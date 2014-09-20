@@ -1,0 +1,28 @@
+pro combine_dflux_10000_0,maximus
+
+
+
+
+j=10000
+fname=make_array(3,/STRING)
+fname[0]='dflux_10000_0'
+fname[1]='Dartmouth_dflux_10000_0'
+fname[2]='Dartmouth_dflux_10000_0_NOSMOOTH'
+
+filename=fname[0]
+result=file_which('./',filename)
+if result then begin
+   for jj=0,5 do begin
+      result=file_which('./',filename)
+      if result then begin
+         print,j,jj
+         rdf_dflux,result,dat
+      endif
+      filename=fname[jj+1]
+   endfor
+endif
+
+
+
+return
+end
