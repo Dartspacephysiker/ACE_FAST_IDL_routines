@@ -10,64 +10,83 @@ pro write_chast_plus_two, chast_time, chast_data, dart1_time, dart1_data, dart2_
   endif
 
   ;open a file for writing
-  openw,outf,file,/get_lun
-  printf,outf, "Chaston orig             Dartmouth1             Dartmouth2"
+  openu,outf,file,/append,/get_lun
+  printf,outf, "      Chaston orig             Dartmouth1                  Dartmouth2"
 
+  i=0
   i_chast = 0
   i_dart1 = 0
   i_dart2 = 0
+
+  chast_dart1_dart2_match = 0
+  chast_dart1_match = 0
+  chast_dart2_match = 0
+  dart1_dart2_match = 0
   
   WHILE ((i_chast LT n_chast) && (i_dart1 LT n_dart1) && (i_dart2 LT n_dart2)) DO BEGIN
     IF str_to_time(chast_time[i_chast]) LT str_to_time(dart1_time[i_dart1]) THEN BEGIN
       IF str_to_time(chast_time[i_chast]) LT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-        printf,outf, format= '(A0)',chast_data[i_chast]
+        printf,outf, format= '(I-6,A-24)',i,str(chast_data[i_chast])
         i_chast++
+        i++
       ENDIF ELSE BEGIN
         IF str_to_time(chast_time[i_chast]) GT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-          printf,outf, format= '(T54,A0)',dart2_data[i_dart2]
+          printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
           i_dart2++
+          i++
         ENDIF ELSE BEGIN
           IF str_to_time(chast_time[i_chast]) EQ str_to_time(dart2_time[i_dart2]) THEN BEGIN
-            printf,outf, format= '(A0,T26,A0)',chast_data[i_chast], dart2_data[i_dart2]
+            printf,outf, format= '(I-5,"*",A-23,", ",T60,A-0)',i,str(chast_data[i_chast]), str(dart2_data[i_dart2])
             i_chast++
-            i_dart2++            
+            i_dart2++
+            chast_dart2_match++
+            i++
           ENDIF
         ENDELSE
       ENDELSE
     ENDIF ELSE BEGIN
       IF str_to_time(chast_time[i_chast]) GT str_to_time(dart1_time[i_dart1]) THEN BEGIN
         IF str_to_time(dart1_time[i_dart1]) LT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-          printf,outf, format= '(T26,A0)',dart1_data[i_dart1]
+          printf,outf, format= '(I-6,T32,A-0)',i,str(dart1_data[i_dart1])
           i_dart1++
+          i++
         ENDIF ELSE BEGIN
           IF str_to_time(dart1_time[i_dart1]) GT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-            printf,outf, format= '(T54,A0)',dart2_data[i_dart2]
+            printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
             i_dart2++
+            i++
           ENDIF ELSE BEGIN
             IF str_to_time(dart1_time[i_dart1]) EQ str_to_time(dart2_time[i_dart2]) THEN BEGIN
-              printf,outf, format= '(T26,2(A0,:,", "))',dart1_data[i_dart1], dart2_data[i_dart2]
+              printf,outf, format= '(I-5,"*",T32,2(A-23,", ",:))',i,str(dart1_data[i_dart1]), str(dart2_data[i_dart2])
               i_dart1++
               i_dart2++
+              dart1_dart2_match++
+              i++
             ENDIF
           ENDELSE
         ENDELSE
       ENDIF ELSE BEGIN
         IF str_to_time(chast_time[i_chast]) EQ str_to_time(dart1_time[i_dart1]) THEN BEGIN
           IF str_to_time(chast_time[i_chast]) LT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-            printf,outf, format= '(2(A0,:,", "))',chast_data[i_chast],dart1_data[i_dart1]
+            printf,outf, format= '(I-5,"*",2(A-23,:,", "))',i,str(chast_data[i_chast]),str(dart1_data[i_dart1])
             i_chast++
             i_dart1++
+            chast_dart1_match++
+            i++
           ENDIF ELSE BEGIN
             IF str_to_time(chast_time[i_chast]) GT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-              printf,outf, format= '(T54,A0)',dart2_data[i_dart2]
+              printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
               i_dart2++
+              i++
             ENDIF ELSE BEGIN
               IF str_to_time(chast_time[i_chast]) EQ str_to_time(dart2_time[i_dart2]) THEN BEGIN
-                printf,outf, format= '(3(A0,:,", "))',chast_data[i_chast], $
-                  dart1_data[i_dart1],dart2_data[i_dart2]
+                printf,outf, format= '(I-5,"*",3(A-23,:,", "))',i,str(chast_data[i_chast]), $
+                  str(dart1_data[i_dart1]),str(dart2_data[i_dart2])
                 i_chast++
                 i_dart1++
                 i_dart2++
+                chast_dart1_dart2_match++
+                i++
               ENDIF
             ENDELSE
           ENDELSE
@@ -81,24 +100,29 @@ pro write_chast_plus_two, chast_time, chast_data, dart1_time, dart1_data, dart2_
     IF (i_dart2 EQ n_dart2) THEN BEGIN
       print, 'Wrapping up chast lines...'
       WHILE (i_chast LT n_chast) DO BEGIN
-        printf,outf, format= '(A0)',chast_data[i_chast]
+        printf,outf, format= '(I-6,A-0)',i,str(chast_data[i_chast])
         i_chast++
+        i++
       ENDWHILE
     ENDIF ELSE BEGIN
       print, 'Wrapping up chast and dart2 lines...'
       WHILE ((i_chast LT n_chast) && (i_dart2 LT n_dart2)) DO BEGIN
         IF str_to_time(chast_time[i_chast]) LT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-          printf,outf, format= '(A0)',chast_data[i_chast]
+          printf,outf, format= '(I-6,A-0)',i,str(chast_data[i_chast])
           i_chast++
+          i++
         ENDIF ELSE BEGIN
           IF str_to_time(chast_time[i_chast]) GT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-            printf,outf, format= '(T54,A0)',dart2_data[i_dart2]
+            printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
             i_dart2++
+            i++
           ENDIF ELSE BEGIN
             IF str_to_time(chast_time[i_chast]) EQ str_to_time(dart2_time[i_dart2]) THEN BEGIN
-              printf,outf, format= '(A0,", ",T26,", "A0))',chast_data[i_chast], dart2_data[i_dart2]
+              printf,outf, format= '(I-5,"*",A-23,", ",T60,", "A-0))',i,str(chast_data[i_chast]), str(dart2_data[i_dart2])
               i_chast++
               i_dart2++
+              chast_dart2_match++
+              i++
             ENDIF
           ENDELSE
         ENDELSE
@@ -109,24 +133,29 @@ pro write_chast_plus_two, chast_time, chast_data, dart1_time, dart1_data, dart2_
       IF (i_dart2 EQ n_dart2) THEN BEGIN
         print, 'Wrapping up dart1 lines...'
         WHILE (i_dart1 LT n_dart1) DO BEGIN
-          printf,outf, format= '(T26,A0)',dart1_data[i_dart1]
+          printf,outf, format= '(I-6,T32,A-0)',i,str(dart1_data[i_dart1])
           i_dart1++
+          i++
         ENDWHILE
       ENDIF ELSE BEGIN
         print, 'Wrapping up dart1 and dart2 lines...'
         WHILE ((i_dart1 LT n_dart1) && (i_dart2 LT n_dart2)) DO BEGIN
           IF str_to_time(dart1_time[i_dart1]) LT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-            printf,outf, format= '(A0)',dart1_data[i_dart1]
+            printf,outf, format= '(I-6,A-0)',i,str(dart1_data[i_dart1])
             i_dart1++
+            i++
           ENDIF ELSE BEGIN
             IF str_to_time(dart1_time[i_dart1]) GT str_to_time(dart2_time[i_dart2]) THEN BEGIN
-              printf,outf, format= '(T26,T26,A0)',dart2_data[i_dart2]
+              printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
               i_dart2++
+              i++
             ENDIF ELSE BEGIN
               IF str_to_time(dart1_time[i_dart1]) EQ str_to_time(dart2_time[i_dart2]) THEN BEGIN
-                printf,outf, format= '(T26,A0,", "A0))',dart1_data[i_dart1], dart2_data[i_dart2]
+                printf,outf, format= '(I-5,"*",T32,A-23,", "A-0))',i,str(dart1_data[i_dart1]), str(dart2_data[i_dart2])
                 i_dart1++
                 i_dart2++
+                dart1_dart2_match++
+                i++
               ENDIF
             ENDELSE
           ENDELSE
@@ -136,15 +165,17 @@ pro write_chast_plus_two, chast_time, chast_data, dart1_time, dart1_data, dart2_
         IF (i_dart1 LT n_dart1) && (i_dart2 EQ n_dart2) THEN BEGIN
           print, 'Wrapping up dart1 lines...'
           WHILE (i_dart1 LT n_dart1) DO BEGIN
-            printf,outf, format= '(T26,A0)',dart1_data[i_dart1]
+            printf,outf, format= '(I-6,T32,A-0)',i,str(dart1_data[i_dart1])
             i_dart1++
+            i++
           ENDWHILE
         ENDIF ELSE BEGIN
           IF (i_dart1 EQ n_dart1) && (i_dart2 LT n_dart2) THEN BEGIN
             print, 'Wrapping up dart lines...'
             WHILE (i_dart2 LT n_dart2) DO BEGIN
-              printf,outf, format= '(T26,T26,A0)',dart2_data[i_dart2]
+              printf,outf, format= '(I-6,T60,A-0)',i,str(dart2_data[i_dart2])
               i_dart2++
+              i++
             ENDWHILE
           ENDIF
         ENDELSE
@@ -156,5 +187,17 @@ pro write_chast_plus_two, chast_time, chast_data, dart1_time, dart1_data, dart2_
   print, 'i_chast = ' + str(i_chast) + ' and n_chast = ' + str(n_chast)
   print, 'i_dart1 = ' + str(i_dart1) + ' and n_dart1 = ' + str(n_dart1)
   print, 'i_dart2 = ' + str(i_dart2) + ' and n_dart2 = ' + str(n_dart2)
+
+  printf,outf, string(13b)
+  printf,outf, "Number of Chaston events   : " + str(n_chast)
+  printf,outf, "Number of Dartmouth events : " + str(n_dart1)
+  printf,outf, "Number of Dartmout2 events : " + str(n_dart2)
+  printf,outf, string(13b)
+  printf,outf, "Chaston/Dart1/Dart2 matches :" + str(chast_dart1_dart2_match)
+  printf,outf, "Chaston/Dart1       matches :" + str(chast_dart1_match)
+  printf,outf, "Chaston/     /Dart2 matches :" + str(chast_dart2_match)
+  printf,outf, "        Dart1/Dart2 matches :" + str(dart1_dart2_match)
+  
+  FREE_LUN, outf
 
 end
