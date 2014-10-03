@@ -1,8 +1,10 @@
-pro compare_chastondbfile_dartdbfile, $
+pro compare_chastondbfile_dartdbfile_2, $
   orbit,arr_elem=arr_elem,smooth=smooth, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
   smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
-  show_fieldnames=show_f
+  check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f
+
+;10/02/2014 Adding check_current_thresh option to see if our DBs match for a given current threshold (default 10)
 
   ;Structure of data files (array element can be one of the following):
   ;0-Orbit number'
@@ -55,13 +57,16 @@ pro compare_chastondbfile_dartdbfile, $
     RETURN
   ENDIF
 
+  IF KEYWORD_SET(check_c) AND check_c EQ !NULL THEN check_c=10 ;default 
+
   if not keyword_set(arr_elem) then begin
     print, "No array element specified! Comparing times of max current..."
     arr_elem = 1 ;default, do max current times
   endif
 
   chastondbdir='/SPENCEdata/Research/Cusp/database/current_db/'
-  datadir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
+  ;datadir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
+  datadir='/SPENCEdata/software/sdt/batch_jobs/Alfven_study_14F/output_alfven_stats/'
   outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
 
   basename='dflux_'+strcompress(orbit,/remove_all)+'_0'
@@ -75,7 +80,15 @@ pro compare_chastondbfile_dartdbfile, $
   IF KEYWORD_SET(analyse_noise) THEN fname += '_analysenoise'
   IF KEYWORD_SET(extra_t) THEN fname += '_extratimes'
   IF KEYWORD_SET(no_s) THEN fname += '_noscreen'
-  outname=outdir+'Dartmouth_'+basename+savsuf
+  IF KEYWORD_SET(ucla) THEN fname += '_magdespin'
+
+  outname=outdir+'Dartmouth_'+basename
+  IF KEYWORD_SET(analyse_noise) THEN outname += '_analysenoise'
+  IF KEYWORD_SET(extra_t) THEN outname += '_extratimes'
+  IF KEYWORD_SET(no_s) THEN outname += '_noscreen'
+  IF KEYWORD_SET(ucla) THEN outname += '_magdespin'
+  ;IF KEYWORD_SET(check_c) THEN outname += '_curthresh' + str(check_c) + 'microA'
+  outname += savsuf
 
   smoothfname=fname+'_smooth'
   IF KEYWORD_SET(smooth_extra_t) THEN smoothfname += '_extratimes'
@@ -100,6 +113,8 @@ pro compare_chastondbfile_dartdbfile, $
   IF KEYWORD_SET(extra_t) THEN outdataf += '_extratimes'
   IF KEYWORD_SET(no_s) THEN outdataf += '_noscreen'
   IF KEYWORD_SET(do_t) THEN outdataf += '_two'
+  IF KEYWORD_SET(check_c) THEN outdataf += '_curthresh' + str(check_c) + 'microA'
+  IF KEYWORD_SET(ucla) THEN outdataf += '_magdespin'
   outdataf = outdataf+'_'+fieldnames[arr_elem]+'.txt'
 
   ;get files in memory
@@ -161,6 +176,11 @@ pro compare_chastondbfile_dartdbfile, $
   ENDIF
   printf,outf, "(Two data points on same line ==> identical time of occurrence of max FAC corresponding to data)"
 
+  IF KEYWORD_SET(check_c) THEN BEGIN
+    print, "Current threshold: " + str(check_c) + " microA/m^2"
+    printf, outf, "Current threshold: " + str(check_c) + " microA/m^2"
+  ENDIF
+
 ;New line and close file here (re-opened in write_chast_* routines below)
   printf,outf, string(13b)
   FREE_LUN, outf
@@ -168,10 +188,17 @@ pro compare_chastondbfile_dartdbfile, $
 
   ;Now the magic staggering part:
   IF NOT KEYWORD_SET(do_t) THEN BEGIN
-    write_chast_plus_one,dat.time,dat.(arr_elem),dat1.time,dat1.(arr_elem),filename=outdataf
+    IF KEYWORD_SET(check_c) THEN BEGIN
+      write_chast_plus_one_2,dat,dat1,arr_elem=arr_elem,filename=outdataf,check_c=check_c
+    ENDIF ELSE BEGIN
+      write_chast_plus_one_2,dat,dat1,arr_elem=arr_elem,filename=outdataf
+    ENDELSE
   ENDIF ELSE BEGIN
-    write_chast_plus_two,dat.time,dat.(arr_elem),dat1.time,dat1.(arr_elem), $
-      dat_smooth.time,dat_smooth.(arr_elem),filename=outdataf
+    IF KEYWORD_SET(check_c) THEN BEGIN
+      write_chast_plus_two_2,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf,check_c=check_c
+    ENDIF ELSE BEGIN
+      write_chast_plus_two_2,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf  
+    ENDELSE
   ENDELSE
 
   return

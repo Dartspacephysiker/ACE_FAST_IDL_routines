@@ -1,4 +1,5 @@
-pro write_chast_plus_one, chast_time, chast_data, dart_time, dart_data, filename=file
+pro write_chast_plus_one,chast_time,chast_data,dart_time,dart_data,filename=file,$
+  check_current_thresh=check_c,chast_struct,dart_struct
 
   n_chast=N_ELEMENTS(chast_time)
   n_dart=n_elements(dart_time)
@@ -7,6 +8,8 @@ pro write_chast_plus_one, chast_time, chast_data, dart_time, dart_data, filename
     file="./write_chast_plus_one.out"
     print, "write_chast_plus_one: No file selected! using default '" + file +"'"
   endif
+
+
 
   ;open a file for writing
   openu,outf,file,/append,/get_lun 
@@ -50,7 +53,7 @@ pro write_chast_plus_one, chast_time, chast_data, dart_time, dart_data, filename
     IF (i_chast EQ n_chast) && (i_dart LT n_dart) THEN BEGIN
       print, 'Wrapping up dart lines...'
       WHILE (i_dart LT n_dart) DO BEGIN
-        printf,outf, format= '(I-6,T32,A-24)',i,dart_data[i_dart]
+        printf,outf, format= '(I-6,T26,A-24)',i,dart_data[i_dart]
         i_dart++
         i++
       ENDWHILE
