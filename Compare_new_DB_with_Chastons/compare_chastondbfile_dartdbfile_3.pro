@@ -1,10 +1,26 @@
-pro compare_chastondbfile_dartdbfile_2, $
+;-
+; :KEYWORDS:
+;   max_tdiff            =  Max time difference (in seconds) between a Dartmouth event
+;                           and a Chaston event for considering them identical
+;   check_current_thresh =  Specify a current density threshold (in microA/m^2) which
+;                           events must meet. Outputs statistics of those meeting criterion.
+;   do_as5               =  Use fancy new Alfven_Stats_5 database
+;
+; :HISTOIRE:
+;   10/02/2014 Adding check_current_thresh option to see if
+;              our DBs match for a given current threshold (default 10)
+; 
+; :AUTEUR:
+;   Monsieur Hatch
+;   Dartworth College (Après l'esprit de nous coopérateurs francais)
+;-
+
+pro compare_chastondbfile_dartdbfile_3, $
   orbit,arr_elem=arr_elem,smooth=smooth, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
   smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
-  check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f
-
-;10/02/2014 Adding check_current_thresh option to see if our DBs match for a given current threshold (default 10)
+  check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
+  do_as5=do_as5
 
   ;Structure of data files (array element can be one of the following):
   ;0-Orbit number'
@@ -66,7 +82,10 @@ pro compare_chastondbfile_dartdbfile_2, $
 
   chastondbdir='/SPENCEdata/Research/Cusp/database/current_db/'
   ;datadir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
-  datadir='/SPENCEdata/software/sdt/batch_jobs/Alfven_study_14F/output_alfven_stats/'
+  datadir='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/'
+  IF KEYWORD_SET(do_as5) THEN datadir += 'as5_14F/batch_output/' $
+    ELSE datadir += 'as3_pristine/'
+  ;outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput//jigglemicroA/'
   outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
 
   basename='dflux_'+strcompress(orbit,/remove_all)+'_0'
@@ -82,7 +101,8 @@ pro compare_chastondbfile_dartdbfile_2, $
   IF KEYWORD_SET(no_s) THEN fname += '_noscreen'
   IF KEYWORD_SET(ucla) THEN fname += '_magdespin'
 
-  outname=outdir+'Dartmouth_'+basename
+  IF NOT KEYWORD_SET(do_as5) THEN outname=outdir+'Dartmouth_as3_pristine_'+basename $
+    ELSE outname=outdir+'Dartmouth_as5_'+basename
   IF KEYWORD_SET(analyse_noise) THEN outname += '_analysenoise'
   IF KEYWORD_SET(extra_t) THEN outname += '_extratimes'
   IF KEYWORD_SET(no_s) THEN outname += '_noscreen'
@@ -115,12 +135,20 @@ pro compare_chastondbfile_dartdbfile_2, $
   IF KEYWORD_SET(do_t) THEN outdataf += '_two'
   IF KEYWORD_SET(check_c) THEN outdataf += '_curthresh' + str(check_c) + 'microA'
   IF KEYWORD_SET(ucla) THEN outdataf += '_magdespin'
+  IF KEYWORD_SET(max_tdiff) THEN BEGIN
+    outdataf += STRING(max_tdiff,FORMAT='("_tdiff_",F-0.3)')
+  ENDIF
   outdataf = outdataf+'--'+fieldnames[arr_elem]+'.txt'
+  print, "Output filename: " + outdataf
 
   ;get files in memory
   combine_dflux_dartchast,orbit, 0, in_name=chastonfname,outname=chastonoutname
-  combine_dflux_dartchast,orbit, 1, in_name=fname,outname=outname
   restore, chastonoutname
+  IF KEYWORD_SET(do_as5) THEN BEGIN
+    combine_dflux_dartchast,orbit, 3, in_name=fname,outname=outname
+  ENDIF ELSE BEGIN
+    combine_dflux_dartchast,orbit, 1, in_name=fname,outname=outname
+  ENDELSE
   restore, outname
 
   IF (KEYWORD_SET(smooth) || KEYWORD_SET(do_t)) THEN BEGIN
@@ -189,15 +217,15 @@ pro compare_chastondbfile_dartdbfile_2, $
   ;Now the magic staggering part:
   IF NOT KEYWORD_SET(do_t) THEN BEGIN
     IF KEYWORD_SET(check_c) THEN BEGIN
-      write_chast_plus_one_2,dat,dat1,arr_elem=arr_elem,filename=outdataf,check_c=check_c
+      write_chast_plus_one_3,dat,dat1,arr_elem=arr_elem,filename=outdataf,check_c=check_c,max_tdiff=max_tdiff
     ENDIF ELSE BEGIN
-      write_chast_plus_one_2,dat,dat1,arr_elem=arr_elem,filename=outdataf
+      write_chast_plus_one_3,dat,dat1,arr_elem=arr_elem,filename=outdataf,max_tdiff=max_tdiff
     ENDELSE
   ENDIF ELSE BEGIN
     IF KEYWORD_SET(check_c) THEN BEGIN
-      write_chast_plus_two_2,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf,check_c=check_c
+      write_chast_plus_two_3,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf,check_c=check_c,max_tdiff=max_tdiff
     ENDIF ELSE BEGIN
-      write_chast_plus_two_2,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf  
+      write_chast_plus_two_3,dat,dat1,dat_smooth,arr_elem=arr_elem,filename=outdataf,max_tdiff=max_tdiff
     ENDELSE
   ENDELSE
 

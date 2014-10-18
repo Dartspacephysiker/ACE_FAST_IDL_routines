@@ -38,7 +38,7 @@ pro write_chast_plus_one_2,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
   
   WHILE ((i_chast LT n_chast) && (i_dart LT n_dart)) DO BEGIN
     IF str_to_time(chast_struct.time[i_chast]) LT str_to_time(dart_struct.time[i_dart]) THEN BEGIN
-      printf,outf, format= '(I-6,A-24)',i,str(chast_struct.(arr_elem)[i_chast])
+      printf,outf, format= '(I-6,A-24,T54,I-4)',i,str(chast_struct.(arr_elem)[i_chast]),i_chast
       if ( KEYWORD_SET(check_c) && (chast_struct.(magc_ind)[i_chast] GT check_c) ) then begin
         chastct_ind = [chastct_ind, i]
         chast_ct++
@@ -47,7 +47,7 @@ pro write_chast_plus_one_2,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
       i++
     ENDIF ELSE BEGIN
       IF str_to_time(chast_struct.time[i_chast]) GT str_to_time(dart_struct.time[i_dart]) THEN BEGIN
-        printf,outf, format= '(I-6,T32,A-0)',i,str(dart_struct.(arr_elem)[i_dart])
+        printf,outf, format= '(I-6,T32,A-0,T58,I-4)',i,str(dart_struct.(arr_elem)[i_dart]),i_dart
         if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[i_dart] GT check_c) ) then begin
           dartct_ind = [dartct_ind, i]
           dart_ct++
@@ -79,7 +79,7 @@ pro write_chast_plus_one_2,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
   IF (i_chast LT n_chast) && (i_dart EQ n_dart) THEN BEGIN
     print, 'Wrapping up chast lines...'
     WHILE (i_chast LT n_chast) DO BEGIN
-      printf,outf, format= '(I-6,A-24)',i,chast_struct.(arr_elem)[i_chast]
+      printf,outf, format= '(I-6,A-24,T54,I-4)',i,chast_struct.(arr_elem)[i_chast],i_chast
       if ( KEYWORD_SET(check_c) && (chast_struct.(magc_ind)[i_chast] GT check_c) ) then begin
         chastct_ind = [chastct_ind, i]
         chast_ct++
@@ -91,7 +91,7 @@ pro write_chast_plus_one_2,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     IF (i_chast EQ n_chast) && (i_dart LT n_dart) THEN BEGIN
       print, 'Wrapping up dart lines...'
       WHILE (i_dart LT n_dart) DO BEGIN
-        printf,outf, format= '(I-6,T26,A-24)',i,dart_struct.(arr_elem)[i_dart]
+        printf,outf, format= '(I-6,T26,A-24,T58,I-4)',i,dart_struct.(arr_elem)[i_dart],i_dart
         if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[i_dart] GT check_c) ) then begin
           dartct_ind = [dartct_ind, i]
           dart_ct++
