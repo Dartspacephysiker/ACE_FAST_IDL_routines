@@ -1,14 +1,26 @@
 ;+
-; :KEYWORDS:
+; :NAME:
+;   compare_chastondbfile_dartdbfile_3
+; :REQUIRED KEYWORD(S):
+;   orbit                = Specify orbit to be compared. If 'fname' is set, this will only specify which Chastondb file to use
+;                          for comparison
+; :OPTIONAL KEYWORDS:
+;   interval             =  For a given orbit, which interval to consider 
+;                           (There is only one interval per orbit--"0"--and this is the default. Chaston's DB divides orbits into intervals
+;                            based, I believe, on location of the satellite) 
 ;   max_tdiff            =  Max time difference (in seconds) between a Dartmouth event
 ;                           and a Chaston event for considering them identical
 ;   check_current_thresh =  Specify a current density threshold (in microA/m^2) which
 ;                           events must meet. Outputs statistics of those meeting criterion.
-;   do_as5               =  Use fancy new Alfven_Stats_5 database
-;
+;   do_as3               =  Use old Alfven_Stats_3 database
+;   fname                =  Specify a filename to compare with a Chastondb file--make sure to specify proper orbit in call!
+;   outdataf             =  Name of analysis file to be outputted
+;   
 ; :HISTOIRE:
-;   10/02/2014 Adding check_current_thresh option to see if
-;              our DBs match for a given current threshold (default 10)
+;   10/28/2014  Added outdataf and fname options, updated documentation a little, changed do_as5 to do_as3, since as3 is the older code
+;               and the default behavior should be usage of the new alfven_stats_5 database  
+;   10/02/2014  Adding check_current_thresh option to see if
+;               our DBs match for a given current threshold (default 10)
 ; 
 ; :AUTEUR:
 ;   Monsieur Hatch
@@ -20,7 +32,7 @@ pro compare_chastondbfile_dartdbfile_3, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
   smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
-  do_as5=do_as5, _ref_extra = e
+  do_as3=do_as3, outdataf=outdataf,fname=fname,outname=outname,_ref_extra = e
 
   ;Structure of data files (array element can be one of the following):
   ;0-Orbit number'
@@ -57,13 +69,14 @@ pro compare_chastondbfile_dartdbfile_3, $
   ;30-interval stop time
   ;31-duration of interval
 
-  IF KEYWORD_SET(do_as5) THEN BEGIN
-    PRINT,"Using field names for Alfven_Stats 5!  (For as3 remove keyword /do_as5)"
+  IF NOT KEYWORD_SET(do_as3) THEN BEGIN
+    PRINT,"Using field names for Alfven_Stats_5!  (For as3 set keyword /do_as3)"
     fieldnames=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ','max_chare_losscone',$
       'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de','fields_samp_period','fields_mode',$
       'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num','max_lp_current','min_lp_current','median_lp_current']
     as5=1
   ENDIF ELSE BEGIN
+    PRINT,"Using field names for Alfven_Stats_3!  (For as5 unset keyword /do_as3)"
     fieldnames=['orbit','time','alt','mlt','ilat','mag_current','esa_current','elec_energy_flux','integ_elec_energy_flux','char_elec_energy','ion_energy_flux','ion_flux','ion_flux_up',$
         'integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E','mode','sample_t','proton_flux_up','proton_energy_flux_up',$
         'oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
@@ -90,16 +103,16 @@ pro compare_chastondbfile_dartdbfile_3, $
 
   if not keyword_set(arr_elem) then begin
     print, "No array element specified! Comparing times of max current..."
-    IF KEYWORD_SET(do_as5) THEN arr_elem = 2 ELSE arr_elem = 1 ;default, do max current times
+    IF NOT KEYWORD_SET(do_as3) THEN arr_elem = 2 ELSE arr_elem = 1 ;default, do max current times
   endif
 
   chastondbdir='/SPENCEdata/Research/Cusp/database/current_db/'
   ;datadir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
   datadir='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/'
-  IF KEYWORD_SET(do_as5) THEN datadir += 'as5_14F/' $
+  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/' $
     ELSE datadir += 'as3_pristine/'
   ;outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput//jigglemicroA/'
-  outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
+  outdir='/SPENCEdata/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/magcal_versions/'
 
   basename='dflux_' + strcompress(orbit,/remove_all)+'_' + STRCOMPRESS(interval,/REMOVE_ALL)
   savsuf='.sav'
@@ -108,22 +121,28 @@ pro compare_chastondbfile_dartdbfile_3, $
   chastonfname=chastondbdir+basename
   chastonoutname=outdir+'chast_'+basename+savsuf
 
-  fname=datadir+'Dartmouth_'
-  if KEYWORD_SET(do_as5) THEN fname += "as5_"
-  fname +=basename
-  IF KEYWORD_SET(analyse_noise) THEN fname += '_analysenoise'
-  IF KEYWORD_SET(extra_t) THEN fname += '_extratimes'
-  IF KEYWORD_SET(no_s) THEN fname += '_noscreen'
-  IF KEYWORD_SET(ucla) THEN fname += '_magdespin'
+  IF NOT KEYWORD_SET(fname) THEN BEGIN
+    PRINT,"WHERE'S THE FILENAME?"
+    RETURN
+    fname=datadir+'Dartmouth_'
+    if NOT KEYWORD_SET(do_as3) THEN fname += "as5_"
+    fname +=basename
+    IF KEYWORD_SET(analyse_noise) THEN fname += '_analysenoise'
+    IF KEYWORD_SET(extra_t) THEN fname += '_extratimes'
+    IF KEYWORD_SET(no_s) THEN fname += '_noscreen'
+    IF KEYWORD_SET(ucla) THEN fname += '_magdespin'
+  ENDIF
 
-  IF NOT KEYWORD_SET(do_as5) THEN outname=outdir+'as3/Dartmouth_as3_pristine_'+basename $
+  IF NOT KEYWORD_SET(outname) THEN BEGIN
+    IF KEYWORD_SET(do_as3) THEN outname=outdir+'as3/Dartmouth_as3_pristine_'+basename $
     ELSE outname=outdir+'as5/Dartmouth_as5_'+basename
-  IF KEYWORD_SET(analyse_noise) THEN outname += '_analysenoise'
-  IF KEYWORD_SET(extra_t) THEN outname += '_extratimes'
-  IF KEYWORD_SET(no_s) THEN outname += '_noscreen'
-  IF KEYWORD_SET(ucla) THEN outname += '_magdespin'
-  ;IF KEYWORD_SET(check_c) THEN outname += '_curthresh' + str(check_c) + 'microA'
-  outname += savsuf
+    IF KEYWORD_SET(analyse_noise) THEN outname += '_analysenoise'
+    IF KEYWORD_SET(extra_t) THEN outname += '_extratimes'
+    IF KEYWORD_SET(no_s) THEN outname += '_noscreen'
+    IF KEYWORD_SET(ucla) THEN outname += '_magdespin'
+    ;IF KEYWORD_SET(check_c) THEN outname += '_curthresh' + str(check_c) + 'microA'
+    outname += savsuf
+  ENDIF
 
   smoothfname=fname+'_smooth'
   IF KEYWORD_SET(smooth_extra_t) THEN smoothfname += '_extratimes'
@@ -136,32 +155,35 @@ pro compare_chastondbfile_dartdbfile_3, $
   print, "Dar smooth file: " + smoothfname ;smooth option?
 
   ;Deal with output filename
-  outdataf=outdir
-  if KEYWORD_SET(do_as5) THEN outdataf += "as5/"+basename+"_as5" $
+  IF NOT KEYWORD_SET(outdataf) THEN BEGIN
+    outdataf=outdir
+    if NOT KEYWORD_SET(do_as3) THEN outdataf += "as5/"+basename+"_as5" $
     ELSE outdataf += "as3/"+basename+"_as3"
-  IF KEYWORD_SET(analyse_noise) THEN outdataf += '_analysenoise'
-  if ( (NOT KEYWORD_SET(do_t)) && KEYWORD_SET(smooth) ) then begin
-    fname=smoothfname
-    outname=smoothoutname
-    outdataf+='_smooth'
-    print, 'Doing smooth Dart file instead of unsmoothed file...'
-  endif
+    IF KEYWORD_SET(analyse_noise) THEN outdataf += '_analysenoise'
+    if ( (NOT KEYWORD_SET(do_t)) && KEYWORD_SET(smooth) ) then begin
+      fname=smoothfname
+      outname=smoothoutname
+      outdataf+='_smooth'
+      print, 'Doing smooth Dart file instead of unsmoothed file...'
+    endif
 
-  IF KEYWORD_SET(extra_t) THEN outdataf += '_extratimes'
-  IF KEYWORD_SET(no_s) THEN outdataf += '_noscreen'
-  IF KEYWORD_SET(do_t) THEN outdataf += '_two'
-  IF KEYWORD_SET(check_c) THEN outdataf += '_curthresh' + str(check_c) + 'microA'
-  IF KEYWORD_SET(ucla) THEN outdataf += '_magdespin'
-  IF KEYWORD_SET(max_tdiff) THEN BEGIN
-    outdataf += STRING(max_tdiff,FORMAT='("_tdiff_",F-0.3)')
+    IF KEYWORD_SET(extra_t) THEN outdataf += '_extratimes'
+    IF KEYWORD_SET(no_s) THEN outdataf += '_noscreen'
+    IF KEYWORD_SET(do_t) THEN outdataf += '_two'
+    IF KEYWORD_SET(check_c) THEN outdataf += '_curthresh' + str(check_c) + 'microA'
+    IF KEYWORD_SET(ucla) THEN outdataf += '_magdespin'
+    IF KEYWORD_SET(max_tdiff) THEN BEGIN
+      outdataf += STRING(max_tdiff,FORMAT='("_tdiff_",F-0.3)')
+    ENDIF
+    outdataf = outdataf+'--'+fieldnames[arr_elem]+'.txt'
   ENDIF
-  outdataf = outdataf+'--'+fieldnames[arr_elem]+'.txt'
+
   print, "Output filename: " + outdataf
 
   ;get files in memory
   combine_dflux_dartchast,orbit, 0, in_name=chastonfname,outname=chastonoutname
   restore, chastonoutname
-  IF KEYWORD_SET(do_as5) THEN BEGIN
+  IF NOT KEYWORD_SET(do_as3) THEN BEGIN
     combine_dflux_dartchast,orbit, 3, in_name=fname,outname=outname
   ENDIF ELSE BEGIN
     combine_dflux_dartchast,orbit, 1, in_name=fname,outname=outname

@@ -13,3 +13,9 @@ testcode/laTEST/*.png
 
 #No testcode postscripts
 testcode/laTEST/*.ps
+
+#None 'dat file
+*.dat
+
+#No CDF files
+*.cdf
