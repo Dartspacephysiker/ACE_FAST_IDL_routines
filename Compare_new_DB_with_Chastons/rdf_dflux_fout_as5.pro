@@ -1,3 +1,5 @@
+;Tuesday, Dec 2, 2014: Added line at end so that saving the file is optional
+;Ha! It should be ready now...
 ;Saturday, Oct 17: This thing is not ready at all. I haven't changed anything as of yet to
 ;reflect the format of files outputted by Alfven_Stats_5
 pro rdf_dflux_fout_as5,filename,dat,outname
@@ -11,7 +13,7 @@ pro rdf_dflux_fout_as5,filename,dat,outname
 ;  printf,unit1,'total upward only ion outflow at ionosphere from total of intervals',total(current_intervals(*,13))
 ;  printf,unit1,'total Alfven upward only ion outflow at ionosphere',total(current_intervals(keep,13))
 
-;this pro reads file output from Alfven_stats_3.pro and stores it as a structure
+;this pro reads file output from Alfven_stats_5.pro and stores it as a structure
 
 fieldtypes=[2,4,7,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7]
 fieldnames=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','total_eflux_max','eflux_losscone_integ','total_eflux_integ','max_chare_losscone',$
@@ -97,7 +99,7 @@ dat_orbit_integrated={$
 
 dat=create_struct(dat,dat_orbit_integrated)
 
-save, dat, filename=outname
+IF KEYWORD_SET(outname) THEN save, dat, filename=outname
 
 return
 end

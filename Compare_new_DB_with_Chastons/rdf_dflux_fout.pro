@@ -1,3 +1,4 @@
+;Tuesday, Dec 2, 2014: Added line at end so that saving the file is optional
 pro rdf_dflux_fout,filename,dat,outname
 
 ;this pro reads file output from Alfven_stats_3.pro and stores it as a structure
@@ -52,7 +53,7 @@ dat_orbit_integrated={$
 
 dat=create_struct(dat,dat_orbit_integrated)
 
-save, dat, filename=outname
+IF KEYWORD_SET(outname) THEN save, dat, filename=outname
 
 return
 end

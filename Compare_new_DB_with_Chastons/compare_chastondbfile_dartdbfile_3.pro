@@ -106,7 +106,7 @@ pro compare_chastondbfile_dartdbfile_3, $
     IF NOT KEYWORD_SET(do_as3) THEN arr_elem = 2 ELSE arr_elem = 1 ;default, do max current times
   endif
 
-drive='SPENCEdata2'
+  drive='SPENCEdata2'
   chastondbdir='/'+drive+'/Research/Cusp/database/current_db/'
   ;datadir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
   datadir='/'+drive+'/software/sdt/batch_jobs/Alfven_study/'
