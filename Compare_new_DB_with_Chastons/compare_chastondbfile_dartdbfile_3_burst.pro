@@ -1,13 +1,11 @@
 ;+
 ; :NAME:
-;   compare_chastondbfile_dartdbfile_3
+;   compare_chastondbfile_dartdbfile_3_burst
 ; :REQUIRED KEYWORD(S):
 ;   orbit                = Specify orbit to be compared. If 'fname' is set, this will only specify which Chastondb file to use
 ;                          for comparison
 ; :OPTIONAL KEYWORDS:
-;   interval             =  For a given orbit, which interval to consider 
-;                           (There is only one interval per orbit--"0"--and this is the default. Chaston's DB divides orbits into intervals
-;                            based, I believe, on location of the satellite) 
+;   interval             =  DISABLED! See HISTOIRE 
 ;   max_tdiff            =  Max time difference (in seconds) between a Dartmouth event
 ;                           and a Chaston event for considering them identical
 ;   check_current_thresh =  Specify a current density threshold (in microA/m^2) which
@@ -17,6 +15,8 @@
 ;   outdataf             =  Name of analysis file to be outputted
 ;   
 ; :HISTOIRE:
+;   12/02/2014  Forked from compare_chastondbfile_dartdbfile_3 to accommodate 'burst mode' output from Alfven_Stats_5, which tends to 
+;               generate many intervals for a given orbit instead of the typical 1 or 2 intervals.
 ;   10/28/2014  Added outdataf and fname options, updated documentation a little, changed do_as5 to do_as3, since as3 is the older code
 ;               and the default behavior should be usage of the new alfven_stats_5 database  
 ;   10/02/2014  Adding check_current_thresh option to see if
@@ -27,8 +27,8 @@
 ;   Dartworth College (Après l'esprit de nous coopérateurs francais)
 ;-
 
-pro compare_chastondbfile_dartdbfile_3, $
-  orbit,interval=interval,arr_elem=arr_elem,smooth=smooth, $
+pro compare_chastondbfile_dartdbfile_3_burst, $
+  orbit,arr_elem=arr_elem,smooth=smooth, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
   smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
