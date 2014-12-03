@@ -9,7 +9,7 @@ pro combine_dbfile,jj,dat,in_name=in, outname=out
   if result then begin
 ;     result=file_which('./',in_name)
 ;     if result then begin
-     print,orbit,jj
+     print,jj
      CASE jj OF
       0: BEGIN
         rdf_dflux_fout_as5,result,dat,out 

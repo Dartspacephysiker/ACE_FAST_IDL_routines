@@ -8,7 +8,7 @@
 ; :OPTIONAL KEYWORDS:
 ;   dbfile1_is_idl_sav       = file 1 is an IDL .sav file; don't
 ;                            run rdf_dflux_fout on it
-;   dbfile2_is_idl_sav       = file 2 is an IDL .sav file; don't
+;   dbf2_is_idl_sav       = file 2 is an IDL .sav file; don't
 ;                            run rdf_dflux_fout on it
 ;   max_tdiff              = Max time difference (in seconds) between a Dartmouth event
 ;                            and a Chaston event for considering them identical
@@ -36,9 +36,9 @@
 ;-
 
 pro compare_dbfiles_3, $
-  dbfile1,dbfile2,outfile,dbfile1_is_idl_sav=dbfile1_is_idl_sav,dbfile2_is_idl_sav=dbfile2_is_idl_sav, $
-  dbfile1_is_as3=dbfile1_is_as3,dbfile2_is_as3=dbfile2_is_as3,arr_elem1=arr_elem1, $
-  do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
+  dbfile1,dbfile2,outfile,dbfile1_idl_sav=dbfile1_idl_sav,dbfile2_idl_sav=dbfile2_idl_sav, $
+  dbf1_is_as3=dbf1_is_as3,dbf2_is_as3=dbf2_is_as3,arr_elem1=arr_elem1, $
+  extra_times=extra_t, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
   fname=fname,outname=outname,_ref_extra = e
 
@@ -87,27 +87,27 @@ pro compare_dbfiles_3, $
                   'integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E','mode','sample_t','proton_flux_up','proton_energy_flux_up',$
                   'oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
 
-  if not keyword_set(arr_elem) then begin
+  if not keyword_set(arr_elem1) then begin
     print, "No array element specified! Comparing times of max current..."
-    IF NOT KEYWORD_SET(dbfile1_is_as3) THEN arr_elem1 = 2 ELSE arr_elem1 = 1 ;default, do max current times
-    IF NOT KEYWORD_SET(dbfile2_is_as3) THEN arr_elem2 = 2 ELSE arr_elem2 = 1 ;default, do max current times
+    IF NOT KEYWORD_SET(dbf1_is_as3) THEN arr_elem1 = 2 ELSE arr_elem1 = 1 ;default, do max current times
+    IF NOT KEYWORD_SET(dbf2_is_as3) THEN arr_elem2 = 2 ELSE arr_elem2 = 1 ;default, do max current times
   endif
 
-  IF NOT KEYWORD_SET(dbfile1_is_as3) THEN BEGIN
-    PRINT,"dbfile1 is using field names for Alfven_Stats_5!  "
+  IF NOT KEYWORD_SET(dbf1_is_as3) THEN BEGIN
+    PRINT,"dbfile1 is using field names for Alfven_Stats_5"
     fieldnames1=fieldnames_as5
-    dbfile1_is_as3=0
+    dbf1_is_as3=0
   ENDIF ELSE BEGIN
     fieldnames1=fieldnames_as3
-    PRINT,"dbfile1 is using field names for Alfven_Stats_3!  (For as5 unset keyword /do_as3)"
+    PRINT,"dbfile1 is using field names for Alfven_Stats_3!  (For as5 unset keyword /dbf1_is_as3)"
   ENDELSE
 
-  IF NOT KEYWORD_SET(dbfile2_is_as3) THEN BEGIN
-    PRINT,"dbfile2 is using field names for Alfven_Stats_5!  "
+  IF NOT KEYWORD_SET(dbf2_is_as3) THEN BEGIN
+    PRINT,"dbfile2 is using field names for Alfven_Stats_5"
     fieldnames2=fieldnames_as5
-    dbfile2_is_as3=0
+    dbf2_is_as3=0
   ENDIF ELSE BEGIN
-    PRINT,"dbfile2 is using field names for Alfven_Stats_3!  (For as5 unset keyword /dbfile2_is_as3)"
+    PRINT,"dbfile2 is using field names for Alfven_Stats_3!  (For as5 unset keyword /dbf2_is_as3)"
     fieldnames2=fieldnames_as3
   ENDELSE
 
@@ -134,12 +134,14 @@ pro compare_dbfiles_3, $
   ;outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput//jigglemicroA/'
   outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
 
-  IF NOT KEYWORD_SET(dbfile1) OR NOT KEYWORD_SET(dbfile2) OR NOT KEYWORD_SET(outfile) THEN BEGIN
+;  IF NOT KEYWORD_SET(dbfile1) OR NOT KEYWORD_SET(dbfile2) OR NOT
+;  KEYWORD_SET(outfile) THEN BEGIN
+  IF NOT KEYWORD_SET(dbfile1) THEN BEGIN
     PRINT,"WHAT'S DBFILE1?"
     RETURN
   ENDIF
 
-  IF NOT KEYWORD_SET(dbfile2) OR NOT KEYWORD_SET(outfile) THEN BEGIN
+  IF NOT KEYWORD_SET(dbfile2) THEN BEGIN
     PRINT,"WHAT's DBFILE2?"
     RETURN
   ENDIF
@@ -149,20 +151,20 @@ pro compare_dbfiles_3, $
     RETURN
   ENDIF
 
-  print, "dbfile1  : " + chastonfname
-  print, "dbfile2  : " + fname
+  print, "dbfile1  : " + dbfile1
+  print, "dbfile2  : " + dbfile2
   print, "Outfile  : " + outfile
 
   ;get files in memory
-  IF NOT KEYWORD_SET(dbfile1_is_idl_sav) THEN BEGIN
-     combine_dbfile, dbfile1_is_as3, dat1,in_name=dbfile1,outname="combine_dbfile1.out"
+  IF NOT KEYWORD_SET(dbfile1_idl_sav) THEN BEGIN
+     combine_dbfile, dbf1_is_as3, dat1,in_name=dbfile1,outname="combine_dbfile1.out"
   ENDIF ELSE BEGIN
      restore,dbfile1
      dat1=dat
   ENDELSE
 
-  IF NOT KEYWORD_SET(dbfile2_is_idl_sav) THEN BEGIN
-    combine_dbfile, dbfile2_is_as3, dat2,in_name=dbfile2,outname="combine_dbfile2.out"
+  IF NOT KEYWORD_SET(dbfile2_idl_sav) THEN BEGIN
+    combine_dbfile, dbf2_is_as3, dat2,in_name=dbfile2,outname="combine_dbfile2.out"
   ENDIF ELSE BEGIN
      restore,dbfile2
      dat2=dat
@@ -193,7 +195,7 @@ pro compare_dbfiles_3, $
     print, 'dbfile1 ends first: ' + dat1.time[n_dbf1-1]
   endif else begin
     if str_to_time(dat1.time[n_dbf1-1]) gt str_to_time(dat2.time[n_dbf2-1]) then begin
-      print, ' dbfile2 ends first: ' + dat2.time[n_dbf2-1]
+      print, 'dbfile2 ends first: ' + dat2.time[n_dbf2-1]
     endif else print, 'dbfiles end at the same time: ' + dat1.time[n_dbf1-1]
   endelse
 
@@ -223,9 +225,9 @@ pro compare_dbfiles_3, $
 
   ;Now the magic staggering part:
   IF KEYWORD_SET(check_c) THEN BEGIN
-     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,check_c=check_c,max_tdiff=max_tdiff, _extra = e,dbf2_is_as5=~dbfile2_is_as3
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem1,filename=outfile,check_c=check_c,max_tdiff=max_tdiff, _extra = e,dbf1_is_as5=~dbf1_is_as3,dbf2_is_as5=~dbf2_is_as3
   ENDIF ELSE BEGIN
-     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,max_tdiff=max_tdiff, _extra = e,dbf2_is_as5=~dbfile2_is_as3
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem1,filename=outfile,max_tdiff=max_tdiff, _extra = e,dbf1_is_as5=~dbf1_is_as3,dbf2_is_as5=~dbf2_is_as3
   ENDELSE
 
   return

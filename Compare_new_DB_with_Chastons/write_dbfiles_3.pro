@@ -1,26 +1,60 @@
-pro write_dbfiles_3,dbf1_struct,dbf2_struct,dbf2_arr_elem=dbf2_arr_elem,filename=file,$
-  check_current_thresh=check_c,max_tdiff=max_tdiff, dbf1_is_as5=dbf1_is_as5, dbf2_is_as5=dbf2_is_as5, dbf1_only_alfvenic=dbf1_only_alfvenic, dbf2_only_alfvenic=dbf2_only_alfvenic, _extra = e
+pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file, $
+  check_current_thresh=check_c, max_tdiff=max_tdiff, $
+  dbf1_is_as5=dbf1_is_as5, dbf2_is_as5=dbf2_is_as5, $
+  dbf1_only_alfvenic=dbf1_only_alfvenic, dbf2_only_alfvenic=dbf2_only_alfvenic, $
+  check_sorted=check_sorted, _extra = e
 
 ;This one incorporates the idea from my most recent meeting with Professor LaBelle that we ought
 ;to say that two points are a match if they're within a few milliseconds of each other. 
 ;Let's see how this changes the statistics...
  
   if ISA(e) THEN BEGIN
+    print,"Why these extra parameters? They have no home...:"
     help,e
-    print,"Why the extra parameters? They have no home..."
     RETURN
   endif
 
   dbf2_magc_ind = 5 ;index of mag_current in structs for as3 files
   dbf1_magc_ind = 5
 
+  ;make sure we're not dealing with dupes
+  IF KEYWORD_SET(check_sorted) THEN BEGIN
+    ;For dbf1 struct
+     uniq_times_i1=uniq(str_to_time(dbf1_struct.time),sort(str_to_time(dbf1_struct.time)))
+     ntags_dbf1=n_elements(tag_names(dbf1_struct))
+     for i=0,ntags_dbf1-1 do begin
+        dbf1_struct.(i)=dbf1_struct.(i)(uniq_times_i1)
+     endfor
+     
+     print,"Original number of elements  in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time),/REMOVE_ALL)
+     print,"Number of duplicate elements in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time)-n_elements(uniq_times_i1),/REMOVE_ALL)
+     
+     ;For dbf2 struct
+     uniq_times_i2=uniq(str_to_time(dbf2_struct.time),sort(str_to_time(dbf2_struct.time)))
+     ntags_dbf2=n_elements(tag_names(dbf2_struct))
+     for i=0,ntags_dbf2-1 do begin
+        dbf2_struct.(i)=dbf2_struct.(i)(uniq_times_i2)
+     endfor
+     print,"Original number of elements  in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time),/REMOVE_ALL)
+     print,"Number of duplicate elements in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
+  ENDIF
+  
+
+  ;Setup indexing into structs for each dbfile to compare desired data products
   IF KEYWORD_SET(dbf2_is_as5) AND NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
+     print,"dbfile1  : as3"
+     print,"dbfile2  : as5"
     dbf2_magc_ind = 6
     ;Array to match as5 data with as3 data
     dbf2_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,8,-1,9, $; =(max_chare_losscone), Not sure if max_chare_losscone or max_chare_total correspond to char_elec_energy
       -1,10,11,12,13,14,15,16,17,18,19,21,20, $ ;fields mode
       22,23,24,25,26,27,28,-1,-1,-1,-1]
     dbf1_arr_elem = dbf2_as5_arr_elem[arr_elem]
+    dbf2_arr_elem=arr_elem
+    print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+    print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
+    print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
+
     IF dbf1_arr_elem LE -1.0 THEN BEGIN
       PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +string(arr_elem) + " for comparison, but DBFile1 doesn't include this calculation!"
       PRINT, "Exiting..."
@@ -28,12 +62,19 @@ pro write_dbfiles_3,dbf1_struct,dbf2_struct,dbf2_arr_elem=dbf2_arr_elem,filename
     ENDIF
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(dbf1_is_as5) AND NOT KEYWORD_SET(dbf2_is_as5) THEN BEGIN
+        print,"dbfile1  : as5"
+        print,"dbfile2  : as3"
         dbf1_magc_ind = 6
         ;Array to match as5 data with as3 data
         dbf1_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,8,-1,9, $ ; =(max_chare_losscone), Not sure if max_chare_losscone or max_chare_total correspond to char_elec_energy
                              -1,10,11,12,13,14,15,16,17,18,19,21,20, $ ;fields mode
                              22,23,24,25,26,27,28,-1,-1,-1,-1]
         dbf2_arr_elem = dbf1_as5_arr_elem[arr_elem]
+        dbf1_as5_arr_elem=arr_elem
+        print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+        print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
+        print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
+
         IF dbf2_arr_elem LE -1.0 THEN BEGIN
            PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +string(arr_elem) + " for comparison, but DBFile2 doesn't include this calculation!"
            PRINT, "Exiting..."
@@ -41,9 +82,16 @@ pro write_dbfiles_3,dbf1_struct,dbf2_struct,dbf2_arr_elem=dbf2_arr_elem,filename
         ENDIF
      ENDIF ELSE BEGIN
         IF KEYWORD_SET(dbf1_is_as5) AND KEYWORD_SET(dbf2_is_as5) THEN BEGIN
+           print,"dbfile1  : as5"
+           print,"dbfile2  : as5"
            dbf1_magc_ind = 6
            dbf2_magc_ind = 6
-           dbf1_arr_elem = dbf2_arr_elem
+           dbf1_arr_elem = arr_elem
+           dbf2_arr_elem = arr_elem
+           print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+           print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
+           print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
+
         ENDIF 
      ENDELSE
   ENDELSE
@@ -104,7 +152,7 @@ pro write_dbfiles_3,dbf1_struct,dbf2_struct,dbf2_arr_elem=dbf2_arr_elem,filename
 
   ;open a file for writing
   openu,outf,file,/append,/get_lun 
-  printf,outf, "      DBFile1                  DBFile2                   DBF1 ind      DBF2 ind"
+  printf,outf, "      DBFile1                  DBFile2                     DBF1 ind      DBF2 ind"
 
   i = 0
   i_dbf1 = 0
@@ -203,8 +251,8 @@ pro write_dbfiles_3,dbf1_struct,dbf2_struct,dbf2_arr_elem=dbf2_arr_elem,filename
     ENDIF
   ENDELSE
 
-  print, 'i_dbf2 = ' + str(i_dbf2) + ' and n_dbf2 = ' + str(n_dbf2)
   print, 'i_dbf1 = ' + str(i_dbf1) + ' and n_dbf1 = ' + str(n_dbf1)
+  print, 'i_dbf2 = ' + str(i_dbf2) + ' and n_dbf2 = ' + str(n_dbf2)
   print, 'matches = ' +str(matches)
 
   if KEYWORD_SET(check_c) then begin
