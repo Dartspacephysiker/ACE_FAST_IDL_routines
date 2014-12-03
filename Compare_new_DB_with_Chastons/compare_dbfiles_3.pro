@@ -223,9 +223,9 @@ pro compare_dbfiles_3, $
 
   ;Now the magic staggering part:
   IF KEYWORD_SET(check_c) THEN BEGIN
-     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,check_c=check_c,max_tdiff=max_tdiff, _extra = e,as5=~dbfile1_is_as3
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,check_c=check_c,max_tdiff=max_tdiff, _extra = e,dbf2_is_as5=~dbfile2_is_as3
   ENDIF ELSE BEGIN
-     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,max_tdiff=max_tdiff, _extra = e,as5=~dbfile1_is_as3
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,max_tdiff=max_tdiff, _extra = e,dbf2_is_as5=~dbfile2_is_as3
   ENDELSE
 
   return
