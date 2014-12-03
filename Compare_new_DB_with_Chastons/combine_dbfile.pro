@@ -1,4 +1,4 @@
-pro combine_dflux_dartchast, orbit,jj, in_name=in, outname=out
+pro combine_dbfile,jj,in_name=in, outname=out
 
 ;;  in_name=fname[0]
   print, "File: " + in
