@@ -36,11 +36,11 @@
 ;-
 
 pro compare_dbfiles_3, $
-  orbit,dbfile1,dbfile2,outfile,dbfile1_is_idl_sav=dbfile1_is_idl_sav,dbfile2_is_idl_sav=dbfile2_is_idl_sav,dbfile1_is_as3=dbfile1_is_as3,dbfile2_is_as3=dbfile2_is_as3,arr_elem=arr_elem,smooth=smooth, $
+  dbfile1,dbfile2,outfile,dbfile1_is_idl_sav=dbfile1_is_idl_sav,dbfile2_is_idl_sav=dbfile2_is_idl_sav, $
+  dbfile1_is_as3=dbfile1_is_as3,dbfile2_is_as3=dbfile2_is_as3,arr_elem1=arr_elem1, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
-  smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
-  do_as3=do_as3, outdataf=outdataf,fname=fname,outname=outname,_ref_extra = e
+  fname=fname,outname=outname,_ref_extra = e
 
   ;Structure of data files (array element can be one of the following):
   ;0-Orbit number'
@@ -77,30 +77,38 @@ pro compare_dbfiles_3, $
   ;30-interval stop time
   ;31-duration of interval
 
+
+  fieldnames_as5=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ', $
+                  'max_chare_losscone', 'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de', $
+                  'fields_samp_period', 'fields_mode', 'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num', $
+                  'max_lp_current','min_lp_current','median_lp_current']
+    
+  fieldnames_as3=['orbit','time','alt','mlt','ilat','mag_current','esa_current','elec_energy_flux','integ_elec_energy_flux','char_elec_energy','ion_energy_flux','ion_flux','ion_flux_up',$
+                  'integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E','mode','sample_t','proton_flux_up','proton_energy_flux_up',$
+                  'oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
+
+  if not keyword_set(arr_elem) then begin
+    print, "No array element specified! Comparing times of max current..."
+    IF NOT KEYWORD_SET(dbfile1_is_as3) THEN arr_elem1 = 2 ELSE arr_elem1 = 1 ;default, do max current times
+    IF NOT KEYWORD_SET(dbfile2_is_as3) THEN arr_elem2 = 2 ELSE arr_elem2 = 1 ;default, do max current times
+  endif
+
   IF NOT KEYWORD_SET(dbfile1_is_as3) THEN BEGIN
-    PRINT,"dbfile1 is using field names for Alfven_Stats_5!  (For as3 set keyword /do_as3)"
-    fieldnames1=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ','max_chare_losscone',$
-      'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de','fields_samp_period','fields_mode',$
-      'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num','max_lp_current','min_lp_current','median_lp_current']
-    as5=1
+    PRINT,"dbfile1 is using field names for Alfven_Stats_5!  "
+    fieldnames1=fieldnames_as5
+    dbfile1_is_as3=0
   ENDIF ELSE BEGIN
+    fieldnames1=fieldnames_as3
     PRINT,"dbfile1 is using field names for Alfven_Stats_3!  (For as5 unset keyword /do_as3)"
-    fieldnames1=['orbit','time','alt','mlt','ilat','mag_current','esa_current','elec_energy_flux','integ_elec_energy_flux','char_elec_energy','ion_energy_flux','ion_flux','ion_flux_up',$
-        'integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E','mode','sample_t','proton_flux_up','proton_energy_flux_up',$
-        'oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
   ENDELSE
 
   IF NOT KEYWORD_SET(dbfile2_is_as3) THEN BEGIN
-    PRINT,"dbfile2 is using field names for Alfven_Stats_5!  (For as3 set keyword /do_as3)"
-    fieldnames2=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ','max_chare_losscone',$
-      'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de','fields_samp_period','fields_mode',$
-      'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num','max_lp_current','min_lp_current','median_lp_current']
-    as5=1
+    PRINT,"dbfile2 is using field names for Alfven_Stats_5!  "
+    fieldnames2=fieldnames_as5
+    dbfile2_is_as3=0
   ENDIF ELSE BEGIN
     PRINT,"dbfile2 is using field names for Alfven_Stats_3!  (For as5 unset keyword /dbfile2_is_as3)"
-    fieldnames2=['orbit','time','alt','mlt','ilat','mag_current','esa_current','elec_energy_flux','integ_elec_energy_flux','char_elec_energy','ion_energy_flux','ion_flux','ion_flux_up',$
-        'integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E','mode','sample_t','proton_flux_up','proton_energy_flux_up',$
-        'oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
+    fieldnames2=fieldnames_as3
   ENDELSE
 
   
@@ -116,12 +124,6 @@ pro compare_dbfiles_3, $
   ENDIF
 
   IF KEYWORD_SET(check_c) AND check_c EQ !NULL THEN check_c=10 ;default 
-
-  if not keyword_set(arr_elem) then begin
-    print, "No array element specified! Comparing times of max current..."
-    IF NOT KEYWORD_SET(dbfile1_is_as3) THEN arr_elem1 = 2 ELSE arr_elem1 = 1 ;default, do max current times
-    IF NOT KEYWORD_SET(dbfile2_is_as3) THEN arr_elem2 = 2 ELSE arr_elem2 = 1 ;default, do max current times
-  endif
 
   drive='SPENCEdata2'
   chastondbdir='/'+drive+'/Research/Cusp/database/current_db/'
@@ -147,57 +149,43 @@ pro compare_dbfiles_3, $
     RETURN
   ENDIF
 
-  print, "db file 1: " + chastonfname
-  print, "db file 2: " + fname
-
-
-    IF KEYWORD_SET(extra_t) THEN outdataf += '_extratimes'
-    IF KEYWORD_SET(no_s) THEN outdataf += '_noscreen'
-    IF KEYWORD_SET(do_t) THEN outdataf += '_two'
-    IF KEYWORD_SET(check_c) THEN outdataf += '_curthresh' + str(check_c) + 'microA'
-    IF KEYWORD_SET(ucla) THEN outdataf += '_magdespin'
-    IF KEYWORD_SET(max_tdiff) THEN BEGIN
-      outdataf += STRING(max_tdiff,FORMAT='("_tdiff_",F-0.3)')
-    ENDIF
-    outdataf = outdataf+'--'+fieldnames1[arr_elem]+'.txt'
-  ENDIF
-
-  print, "Output filename: " + outfile
+  print, "dbfile1  : " + chastonfname
+  print, "dbfile2  : " + fname
+  print, "Outfile  : " + outfile
 
   ;get files in memory
   IF NOT KEYWORD_SET(dbfile1_is_idl_sav) THEN BEGIN
-     combine_dbfile, 0, in_name=dbfile1,outname="combine_dbfile1.out"
+     combine_dbfile, dbfile1_is_as3, dat1,in_name=dbfile1,outname="combine_dbfile1.out"
   ENDIF ELSE BEGIN
      restore,dbfile1
      dat1=dat
   ENDELSE
 
   IF NOT KEYWORD_SET(dbfile2_is_idl_sav) THEN BEGIN
-    combine_dbfile, 3, in_name=dbfile2,outname="combine_dbfile2.out"
+    combine_dbfile, dbfile2_is_as3, dat2,in_name=dbfile2,outname="combine_dbfile2.out"
   ENDIF ELSE BEGIN
-     restore,dbfile1
+     restore,dbfile2
      dat2=dat
   ENDELSE
-  restore, outname
 
   ;find which data set has larger number of filaments
-  n_dbf2 = N_ELEMENTS(dat1.time)
-  n_dbf1 = N_ELEMENTS(dat.time)
+  n_dbf1 = N_ELEMENTS(dat1.time)
+  n_dbf2 = N_ELEMENTS(dat2.time)
   n = max([n_dbf1,n_dbf2],k)
 
   if k eq 0 then begin
-    print, 'Chaston db file has larger number of filaments: ' + Str(n)
+    print, 'dbfile1 has larger number of filaments: ' + Str(n)
   endif else begin
-    print, 'Dartmouth db file has larger number of filaments: ' + Str(n)
+    print, 'dbfile2 has larger number of filaments: ' + Str(n)
   endelse
 
   ;find which data set begins first and which ends last
   if str_to_time(dat1.time[0]) lt str_to_time(dat2.time[0]) then begin
-    print, 'Chaston db begins first: ' + dat1.time[0]
+    print, 'dbfile1 begins first: ' + dat1.time[0]
   endif else begin
     if str_to_time(dat1.time[0]) gt str_to_time(dat2.time[0]) then begin
-      print, 'Dartmo db begins first: ' + dat2.time[0]
-    endif else print, 'Chaston and Dartmo db begin at the same time: ' + dat1.time[0]
+      print, 'dbfile2 begins first: ' + dat2.time[0]
+    endif else print, 'dbfiles begin at the same time: ' + dat1.time[0]
 
   endelse
 
@@ -206,20 +194,20 @@ pro compare_dbfiles_3, $
   endif else begin
     if str_to_time(dat1.time[n_dbf1-1]) gt str_to_time(dat2.time[n_dbf2-1]) then begin
       print, ' dbfile2 ends first: ' + dat2.time[n_dbf2-1]
-    endif else print, 'Chaston and Dartmo db end at the same time: ' + dat1.time[n_dbf1-1]
+    endif else print, 'dbfiles end at the same time: ' + dat1.time[n_dbf1-1]
   endelse
 
   ;Some prelims for the output file
-  openw,outf,outdataf,/get_lun
+  openw,outf,outfile,/get_lun
   
   print, "Comparing " + fieldnames1[arr_elem1] + "..."
   print, "dbfile1: " + dbfile1
-  print, "Dart file: " + fname
+  print, "dbfile2: " + dbfile2
 
   PRINTF,outf, SYSTIME()
   printf,outf, "***Comparison of '" + fieldnames1[arr_elem1] + "' data***"
-  printf,outf, "*Chaston file: " + chastonfname
-  printf,outf, "*Dart file: " + fname
+  printf,outf, "dbfile1: " + dbfile1
+  printf,outf, "dbfile2: " + dbfile2
 
   printf,outf, "(Two data points on same line ==> identical time of occurrence of max FAC corresponding to data)"
 
@@ -235,9 +223,9 @@ pro compare_dbfiles_3, $
 
   ;Now the magic staggering part:
   IF KEYWORD_SET(check_c) THEN BEGIN
-     write_chast_plus_one_3,dat,dat1,arr_elem=arr_elem,filename=outdataf,check_c=check_c,max_tdiff=max_tdiff, _extra = e,as5=as5
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,check_c=check_c,max_tdiff=max_tdiff, _extra = e,as5=~dbfile1_is_as3
   ENDIF ELSE BEGIN
-     write_chast_plus_one_3,dat,dat1,arr_elem=arr_elem,filename=outdataf,max_tdiff=max_tdiff, _extra = e,as5=as5
+     write_dbfiles_3,dat1,dat2,arr_elem=arr_elem,filename=outfile,max_tdiff=max_tdiff, _extra = e,as5=~dbfile1_is_as3
   ENDELSE
 
   return
