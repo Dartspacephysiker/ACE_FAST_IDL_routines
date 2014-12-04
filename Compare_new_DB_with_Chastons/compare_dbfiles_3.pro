@@ -6,15 +6,16 @@
 ;   dbfile2                = second dbfile
 ;   outfile                = file to be written
 ; :OPTIONAL KEYWORDS:
-;   dbfile1_is_idl_sav       = file 1 is an IDL .sav file; don't
+;   dbf1_idl_sav           = file 1 is an IDL .sav file; don't
 ;                            run rdf_dflux_fout on it
-;   dbf2_is_idl_sav       = file 2 is an IDL .sav file; don't
+;   dbf2_idl_sav           = file 2 is an IDL .sav file; don't
 ;                            run rdf_dflux_fout on it
 ;   max_tdiff              = Max time difference (in seconds) between a Dartmouth event
 ;                            and a Chaston event for considering them identical
 ;   check_current_thresh   = Specify a current density threshold (in microA/m^2) which
 ;                            events must meet. Outputs statistics of those meeting criterion.
-;   do_as3                 = Use old Alfven_Stats_3 database
+;   dbf1_is_as3            = Use old Alfven_Stats_3 database for dbfile1
+;   dbf2_is_as3            = Use old Alfven_Stats_3 database for dbfile2
 ;   outdataf               = Name of analysis file to be outputted
 ;   
 ; :HISTOIRE:
@@ -36,7 +37,7 @@
 ;-
 
 pro compare_dbfiles_3, $
-  dbfile1,dbfile2,outfile,dbfile1_idl_sav=dbfile1_idl_sav,dbfile2_idl_sav=dbfile2_idl_sav, $
+  dbfile1,dbfile2,outfile,dbf1_idl_sav=dbf1_idl_sav,dbf2_idl_sav=dbf2_idl_sav, $
   dbf1_is_as3=dbf1_is_as3,dbf2_is_as3=dbf2_is_as3,arr_elem1=arr_elem1, $
   extra_times=extra_t, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
@@ -156,14 +157,14 @@ pro compare_dbfiles_3, $
   print, "Outfile  : " + outfile
 
   ;get files in memory
-  IF NOT KEYWORD_SET(dbfile1_idl_sav) THEN BEGIN
+  IF NOT KEYWORD_SET(dbf1_idl_sav) THEN BEGIN
      combine_dbfile, dbf1_is_as3, dat1,in_name=dbfile1,outname="combine_dbfile1.out"
   ENDIF ELSE BEGIN
      restore,dbfile1
      dat1=dat
   ENDELSE
 
-  IF NOT KEYWORD_SET(dbfile2_idl_sav) THEN BEGIN
+  IF NOT KEYWORD_SET(dbf2_idl_sav) THEN BEGIN
     combine_dbfile, dbf2_is_as3, dat2,in_name=dbfile2,outname="combine_dbfile2.out"
   ENDIF ELSE BEGIN
      restore,dbfile2

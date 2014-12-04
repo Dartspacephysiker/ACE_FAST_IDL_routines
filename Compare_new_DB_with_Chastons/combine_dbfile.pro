@@ -1,4 +1,4 @@
-pro combine_dbfile,jj,dat,in_name=in, outname=out
+pro combine_dbfile,is_as3,dat,in_name=in, outname=out
 
 ;;  in_name=fname[0]
   print, "File: " + in
@@ -9,8 +9,8 @@ pro combine_dbfile,jj,dat,in_name=in, outname=out
   if result then begin
 ;     result=file_which('./',in_name)
 ;     if result then begin
-     print,jj
-     CASE jj OF
+     print,is_as3
+     CASE is_as3 OF
       0: BEGIN
         rdf_dflux_fout_as5,result,dat,out 
         restore, out

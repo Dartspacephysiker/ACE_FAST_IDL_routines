@@ -1,4 +1,4 @@
-pro combine_intervals_as5,basename,dat,datadir=datadir,suffix=suffix,outname=outname
+pro combine_intervals_as5,basename,dat,datadir=datadir,suffix=suffix,outfile=outfile
 
   IF NOT KEYWORD_SET(datadir) THEN BEGIN
      drive='SPENCEdata2'
@@ -76,8 +76,9 @@ pro combine_intervals_as5,basename,dat,datadir=datadir,suffix=suffix,outname=out
      print,"Couldn't find interval 0: '" + datadir + basename + '_0' + suffix + "'!"
   endelse
   
-  if keyword_set(outname) then begin
-     save, dat,filename=outname
+  if keyword_set(outfile) then begin
+     save, dat,filename=outfile
+     print,"Outputted file : " + outfile
   endif
 
   return

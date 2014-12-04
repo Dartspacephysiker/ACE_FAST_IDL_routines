@@ -1,4 +1,4 @@
-pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file, $
+pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem1=arr_elem1, filename=file, $
   check_current_thresh=check_c, max_tdiff=max_tdiff, $
   dbf1_is_as5=dbf1_is_as5, dbf2_is_as5=dbf2_is_as5, $
   dbf1_only_alfvenic=dbf1_only_alfvenic, dbf2_only_alfvenic=dbf2_only_alfvenic, $
@@ -45,63 +45,71 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
   dbf2_magc_ind = 5 
   dbf1_magc_ind = 5
 
+  ;default, do max current times
+  if not keyword_set(arr_elem1) then begin
+    print, "No array element specified! Comparing times of max current..."
+    IF KEYWORD_SET(dbf1_is_as5) THEN dbf1_arr_elem = 2 ELSE dbf1_arr_elem = 1
+ endif
+
   ;Setup indexing into structs for each dbfile to compare desired data products
   IF KEYWORD_SET(dbf2_is_as5) AND NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
-     print,"dbfile1  : as3"
-     print,"dbfile2  : as5"
+     print,"dbfile1          : as3"
+     print,"dbfile2          : as5"
     dbf2_magc_ind = 6
     ;Array to match as5 data with as3 data
-    dbf2_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,8,-1,9, $; =(max_chare_losscone), Not sure if max_chare_losscone or max_chare_total correspond to char_elec_energy
-      -1,10,11,12,13,14,15,16,17,18,19,21,20, $ ;fields mode
-      22,23,24,25,26,27,28,-1,-1,-1,-1]
-    dbf1_arr_elem = dbf2_as5_arr_elem[arr_elem]
-    dbf2_arr_elem=arr_elem
-    print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+    dbf2_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,$
+                         8,-1,9,-1,10,11,12,13,14,15,$
+                         16,17,18,19,21,20,22,23,24,25,$
+                         26,27,28,-1,-1,-1,-1]
+    dbf1_as3_arr_elem = [0,2,3,4,5,6,7,8,10,12, $
+                         14,15,16,17,18,19,20,21,22,23,$
+                         25,24,26,27,28,29,30,31,32,-1,-1,$
+                         -1,-1,-1]
+    dbf2_arr_elem = dbf1_as3_arr_elem[arr_elem1]
+    dbf1_arr_elem = arr_elem1
+;;    print,"arr_elem1        : " + strcompress(arr_elem1,/REMOVE_ALL)
     print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
     print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
 
-    IF dbf1_arr_elem LE -1.0 THEN BEGIN
-      PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +string(arr_elem) + " for comparison, but DBFile1 doesn't include this calculation!"
+    IF dbf2_arr_elem LE -1.0 THEN BEGIN
+      PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +strcompress(arr_elem,/REMOVE_ALL) + " for comparison, but DBFile1 doesn't include this calculation!"
       PRINT, "Exiting..."
       RETURN
     ENDIF
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(dbf1_is_as5) AND NOT KEYWORD_SET(dbf2_is_as5) THEN BEGIN
-        print,"dbfile1  : as5"
-        print,"dbfile2  : as3"
+        print,"dbfile1          : as5"
+        print,"dbfile2          : as3"
         dbf1_magc_ind = 6
         ;Array to match as5 data with as3 data
         dbf1_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,8,-1,9, $ ; =(max_chare_losscone), Not sure if max_chare_losscone or max_chare_total correspond to char_elec_energy
                              -1,10,11,12,13,14,15,16,17,18,19,21,20, $ ;fields mode
                              22,23,24,25,26,27,28,-1,-1,-1,-1]
-        dbf2_arr_elem = dbf1_as5_arr_elem[arr_elem]
-        dbf1_as5_arr_elem=arr_elem
-        print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+        dbf2_arr_elem = dbf1_as5_arr_elem[arr_elem1]
+        dbf1_as5_arr_elem=arr_elem1
+;;        print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
         print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
         print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
 
         IF dbf2_arr_elem LE -1.0 THEN BEGIN
-           PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +string(arr_elem) + " for comparison, but DBFile2 doesn't include this calculation!"
+           PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +strcompress(arr_elem,/REMOVE_ALL) + " for comparison, but DBFile2 doesn't include this calculation!"
            PRINT, "Exiting..."
            RETURN
         ENDIF
      ENDIF ELSE BEGIN
         IF KEYWORD_SET(dbf1_is_as5) AND KEYWORD_SET(dbf2_is_as5) THEN BEGIN
-           print,"dbfile1  : as5"
-           print,"dbfile2  : as5"
+           print,"dbfile1          : as5"
+           print,"dbfile2          : as5"
            dbf1_magc_ind = 6
            dbf2_magc_ind = 6
            dbf1_arr_elem = arr_elem
            dbf2_arr_elem = arr_elem
-           print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
+;;           print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
            print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
            print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
         ENDIF 
      ENDELSE
   ENDELSE
-
-  print,"N_elements for dbf1(arr_elem): " + str(n_elements(dbf1_struct.(dbf1_arr_elem)))
-  print,"N_elements for dbf2(arr_elem): " + str(n_elements(dbf2_struct.(dbf2_arr_elem)))
 
   IF KEYWORD_SET(dbf1_only_alfvenic) THEN BEGIN
     IF NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
@@ -137,11 +145,6 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
   if not keyword_set(file) then begin
     file="./write_dbfiles_3.out"
     print, "write_dbfiles_3: No file selected! using default '" + file +"'"
-  endif
-
-  if not keyword_set(dbf2_arr_elem) then begin
-    print, "No array element specified! Comparing times of max current..."
-    dbf2_arr_elem = 1 ;default, do max current times
   endif
 
   ;open a file for writing
@@ -271,12 +274,12 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
     printf,outf, 'Current threshold: ' + str(check_c) + ' microA/m^2'
     print, string(13b)
     printf,outf, string(13b)
-    print, 'DBFile1 events above cur_thresh              = ' + str(dbf1_ct)
-    printf,outf, 'DBFile1 events above cur_thresh              = ' + str(dbf1_ct)
+    print, 'DBFile1 events above cur_thresh            =   ' + str(dbf1_ct)
+    printf,outf, 'DBFile1 events above cur_thresh            =   ' + str(dbf1_ct)
     IF dbf1ct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying DBFile1 events    : ",(T48,10(I-4)))',$
+      print, format='("Line numbers of qualifying DBFile1 events    : ",(T48,8(I-6)))',$
         dbf1ct_ind
-      printf,outf, format='("Line numbers of qualifying DBFile1 events    : ",(T48,10(I-4)))',$
+      printf,outf, format='("Line numbers of qualifying DBFile1 events    : ",(T48,8(I-6)))',$
         dbf1ct_ind
       print,format='("Time of DBFile1 events                       :",(T48,3(A-25)))',$
         dbf1_struct.time[dbf1ct_eig]
@@ -285,11 +288,11 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
     ENDIF
     print, string(13b)
     printf,outf, string(13b)
-    print, 'DBFile2 events above cur_thresh            = ' + str(dbf2_ct)
-    printf,outf, 'DBFile2 events above cur_thresh            = ' + str(dbf2_ct)
+    print, 'DBFile2 events above cur_thresh            =   ' + str(dbf2_ct)
+    printf,outf, 'DBFile2 events above cur_thresh            =   ' + str(dbf2_ct)
     IF dbf2ct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying DBFile2 events  : ",(T48,10(I-4)))',dbf2ct_ind
-      printf,outf, format='("Line numbers of qualifying DBFile2 events  : ",(T48,10(I-4)))',dbf2ct_ind
+      print, format='("Line numbers of qualifying DBFile2 events  : ",(T48,8(I-6)))',dbf2ct_ind
+      printf,outf, format='("Line numbers of qualifying DBFile2 events  : ",(T48,8(I-6)))',dbf2ct_ind
       print,format='("Time of DBFile2 events                     :",(T48,3(A-25)))',$
         dbf2_struct.time[dbf2ct_eig]
       printf,outf,format='("Time of DBFile2 events                     :",(T48,3(A-25)))',$
@@ -297,13 +300,13 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
     ENDIF
     print, string(13b)
     printf,outf, string(13b)
-    print, 'Matching events above cur thresh             = ' + str(ct_matches)
-    printf,outf, 'Matching events above cur thresh             = ' + str(ct_matches)
+    print, 'Matching events above cur thresh           =    ' + str(ct_matches)
+    printf,outf, 'Matching events above cur thresh           =    ' + str(ct_matches)
     IF matchct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying matching events   : ",(T48,10(I-4)))',matchct_ind
-      printf,outf, format='("Line numbers of qualifying matched events    : ",(T48,10(I-4)))',matchct_ind
-      print,format='("Time of matching events                      :",(T48,3(A-25)))',dbf2_struct.time[matchct_eig]
-      printf,outf,format='("Time of matching events                      :",(T48,3(A-25)))',$
+      print, format='("Line numbers of qualifying matching events : ",(T48,8(I-6)))',matchct_ind
+      printf,outf, format='("Line numbers of qualifying matched events  : ",(T48,8(I-6)))',matchct_ind
+      print,format='("Time of matching events                    :",(T48,3(A-25)))',dbf2_struct.time[matchct_eig]
+      printf,outf,format='("Time of matching events                    :",(T48,3(A-25)))',$
         dbf2_struct.time[matchct_eig]
     ENDIF
  
