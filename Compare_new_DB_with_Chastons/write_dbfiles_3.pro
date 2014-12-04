@@ -2,6 +2,7 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
   check_current_thresh=check_c, max_tdiff=max_tdiff, $
   dbf1_is_as5=dbf1_is_as5, dbf2_is_as5=dbf2_is_as5, $
   dbf1_only_alfvenic=dbf1_only_alfvenic, dbf2_only_alfvenic=dbf2_only_alfvenic, $
+  dbf1_check_sorted=dbf1_check_sorted, dbf2_check_sorted=dbf2_check_sorted, $
   check_sorted=check_sorted, _extra = e
 
 ;This one incorporates the idea from my most recent meeting with Professor LaBelle that we ought
@@ -9,34 +10,44 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
 ;Let's see how this changes the statistics...
  
   if ISA(e) THEN BEGIN
-    print,"Why these extra parameters? They have no home...:"
+    print,"Why the following extra parameters? They have no home...:"
     help,e
     RETURN
   endif
 
-  dbf2_magc_ind = 5 ;index of mag_current in structs for as3 files
+  ;index of mag_current in structs for as3 files
+  dbf2_magc_ind = 5 
   dbf1_magc_ind = 5
 
   ;make sure we're not dealing with dupes
-  IF KEYWORD_SET(check_sorted) THEN BEGIN
-    ;For dbf1 struct
-     uniq_times_i1=uniq(str_to_time(dbf1_struct.time),sort(str_to_time(dbf1_struct.time)))
-     ntags_dbf1=n_elements(tag_names(dbf1_struct))
-     for i=0,ntags_dbf1-1 do begin
-        dbf1_struct.(i)=dbf1_struct.(i)(uniq_times_i1)
-     endfor
-     
+  IF KEYWORD_SET(dbf1_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
+     ;For dbf1 struct
+     uniq_times_i2=uniq(str_to_time(dbf1_struct.time),sort(str_to_time(dbf1_struct.time)))
+     tags_dbf1=tag_names(dbf1_struct)
+     ntags_dbf1=n_elements(tags_dbf1)
+     tmp = create_struct(tags_dbf1[0], dbf1_struct.(0)(uniq_times_i2))
+     for i=1,ntags_dbf1-1 do tmp = create_struct(tmp, tags_dbf1[i],dbf1_struct.(i)(uniq_times_i2))
      print,"Original number of elements  in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time),/REMOVE_ALL)
-     print,"Number of duplicate elements in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time)-n_elements(uniq_times_i1),/REMOVE_ALL)
-     
+     print,"Number of duplicate elements in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
+     dbf1_struct = tmp
+     ;; for i=0,ntags_dbf1-1 do begin
+     ;;    dbf1_struct.(i)=dbf1_struct.(i)(uniq_times_i2)
+     ;; endfor
+  ENDIF
+
+  IF KEYWORD_SET(dbf2_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
      ;For dbf2 struct
      uniq_times_i2=uniq(str_to_time(dbf2_struct.time),sort(str_to_time(dbf2_struct.time)))
-     ntags_dbf2=n_elements(tag_names(dbf2_struct))
-     for i=0,ntags_dbf2-1 do begin
-        dbf2_struct.(i)=dbf2_struct.(i)(uniq_times_i2)
-     endfor
+     tags_dbf2=tag_names(dbf2_struct)
+     ntags_dbf2=n_elements(tags_dbf2)
+     tmp = create_struct(tags_dbf2[0], dbf2_struct.(0)(uniq_times_i2))
+     for i=1,ntags_dbf2-1 do tmp = create_struct(tmp, tags_dbf2[i],dbf2_struct.(i)(uniq_times_i2))
      print,"Original number of elements  in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time),/REMOVE_ALL)
      print,"Number of duplicate elements in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
+     dbf2_struct = tmp
+     ;; for i=0,ntags_dbf2-1 do begin
+     ;;    dbf2_struct.(i)=dbf2_struct.(i)(uniq_times_i2)
+     ;; endfor
   ENDIF
   
 
@@ -91,15 +102,12 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
            print,"arr_elem         : " + strcompress(arr_elem,/REMOVE_ALL)
            print,"dbfile1 arr_elem : " + strcompress(dbf1_arr_elem,/REMOVE_ALL)
            print,"dbfile2 arr_elem : " + strcompress(dbf2_arr_elem,/REMOVE_ALL)
-
         ENDIF 
      ENDELSE
   ENDELSE
 
-  IF KEYWORD_SET(dbf1_only_alfvenic) AND NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
-     print,"Keyword set to use only Alfvènic events with as3 db file1! No such parameter exists..."
-     RETURN
-  ENDIF
+  print,"N_elements for dbf1(arr_elem): " + str(n_elements(dbf1_struct.(dbf1_arr_elem)))
+  print,"N_elements for dbf2(arr_elem): " + str(n_elements(dbf2_struct.(dbf2_arr_elem)))
 
   IF KEYWORD_SET(dbf1_only_alfvenic) THEN BEGIN
     IF NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
