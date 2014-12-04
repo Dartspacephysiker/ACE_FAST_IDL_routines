@@ -15,10 +15,6 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
     RETURN
   endif
 
-  ;index of mag_current in structs for as3 files
-  dbf2_magc_ind = 5 
-  dbf1_magc_ind = 5
-
   ;make sure we're not dealing with dupes
   IF KEYWORD_SET(dbf1_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
      ;For dbf1 struct
@@ -30,9 +26,6 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
      print,"Original number of elements  in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time),/REMOVE_ALL)
      print,"Number of duplicate elements in dbf1_struct : " + strcompress(n_elements(dbf1_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
      dbf1_struct = tmp
-     ;; for i=0,ntags_dbf1-1 do begin
-     ;;    dbf1_struct.(i)=dbf1_struct.(i)(uniq_times_i2)
-     ;; endfor
   ENDIF
 
   IF KEYWORD_SET(dbf2_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
@@ -45,11 +38,12 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
      print,"Original number of elements  in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time),/REMOVE_ALL)
      print,"Number of duplicate elements in dbf2_struct : " + strcompress(n_elements(dbf2_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
      dbf2_struct = tmp
-     ;; for i=0,ntags_dbf2-1 do begin
-     ;;    dbf2_struct.(i)=dbf2_struct.(i)(uniq_times_i2)
-     ;; endfor
   ENDIF
   
+
+  ;index of mag_current in structs for as3 files
+  dbf2_magc_ind = 5 
+  dbf1_magc_ind = 5
 
   ;Setup indexing into structs for each dbfile to compare desired data products
   IF KEYWORD_SET(dbf2_is_as5) AND NOT KEYWORD_SET(dbf1_is_as5) THEN BEGIN
@@ -150,16 +144,23 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
     dbf2_arr_elem = 1 ;default, do max current times
   endif
 
+  ;open a file for writing
+  openu,outf,file,/append,/get_lun 
+
+  ;set up tdiff stuff
   if NOT KEYWORD_SET(max_tdiff) OR max_tdiff EQ !NULL then begin
-    max_tdiff = 0.00 ;maximum time difference in seconds to qualify as a match
-    print, "No max time_difference specified...using " + str(max_tdiff) + " seconds"
-  endif
+     max_tdiff = 0.00           ;maximum time difference in seconds to qualify as a match
+     print, "***No max time_difference specified...using " + str(max_tdiff) + " seconds"
+     printf,outf, "***No max time_difference specified...using " + str(max_tdiff) + " seconds"
+  endif ELSE BEGIN
+     print, "***Using max_tdiff="+strcompress(max_tdiff,/REMOVE_ALL) + " seconds"
+     printf,outf, "***Using max_tdiff="+strcompress(max_tdiff,/REMOVE_ALL) + " seconds"
+     printf,outf,""
+  ENDELSE
 
   ;help,dbf1_struct,/str
   ;help,dbf2_struct,/str 
 
-  ;open a file for writing
-  openu,outf,file,/append,/get_lun 
   printf,outf, "      DBFile1                  DBFile2                     DBF1 ind      DBF2 ind"
 
   i = 0
@@ -310,8 +311,8 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem=arr_elem, filename=file,
 
   printf,outf, string(13b)
   printf,outf, "DBFile1 events   : " + str(n_dbf1)
-  printf,outf, "DBFile2 events : " + str(n_dbf2)
-  printf,outf, 'Total matches              : ' +str(matches)
+  printf,outf, "DBFile2 events   : " + str(n_dbf2)
+  printf,outf, 'Total matches    : ' +str(matches)
   FREE_LUN, outf
 
 end

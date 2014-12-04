@@ -78,7 +78,7 @@ pro compare_dbfiles_3, $
   ;31-duration of interval
 
 
-  fieldnames_as5=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ', $
+  fieldnames_as5=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','total_eflux_max','eflux_losscone_integ','total_eflux_integ', $
                   'max_chare_losscone', 'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de', $
                   'fields_samp_period', 'fields_mode', 'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num', $
                   'max_lp_current','min_lp_current','median_lp_current']
