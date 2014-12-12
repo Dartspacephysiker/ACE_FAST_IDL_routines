@@ -72,8 +72,8 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     print, "Only considering Alfvènic Dartmouth DB events"
     keep_dart=where(dart_struct.alfvenic GT 0)
     n_dart=n_elements(keep_dart)
-    dart_struct.time = dart_struct.time(keep_dart)
-    dart_struct.(arr_elem) = dart_struct.(arr_elem)(keep_dart)
+;    dart_struct.time = dart_struct.time(keep_dart)
+;    dart_struct.(arr_elem) = dart_struct.(arr_elem)(keep_dart)
   endif else begin
     n_dart=n_elements(dart_struct.time)
     keep_dart=indgen(n_dart)
@@ -164,7 +164,7 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
   
   WHILE ((i_chast LT n_chast) && (i_dart LT n_dart)) DO BEGIN
      
-     tdiff = str_to_time(chast_struct.time[i_chast]) - str_to_time(dart_struct.time[i_dart])
+     tdiff = str_to_time(chast_struct.time[i_chast]) - str_to_time(dart_struct.time[keep_dart[i_dart]])
 
      IF ABS(tdiff) GT max_tdiff THEN BEGIN
         IF (ABS(tdiff) GT 0.000001) AND (tdiff/ABS(tdiff) LT 0) THEN BEGIN
@@ -178,10 +178,10 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
            i++
         ENDIF ELSE BEGIN
            IF FINITE(tdiff/ABS(tdiff)) GT 0.0 THEN BEGIN
-              printf,outf, format= '(I-6,T32,A-0,T74,I-4)',i,str(dart_struct.(arr_elem)[i_dart]),i_dart
-              if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[i_dart] GT check_c) ) then begin
+              printf,outf, format= '(I-6,T32,A-0,T74,I-4)',i,str(dart_struct.(arr_elem)[keep_dart[i_dart]]),i_dart
+              if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[keep_dart[i_dart]] GT check_c) ) then begin
                  dartct_ind = [dartct_ind, i]
-                 dartct_eig = [dartct_eig, i_dart]
+                 dartct_eig = [dartct_eig, keep_dart[i_dart]]
                  dart_ct++
               endif
               i_dart++
@@ -190,15 +190,15 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
         ENDELSE
      ENDIF ELSE BEGIN
         IF ABS(tdiff) GE 0.00005 THEN BEGIN
-           printf,outf, format= '(I-5,"!",2(A-23,:,", "))',i,$
-                  str(chast_struct.(chast_arr_elem)[i_chast]), str(dart_struct.(arr_elem)[i_dart])
+           printf,outf, format= '(I-5,"!",2(A-23,:,", "),T60,I-4,T74,I-4)',i,$
+                  str(chast_struct.(chast_arr_elem)[i_chast]), str(dart_struct.(arr_elem)[keep_dart[i_dart]]),i_chast,i_dart
         ENDIF ELSE BEGIN
-           printf,outf, format= '(I-5,"*",2(A-23,:,", "))',i,$
-                  str(chast_struct.(chast_arr_elem)[i_chast]), str(dart_struct.(arr_elem)[i_dart])
+           printf,outf, format= '(I-5,"*",2(A-23,:,", "),T60,I-4,T74,I-4)',i,$
+                  str(chast_struct.(chast_arr_elem)[i_chast]), str(dart_struct.(arr_elem)[keep_dart[i_dart]]),i_chast,i_dart
         ENDELSE
         if ( KEYWORD_SET(check_c) && (chast_struct.(chast_magc_ind)[i_chast] GT check_c) ) then begin
            matchct_ind = [matchct_ind, i]
-           matchct_eig = [matchct_eig, i_dart]
+           matchct_eig = [matchct_eig, keep_dart[i_dart]]
            chast_ct++
            dart_ct++
            ct_matches++
@@ -229,10 +229,10 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     IF (i_chast EQ n_chast) && (i_dart LT n_dart) THEN BEGIN
       print, 'Wrapping up dart lines...'
       WHILE (i_dart LT n_dart) DO BEGIN
-        printf,outf, format= '(I-6,T32,A-24,T74,I-4)',i,dart_struct.(arr_elem)[i_dart],i_dart
-        if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[i_dart] GT check_c) ) then begin
+        printf,outf, format= '(I-6,T32,A-24,T74,I-4)',i,dart_struct.(arr_elem)[keep_dart[i_dart]],i_dart
+        if ( KEYWORD_SET(check_c) && (dart_struct.(magc_ind)[keep_dart[i_dart]] GT check_c) ) then begin
           dartct_ind = [dartct_ind, i]
-          dartct_eig = [dartct_eig, i_dart]
+          dartct_eig = [dartct_eig, keep_dart[i_dart]]
           dart_ct++
         endif
         i_dart++
