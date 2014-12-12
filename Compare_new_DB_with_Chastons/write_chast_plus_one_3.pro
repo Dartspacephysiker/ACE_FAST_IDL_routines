@@ -293,7 +293,7 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
   printf,outf, string(13b)
   printf,outf, "Chaston events   : " + str(n_chast)
   printf,outf, "Dartmouth events : " + str(n_dart)
-  printf,outf, 'Total matches              : ' +str(matches)
+  printf,outf, 'Total matches    : ' +str(matches)
   FREE_LUN, outf
 
 end
