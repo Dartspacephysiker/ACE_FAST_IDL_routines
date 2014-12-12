@@ -162,4 +162,4 @@ phiChast=phiChast*180/!PI
 thetaCone=thetaCone*180/!PI
 phiClock=phiClock*180/!PI
 
-delvar,cdbAcepropInterp_ii,unique_iii,bigdiff_ii,sortme
+undefine,cdbAcepropInterp_ii,unique_iii,bigdiff_ii,sortme

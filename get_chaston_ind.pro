@@ -7,7 +7,19 @@
 
 ;***********************************************
 ;Load up all the dater, working from ~/Research/ACE_indices_data/idl
-IF maximus EQ !NULL THEN restore,dataDir + "/processed/maximus.dat"
+;IF maximus EQ !NULL THEN restore,dataDir + "/processed/maximus.dat"
+
+;For doing Chaston db
+;loaddatadir=dataDir
+;dbfile="/processed/maximus.dat"
+
+;for doing our own DB
+dbfile="Dartdb_12102014_maximus.sav"
+loaddataDir='/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+
+;Load, if need be
+IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN & $
+           print,"There is already a maximus struct loaded! Not loading " + loaddataDir + dbfile + "..." & ENDELSE
 
 
 ;generate indices based on restrictions in interp_plots.pro
@@ -47,6 +59,6 @@ printf,lun,"****END get_chaston_ind.pro****"
 
 ;***********************************************
 ;Delete all the unnecessaries
-delvar,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$
+undefine,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$
 ind_region_magc_ge10,ind_region_magc_leneg10,ind_region_magc_geabs10,$
 ind_ACEstart

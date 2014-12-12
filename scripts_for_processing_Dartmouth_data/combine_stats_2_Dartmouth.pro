@@ -1,12 +1,12 @@
 pro combine_stats_2_Dartmouth,maximus
 
 Dartmouth_DB='/SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
-contents_file='./orbits_contained_in_DartDBfile_12102014.txt'
+contents_file='./orbits_contained_in_DartDBfile_12112014.txt'
 
 ;open file to write list of orbits included
 OPENW,outlun,contents_file,/get_lun
 
-min_orbit=6000
+min_orbit=2000
 max_orbit=12000
 
 for j=min_orbit,max_orbit do begin
@@ -33,9 +33,9 @@ for j=min_orbit,max_orbit do begin
                           ELEC_ENERGY_FLUX:[maximus.ELEC_ENERGY_FLUX,dat.ELEC_ENERGY_FLUX],$
                           INTEG_ELEC_ENERGY_FLUX:[maximus.INTEG_ELEC_ENERGY_FLUX,dat.INTEG_ELEC_ENERGY_FLUX],$
                           EFLUX_LOSSCONE_INTEG:[maximus.EFLUX_LOSSCONE_INTEG,dat.EFLUX_LOSSCONE_INTEG],$
-                          TOTAL_EFLUX_INTEG:[maximus.TOTAL_EFLUX_INTEG,dat.TOTAL_EFLUX_INTEG],$
-                          MAX_CHARE_LOSSCONE:[maximus.MAX_CHARE_LOSSCONE,dat.MAX_CHARE_LOSSCONE],$
-                          MAX_CHARE_TOTAL:[maximus.MAX_CHARE_TOTAL,dat.MAX_CHARE_TOTAL],$
+                            total_eflux_integ:[maximus.total_eflux_integ,dat.total_eflux_integ],$
+                          max_chare_losscone:[maximus.max_chare_losscone,dat.max_chare_losscone],$
+                          max_chare_total:[maximus.max_chare_total,dat.max_chare_total],$
                           ION_ENERGY_FLUX:[maximus.ION_ENERGY_FLUX,dat.ION_ENERGY_FLUX],$
                           ION_FLUX:[maximus.ION_FLUX,dat.ION_FLUX],$
                           ION_FLUX_UP:[maximus.ION_FLUX_UP,dat.ION_FLUX_UP],$
@@ -77,7 +77,7 @@ for j=min_orbit,max_orbit do begin
     endif
 endfor
 
-save,maximus,filename='Dartdb_12102014_maximus.sav'
+save,maximus,filename='Dartdb_12112014_maximus.sav'
 
 return
 

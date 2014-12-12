@@ -1,6 +1,60 @@
+;+
+; NAME: WRITE_CHAST_PLUS_ONE_3
+;
+;
+;
+; PURPOSE: Write a file that compares a Chaston Alfvènic FAC db file
+;          with one of ours.
+;
+;
+;
+; CATEGORY:
+;
+;
+;
+; CALLING SEQUENCE: This is called by compare_chastondbfile_dartdbfile_3.pro, which is how you should leave it.
+;
+;
+;
+; INPUTS:
+;
+;
+;
+; OPTIONAL INPUTS:
+;
+;
+;
+; KEYWORD PARAMETERS:
+;
+;
+;
+; OUTPUTS:
+;
+;
+;
+; OPTIONAL OUTPUTS:
+;
+;
+;
+; SIDE EFFECTS:
+;
+;
+;
+; PROCEDURE:
+;
+;
+;
+; EXAMPLE: (for calling compare_chastondbfile_dartdbfile_3, which calls this pro)
+;          compare_chastondbfile_dartdbfile_3,10000,out_suffix="--AGU_mtg_w_Chaston",max_tdiff=0.016,check_current_thresh=5,/only_alfvenic
+;
+;
+; MODIFICATION HISTORY:
+; 12/12/2014 Added 'check_sorted' option originally written in compare_dbfiles_3.pro
+;-
 pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=file,$
-  check_current_thresh=check_c,max_tdiff=max_tdiff, as5=as5, only_alfvenic=only_alfvenic, _extra = e
-
+  check_current_thresh=check_c,max_tdiff=max_tdiff, as5=as5, only_alfvenic=only_alfvenic, $
+  chaston_check_sorted=chaston_check_sorted, dart_check_sorted=dart_check_sorted, check_sorted=check_sorted, $
+  _extra = e
 ;This one incorporates the idea from my most recent meeting with Professor LaBelle that we ought to
 ;say that two points are a match if they're within a few milliseconds of each other. 
 ;Let's see how this changes the statistics...
@@ -10,6 +64,45 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     print,"Why the extra parameters? They have no home..."
     RETURN
   endif
+
+  n_chast=N_ELEMENTS(chast_struct.time)
+
+  ;
+  if KEYWORD_SET(as5) AND KEYWORD_SET(only_alfvenic) THEN BEGIN
+    print, "Only considering Alfvènic Dartmouth DB events"
+    keep_dart=where(dart_struct.alfvenic GT 0)
+    n_dart=n_elements(keep_dart)
+    dart_struct.time = dart_struct.time(keep_dart)
+    dart_struct.(arr_elem) = dart_struct.(arr_elem)(keep_dart)
+  endif else begin
+    n_dart=n_elements(dart_struct.time)
+    keep_dart=indgen(n_dart)
+  endelse
+
+  ;make sure we're not dealing with dupes
+  IF KEYWORD_SET(chaston_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
+     ;For chaston struct
+     uniq_times_i2=uniq(str_to_time(chast_struct.time),sort(str_to_time(chast_struct.time)))
+     tags_chast=tag_names(chast_struct)
+     ntags_chast=n_elements(tags_chast)
+     tmp = create_struct(tags_chast[0], chast_struct.(0)(uniq_times_i2))
+     for i=1,ntags_chast-1 do tmp = create_struct(tmp, tags_chast[i],chast_struct.(i)(uniq_times_i2))
+     print,"Original number of elements  in chast_struct : " + strcompress(n_elements(chast_struct.time),/REMOVE_ALL)
+     print,"Number of duplicate elements in chast_struct : " + strcompress(n_elements(chast_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
+     chast_struct = tmp
+  ENDIF
+
+  IF KEYWORD_SET(dart_check_sorted) OR KEYWORD_SET(check_sorted) THEN BEGIN
+     ;For dart struct
+     uniq_times_i2=uniq(str_to_time(dart_struct.time),sort(str_to_time(dart_struct.time)))
+     tags_dart=tag_names(dart_struct)
+     ntags_dart=n_elements(tags_dart)
+     tmp = create_struct(tags_dart[0], dart_struct.(0)(uniq_times_i2))
+     for i=1,ntags_dart-1 do tmp = create_struct(tmp, tags_dart[i],dart_struct.(i)(uniq_times_i2))
+     print,"Original number of elements  in dart_struct : " + strcompress(n_elements(dart_struct.time),/REMOVE_ALL)
+     print,"Number of duplicate elements in dart_struct : " + strcompress(n_elements(dart_struct.time)-n_elements(uniq_times_i2),/REMOVE_ALL)
+     dart_struct = tmp
+  ENDIF
 
   magc_ind = 5 ;index of mag_current in structs
   chast_magc_ind = 5
@@ -28,17 +121,6 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
       RETURN
     ENDIF
   ENDIF ELSE chast_arr_elem = arr_elem
-
-  n_chast=N_ELEMENTS(chast_struct.time)
-  if KEYWORD_SET(as5) AND KEYWORD_SET(only_alfvenic) THEN BEGIN
-    print, "Only considering Alfvènic Dartmouth DB events"
-    keep_dart=where(dart_struct.alfvenic GT 0)
-    n_dart=n_elements(keep_dart)
-    dart_struct.time = dart_struct.time(keep_dart)
-    dart_struct.(arr_elem) = dart_struct.(arr_elem)(keep_dart)
-  endif else begin
-    n_dart=n_elements(dart_struct.time)
-  endelse
 
   if not keyword_set(file) then begin
     file="./write_chast_plus_one.out"
@@ -173,9 +255,9 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     print, 'Chaston events above cur_thresh              = ' + str(chast_ct)
     printf,outf, 'Chaston events above cur_thresh              = ' + str(chast_ct)
     IF chastct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying Chaston events    : ",(T48,10(I-4)))',$
+      print, format='("Line numbers of qualifying Chaston events    : ",(T48,10(I-6)))',$
         chastct_ind
-      printf,outf, format='("Line numbers of qualifying Chaston events    : ",(T48,10(I-4)))',$
+      printf,outf, format='("Line numbers of qualifying Chaston events    : ",(T48,10(I-6)))',$
         chastct_ind
       print,format='("Time of Chaston events                       :",(T48,3(A-25)))',$
         chast_struct.time[chastct_eig]
@@ -187,8 +269,8 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     print, 'Dartmouth events above cur_thresh            = ' + str(dart_ct)
     printf,outf, 'Dartmouth events above cur_thresh            = ' + str(dart_ct)
     IF dartct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying Dartmouth events  : ",(T48,10(I-4)))',dartct_ind
-      printf,outf, format='("Line numbers of qualifying Dartmouth events  : ",(T48,10(I-4)))',dartct_ind
+      print, format='("Line numbers of qualifying Dartmouth events  : ",(T48,10(I-6)))',dartct_ind
+      printf,outf, format='("Line numbers of qualifying Dartmouth events  : ",(T48,10(I-6)))',dartct_ind
       print,format='("Time of Dartmouth events                     :",(T48,3(A-25)))',$
         dart_struct.time[dartct_eig]
       printf,outf,format='("Time of Dartmouth events                     :",(T48,3(A-25)))',$
@@ -199,8 +281,8 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
     print, 'Matching events above cur thresh             = ' + str(ct_matches)
     printf,outf, 'Matching events above cur thresh             = ' + str(ct_matches)
     IF matchct_ind NE !NULL THEN BEGIN
-      print, format='("Line numbers of qualifying matching events   : ",(T48,10(I-4)))',matchct_ind
-      printf,outf, format='("Line numbers of qualifying matched events    : ",(T48,10(I-4)))',matchct_ind
+      print, format='("Line numbers of qualifying matching events   : ",(T48,10(I-6)))',matchct_ind
+      printf,outf, format='("Line numbers of qualifying matched events    : ",(T48,10(I-6)))',matchct_ind
       print,format='("Time of matching events                      :",(T48,3(A-25)))',dart_struct.time[matchct_eig]
       printf,outf,format='("Time of matching events                      :",(T48,3(A-25)))',$
         dart_struct.time[matchct_eig]

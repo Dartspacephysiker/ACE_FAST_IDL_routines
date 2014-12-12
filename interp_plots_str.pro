@@ -41,7 +41,7 @@ orbFreqPlot= 0 ;Contributing/total orbits plot?
 
 ;Which IMF clock angle are we doing?
 ;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth'
-IF batchMode EQ !NULL THEN clockStr='dawnward'
+IF batchMode EQ !NULL THEN clockStr='duskward'
 
 ;How to set angles? Note, clock angle is measured with
 ;Bz North at zero deg, ranging from -180<clock_angle<180
@@ -129,7 +129,7 @@ Bx_over_ByBz_Lim=0 ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
 ;Stuff for output
 hoyDia= "_" + STRMID(SYSTIME(0), 4, 3) + "_" + $
        STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
-plotDir='plots/'
+plotDir='plots/new_Dartmouth_db/'
 IF medPlot GT 0 THEN plotSuff = "_med" ELSE plotSuff = "_avg"
 plotType='Eflux_' +eFluxPlotType
 plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
@@ -157,9 +157,9 @@ plot_i=cdbInterp_i(phiImf_ii)
 
 ;********************************************************
 ;WHICH ORBITS ARE UNIQUE?
-uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
-;nOrbs=n_elements(uniqueOrbs_ii)
-;printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
+;; uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
+;; nOrbs=n_elements(uniqueOrbs_ii)
+;; printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
 
 ;***********************************************
 ;Calculate Poynting flux estimate
@@ -294,7 +294,7 @@ IF (ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] & $
     dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] & $
 ENDIF
 
-delvar,h2dEStr;,elecData 
+undefine,h2dEStr;,elecData 
 
 
 ;########Poynting Flux########
@@ -352,7 +352,8 @@ IF (pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] & $
     dataName=[dataName,STRTRIM(abslogPstr,2)+"pFlux_"] & $
     dataRawPtr=[dataRawPtr,PTR_NEW(pData)] & $
 ENDIF
-delvar,h2dPStr
+
+undefine,h2dPStr
 
 ;use these n stuff
 IF (tempSAVE) THEN BEGIN & $
@@ -365,7 +366,7 @@ IF (tempSAVE) THEN BEGIN & $
   save,pData,filename="testcode/pData.dat" & $
 ENDIF
 
-IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN delvar,pData
+IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN undefine,pData
 
 ;if iPlots NE 0 THEN @interp_plots_ions.pro
 
@@ -461,9 +462,9 @@ IF (orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] & $
   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbFreq_"] & $
 ENDIF
 
-delvar,h2dTotOrbStr
-delvar,h2dOrbStr
-delvar,h2dFreqOrbStr
+undefine,h2dTotOrbStr
+undefine,h2dOrbStr
+undefine,h2dFreqOrbStr
 
 ;********************************************************
 ;If something screwy goes on, better take stock of it and alert user
@@ -653,7 +654,7 @@ IF (writeASCII) THEN BEGIN & $
   ENDIF & $
 ENDIF
 
-IF (writeHDF5) OR (writeASCII) THEN BEGIN & delvar,dataRawPtr & HEAP_GC & ENDIF
+IF (writeHDF5) OR (writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
 ;********************************************************
 ;OLD THINGS FOR SINGLE PLOTS FOLLOW HERE
 

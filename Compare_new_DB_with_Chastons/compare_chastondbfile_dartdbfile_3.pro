@@ -17,6 +17,7 @@
 ;   outdataf             =  Name of analysis file to be outputted
 ;   
 ; :HISTOIRE:
+;   12/12/2014  Added out_suffix so that I can add a suffix to outputted files
 ;   10/28/2014  Added outdataf and fname options, updated documentation a little, changed do_as5 to do_as3, since as3 is the older code
 ;               and the default behavior should be usage of the new alfven_stats_5 database  
 ;   10/02/2014  Adding check_current_thresh option to see if
@@ -32,7 +33,7 @@ pro compare_chastondbfile_dartdbfile_3, $
   do_two=do_t,analyse_noise=analyse_noise,extra_times=extra_t,no_screen=no_s, $
   smooth_extra_times=smooth_extra_t, smooth_no_screen=smooth_no_s, $
   check_current_thresh=check_c,ucla_mag_despin=ucla,show_fieldnames=show_f,max_tdiff=max_tdiff,$
-  do_as3=do_as3, outdataf=outdataf,fname=fname,outname=outname,_ref_extra = e
+  do_as3=do_as3, outdataf=outdataf,fname=fname,outname=outname, out_suffix=out_suffix, _ref_extra = e
 
   ;Structure of data files (array element can be one of the following):
   ;0-Orbit number'
@@ -110,7 +111,7 @@ pro compare_chastondbfile_dartdbfile_3, $
   chastondbdir='/'+drive+'/Research/Cusp/database/current_db/'
   ;datadir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
   datadir='/'+drive+'/software/sdt/batch_jobs/Alfven_study/'
-  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/' $
+  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/batch_output/' $
     ELSE datadir += 'as3_pristine/'
   ;outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput//jigglemicroA/'
   outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
@@ -176,7 +177,9 @@ pro compare_chastondbfile_dartdbfile_3, $
     IF KEYWORD_SET(max_tdiff) THEN BEGIN
       outdataf += STRING(max_tdiff,FORMAT='("_tdiff_",F-0.3)')
     ENDIF
-    outdataf = outdataf+'--'+fieldnames[arr_elem]+'.txt'
+    outdataf = outdataf+'--'+fieldnames[arr_elem]
+    IF KEYWORD_SET(out_suffix) THEN outdataf += out_suffix
+    outdataf += '.txt'
   ENDIF
 
   print, "Output filename: " + outdataf
