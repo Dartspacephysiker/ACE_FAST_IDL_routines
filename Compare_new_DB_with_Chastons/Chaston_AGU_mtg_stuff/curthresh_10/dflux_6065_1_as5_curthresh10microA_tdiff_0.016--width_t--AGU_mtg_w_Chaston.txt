@@ -1,0 +1,27 @@
+Sat Dec 13 10:55:51 2014
+***Comparison of 'width_t' data***
+*Chaston file: /SPENCEdata2/Research/Cusp/database/current_db/dflux_6065_1
+*Dart file: /SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/Dartmouth_as5_dflux_6065_1
+(Two data points on same line ==> identical time of occurrence of max FAC corresponding to data)
+Current threshold: 10 microA/m^2
+
+      Chaston orig             Dartmouth                   Chast ind     Dart ind
+0     0.234375                                             0   
+1                              0.531250                                  0   
+2                              0.828125                                  1   
+3     3.46875                                              1   
+4     6.18408                                              2   
+5                              0.625000                                  2   
+6          0.281250                                        3   
+
+Current threshold: 10 microA/m^2
+
+Chaston events above cur_thresh              = 0
+
+Dartmouth events above cur_thresh            = 0
+
+Matching events above cur thresh             = 0
+
+Chaston events   : 4
+Dartmouth events : 3
+Total matches    : 0
