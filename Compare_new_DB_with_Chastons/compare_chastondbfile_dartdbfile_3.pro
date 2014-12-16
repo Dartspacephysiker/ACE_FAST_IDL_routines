@@ -72,7 +72,7 @@ pro compare_chastondbfile_dartdbfile_3, $
 
   IF NOT KEYWORD_SET(do_as3) THEN BEGIN
     PRINT,"Using field names for Alfven_Stats_5!  (For as3 set keyword /do_as3)"
-    fieldnames=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','NOtotal_eflux_max','YESeflux_losscone_integ','NOtotal_eflux_integ','max_chare_losscone',$
+    fieldnames=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','total_eflux_max','eflux_losscone_integ','total_eflux_integ','max_chare_losscone',$
       'max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie','width_t','width_spatial','db','de','fields_samp_period','fields_mode',$
       'max_hf_up','max_h_chare','max_of_up','max_o_chare','max_hef_up','max_he_chare','sc_pot','lp_num','max_lp_current','min_lp_current','median_lp_current']
     as5=1
@@ -111,7 +111,8 @@ pro compare_chastondbfile_dartdbfile_3, $
   chastondbdir='/'+drive+'/Research/Cusp/database/current_db/'
   ;datadir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/'
   datadir='/'+drive+'/software/sdt/batch_jobs/Alfven_study/'
-  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/batch_output/' $
+;  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/batch_output/' $
+  IF NOT KEYWORD_SET(do_as3) THEN datadir += 'as5_14F/batch_output/for_Chaston_AGU_mtg/' $
     ELSE datadir += 'as3_pristine/'
   ;outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput//jigglemicroA/'
   outdir='/'+drive+'/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/'
@@ -127,6 +128,7 @@ pro compare_chastondbfile_dartdbfile_3, $
     PRINT,"WHERE'S THE FILENAME?"
 ;    RETURN
     fname=datadir+'Dartmouth_'
+;    if NOT KEYWORD_SET(do_as3) THEN fname += "as5_startstop_"
     if NOT KEYWORD_SET(do_as3) THEN fname += "as5_"
     fname +=basename
     IF KEYWORD_SET(analyse_noise) THEN fname += '_analysenoise'
@@ -137,7 +139,8 @@ pro compare_chastondbfile_dartdbfile_3, $
 
   IF NOT KEYWORD_SET(outname) THEN BEGIN
     IF KEYWORD_SET(do_as3) THEN outname=outdir+'as3/Dartmouth_as3_pristine_'+basename $
-    ELSE outname=outdir+'as5/Dartmouth_as5_'+basename
+;    ELSE outname=outdir+'as5/Dartmouth_as5_startstop_'+basename
+    ELSE outname=outdir+'as5/Dartmouth_as5__'+basename
     IF KEYWORD_SET(analyse_noise) THEN outname += '_analysenoise'
     IF KEYWORD_SET(extra_t) THEN outname += '_extratimes'
     IF KEYWORD_SET(no_s) THEN outname += '_noscreen'

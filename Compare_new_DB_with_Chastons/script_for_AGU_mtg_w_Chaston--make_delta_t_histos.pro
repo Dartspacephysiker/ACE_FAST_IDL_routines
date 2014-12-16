@@ -5,8 +5,10 @@ datdir="/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutp
 
 max_hist=40
 
-orbs=[2030,2057,6065,6065,9000,10000]
-intervals=[0,0,0,1,0,0]
+;orbs=[2030,2057,6065,6065,9000,10000]
+;intervals=[0,0,0,1,0,0]
+orbs=[2030,2057,6535,9000,10000]
+intervals=[0,0,0,0,0]
 
 for i=0,n_elements(orbs)-1 do begin & $
 
@@ -15,13 +17,16 @@ for i=0,n_elements(orbs)-1 do begin & $
    chast_dat=dat & $
 
    ;Dart file
-   restore,datdir+"as5/Dartmouth_as5_dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" & $
+   restore,datdir+"as5/Dartmouth_as5__dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" & $
    dart_dat=dat1 & $
 
    ;Now what? Relevant data products are...
    ;For Chaston: 'Width_time'
    ;For Dart data: 'Width_t'
 
+   chast_histo=histogram(chast_dat.width_time,binsize=0.1)
+   dart_histo=histogram(dart_dat.width_t,binsize=0.1)
+   max_hist=max([chast_histo,dart_histo])
 
    cgPS_Open, FILENAME='Chaston_AGU_mtg_stuff/current_width_histos/Current_width--histo_comparison--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+'.png' & $
 

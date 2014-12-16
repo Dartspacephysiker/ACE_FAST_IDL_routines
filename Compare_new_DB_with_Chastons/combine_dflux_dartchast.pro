@@ -29,7 +29,8 @@ pro combine_dflux_dartchast, orbit,jj, in_name=in, outname=out
         save, dat_SMOOTH, filename=out
         END
       3: BEGIN
-        rdf_dflux_fout_as5,result,dat,out
+;        rdf_dflux_fout_as5,result,dat,out
+        rdf_stats_Dartmouth_as5_startstop_inc,result,dat,out
         restore, out
         dat1=dat
         save, dat1, filename=out

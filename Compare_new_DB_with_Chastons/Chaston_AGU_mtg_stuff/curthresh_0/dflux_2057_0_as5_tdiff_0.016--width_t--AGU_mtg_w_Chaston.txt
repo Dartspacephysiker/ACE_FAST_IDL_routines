@@ -1,7 +1,7 @@
-Sat Dec 13 10:55:47 2014
+Tue Dec 16 06:27:57 2014
 ***Comparison of 'width_t' data***
 *Chaston file: /SPENCEdata2/Research/Cusp/database/current_db/dflux_2057_0
-*Dart file: /SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/Dartmouth_as5_dflux_2057_0
+*Dart file: /SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/for_Chaston_AGU_mtg/Dartmouth_as5_dflux_2057_0
 (Two data points on same line ==> identical time of occurrence of max FAC corresponding to data)
 
       Chaston orig             Dartmouth                   Chast ind     Dart ind
