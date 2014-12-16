@@ -31,6 +31,10 @@
 ;Evt 43 start/stop times:        43 1997-02-27/15:59:45.756 1997-02-27/15:59:46.271
 ;Evt 44 peak current time:          1997-02-27/15:59:46.888
 ;Evt 44 start/stop times:        44 1997-02-27/15:59:46.513 1997-02-27/15:59:47.381     
+;2478     1997-02-27/15:59:46.310     Current too low   :   0.4887
+;2478     1997-02-27/15:59:46.310     Delta-b too low   :   0.1645
+;2479     1997-02-27/15:59:46.388     Delta-b too low   :   0.5778
+;Several other 'delta-b too low' issues for nearby times
 
 ;For Chaston event 38, we have event 44:
 ;Chast evt 38 time:                 1997-02-27/15:59:38.521
@@ -46,11 +50,17 @@
 ;Chast evt 40 time:                 1997-02-27/15:59:49.779
 ;Evt 45 peak current time:          1997-02-27/15:59:47.803
 ;Evt 45 start/stop times:        45 1997-02-27/15:59:47.576 1997-02-27/15:59:48.107
+;From reject list:
+;2493     1997-02-27/15:59:49.779     ESA_j/delta_bj low:   0.0129
+
 
 ;For Chaston event 41, we have no event... 46 is closest on list:
 ;Chast evt 41 time:                 1997-02-27/15:59:50.490
 ;Evt 46 peak current time:          1997-02-27/15:59:51.162
 ;Evt 46 start/stop times:        46 1997-02-27/15:59:50.365 1997-02-27/15:59:51.490
+;From reject list:
+;2494     1997-02-27/15:59:50.334     Delta-b too low   :   0.5603
+
 
 ;For Chaston event 52, we have event 57:
 ;Chast evt 52 time:                 1997-02-27/15:59:59.826 
@@ -75,4 +85,9 @@
 ;For Chaston event 59, we have no event...Closest is Evt 64:
 ;Chast evt 59 time:                 1997-02-27/16:00:04.045
 ;Evt 64 peak current time:          1997-02-27/16:00:03.920
-;Evt 64 start/stop times:        64 1997-02-27/16:00:03.865 1997-02-27/16:00:03.967
+;Evt 64 start/stop times:        64 1997-02-27/16:00:03.865
+;1997-02-27/16:00:03.967
+;From reject list:
+;2543     1997-02-27/16:00:04.037     ESA_j/delta_bj low:   0.0015
+;2543     1997-02-27/16:00:04.037     Jee ionos low     :   0.0031
+
