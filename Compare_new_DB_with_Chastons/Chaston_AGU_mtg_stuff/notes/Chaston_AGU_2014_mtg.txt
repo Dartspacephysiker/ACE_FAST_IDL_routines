@@ -1,0 +1,96 @@
+12/16/2014 Notes for meeting with Chris at AGU, Tue Dec 16, 2014
+
+Follow-up notes
+* CAPER
+   * Orbits for AGU meeting with Chris: 2030, 2057, 6065, 9000, 10000
+   * Orb 6065 interval 1 provides an instance of Chaston identifying an event that we don’t
+
+12/16/2014 Now using orb 6535, since orb 6065 was a perennial source of trouble
+
+
+To do before meeting:
+
+*Get plots for orbit 6535 (DONE)
+Reproduce current histos (DONE)
+*Do thorough comparison of events for orbits 2030, 2057, 6535, 9000, 10000
+	*Prior to this, run alfven_stats_5 again over all orbits (DONE)
+	*I have all reject lists as well--maybe that helps?
+*What can I say about current_width histos?
+
+*For each orbit, show the following:
+	*Matching events
+	*current width histos
+	*Non-matching events + pngs of such events
+
+
+
+
+
+***Alfven_stats_5 running params:
+
+We have tried analyse_noise, burst, and ucla_mag_despin
+pro alfven_stats_5,filename=filename,energy_electrons=energy_electrons,energy_ions=energy_ions,analyse_noise=analyse_noise,$                                             
+t1=t1,t2=t2,filterfreq=filterfreq,$                                                                                                                                      
+burst=burst,heavy=heavy,ucla_mag_despin=ucla_mag_despin,keep_alfven_only=keep_alfven_only                
+                                                                                                                                                                         
+current_threshold=1.0;microA/m^2                                                                                                                                         
+delta_b_threshold=5.0; nT                                                                                                                                                
+delta_E_threshold=10.0 ; mV/m                                                                                                                                            
+esa_j_delta_bj_ratio_threshold=0.02                                                                                                                                      
+electron_eflux_ionos_threshold=0.05;ergs/cm^2/s                                                                                                                          
+eb_to_alfven_speed=10.0; factor by which the event can differ from model Alfven speed and still be called an Alfven wave                                                 
+;(applies only to the lower limit for e over b the upper limit is taken care of by the requiremenst that delta_b exceed 5 nT                                             
+
+
+
+*Orbit 2030
+	*All events match! (within several milliseconds of eachother)
+	*One issue: We have 8 events above 5 microA/m^2, original db has 4
+	*We have 34 events total, original db has 13
+	*Histo shows a little variability; we seem to have a bunch of shorter-duration events
+
+*Orbit 2057
+	*
+	*We have 14 events above 5 microA/m^2, original db has 16
+	*We have 76 events total, original db has 69
+	*Histo again shows we seem to have more short-duration events
+	*We have no 'event 37' at 46.373; potential events identified around there are rejected because dB is too low
+	*No 'event 40' at 59:49.779; rejected because ESA_j/delta_b_j too low (0.0129)
+	*No 'event 41' at 59:50.490; event at 50.334 rejected because delta_b_j too low 
+	*No 'event 59' at 00:04.045; event at 04.037 rejected because ESA_j/delta_bj too low AND because Jee ionos low
+		*Events 41 and 59 have j_mags of about 20 and 13 microA/m^2!
+	*So of the 12 events in original db with no match, only 4 genuinely have no match for reasons given
+	
+*Orbit 9000
+	*We have 30 events above 5 microA/m^2, original db has 32
+	*We have 73 events total, original db has 64
+	*Current width histograms appear to be quite similar
+	*No 'event 19' at 10:56.324; event at 10.56.347 rejected because delta_E too low (9.87 mV/m)
+	*No 'event 39' at 11:07.980; events around there (+/- 50ms) were rejected on account of dE or low Jee ionosphere
+	*No 'event 59' at 11:31.863; events around 11:31.292 have low dB, dE
+		*Substantial (~20mA/m^2) current for event 59
+	*No 'event 49' at 11:16.488; event at 11:16.503 has low delta_bj/ESA_j
+	*So of the 14 events in original db with no match, only 4 genuinely have no match
+
+*Orbit 6535
+	*We have 110 events above 5 microA/m^2, original db has 84
+	*We have 268 events total, original db has 209
+	*Current width histograms quite similar, though original db has a few more events of longer duration
+	*Event 5 dE too low: 7.73
+	*Event 27 dE too low: 4.25
+	*Event 41 db, dE too low: 4.04, 7.36	
+	*Event 62 misses window by 2 ms	
+	*Event 64 dE too low: 7.43
+	*Event 92 db, dE too low: 1.13, 4.32
+	*Event 111 db too low: 2.39
+	*Event 120 db, dE too low: 4.6 7.83
+	*Event 121 db too low: 3.12
+	*Event 124 db, dE too low: 4.54, 4.62
+	*Event 127 db too low: 2.47
+	*Event 183 low db: 4.22
+	*Event 186 low db, dE: 1.84, 6.74
+	*Event 187 low db, dE: 3.72, 2.93
+	*Event 201 has low current: 0.0150
+	*Events 202 and 203 have low dE values: 8.47, 7.36	
+	*Of the 44 events in the original db with no match, only 18 (17 if you don't count event 62) genuinely have no match
+

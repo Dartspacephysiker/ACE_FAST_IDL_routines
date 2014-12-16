@@ -9,10 +9,8 @@
 ;53    1997-02-27/15:59:38.232                              29  
 ;54    1997-02-27/15:59:38.521                              30  
 ;55                             1997-02-27/15:59:38.771                   38  
-;The Chaston events that we don't match are at line number 54,
-;61, 64, 66, 68 ,69, 70, 83, 85, 87, 91 and 95
-;These correspond to Chaston events 30, 36, 37, 38, 39, 40, 41, 52,
-;53, and 54, 57, and 59
+;The Chaston events that we don't match are at line number 54, 61, 64, 66, 68 ,69, 70, 83, 85, 87, 91 and 95
+;These correspond to Chaston events 30, 36, 37, 38, 39, 40, 41, 52, 53, and 54, 57, and 59
 
 ;For Chaston event 30, we have event 38:
 ;Chast evt 30 time:                 1997-02-27/15:59:38.521

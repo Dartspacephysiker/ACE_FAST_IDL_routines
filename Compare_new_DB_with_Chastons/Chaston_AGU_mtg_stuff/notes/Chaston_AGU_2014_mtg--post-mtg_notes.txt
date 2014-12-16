@@ -1,0 +1,31 @@
+Tue, Dec 16, 2014
+Follow-up notes on meeting with Chris
+
+*His sense was that the data has definitely has changed
+	*He was surprised at the number of discrepant events
+	*When I told him I had run over some data with _every_ _single_ version of the mag cal data and that it hadn't significantly
+	 affected the statistics, he was a little surprised
+	*He mentioned that the electric field calibrations as well
+
+*Ultimately, said he, we probably can't track down what exactly has changed
+	*Recommends that we just go ahead and do the statistics to see what comes out
+
+*Was gratified that we're making use of some of his old work
+
+*Professor LaBelle spoke with him at some length about density measurements, proxies for density
+
+*Chris said obtaining Alfvèn speeds is a rubbery business, but we might be able to screen more strongly for Alfvèn events
+ by requiring higher (i.e., >10microA/m^2) currents
+
+*Ideas for the future
+	*Evidently O+ contributions to the ring current are still poorly understood (how, where, etc.)
+		*He thought we might use TEAMS data to look at a few strong storms, see if we can learn anything about O+ therefrom
+			*He said he had a student working on such an idea and he had a conversation with Eric Lund about using TEAMS data,
+			 but he was befuddled by what Eric told him and said he ultimately moved on to other things. Evidently there was 
+			 some issue teasing out what is O+, what is He, what is H+.
+			*We might have to do some trickery to tease out what is quality/useful data
+			*I mentioned I spoke to Eric at one point about which data are quality...
+		*These are the sorts of topic that are supposedly still quite hot
+	*Also mentioned that his idea is that small-scale processes are probably responsible for a good fraction of the outflow
+		*I wasn't sure how this tied in with what Bin was saying, but Bin also mentioned "small-scale"...
+

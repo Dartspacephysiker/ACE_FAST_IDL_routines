@@ -1,0 +1,18 @@
+﻿Meeting with Professor LaBelle        12/11/2014
+
+
+Adressables: 
+* FAST STUFF
+   * Make histogram of our delta-t’s vs. Chaston’s delta-t’s for, e.g., orb 2000,4000,6000,8000,10000 (or just 10 randomly selected orbits)
+   * Redo Chaston current exercise, well documented in order to show to Chris
+   * Find bad points, discover a way to discard (example, Chaston event 130 in orbit 10000)
+   * Need to save t_start and t_end time in order to (possibly) expedite running over the database in the future
+   * Make hardcopies so we can look over them at AGU!
+* CAPER
+   * By end of Dec:
+      * Pull gains off all non-AGC channels (ELF, VF, SKIN, right?)
+      * Write CAPER data types--document the structures of, say, TM1, TM2&3, TM4, DUAL{A,B}, digitizer, etc.
+         * Could be the group classic on data types…        
+
+
+
