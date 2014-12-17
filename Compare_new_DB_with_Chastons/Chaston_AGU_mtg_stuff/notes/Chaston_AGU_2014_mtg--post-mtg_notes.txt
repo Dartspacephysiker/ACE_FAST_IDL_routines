@@ -29,3 +29,8 @@ Follow-up notes on meeting with Chris
 	*Also mentioned that his idea is that small-scale processes are probably responsible for a good fraction of the outflow
 		*I wasn't sure how this tied in with what Bin was saying, but Bin also mentioned "small-scale"...
 
+	*Since we have some time before the FAST dataset arrives, Professor LaBelle recommended the following:
+	       *We can start thinking about how to ensure reliability of ion data 
+	       	   *(Eric Lund says 2D stuff only good for years one and two; this corresponds to Aug 1996 - Aug 1998 (~orbit 7900), 
+       		    and probably excluding the first several months while bugs[?] got worked out)
+	       *We can start thinking about how to identify storms in order to take max advantage of what data exists
