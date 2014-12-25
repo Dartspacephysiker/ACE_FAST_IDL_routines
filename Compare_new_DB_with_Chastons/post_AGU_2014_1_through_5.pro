@@ -5,7 +5,7 @@
 ;'binsize' argument
 
 ;FOR TOMORROW
-;1. Generate electron flux, Poynting flux histos for all orbits we showed to Chaston at AGU
+;1. Generate electron flux, Poynting flux histos for all orbits we showed to Chaston at AGU (DONE as of 12/25/2014)
 ;2. Almost inevitably there will be some garbage events--Determine what makes them garbage, write down the numbers, then find out if these values are orders of magnitude above what is ever expected in the cusp or observed in general
 ;(I should know order-of-magnitude values for flux, integrated and otherwise)
 ;3. Have plots of these ready to see if it’s an instrument error or something else--what causes them to be “bad”?
@@ -25,7 +25,7 @@
 ;1. Electron flux and Poynting flux histos
 ;2. post_AGU_2014_2_through_4_find_garbage_events
 
-PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, as3=as3, show_f=show_f, outdir=outdir, poynting_histo=poynting_histo, _ref_extra = e
+PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=intervals, as3=as3, show_f=show_f, outdir=outdir, poynting_histo=poynting_histo, cur_thresh=cur_thresh, _ref_extra = e
 
   datdir="/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/"
 
@@ -35,13 +35,13 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, as3=as3, show_f
 ;intervals=[0,0,0,1,0,0]
 
 
-  IF NOT KEYWORD_SET(outdir) THEN outdir='/SPENCEdata2/Research/Cusp/ACE_FAST/studies/post_AGU_2014_various/histos' & $
+  IF NOT KEYWORD_SET(outdir) THEN outdir='/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/post_AGU_2014_various/histos/' 
 
 
 
-  IF NOT KEYWORD_SET(orbs) THEN BEGIN & $
-     orbs=[2030,2057,6535,9000,10000] & $
-     intervals=[0,0,0,0,0] & $
+  IF NOT KEYWORD_SET(orbs) THEN BEGIN 
+     orbs=[2030,2057,6535,9000,10000] 
+     intervals=[0,0,0,0,0] 
   ENDIF
 
 ;field names for as5-generated file
@@ -93,94 +93,122 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, as3=as3, show_f
         RETURN
      ENDIF
 
+     IF KEYWORD_SET(cur_thresh) THEN curthresh_string = '--curthresh_'+strcompress(cur_thresh,/remove_all) ELSE curthresh_string = ''
+
      dartTitle = fieldnames_as5[arr_elem]
+     chastTitle=fieldnames_as3[chast_arr_elem]
 
   ENDIF ELSE BEGIN 
      IF NOT KEYWORD_SET(POYNTING_HISTO) THEN BEGIN
 
         chast_arr_elem = arr_elem
         dartTitle = fieldnames_as3[arr_elem]
-     ENDIF
+        chastTitle=dartTitle
+     ENDIF 
   ENDELSE
   
-;produce the histos
-  for i=0,n_elements(orbs)-1 do begin & $
+  ;produce the histos
+  for i=0,n_elements(orbs)-1 do begin
      
-                                ;Chaston file
-     restore,datdir+"chast_dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" & $
-     chast_dat=dat & $
+     ;Chaston file
+     restore,datdir+"chast_dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav"
+     chast_struct=dat
      
-                                ;Dart file
-     restore,datdir+"as5/Dartmouth_as5__dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" & $
-     dart_dat=dat1 & $
+     ;Dart file
+     restore,datdir+"as5/Dartmouth_as5__dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav"
+     dart_struct=dat1 
      
-     IF NOT KEYWORD_SET(POYNTING_HISTO) THEN BEGIN & $
-     
-     chast_histo=histogram(chast_dat.(chast_arr_elem)) & $
-     dart_histo=histogram(dart_dat.(arr_elem)) & $
-     max_hist=max([chast_histo,dart_histo]) & $
-     datMax=MAX([chast_dat.(chast_arr_elem),dart_dat.(arr_elem)]) & $
-     
-     ENDIF ELSE BEGIN & $
-     mu_0 = 4.0e-7 * !PI & $    ;perm. of free space, for Poynt. est
-     chast_poynting=chast_dat.delta_e * chast_dat.delta_b * mu_0 & $
-     dart_poynting = dart_dat.db * dart_dat.de * mu_0 & $
-     chast_histo=histogram(chast_poynting) & $
-     dart_histo=histogram(dart_poynting) & $
-     max_hist=max([chast_histo,dart_histo]) & $
-     datMax=MAX([chast_poynting,dart_poynting]) & $
-     dartTitle='Poynting_flux' & $
-     ENDELSE & $
-     
+     IF NOT KEYWORD_SET(POYNTING_HISTO) THEN BEGIN 
+        
+        chast_data = chast_struct.(chast_arr_elem)
+        dart_data = dart_struct.(arr_elem)
+        
+     ENDIF ELSE BEGIN 
+        
+        mu_0 = 4.0e-7 * !PI     ;perm. of free space, for Poynt. est
+        
+        chast_data = chast_struct.delta_e * chast_struct.delta_b * mu_0 
+        dart_data = dart_struct.db * dart_struct.de * mu_0 
+
+        dartTitle='Poynting_flux'
+        chastTitle=dartTitle
+     ENDELSE 
+
+     ;to achieve a binsize that is an order of magnitude below the median value of both arrays
+     exponent=floor(alog10(abs(median([chast_data,dart_data]))))
+     binS=10.0^(exponent)
+
+;     print,'exponent: ',exponent
+;     print,'binsize: ',binS
+
+     IF KEYWORD_SET(cur_thresh) THEN BEGIN
+        winnow_chast_and_dart_data_array,cur_thresh=cur_thresh,chast_arr_elem=chast_arr_elem,arr_elem=arr_elem, $
+                                         chast_data=chast_data,dart_data=dart_data,chast_struct=chast_struct,dart_struct=dart_struct,as3=as3
+     ENDIF
+
+     ;few things for the plots
+     chast_histo=histogram(chast_data) 
+     dart_histo=histogram(dart_data)
+     max_hist=max([chast_histo,dart_histo])
+     datMax=MAX([chast_data,dart_data])
+  
      ;open postscript file
-     cgPS_Open, FILENAME=outdir+'histo_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+'.png', font=1 & $
+     fname = outdir+'histo_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)
+     IF KEYWORD_SET(cur_thresh) THEN fname += '--curthresh_' + strcompress(cur_thresh,/remove_all)
+     fname +='.png'
+
+     cgPS_Open, FILENAME=fname, font=1 
      
-     IF NOT KEYWORD_SET(POYNTING_HISTO) THEN BEGIN & $
-     cghistoplot,chast_dat.(chast_arr_elem),POLYCOLOR='navy',histdata=chast_histodata,layout=[2,1,1],/line_fill,xtitle=fieldnames_as3[chast_arr_elem],title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e & $
+     !p.thick=2
+     !x.thick=2
+     !y.thick=2
+     !p.charthick=2.0
+     !p.font=1
+     !p.charsize=1.4
+
+     cghistoplot,chast_data,POLYCOLOR='navy',/fillpolygon, binsize=binS, histdata=chast_histodata,layout=[2,1,1],xtitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e 
      
-     cghistoplot,dart_dat.(arr_elem),POLYCOLOR='forest green',histdata=dart_histodata,layout=[2,1,2],/line_fill,xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e & $
-     ENDIF ELSE BEGIN & $
-     cghistoplot,chast_poynting,POLYCOLOR='navy',histdata=chast_histodata,layout=[2,1,1],/line_fill,xtitle=dartTile,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e & $
-     
-     cghistoplot,dart_poynting,POLYCOLOR='forest green',histdata=dart_histodata,layout=[2,1,2],/line_fill,xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e & $
-     
-     ENDELSE & $
+     cghistoplot,dart_data,POLYCOLOR='forest green',/fillpolygon, binsize=binS, histdata=dart_histodata,layout=[2,1,2],xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e 
+
+     chast_integral=total(chast_data)
+     dart_integral=total(dart_data)
+     chast_nevents=n_elements(chast_data)
+     dart_nevents=n_elements(dart_data)
+
+     cgText,0.46,0.2,  'Binsize             : ' + strcompress(binS,/remove_all),/normal,charsize=1
+     cgText,0.46,0.175,'Chaston integral    : ' + strcompress(chast_integral,/remove_all),/normal,charsize=1
+     cgText,0.46,0.155,'Dartmouth integral  : ' + strcompress(dart_integral,/remove_all),/normal,charsize=1
+     cgText,0.46,0.13, 'Chaston # events    : ' + strcompress(chast_nevents,/remove_all),/normal,charsize=1
+     cgText,0.46,0.11, 'Dartmouth # events  : ' + strcompress(dart_nevents,/remove_all),/normal,charsize=1
+     IF KEYWORD_SET(cur_thresh) THEN $
+        cgText,0.46,0.095, 'microA/m^2 threshold: ' + strcompress(cur_thresh,/remove_all),/normal,charsize=1
+
+     cgps_Close 
         
-     cgps_Close & $
-        
-        
-     endfor
+  endfor
   
 END
 
 ;I think I want to use this to make box plots
-PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, as3=as3, show_f=show_f, poynting_boxplot=poynting_boxplot, logplots=logplots, _ref_extra = e
+PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, orbs=orbs, intervals=intervals, as3=as3, show_f=show_f, poynting_boxplot=poynting_boxplot, logplots=logplots, _ref_extra = e
 
   datdir="/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/"
 
-;the orbits to be processed
-;make sure both Chaston and Dart db files exist!
-;orbs=[2030,2057,6065,6065,9000,10000]
-;intervals=[0,0,0,1,0,0]
+  IF NOT KEYWORD_SET(outdir) THEN outdir='/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/post_AGU_2014_various/boxplots/' 
 
-
-  IF NOT KEYWORD_SET(outdir) THEN outdir='/SPENCEdata2/Research/Cusp/ACE_FAST/studies/post_AGU_2014_various/boxplots/' & $
-
-
-
-  IF NOT KEYWORD_SET(orbs) THEN BEGIN & $
-     orbs=[2030,2057,6535,9000,10000] & $
-;     orbs=[10000] & $
-     intervals=[0,0,0,0,0] & $
+  IF NOT KEYWORD_SET(orbs) THEN BEGIN 
+     orbs=[2030,2057,6535,9000,10000] 
+;     orbs=[10000] 
+     intervals=[0,0,0,0,0] 
   ENDIF
 
-;field names for as5-generated file
+  ;field names for as5-generated file
   fieldnames_as5=['orbit','alfvenic','time','alt','mlt','ilat','mag_current','esa_current','eflux_losscone_max','total_eflux_max',$
                   'eflux_losscone_integ','total_eflux_integ','max_chare_losscone','max_chare_total','max_ie','max_ion_flux','max_upgoing_ionflux','integ_ionf','integ_upgoing_ionf','max_char_ie',$
                   'width_t','width_spatial','db','de','fields_samp_period','fields_mode','max_hf_up','max_h_chare','max_of_up','max_o_chare',$
                   'max_hef_up','max_he_chare','sc_pot','lp_num','max_lp_current','min_lp_current','median_lp_current']
 
-;field names for as3-generated file
+  ;field names for as3-generated file
   fieldnames_as3=['orbit','time','alt','mlt','ilat','mag_current','esa_current','elec_energy_flux','integ_elec_energy_flux','char_elec_energy',$
                   'ion_energy_flux','ion_flux','ion_flux_up','integ_ion_flux','integ_ion_flux_up','char_ion_energy','width_time','width_x','delta_B','delta_E',$
                   'mode','sample_t','proton_flux_up','proton_energy_flux_up','oxy_flux_up','oxy_energy_flux_up','helium_flux_up','helium_energy_flux_up','sc_pot']
@@ -211,7 +239,7 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, as3=as3, show_f=sho
   
   IF NOT KEYWORD_SET(as3) AND NOT KEYWORD_SET(POYNTING_BOXPLOT) THEN BEGIN
      
-                                ;Array to match as5 data with as3 data
+     ;Array to match as5 data with as3 data
      dart_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,$ ; Not sure if max_chare_losscone [i=12] or max_chare_total correspond to char_elec_energy
                           8,-1,9,-1,10,11,12,13,14,15,$
                           16,17,18,19,21,20,22,23,24,25,$ ;fields mode [i=25 here, or 20]
@@ -247,27 +275,27 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, as3=as3, show_f=sho
      chastTitle+=logTitle
   ENDIF
   
-;produce the boxplots
+  ;produce the boxplots
   for i=0,n_elements(orbs)-1 do begin 
      
-                                ;Chaston file
+     ;Chaston file
      restore,datdir+"chast_dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" 
-     chast_dat=dat 
+     chast_struct=dat 
      
-                                ;Dart file
+     ;Dart file
      restore,datdir+"as5/Dartmouth_as5__dflux_"+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+".sav" 
-     dart_dat=dat1 
+     dart_struct=dat1 
      
      IF NOT KEYWORD_SET(POYNTING_BOXPLOT) THEN BEGIN 
         
-        chast_boxdata = chast_dat.(chast_arr_elem)
-        dart_boxdata = dart_dat.(arr_elem)
+        chast_boxdata = chast_struct.(chast_arr_elem)
+        dart_boxdata = dart_struct.(arr_elem)
    
      ENDIF ELSE BEGIN 
         mu_0 = 4.0e-7 * !PI     ;perm. of free space, for Poynt. est
    
-        chast_boxdata=chast_dat.delta_e * chast_dat.delta_b * mu_0 
-        dart_boxdata = dart_dat.db * dart_dat.de * mu_0 
+        chast_boxdata=chast_struct.delta_e * chast_struct.delta_b * mu_0 
+        dart_boxdata = dart_struct.db * dart_struct.de * mu_0 
         
      ENDELSE 
      
@@ -284,23 +312,14 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, as3=as3, show_f=sho
      datMin=MIN([chast_boxdata,dart_boxdata]) 
 
 
-                                ;open postscript file
+
+     ;open postscript file
      cgPS_Open, FILENAME=outdir+'boxplot_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+'.png', font=1 
-     
-;     IF NOT KEYWORD_SET(POYNTING_BOXPLOT) THEN BEGIN 
+
+     cgboxplot,chast_boxdata, BoxColor='navy', outliercolor='red', stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
         
-        cgboxplot,chast_boxdata, BoxColor='navy', outliercolor='red', stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
+     cgboxplot,dart_boxdata, BoxColor='forest green', outliercolor='red', stats=dart_boxstats,layout=[2,1,2],ytitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
         
-        cgboxplot,dart_boxdata, BoxColor='forest green', outliercolor='red', stats=dart_boxstats,layout=[2,1,2],ytitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
-        
-     ;; ENDIF ELSE BEGIN 
-        
-     ;;    cgboxplot,chast_poynting, BoxColor='navy', outliercolor='red', stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
-        
-     ;;    cgboxplot,dart_poynting, BoxColor='forest green', outliercolor='red', stats=dart_boxstats,layout=[2,1,2],ytitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
-        
-     ;; ENDELSE 
-     
      cSize=1.0
      
      boxtags=tag_names(chast_boxstats)
@@ -318,7 +337,7 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, as3=as3, show_f=sho
         cgtext,xpos1,ypos1,str(boxtags[k]),/normal,charsize=cSize
         cgtext,xpos2,ypos2,str(boxtags[k]),/normal,charsize=cSize
         
-                                ;values
+        ;values
         cgtext,xpos1+0.09,ypos1,strcompress(chast_boxstats.(k),/remove_all),/normal,charsize=cSize
         cgtext,xpos2+0.09,ypos2,strcompress(dart_boxstats.(k),/remove_all),/normal,charsize=cSize
         
