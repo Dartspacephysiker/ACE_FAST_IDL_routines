@@ -111,9 +111,10 @@ pro write_chast_plus_one_3,chast_struct,dart_struct,arr_elem=arr_elem,filename=f
   
     magc_ind = 6
     ;Array to match as5 data with as3 data
-    dart_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,8,-1,9, $; =(max_chare_losscone), Not sure if max_chare_losscone or max_chare_total correspond to char_elec_energy
-      -1,10,11,12,13,14,15,16,17,18,19,21,20, $ ;fields mode
-      22,23,24,25,26,27,28,-1,-1,-1,-1]
+    dart_as5_arr_elem = [0,-1,1,2,3,4,5,6,7,-1,$ $ ; Not sure if max_chare_losscone [i=12] or max_chare_total correspond to char_elec_energy
+                         8,-1,9,-1,10,11,12,13,14,15,$
+                         16,17,18,19,21,20,22,23,24,25,$ ;fields mode [i=25 here, or 20]
+                         26,27,28,-1,-1,-1,-1]  
     chast_arr_elem = dart_as5_arr_elem[arr_elem]
     IF chast_arr_elem LE -1.0 THEN BEGIN
       PRINT, "ERROR! You're attempting to use Alfven_Stats_5 array element " +string(arr_elem) + " for comparison, but the Chaston DB doesn't include this calculation!"
