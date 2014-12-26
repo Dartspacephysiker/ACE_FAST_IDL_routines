@@ -149,9 +149,10 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
      ;few things for the plots
      chast_histo=histogram(chast_data) 
      dart_histo=histogram(dart_data)
-     max_hist=max([chast_histo,dart_histo])
+     maxHist=max([chast_histo,dart_histo])
      datMax=MAX([chast_data,dart_data])
-  
+     datMin=MIN([chast_data,dart_data])
+
      ;open postscript file
      fname = outdir+'histo_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)
      IF KEYWORD_SET(cur_thresh) THEN fname += '--curthresh_' + strcompress(cur_thresh,/remove_all)
@@ -164,24 +165,35 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
      !y.thick=2
      !p.charthick=2.0
      !p.font=1
-     !p.charsize=1.4
+     !p.charsize=1.25
 
-     cghistoplot,chast_data,POLYCOLOR='navy',/fillpolygon, binsize=binS, histdata=chast_histodata,layout=[2,1,1],xtitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e 
+     cghistoplot,chast_data,POLYCOLOR='navy',/fillpolygon, COLOR='navy', binsize=binS, histdata=chast_histodata,layout=[2,1,1],xtitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95,  _extra = e 
      
-     cghistoplot,dart_data,POLYCOLOR='forest green',/fillpolygon, binsize=binS, histdata=dart_histodata,layout=[2,1,2],xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=max_hist,maxinput=datMax, _extra = e 
+     cghistoplot,dart_data,POLYCOLOR='forest green', /fillpolygon, COLOR='forest green', binsize=binS, histdata=dart_histodata,layout=[2,1,2],xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95,  _extra = e 
 
      chast_integral=total(chast_data)
      dart_integral=total(dart_data)
      chast_nevents=n_elements(chast_data)
      dart_nevents=n_elements(dart_data)
 
-     cgText,0.46,0.2,  'Binsize             : ' + strcompress(binS,/remove_all),/normal,charsize=1
-     cgText,0.46,0.175,'Chaston integral    : ' + strcompress(chast_integral,/remove_all),/normal,charsize=1
-     cgText,0.46,0.155,'Dartmouth integral  : ' + strcompress(dart_integral,/remove_all),/normal,charsize=1
-     cgText,0.46,0.13, 'Chaston # events    : ' + strcompress(chast_nevents,/remove_all),/normal,charsize=1
-     cgText,0.46,0.11, 'Dartmouth # events  : ' + strcompress(dart_nevents,/remove_all),/normal,charsize=1
+     cSize=1
+
+     ;; cgText,0.46,0.2,  'Binsize             : ' + strcompress(binS,/remove_all),/normal,charsize=cSize
+     ;; cgText,0.46,0.175,'Chaston integral    : ' + strcompress(chast_integral,/remove_all),/normal,charsize=cSize
+     ;; cgText,0.46,0.155,'Dartmouth integral  : ' + strcompress(dart_integral,/remove_all),/normal,charsize=cSize
+     ;; cgText,0.46,0.13, 'Chaston # events    : ' + strcompress(chast_nevents,/remove_all),/normal,charsize=cSize
+     ;; cgText,0.46,0.11, 'Dartmouth # events  : ' + strcompress(dart_nevents,/remove_all),/normal,charsize=cSize
+     ;; IF KEYWORD_SET(cur_thresh) THEN $
+     ;;    cgText,0.46,0.095, 'microA/m^2 threshold: ' + strcompress(cur_thresh,/remove_all),/normal,charsize=cSize
+
+     cgText,0.46,0.2,string(format='("Binsize",T22,":",T25,G0.4)',binS),/normal,charsize=cSize
+     cgText,0.46,0.175,string(format='("Chaston integral",T22,":",T25,G0.4)',chast_integral),/normal,charsize=cSize
+     cgText,0.46,0.155,string(format='("Dartmouth integral",T22,":",T25,G0.4)',dart_integral),/normal,charsize=cSize
+     cgText,0.46,0.13,string(format='("Chaston # events",T22,":",T25,I0)',chast_nevents),/normal,charsize=cSize
+     cgText,0.46,0.11,string(format='("Dartmouth # events",T22,":",T25,I0)',dart_nevents),/normal,charsize=cSize
      IF KEYWORD_SET(cur_thresh) THEN $
-        cgText,0.46,0.095, 'microA/m^2 threshold: ' + strcompress(cur_thresh,/remove_all),/normal,charsize=1
+        cgText,0.46,0.095, string(format='("microA/m^2 threshold",T22,":",T25,G0.4)',cur_thresh),/normal,charsize=cSize
+
 
      cgps_Close 
         
@@ -190,7 +202,8 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
 END
 
 ;I think I want to use this to make box plots
-PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, orbs=orbs, intervals=intervals, as3=as3, show_f=show_f, poynting_boxplot=poynting_boxplot, logplots=logplots, _ref_extra = e
+PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, orbs=orbs, intervals=intervals, as3=as3, show_f=show_f, poynting_boxplot=poynting_boxplot, $
+   cur_thresh=cur_thresh, logplots=logplots, _ref_extra = e
 
   datdir="/SPENCEdata2/Research/Cusp/ACE_FAST/Compare_new_DB_with_Chastons/txtoutput/"
 
@@ -299,26 +312,39 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, orbs=orbs, interval
         
      ENDELSE 
      
+     ;generate array of signs for each data set
+     neg_arr_chast = chast_boxdata
+     neg_arr_chast(where(neg_arr_chast NE 0)) = neg_arr_chast(where(neg_arr_chast NE 0)) / abs(neg_arr_chast(where(neg_arr_chast NE 0)))
+
+     neg_arr_dart = dart_boxdata
+     neg_arr_dart(where(neg_arr_dart NE 0)) = neg_arr_dart(where(neg_arr_dart NE 0)) / abs(neg_arr_dart(where(neg_arr_dart NE 0)))
+
      IF KEYWORD_SET(logplots) THEN BEGIN
         chast_boxdata=abs(alog10(chast_boxdata))
         dart_boxdata=abs(alog10(dart_boxdata))
         
-     ENDIF ;ELSE BEGIN
-     ;;    logTitle=''   
-     ;; ENDELSE
+     ENDIF 
 
      ;bounds for plots
      datMax=MAX([chast_boxdata,dart_boxdata]) 
      datMin=MIN([chast_boxdata,dart_boxdata]) 
 
+     IF KEYWORD_SET(cur_thresh) THEN BEGIN
+        winnow_chast_and_dart_data_array,cur_thresh=cur_thresh,chast_arr_elem=chast_arr_elem,arr_elem=arr_elem, $
+                                         chast_data=chast_boxdata,dart_data=dart_boxdata,chast_struct=chast_struct,dart_struct=dart_struct,as3=as3
+     ENDIF
 
 
      ;open postscript file
-     cgPS_Open, FILENAME=outdir+'boxplot_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)+'.png', font=1 
+     fname = outdir+'boxplot_comparison--'+dartTitle+'--Chast_Dartmouth--Orbit_'+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all)
+     IF KEYWORD_SET(cur_thresh) THEN fname += '--curthresh_' + strcompress(cur_thresh,/remove_all)
+     fname +='.png'
 
-     cgboxplot,chast_boxdata, BoxColor='navy', outliercolor='red', stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
+     cgPS_Open, FILENAME=fname, font=1 
+
+     cgboxplot_wnegs,chast_boxdata, BoxColor='navy', outliercolor='red', neg_outliercolor='blue', NEG_ARR=neg_arr_chast, stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
         
-     cgboxplot,dart_boxdata, BoxColor='forest green', outliercolor='red', stats=dart_boxstats,layout=[2,1,2],ytitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
+     cgboxplot_wnegs,dart_boxdata, BoxColor='forest green', outliercolor='red', neg_outliercolor='blue', NEG_ARR=neg_arr_dart, stats=dart_boxstats,layout=[2,1,2],ytitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
         
      cSize=1.0
      
