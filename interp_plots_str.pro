@@ -157,9 +157,9 @@ plot_i=cdbInterp_i(phiImf_ii)
 
 ;********************************************************
 ;WHICH ORBITS ARE UNIQUE?
-;; uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
-;; nOrbs=n_elements(uniqueOrbs_ii)
-;; printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
+uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
+nOrbs=n_elements(uniqueOrbs_ii)
+printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
 
 ;***********************************************
 ;Calculate Poynting flux estimate
@@ -292,9 +292,10 @@ IF (ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] & $
   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN & $
     dataName=[dataName,STRTRIM(abslogEstr,2)+"eFlux"+eFluxPlotType+"_"] & $
     dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] & $
+   ENDIF & $
 ENDIF
 
-undefine,h2dEStr;,elecData 
+undefine,h2dEStr ;,elecData 
 
 
 ;########Poynting Flux########
@@ -351,6 +352,7 @@ IF (pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] & $
   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN & $
     dataName=[dataName,STRTRIM(abslogPstr,2)+"pFlux_"] & $
     dataRawPtr=[dataRawPtr,PTR_NEW(pData)] & $
+   ENDIF & $ 
 ENDIF
 
 undefine,h2dPStr
@@ -449,7 +451,7 @@ h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)]
 
 IF (orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] & $
   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbTot_"] & $
-ENDIF
+  ENDIF
 ;########Orbit FREQUENCY########
 h2dFreqOrbStr={h2dStr}
 h2dFreqOrbStr.data=h2dOrbStr.data
@@ -474,7 +476,7 @@ FOR i = 2, N_ELEMENTS(h2dStr)-1 DO BEGIN & $
    n_elements(where(h2dStr[0].data EQ 0,/NULL)) THEN BEGIN & $
      printf,lun,"h2dStr."+h2dStr[i].title + " has ", strtrim(n_elements(where(h2dStr[i].data EQ 0)),2)," elements that are zero, whereas FluxN has ", strtrim(n_elements(where(h2dStr[0].data EQ 0)),2),"." & $
 printf,lun,"Sorry, can't plot anything meaningful." & ENDIF
-
+ENDFOR
 
 ;********************************************************
 ;Handle Plots all at once

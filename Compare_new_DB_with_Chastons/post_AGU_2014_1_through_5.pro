@@ -138,8 +138,8 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
      exponent=floor(alog10(abs(median([chast_data,dart_data]))))
      binS=10.0^(exponent)
 
-;     print,'exponent: ',exponent
-;     print,'binsize: ',binS
+     print,'exponent: ',exponent
+     print,'binsize: ',binS
 
      IF KEYWORD_SET(cur_thresh) THEN BEGIN
         winnow_chast_and_dart_data_array,cur_thresh=cur_thresh,chast_arr_elem=chast_arr_elem,arr_elem=arr_elem, $
@@ -158,18 +158,19 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
      IF KEYWORD_SET(cur_thresh) THEN fname += '--curthresh_' + strcompress(cur_thresh,/remove_all)
      fname +='.png'
 
-     cgPS_Open, FILENAME=fname, font=1 
+;DOESN'T WORK     cgps_open, xsize=800, ysize=600, FILENAME=fname, font=1, /nomatch
+     cgps_open, FILENAME=fname, font=1
      
-     !p.thick=2
-     !x.thick=2
-     !y.thick=2
-     !p.charthick=2.0
-     !p.font=1
+     ;; !p.thick=2
+     ;; !x.thick=2
+     ;; !y.thick=2
+     ;; !p.charthick=2.0
+     ;; !p.font=1
      !p.charsize=1.25
 
-     cghistoplot,chast_data,POLYCOLOR='navy',/fillpolygon, COLOR='navy', binsize=binS, histdata=chast_histodata,layout=[2,1,1],xtitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95,  _extra = e 
+     cghistoplot,chast_data,POLYCOLOR='navy',/fillpolygon, datacolorname='blue', binsize=binS, histdata=chast_histodata,layout=[2,1,1],xtitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95, charsize=1.3, _extra = e 
      
-     cghistoplot,dart_data,POLYCOLOR='forest green', /fillpolygon, COLOR='forest green', binsize=binS, histdata=dart_histodata,layout=[2,1,2],xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95,  _extra = e 
+     cghistoplot,dart_data,POLYCOLOR='forest green', /fillpolygon, datacolorname='green', binsize=binS, histdata=dart_histodata,layout=[2,1,2],xtitle=dartTitle,title="Dart db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all),ytitle='Number of occurrences',max_value=maxHist,maxinput=datmax*1.05, mininput=datMin*0.95, charsize=1.3, _extra = e 
 
      chast_integral=total(chast_data)
      dart_integral=total(dart_data)
@@ -186,13 +187,13 @@ PRO post_AGU_2014_1_make_comparison_histos, arr_elem, orbs=orbs, intervals=inter
      ;; IF KEYWORD_SET(cur_thresh) THEN $
      ;;    cgText,0.46,0.095, 'microA/m^2 threshold: ' + strcompress(cur_thresh,/remove_all),/normal,charsize=cSize
 
-     cgText,0.46,0.2,string(format='("Binsize",T22,":",T25,G0.4)',binS),/normal,charsize=cSize
-     cgText,0.46,0.175,string(format='("Chaston integral",T22,":",T25,G0.4)',chast_integral),/normal,charsize=cSize
-     cgText,0.46,0.155,string(format='("Dartmouth integral",T22,":",T25,G0.4)',dart_integral),/normal,charsize=cSize
-     cgText,0.46,0.13,string(format='("Chaston # events",T22,":",T25,I0)',chast_nevents),/normal,charsize=cSize
-     cgText,0.46,0.11,string(format='("Dartmouth # events",T22,":",T25,I0)',dart_nevents),/normal,charsize=cSize
+     cgText,0.46,0.25,string(format='("Binsize",T22,":",T25,G0.4)',binS),/normal,charsize=cSize
+     cgText,0.46,0.225,string(format='("Chaston integral",T22,":",T25,G0.4)',chast_integral),/normal,charsize=cSize
+     cgText,0.46,0.205,string(format='("Dartmouth integral",T22,":",T25,G0.4)',dart_integral),/normal,charsize=cSize
+     cgText,0.46,0.18,string(format='("Chaston # events",T22,":",T25,I0)',chast_nevents),/normal,charsize=cSize
+     cgText,0.46,0.16,string(format='("Dartmouth # events",T22,":",T25,I0)',dart_nevents),/normal,charsize=cSize
      IF KEYWORD_SET(cur_thresh) THEN $
-        cgText,0.46,0.095, string(format='("microA/m^2 threshold",T22,":",T25,G0.4)',cur_thresh),/normal,charsize=cSize
+        cgText,0.46,0.145, string(format='("microA/m^2 threshold",T22,":",T25,G0.4)',cur_thresh),/normal,charsize=cSize
 
 
      cgps_Close 
@@ -340,7 +341,10 @@ PRO post_AGU_2014_2_through_4_find_garbage_events, arr_elem, orbs=orbs, interval
      IF KEYWORD_SET(cur_thresh) THEN fname += '--curthresh_' + strcompress(cur_thresh,/remove_all)
      fname +='.png'
 
-     cgPS_Open, FILENAME=fname, font=1 
+;     cgps_open, xsize=800, ysize=600, FILENAME=fname, font=1 
+     cgps_open, FILENAME=fname, font=1
+
+     !p.charsize=1.25
 
      cgboxplot_wnegs,chast_boxdata, BoxColor='navy', outliercolor='red', neg_outliercolor='blue', NEG_ARR=neg_arr_chast, stats=chast_boxstats,layout=[2,1,1],ytitle=chastTitle,title="Chaston db, orbit "+strcompress(orbs[i],/remove_all)+'_'+strcompress(intervals[i],/remove_all), yrange=[datMin,datMax], LABELS=[''],  _extra = e 
         

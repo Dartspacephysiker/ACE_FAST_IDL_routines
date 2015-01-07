@@ -253,7 +253,7 @@ FUNCTION cgBoxPlot_wnegs_Prepare_Data, data, missing_data_value
 
       ; Check the parameters.
       IF N_Elements(thisdata) EQ 0 THEN Message, 'Data vector is undefined.'
-      IF N_Elements(boxcolor) EQ 0 THEN boxcolor = 'rose'
+      IF N_Elements(boxcolor) EQ 0 THEN boxcolor = 'black'
       IF N_Elements(color) EQ 0 THEN color = 'opposite'
       IF N_Elements(neg_outliercolor) EQ 0 THEN neg_outliercolor = color
       IF N_Elements(outliercolor) EQ 0 THEN outliercolor = color
@@ -744,7 +744,7 @@ FUNCTION cgBoxPlot_wnegs_Prepare_Data, data, missing_data_value
       IF N_Elements(background_color) EQ 0 THEN background_color = 'white'
       IF N_Elements(charsize) EQ 0 THEN charsize = cgDefCharsize()
       IF N_Elements(xcharsize) EQ 0 THEN xcharsize = charsize * 0.75
-      IF N_Elements(boxcolor) EQ 0 THEN boxcolor = 'rose'
+      IF N_Elements(boxcolor) EQ 0 THEN boxcolor = 'black'
       fillboxes = Keyword_Set(fillboxes)
       IF N_Elements(neg_outliercolor) EQ 0 THEN neg_outliercolor = color
       IF N_Elements(outliercolor) EQ 0 THEN outliercolor = color
