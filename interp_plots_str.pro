@@ -41,7 +41,7 @@ orbFreqPlot= 0 ;Contributing/total orbits plot?
 
 ;Which IMF clock angle are we doing?
 ;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth'
-IF batchMode EQ !NULL THEN clockStr='duskward'
+IF batchMode EQ !NULL THEN clockStr='dawnward'
 
 ;How to set angles? Note, clock angle is measured with
 ;Bz North at zero deg, ranging from -180<clock_angle<180
