@@ -17,6 +17,7 @@
 
 printf,lun,"****From check_imf_stability.pro****" & $
 
+
 ;Set up to check correct region: negAngle<phi<posAngle
 IF clockStr EQ 'duskward' THEN BEGIN & $
 ;   ctrAngle=90 & $
@@ -32,18 +33,23 @@ ENDIF ELSE IF clockStr EQ 'bzNorth' THEN BEGIN & $
    posAngle=angleLim1 & $
 ENDIF ELSE IF clockStr EQ 'bzSouth' THEN BEGIN & $ 
 ;   ctrAngle=180 & $
-
    negAngle=angleLim2 & $
    posAngle=-angleLim2 & $
-ENDIF ELSE BEGIN & printf,lun, "Only four options, brother." & plot_i=-1 & ENDELSE
+ENDIF ELSE IF clockStr EQ 'all_IMF' THEN BEGIN & $
+   negAngle=-angleLim1 & $
+   posAngle=angleLim2 & $
+ENDIF ELSE BEGIN & printf,lun, "Only five options, brother." & plot_i=-1 & ENDELSE
 
 ;Everyone but bzSouth is amenable to what's below
 ;NOTE: /NULL used in WHERE so that if no elements are returned,
 ;we don't append a value of -1 to phiImf_ii
-IF clockStr NE 'bzSouth' THEN $
+IF clockStr NE 'bzSouth' AND clockStr NE 'all_IMF' THEN $
    phiImf_ii=where(phiChast GE negAngle AND phiChast LE posAngle) $
-ELSE phiImf_ii=cgSetUnion(where(phiChast GE negAngle, /NULL),$
-                          where(phiChast LE posAngle, /NULL))
+ELSE IF clockStr EQ 'bzSouth' THEN $
+   phiImf_ii=cgSetUnion(where(phiChast GE negAngle, /NULL),$
+                        where(phiChast LE posAngle, /NULL)) $
+ELSE IF clockStr EQ 'all_IMF' THEN $
+   phiImf_ii=where(phiChast EQ phiChast, /NULL)
 
 
 printf,lun,strtrim(N_ELEMENTS(phiImf_ii),2)+" events with IMF predominantly " $

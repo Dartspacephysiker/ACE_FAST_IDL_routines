@@ -14,7 +14,7 @@
 ;dbfile="/processed/maximus.dat"
 
 ;for doing our own DB
-dbfile="Dartdb_01072015_maximus.sav"
+dbfile="Dartdb_01092015_maximus.sav"
 loaddataDir='/SPENCEdata2/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
 
 ;Load, if need be

@@ -63,8 +63,8 @@ pro write_dbfiles_3, dbf1_struct, dbf2_struct, arr_elem1=arr_elem1, filename=fil
                          26,27,28,-1,-1,-1,-1]
     dbf1_as3_arr_elem = [0,2,3,4,5,6,7,8,10,12, $
                          14,15,16,17,18,19,20,21,22,23,$
-                         25,24,26,27,28,29,30,31,32,-1,-1,$
-                         -1,-1,-1]
+                         25,24,26,27,28,29,30,31,32,-1,$
+                         -1,-1,-1,-1]
     dbf2_arr_elem = dbf1_as3_arr_elem[arr_elem1]
     dbf1_arr_elem = arr_elem1
 ;;    print,"arr_elem1        : " + strcompress(arr_elem1,/REMOVE_ALL)

@@ -2,7 +2,7 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='01092015'
+  date='01122015'
   Dartmouth_DB='/SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
 
@@ -19,7 +19,7 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
                                 ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
      result=file_which(Dartmouth_DB,filename)
      if result then begin
-        for jj=0,5 do begin
+        for jj=0,9 do begin
            result=file_which(Dartmouth_DB,filename)
            if result then begin
               print,j,jj

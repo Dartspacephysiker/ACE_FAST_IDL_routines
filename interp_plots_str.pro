@@ -40,15 +40,20 @@ orbTotPlot= 0 ;"Total orbits considered" plot?
 orbFreqPlot= 0 ;Contributing/total orbits plot?
 
 ;Which IMF clock angle are we doing?
-;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth'
-IF batchMode EQ !NULL THEN clockStr='dawnward'
+;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
+IF batchMode EQ !NULL THEN clockStr='all_IMF'
 
 ;How to set angles? Note, clock angle is measured with
 ;Bz North at zero deg, ranging from -180<clock_angle<180
 ;Setting angle limits 45 and 135, for example, gives a 90-deg
 ;window for dawnward and duskward plots
-angleLim1=45 ;in degrees
-angleLim2=135;in degrees
+IF clockStr NE "all_IMF" THEN BEGIN & $
+   angleLim1=45 &  $            ;in degrees
+   angleLim2=135 & $            ;in degrees
+ENDIF ELSE BEGIN & $
+   angleLim1=180 & $            ;for doing all IMF
+   angleLim2=180 & $
+ENDELSE
 
 ;Bin sizes for 2D histos
 binMLT=0.5
@@ -186,8 +191,10 @@ printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
 printf,lun,"Angle lim 2: " + strtrim(angleLim2,2)
 printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
 printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
-printf,lun,"Percentage of Chaston DB used: " + $
-       strtrim((N_ELEMENTS(plot_i))/134925.0*100.0,2) + "%"
+;; printf,lun,"Percentage of Chaston DB used: " + $
+;;        strtrim((N_ELEMENTS(plot_i))/134925.0*100.0,2) + "%"
+printf,lun,"Percentage of current DB used: " + $
+       strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
 
 ;********************************************
 ;junk=where(cdbInterp_i(phi_dusk_ii) EQ cdbInterp_i(phi_dawn_ii))
@@ -404,7 +411,7 @@ ENDFOR
 h2dOrbStr.title="Num Contributing Orbits"
 
 ;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-h2dOrbStr.lim=[1,15]
+h2dOrbStr.lim=[1,20]
 
 IF (orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] & $
   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbsContributing_"] & $
