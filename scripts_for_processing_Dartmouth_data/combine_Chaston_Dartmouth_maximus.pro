@@ -7,7 +7,7 @@ pro combine_Chaston_Dartmouth_maximus,maximus
   Chaston_DBfile='/SPENCEdata2/Research/Cusp/database/processed/maximus.dat'
   
   ;; Dartmouth db file
-  date='01122015'
+  date='01142015'
   Dartmouth_DB='/SPENCEdata2//Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
   Dart_DBfile=Dartmouth_DB + 'Dartdb_' + date + '_maximus.sav'
 

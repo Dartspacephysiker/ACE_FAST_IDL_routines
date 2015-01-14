@@ -41,7 +41,7 @@ orbFreqPlot= 0 ;Contributing/total orbits plot?
 
 ;Which IMF clock angle are we doing?
 ;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
-IF batchMode EQ !NULL THEN clockStr='all_IMF'
+IF batchMode EQ !NULL THEN clockStr='dawnward'
 
 ;How to set angles? Note, clock angle is measured with
 ;Bz North at zero deg, ranging from -180<clock_angle<180
@@ -134,7 +134,7 @@ Bx_over_ByBz_Lim=0 ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
 ;Stuff for output
 hoyDia= "_" + STRMID(SYSTIME(0), 4, 3) + "_" + $
        STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
-plotDir='plots/new_Dartmouth_db/'
+plotDir='plots/combined_Chast_Dart_db/'
 IF medPlot GT 0 THEN plotSuff = "_med" ELSE plotSuff = "_avg"
 plotType='Eflux_' +eFluxPlotType
 plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
