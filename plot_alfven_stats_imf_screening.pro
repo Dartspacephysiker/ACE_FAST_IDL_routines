@@ -1,52 +1,216 @@
-PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
-                                     NPLOTS=nPlots,EPLOTS=ePlots, PPLOTS= pPlots, $
+;+
+; NAME: PLOT_ALFVEN_STATS_IMF_SCREENING
+;
+;
+;
+; PURPOSE: Plot FAST data processed by Chris Chaston's ALFVEN_STATS_5 procedure (with mods).
+;          All data are binned by MLT and ILAT (bin sizes can be set manually).
+;
+;
+;
+; CATEGORY:
+;
+;
+;
+; CALLING SEQUENCE: PLOT_ALFVEN_STATS_IMF_SCREENING
+;
+;
+;
+; INPUTS:
+;
+;
+;
+; OPTIONAL INPUTS:   
+;                *DATABASE PARAMETERS
+;                    CLOCKSTR          :  Interplanetary magnetic field clock angle.
+;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', or 'all_IMF'
+;		     ANGLELIM1         :     
+;		     ANGLELIM2         :     
+;		     ORBRANGE          :     
+;		     MLTBINS           :  MLT binsize  (Default: 0.5)
+;		     ILATBINS          :  ILAT binsize (Default: 2.0)
+;		     MIN_NEVENTS       :  Minimum number of events an orbit must contain to qualify as a "participating orbit"
+;                    MASKMIN           :  Minimum number of events a given MLT/ILAT bin must contain to show up on the plot.
+;                                            Otherwise it gets shown as "no data". (Default: 1)
+;		     NPLOTS            :  Plot number of orbits.   
+;
+;                *IMF SATELLITE PARAMETERS
+;                    SATELLITE         :  Satellite to use for checking FAST data against IMF.
+;                                           Can be any of "ACE", "wind", or "wind_ACE".
+;                    DELAY             :  Time (in seconds) to lag IMF behind FAST observations. 
+;                                         Binzheng Zhang has found that current IMF conditions at ACE or WIND usually rear   
+;                                            their heads in the ionosphere about 11 minutes after they are observed.
+;                    STABLEIMF         :  Time (in minutes) over which stability of IMF is required to include data.
+;                                            NOTE! Cannot be less than 1 minute.
+;
+;                *ELECTRON FLUX PLOT OPTIONS
+;		     EPLOTS            :     
+;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
+;                    LOGEFPLOT         :  Do log plots of electron flux.
+;                    ABSEFLUX          :  Use absolute value of electron flux (required for log plots).
+;                    CUSTOMERANGE      :  Range of allowable values for e- flux plots. (Default: [-500000,500000])
+;
+;                *POYNTING FLUX PLOT OPTIONS
+;		     PPLOTS            :  Do Poynting flux plots.
+;                    LOGPFPLOT         :  Do log plots of Poynting flux.
+;                    ABSPFLUX          :  Use absolute value of Poynting flux (required for log plots).
+;                    CUSTOMPRANGE      :  Range of allowable values for e- flux plots. (Default: [0,3])
+;
+;                *ION FLUX PLOTS
+;		     IPLOTS            :  Do ion plots.
+;
+;                *ORBIT PLOT OPTIONS
+;		     ORBPLOT           :     
+;		     ORBTOTPLOT        :     
+;		     ORBFREQPLOT       :     
+;
+;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
+;		     MEDIANPLOT        :  Do median plots instead of averages.
+;		     LOGPLOT           :     
+;		     POLARPLOT         :  Do plots in polar stereo coordinates. (Default: on)    
+;
+;		     DBFILE            :     
+;		     DATADIR           :     
+;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
+;                                            (He used it for a few papers, I think, so it's good).
+;
+;                  *VARIOUS OUTPUT OPTIONS
+;		     WRITEASCII        :     
+;		     WRITEHDF5         :      
+;                    WRITEPROCESSEDH2D :  Use this to output processed, histogrammed data. That way you
+;                                            can share with others!
+;		     SAVERAW           :     
+;                    NOPLOTSJUSTDATA   :  No plots whatsoever; just give me the dataz.
+;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
+;		     PLOTPREFIX        :     
+;                    OUTPUTPLOTSUMMARY :  Make a text file with record of running params, various statistics
+;
+; KEYWORD PARAMETERS:
+;
+;
+;
+; OUTPUTS:
+;
+;
+;
+; OPTIONAL OUTPUTS: 
+;                    MAXIMUS           :  Return maximus structure used in this pro.
+;
+;
+;
+; COMMON BLOCKS:
+;
+;
+;
+; RESTRICTIONS:
+;
+;
+;
+; PROCEDURE:
+;
+;
+;
+; EXAMPLE: 
+;     Use Chaston's original (ALFVEN_STATS_3) database, only including orbits falling in the range 1000-4230
+;     plot_alfven_stats_imf_screening,clockstr="duskward",/do_chastdb,$
+;                                          plotpref='NESSF2014_reproduction_Jan2015--orbs1000-4230',ORBRANGE=[1000,4230]
+;
+;
+;
+; MODIFICATION HISTORY: Best to follow my mod history on the Github repository...
+;                       Jan 2015: Finally turned interp_plots_str into a procedure! Here you have
+;                                 the result.
+;-
+
+PRO plot_alfven_stats_imf_screening, maximus, $
+                                     CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, ORBRANGE=orbRange, $
+                                     MLTBINS=MLTbinS, ILATBINS=ILATbinS, $
+                                     SATELLITE=satellite, DELAY=delay, STABLEIMF=stableIMF, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                     NPLOTS=nPlots, $
+                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEFlux, CUSTOMERANGE=customERange, $
+                                     PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPFlux, CUSTOMPRANGE=customPRange, $
+                                     IPLOTS=iPlots, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, POLARPLOT=polarPlot, $
-                                     ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                     ORBRANGE=orbRange, $
-;;                                     BINMLT=binMLT, BINILAT=binILAT, $
-                                     MIN_NEVENTS=min_nEvents, $
+                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
-                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, SAVERAW=saveRaw, $
-                                     PLOTPREFIX=plotPrefix
+                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
+                                     NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
+                                     OUTPUTPLOTSUMMARY=outputPlotSummary
 
   ;;variables to be used by interp_contplot.pro
   COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
 
-  !EXCEPT=0
+  !EXCEPT=0                                                      ;Do report errors, please
   ;;***********************************************
   tempSave=0
 
+  ;;***********************************************
+  ;;RESTRICTIONS ON DATA, SOME VARIABLES
+  ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
+  
+  mu_0 = 4.0e-7 * !PI                                            ;perm. of free space, for Poynt. est
+  ;;mu_0 = 1 ;perm. of free space, for Poynt. est
+  
+  ;; Don't use minOrb or maxOrb; use orbRange as a keyword in call to this pro
+  ;; minOrb=8100                   ;8260 for Strangeway study
+  ;; maxOrb=8500                   ;8292 for Strangeway study
+  ;;nOrbits = maxOrb - minOrb + 1
+  
+  IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
+  IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
+  
+  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 9
+  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 15
+  
+  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68
+  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84
+  
+  IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
+  IF NOT KEYWORD_SET(max_negmagc) THEN max_negmagc = -10         ; Current must be less than this, if it's going to make the cut
+  
+  
+  ;;********************************************
+  ;;satellite data options
+  
+  IF NOT KEYWORD_SET(satellite) THEN satellite = "wind_ACE"      ;either "ACE", "wind", or "wind_ACE"
+  
+  IF NOT KEYWORD_SET(delay) THEN delay = 660                     ;Delay between ACE propagated data and ChastonDB data
+                                                                 ;Bin recommends something like 11min
+  
+  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = 0S                    ;Set to a time (in minutes) over which IMF stability is required
+  IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
+                                                                       ;there's no way to calculate IMF stability
+                                                                       ;Only valid for stableIMF GE 1
+  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = 0       ;
+  
+  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = 0 ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  
+  
   ;;Want to make plots in plotDir?
-  savePlots=1
   IF NOT KEYWORD_SET(plotDir) THEN plotDir = 'plots/'
   ;;plotPrefix='NESSF2014_reproduction_Jan2015'
 
   saveRaw=0                     ; save raw data plots?
   saveRawDir="testcode/laTEST/"
-  ;;Write output file with data params? Only possible if savePlots=1...
-  IF savePlots NE 0 THEN outputPlotSummary=0 $   ;;Change to zero if not wanted
-  ELSE outputPlotSummary=0
+ 
+  ;;Write output file with data params? Only possible if noSavePlots=0...
+  IF KEYWORD_SET(noSavePlots) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
+     print, "Is it possible to have outputPlotSummary==1 while noSavePlots==0? You used to say no..."
+     outputPlotSummary=1   ;;Change to zero if not wanted
+  ENDIF 
 
   ;;Write plot data output for Bin?
-
-  noPlots=0                     ;turn off plots, if just outputting data
-  writeHDF5=0
-  writeASCII=0
-  writeProcessedH2d=0           ;Use this to output processed, histogrammed data
 
   IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata2/Research/Cusp/database/"
   ;;********************************************
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
-  ;;Want medians instead of averages?
-  medianplot=0
+  IF N_ELEMENTS(polarPlot) EQ 0 THEN polarPlot=1                 ;do Polar plots instead?
 
-  polarPlot=1                   ;do Polar plots instead?
-
-  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                   ; do num events plots?
-  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                  ;electron flux plots?
+  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                     ; do num events plots?
+  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                    ;electron flux plots?
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = "Integ" ;options are "Integ" and "Max"
   IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                    ;Poynting flux [estimate] plots?
   IF N_ELEMENTS(iPlots) EQ 0 THEN iPlots =  0                    ;ion Plots?
@@ -71,85 +235,61 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ENDELSE
 
   ;;Bin sizes for 2D histos
-  binMLT=0.5
-  binILAT=2
-  
+  binMLT=(N_ELEMENTS(MLTbinS) EQ 0) ? 0.5 : MLTbinS
+  binILAT=(N_ELEMENTS(ILATbinS) EQ 0) ? 2.0 : ILATbinS 
+
   ;;Set minimum allowable number of events for a histo bin to be displayed
-  maskMin=1
+  IF NOT KEYWORD_SET(maskMin) THEN maskMin=1
   
   ;;######ELECTRONS
   ;;Eflux max abs. value in interval, or integrated flux?
   ;;NOTE: max value has negative values, which can mess with
   ;;color bars
   
-  logEfPlot=1                   ;Want log plots of e- flux?
-  absEFlux=1                    ;Make E Flux plots absolute value?
+  IF NOT KEYWORD_SET(logEfPlot) THEN logEfPlot=1                 ;Want log plots of e- flux?
+
+  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEFlux) THEN BEGIN 
+     print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEFlux' set!"
+     print,"Can't make log plots without using absolute value..."
+     WAIT, 1
+     absEFlux=1
+  ENDIF
+
   ;;For linear or log EFlux plotrange
-  IF (~logEfPlot) THEN customERange=[-500000,500000] ELSE customERange=[1,5]
+  IF NOT KEYWORD_SET(customERange) THEN BEGIN
+     IF NOT KEYWORD_SET(logEfPlot) THEN customERange=[-500000,500000] ELSE customERange=[1,5]
+  ENDIF
   
   ;;######Poynting flux
-  logPfPlot=0                   ;Want log plots of Poynting flux?
-  absPFlux=0                    ;Make Poynting flux plots absolute value?
+  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPFlux) THEN BEGIN 
+     print,"Warning!: You're trying to do log Pflux plots but you don't have 'absPFlux' set!"
+     print,"Can't make log plots without using absolute value..."
+     WAIT, 1
+     absPFlux=1
+  ENDIF
+
   ;;For linear or log PFlux plotrange
-  IF (~logPfPlot) THEN customPRange=[0,3] ELSE customPRange=[-1,0.5]
-  
+  IF NOT KEYWORD_SET(customPRange) THEN BEGIN
+     IF NOT KEYWORD_SET(logPfPlot) THEN customPRange=[0,3] ELSE customPRange=[-1,0.5]
+  ENDIF
+
   ;;######Ion flux (up)
   logIonFluxPlot=0
   absIonFlux=0
   ;;For linear or log ion flux plotrange
-  IF (~logIonFluxPlot) THEN customIonRange=[0,1.5e8] ELSE customIonRange=[1,8.5]
+  IF NOT KEYWORD_SET(logIonFluxPlot) THEN customIonRange=[0,1.5e8] ELSE customIonRange=[1,8.5]
   
   ;;######Oxy flux
   logOFluxPlot=0
   absOFlux=0
   ;;For linear or log ion flux plotrange
   ;;IF logOFluxPlot EQ 0 THEN customORange=[0,1e4] ELSE customRange=ALOG10([0,1e4]
-  
-  ;;***********************************************
-  ;;RESTRICTIONS ON CHASTON DATA
-  ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
-  
-  mu_0 = 4.0e-7 * !PI           ;perm. of free space, for Poynt. est
-  ;;mu_0 = 1 ;perm. of free space, for Poynt. est
-  
-  minOrb=8100                   ;8260 for Strangeway study
-  maxOrb=8500                   ;8292 for Strangeway study
-  ;;nOrbits = maxOrb - minOrb + 1
-  
-  minE = 4                      ; 4 eV in Strangeway
-  maxE = 250                    ; ~300 eV in Strangeway
-  
-  minMLT = 9
-  maxMLT = 15
-  
-  minILAT = 68
-  maxILAT = 84
-  
-  min_magc = 10                 ; Minimum current derived from mag data, in microA/m^2
-  max_negmagc = -10             ; Current must be less than this, if it's going to make the cut
-  
-  
-  ;;********************************************
-  ;;satellite data options
-  
-  satellite="wind_ACE"          ;either "ACE", "wind", or "wind_ACE"
-  
-  delay=660                     ;Delay between ACE propagated data and ChastonDB data
-                                ;Bin recommends something like 11min
-  
-  stableIMF=0S                  ;Set to a time (in minutes) over which IMF stability is required
-  includeNoConsecData=0         ;Setting this to 1 includes Chaston data for which  
-                                ;there's no way to calculate IMF stability
-                                ;Only valid for stableIMF GE 1
-  checkBothWays=0               ;
-  
-  Bx_over_ByBz_Lim=0            ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
-  
+    
   ;;********************************************
   ;;Stuff for output
   hoyDia= "_" + STRMID(SYSTIME(0), 4, 3) + "_" + $
           STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
-  IF medianplot GT 0 THEN plotSuff = "_med" ELSE plotSuff = "_avg"
+  IF KEYWORD_SET(medianplot) THEN plotSuff = "_med" ELSE plotSuff = "_avg"
   IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
      plotType='Eflux_' +eFluxPlotType
      plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
@@ -166,7 +306,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ENDELSE
   
   ;;Open file for text summary, if desired
-  IF (outputPlotSummary) THEN $
+  IF KEYWORD_SET(outputPlotSummary) THEN $
      OPENW,lun,plotDir+'fluxplots_'+hemStr+'_'+clockStr+plotSuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
@@ -232,7 +372,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
                    MAX1=MAXMLT,MAX2=MAXILAT)
 
   h2dFluxNTitle="Number of events"
-  IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName="nEvents_" 
      dataRawPtr=PTR_NEW() 
   ENDIF
@@ -248,12 +388,12 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   h2dMaskStr.data(where(h2dStr.data GE maskMin,NULL))=0
   h2dMaskStr.title="Histogram mask"
 
-  IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName=[dataName,"histoMask_"] 
      dataRawPtr=[dataRawPtr,PTR_NEW()] 
   ENDIF
 
-  IF (nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
+  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
 
   ;;h2dStr={h2dStr, data : DBLARR(N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*))), title : "", lim : DBLARR(2) }
 
@@ -274,7 +414,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   IF eFluxPlotType EQ "Integ" THEN elecData=maximus.integ_elec_energy_flux(plot_i) $
   ELSE IF eFluxPlotType EQ "Max" THEN elecData=maximus.elec_energy_flux(plot_i)
 
-  IF (medianplot) THEN BEGIN 
+  IF KEYWORD_SET(medianplot) THEN BEGIN 
      h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                               elecData,$
                               MIN1=MINMLT,MIN2=MINILAT,$
@@ -296,25 +436,25 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;Log plots desired?
   logEstr=""
   absEstr=""
-  IF absEFlux EQ 1 THEN BEGIN 
+  IF KEYWORD_SET(absEFlux)THEN BEGIN 
      h2dEStr.data = ABS(h2dEStr.data) 
      absEstr= "ABS" 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN elecData=ABS(elecData) 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
   ENDIF
-  IF logEfPlot EQ 1 THEN BEGIN 
+  IF KEYWORD_SET(logEfPlot) THEN BEGIN 
      logEstr="Log " 
      h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
   ENDIF
   abslogEstr=absEstr + logEstr
 
   ;;Do custom range for Eflux plots, if requested
-  IF customERange NE !NULL THEN h2dEStr.lim=TEMPORARY(customERange)$
+  IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
   ELSE h2dEStr.lim = [MIN(h2dEstr.data),MAX(h2dEstr.data)]
 
   h2dEStr.title= abslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
-  IF (ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
         dataName=[dataName,STRTRIM(abslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
      ENDIF 
@@ -327,7 +467,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
 
   h2dPStr={h2dStr}
 
-  IF medianplot GT 0 THEN BEGIN 
+  IF KEYWORD_SET(medianplot) THEN BEGIN 
      h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                               poynt_est(plot_i),$
                               MIN1=MINMLT,MIN2=MINILAT,$
@@ -345,21 +485,21 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
   ENDELSE
 
-  IF (writeHDF5) or (writeASCII) OR (polarPlot) OR (saveRaw) THEN pData=poynt_est(plot_i)
+  IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
 
   ;;Log plots desired?
   logPstr=""
   absPstr=""
-  IF absPflux EQ 1 THEN BEGIN 
+  IF KEYWORD_SET(absPflux) THEN BEGIN 
      h2dPStr.data = ABS(h2dPStr.data) 
      absPstr= "ABS" 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN pData=ABS(pData) 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
   ENDIF
 
-  IF logPfPlot EQ 1 THEN BEGIN 
+  IF KEYWORD_SET(logPfPlot) THEN BEGIN 
      logPstr="Log " 
      h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN $
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN $
         pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
   ENDIF
 
@@ -368,15 +508,15 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   h2dPStr.title= abslogPstr + "Poynting Flux (mW/m!U2!N)"
 
   ;;Do custom range for Pflux plots, if requested
-  IF customPRange NE !NULL THEN h2dPStr.lim=TEMPORARY(customPRange)$
+  IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
   ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
 
   ;;IF pPlots NE 0 THEN BEGIN 
   ;;  IF ePlots NE 0 THEN h2dStr=[h2dStr,TEMPORARY(h2dPStr)] $
   ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
   ;;ENDIF
-  IF (pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
         dataName=[dataName,STRTRIM(abslogPstr,2)+"pFlux_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
      ENDIF  
@@ -385,7 +525,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
 ;;   undefine,h2dPStr
 
   ;;use these n stuff
-  IF (tempSAVE) THEN BEGIN 
+  IF KEYWORD_SET(tempSAVE) THEN BEGIN 
      print,"saving tempdata..." 
      save,elecData,filename="testcode/elecdata.dat" 
      mlts=maximus.mlt(plot_i) 
@@ -395,7 +535,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      save,pData,filename="testcode/pData.dat" 
   ENDIF
 
-;;   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN undefine,pData
+;;   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN undefine,pData
 
   ;;if iPlots NE 0 THEN @interp_plots_ions.pro
 
@@ -436,8 +576,8 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
   h2dOrbStr.lim=[1,15]
 
-  IF (orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
+  IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
   ENDIF
 
   ;;########TOTAL Orbits########
@@ -479,8 +619,8 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   h2dTotOrbStr.title="Total Orbits"
   h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)]
 
-  IF (orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbTot_"] 
+  IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
   ENDIF
   ;;########Orbit FREQUENCY########
   h2dFreqOrbStr={h2dStr}
@@ -490,8 +630,8 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
   h2dFreqOrbStr.lim=[0,0.3]
 
-  IF (orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
-     IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbFreq_"] 
+  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
   ENDIF
 
 ;;   undefine,h2dTotOrbStr
@@ -514,25 +654,25 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
 
   h2dStr=SHIFT(h2dStr,-1-(nPlots))
-  IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName=SHIFT(dataName,-2) 
      dataRawPtr=SHIFT(dataRawPtr,-2) 
   ENDIF
 
-  IF (polarPlot) THEN save,h2dStr,dataName,maxMLT,minMLT,maxILAT,minILAT,binMLT,binILAT,$
+  IF KEYWORD_SET(polarPlot) THEN save,h2dStr,dataName,maxMLT,minMLT,maxILAT,minILAT,binMLT,binILAT,$
                            saveRawDir,clockStr,plotsuff,stableIMF,hoyDia,hemstr,$
                            ;;                       filename=saveRawDir+'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
                            filename='temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
-  IF (~savePlots) THEN BEGIN 
-     IF (~noPlots) AND (~polarPlot) THEN $
+  IF KEYWORD_SET(noSavePlots) THEN BEGIN 
+     IF NOT KEYWORD_SET(noPlotsJustData) AND NOT KEYWORD_SET(polarPlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
                   ;; SAVERAW=(saveRaw) ? saveRawDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia : 0,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotSuff,1) $
-     ELSE IF (~noPlots) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
+     ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
         ;;    cgWindow,'interp_polar_plot',[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                 ;;             h2dStr[0].lim,Background="White",wxsize=800,wysize=600, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
@@ -544,9 +684,9 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotSuff,1) $
                 
-     ELSE PRINTF,LUN,"**Plots turned off with noPlots**" 
+     ELSE PRINTF,LUN,"**Plots turned off with noPlotsJustData**" 
   ENDIF ELSE BEGIN 
-     IF (~polarPlot) AND (~noPlots) THEN BEGIN 
+     IF NOT KEYWORD_SET(polarPlot) AND NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
         PRINTF,LUN, "Creating output files..." 
 
@@ -559,7 +699,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
         cgPS2Raster, plotDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', $
                      /PNG, Width=1000, /DELETE_PS 
      
-     ENDIF ELSE IF (~noPlots) THEN BEGIN 
+     ENDIF ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
         PRINTF,LUN, "Creating output files..." 
         
@@ -583,13 +723,16 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;For altitude histograms
   ;;cgWindow,"cgHistoPlot",maximus.alt(plot_i),title="Current events for predom. " +clockStr+" IMF, 15Min stability",fill="red"
 
-  IF (outputPlotSummary) THEN BEGIN & CLOSE,lun & FREE_LUN,lun & ENDIF
+  IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
+     CLOSE,lun 
+     FREE_LUN,lun 
+  ENDIF
 
 
    ;;********************************************************
    ;;Thanks, IDL Coyote--time to write out lots of data
 
-   IF (writeHDF5) THEN BEGIN 
+   IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
       FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
          fname=plotDir+dataName[j]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.h5' 
@@ -618,7 +761,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
       ;;To read your newly produced HDF5 file, do this:
       ;;s = H5_PARSE(fname, /READ_DATA)
       ;;HELP, s.mydata._DATA, /STRUCTURE  
-      IF (writeProcessedH2d) THEN BEGIN 
+      IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
             fname=plotDir+dataName[j]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.h5' 
             PRINT,"Writing HDF5 file: " + fname 
@@ -659,7 +802,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
    ;;   FREE_LUN, lun2 
    ;;ENDIF
 
-   IF (writeASCII) THEN BEGIN 
+   IF KEYWORD_SET(writeASCII) THEN BEGIN 
       ;;These are the "raw" data, just as we got them from Chris
       FOR j = 0, n_elements(dataRawPtr)-3 DO BEGIN 
          fname=plotDir+dataName[j]+hemStr+'_'+clockStr+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ascii' 
@@ -676,7 +819,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
       ENDFOR 
       
       ;;NOW DO PROCESSED H2D DATA 
-      IF (writeProcessedH2d) THEN BEGIN 
+      IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR i = 0, n_elements(h2dStr)-1 DO BEGIN 
             fname=plotDir+"h2d_"+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
@@ -695,7 +838,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
       ENDIF 
    ENDIF
 
-;;   IF (writeHDF5) OR (writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
+;;   IF KEYWORD_SET(writeHDF5) OR KEYWORD_SET(writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
    ;;********************************************************
    ;;OLD THINGS FOR SINGLE PLOTS FOLLOW HERE
 
