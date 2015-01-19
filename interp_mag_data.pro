@@ -105,6 +105,8 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
          " events are less than one minute apart."
 
   printf,lun,"****END text from interp_mag_data.pro****"
+  printf,lun,""
+
   ;;********************************************************
   ;;How about the distance between the ACE magdata times twice removed from a current event?
   ;;bigdiff_arr is the smallest distance between chastondbtime and mag_utc[either i or i+1]

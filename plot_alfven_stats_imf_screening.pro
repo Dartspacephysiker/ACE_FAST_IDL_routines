@@ -5,8 +5,9 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
                                      ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
 ;;                                     BINMLT=binMLT, BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, $
-                                     DBFILE=dbfile, DATADIR=dataDir, $
-                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, SAVERAW=saveRaw
+                                     DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, SAVERAW=saveRaw, $
+                                     PLOTPREFIX=plotPrefix
 
   ;;variables to be used by interp_contplot.pro
   COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
@@ -17,6 +18,8 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
 
   ;;Want to make plots in plotDir?
   savePlots=1
+  IF NOT KEYWORD_SET(plotDir) THEN plotDir = 'plots/'
+  ;;plotPrefix='NESSF2014_reproduction_Jan2015'
 
   saveRaw=0                     ; save raw data plots?
   saveRawDir="testcode/laTEST/"
@@ -145,13 +148,14 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;Stuff for output
   hoyDia= "_" + STRMID(SYSTIME(0), 4, 3) + "_" + $
           STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
-  plotDir='../plots/combined_Chast_Dart_db/'
   IF medianplot GT 0 THEN plotSuff = "_med" ELSE plotSuff = "_avg"
-  plotType='Eflux_' +eFluxPlotType
-  plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
-  plotType=(logPfPlot EQ 0) ? plotType : 'logPf_' + plotType
-  plotDir=(polarPlot) ? plotDir + "polar/" + plotType + '/' : plotDir + plotType
-  
+  IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
+     plotType='Eflux_' +eFluxPlotType
+     plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
+     plotType=(logPfPlot EQ 0) ? plotType : 'logPf_' + plotType
+     plotDir=(polarPlot) ? plotDir + "polar/" + plotType + '/' : plotDir + plotType
+  ENDIF ELSE plotDir += plotPrefix + "--"
+
   ;;********************************************
   ;;Figure out both hemisphere and plot indices, 
   ;;tap DBs, and setup output
@@ -167,7 +171,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   
   ;;Now run these to tap the databases and interpolate satellite data
   
-  ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile)
+  ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb)
   phiChast= interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun,cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,DATADIR=dataDir)
   phiImf_ii= check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
@@ -315,7 +319,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      ENDIF 
   ENDIF
 
-  undefine,h2dEStr   ;;,elecData 
+;;   undefine,h2dEStr   ;;,elecData 
 
 
   ;;########Poynting Flux########
@@ -377,7 +381,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      ENDIF  
   ENDIF
 
-  undefine,h2dPStr
+;;   undefine,h2dPStr
 
   ;;use these n stuff
   IF (tempSAVE) THEN BEGIN 
@@ -390,7 +394,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      save,pData,filename="testcode/pData.dat" 
   ENDIF
 
-  IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN undefine,pData
+;;   IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN undefine,pData
 
   ;;if iPlots NE 0 THEN @interp_plots_ions.pro
 
@@ -404,7 +408,10 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   ;;2D array pointed to is indexed by MLTbin and ILATbin. The contents of
   ;;the 3D array are of the format [UniqueOrbs_ii index,MLT,ILAT]
 
-
+  uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
+  nOrbs=n_elements(uniqueOrbs_ii)
+  printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
+  
   h2dOrbStr={h2dStr}
 
   h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
@@ -426,7 +433,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   h2dOrbStr.title="Num Contributing Orbits"
 
   ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-  h2dOrbStr.lim=[1,20]
+  h2dOrbStr.lim=[1,15]
 
   IF (orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
      IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
@@ -486,9 +493,9 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
      IF (writeASCII) OR (writeHDF5) OR (polarPlot) OR (saveRaw) THEN dataName=[dataName,"orbFreq_"] 
   ENDIF
 
-  undefine,h2dTotOrbStr
-  undefine,h2dOrbStr
-  undefine,h2dFreqOrbStr
+;;   undefine,h2dTotOrbStr
+;;   undefine,h2dOrbStr
+;;   undefine,h2dFreqOrbStr
 
   ;;********************************************************
   ;;If something screwy goes on, better take stock of it and alert user
@@ -514,7 +521,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   IF (polarPlot) THEN save,h2dStr,dataName,maxMLT,minMLT,maxILAT,minILAT,binMLT,binILAT,$
                            saveRawDir,clockStr,plotsuff,stableIMF,hoyDia,hemstr,$
                            ;;                       filename=saveRawDir+'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
-                           filename='../temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
+                           filename='temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF (~savePlots) THEN BEGIN 
@@ -531,7 +538,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
                 ;;             ' IMF, ' + strmid(plotSuff,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
            cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i], $
-                '../temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat",$
+                'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat",$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotSuff,1) $
@@ -548,7 +555,8 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
         cgPS_Close 
 
         ;;Create a PNG file with a width of 800 pixels.
-        cgPS2Raster, plotDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', /PNG, Width=1000 
+        cgPS2Raster, plotDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', $
+                     /PNG, Width=1000, /DELETE_PS 
      
      ENDIF ELSE IF (~noPlots) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
@@ -560,11 +568,12 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
            cgPS_Open, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps' 
            ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
            ;;          h2dStr[0].lim 
-           interp_polar2dhist,h2dStr[i],dataName[i],'../temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat" 
+           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat" 
            cgPS_Close 
            
            ;;Create a PNG file with a width of 800 pixels.
-           cgPS2Raster, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', /PNG, Width=1000 
+           cgPS2Raster, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', $
+                        /PNG, Width=1000, /DELETE_PS
         ENDFOR    
         
      ENDIF 
@@ -685,7 +694,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
       ENDIF 
    ENDIF
 
-  IF (writeHDF5) OR (writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
+;;   IF (writeHDF5) OR (writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
    ;;********************************************************
    ;;OLD THINGS FOR SINGLE PLOTS FOLLOW HERE
 

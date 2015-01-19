@@ -5,7 +5,7 @@
 ;See 'current_event_Poynt_flux_vs_imf.pro' for
 ;more info, since that's where this code comes from.
 
-FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,cdbTime=cdbTime
+FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB
 
   COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
 
@@ -19,8 +19,15 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,cdbTime=cdbTime
 
   ;;for doing our own DB
   ;;dbfile="Dartdb_01092015_maximus.sav"
-  IF NOT KEYWORD_SET(dbfile) then dbfile = "Chastdb_Dartdb_combined--01142015_maximus.sav"
-  loaddataDir='/SPENCEdata2/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
+     dbfile = "Dartdb_01192015_maximus.sav"
+     loaddataDir='/SPENCEdata2/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(CHASTDB) THEN BEGIN
+        dbfile = "maximus.dat"
+        loaddataDir='/SPENCEdata2/Research/Cusp/database/processed/'
+     ENDIF
+  ENDELSE
 
   ;;Load, if need be
   IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN 
@@ -58,12 +65,15 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,cdbTime=cdbTime
   
   printf,lun,""
   printf,lun,"****From get_chaston_ind.pro****"
+  printf,lun,"DBFile = " + dbfile
+  printf,lun,""
   printf,lun,"There are " + strtrim(nGood,2) + " total events making the cut." 
   IF (satellite EQ "ACE") THEN $
      printf,lun,"You're losing " + strtrim(nlost,2) + $
             " current events because ACE data doesn't start until " + strtrim(maximus.time(ind_ACEstart),2) + "."
   printf,lun,"****END get_chaston_ind.pro****"
-  
+  printf,lun,""
+
   ;;***********************************************
   ;;Delete all the unnecessaries
   undefine,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$
