@@ -3,6 +3,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, POLARPLOT=polarPlot, $
                                      ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                     ORBRANGE=orbRange, $
 ;;                                     BINMLT=binMLT, BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -171,7 +172,7 @@ PRO plot_alfven_stats_imf_screening, maximus, CLOCKSTR=clockStr, $
   
   ;;Now run these to tap the databases and interpolate satellite data
   
-  ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb)
+  ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb,ORBRANGE=orbRange)
   phiChast= interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun,cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,DATADIR=dataDir)
   phiImf_ii= check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,lun,bx_over_bybz=Bx_over_ByBz_Lim)
   

@@ -5,7 +5,7 @@
 ;See 'current_event_Poynt_flux_vs_imf.pro' for
 ;more info, since that's where this code comes from.
 
-FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB
+FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB,ORBRANGE=orbRange
 
   COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
 
@@ -47,9 +47,23 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;ind_region_e=cgsetintersection(ind_e_ge_min_le_max,ind_region)
   ;;ind_region_e_curge10=cgsetintersection(ind_region_e,ind_magc_ge10)
   ;;ind_region_e_curleneg10=cgsetintersection(ind_region_e,ind_magc_leneg10) 
-  ;;ind_n_orbs=where(maximus.orbit GE minOrb AND maximus.orbit LE maxOrb)
-  ;;ind_region_e_n_orbs=cgsetintersection(ind_region_e,ind_n_orbs)
+  ;; ind_n_orbs=where(maximus.orbit GE orbRange[0] AND maximus.orbit LE orbRange[1])
+  ;; ind_region_e_n_orbs=cgsetintersection(ind_region_e,ind_n_orbs)
   
+  IF KEYWORD_SET (orbRange) THEN BEGIN
+     IF N_ELEMENTS(orbRange) EQ 2 THEN BEGIN
+        
+        printf,lun,"Min orbit: " + strcompress(orbRange[0],/remove_all)
+        printf,lun,"Max orbit: " + strcompress(orbRange[1],/remove_all)
+
+        ind_n_orbs=where(maximus.orbit GE orbRange[0] AND maximus.orbit LE orbRange[1])
+        ind_region_magc_geabs10=cgsetintersection(ind_region_magc_geabs10,ind_n_orbs)
+     ENDIF ELSE BEGIN
+        printf,lun,"Incorrect input for keyword 'orbRange'!!"
+        printf,lun,"Please use orbRange=[minOrb maxOrb]"
+        RETURN, -1
+     ENDELSE
+  ENDIF
   
   ;;gotta screen to make sure it's in ACE db too:
   ;;Only so many are useable, since ACE data start in 1998
@@ -67,6 +81,10 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   printf,lun,"****From get_chaston_ind.pro****"
   printf,lun,"DBFile = " + dbfile
   printf,lun,""
+  IF KEYWORD_SET (orbRange) AND N_ELEMENTS(orbRange) EQ 2 THEN BEGIN
+     printf,lun,"Min orbit: " + strcompress(orbRange[0],/remove_all)
+     printf,lun,"Max orbit: " + strcompress(orbRange[1],/remove_all)
+  ENDIF
   printf,lun,"There are " + strtrim(nGood,2) + " total events making the cut." 
   IF (satellite EQ "ACE") THEN $
      printf,lun,"You're losing " + strtrim(nlost,2) + $
