@@ -94,9 +94,9 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
   ;;***********************************************
   ;;Delete all the unnecessaries
-  undefine,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$
-              ind_region_magc_ge10,ind_region_magc_leneg10,ind_region_magc_geabs10,$
-           ind_ACEstart
+;;  undefine,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$
+;;              ind_region_magc_ge10,ind_region_magc_leneg10,ind_region_magc_geabs10,$
+;;              ind_ACEstart
 
   RETURN, ind_region_magc_geabs10_ACEstart
   

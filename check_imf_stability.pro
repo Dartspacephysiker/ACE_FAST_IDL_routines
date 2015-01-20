@@ -146,7 +146,8 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInt
      ENDIF 
 
      ;;Last of all, set up plot indices
-     phiIMF_ii=TEMPORARY(stableIMF_ii) 
+;     phiIMF_ii=TEMPORARY(stableIMF_ii) 
+     phiIMF_ii=stableIMF_ii
      
   ENDIF 
   

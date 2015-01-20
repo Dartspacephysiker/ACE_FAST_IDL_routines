@@ -18,7 +18,7 @@ function median_hist, MLT, ILAT, data, $
                  BINEDGE1=Binedge1, BINEDGE2=Binedge2, NONZERO=nonzeroHist,$
                  PTRHIST=ptrHist,ABSMED=absMed
 
-         ON_ERROR, 2          ; on error, return control to caller
+         ON_ERROR, 0          ; on error, return control to caller
 
 ;   Check dimensions
          s1   = size(MLT)
@@ -95,22 +95,30 @@ function median_hist, MLT, ILAT, data, $
 
 ;         PRINT,"n1 is " + string(n1) + " and n2 is " + string(n2)
 
-         FOR i=0, n_elements(MLTc) DO BEGIN
+         n_loop=n_elements(MLTc)-1
+         print,"n_loop is " + str(n_loop)
+         FOR i=0, n_loop DO BEGIN
             smallMLT=MIN(ABS(Obin1-MLTc[i]),binMLT)
             smallILAT=MIN(ABS(Obin2-ILATc[i]),binILAT)
-            IF *ptrHist[binMLT,binILAT] EQ !NULL THEN $
-               *ptrHist[binMLT,binILAT]= wgtc[i] $
-            ELSE *ptrHist[binMLT,binILAT]= [*ptrHist[binMLT,binILAT],wgtc[i]]
-            nonzeroHist[binMLT,binILAT]=1
-            print,MLTc[i],binMLT,smallMLT
-            print,ILATc[i],binILAT,smallILAT
-            print,wgtc[i]
+            IF *ptrHist[binMLT,binILAT] EQ !NULL THEN BEGIN
+               *ptrHist[binMLT,binILAT]= wgtc[i] 
+               nonzeroHist[binMLT,binILAT]=1
+            ENDIF ELSE BEGIN
+               *ptrHist[binMLT,binILAT]= [*ptrHist[binMLT,binILAT],wgtc[i]]
+            ENDELSE
+;            print,MLTc[i],binMLT,smallMLT
+;            print,ILATc[i],binILAT,smallILAT
+;            print,wgtc[i]
          ENDFOR 
 
 ;    Now calculate the median of each bin using ptrHist
          hist_i=WHERE(nonzeroHist GT 0)
-         FOR i=0, N_ELEMENTS(hist_i) DO $
-            medHist(hist_i[i])=MEDIAN(*ptrHist(hist_i[i]))$
+         FOR i=0, N_ELEMENTS(hist_i)-1 DO BEGIN
+            IF N_ELEMENTS(*(ptrHist(hist_i[i]))) EQ 1 THEN BEGIN
+               medHist(hist_i[i])=*(ptrHist(hist_i[i])) 
+            ENDIF ELSE BEGIN
+               medHist(hist_i[i])=MEDIAN(*ptrHist(hist_i[i]))
+            ENDELSE
          ENDFOR
             
          RETURN,medHist

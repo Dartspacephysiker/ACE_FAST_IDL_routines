@@ -48,13 +48,15 @@
 ;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
 ;                    LOGEFPLOT         :  Do log plots of electron flux.
 ;                    ABSEFLUX          :  Use absolute value of electron flux (required for log plots).
-;                    CUSTOMERANGE      :  Range of allowable values for e- flux plots. (Default: [-500000,500000])
+;                    CUSTOMERANGE      :  Range of allowable values for e- flux plots. 
+;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;
 ;                *POYNTING FLUX PLOT OPTIONS
 ;		     PPLOTS            :  Do Poynting flux plots.
 ;                    LOGPFPLOT         :  Do log plots of Poynting flux.
 ;                    ABSPFLUX          :  Use absolute value of Poynting flux (required for log plots).
-;                    CUSTOMPRANGE      :  Range of allowable values for e- flux plots. (Default: [0,3])
+;                    CUSTOMPRANGE      :  Range of allowable values for e- flux plots. 
+;                                         (Default: [0,3]; [-1,0.5] for log plots)
 ;
 ;                *ION FLUX PLOTS
 ;		     IPLOTS            :  Do ion plots.
@@ -63,6 +65,7 @@
 ;		     ORBPLOT           :     
 ;		     ORBTOTPLOT        :     
 ;		     ORBFREQPLOT       :     
+;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
@@ -131,6 +134,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPFlux, CUSTOMPRANGE=customPRange, $
                                      IPLOTS=iPlots, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
+                                     NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, POLARPLOT=polarPlot, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -217,6 +221,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(orbPlot) EQ 0 THEN orbPlot =  1                  ;Contributing orbits plot?
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
   IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0          ;Contributing/total orbits plot?
+  IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0 ;N Events/orbit plot?
+
+  IF KEYWORD_SET(nEventPerOrbPlot) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
+     print,"Can't do nEventPerOrbPlot without nPlots!!"
+     print,"Enabling nPlots..."
+     nPlots=1
+  ENDIF
 
   ;;Which IMF clock angle are we doing?
   ;;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
@@ -246,8 +257,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;NOTE: max value has negative values, which can mess with
   ;;color bars
   
-  IF NOT KEYWORD_SET(logEfPlot) THEN logEfPlot=1                 ;Want log plots of e- flux?
-
   IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEFlux) THEN BEGIN 
      print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEFlux' set!"
      print,"Can't make log plots without using absolute value..."
@@ -393,7 +402,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      dataRawPtr=[dataRawPtr,PTR_NEW()] 
   ENDIF
 
-  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
+;  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
+  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
 
   ;;h2dStr={h2dStr, data : DBLARR(N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*))), title : "", lim : DBLARR(2) }
 
@@ -549,9 +559,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;2D array pointed to is indexed by MLTbin and ILATbin. The contents of
   ;;the 3D array are of the format [UniqueOrbs_ii index,MLT,ILAT]
 
+  ;;The following two lines shouldn't be necessary; the data are being corrupted somewhere when I run this with clockstr="dawnward"
   uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
   nOrbs=n_elements(uniqueOrbs_ii)
-  printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
   
   h2dOrbStr={h2dStr}
 
@@ -622,6 +632,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
   ENDIF
+
   ;;########Orbit FREQUENCY########
   h2dFreqOrbStr={h2dStr}
   h2dFreqOrbStr.data=h2dOrbStr.data
@@ -630,13 +641,37 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
   h2dFreqOrbStr.lim=[0,0.3]
 
-  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
+;  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
+  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
   ENDIF
 
+  ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
+  orbs_w_events_histo_i=where(h2dorbstr.data NE 0)
+  orbs_histo_i=where(h2dtotorbstr.data NE 0)
+  orbfreq_histo_i=cgsetintersection(orbs_w_events_histo_i,orbs_histo_i)
+  h2dnewdata=h2dOrbStr.data
+  h2dnewdata(orbfreq_histo_i)=h2dOrbStr.data(orbfreq_histo_i)/h2dTotOrbStr.data(orbfreq_histo_i)
+  diff=where(h2dfreqorbstr.data NE h2dnewdata)
+  print,diff
+  wait, 2
 ;;   undefine,h2dTotOrbStr
 ;;   undefine,h2dOrbStr
 ;;   undefine,h2dFreqOrbStr
+
+  ;;########NEvents/orbit########
+  h2dNEvPerOrbStr={h2dStr}
+  h2dNEvPerOrbStr.data=h2dStr(0).data
+  h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
+  h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
+  h2dNEvPerOrbStr.title="N Events per Orbit"
+  ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
+  h2dNEvPerOrbStr.lim=[0,10]
+
+  IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
+     h2dStr=[h2dStr,h2dNEvPerOrbStr] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
+  ENDIF
 
   ;;********************************************************
   ;;If something screwy goes on, better take stock of it and alert user
