@@ -85,10 +85,10 @@ function median_hist, MLT, ILAT, data, $
          Obin1     = Omin1 + (lindgen(n1)+offset1)*binsize1
          Obin2     = Omin2 + (lindgen(n2)+offset2)*binsize2
          
-         PRINT,"Obin1:"
-         PRINT,Obin1
-         PRINT,"Obin2:"
-         PRINT,Obin2
+         ;; PRINT,"Obin1:"
+         ;; PRINT,Obin1
+         ;; PRINT,"Obin2:"
+         ;; PRINT,Obin2
          ptrHist = PTRARR(n1,n2,/ALLOCATE_HEAP)
          nonzeroHist=BYTARR(n1,n2)
          medHist=DBLARR(n1,n2)
@@ -96,7 +96,7 @@ function median_hist, MLT, ILAT, data, $
 ;         PRINT,"n1 is " + string(n1) + " and n2 is " + string(n2)
 
          n_loop=n_elements(MLTc)-1
-         print,"n_loop is " + str(n_loop)
+         ;; print,"n_loop is " + str(n_loop)
          FOR i=0, n_loop DO BEGIN
             smallMLT=MIN(ABS(Obin1-MLTc[i]),binMLT)
             smallILAT=MIN(ABS(Obin2-ILATc[i]),binILAT)

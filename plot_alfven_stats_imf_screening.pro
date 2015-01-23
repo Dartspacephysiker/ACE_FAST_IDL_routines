@@ -218,7 +218,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = "Integ" ;options are "Integ" and "Max"
   IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                    ;Poynting flux [estimate] plots?
   IF N_ELEMENTS(iPlots) EQ 0 THEN iPlots =  0                    ;ion Plots?
-  IF N_ELEMENTS(orbPlot) EQ 0 THEN orbPlot =  1                  ;Contributing orbits plot?
+  IF N_ELEMENTS(orbPlot) EQ 0 THEN orbPlot =  0                  ;Contributing orbits plot?
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
   IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0          ;Contributing/total orbits plot?
   IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0 ;N Events/orbit plot?
@@ -584,7 +584,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dOrbStr.title="Num Contributing Orbits"
 
   ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-  h2dOrbStr.lim=[1,15]
+  h2dOrbStr.lim=[1,50]
 
   IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
@@ -653,7 +653,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dnewdata=h2dOrbStr.data
   h2dnewdata(orbfreq_histo_i)=h2dOrbStr.data(orbfreq_histo_i)/h2dTotOrbStr.data(orbfreq_histo_i)
   diff=where(h2dfreqorbstr.data NE h2dnewdata)
-  print,diff
+  ;;  print,diff
   wait, 2
 ;;   undefine,h2dTotOrbStr
 ;;   undefine,h2dOrbStr
