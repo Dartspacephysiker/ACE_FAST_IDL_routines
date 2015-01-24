@@ -296,7 +296,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
     
   ;;********************************************
   ;;Stuff for output
-  hoyDia= "_" + STRMID(SYSTIME(0), 4, 3) + "_" + $
+  hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
           STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
   IF KEYWORD_SET(medianplot) THEN plotSuff = "_med" ELSE plotSuff = "_avg"
   IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
@@ -314,9 +314,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      printf,lun,"Which hemisphere?" & hemStr = '??'
   ENDELSE
   
+  ;;parameter string
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+satellite+"_"+hoyDia
+
+
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir+'fluxplots_'+hemStr+'_'+clockStr+plotSuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.txt',/GET_LUN $
+     OPENW,lun,plotDir+'fluxplots_'+paramStr+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;Now run these to tap the databases and interpolate satellite data
@@ -695,15 +699,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   IF KEYWORD_SET(polarPlot) THEN save,h2dStr,dataName,maxMLT,minMLT,maxILAT,minILAT,binMLT,binILAT,$
-                           saveRawDir,clockStr,plotsuff,stableIMF,hoyDia,hemstr,$
-                           ;;                       filename=saveRawDir+'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
-                           filename='temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat"
+                           saveRawDir,clockStr,plotSuff,stableIMF,hoyDia,hemstr,$
+                           ;;                       filename=saveRawDir+'fluxplots_'+paramStr+".dat"
+                           filename='temp/polarplots_'+paramStr+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(noSavePlots) THEN BEGIN 
      IF NOT KEYWORD_SET(noPlotsJustData) AND NOT KEYWORD_SET(polarPlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
-                  ;; SAVERAW=(saveRaw) ? saveRawDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia : 0,$
+                  ;; SAVERAW=(saveRaw) ? saveRawDir + 'fluxplots_'+paramStr : 0,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotSuff,1) $
@@ -714,7 +718,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 ;;             ' IMF, ' + strmid(plotSuff,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
            cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i], $
-                'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat",$
+                'temp/polarplots_'+paramStr+".dat",$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotSuff,1) $
@@ -726,12 +730,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         PRINTF,LUN, "Creating output files..." 
 
         ;;Create a PostScript file.
-        cgPS_Open, plotDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps' 
+        cgPS_Open, plotDir + 'fluxplots_'+paramStr+'.ps' 
         interp_contplotmulti_str,h2dStr 
         cgPS_Close 
 
         ;;Create a PNG file with a width of 800 pixels.
-        cgPS2Raster, plotDir + 'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', $
+        cgPS2Raster, plotDir + 'fluxplots_'+paramStr+'.ps', $
                      /PNG, Width=1000, /DELETE_PS 
      
      ENDIF ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
@@ -741,14 +745,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN  
            
            ;;Create a PostScript file.
-           cgPS_Open, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps' 
+           cgPS_Open, plotDir + 'plot_'+dataName[i]+paramStr+'.ps' 
            ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
            ;;          h2dStr[0].lim 
-           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat" 
+           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat" 
            cgPS_Close 
            
            ;;Create a PNG file with a width of 800 pixels.
-           cgPS2Raster, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', $
+           cgPS2Raster, plotDir + 'plot_'+dataName[i]+paramStr+'.ps', $
                         /PNG, Width=1000, /DELETE_PS
         ENDFOR    
         
@@ -770,7 +774,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
       FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-         fname=plotDir+dataName[j]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.h5' 
+         fname=plotDir+dataName[j]+paramStr+'.h5' 
          PRINT,"Writing HDF5 file: " + fname 
          fileID=H5F_CREATE(fname) 
          datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
@@ -782,7 +786,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;loop style for individual structures
       ;;   FOR i=0, N_ELEMENTS(h2dStr)-1 DO BEGIN 
       ;;      fname=plotDir+h2dStr[i].title+'_'+ $
-      ;;            hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.h5' 
+      ;;            paramStr+'.h5' 
       ;;      fileID=H5F_CREATE(fname) 
       ;;      datatypeID=H5T_IDL_CREATE(h2dStr[i]) 
       ;;      dataspaceID=H5S_CREATE_SIMPLE(1) 
@@ -798,7 +802,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;HELP, s.mydata._DATA, /STRUCTURE  
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-            fname=plotDir+dataName[j]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.h5' 
+            fname=plotDir+dataName[j]+paramStr+'.h5' 
             PRINT,"Writing HDF5 file: " + fname 
             fileID=H5F_CREATE(fname) 
             
@@ -823,7 +827,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    ENDIF
 
    ;;IF writeASCII NE 0 THEN BEGIN 
-   ;;  fname=plotDir+'fluxplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ascii' 
+   ;;  fname=plotDir+'fluxplots_'+paramStr+'.ascii' 
    ;;   PRINT,"Writing ASCII file: " + fname 
    ;;   OPENW,lun2, fname, /get_lun 
    ;;   PRINT_STRUCT,h2dStr,LUN_OUT=lun2 
@@ -840,7 +844,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeASCII) THEN BEGIN 
       ;;These are the "raw" data, just as we got them from Chris
       FOR j = 0, n_elements(dataRawPtr)-3 DO BEGIN 
-         fname=plotDir+dataName[j]+hemStr+'_'+clockStr+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ascii' 
+         fname=plotDir+dataName[j]+paramStr+'.ascii' 
          PRINT,"Writing ASCII file: " + fname 
          OPENW,lun2, fname, /get_lun 
 
@@ -856,7 +860,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;NOW DO PROCESSED H2D DATA 
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR i = 0, n_elements(h2dStr)-1 DO BEGIN 
-            fname=plotDir+"h2d_"+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ascii' 
+            fname=plotDir+"h2d_"+dataName[i]+paramStr+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
             OPENW,lun2, fname, /get_lun 
             FOR j = 0, N_ELEMENTS(h2dBinsMLT) - 1 DO BEGIN 

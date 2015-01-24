@@ -1,8 +1,9 @@
-pro interp_polar2dhist,temp,tempName,ancillaryData
+pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
+
 restore,ancillaryData
 
 ;want me to output integral of plot?
-integralText=0
+;;noPlotIntegral=1
 
 ;Subtract one since last array is the mask
 nPlots=N_ELEMENTS(h2dStr)-1
@@ -98,7 +99,7 @@ charsize = cgDefCharSize()*0.75
 ;cgText, 180, minILAT-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charsize   
 ;cgText, 90, minILAT-5, 'dawnward',Alignment=0.5,Charsize=charsize
 ;cgText, -90, minILAT-5, 'duskward',Alignment=0.5,Charsize=charsize  
-IF (integralText) THEN BEGIN & $
+IF NOT KEYWORD_SET(noPlotIntegral) THEN BEGIN & $
   cgText,0.11,0.78,'Integral: ' + string(TOTAL(temp.data(WHERE(h2dStr[nPlots].data LT 250))),Format='(D0.3)'),/NORMAL & $
   cgText,0.105,0.74,'|Integral|: ' + string(TOTAL(ABS(temp.data(WHERE(h2dStr[nPlots].data LT 250)))),Format='(D0.3)'),/NORMAL & $
     cgText,0.68,0.78,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL & $
@@ -110,5 +111,8 @@ cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charsize
    cgColorbar, NColors=nlevels-2, Bottom=1B, Divisions=nlevels-2,$;OOB_Low=0B, OOB_High=BYTE(nLevels-1),$ 
                Range=temp.lim, Title=temp.title, /Discrete, $
                Position=[0.25, 0.87, 0.75, 0.92], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.2,$
-        ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]
+;;        ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]
+               ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
+                          String(((temp.lim[0]+temp.lim[1])/2), Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
+                          String(temp.lim[1], Format='(D0.1)')]
 END
