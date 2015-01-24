@@ -8,7 +8,7 @@
 ;Of course they are not interchangeable, so make sure to 
 ;use the right ones.
 
-FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CDBTIME=cdbTime,DATADIR=datadir,CDBINTERP_I=cdbInterp_i
+FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CDBTIME=cdbTime,DATADIR=datadir,CDBINTERP_I=cdbInterp_i,SMOOTHWINDOW=smoothWindow
 
   ;;********************************************************
   ;;Restore ACE data, if need be
@@ -47,8 +47,7 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
 
   IF bigdiff_ii[0] NE -1 THEN BEGIN 
 
-     interp_worthy_iii=where(abs((mag_utc(cdbAceprop_i(bigdiff_ii)+1)+ $
-                                  delay-cdbTime(bigdiff_ii)))/60 LT maxdiff/2.0 OR $
+     interp_worthy_iii=where(abs((mag_utc(cdbAceprop_i(bigdiff_ii)+1)+delay-cdbTime(bigdiff_ii)))/60 LT maxdiff/2.0 OR $
                              abs(mag_utc(cdbAceprop_i(bigdiff_ii))+delay-cdbTime(bigdiff_ii))/60 LT maxdiff/2.0, $
                              complement=interp_bad_iii) 
 
@@ -156,6 +155,9 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
   byChast=by(cdbAcepropInterp_i)+by_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
   bxChast=bx(cdbAcepropInterp_i)+bx_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
 
+  ;;*********************************************************
+  ;;If we're also going to smooth IMF data, it might as well happen here
+  
 
   phiChast=ATAN(byChast,bzChast)
   thetaChast=ACOS(abs(bxChast)/SQRT(bxChast*bxChast+byChast*byChast+bzChast*bzChast))
