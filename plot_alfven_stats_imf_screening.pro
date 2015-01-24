@@ -48,6 +48,7 @@
 ;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
 ;                    LOGEFPLOT         :  Do log plots of electron flux.
 ;                    ABSEFLUX          :  Use absolute value of electron flux (required for log plots).
+;                    NONEGEFLUX        :  Do not use negative e fluxes in any of the plots
 ;                    CUSTOMERANGE      :  Range of allowable values for e- flux plots. 
 ;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;
@@ -55,6 +56,7 @@
 ;		     PPLOTS            :  Do Poynting flux plots.
 ;                    LOGPFPLOT         :  Do log plots of Poynting flux.
 ;                    ABSPFLUX          :  Use absolute value of Poynting flux (required for log plots).
+;                    NONEGPFLUX        :  Do not use negative Poynting fluxes in any of the plots
 ;                    CUSTOMPRANGE      :  Range of allowable values for e- flux plots. 
 ;                                         (Default: [0,3]; [-1,0.5] for log plots)
 ;
@@ -130,8 +132,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      MLTBINS=MLTbinS, ILATBINS=ILATbinS, $
                                      SATELLITE=satellite, DELAY=delay, STABLEIMF=stableIMF, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
-                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEFlux, CUSTOMERANGE=customERange, $
-                                     PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPFlux, CUSTOMPRANGE=customPRange, $
+                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEFlux, NONEGEFLUX=noNegEflux, $
+                                     CUSTOMERANGE=customERange, $
+                                     PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPFlux, NONEGPFLUX=noNegPflux, CUSTOMPRANGE=customPRange, $
                                      IPLOTS=iPlots, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
@@ -257,24 +260,28 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;NOTE: max value has negative values, which can mess with
   ;;color bars
   
-  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEFlux) THEN BEGIN 
-     print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEFlux' set!"
-     print,"Can't make log plots without using absolute value..."
+  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEFlux) AND NOT KEYWORD_SET(noNegEflux) THEN BEGIN 
+     print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEFlux' or 'noNegEflux' set!"
+     print,"Can't make log plots without using absolute value or only positive values..."
+     print,"Default: junking all negative Eflux values"
      WAIT, 1
-     absEFlux=1
+;;     absEFlux=1
+     noNegEflux=1
   ENDIF
 
   ;;For linear or log EFlux plotrange
   IF NOT KEYWORD_SET(customERange) THEN BEGIN
-     IF NOT KEYWORD_SET(logEfPlot) THEN customERange=[-500000,500000] ELSE customERange=[1,5]
+     IF NOT KEYWORD_SET(logEfPlot) THEN customERange=[0.01,100] ELSE customERange=[-2,2]
   ENDIF
   
   ;;######Poynting flux
-  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPFlux) THEN BEGIN 
-     print,"Warning!: You're trying to do log Pflux plots but you don't have 'absPFlux' set!"
-     print,"Can't make log plots without using absolute value..."
+  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPFlux) AND NOT KEYWORD_SET(noNegPflux) THEN BEGIN 
+     print,"Warning!: You're trying to do log Pflux plots but you don't have 'absEFlux' or 'noNegPflux' set!"
+     print,"Can't make log plots without using absolute value or only positive values..."
+     print,"Default: junking all negative Pflux values"
      WAIT, 1
-     absPFlux=1
+;;     absEFlux=1
+     noNegPflux=1
   ENDIF
 
   ;;For linear or log PFlux plotrange
@@ -425,8 +432,22 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   h2dEStr={h2dStr}
 
-  IF eFluxPlotType EQ "Integ" THEN elecData=maximus.integ_elec_energy_flux(plot_i) $
-  ELSE IF eFluxPlotType EQ "Max" THEN elecData=maximus.elec_energy_flux(plot_i)
+  ;;If not allowing negative fluxes
+  IF eFluxPlotType EQ "Integ" THEN BEGIN
+     IF KEYWORD_SET(noNegEflux) THEN BEGIN
+        no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+        plot_i=cgsetintersection(no_negs_i,plot_i)
+     ENDIF
+     elecData=maximus.integ_elec_energy_flux(plot_i) 
+  ENDIF ELSE BEGIN
+     IF eFluxPlotType EQ "Max" THEN BEGIN
+        IF KEYWORD_SET(noNegEflux) THEN BEGIN
+           no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+           plot_i=cgsetintersection(no_negs_i,plot_i)        
+        ENDIF
+        elecData=maximus.elec_energy_flux(plot_i)
+     ENDIF
+  ENDELSE
 
   IF KEYWORD_SET(medianplot) THEN BEGIN 
      h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
@@ -448,28 +469,32 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE 
 
   ;;Log plots desired?
-  logEstr=""
   absEstr=""
+  negEstr=""
+  logEstr=""
   IF KEYWORD_SET(absEFlux)THEN BEGIN 
      h2dEStr.data = ABS(h2dEStr.data) 
-     absEstr= "ABS" 
+     absEstr= "Abs--" 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
+  ENDIF
+  IF KEYWORD_SET(noNegEflux) THEN BEGIN
+     negEstr = "NoNegs--"
   ENDIF
   IF KEYWORD_SET(logEfPlot) THEN BEGIN 
      logEstr="Log " 
      h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
   ENDIF
-  abslogEstr=absEstr + logEstr
+  absnegslogEstr=absEstr + negEstr + logEstr
 
   ;;Do custom range for Eflux plots, if requested
   IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
   ELSE h2dEStr.lim = [MIN(h2dEstr.data),MAX(h2dEstr.data)]
 
-  h2dEStr.title= abslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
+  h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
   IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-        dataName=[dataName,STRTRIM(abslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
+        dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
      ENDIF 
   ENDIF
@@ -480,6 +505,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########Poynting Flux########
 
   h2dPStr={h2dStr}
+
+  IF KEYWORD_SET(noNegPflux) THEN BEGIN
+     no_negs_i=WHERE(poynt_est GE 0.0)
+     plot_i=cgsetintersection(no_negs_i,plot_i)
+  ENDIF
 
   IF KEYWORD_SET(medianplot) THEN BEGIN 
      h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
@@ -502,12 +532,17 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
 
   ;;Log plots desired?
-  logPstr=""
   absPstr=""
+  negPstr=""
+  logPstr=""
   IF KEYWORD_SET(absPflux) THEN BEGIN 
      h2dPStr.data = ABS(h2dPStr.data) 
-     absPstr= "ABS" 
+     absPstr= "Abs" 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
+  ENDIF
+
+  IF KEYWORD_SET(noNegPflux) THEN BEGIN
+     negPstr = "NoNegs--"
   ENDIF
 
   IF KEYWORD_SET(logPfPlot) THEN BEGIN 
@@ -517,9 +552,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
   ENDIF
 
-  abslogPstr=absPstr + logPstr
+  absnegslogPstr=absPstr + negPstr+ logPstr
 
-  h2dPStr.title= abslogPstr + "Poynting Flux (mW/m!U2!N)"
+  h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
 
   ;;Do custom range for Pflux plots, if requested
   IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
@@ -531,7 +566,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;ENDIF
   IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-        dataName=[dataName,STRTRIM(abslogPstr,2)+"pFlux_"] 
+        dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
      ENDIF  
   ENDIF

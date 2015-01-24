@@ -20,7 +20,11 @@ nPlots=N_ELEMENTS(h2dStr)-1
    ; Load the colors for the plot.
 
 nLevels=12
-cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
+;This one is the one we normally use
+;cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
+
+;This is the one for doing sweet electron flux plots
+cgLoadCT, 16,/BREWER, NCOLORS=nLevels
    
    ; Set up the contour levels.
 ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
