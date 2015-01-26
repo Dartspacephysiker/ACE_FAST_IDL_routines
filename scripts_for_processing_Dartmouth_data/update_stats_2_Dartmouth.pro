@@ -1,25 +1,39 @@
-pro update_stats_2_Dartmouth_startstop_inc,maximus
+pro update_stats_2_Dartmouth,maximus
 ;01/20/2015
 ;We're in the middle of processing tons of FAST data, and it's inconvenient to run
 ;this routine for the full list of files in batch_output every time. The strategy here
 ;is to take a database that already exists and UPDATE it!
   
   ;max orbit to check out
-  max_orbit=5682
+  max_orbit=6900
 
-  oldDBDate='01232015'
-  newDBDate='01242015'
+  ;Database directory
   Dartmouth_DB='/SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
+
+  ;Files to deal with
+  oldDBDate='01262015'
+  oldDBFile='Dartdb_' + oldDBDate + '--first5900--maximus.sav'
+
+  newDBDate='01262015'
+  newDBFile='Dartdb_' + newDBDate + '_maximus.sav'
+
+  ;;File containing list of orbs in newDBFile
   contents_file='./new_db_' + newDBDate + '--orbits_added_to_DartDBfile_' + oldDBDate + '.txt'
 
   ;open file to write list of orbits included
   OPENW,outlun,contents_file,/get_lun
 
   ;restore old DBfile
-  restore,filename='Dartdb_' + oldDBDate + '_maximus.sav'
+  ;; restore,filename='Dartdb_' + oldDBDate + '_maximus.sav'
+  restore,filename=oldDBFile
+
+  ;;Print it
+  PRINT,"Old DBFile: " + oldDBFile
+  PRINT,"New DBFile: " + newDBFile
 
   ;get latest orbit processed in old db
   latestOrb=MAX(maximus.orbit)
+  PRINT,"Latest orb found in oldDBFile is " + strcompress(latestOrb,/REMOVE_ALL)
 
   IF latestOrb GE max_orbit THEN BEGIN
      PRINT, "What are you thinking? latestOrb is greater than max_orbit!"
@@ -97,7 +111,7 @@ pro update_stats_2_Dartmouth_startstop_inc,maximus
      endif
   endfor
 
-  save,maximus,filename='Dartdb_' + newDBDate + '_maximus.sav'
+  save,maximus,filename=newDBFile
 
   return
 

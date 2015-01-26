@@ -1,4 +1,4 @@
-pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
+pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,_EXTRA=e
 
   restore,ancillaryData
 
@@ -22,15 +22,18 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   nLevels=12
 
   ;;Select color table
-  ePlotzz=N_ELEMENTS(WHERE(STRMATCH(temp.title, "electron",/FOLD_CASE)))
-  pPlotzz=N_ELEMENTS(WHERE(STRMATCH(temp.title, "poynting",/FOLD_CASE)))
-  IF ePlotzz GT 5 OR pPlotzz GT 5 THEN BEGIN
+  ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
+  pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
+  IF ePlotzz GT 0 OR pPlotzz GT 0 THEN BEGIN
      ;This is the one for doing sweet electron flux plots
      cgLoadCT, 16,/BREWER, NCOLORS=nLevels
   ENDIF ELSE BEGIN
      ;This one is the one we use for orbit plots
      cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ENDELSE
+
+  ;;Is this a log plot? If so, do integral of exponentiated value
+  logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
 
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
@@ -60,6 +63,9 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   dawnIntegral=0
   duskIntegral=0
 
+  ;;binary matrix to tell us where masked values are
+  masked=(h2dStr[nPlots].data GT 250.0)
+
   FOR j=0, N_ELEMENTS(ilats)-2 DO BEGIN 
      FOR i=0, N_ELEMENTS(mlts)-2 DO BEGIN 
         ;tempMLTS=[mlts[i],mlts[i+1]] 
@@ -78,11 +84,11 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         tempMLTS=[mlts[i]+binMLT*15/2.0,tempMLTS,mlts[i]+binMLT*15/2.0,tempMLTS+binMLT*15]  
         
         ;;Integrals
-        IF tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=temp.data[i,j] $
-        ELSE IF tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=temp.data[i,j]
+        IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
+        ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j]
         
         ;  cgColorFill,[mlts[i],mlts[i+1],mlts[i+1],mlts[i]],[ilats[j:j+1],ilats[j:j+1]],color=h2descl(i,j) 
-        cgColorFill,tempMLTS,tempILATS,color=((h2dStr[nPlots]).data[i,j] GT 250.0) ? "gray" : h2descl[i,j]
+        cgColorFill,tempMLTS,tempILATS,color=(masked[i,j]) ? "gray" : h2descl[i,j]
 
      ENDFOR 
   ENDFOR
@@ -111,9 +117,19 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;cgText, -90, minILAT-5, 'duskward',Alignment=0.5,Charsize=charsize  
 
   ;;Integral text
+  ;;REMEMBER: h2dStr[nPlots].data is the MASK
   IF NOT KEYWORD_SET(noPlotIntegral) THEN BEGIN 
-     cgText,0.11,0.78,'Integral: ' + string(TOTAL(temp.data(WHERE(h2dStr[nPlots].data LT 250))),Format='(D0.3)'),/NORMAL 
-     cgText,0.105,0.74,'|Integral|: ' + string(TOTAL(ABS(temp.data(WHERE(h2dStr[nPlots].data LT 250)))),Format='(D0.3)'),/NORMAL 
+     IF logPlotzz THEN BEGIN
+        integ=TOTAL(10^temp.data(WHERE(~masked)))
+        absInteg=integ
+     ENDIF ELSE BEGIN
+        integ=TOTAL(temp.data(WHERE(~masked)))
+        absInteg=TOTAL(ABS(temp.data(WHERE(~masked))))
+     ENDELSE
+     ;; dawnIntegral=
+     ;; duskIntegral=
+     cgText,0.11,0.78,'Integral: ' + string(integ,Format='(D0.3)'),/NORMAL 
+     IF NOT (logPlotzz) THEN cgText,0.105,0.74,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL 
      cgText,0.68,0.78,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL 
      cgText,0.68,0.74,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL 
   ENDIF 
