@@ -1,0 +1,7 @@
+From http://nssdc.gsfc.nasa.gov/nmc/masterCatalog.do?sc=1996-049A
+
+FAST
+NSSDC/COSPAR ID: 1996-049A
+
+[Near bottom of page]
+The FAST electric field instrument stopped providing meaningful data around 2002, all other instruments and systems continue to function nominally.
