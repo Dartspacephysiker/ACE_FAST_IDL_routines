@@ -120,7 +120,7 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;REMEMBER: h2dStr[nPlots].data is the MASK
   IF NOT KEYWORD_SET(noPlotIntegral) THEN BEGIN 
      IF logPlotzz THEN BEGIN
-        integ=TOTAL(10^temp.data(WHERE(~masked)))
+        integ=TOTAL(10.0^(temp.data(WHERE(~masked))))
         absInteg=integ
      ENDIF ELSE BEGIN
         integ=TOTAL(temp.data(WHERE(~masked)))

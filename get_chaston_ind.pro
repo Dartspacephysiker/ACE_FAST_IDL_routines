@@ -20,7 +20,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;for doing our own DB
   ;;dbfile="Dartdb_01092015_maximus.sav"
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
-     dbfile = "Dartdb_01262015_maximus.sav"
+     dbfile = "Dartdb_01282015_maximus.sav"
      loaddataDir='/SPENCEdata2/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN

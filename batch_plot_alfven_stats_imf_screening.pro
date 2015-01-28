@@ -21,7 +21,7 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
   ENDIF ELSE BEGIN
      directions=['dawnward', 'duskward', 'all_IMF']
   ENDELSE
-  PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(8(A),TR3))',directions
+  PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(5(A10)))',directions
 
   ;plot prefix
   IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN

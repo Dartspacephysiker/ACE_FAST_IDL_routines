@@ -11,10 +11,10 @@ pro update_stats_2_Dartmouth,maximus
   Dartmouth_DB='/SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
 
   ;Files to deal with
-  oldDBDate='01262015'
-  oldDBFile='Dartdb_' + oldDBDate + '--first5900--maximus.sav'
+  oldDBDate='01282015'
+  oldDBFile='Dartdb_' + oldDBDate + '--first6400--maximus.sav'
 
-  newDBDate='01262015'
+  newDBDate='01282015'
   newDBFile='Dartdb_' + newDBDate + '_maximus.sav'
 
   ;;File containing list of orbs in newDBFile

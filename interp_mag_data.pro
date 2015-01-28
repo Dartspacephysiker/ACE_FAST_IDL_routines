@@ -8,7 +8,10 @@
 ;Of course they are not interchangeable, so make sure to 
 ;use the right ones.
 
-FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CDBTIME=cdbTime,DATADIR=datadir,CDBINTERP_I=cdbInterp_i,SMOOTHWINDOW=smoothWindow
+FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun, $
+                         CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
+                         MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
+                         DATADIR=datadir
 
   ;;********************************************************
   ;;Restore ACE data, if need be
@@ -103,6 +106,8 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
                                       (SHIFT(cdbInterpTime,1))[1:-2] LE 60)),2) + $
          " events are less than one minute apart."
 
+  IF KEYWORD_SET(smoothWindow) THEN printf,lun,"Smooth window is set to " + strcompress(smoothWindow,/remove_all) + " minutes"
+
   printf,lun,"****END text from interp_mag_data.pro****"
   printf,lun,""
 
@@ -141,6 +146,15 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
   ;;interp_t_l=mag_utc(cdbAcepropInterp_i)-mag_utc((cdbAcepropInterp_i)-1)
   ;;interp_scare=cgSetIntersection(where(interp_t_r GT 60),where(interp_t_l GT 60))
 
+  ;;*********************************************************
+  ;;If we're also going to smooth IMF data, it might as well happen here
+  IF KEYWORD_SET(smoothWindow) THEN BEGIN
+     IF smoothWindow EQ 1 THEN smoothWindow = 5 ;default to five-minute smoothing
+     bx(cdbAcepropInterp_i)=smooth(bx(cdbAcepropInterp_i),smoothWindow)
+     by(cdbAcepropInterp_i)=smooth(by(cdbAcepropInterp_i),smoothWindow)
+     bz(cdbAcepropInterp_i)=smooth(bz(cdbAcepropInterp_i),smoothWindow)
+  ENDIF
+  
   ;;********************************************************
   ;;Should we interpolate those guys?
   ;;Dah yeah
@@ -155,10 +169,6 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
   byChast=by(cdbAcepropInterp_i)+by_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
   bxChast=bx(cdbAcepropInterp_i)+bx_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
 
-  ;;*********************************************************
-  ;;If we're also going to smooth IMF data, it might as well happen here
-  
-
   phiChast=ATAN(byChast,bzChast)
   thetaChast=ACOS(abs(bxChast)/SQRT(bxChast*bxChast+byChast*byChast+bzChast*bzChast))
   bxy_over_bzChast=sqrt(bxChast*bxChast+byChast*byChast)/abs(bzChast)
@@ -169,7 +179,7 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart,satellite,delay,lun,CD
   thetaCone=thetaCone*180/!PI
   phiClock=phiClock*180/!PI
 
-  undefine,cdbAcepropInterp_ii,unique_iii,bigdiff_ii,sortme
+  ;; undefine,cdbAcepropInterp_ii,unique_iii,bigdiff_ii,sortme
 
   RETURN, phiChast
 

@@ -42,6 +42,7 @@
 ;                                            their heads in the ionosphere about 11 minutes after they are observed.
 ;                    STABLEIMF         :  Time (in minutes) over which stability of IMF is required to include data.
 ;                                            NOTE! Cannot be less than 1 minute.
+;                    SMOOTHWINDOW      :  Smooth IMF data over a given window (default: 5 minutes)
 ;
 ;                *ELECTRON FLUX PLOT OPTIONS
 ;		     EPLOTS            :     
@@ -134,7 +135,8 @@
 PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, ORBRANGE=orbRange, $
                                      MLTBINS=MLTbinS, ILATBINS=ILATbinS, $
-                                     SATELLITE=satellite, DELAY=delay, STABLEIMF=stableIMF, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                     SATELLITE=satellite, $
+                                     DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
                                      EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEflux, $
                                      NONEGEFLUX=noNegEflux, NOPOSEFLUX=noPosEflux, $
@@ -151,7 +153,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, $
-                                     _extra = e
+                                     _EXTRA = e
 
   ;;variables to be used by interp_contplot.pro
   COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
@@ -183,8 +185,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
   IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
   
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 9
-  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 15
+  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 6
+  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 18
   
   IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68
   IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84
@@ -339,6 +341,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      plotDir=(polarPlot) ? plotDir + "polar/" + plotType + '/' : plotDir + plotType
   ENDIF ELSE plotDir += plotPrefix + "--"
 
+  smoothStr=""
+
+  IF KEYWORD_SET(smoothWindow) THEN smoothStr = strtrim(smoothWindow,2)+"min_IMFsmooth--"
+
   ;;********************************************
   ;;Figure out both hemisphere and plot indices, 
   ;;tap DBs, and setup output
@@ -348,7 +354,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
   
   ;;parameter string
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+satellite+"_"+maskStr+hoyDia
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -359,8 +365,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Now run these to tap the databases and interpolate satellite data
   
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb,ORBRANGE=orbRange)
-  phiChast= interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun,cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,DATADIR=dataDir)
-  phiImf_ii= check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,lun,bx_over_bybz=Bx_over_ByBz_Lim)
+  phiChast= interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
+                            cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiclock, $
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow)
+  phiImf_ii= check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiclock,LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
   plot_i=cdbInterp_i(phiImf_ii)
 

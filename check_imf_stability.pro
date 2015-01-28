@@ -13,7 +13,10 @@
 ;ensure that the angle doesn't deviate too sharply
 ;from it's initial 'approved' value
 
-FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,lun,BX_OVER_BYBZ=bx_over_bybz
+FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
+                             cdbAcepropInterp_i, stableIMF, mag_utc, phiclock, $
+                             BX_OVER_BYBZ=bx_over_bybz,INCLUDENOCONSECDATA=includenoconsecdata, $
+                             LUN=lun
 
   printf,lun,"****From check_imf_stability.pro****"
 
@@ -135,7 +138,7 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInt
             " events associated with unstable IMF." 
      
      ;;Include data that probably don't have stability info?
-     IF includeNoConsecData GT 0 THEN BEGIN 
+     IF KEYWORD_SET(includeNoConsecData) THEN BEGIN 
         noConsec_ii=WHERE(imfDurArr EQ 0) 
         IF noConsec_ii[0] NE -1 THEN BEGIN 
            printf,lun,"Including "+strtrim(N_ELEMENTS(noConsec_ii),2)+ $
