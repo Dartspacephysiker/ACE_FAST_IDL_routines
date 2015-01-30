@@ -5,7 +5,7 @@ pro update_stats_2_Dartmouth,maximus
 ;is to take a database that already exists and UPDATE it!
   
   ;max orbit to check out
-  max_orbit=6900
+  max_orbit=7599
 
   ;Database directory
   Dartmouth_DB='/SPENCEdata2/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
@@ -14,8 +14,8 @@ pro update_stats_2_Dartmouth,maximus
   oldDBDate='01282015'
   oldDBFile='Dartdb_' + oldDBDate + '--first6400--maximus.sav'
 
-  newDBDate='01282015'
-  newDBFile='Dartdb_' + newDBDate + '_maximus.sav'
+  newDBDate='01302015'
+  newDBFile='Dartdb_' + newDBDate + '--first7599--maximus.sav'
 
   ;;File containing list of orbs in newDBFile
   contents_file='./new_db_' + newDBDate + '--orbits_added_to_DartDBfile_' + oldDBDate + '.txt'

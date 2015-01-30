@@ -1,0 +1,40 @@
+12/29/2014
+
+==========
+Orbit 2030
+==========
+
+Chaston events 9,10 are the good ones
+
+From 'less dflux_2030_0_as5_curthresh10microA_tdiff_0.016--time--AGU_mtg_w_Chaston.txt'
+22   !1997-02-25/04:13:37.769, 1997-02-25/04:13:37.778,    9             17  
+23   !1997-02-25/04:13:38.019, 1997-02-25/04:13:38.020,    10            18  
+
+Event 9 looks fine, no commentary
+
+Event 10 looks fine as well; both are believable
+
+
+HISTO COMMENTARY
+****************
+-->eflux
+*Only 1 Dartmouth event showing for eflux?
+*Numbers are similar for eflux
+*We both have the ~365 eflux event
+*Chaston has another ~600 eflux event
+
+-->Poynting
+*Hmmm... Even though Chaston has two events and we only have one (for 10microA thresh):
+Chaston Poynting integral: 3.095*10^-4
+Dart Poynting integral:    3.169*10^-4
+
+*For 5 microA thresh:
+Why such a large discrepancy?
+Chast Poynting integral:  4.529*10^-4
+Dart Poynting integral:   2.645*10^-3
+
+
+BOXPLOT COMMENTARY
+******************
+--->
+

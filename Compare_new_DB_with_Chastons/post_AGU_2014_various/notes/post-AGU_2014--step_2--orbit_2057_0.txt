@@ -1,0 +1,23 @@
+12/29/2014
+
+==========
+Orbit 2057
+==========
+
+From 'dflux_2030_0_as5_curthresh10microA_tdiff_0.016--time--AGU_mtg_w_Chaston.txt'
+
+
+
+HISTO COMMENTARY
+****************
+-->eflux
+
+-->Poynting
+
+*For 5 microA thresh:
+
+
+BOXPLOT COMMENTARY
+******************
+--->
+

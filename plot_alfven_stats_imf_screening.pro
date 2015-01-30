@@ -78,7 +78,7 @@
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
 ;		     LOGPLOT           :     
 ;		     POLARPLOT         :  Do plots in polar stereo coordinates. (Default: on)    
-;
+;                    WHOLECAP          :  (Only for polar plot!) Plot the entire polar cap, not just a range of MLTs and ILATs
 ;		     DBFILE            :  Which database file to use?
 ;		     DATADIR           :     
 ;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
@@ -147,7 +147,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      IPLOTS=iPlots, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
-                                     MEDIANPLOT=medianPlot, LOGPLOT=logPlot, POLARPLOT=polarPlot, $
+                                     MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
+                                     POLARPLOT=polarPlot, $ ;WHOLECAP=wholeCap, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
@@ -164,10 +165,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
-     help,e
-     print,e
-     print,"Why the extra parameters? They have no home..."
-     RETURN
+     IF $
+        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $ ;keywords for interp_polar2dhist
+     THEN BEGIN                                                            ;Check for passed variables here
+        help,e
+        print,e
+        print,"Why the extra parameters? They have no home..."
+        RETURN
+     ENDIF
   ENDIF
 
   ;;***********************************************
@@ -185,11 +190,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
   IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
   
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 6
-  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 18
+  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 0L
+  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 24L
   
-  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68
-  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84
+  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68L
+  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 90L
   
   IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
   IF NOT KEYWORD_SET(max_negmagc) THEN max_negmagc = -10         ; Current must be less than this, if it's going to make the cut
@@ -232,7 +237,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
-  IF N_ELEMENTS(polarPlot) EQ 0 THEN polarPlot=1                 ;do Polar plots instead?
+  IF N_ELEMENTS(polarPlot) EQ 0 THEN BEGIN
+     IF N_ELEMENTS(wholeCap) EQ 1 THEN PRINT,"Keyword WHOLECAP set without setting POLARPLOT! I'm doing it for you..."
+     polarPlot=1                                                 ;do Polar plots instead?
+  ENDIF
 
   IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                     ; do num events plots?
   IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                    ;electron flux plots?
@@ -307,7 +315,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      print,"Default: junking all negative Pflux values"
      WAIT, 1
 ;;     absEflux=1
-     noNegPflux=1
+     noPosPflux=1
   ENDIF
 
   IF KEYWORD_SET(noPosPflux) AND KEYWORD_SET (logPfPlot) THEN absPflux = 1
@@ -416,7 +424,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************************
   ;;HISTOS
 
-
+  
+  IF minMLT NE 0 THEN minMLT = 0L
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   h2dFluxN=hist_2d(maximus.mlt(plot_i),$
@@ -536,11 +545,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   absnegslogEstr=absEstr + negEstr + posEstr + logEstr
 
   ;;Do custom range for Eflux plots, if requested
-  IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
+  ;; IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
+  IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=customERange $
   ELSE h2dEStr.lim = [MIN(h2dEstr.data),MAX(h2dEstr.data)]
 
   h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
-  IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
+  ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
+  IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
         dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
@@ -616,14 +627,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
 
   ;;Do custom range for Pflux plots, if requested
-  IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
+  ;; IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
+  IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=customPRange $
   ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
 
   ;;IF pPlots NE 0 THEN BEGIN 
   ;;  IF ePlots NE 0 THEN h2dStr=[h2dStr,TEMPORARY(h2dPStr)] $
   ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
   ;;ENDIF
-  IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
+  ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
+  IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
         dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
         dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
@@ -665,6 +678,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
   orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
+
+  IF(minMLT NE 0) THEN minMLT=0L
 
   FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
      tempOrb=maximus.orbit(plot_i(uniqueOrbs_ii(j))) 
@@ -812,7 +827,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 ;;             ' IMF, ' + strmid(plotSuff,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
            cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i], $
-                'temp/polarplots_'+paramStr+".dat",$
+                'temp/polarplots_'+paramStr+".dat",_extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotSuff,1) $

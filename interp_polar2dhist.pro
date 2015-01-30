@@ -1,4 +1,4 @@
-pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,_EXTRA=e
+pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,_EXTRA=e
 
   restore,ancillaryData
 
@@ -12,11 +12,15 @@ pro interp_polar2dhist,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   cgDisplay,color="black"
 
   position = [0.1, 0.075, 0.9, 0.75]
-  cgMap_Set, (minILAT GT 0) ? 90 : -90, 180,/STEREOGRAPHIC, /NoErase, /NoBorder, $
-             Position=position,$
-  ;Limit=[minILAT-5,maxMLT*15-360,maxILAT+5,minMLT*15],
-             Limit=[minILAT,minMLT*15,maxILAT,maxMLT*15]  
-  
+  IF KEYWORD_SET(WHOLECAP) THEN BEGIN
+     cgMap_Set, (minILAT GT 0) ? 90 : -90, 180,/STEREOGRAPHIC, /HORIZON, $
+                /NOERASE, /NOBORDER, POSITION=position
+  ENDIF  ELSE BEGIN
+     cgMap_Set, (minILAT GT 0) ? 90 : -90, 180,/STEREOGRAPHIC, /NoErase, /NoBorder, $
+                Position=position,$
+                ;;Limit=[minILAT-5,maxMLT*15-360,maxILAT+5,minMLT*15],
+                Limit=[minILAT,minMLT*15,maxILAT,maxMLT*15]  
+  ENDELSE
   ; Load the colors for the plot.
 
   nLevels=12
