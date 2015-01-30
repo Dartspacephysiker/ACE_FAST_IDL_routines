@@ -11,16 +11,18 @@
 ;      01/26/2014 Born in Wilder 315
 ;
 ;-
-PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,ALL=all, $
+PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
                                           EPLOTS=ePlots,PPLOTS=pPlots,ORBPLOTS=orbPlots, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
 
-  IF KEYWORD_SET(all) THEN BEGIN
+  IF KEYWORD_SET(all) AND NOT KEYWORD_SET(directions) THEN BEGIN
      directions=['dawnward', 'duskward', 'all_IMF', 'bzNorth', 'bzSouth']
-  ENDIF ELSE BEGIN
-     directions=['dawnward', 'duskward', 'all_IMF']
-  ENDELSE
+  ENDIF
+
+  IF NOT KEYWORD_SET(directions) THEN BEGIN
+     directions=['dawnward', 'duskward'] ;default
+  ENDIF
   PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(5(A10)))',directions
 
   ;plot prefix
@@ -30,8 +32,8 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
   PRINT,"Plot prefix: " + plotPrefix
 
   ;mask min
-  IF NOT KEYWORD_SET(maskMin) THEN BEGIN
-     maskMin = 8
+  IF N_ELEMENTS(maskMin) EQ 0 THEN BEGIN
+     maskMin = 4
   ENDIF
   PRINT,"Mask min: " + strcompress(maskMin,/REMOVE_ALL)
 

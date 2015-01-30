@@ -78,7 +78,8 @@
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
 ;		     LOGPLOT           :     
 ;		     POLARPLOT         :  Do plots in polar stereo coordinates. (Default: on)    
-;                    WHOLECAP          :  (Only for polar plot!) Plot the entire polar cap, not just a range of MLTs and ILATs
+;                    WHOLECAP*         :   *(Only for polar plot!) Plot the entire polar cap, not just a range of MLTs and ILATs
+;                    MIDNIGHT*         :   *(Only for polar plot!) Orient polar plot with midnight (24MLT) at bottom
 ;		     DBFILE            :  Which database file to use?
 ;		     DATADIR           :     
 ;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
@@ -163,18 +164,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;***********************************************
   tempSave=0
 
-  ;;Shouldn't be leftover unused params from batch call
-  IF ISA(e) THEN BEGIN
-     IF $
-        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $ ;keywords for interp_polar2dhist
-     THEN BEGIN                                                            ;Check for passed variables here
-        help,e
-        print,e
-        print,"Why the extra parameters? They have no home..."
-        RETURN
-     ENDIF
-  ENDIF
-
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
   ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
@@ -199,6 +188,25 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
   IF NOT KEYWORD_SET(max_negmagc) THEN max_negmagc = -10         ; Current must be less than this, if it's going to make the cut
   
+  ;;Shouldn't be leftover unused params from batch call
+  IF ISA(e) THEN BEGIN
+     IF $
+        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $ ;keywords for interp_polar2dhist
+     THEN BEGIN                                                            ;Check for passed variables here
+        help,e
+        print,e
+        print,"Why the extra parameters? They have no home..."
+        RETURN
+     ENDIF ELSE BEGIN
+        IF tag_exist(e,"wholecap") THEN BEGIN
+           minMLT=0
+           maxMLT=24
+           minILAT=64
+           maxILAT=88
+        ENDIF
+     ENDELSE
+     
+  ENDIF
   
   ;;********************************************
   ;;satellite data options

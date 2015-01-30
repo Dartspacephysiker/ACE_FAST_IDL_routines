@@ -1,4 +1,4 @@
-PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,_EXTRA=e
+PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight,_EXTRA=e
 
   restore,ancillaryData
 
@@ -20,7 +20,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
      lim=[minILAT,minMLT*15,maxILAT,maxMLT*15]
   ENDELSE
 
-  cgMap_Set, (minILAT GT 0) ? 90 : -90, 180,/STEREOGRAPHIC, /HORIZON, $
+  cgMap_Set, (minILAT GT 0) ? 90 : -90, (KEYWORD_SET(midnight)) ? 0 : 180,/STEREOGRAPHIC, /HORIZON, $
              /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
                 ;;Limit=[minILAT-5,maxMLT*15-360,maxILAT+5,minMLT*15],
                 
