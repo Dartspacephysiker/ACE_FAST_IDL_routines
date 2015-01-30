@@ -190,11 +190,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
   IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
   
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 0L
-  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 24L
+  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 6L
+  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 18L
   
   IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68L
-  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 90L
+  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84L
   
   IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
   IF NOT KEYWORD_SET(max_negmagc) THEN max_negmagc = -10         ; Current must be less than this, if it's going to make the cut
@@ -697,7 +697,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dOrbStr.title="Num Contributing Orbits"
 
   ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-  h2dOrbStr.lim=[1,50]
+  h2dOrbStr.lim=[1,60]
 
   IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
      IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
@@ -752,7 +752,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
   h2dFreqOrbStr.title="Orbit Frequency"
   ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
-  h2dFreqOrbStr.lim=[0,0.3]
+  h2dFreqOrbStr.lim=[0,0.5]
 
 ;  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
   IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
@@ -857,7 +857,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            cgPS_Open, plotDir + 'plot_'+dataName[i]+paramStr+'.ps' 
            ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
            ;;          h2dStr[0].lim 
-           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat" 
+           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat",_extra=e;WHOLECAP=tag_exist(e,"wholecap") ? 1 : 0 
            cgPS_Close 
            
            ;;Create a PNG file with a width of 800 pixels.
