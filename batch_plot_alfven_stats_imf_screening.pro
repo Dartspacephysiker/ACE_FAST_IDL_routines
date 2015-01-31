@@ -12,7 +12,7 @@
 ;
 ;-
 PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
-                                          EPLOTS=ePlots,PPLOTS=pPlots,ORBPLOTS=orbPlots, $
+                                          EPLOTS=ePlots,PPLOTS=pPlots,ORBPLOTS=orbPlots, CHAREPLOT=charEPlot, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
 
@@ -50,6 +50,10 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
      IF KEYWORD_SET(pPlots) THEN BEGIN
 ;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,/logpfplot,PPLOTS=pPlots,/medianplot,maskmin=maskMin,customprange=[-1.3,1.7],/nonegpflux,_extra=e
         plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, maskmin=maskMin, PPLOTS=pPlots, _EXTRA=e
+     ENDIF
+
+     IF KEYWORD_SET(charEPlot) THEN BEGIN
+        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, CHAREPLOT=charEPlot, maskmin=maskMin, _extra=e
      ENDIF
 
      ;;various orbit plots

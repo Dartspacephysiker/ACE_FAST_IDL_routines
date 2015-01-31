@@ -66,6 +66,16 @@
 ;                *ION FLUX PLOTS
 ;		     IPLOTS            :  Do ion plots.
 ;
+;                *CHAR E PLOTS
+;                    CHAREPLOT         :  Do characteristic electron energy plots
+;                    CHARETYPE     :  Options are 'lossCone' for electrons in loss cone or 'Total' for all electrons.
+;                    LOGCHAREPLOT      :  Do log plots of characteristic electron energy.
+;                    ABSCHARE          :  Use absolute value of characteristic electron (required for log plots).
+;                    NONEGCHARE        :  Do not use negative char e in any of the plots (positive MIGHT be earthward...)
+;                    NOPOSCHARE        :  Do not use positive char e in any of the plots
+;                    CUSTOMCHARERANGE  :  Range of allowable values for characteristic electron energy plots. 
+;                                         (Default: [-500000,500000]; [0,3.6] for log plots)
+;
 ;                *ORBIT PLOT OPTIONS
 ;		     ORBPLOT           :  Contributing orbit plots
 ;		     ORBTOTPLOT        :  Plot of total number of orbits for each bin, 
@@ -146,6 +156,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, $
                                      CUSTOMPRANGE=customPRange, $
                                      IPLOTS=iPlots, $
+                                     CHAREPLOT=charEPlot, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+                                     NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, $
+                                     CUSTOMCHARERANGE=customCharERange, $
                                      ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
@@ -182,7 +195,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minMLT) THEN minMLT = 6L
   IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 18L
   
-  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 68L
+  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 60L
   IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84L
   
   IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
@@ -201,7 +214,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF tag_exist(e,"wholecap") THEN BEGIN
            minMLT=0
            maxMLT=24
-           minILAT=64
+           minILAT=60
            maxILAT=88
         ENDIF
      ENDELSE
@@ -255,6 +268,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = "Integ" ;options are "Integ" and "Max"
   IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                    ;Poynting flux [estimate] plots?
   IF N_ELEMENTS(iPlots) EQ 0 THEN iPlots =  0                    ;ion Plots?
+  IF N_ELEMENTS(charEPlot) EQ 0 THEN charEPlot =  0              ;char E plots?
+  IF N_ELEMENTS(charEType) EQ 0 THEN charEType = "lossCone"      ;options are "lossCone" and "Total"
   IF N_ELEMENTS(orbPlot) EQ 0 THEN orbPlot =  0                  ;Contributing orbits plot?
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
   IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0          ;Contributing/total orbits plot?
@@ -300,7 +315,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;NOTE: max value has negative values, which can mess with
   ;;color bars
   
-  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEflux) AND NOT KEYWORD_SET(noNegEflux) THEN BEGIN 
+  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEflux) AND NOT KEYWORD_SET(noNegEflux) AND NOT KEYWORD_SET(noPosEflux) THEN BEGIN 
      print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEflux', 'noNegEflux', or 'noPosEflux' set!"
      print,"Can't make log plots without using absolute value or only positive values..."
      print,"Default: junking all negative Eflux values"
@@ -317,7 +332,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
   
   ;;######Poynting flux
-  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPflux) AND NOT KEYWORD_SET(noNegPflux) THEN BEGIN 
+  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPflux) AND NOT KEYWORD_SET(noNegPflux) AND NOT KEYWORD_SET(noPosPflux) THEN BEGIN 
      print,"Warning!: You're trying to do log Pflux plots but you don't have 'absPflux', 'noNegPflux', or 'noPosPflux' set!"
      print,"Can't make log plots without using absolute value or only positive values..."
      print,"Default: junking all negative Pflux values"
@@ -345,6 +360,22 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;For linear or log ion flux plotrange
   ;;IF logOFluxPlot EQ 0 THEN customORange=[0,1e4] ELSE customRange=ALOG10([0,1e4]
     
+  IF KEYWORD_SET(logCharEPlot) AND NOT KEYWORD_SET(absCharE) AND NOT KEYWORD_SET(noNegCharE) AND NOT KEYWORD_SET(noPosCharE) THEN BEGIN 
+     print,"Warning!: You're trying to do log Eflux plots but you don't have 'absCharE', 'noNegCharE', or 'noPosCharE' set!"
+     print,"Can't make log plots without using absolute value or only positive values..."
+     print,"Default: junking all negative CharE values"
+     WAIT, 1
+;;     absCharE=1
+     noNegCharE=1
+  ENDIF
+
+  IF KEYWORD_SET(noPosCharE) AND KEYWORD_SET (logCharEPlot) THEN absCharE = 1
+
+  ;;For linear or log charE plotrange
+  IF NOT KEYWORD_SET(customCharERange) THEN BEGIN
+     IF NOT KEYWORD_SET(logCharEPlot) THEN customCharERange=[1,4000] ELSE customERange=[0,3.6]
+  ENDIF
+
   ;;********************************************
   ;;Stuff for output
   hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
@@ -667,6 +698,99 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 ;;   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN undefine,pData
 
   ;;if iPlots NE 0 THEN @interp_plots_ions.pro
+
+
+  ;;########CHARACTERISTIC ENERGY########
+
+  h2dCharEStr={h2dStr}
+
+  ;;If not allowing negative fluxes
+  IF charEType EQ "lossCone" THEN BEGIN
+     IF KEYWORD_SET(noNegCharE) THEN BEGIN
+        no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+        plot_i=cgsetintersection(no_negs_i,plot_i)
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(noPosCharE) THEN BEGIN
+           no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
+           plot_i=cgsetintersection(no_pos_i,plot_i)        
+        ENDIF
+     ENDELSE
+     charEData=maximus.max_chare_losscone(plot_i) 
+  ENDIF ELSE BEGIN
+     IF charEType EQ "Total" THEN BEGIN
+        IF KEYWORD_SET(noNegCharE) THEN BEGIN
+           no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+           plot_i=cgsetintersection(no_negs_i,plot_i)        
+        ENDIF ELSE BEGIN
+           IF KEYWORD_SET(noPosCharE) THEN BEGIN
+           no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
+           plot_i=cgsetintersection(no_pos_i,plot_i)        
+           ENDIF
+        ENDELSE
+        charEData=maximus.max_chare_total(plot_i)
+     ENDIF
+  ENDELSE
+
+  IF KEYWORD_SET(medianplot) THEN BEGIN 
+     h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+                              charEData,$
+                              MIN1=MINMLT,MIN2=MINILAT,$
+                              MAX1=MAXMLT,MAX2=MAXILAT,$
+                              BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                              OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
+                              ABSMED=absCharE) 
+  ENDIF ELSE BEGIN 
+     h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
+                         maximus.ilat(plot_i),$
+                         charEData,$
+                         MIN1=MINMLT,MIN2=MINILAT,$
+                         MAX1=MAXMLT,MAX2=MAXILAT,$
+                         BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                         OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
+     h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
+  ENDELSE 
+
+  ;;Log plots desired?
+  absCharEStr=""
+  negCharEStr=""
+  posCharEStr=""
+  logCharEStr=""
+  IF KEYWORD_SET(absCharE)THEN BEGIN 
+     h2dCharEStr.data = ABS(h2dCharEStr.data) 
+     absCharEStr= "Abs--" 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
+  ENDIF
+  IF KEYWORD_SET(noNegCharE) THEN BEGIN
+     negCharEStr = "NoNegs--"
+  ENDIF
+  IF KEYWORD_SET(noPosCharE) THEN BEGIN
+     posCharEStr = "NoPos--"
+  ENDIF
+  IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
+     logCharEStr="Log " 
+     h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
+  ENDIF
+  absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
+
+  ;;Do custom range for charE plots, if requested
+  ;; IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=TEMPORARY(customcharERange)$
+  IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=customCharERange $
+  ELSE h2dCharEStr.lim = [MIN(h2dCharEStr.data),MAX(h2dCharEStr.data)]
+
+  h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
+  ;; IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
+  IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
+     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+        dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
+     ENDIF 
+  ENDIF
+
+;;   undefine,h2dCharEStr   ;;,charEData 
+
+
+
 
   ;;########################################
   ;;

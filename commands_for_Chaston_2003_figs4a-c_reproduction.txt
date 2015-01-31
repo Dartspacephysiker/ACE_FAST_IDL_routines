@@ -1,17 +1,22 @@
 ;01/30/2015 6 PM
 ;Here I am, reproducing these figures on a Friday night. It's totally excellent, because things appear to line up with Chaston's picture!
 
+;;;;;;;;;;
 ;orb plots
 plotprf="Foolin_round_01302015/Dartdb_01302015" & batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions='all_IMF',maskmin=0,/orbplots,/orbtotplot,/orbfreqplot,/neventperorbplot,/WHOLECAP,/midnight
 
+;;;;;;;;;;;;;;;
 ;electron plots
 plotprf="Foolin_round_01302015/midnight_nomask/Dartdb_01302015" & batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions='all_IMF',maskmin=0,/eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,/midnight
 
 ;;;;;;;;;;;;;;;;;;;;
 ;Poynting flux plots
-;;;;;;;;;;;;;;;;;;;;
 ;Chaston's plotrange
 plotprf="Foolin_round_01302015/midnight_nomask/Dartdb_01302015_otherpplot" & batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions='all_IMF',maskmin=0,/pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight
 
 ;Better (for showing features) plotrange
 plotprf="Foolin_round_01302015/midnight_nomask/Dartdb_01302015_otherpplot" & batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions='all_IMF',maskmin=0,/pplots,/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;characteristic energy plot
+plotprf="Foolin_round_01302015/midnight_nomask/Dartdb_01302015" & batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions='all_IMF',maskmin=0,/chareplot,charetype="lossCone",/logchareplot,/nonegchare,/medianplot,/WHOLECAP,/midnight
