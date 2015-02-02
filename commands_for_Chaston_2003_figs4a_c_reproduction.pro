@@ -14,7 +14,9 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /orbplots,/orbtotplot,/orbfreqplot,/neventperorbplot,/WHOLECAP,/midnight
+                                        /orbcontribplot,/orbtotplot,/orbfreqplot,/neventperorbplot, $
+                                        neventperorbrange=[0.0,10.0], $
+                                        /WHOLECAP,/midnight
 
   ;;;;;;;;;;;;;;;
   ;electron plots
@@ -24,11 +26,11 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
-  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherpplot",directions=dirs,maskmin=mskm, $
+  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
                                         /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight
   
   ;Better (for showing features) plotrange
-  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherpplot",directions=dirs,maskmin=mskm, $
+  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
                                         /pplots,/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;

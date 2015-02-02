@@ -19,3 +19,14 @@ testcode/laTEST/*.ps
 
 #No CDF files
 *.cdf
+
+#No gifs
+*.gif
+
+#No dat_and_plots dirs
+*dat_and_plots*
+testcode/laTEST/goodplots
+
+#No DB files
+scripts_for_processing_Dartmouth_data/*.sav
+scripts_for_processing_Dartmouth_data/*.txt

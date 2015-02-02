@@ -77,12 +77,16 @@
 ;                                         (Default: [-500000,500000]; [0,3.6] for log plots)
 ;
 ;                *ORBIT PLOT OPTIONS
-;		     ORBPLOT           :  Contributing orbit plots
+;		     ORBCONTRIBPLOT    :  Contributing orbit plots
+;		     ORBCONTRIBRANGE   :  Range for contributing orbit plot
 ;		     ORBTOTPLOT        :  Plot of total number of orbits for each bin, 
 ;                                            given user-specified restrictions on the database.
+;		     ORBTOTRANGE       :  Range for Orbtotplot 
 ;		     ORBFREQPLOT       :  Plot of orbits contributing to a given bin, 
+;		     ORBFREQRANGE      :  Range for Orbfreqplot.
 ;                                            divided by total orbits passing through the bin.
 ;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
+;                    NEVENTPERORBRANGE :  Range for Neventperorbplot.
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
@@ -94,6 +98,7 @@
 ;		     DATADIR           :     
 ;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
 ;                                            (He used it for a few papers, I think, so it's good).
+;                    NEVENTSRANGE      :  Range for nEvents plot.
 ;
 ;                  *VARIOUS OUTPUT OPTIONS
 ;		     WRITEASCII        :     
@@ -159,12 +164,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      CHAREPLOT=charEPlot, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
                                      NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, $
                                      CUSTOMCHARERANGE=customCharERange, $
-                                     ORBPLOT=orbPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                                     NEVENTPERORBPLOT=nEventPerOrbPlot, $
+                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, NEVENTPERORBPLOT=nEventPerOrbPlot, $
+                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      POLARPLOT=polarPlot, $ ;WHOLECAP=wholeCap, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                     NEVENTSRANGE=nEventsRange, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -270,7 +276,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(iPlots) EQ 0 THEN iPlots =  0                    ;ion Plots?
   IF N_ELEMENTS(charEPlot) EQ 0 THEN charEPlot =  0              ;char E plots?
   IF N_ELEMENTS(charEType) EQ 0 THEN charEType = "lossCone"      ;options are "lossCone" and "Total"
-  IF N_ELEMENTS(orbPlot) EQ 0 THEN orbPlot =  0                  ;Contributing orbits plot?
+  IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0                  ;Contributing orbits plot?
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
   IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0          ;Contributing/total orbits plot?
   IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0 ;N Events/orbit plot?
@@ -481,7 +487,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
           title : "Number of events", $
-          lim : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
+          lim : (KEYWORD_SET(nEventsRange) AND N_ELEMENTS(nEventsRange) EQ 2) ? DOUBLE(nEventsRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
 
   ;;Make a mask for plots so that we can show where no data exists
   h2dMaskStr={h2dStr}
@@ -814,7 +820,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
   nOrbs=n_elements(uniqueOrbs_ii)
   
-  IF KEYWORD_SET(orbplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
+  IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
      
      h2dOrbStr={h2dStr}
 
@@ -839,9 +845,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dOrbStr.title="Num Contributing Orbits"
 
      ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-     h2dOrbStr.lim=[1,60]
+     IF NOT KEYWORD_SET(orbContribRange) OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
 
-     IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
+     IF KEYWORD_SET(orbContribPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
         IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
      ENDIF
 
@@ -885,7 +891,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDFOR
 
      h2dTotOrbStr.title="Total Orbits"
-     h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)]
+     IF NOT KEYWORD_SET(orbTotRange) OR N_ELEMENTS(orbTotRange) NE 2 THEN h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)] $ 
+     ELSE h2dTotOrbStr.lim=orbTotRange
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
         IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
@@ -902,7 +909,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
      h2dFreqOrbStr.title="Orbit Frequency"
      ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
-     h2dFreqOrbStr.lim=[0,0.5]
+     IF NOT KEYWORD_SET(orbFreqRange) OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
 
 ;  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
      IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
@@ -933,7 +940,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
      h2dNEvPerOrbStr.title="N Events per Orbit"
      ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
-     h2dNEvPerOrbStr.lim=[0,10]
+     h2dNEvPerOrbStr.lim=[0,7]
 
      IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
         h2dStr=[h2dStr,h2dNEvPerOrbStr] 
