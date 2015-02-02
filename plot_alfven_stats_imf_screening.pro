@@ -512,284 +512,292 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########ELECTRON FLUX########
 
-  h2dEStr={h2dStr}
+  IF KEYWORD_SET(eplots) THEN BEGIN
+     h2dEStr={h2dStr}
 
-  ;;If not allowing negative fluxes
-  IF eFluxPlotType EQ "Integ" THEN BEGIN
-     IF KEYWORD_SET(noNegEflux) THEN BEGIN
-        no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
-        plot_i=cgsetintersection(no_negs_i,plot_i)
-     ENDIF ELSE BEGIN
-        IF KEYWORD_SET(noPosEflux) THEN BEGIN
-           no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
-           plot_i=cgsetintersection(no_pos_i,plot_i)        
-        ENDIF
-     ENDELSE
-     elecData=maximus.integ_elec_energy_flux(plot_i) 
-  ENDIF ELSE BEGIN
-     IF eFluxPlotType EQ "Max" THEN BEGIN
+     ;;If not allowing negative fluxes
+     IF eFluxPlotType EQ "Integ" THEN BEGIN
         IF KEYWORD_SET(noNegEflux) THEN BEGIN
-           no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
-           plot_i=cgsetintersection(no_negs_i,plot_i)        
+           no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+           plot_i=cgsetintersection(no_negs_i,plot_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosEflux) THEN BEGIN
-           no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
-           plot_i=cgsetintersection(no_pos_i,plot_i)        
+              no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
+              plot_i=cgsetintersection(no_pos_i,plot_i)        
            ENDIF
         ENDELSE
-        elecData=maximus.elec_energy_flux(plot_i)
+        elecData=maximus.integ_elec_energy_flux(plot_i) 
+     ENDIF ELSE BEGIN
+        IF eFluxPlotType EQ "Max" THEN BEGIN
+           IF KEYWORD_SET(noNegEflux) THEN BEGIN
+              no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+              plot_i=cgsetintersection(no_negs_i,plot_i)        
+           ENDIF ELSE BEGIN
+              IF KEYWORD_SET(noPosEflux) THEN BEGIN
+                 no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
+                 plot_i=cgsetintersection(no_pos_i,plot_i)        
+              ENDIF
+           ENDELSE
+           elecData=maximus.elec_energy_flux(plot_i)
+        ENDIF
+     ENDELSE
+
+     IF KEYWORD_SET(medianplot) THEN BEGIN 
+        h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+                                 elecData,$
+                                 MIN1=MINMLT,MIN2=MINILAT,$
+                                 MAX1=MAXMLT,MAX2=MAXILAT,$
+                                 BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
+                                 ABSMED=absEflux) 
+     ENDIF ELSE BEGIN 
+        h2dEStr.data=hist2d(maximus.mlt(plot_i), $
+                            maximus.ilat(plot_i),$
+                            elecData,$
+                            MIN1=MINMLT,MIN2=MINILAT,$
+                            MAX1=MAXMLT,MAX2=MAXILAT,$
+                            BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                            OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
+        h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
+     ENDELSE 
+
+     ;;Log plots desired?
+     absEstr=""
+     negEstr=""
+     posEstr=""
+     logEstr=""
+     IF KEYWORD_SET(absEflux)THEN BEGIN 
+        h2dEStr.data = ABS(h2dEStr.data) 
+        absEstr= "Abs--" 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
      ENDIF
-  ENDELSE
+     IF KEYWORD_SET(noNegEflux) THEN BEGIN
+        negEstr = "NoNegs--"
+     ENDIF
+     IF KEYWORD_SET(noPosEflux) THEN BEGIN
+        posEstr = "NoPos--"
+     ENDIF
+     IF KEYWORD_SET(logEfPlot) THEN BEGIN 
+        logEstr="Log " 
+        h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
+     ENDIF
+     absnegslogEstr=absEstr + negEstr + posEstr + logEstr
 
-  IF KEYWORD_SET(medianplot) THEN BEGIN 
-     h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                              elecData,$
-                              MIN1=MINMLT,MIN2=MINILAT,$
-                              MAX1=MAXMLT,MAX2=MAXILAT,$
-                              BINSIZE1=binMLT,BINSIZE2=binILAT,$
-                              OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                              ABSMED=absEflux) 
-  ENDIF ELSE BEGIN 
-     h2dEStr.data=hist2d(maximus.mlt(plot_i), $
-                         maximus.ilat(plot_i),$
-                         elecData,$
-                         MIN1=MINMLT,MIN2=MINILAT,$
-                         MAX1=MAXMLT,MAX2=MAXILAT,$
-                         BINSIZE1=binMLT,BINSIZE2=binILAT,$
-                         OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-     h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-  ENDELSE 
+     ;;Do custom range for Eflux plots, if requested
+     ;; IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
+     IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=customERange $
+     ELSE h2dEStr.lim = [MIN(h2dEstr.data),MAX(h2dEstr.data)]
 
-  ;;Log plots desired?
-  absEstr=""
-  negEstr=""
-  posEstr=""
-  logEstr=""
-  IF KEYWORD_SET(absEflux)THEN BEGIN 
-     h2dEStr.data = ABS(h2dEStr.data) 
-     absEstr= "Abs--" 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
-  ENDIF
-  IF KEYWORD_SET(noNegEflux) THEN BEGIN
-     negEstr = "NoNegs--"
-  ENDIF
-  IF KEYWORD_SET(noPosEflux) THEN BEGIN
-     posEstr = "NoPos--"
-  ENDIF
-  IF KEYWORD_SET(logEfPlot) THEN BEGIN 
-     logEstr="Log " 
-     h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
-  ENDIF
-  absnegslogEstr=absEstr + negEstr + posEstr + logEstr
+     h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
+     ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
+     IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+           dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
+           dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
+        ENDIF 
+     ENDIF
 
-  ;;Do custom range for Eflux plots, if requested
-  ;; IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=TEMPORARY(customERange)$
-  IF  KEYWORD_SET(customERange) THEN h2dEStr.lim=customERange $
-  ELSE h2dEStr.lim = [MIN(h2dEstr.data),MAX(h2dEstr.data)]
+     ;;   undefine,h2dEStr   ;;,elecData 
 
-  h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
-  ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
-  IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-        dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
-        dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
-     ENDIF 
   ENDIF
-
-;;   undefine,h2dEStr   ;;,elecData 
 
 
   ;;########Poynting Flux########
 
-  h2dPStr={h2dStr}
+  IF KEYWORD_SET(pplots) THEN BEGIN
 
-  IF KEYWORD_SET(noNegPflux) THEN BEGIN
-     no_negs_i=WHERE(poynt_est GE 0.0)
-     plot_i=cgsetintersection(no_negs_i,plot_i)
-  ENDIF
+     h2dPStr={h2dStr}
 
-  IF KEYWORD_SET(noPosPflux) THEN BEGIN
-     no_pos_i=WHERE(poynt_est GE 0.0)
-     plot_i=cgsetintersection(no_pos_i,plot_i)
-  ENDIF
+     IF KEYWORD_SET(noNegPflux) THEN BEGIN
+        no_negs_i=WHERE(poynt_est GE 0.0)
+        plot_i=cgsetintersection(no_negs_i,plot_i)
+     ENDIF
+
+     IF KEYWORD_SET(noPosPflux) THEN BEGIN
+        no_pos_i=WHERE(poynt_est GE 0.0)
+        plot_i=cgsetintersection(no_pos_i,plot_i)
+     ENDIF
 
 
-  IF KEYWORD_SET(medianplot) THEN BEGIN 
-     h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                              poynt_est(plot_i),$
-                              MIN1=MINMLT,MIN2=MINILAT,$
-                              MAX1=MAXMLT,MAX2=MAXILAT,$
-                              BINSIZE1=binMLT,BINSIZE2=binILAT,$
-                              OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                              ABSMED=absPflux) 
-  ENDIF ELSE BEGIN 
-     h2dPStr.data=hist2d(maximus.mlt(plot_i),$
-                         maximus.ilat(plot_i),$
-                         poynt_est(plot_i),$
-                         MIN1=MINMLT,MIN2=MINILAT,$
-                         MAX1=MAXMLT,MAX2=MAXILAT,$
-                         BINSIZE1=binMLT,BINSIZE2=binILAT) 
-     h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
-  ENDELSE
+     IF KEYWORD_SET(medianplot) THEN BEGIN 
+        h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+                                 poynt_est(plot_i),$
+                                 MIN1=MINMLT,MIN2=MINILAT,$
+                                 MAX1=MAXMLT,MAX2=MAXILAT,$
+                                 BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
+                                 ABSMED=absPflux) 
+     ENDIF ELSE BEGIN 
+        h2dPStr.data=hist2d(maximus.mlt(plot_i),$
+                            maximus.ilat(plot_i),$
+                            poynt_est(plot_i),$
+                            MIN1=MINMLT,MIN2=MINILAT,$
+                            MAX1=MAXMLT,MAX2=MAXILAT,$
+                            BINSIZE1=binMLT,BINSIZE2=binILAT) 
+        h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
+     ENDELSE
 
-  IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
+     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
 
-  ;;Log plots desired?
-  absPstr=""
-  negPstr=""
-  posPstr=""
-  logPstr=""
-  IF KEYWORD_SET(absPflux) THEN BEGIN 
-     h2dPStr.data = ABS(h2dPStr.data) 
-     absPstr= "Abs" 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
-  ENDIF
+     ;;Log plots desired?
+     absPstr=""
+     negPstr=""
+     posPstr=""
+     logPstr=""
+     IF KEYWORD_SET(absPflux) THEN BEGIN 
+        h2dPStr.data = ABS(h2dPStr.data) 
+        absPstr= "Abs" 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
+     ENDIF
 
-  IF KEYWORD_SET(noNegPflux) THEN BEGIN
-     negPstr = "NoNegs--"
-  ENDIF
+     IF KEYWORD_SET(noNegPflux) THEN BEGIN
+        negPstr = "NoNegs--"
+     ENDIF
 
-  IF KEYWORD_SET(noPosPflux) THEN BEGIN
-     posPstr = "NoPos--"
-  ENDIF
+     IF KEYWORD_SET(noPosPflux) THEN BEGIN
+        posPstr = "NoPos--"
+     ENDIF
 
-  IF KEYWORD_SET(logPfPlot) THEN BEGIN 
-     logPstr="Log " 
-     h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN $
-        pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
-  ENDIF
+     IF KEYWORD_SET(logPfPlot) THEN BEGIN 
+        logPstr="Log " 
+        h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN $
+           pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
+     ENDIF
 
-  absnegslogPstr=absPstr + negPstr + posPstr + logPstr
+     absnegslogPstr=absPstr + negPstr + posPstr + logPstr
 
-  h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
+     h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
 
-  ;;Do custom range for Pflux plots, if requested
-  ;; IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
-  IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=customPRange $
-  ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
+     ;;Do custom range for Pflux plots, if requested
+     ;; IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=TEMPORARY(customPRange)$
+     IF KEYWORD_SET(customPRange) THEN h2dPStr.lim=customPRange $
+     ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
 
-  ;;IF pPlots NE 0 THEN BEGIN 
-  ;;  IF ePlots NE 0 THEN h2dStr=[h2dStr,TEMPORARY(h2dPStr)] $
-  ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
-  ;;ENDIF
-  ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
-  IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-        dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
-        dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
-     ENDIF  
-  ENDIF
+     ;;IF pPlots NE 0 THEN BEGIN 
+     ;;  IF ePlots NE 0 THEN h2dStr=[h2dStr,TEMPORARY(h2dPStr)] $
+     ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
+     ;;ENDIF
+     ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
+     IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+           dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
+           dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
+        ENDIF  
+     ENDIF
 
 ;;   undefine,h2dPStr
 
-  ;;use these n stuff
-  IF KEYWORD_SET(tempSAVE) THEN BEGIN 
-     print,"saving tempdata..." 
-     save,elecData,filename="testcode/elecdata.dat" 
-     mlts=maximus.mlt(plot_i) 
-     ilats=maximus.ilat(plot_i) 
-     save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
-     pData=poynt_est(plot_i) 
-     save,pData,filename="testcode/pData.dat" 
-  ENDIF
+     ;;use these n stuff
+     IF KEYWORD_SET(tempSAVE) THEN BEGIN 
+        print,"saving tempdata..." 
+        save,elecData,filename="testcode/elecdata.dat" 
+        mlts=maximus.mlt(plot_i) 
+        ilats=maximus.ilat(plot_i) 
+        save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
+        pData=poynt_est(plot_i) 
+        save,pData,filename="testcode/pData.dat" 
+     ENDIF
 
 ;;   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN undefine,pData
 
-  ;;if iPlots NE 0 THEN @interp_plots_ions.pro
+     ;;if iPlots NE 0 THEN @interp_plots_ions.pro
 
+  ENDIF
 
   ;;########CHARACTERISTIC ENERGY########
 
-  h2dCharEStr={h2dStr}
+  IF KEYWORD_SET(chareplot) THEN BEGIN
 
-  ;;If not allowing negative fluxes
-  IF charEType EQ "lossCone" THEN BEGIN
-     IF KEYWORD_SET(noNegCharE) THEN BEGIN
-        no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
-        plot_i=cgsetintersection(no_negs_i,plot_i)
-     ENDIF ELSE BEGIN
-        IF KEYWORD_SET(noPosCharE) THEN BEGIN
-           no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
-           plot_i=cgsetintersection(no_pos_i,plot_i)        
-        ENDIF
-     ENDELSE
-     charEData=maximus.max_chare_losscone(plot_i) 
-  ENDIF ELSE BEGIN
-     IF charEType EQ "Total" THEN BEGIN
+     h2dCharEStr={h2dStr}
+
+     ;;If not allowing negative fluxes
+     IF charEType EQ "lossCone" THEN BEGIN
         IF KEYWORD_SET(noNegCharE) THEN BEGIN
-           no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
-           plot_i=cgsetintersection(no_negs_i,plot_i)        
+           no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+           plot_i=cgsetintersection(no_negs_i,plot_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosCharE) THEN BEGIN
-           no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
-           plot_i=cgsetintersection(no_pos_i,plot_i)        
+              no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
+              plot_i=cgsetintersection(no_pos_i,plot_i)        
            ENDIF
         ENDELSE
-        charEData=maximus.max_chare_total(plot_i)
+        charEData=maximus.max_chare_losscone(plot_i) 
+     ENDIF ELSE BEGIN
+        IF charEType EQ "Total" THEN BEGIN
+           IF KEYWORD_SET(noNegCharE) THEN BEGIN
+              no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+              plot_i=cgsetintersection(no_negs_i,plot_i)        
+           ENDIF ELSE BEGIN
+              IF KEYWORD_SET(noPosCharE) THEN BEGIN
+                 no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
+                 plot_i=cgsetintersection(no_pos_i,plot_i)        
+              ENDIF
+           ENDELSE
+           charEData=maximus.max_chare_total(plot_i)
+        ENDIF
+     ENDELSE
+
+     IF KEYWORD_SET(medianplot) THEN BEGIN 
+        h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+                                     charEData,$
+                                     MIN1=MINMLT,MIN2=MINILAT,$
+                                     MAX1=MAXMLT,MAX2=MAXILAT,$
+                                     BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                     OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
+                                     ABSMED=absCharE) 
+     ENDIF ELSE BEGIN 
+        h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
+                                maximus.ilat(plot_i),$
+                                charEData,$
+                                MIN1=MINMLT,MIN2=MINILAT,$
+                                MAX1=MAXMLT,MAX2=MAXILAT,$
+                                BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
+        h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
+     ENDELSE 
+
+     ;;Log plots desired?
+     absCharEStr=""
+     negCharEStr=""
+     posCharEStr=""
+     logCharEStr=""
+     IF KEYWORD_SET(absCharE)THEN BEGIN 
+        h2dCharEStr.data = ABS(h2dCharEStr.data) 
+        absCharEStr= "Abs--" 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
      ENDIF
-  ENDELSE
+     IF KEYWORD_SET(noNegCharE) THEN BEGIN
+        negCharEStr = "NoNegs--"
+     ENDIF
+     IF KEYWORD_SET(noPosCharE) THEN BEGIN
+        posCharEStr = "NoPos--"
+     ENDIF
+     IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
+        logCharEStr="Log " 
+        h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
+     ENDIF
+     absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
 
-  IF KEYWORD_SET(medianplot) THEN BEGIN 
-     h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                              charEData,$
-                              MIN1=MINMLT,MIN2=MINILAT,$
-                              MAX1=MAXMLT,MAX2=MAXILAT,$
-                              BINSIZE1=binMLT,BINSIZE2=binILAT,$
-                              OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                              ABSMED=absCharE) 
-  ENDIF ELSE BEGIN 
-     h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
-                         maximus.ilat(plot_i),$
-                         charEData,$
-                         MIN1=MINMLT,MIN2=MINILAT,$
-                         MAX1=MAXMLT,MAX2=MAXILAT,$
-                         BINSIZE1=binMLT,BINSIZE2=binILAT,$
-                         OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-     h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-  ENDELSE 
+     ;;Do custom range for charE plots, if requested
+     ;; IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=TEMPORARY(customcharERange)$
+     IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=customCharERange $
+     ELSE h2dCharEStr.lim = [MIN(h2dCharEStr.data),MAX(h2dCharEStr.data)]
 
-  ;;Log plots desired?
-  absCharEStr=""
-  negCharEStr=""
-  posCharEStr=""
-  logCharEStr=""
-  IF KEYWORD_SET(absCharE)THEN BEGIN 
-     h2dCharEStr.data = ABS(h2dCharEStr.data) 
-     absCharEStr= "Abs--" 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
-  ENDIF
-  IF KEYWORD_SET(noNegCharE) THEN BEGIN
-     negCharEStr = "NoNegs--"
-  ENDIF
-  IF KEYWORD_SET(noPosCharE) THEN BEGIN
-     posCharEStr = "NoPos--"
-  ENDIF
-  IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
-     logCharEStr="Log " 
-     h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
-  ENDIF
-  absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
-
-  ;;Do custom range for charE plots, if requested
-  ;; IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=TEMPORARY(customcharERange)$
-  IF  KEYWORD_SET(customCharERange) THEN h2dCharEStr.lim=customCharERange $
-  ELSE h2dCharEStr.lim = [MIN(h2dCharEStr.data),MAX(h2dCharEStr.data)]
-
-  h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
-  ;; IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
-  IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-        dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
-        dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
-     ENDIF 
-  ENDIF
+     h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
+     ;; IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
+     IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+           dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
+           dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
+        ENDIF 
+     ENDIF
 
 ;;   undefine,h2dCharEStr   ;;,charEData 
 
-
+  ENDIF
 
 
   ;;########################################
@@ -806,116 +814,132 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
   nOrbs=n_elements(uniqueOrbs_ii)
   
-  h2dOrbStr={h2dStr}
+  IF KEYWORD_SET(orbplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
+     
+     h2dOrbStr={h2dStr}
 
-  h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
-  orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
+     h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
+     orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
 
-  IF(minMLT NE 0) THEN minMLT=0L
+     IF(minMLT NE 0) THEN minMLT=0L
 
-  FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-     tempOrb=maximus.orbit(plot_i(uniqueOrbs_ii(j))) 
-     temp_ii=WHERE(maximus.orbit(plot_i) EQ tempOrb,/NULL) 
-     h2dOrbTemp=hist_2d(maximus.mlt(plot_i(temp_ii)),$
-                        maximus.ilat(plot_i(temp_ii)),$
-                        BIN1=binMLT,BIN2=binILAT,$
-                        MIN1=MINMLT,MIN2=MINILAT,$
-                        MAX1=MAXMLT,MAX2=MAXILAT) 
-     orbARR[j,*,*]=h2dOrbTemp 
-     h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
-     h2dOrbStr.data += h2dOrbTemp 
-  ENDFOR
+     FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
+        tempOrb=maximus.orbit(plot_i(uniqueOrbs_ii(j))) 
+        temp_ii=WHERE(maximus.orbit(plot_i) EQ tempOrb,/NULL) 
+        h2dOrbTemp=hist_2d(maximus.mlt(plot_i(temp_ii)),$
+                           maximus.ilat(plot_i(temp_ii)),$
+                           BIN1=binMLT,BIN2=binILAT,$
+                           MIN1=MINMLT,MIN2=MINILAT,$
+                           MAX1=MAXMLT,MAX2=MAXILAT) 
+        orbARR[j,*,*]=h2dOrbTemp 
+        h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
+        h2dOrbStr.data += h2dOrbTemp 
+     ENDFOR
 
-  h2dOrbStr.title="Num Contributing Orbits"
+     h2dOrbStr.title="Num Contributing Orbits"
 
-  ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-  h2dOrbStr.lim=[1,60]
+     ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
+     h2dOrbStr.lim=[1,60]
 
-  IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
+     IF KEYWORD_SET(orbPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
+     ENDIF
+
   ENDIF
-
   ;;########TOTAL Orbits########
 
-  ;;uniqueOrbs_ii=UNIQ(maximus.orbit(ind_region_magc_geabs10_acestart),SORT(maximus.orbit(ind_region_magc_geabs10_acestart)))
-  uniqueOrbs_ii=UNIQ(maximus.orbit,SORT(maximus.orbit))
+  IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
 
-  h2dTotOrbStr={h2dStr}
-  orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
-  h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
+     ;;uniqueOrbs_ii=UNIQ(maximus.orbit(ind_region_magc_geabs10_acestart),SORT(maximus.orbit(ind_region_magc_geabs10_acestart)))
+     uniqueOrbs_ii=UNIQ(maximus.orbit,SORT(maximus.orbit))
+
+     h2dTotOrbStr={h2dStr}
+     orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
+     h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
 
 
-  ;;FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-  ;;   tempOrb=maximus.orbit(ind_region_magc_geabs10_acestart(uniqueOrbs_ii(j))) 
-  ;;   temp_ii=WHERE(maximus.orbit(ind_region_magc_geabs10_acestart) EQ tempOrb) 
-  ;;   h2dOrbTemp=hist_2d(maximus.mlt(ind_region_magc_geabs10_acestart(temp_ii)),$
-  ;;                      maximus.ilat(ind_region_magc_geabs10_acestart(temp_ii)),$
-  ;;                      BIN1=binMLT,BIN2=binILAT,$
-  ;;                      MIN1=MINMLT,MIN2=MINILAT,$
-  ;;                      MAX1=MAXMLT,MAX2=MAXILAT) 
-  ;;   orbARR[j,*,*]=h2dOrbTemp 
-  ;;   h2dOrbTemp(WHERE(h2dOrbTemp GT 0)) = 1 
-  ;;   h2dTotOrbStr.data += h2dOrbTemp 
-  ;;ENDFOR
+     ;;FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
+     ;;   tempOrb=maximus.orbit(ind_region_magc_geabs10_acestart(uniqueOrbs_ii(j))) 
+     ;;   temp_ii=WHERE(maximus.orbit(ind_region_magc_geabs10_acestart) EQ tempOrb) 
+     ;;   h2dOrbTemp=hist_2d(maximus.mlt(ind_region_magc_geabs10_acestart(temp_ii)),$
+     ;;                      maximus.ilat(ind_region_magc_geabs10_acestart(temp_ii)),$
+     ;;                      BIN1=binMLT,BIN2=binILAT,$
+     ;;                      MIN1=MINMLT,MIN2=MINILAT,$
+     ;;                      MAX1=MAXMLT,MAX2=MAXILAT) 
+     ;;   orbARR[j,*,*]=h2dOrbTemp 
+     ;;   h2dOrbTemp(WHERE(h2dOrbTemp GT 0)) = 1 
+     ;;   h2dTotOrbStr.data += h2dOrbTemp 
+     ;;ENDFOR
 
-  FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-     tempOrb=maximus.orbit(uniqueOrbs_ii(j)) 
-     temp_ii=WHERE(maximus.orbit EQ tempOrb,/NULL) 
-     h2dOrbTemp=hist_2d(maximus.mlt(temp_ii),$
-                        maximus.ilat(temp_ii),$
-                        BIN1=binMLT,BIN2=binILAT,$
-                        MIN1=MINMLT,MIN2=MINILAT,$
-                        MAX1=MAXMLT,MAX2=MAXILAT) 
-     orbARR[j,*,*]=h2dOrbTemp 
-     h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
-     h2dTotOrbStr.data += h2dOrbTemp 
-  ENDFOR
+     FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
+        tempOrb=maximus.orbit(uniqueOrbs_ii(j)) 
+        temp_ii=WHERE(maximus.orbit EQ tempOrb,/NULL) 
+        h2dOrbTemp=hist_2d(maximus.mlt(temp_ii),$
+                           maximus.ilat(temp_ii),$
+                           BIN1=binMLT,BIN2=binILAT,$
+                           MIN1=MINMLT,MIN2=MINILAT,$
+                           MAX1=MAXMLT,MAX2=MAXILAT) 
+        orbARR[j,*,*]=h2dOrbTemp 
+        h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
+        h2dTotOrbStr.data += h2dOrbTemp 
+     ENDFOR
 
-  h2dTotOrbStr.title="Total Orbits"
-  h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)]
+     h2dTotOrbStr.title="Total Orbits"
+     h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)]
 
-  IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
+     IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
+     ENDIF
+     
   ENDIF
 
   ;;########Orbit FREQUENCY########
-  h2dFreqOrbStr={h2dStr}
-  h2dFreqOrbStr.data=h2dOrbStr.data
-  h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
-  h2dFreqOrbStr.title="Orbit Frequency"
-  ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
-  h2dFreqOrbStr.lim=[0,0.5]
+
+  IF KEYWORD_SET(orbfreqplot) THEN BEGIN
+
+     h2dFreqOrbStr={h2dStr}
+     h2dFreqOrbStr.data=h2dOrbStr.data
+     h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
+     h2dFreqOrbStr.title="Orbit Frequency"
+     ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
+     h2dFreqOrbStr.lim=[0,0.5]
 
 ;  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
-  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
+     IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
+     ENDIF
+
+     ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
+     orbs_w_events_histo_i=where(h2dorbstr.data NE 0)
+     orbs_histo_i=where(h2dtotorbstr.data NE 0)
+     orbfreq_histo_i=cgsetintersection(orbs_w_events_histo_i,orbs_histo_i)
+     h2dnewdata=h2dOrbStr.data
+     h2dnewdata(orbfreq_histo_i)=h2dOrbStr.data(orbfreq_histo_i)/h2dTotOrbStr.data(orbfreq_histo_i)
+     diff=where(h2dfreqorbstr.data NE h2dnewdata)
+     ;;  print,diff
+     wait, 2
+     ;;   undefine,h2dTotOrbStr
+     ;;   undefine,h2dOrbStr
+     ;;   undefine,h2dFreqOrbStr
   ENDIF
-
-  ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
-  orbs_w_events_histo_i=where(h2dorbstr.data NE 0)
-  orbs_histo_i=where(h2dtotorbstr.data NE 0)
-  orbfreq_histo_i=cgsetintersection(orbs_w_events_histo_i,orbs_histo_i)
-  h2dnewdata=h2dOrbStr.data
-  h2dnewdata(orbfreq_histo_i)=h2dOrbStr.data(orbfreq_histo_i)/h2dTotOrbStr.data(orbfreq_histo_i)
-  diff=where(h2dfreqorbstr.data NE h2dnewdata)
-  ;;  print,diff
-  wait, 2
-;;   undefine,h2dTotOrbStr
-;;   undefine,h2dOrbStr
-;;   undefine,h2dFreqOrbStr
-
+     
   ;;########NEvents/orbit########
-  h2dNEvPerOrbStr={h2dStr}
-  h2dNEvPerOrbStr.data=h2dStr(0).data
-  h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
-  h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
-  h2dNEvPerOrbStr.title="N Events per Orbit"
-  ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
-  h2dNEvPerOrbStr.lim=[0,10]
 
-  IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
-     h2dStr=[h2dStr,h2dNEvPerOrbStr] 
-     IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
+  IF KEYWORD_SET(neventperorbplot) THEN BEGIN
+
+     h2dNEvPerOrbStr={h2dStr}
+     h2dNEvPerOrbStr.data=h2dStr(0).data
+     h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
+     h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
+     h2dNEvPerOrbStr.title="N Events per Orbit"
+     ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
+     h2dNEvPerOrbStr.lim=[0,10]
+
+     IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
+        h2dStr=[h2dStr,h2dNEvPerOrbStr] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
+     ENDIF
+
   ENDIF
 
   ;;********************************************************
