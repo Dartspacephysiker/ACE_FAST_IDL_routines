@@ -44,6 +44,12 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
   
+  minMLT=FLOOR(minMLT*4.0)/4.0 ;to 1/4 precision
+  maxMLT=FLOOR(maxMLT*4.0)/4.0 
+  minILAT=FLOOR(minILAT*4.0)/4.0 
+  maxILAT=FLOOR(maxILAT*4.0)/4.0 
+  
+
   nXlines=(maxMLT-minMLT)/binMLT + 1
   nYlines=(maxILAT-minILAT)/binILAT + 1
 

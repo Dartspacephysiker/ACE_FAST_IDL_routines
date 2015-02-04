@@ -58,7 +58,7 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
 
      ;;various orbit plots
      IF KEYWORD_SET(orbPlots) OR KEYWORD_SET(orbFreqPlot) OR KEYWORD_SET(orbTotPlot) OR KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN
-        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,maskmin=maskMin,customprange=[-1.3,1.7], _EXTRA=e
+        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,maskmin=maskMin, _EXTRA=e
      ENDIF
      
 

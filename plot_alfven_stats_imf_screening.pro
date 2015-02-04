@@ -940,7 +940,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
      h2dNEvPerOrbStr.title="N Events per Orbit"
      ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
-     h2dNEvPerOrbStr.lim=[0,7]
+     IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=nEventPerOrbRange
 
      IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
         h2dStr=[h2dStr,h2dNEvPerOrbStr] 

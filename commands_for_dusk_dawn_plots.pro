@@ -3,13 +3,14 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='02022015'
+  date='02042015'
 
   ;dirs='all_IMF'
   dirs=['duskward', 'dawnward']
 
   ;Plot prefix?
-  plotprf="Foolin_round_" + date + "/Dartdb_" + date
+  ;; plotprf="Foolin_round_" + date + "/Dartdb_" + date
+  plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + date
 
   ;mask min?
   mskm=8
@@ -21,11 +22,11 @@ PRO commands_for_dusk_dawn_plots
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /orbContribPlot,/orbTotPlot,/orbFreqPlot,/nEventPerOrbPlot,/orbPlots, $
-                                        neventperorbrange=[0.0,10.0], nEventsRange=[0,1025], orbFreqRange=[0.0, 0.3], $
+                                        neventperorbrange=[0.0,6.0], nEventsRange=[0,1500], orbFreqRange=[0.0, 0.3], orbContribRange=[0,75], $
                                         /WHOLECAP,midnight=midn
   
   ;;;;;;;;;;;;;;;
-                                ;electron plots
+  ;electron plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /eplots,efluxplottype="Integ",customerange=[-1,2.0],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,midnight=midn
   

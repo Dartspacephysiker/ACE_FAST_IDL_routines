@@ -3,19 +3,20 @@
 
 PRO commands_for_Chaston_2003_figs4a_c_reproduction
 
-  date='02022015'
+  date='02042015'
 
-  ;dirs='all_IMF'
-  dirs=['duskward', 'dawnward']
+  dirs='all_IMF'
+  ;; dirs=['duskward', 'dawnward']
 
-  plotprf="Foolin_round_" + date + "/midnight_nomask/Dartdb_" + date 
+  ;; plotprf="Foolin_round_" + date + "/midnight_nomask/Dartdb_" + date 
+  plotprf="LaBelle_Bin_mtg--" + date + "/Chaston_2003_fig4a-d/Dartdb_" + date 
 
   mskm=0
   ;;;;;;;;;;
   ;orb plots
-  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
+  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm,/orbplots, $
                                         /orbcontribplot,/orbtotplot,/orbfreqplot,/neventperorbplot, $
-                                        neventperorbrange=[0.0,10.0], $
+                                        neventperorbrange=[0.0,10.0], nEventsRange=[0,3000], orbFreqRange=[0.0, 0.8], orbcontribrange=[1,200], $
                                         /WHOLECAP,/midnight
 
   ;;;;;;;;;;;;;;;
