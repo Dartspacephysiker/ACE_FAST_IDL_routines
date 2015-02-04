@@ -1,7 +1,7 @@
 PRO plot_IMF_data,XRANGE=xrange,YRANGE=yrange,TIMES=times,PLOTSYM=plotSym,LINESTY=lineSty
 
   ;;which db file?
-  dbdir="/SPENCEdata2/Research/Cusp/database/processed/"
+  dbdir="/SPENCEdata/Research/Cusp/database/processed/"
   dbfile=dbdir+"culled_wind_ACE_magdata.dat"
   restore,dbfile
 

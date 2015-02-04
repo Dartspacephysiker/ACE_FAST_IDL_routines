@@ -1,7 +1,10 @@
-From http://nssdc.gsfc.nasa.gov/nmc/masterCatalog.do?sc=1996-049A
-
-FAST
-NSSDC/COSPAR ID: 1996-049A
-
+[From http://nssdc.gsfc.nasa.gov/nmc/masterCatalog.do?sc=1996-049A]
+"FAST
+"NSSDC/COSPAR ID: 1996-049A
+...
 [Near bottom of page]
-The FAST electric field instrument stopped providing meaningful data around 2002, all other instruments and systems continue to function nominally.
+"The FAST electric field instrument stopped providing meaningful data around 2002, all other instruments and systems continue to function nominally.
+
+"FAST operations ended on May 4, 2009."
+
+FAST orbit 21339 begins 2001-12-31/22:35:00 (from 'http://sprg.ssl.berkeley.edu/htbin/fastcgi/sumplotsNetscape/recentplot.pl', using orbit 21339)

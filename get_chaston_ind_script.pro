@@ -16,7 +16,7 @@
 ;for doing our own DB
 ;dbfile="Dartdb_01092015_maximus.sav"
 dbfile="Chastdb_Dartdb_combined--01142015_maximus.sav"
-loaddataDir='/SPENCEdata2/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+loaddataDir='/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
 
 ;Load, if need be
 IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN & $

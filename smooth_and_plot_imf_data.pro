@@ -1,7 +1,7 @@
 PRO smooth_and_plot_IMF_data,XRANGE=xrange,YRANGE=yrange,TIMES=times,PLOTSYM=plotSym,LINESTY=lineSty,SMOOTHWINDOW=smoothWindow
 
   ;;which db file?
-  dbdir="/SPENCEdata2/Research/Cusp/database/processed/"
+  dbdir="/SPENCEdata/Research/Cusp/database/processed/"
   dbfile=dbdir+"culled_wind_ACE_magdata.dat"
   restore,dbfile
 

@@ -259,7 +259,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Write plot data output for Bin?
 
-  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata2/Research/Cusp/database/"
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
   ;;********************************************
   ;;Variables for histos
   ;;Bin sizes for 2d histos
