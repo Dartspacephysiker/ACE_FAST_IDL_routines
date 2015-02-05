@@ -11,18 +11,25 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ; Open a graphics window.
   cgDisplay,color="black"
 
-
   IF KEYWORD_SET(wholeCap) THEN BEGIN
+     IF wholeCap EQ 0 THEN wholeCap=!NULL
+  ENDIF
+  IF KEYWORD_SET(midnight) THEN BEGIN
+     IF midnight EQ 0 THEN midnight=!NULL
+  ENDIF
+  
+  IF wholeCap NE !NULL THEN BEGIN
      position = [0.05, 0.05, 0.85, 0.85] 
-     lim=[minILAT,0,88,360]
+     lim=[minI,0,88,360]
   ENDIF ELSE BEGIN
      position = [0.1, 0.075, 0.9, 0.75] 
-     lim=[minILAT,minMLT*15,maxILAT,maxMLT*15]
+     lim=[minI,minM*15,maxI,maxM*15]
   ENDELSE
 
-  cgMap_Set, (minILAT GT 0) ? 90 : -90, (KEYWORD_SET(midnight)) ? 0 : 180,/STEREOGRAPHIC, /HORIZON, $
+  
+  cgMap_Set, (minI GT 0) ? 90 : -90, (midnight NE !NULL) ? 0 : 180,/STEREOGRAPHIC, /HORIZON, $
              /ISOTROPIC, /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
-                ;;Limit=[minILAT-5,maxMLT*15-360,maxILAT+5,minMLT*15],
+                ;;Limit=[minI-5,maxM*15-360,maxI+5,minM*15],
                 
   ; Load the colors for the plot.
   nLevels=12
@@ -44,17 +51,17 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
   
-  minMLT=FLOOR(minMLT*4.0)/4.0 ;to 1/4 precision
-  maxMLT=FLOOR(maxMLT*4.0)/4.0 
-  minILAT=FLOOR(minILAT*4.0)/4.0 
-  maxILAT=FLOOR(maxILAT*4.0)/4.0 
+  minM=FLOOR(minM*4.0)/4.0 ;to 1/4 precision
+  maxM=FLOOR(maxM*4.0)/4.0 
+  minI=FLOOR(minI*4.0)/4.0 
+  maxI=FLOOR(maxI*4.0)/4.0 
   
 
-  nXlines=(maxMLT-minMLT)/binMLT + 1
-  nYlines=(maxILAT-minILAT)/binILAT + 1
+  nXlines=(maxM-minM)/binM + 1
+  nYlines=(maxI-minI)/binI + 1
 
-  mlts=indgen(nXlines)*binMLT+minMLT
-  ilats=indgen(nYlines)*binILAT+minILAT
+  mlts=indgen(nXlines)*binM+minM
+  ilats=indgen(nYlines)*binI+minI
 
   mlts=mlts*15
 
@@ -88,7 +95,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         ;tempMLTS=[mlts[i],mlts[i+1]] 
         ;tempILATS=ilats[j:j+1] 
 
-        tempILATS=[ilats[j],ilats[j]+binILAT/2.0,ilats[j+1]] 
+        tempILATS=[ilats[j],ilats[j]+binI/2.0,ilats[j+1]] 
         tempMLTS=[mlts[i],mlts[i],mlts[i]] 
 
         ;print,tempILATS & print,tempMLTS
@@ -98,7 +105,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         ;  tempMLTS=[tempMLTS,REVERSE(tempMLTS)] 
         ;  tempILATS=[tempILATS,tempILATS]
         tempILATS=[ilats[j],tempILATS,ilats[j+1],REVERSE(tempILATS)] 
-        tempMLTS=[mlts[i]+binMLT*15/2.0,tempMLTS,mlts[i]+binMLT*15/2.0,tempMLTS+binMLT*15]  
+        tempMLTS=[mlts[i]+binM*15/2.0,tempMLTS,mlts[i]+binM*15/2.0,tempMLTS+binM*15]  
         
         ;;Integrals
         IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
@@ -112,34 +119,34 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
 
   ; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 3 : 2,$
-              color='black',londelta=binMLT*15,latdelta=binILAT
+              color='black',londelta=binM*15,latdelta=binI
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
-  IF KEYWORD_SET(wholeCap) THEN BEGIN
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binILAT*2,$
+  IF wholeCap NE !NULL THEN BEGIN
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
                  /NO_GRID,$
-                 latlabel=minMLT*15-5,lonlabel=minILAT,$ ;latlabel=((maxMLT-minMLT)/2.0+minMLT)*15-binMLT*7.5,
+                 latlabel=minM*15-5,lonlabel=minI,$ ;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
                  LONNAMES=[STRTRIM(INDGEN(12,2))*2]
   ENDIF ELSE BEGIN
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binILAT*2,$
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
                  /NO_GRID,$
-                 latlabel=minMLT*15-5,lonlabel=minILAT,$ ;latlabel=((maxMLT-minMLT)/2.0+minMLT)*15-binMLT*7.5,
-                 LONS=(1*INDGEN((maxMLT-minMLT)/1.0+1)+minMLT)*15,$
-                 LONNAMES=[strtrim(minMLT,2)+" MLT",STRTRIM(INDGEN((maxMLT-minMLT)/1.0)+(minMLT+1),2)]
+                 latlabel=minM*15-5,lonlabel=minI,$ ;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
+                 LONS=(1*INDGEN((maxM-minM)/1.0+1)+minM)*15,$
+                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
   ENDELSE
      
   ;charSize = cgDefCharSize()*0.75
-  ;cgText, 0, minILAT-1, '0', Alignment=0.5, Orientation=0, Charsize=charSize      
-  ;cgText, 180, minILAT, '12', Alignment=0.5, Orientation=0.00, Charsize=charSize   
-  ;cgText, 90, minILAT-1, '6 MLT',Alignment=0.5,Charsize=charSize
-  ;cgText, -90, minILAT-1, '18',Alignment=0.5,Charsize=charSize
+  ;cgText, 0, minI-1, '0', Alignment=0.5, Orientation=0, Charsize=charSize      
+  ;cgText, 180, minI, '12', Alignment=0.5, Orientation=0.00, Charsize=charSize   
+  ;cgText, 90, minI-1, '6 MLT',Alignment=0.5,Charsize=charSize
+  ;cgText, -90, minI-1, '18',Alignment=0.5,Charsize=charSize
   
-  charSize = cgDefCharSize()*((KEYWORD_SET(wholeCap) ? 0.7 : 0.75))
-  ;cgText, 0, minILAT-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=charSize      
-  ;cgText, 180, minILAT-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charSize   
-  ;cgText, 90, minILAT-5, 'dawnward',Alignment=0.5,Charsize=charSize
-  ;cgText, -90, minILAT-5, 'duskward',Alignment=0.5,Charsize=charSize  
+  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 0.75)
+  ;cgText, 0, minI-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=charSize      
+  ;cgText, 180, minI-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charSize   
+  ;cgText, 90, minI-5, 'dawnward',Alignment=0.5,Charsize=charSize
+  ;cgText, -90, minI-5, 'duskward',Alignment=0.5,Charsize=charSize  
 
   ;;Integral text
   ;;REMEMBER: h2dStr[nPlots].data is the MASK
@@ -153,7 +160,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
      ENDELSE
      ;; dawnIntegral=
      ;; duskIntegral=
-     IF KEYWORD_SET(wholeCap) THEN BEGIN
+     IF wholeCap NE !NULL THEN BEGIN
         lTexPos1=0.09
         lTexPos2=0.63
         bTexPos1=0.88
@@ -170,7 +177,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
      cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
   ENDIF 
 
-  IF KEYWORD_SET(wholeCap) THEN BEGIN
+  IF wholeCap NE !NULL THEN BEGIN
      cgColorbar, NColors=nlevels-2, Divisions=nlevels-2, Bottom=1B, $
                  OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, Title=temp.title, /Discrete, $

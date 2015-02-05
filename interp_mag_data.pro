@@ -179,7 +179,7 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
      
      bzChast=bzChast(byMin_ii)
      byChast=byChast(byMin_ii)
-     bxChast=bxChast(bxMin_ii)
+     bxChast=bxChast(byMin_ii)
      
      cdbAcepropInterp_i=cdbAcepropInterp_i(byMin_ii)
      cdbInterp_i=cdbInterp_i(byMin_ii)

@@ -7,7 +7,7 @@
 
 FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB,ORBRANGE=orbRange
 
-  COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
+  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
@@ -20,8 +20,11 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;for doing our own DB
   ;;dbfile="Dartdb_01092015_maximus.sav"
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
-     dbfile = "Dartdb_02042015--first11465--maximus.sav"
-     loaddataDir='/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+     pref = "Dartdb_02042015--first11465"
+     dbfile = pref + "--maximus.sav"
+     loaddataDir = '/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+     cdbTimeFile = loaddataDir + pref + "--cdbTime.sav"
+     IF FILE_TEST(cdbTimeFile) THEN restore,cdbTimeFile
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
         dbfile = "maximus.dat"
@@ -36,10 +39,10 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
 
   ;;generate indices based on restrictions in interp_plots.pro
-  ind_region=where(maximus.ilat GE minILAT AND maximus.ilat LE maxILAT AND maximus.mlt GE minMLT AND maximus.mlt LE maxMLT)
-  ind_magc_ge10=where(maximus.mag_current GE min_magc)
-  ind_magc_leneg10=where(maximus.mag_current LE max_negmagc)
-  ind_magc_geabs10=where(maximus.mag_current LE max_negmagc OR maximus.mag_current GE min_magc)
+  ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM)
+  ind_magc_ge10=where(maximus.mag_current GE minMC)
+  ind_magc_leneg10=where(maximus.mag_current LE maxNegMC)
+  ind_magc_geabs10=where(maximus.mag_current LE maxNegMC OR maximus.mag_current GE minMC)
   ind_region_magc_ge10=cgsetintersection(ind_region,ind_magc_ge10)
   ind_region_magc_leneg10=cgsetintersection(ind_region,ind_magc_leneg10)
   ind_region_magc_geabs10=cgsetintersection(ind_region,ind_magc_geabs10)
@@ -73,9 +76,10 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ind_region_magc_geabs10_ACEstart=ind_region_magc_geabs10(where(ind_region_magc_geabs10 GE ind_ACEstart,$
                                                                  nGood,complement=lost,ncomplement=nlost))
   lost=ind_region_magc_geabs10(lost)
-  
-  cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) )
-  
+
+  ;Re-make cdbTime if we don't have it made already
+  IF cdbTime EQ !NULL THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $
+  ELSE cdbTime = cdbTime(ind_region_magc_geabs10_ACEstart)
   
   printf,lun,""
   printf,lun,"****From get_chaston_ind.pro****"

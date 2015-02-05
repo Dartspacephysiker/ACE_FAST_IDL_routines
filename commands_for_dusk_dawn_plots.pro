@@ -13,7 +13,7 @@ PRO commands_for_dusk_dawn_plots
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + date
 
   ;; mask min?
-  mskm=9
+  mskm=3
 
   ;; midnight?
   midn=0
@@ -21,38 +21,41 @@ PRO commands_for_dusk_dawn_plots
   ;; byMin?
   byMin=3.0
 
+  ;; whole cap?
+  wc=0
+
   ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /orbContribPlot,/orbTotPlot,/orbFreqPlot,/nEventPerOrbPlot,/orbPlots, $
-                                        neventperorbrange=[0.0,6.0], nEventsRange=[0,1500], orbFreqRange=[0.0, 0.3], orbContribRange=[0,75], $
-                                        /WHOLECAP,midnight=midn,BYMIN=byMin
+                                        neventperorbrange=[0.0,5.0], nEventsRange=[0,1200], orbFreqRange=[0.0, 0.25], orbContribRange=[0,60], $
+                                        WHOLECAP=wc,midnight=midn,BYMIN=byMin
   
   ;;;;;;;;;;;;;;;
   ;electron plots
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-  ;;                                       /eplots,efluxplottype="Max",customerange=[-1,2.0],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,midnight=midn
+  ;;                                       /eplots,efluxplottype="Max",customerange=[-1,2.0],/logefplot,/nonegeflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",customerange=[-0.1,1.2],/logefplot,/abseflux,/medianplot,/WHOLECAP,midnight=midn
+                                        /eplots,efluxplottype="Max",customerange=[-0.1,1.2],/logefplot,/abseflux,/medianplot,WHOLECAP=wc,midnight=midn
   
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-  ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,midnight=midn
+  ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,customprange=[0.01,1.8],/abspflux,/medianplot,/WHOLECAP,midnight=midn
+                                        /pplots,customprange=[0.01,1.8],/abspflux,/medianplot,WHOLECAP=wc,midnight=midn
 
   ;Better (for showing features) plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
-  ;;                                       /pplots,/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,midnight=midn
+  ;;                                       /pplots,/logpfplot,/nonegpflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,/abspflux,/medianplot,/WHOLECAP,midnight=midn
+                                        /pplots,/abspflux,/medianplot,WHOLECAP=wc,midnight=midn
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf, directions=dirs,maskmin=mskm, $
                                         /chareplot,charetype="lossCone",/logchareplot,/nonegchare,customcharerange=[0, 3.6], $
-                                        /medianplot,/WHOLECAP,midnight=midn
+                                        /medianplot,WHOLECAP=wc,midnight=midn
 
 END

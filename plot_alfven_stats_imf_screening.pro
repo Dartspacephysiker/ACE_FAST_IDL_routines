@@ -28,8 +28,12 @@
 ;		     ANGLELIM1         :     
 ;		     ANGLELIM2         :     
 ;		     ORBRANGE          :     
-;		     MLTBINS           :  MLT binsize  (Default: 0.5)
-;		     ILATBINS          :  ILAT binsize (Default: 2.0)
+; 		     MINMLT            :  MLT min  (Default: 9)
+; 		     MAXMLT            :  MLT max  (Default: 15)
+; 		     BINMLT            :  MLT binsize  (Default: 0.5)
+;		     MINILAT           :  ILAT min (Default: 64)
+;		     MAXILAT           :  ILAT max (Default: 80)
+;		     BINILAT           :  ILAT binsize (Default: 2.0)
 ;		     MIN_NEVENTS       :  Minimum number of events an orbit must contain to qualify as a "participating orbit"
 ;                    MASKMIN           :  Minimum number of events a given MLT/ILAT bin must contain to show up on the plot.
 ;                                            Otherwise it gets shown as "no data". (Default: 1)
@@ -152,7 +156,8 @@
 
 PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, ORBRANGE=orbRange, $
-                                     MLTBINS=MLTbinS, ILATBINS=ILATbinS, MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
+                                     minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
                                      SATELLITE=satellite, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
@@ -178,11 +183,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      _EXTRA = e
 
   ;;variables to be used by interp_contplot.pro
-  COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT,binMLT,binILAT,min_magc,max_negmagc
+  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNEGMC
 
   !EXCEPT=0                                                      ;Do report errors, please
   ;;***********************************************
   tempSave=0
+
+  IF KEYWORD_SET(minMLT) then minM = minMLT
+  IF KEYWORD_SET(maxMLT) then maxM = maxMLT
+  IF KEYWORD_SET(binMLT) then binM = binMLT
+  IF KEYWORD_SET(minILAT) then minI = minILAT
+  IF KEYWORD_SET(maxILAT) then maxI = maxILAT
+  IF KEYWORD_SET(binILAT) then binI = binILAT
 
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
@@ -199,14 +211,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
   IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
   
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = 6L
-  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = 18L
+  IF NOT KEYWORD_SET(minM) THEN minM = 9L
+  IF NOT KEYWORD_SET(maxM) THEN maxM = 15L
   
-  IF NOT KEYWORD_SET(minILAT) THEN minILAT = 60L
-  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = 84L
+  IF NOT KEYWORD_SET(minI) THEN minI = 60L
+  IF NOT KEYWORD_SET(maxI) THEN maxI = 84L
   
-  IF NOT KEYWORD_SET(min_magc) THEN min_magc = 10                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(max_negmagc) THEN max_negmagc = -10         ; Current must be less than this, if it's going to make the cut
+  IF NOT KEYWORD_SET(minMC) THEN minMC = 10                ; Minimum current derived from mag data, in microA/m^2
+  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -10         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -219,10 +231,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         RETURN
      ENDIF ELSE BEGIN
         IF tag_exist(e,"wholecap") THEN BEGIN
-           minMLT=0
-           maxMLT=24
-           minILAT=60
-           maxILAT=88
+           IF e.wholecap GT 0 THEN BEGIN
+              minM=0
+              maxM=24
+              minI=60
+              maxI=88
+           ENDIF
         ENDIF
      ENDELSE
      
@@ -305,8 +319,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
 
   ;;Bin sizes for 2D histos
-  binMLT=(N_ELEMENTS(MLTbinS) EQ 0) ? 0.5 : MLTbinS
-  binILAT=(N_ELEMENTS(ILATbinS) EQ 0) ? 2.0 : ILATbinS 
+  binM=(N_ELEMENTS(BinMLT) EQ 0) ? 0.5 : BinMLT
+  binI=(N_ELEMENTS(BinILAT) EQ 0) ? 2.0 : BinILAT 
 
   ;;Set minimum allowable number of events for a histo bin to be displayed
   maskStr=''
@@ -408,7 +422,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;Figure out both hemisphere and plot indices, 
   ;;tap DBs, and setup output
-  IF minILAT GT 0 THEN hemStr='North' ELSE IF maxILAT LT 0 THEN hemStr='South' $
+  IF minI GT 0 THEN hemStr='North' ELSE IF maxI LT 0 THEN hemStr='South' $
   ELSE BEGIN 
      printf,lun,"Which hemisphere?" & hemStr = '??'
   ENDELSE
@@ -444,8 +458,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   ;;1.0e-9 to take stock of delta_b being recordin in nT
   POYNT_EST=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
-  goodpoynt=where(poynt_est(plot_i) GT 0)
-  plot_i=plot_i(goodpoynt)
+  ;; goodpoynt=where(poynt_est(plot_i) GT 0)
+  ;; plot_i=plot_i(goodpoynt)
   ;;********************************************
   ;;Now time for data summary
 
@@ -455,9 +469,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
   printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
   printf,lun,"Screening parameters: [Min] [Max]"
-  printf,lun,"Mag current: " + strtrim(max_negmagc,2) + " " + strtrim(min_magc,2)
-  printf,lun,"MLT: " + strtrim(minMLT,2) + " " + strtrim(maxMLT,2)
-  printf,lun,"ILAT: " + strtrim(minILAT,2) + " " + strtrim(maxILAT,2)
+  printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
+  printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
+  printf,lun,"ILAT: " + strtrim(minI,2) + " " + strtrim(maxI,2)
   printf,lun,"Hemisphere: " + hemStr
   printf,lun,"IMF Predominance: " + clockStr
   printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
@@ -477,15 +491,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************************
   ;;HISTOS
 
+  minM=FLOOR(minM*4.0)/4.0  ;to 1/4 precision
+  maxM=FLOOR(maxM*4.0)/4.0 
+  minI=FLOOR(minI*4.0)/4.0 
+  maxI=FLOOR(maxI*4.0)/4.0 
   
-  IF minMLT NE 0 THEN minMLT = 0L
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   h2dFluxN=hist_2d(maximus.mlt(plot_i),$
                    maximus.ilat(plot_i),$
-                   BIN1=binMLT,BIN2=binILAT,$
-                   MIN1=MINMLT,MIN2=MINILAT,$
-                   MAX1=MAXMLT,MAX2=MAXILAT)
+                   BIN1=binM,BIN2=binI,$
+                   MIN1=MINM,MIN2=MINI,$
+                   MAX1=MAXM,MAX2=MAXI)
 
   h2dFluxNTitle="Number of events"
   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
@@ -518,9 +535,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########Medians?########
   ;;IF medianplot GT 0 THEN $
   ;;medHist=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-  ;;                           plot_i,MIN1=MINMLT,MIN2=MINILAT,$
-  ;;                           MAX1=MAXMLT,MAX2=MAXILAT,$
-  ;;                           BINSIZE1=binMLT,BINSIZE2=binILAT,$
+  ;;                           plot_i,MIN1=MINM,MIN2=MINI,$
+  ;;                           MAX1=MAXM,MAX2=MAXI,$
+  ;;                           BINSIZE1=binM,BINSIZE2=binI,$
   ;;                           OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT)
 
 
@@ -559,18 +576,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(medianplot) THEN BEGIN 
         h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  elecData,$
-                                 MIN1=MINMLT,MIN2=MINILAT,$
-                                 MAX1=MAXMLT,MAX2=MAXILAT,$
-                                 BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                 MIN1=MINM,MIN2=MINI,$
+                                 MAX1=MAXM,MAX2=MAXI,$
+                                 BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absEflux) 
      ENDIF ELSE BEGIN 
         h2dEStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
                             elecData,$
-                            MIN1=MINMLT,MIN2=MINILAT,$
-                            MAX1=MAXMLT,MAX2=MAXILAT,$
-                            BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                            MIN1=MINM,MIN2=MINI,$
+                            MAX1=MAXM,MAX2=MAXI,$
+                            BINSIZE1=binM,BINSIZE2=binI,$
                             OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
      ENDELSE 
@@ -623,6 +640,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dPStr={h2dStr}
 
+     ;;check for NaNs
+     goodPF_i = WHERE(FINITE(poynt_est),NCOMPLEMENT=lostNans)
+     IF goodPF_i[0] NE -1 THEN BEGIN
+        print,"Found some NaNs in Poynting flux! Losing another " + strcompress(lostNans,/REMOVE_ALL) + " events..."
+        plot_i = cgsetintersection(plot_i,goodPF_i)
+     ENDIF
+     
+     
      IF KEYWORD_SET(noNegPflux) THEN BEGIN
         no_negs_i=WHERE(poynt_est GE 0.0)
         plot_i=cgsetintersection(no_negs_i,plot_i)
@@ -637,18 +662,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(medianplot) THEN BEGIN 
         h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  poynt_est(plot_i),$
-                                 MIN1=MINMLT,MIN2=MINILAT,$
-                                 MAX1=MAXMLT,MAX2=MAXILAT,$
-                                 BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                 MIN1=MINM,MIN2=MINI,$
+                                 MAX1=MAXM,MAX2=MAXI,$
+                                 BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absPflux) 
      ENDIF ELSE BEGIN 
         h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                             maximus.ilat(plot_i),$
                             poynt_est(plot_i),$
-                            MIN1=MINMLT,MIN2=MINILAT,$
-                            MAX1=MAXMLT,MAX2=MAXILAT,$
-                            BINSIZE1=binMLT,BINSIZE2=binILAT) 
+                            MIN1=MINM,MIN2=MINI,$
+                            MAX1=MAXM,MAX2=MAXI,$
+                            BINSIZE1=binM,BINSIZE2=binI) 
         h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
      ENDELSE
 
@@ -756,18 +781,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(medianplot) THEN BEGIN 
         h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                      charEData,$
-                                     MIN1=MINMLT,MIN2=MINILAT,$
-                                     MAX1=MAXMLT,MAX2=MAXILAT,$
-                                     BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                     MIN1=MINM,MIN2=MINI,$
+                                     MAX1=MAXM,MAX2=MAXI,$
+                                     BINSIZE1=binM,BINSIZE2=binI,$
                                      OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                      ABSMED=absCharE) 
      ENDIF ELSE BEGIN 
         h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
                                 maximus.ilat(plot_i),$
                                 charEData,$
-                                MIN1=MINMLT,MIN2=MINILAT,$
-                                MAX1=MAXMLT,MAX2=MAXILAT,$
-                                BINSIZE1=binMLT,BINSIZE2=binILAT,$
+                                MIN1=MINM,MIN2=MINI,$
+                                MAX1=MAXM,MAX2=MAXI,$
+                                BINSIZE1=binM,BINSIZE2=binI,$
                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
      ENDELSE 
@@ -835,16 +860,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
      orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
 
-     IF(minMLT NE 0) THEN minMLT=0L
-
      FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
         tempOrb=maximus.orbit(plot_i(uniqueOrbs_ii(j))) 
         temp_ii=WHERE(maximus.orbit(plot_i) EQ tempOrb,/NULL) 
         h2dOrbTemp=hist_2d(maximus.mlt(plot_i(temp_ii)),$
                            maximus.ilat(plot_i(temp_ii)),$
-                           BIN1=binMLT,BIN2=binILAT,$
-                           MIN1=MINMLT,MIN2=MINILAT,$
-                           MAX1=MAXMLT,MAX2=MAXILAT) 
+                           BIN1=binM,BIN2=binI,$
+                           MIN1=MINM,MIN2=MINI,$
+                           MAX1=MAXM,MAX2=MAXI) 
         orbARR[j,*,*]=h2dOrbTemp 
         h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
         h2dOrbStr.data += h2dOrbTemp 
@@ -877,9 +900,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;   temp_ii=WHERE(maximus.orbit(ind_region_magc_geabs10_acestart) EQ tempOrb) 
      ;;   h2dOrbTemp=hist_2d(maximus.mlt(ind_region_magc_geabs10_acestart(temp_ii)),$
      ;;                      maximus.ilat(ind_region_magc_geabs10_acestart(temp_ii)),$
-     ;;                      BIN1=binMLT,BIN2=binILAT,$
-     ;;                      MIN1=MINMLT,MIN2=MINILAT,$
-     ;;                      MAX1=MAXMLT,MAX2=MAXILAT) 
+     ;;                      BIN1=binM,BIN2=binI,$
+     ;;                      MIN1=MINM,MIN2=MINI,$
+     ;;                      MAX1=MAXM,MAX2=MAXI) 
      ;;   orbARR[j,*,*]=h2dOrbTemp 
      ;;   h2dOrbTemp(WHERE(h2dOrbTemp GT 0)) = 1 
      ;;   h2dTotOrbStr.data += h2dOrbTemp 
@@ -890,9 +913,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         temp_ii=WHERE(maximus.orbit EQ tempOrb,/NULL) 
         h2dOrbTemp=hist_2d(maximus.mlt(temp_ii),$
                            maximus.ilat(temp_ii),$
-                           BIN1=binMLT,BIN2=binILAT,$
-                           MIN1=MINMLT,MIN2=MINILAT,$
-                           MAX1=MAXMLT,MAX2=MAXILAT) 
+                           BIN1=binM,BIN2=binI,$
+                           MIN1=MINM,MIN2=MINI,$
+                           MAX1=MAXM,MAX2=MAXI) 
         orbARR[j,*,*]=h2dOrbTemp 
         h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
         h2dTotOrbStr.data += h2dOrbTemp 
@@ -978,7 +1001,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      dataRawPtr=SHIFT(dataRawPtr,-2) 
   ENDIF
 
-  IF KEYWORD_SET(polarPlot) THEN save,h2dStr,dataName,maxMLT,minMLT,maxILAT,minILAT,binMLT,binILAT,$
+  IF KEYWORD_SET(polarPlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
                            saveRawDir,clockStr,plotSuff,stableIMF,hoyDia,hemstr,$
                            ;;                       filename=saveRawDir+'fluxplots_'+paramStr+".dat"
                            filename='temp/polarplots_'+paramStr+".dat"
