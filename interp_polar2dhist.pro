@@ -21,7 +21,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ENDELSE
 
   cgMap_Set, (minILAT GT 0) ? 90 : -90, (KEYWORD_SET(midnight)) ? 0 : 180,/STEREOGRAPHIC, /HORIZON, $
-             /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
+             /ISOTROPIC, /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
                 ;;Limit=[minILAT-5,maxMLT*15-360,maxILAT+5,minMLT*15],
                 
   ; Load the colors for the plot.

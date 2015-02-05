@@ -23,7 +23,8 @@
 ; OPTIONAL INPUTS:   
 ;                *DATABASE PARAMETERS
 ;                    CLOCKSTR          :  Interplanetary magnetic field clock angle.
-;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', or 'all_IMF'
+;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', 'all_IMF',
+;                                            'dawn-north', 'dawn-south', 'dusk-north', or 'dusk-south'.
 ;		     ANGLELIM1         :     
 ;		     ANGLELIM2         :     
 ;		     ORBRANGE          :     
@@ -32,6 +33,7 @@
 ;		     MIN_NEVENTS       :  Minimum number of events an orbit must contain to qualify as a "participating orbit"
 ;                    MASKMIN           :  Minimum number of events a given MLT/ILAT bin must contain to show up on the plot.
 ;                                            Otherwise it gets shown as "no data". (Default: 1)
+;                    BYMIN             :  Minimum value of IMF By during an event to accept the event for inclusion in the analysis.
 ;		     NPLOTS            :  Plot number of orbits.   
 ;
 ;                *IMF SATELLITE PARAMETERS
@@ -150,7 +152,7 @@
 
 PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, ORBRANGE=orbRange, $
-                                     MLTBINS=MLTbinS, ILATBINS=ILATbinS, $
+                                     MLTBINS=MLTbinS, ILATBINS=ILATbinS, MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
                                      SATELLITE=satellite, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
@@ -168,7 +170,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      POLARPLOT=polarPlot, $ ;WHOLECAP=wholeCap, $
-                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                      NEVENTSRANGE=nEventsRange, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
@@ -296,11 +297,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Setting angle limits 45 and 135, for example, gives a 90-deg
   ;;window for dawnward and duskward plots
   IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=45               ;in degrees
-     angleLim2=135              ;in degrees
+     angleLim1=45.0               ;in degrees
+     angleLim2=135.0              ;in degrees
   ENDIF ELSE BEGIN 
-     angleLim1=180              ;for doing all IMF
-     angleLim2=180 
+     angleLim1=180.0              ;for doing all IMF
+     angleLim2=180.0 
   ENDELSE
 
   ;;Bin sizes for 2D histos
@@ -316,6 +317,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
   ENDELSE
   
+  ;;Requirement for IMF By magnitude?
+  byMinStr=''
+  IF KEYWORD_SET(byMin) THEN BEGIN
+     byMinStr='byMin_' + STRCOMPRESS(byMin,/REMOVE_ALL) + '_'
+  ENDIF
+
   ;;######ELECTRONS
   ;;Eflux max abs. value in interval, or integrated flux?
   ;;NOTE: max value has negative values, which can mess with
@@ -351,7 +358,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log PFlux plotrange
   IF NOT KEYWORD_SET(customPRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logPfPlot) THEN customPRange=[0,3] ELSE customPRange=[-1,0.5]
+     IF NOT KEYWORD_SET(logPfPlot) THEN customPRange=[0.1,2.5] ELSE customPRange=[-1,0.5]
   ENDIF
 
   ;;######Ion flux (up)
@@ -407,7 +414,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
   
   ;;parameter string
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+hoyDia
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+byMinStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -418,10 +425,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Now run these to tap the databases and interpolate satellite data
   
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun,cdbTime=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb,ORBRANGE=orbRange)
-  phiChast= interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
+  phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiclock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow)
-  phiImf_ii= check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiclock,LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin)
+  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiclock,$
+                                 LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
   plot_i=cdbInterp_i(phiImf_ii)
 
@@ -1002,7 +1010,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         PRINTF,LUN, "Creating output files..." 
 
         ;;Create a PostScript file.
-        cgPS_Open, plotDir + 'fluxplots_'+paramStr+'.ps' 
+        cgPS_Open, plotDir + 'fluxplots_'+paramStr+'.ps', /nomatch, xsize=1000, ysize=1000
         interp_contplotmulti_str,h2dStr 
         cgPS_Close 
 

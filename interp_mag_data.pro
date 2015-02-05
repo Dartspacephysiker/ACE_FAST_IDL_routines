@@ -11,7 +11,7 @@
 FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun, $
                          CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
-                         DATADIR=datadir
+                         DATADIR=datadir,BYMIN=byMin
 
   ;;********************************************************
   ;;Restore ACE data, if need be
@@ -108,9 +108,6 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
 
   IF KEYWORD_SET(smoothWindow) THEN printf,lun,"Smooth window is set to " + strcompress(smoothWindow,/remove_all) + " minutes"
 
-  printf,lun,"****END text from interp_mag_data.pro****"
-  printf,lun,""
-
   ;;********************************************************
   ;;How about the distance between the ACE magdata times twice removed from a current event?
   ;;bigdiff_arr is the smallest distance between chastondbtime and mag_utc[either i or i+1]
@@ -168,6 +165,36 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
   bzChast=bz(cdbAcepropInterp_i)+bz_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
   byChast=by(cdbAcepropInterp_i)+by_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
   bxChast=bx(cdbAcepropInterp_i)+bx_slope*(cdbInterpTime-mag_utc(cdbAcepropInterp_i)-delay)
+
+
+  ;*********************************************************
+  ;Any requirement for by magnitude?
+  IF KEYWORD_SET(byMin) THEN BEGIN 
+     ;;As they are after interpolation
+     ;; cdbAcepropInterp_i=cdbAceprop_i(cdbAcepropInterp_ii) 
+     ;; cdbInterp_i=ind_region_magc_geabs10_acestart(cdbAcepropInterp_ii) 
+     ;; cdbInterpTime=cdbTime(cdbAcepropInterp_ii) 
+    
+     byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
+     
+     bzChast=bzChast(byMin_ii)
+     byChast=byChast(byMin_ii)
+     bxChast=bxChast(bxMin_ii)
+     
+     cdbAcepropInterp_i=cdbAcepropInterp_i(byMin_ii)
+     cdbInterp_i=cdbInterp_i(byMin_ii)
+     cdbInterpTime=cdbInterpTime(byMin_ii)
+
+     printf,lun,""
+     printf,lun,"ByMin magnitude requirement: " + strcompress(byMin,/REMOVE_ALL) + " nT"
+     printf,lun,"Losing " + strcompress(byMinLost,/REMOVE_ALL) + " events because of minimum By requirement."
+     printf,lun,""
+
+  ENDIF
+
+  printf,lun,"****END text from interp_mag_data.pro****"
+  printf,lun,""
+
 
   phiChast=ATAN(byChast,bzChast)
   thetaChast=ACOS(abs(bxChast)/SQRT(bxChast*bxChast+byChast*byChast+bzChast*bzChast))

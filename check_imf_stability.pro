@@ -11,7 +11,7 @@
 ;angleLim1, angleLim2, and clockStr.
 ;There is no 'relative angle' checking to, e.g.,
 ;ensure that the angle doesn't deviate too sharply
-;from it's initial 'approved' value
+;from its initial 'approved' value
 
 FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
                              cdbAcepropInterp_i, stableIMF, mag_utc, phiclock, $
@@ -45,11 +45,32 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
               IF clockStr EQ 'all_IMF' THEN BEGIN 
                  negAngle=-angleLim1 
                  posAngle=angleLim2 
-              ENDIF ELSE printf,lun, "Only five options, brother." & plot_i=-1
+              ENDIF ELSE BEGIN
+                 IF clockStr EQ 'dawn-north' THEN BEGIN
+                    negAngle=-90.0
+                    posAngle=-angleLim1
+                 ENDIF ELSE BEGIN
+                    IF clockStr EQ 'dawn-south' THEN BEGIN
+                       negAngle=-angleLim2
+                       posAngle=-90.0
+                    ENDIF ELSE BEGIN
+                       IF clockStr EQ 'dusk-north' THEN BEGIN
+                          negAngle=angleLim1
+                          posAngle=90.0
+                       ENDIF ELSE BEGIN
+                          IF clockStr EQ 'dusk-south' THEN BEGIN
+                             negAngle=90.0
+                             posAngle=angleLim2
+                          ENDIF ELSE printf,lun, "Only nine options, brother." & plot_i=-1
+                       ENDELSE
+                    ENDELSE
+                 ENDELSE
+              ENDELSE
            ENDELSE
         ENDELSE
      ENDELSE
   ENDELSE
+
 
   ;;Everyone but bzSouth is amenable to what's below
   ;;NOTE: /NULL used in WHERE so that if no elements are returned,
