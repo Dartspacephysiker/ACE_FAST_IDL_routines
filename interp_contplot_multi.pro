@@ -41,7 +41,7 @@
 PRO interp_contplot_multi,h2dData,h2dTitle,CONTOUR=contour
 
 ;variables from interp_plots.pro
-COMMON ContVars, minMLT, maxMLT, minILAT, maxILAT 
+COMMON ContVars, minM, maxM, minI, maxI 
 
 ;Subtract one since last array is the mask
 nPlots=N_ELEMENTS(h2dData(0,0,*))-1
@@ -117,7 +117,7 @@ FOR i = 0, (nPlots-1) DO BEGIN
  
 ;Other attempt
 cgImage, temp,$
-            XRange=[minMLT,maxMLT], YRange=[minILAT,maxILAT],$
+            XRange=[minM,maxM], YRange=[minI,maxI],$
             XTitle='MLT', YTitle='ILAT', $
             /Axes,Position=p, NoErase=i NE 0
 

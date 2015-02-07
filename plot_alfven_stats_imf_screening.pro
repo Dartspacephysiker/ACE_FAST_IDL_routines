@@ -97,7 +97,8 @@
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
 ;		     LOGPLOT           :     
-;		     POLARPLOT         :  Do plots in polar stereo coordinates. (Default: on)    
+;		     SQUAREPLOT        :  Do plots in square bins. (Default plot is in polar stereo projection)    
+;                    POLARCONTOUR      :  Do polar plot, but do a contour instead
 ;                    WHOLECAP*         :   *(Only for polar plot!) Plot the entire polar cap, not just a range of MLTs and ILATs
 ;                    MIDNIGHT*         :   *(Only for polar plot!) Orient polar plot with midnight (24MLT) at bottom
 ;		     DBFILE            :  Which database file to use?
@@ -111,7 +112,8 @@
 ;		     WRITEHDF5         :      
 ;                    WRITEPROCESSEDH2D :  Use this to output processed, histogrammed data. That way you
 ;                                            can share with others!
-;		     SAVERAW           :     
+;		     SAVERAW           :  Save all raw data
+;		     RAWDIR            :  Directory in which to store raw data
 ;                    NOPLOTSJUSTDATA   :  No plots whatsoever; just give me the dataz.
 ;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
 ;		     PLOTPREFIX        :     
@@ -174,10 +176,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
-                                     POLARPLOT=polarPlot, $ ;WHOLECAP=wholeCap, $
+                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                      NEVENTSRANGE=nEventsRange, $
-                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, SAVERAW=saveRaw, $
+                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                      _EXTRA = e
@@ -211,8 +214,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
   IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
   
-  IF NOT KEYWORD_SET(minM) THEN minM = 9L
-  IF NOT KEYWORD_SET(maxM) THEN maxM = 15L
+  IF NOT KEYWORD_SET(minM) THEN minM = 6L
+  IF NOT KEYWORD_SET(maxM) THEN maxM = 18L
   
   IF NOT KEYWORD_SET(minI) THEN minI = 60L
   IF NOT KEYWORD_SET(maxI) THEN maxI = 84L
@@ -263,8 +266,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(plotDir) THEN plotDir = 'plots/'
   ;;plotPrefix='NESSF2014_reproduction_Jan2015'
 
-  saveRaw=0                     ; save raw data plots?
-  saveRawDir="testcode/laTEST/"
+  IF NOT KEYWORD_SET(rawDir) THEN rawDir="rawsaves/"
  
   ;;Write output file with data params? Only possible if noSavePlots=0...
   IF KEYWORD_SET(noSavePlots) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
@@ -279,9 +281,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
-  IF N_ELEMENTS(polarPlot) EQ 0 THEN BEGIN
-     IF N_ELEMENTS(wholeCap) EQ 1 THEN PRINT,"Keyword WHOLECAP set without setting POLARPLOT! I'm doing it for you..."
-     polarPlot=1                                                 ;do Polar plots instead?
+  IF N_ELEMENTS(squarePlot) EQ 1 THEN BEGIN
+;;     IF N_ELEMENTS(wholeCap) EQ 1 THEN PRINT,"Keyword WHOLECAP set without POLARPLOT! I'm doing it for you..."
+;;     polarPlot=1                                                 ;do Polar plots instead?
   ENDIF
 
   IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                     ; do num events plots?
@@ -336,6 +338,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(byMin) THEN BEGIN
      byMinStr='byMin_' + STRCOMPRESS(byMin,/REMOVE_ALL) + '_'
   ENDIF
+
+  ;;doing polar contour?
+  polarContStr=''
+  IF KEYWORD_SET(polarContour) THEN BEGIN
+     polarContStr='polarCont_'
+  ENDIF
+
 
   ;;######ELECTRONS
   ;;Eflux max abs. value in interval, or integrated flux?
@@ -412,7 +421,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      plotType='Eflux_' +eFluxPlotType
      plotType=(logEfPlot EQ 0) ? plotType : 'log' + plotType
      plotType=(logPfPlot EQ 0) ? plotType : 'logPf_' + plotType
-     plotDir=(polarPlot) ? plotDir + "polar/" + plotType + '/' : plotDir + plotType
+     plotDir=(squarePlot) ? plotDir + plotType : plotDir + "polar/" + plotType + '/' 
   ENDIF ELSE plotDir += plotPrefix + "--"
 
   smoothStr=""
@@ -428,7 +437,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
   
   ;;parameter string
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+byMinStr+hoyDia
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+byMinStr+polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -505,7 +514,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                    MAX1=MAXM,MAX2=MAXI)
 
   h2dFluxNTitle="Number of events"
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName="nEvents_" 
      dataRawPtr=PTR_NEW() 
   ENDIF
@@ -521,7 +530,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dMaskStr.data(where(h2dStr.data GE maskMin,NULL))=0
   h2dMaskStr.title="Histogram mask"
 
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName=[dataName,"histoMask_"] 
      dataRawPtr=[dataRawPtr,PTR_NEW()] 
   ENDIF
@@ -600,7 +609,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(absEflux)THEN BEGIN 
         h2dEStr.data = ABS(h2dEStr.data) 
         absEstr= "Abs--" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
      ENDIF
      IF KEYWORD_SET(noNegEflux) THEN BEGIN
         negEstr = "NoNegs--"
@@ -611,7 +620,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(logEfPlot) THEN BEGIN 
         logEstr="Log " 
         h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
      ENDIF
      absnegslogEstr=absEstr + negEstr + posEstr + logEstr
 
@@ -623,7 +632,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
      ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
      IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
         ENDIF 
@@ -677,7 +686,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
      ENDELSE
 
-     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
+     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
 
      ;;Log plots desired?
      absPstr=""
@@ -687,7 +696,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(absPflux) THEN BEGIN 
         h2dPStr.data = ABS(h2dPStr.data) 
         absPstr= "Abs" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
      ENDIF
 
      IF KEYWORD_SET(noNegPflux) THEN BEGIN
@@ -701,7 +710,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(logPfPlot) THEN BEGIN 
         logPstr="Log " 
         h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN $
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN $
            pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
      ENDIF
 
@@ -720,7 +729,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;ENDIF
      ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
      IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
         ENDIF  
@@ -738,8 +747,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         pData=poynt_est(plot_i) 
         save,pData,filename="testcode/pData.dat" 
      ENDIF
-
-;;   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN undefine,pData
 
      ;;if iPlots NE 0 THEN @interp_plots_ions.pro
 
@@ -805,7 +812,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(absCharE)THEN BEGIN 
         h2dCharEStr.data = ABS(h2dCharEStr.data) 
         absCharEStr= "Abs--" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
      ENDIF
      IF KEYWORD_SET(noNegCharE) THEN BEGIN
         negCharEStr = "NoNegs--"
@@ -816,7 +823,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
         logCharEStr="Log " 
         h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
      ENDIF
      absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
 
@@ -828,7 +835,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
      ;; IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
      IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
         ENDIF 
@@ -879,7 +886,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF NOT KEYWORD_SET(orbContribRange) OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
 
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
      ENDIF
 
   ENDIF
@@ -926,7 +933,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ELSE h2dTotOrbStr.lim=orbTotRange
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
      ENDIF
      
   ENDIF
@@ -942,9 +949,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
      IF NOT KEYWORD_SET(orbFreqRange) OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
 
-;  IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dFreqOrbStr)] 
      IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
      ENDIF
 
      ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
@@ -975,7 +981,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
         h2dStr=[h2dStr,h2dNEvPerOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
+        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
      ENDIF
 
   ENDIF
@@ -996,21 +1002,19 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
 
   h2dStr=SHIFT(h2dStr,-1-(nPlots))
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR KEYWORD_SET(polarPlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
      dataName=SHIFT(dataName,-2) 
      dataRawPtr=SHIFT(dataRawPtr,-2) 
   ENDIF
 
-  IF KEYWORD_SET(polarPlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
-                           saveRawDir,clockStr,plotSuff,stableIMF,hoyDia,hemstr,$
-                           ;;                       filename=saveRawDir+'fluxplots_'+paramStr+".dat"
+  IF NOT KEYWORD_SET(squarePlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
+                           rawDir,clockStr,plotSuff,stableIMF,hoyDia,hemstr,$
                            filename='temp/polarplots_'+paramStr+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(noSavePlots) THEN BEGIN 
-     IF NOT KEYWORD_SET(noPlotsJustData) AND NOT KEYWORD_SET(polarPlot) THEN $
+     IF NOT KEYWORD_SET(noPlotsJustData) AND KEYWORD_SET(squarePlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
-                  ;; SAVERAW=(saveRaw) ? saveRawDir + 'fluxplots_'+paramStr : 0,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotSuff,1) $
@@ -1028,7 +1032,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 
      ELSE PRINTF,LUN,"**Plots turned off with noPlotsJustData**" 
   ENDIF ELSE BEGIN 
-     IF NOT KEYWORD_SET(polarPlot) AND NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
+     IF KEYWORD_SET(squarePlot) AND NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
         PRINTF,LUN, "Creating output files..." 
 
@@ -1047,27 +1051,47 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN  
            
-           ;;Create a PostScript file.
-           cgPS_Open, plotDir + 'plot_'+dataName[i]+paramStr+'.ps' 
-           ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
-           ;;          h2dStr[0].lim 
-           interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat",_extra=e;WHOLECAP=tag_exist(e,"wholecap") ? 1 : 0 
-           cgPS_Close 
+           IF KEYWORD_SET(polarContour) THEN BEGIN
+              ;; The NAME field of the !D system variable contains the name of the
+              ;; current plotting device.
+              mydevice = !D.NAME
+              ;; Set plotting to PostScript:
+              SET_PLOT, 'PS'
+              ;; Use DEVICE to set some PostScript device options:
+              DEVICE, FILENAME='myfile.ps', /LANDSCAPE
+              ;; Make a simple plot to the PostScript file:
+              interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat", $
+                                    fname=plotDir + 'plot_'+dataName[i]+paramStr+'.png', _extra=e
+              ;; Close the PostScript file:
+              DEVICE, /CLOSE
+              ;; Return plotting to the original device:
+              SET_PLOT, mydevice
+           ENDIF ELSE BEGIN
+              ;;Create a PostScript file.
+              cgPS_Open, plotDir + 'plot_'+dataName[i]+paramStr+'.ps' 
+              ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
+              ;;          h2dStr[0].lim 
+              interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat",_extra=e 
+              cgPS_Close 
+              ;;Create a PNG file with a width of 800 pixels.
+              cgPS2Raster, plotDir + 'plot_'+dataName[i]+paramStr+'.ps', $
+                           /PNG, Width=1000, /DELETE_PS
+           ENDELSE
            
-           ;;Create a PNG file with a width of 800 pixels.
-           cgPS2Raster, plotDir + 'plot_'+dataName[i]+paramStr+'.ps', $
-                        /PNG, Width=1000, /DELETE_PS
         ENDFOR    
         
      ENDIF 
   ENDELSE
 
-  ;;For altitude histograms
-  ;;cgWindow,"cgHistoPlot",maximus.alt(plot_i),title="Current events for predom. " +clockStr+" IMF, 15Min stability",fill="red"
-
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
      CLOSE,lun 
      FREE_LUN,lun 
+  ENDIF
+
+  ;;Save raw data, if desired
+  IF KEYWORD_SET(saveRaw) THEN BEGIN
+     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+".dat"
+
   ENDIF
 
 
