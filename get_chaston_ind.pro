@@ -5,7 +5,8 @@
 ;See 'current_event_Poynt_flux_vs_imf.pro' for
 ;more info, since that's where this code comes from.
 
-FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB,ORBRANGE=orbRange
+FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB, $
+                         ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange
 
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
@@ -20,7 +21,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;for doing our own DB
   ;;dbfile="Dartdb_01092015_maximus.sav"
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
-     pref = "Dartdb_02042015--first11465"
+     pref = "Dartdb_02072015--first14236"
      dbfile = pref + "--maximus.sav"
      loaddataDir = '/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
      cdbTimeFile = loaddataDir + pref + "--cdbTime.sav"
@@ -53,6 +54,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;; ind_n_orbs=where(maximus.orbit GE orbRange[0] AND maximus.orbit LE orbRange[1])
   ;; ind_region_e_n_orbs=cgsetintersection(ind_region_e,ind_n_orbs)
   
+  ;;limits on orbits to use?
   IF KEYWORD_SET (orbRange) THEN BEGIN
      IF N_ELEMENTS(orbRange) EQ 2 THEN BEGIN
         
@@ -68,6 +70,39 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
      ENDELSE
   ENDIF
   
+  ;;limits on altitudes to use?
+  IF KEYWORD_SET (altitudeRange) THEN BEGIN
+     IF N_ELEMENTS(altitudeRange) EQ 2 THEN BEGIN
+        
+        printf,lun,"Min altitude: " + strcompress(altitudeRange[0],/remove_all)
+        printf,lun,"Max altitude: " + strcompress(altitudeRange[1],/remove_all)
+
+        ind_n_orbs=where(maximus.altitude GE altitudeRange[0] AND maximus.altitude LE altitudeRange[1])
+        ind_region_magc_geabs10=cgsetintersection(ind_region_magc_geabs10,ind_n_orbs)
+     ENDIF ELSE BEGIN
+        printf,lun,"Incorrect input for keyword 'altitudeRange'!!"
+        printf,lun,"Please use altitudeRange=[minOrb maxOrb]"
+        RETURN, -1
+     ENDELSE
+  ENDIF
+  
+  ;;limits on characteristic electron energies to use?
+  IF KEYWORD_SET (charERange) THEN BEGIN
+     IF N_ELEMENTS(charERange) EQ 2 THEN BEGIN
+        
+        printf,lun,"Min characteristic electron energy: " + strcompress(charERange[0],/remove_all)
+        printf,lun,"Max characteristic electron energy: " + strcompress(charERange[1],/remove_all)
+
+        ind_n_orbs=where(maximus.max_chare_losscone GE charERange[0] AND maximus.max_chare_losscone LE charERange[1])
+        ind_region_magc_geabs10=cgsetintersection(ind_region_magc_geabs10,ind_n_orbs)
+     ENDIF ELSE BEGIN
+        printf,lun,"Incorrect input for keyword 'charERange'!!"
+        printf,lun,"Please use charERange=[minCharE maxCharE]"
+        RETURN, -1
+     ENDELSE
+  ENDIF
+
+
   ;;gotta screen to make sure it's in ACE db too:
   ;;Only so many are useable, since ACE data start in 1998
   
@@ -88,6 +123,14 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   IF KEYWORD_SET (orbRange) AND N_ELEMENTS(orbRange) EQ 2 THEN BEGIN
      printf,lun,"Min orbit: " + strcompress(orbRange[0],/remove_all)
      printf,lun,"Max orbit: " + strcompress(orbRange[1],/remove_all)
+  ENDIF
+  IF KEYWORD_SET (altitudeRange) AND N_ELEMENTS(altitudeRange) EQ 2 THEN BEGIN
+     printf,lun,"Min altitude: " + strcompress(altitudeRange[0],/remove_all)
+     printf,lun,"Max altitude: " + strcompress(altitudeRange[1],/remove_all)
+  ENDIF
+  IF KEYWORD_SET (charERange) AND N_ELEMENTS(charERange) EQ 2 THEN BEGIN
+     printf,lun,"Min characteristic electron energy: " + strcompress(charERange[0],/remove_all)
+     printf,lun,"Max characteristic electron energy: " + strcompress(charERange[1],/remove_all)
   ENDIF
   printf,lun,"There are " + strtrim(nGood,2) + " total events making the cut." 
   IF (satellite EQ "ACE") THEN $

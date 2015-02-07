@@ -5,17 +5,22 @@ pro update_stats_2_Dartmouth,maximus
 ;is to take a database that already exists and UPDATE it!
   
   ;max orbit to check out
-  max_orbit=11465
+  max_orbit=14236
+
+  ;do a new time file as well?
+  doNewTime=1
 
   ;Database directory
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
 
   ;Files to deal with
   oldDBDate='02042015'
-  oldDBFile='Dartdb_' + oldDBDate + '--first11050--maximus.sav'
+  oldDBFile='Dartdb_' + oldDBDate + '--first11465--maximus.sav'
 
-  newDBDate='02042015'
-  newDBFile='Dartdb_' + newDBDate + '--first11465--maximus.sav'
+  newDBDate='02072015'
+  newDBFile='Dartdb_' + newDBDate + '--first14236--maximus.sav'
+
+  newTimeFile='Dartdb_' + newDBDate + '--first14236--cdbTime.sav'
 
   ;;File containing list of orbs in newDBFile
   contents_file='./new_db_' + newDBDate + '--orbits_added_to_DartDBfile_' + oldDBDate + '.txt'
@@ -112,6 +117,11 @@ pro update_stats_2_Dartmouth,maximus
   endfor
 
   save,maximus,filename=newDBFile
+
+  IF (doNewTime) THEN BEGIN
+     cdbTime=str_to_time(maximus.time)
+     save,cdbTime,newTimeFile
+  ENDIF
 
   return
 
