@@ -3,7 +3,7 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='02052015'
+  date='02072015'
 
   ;dirs='all_IMF'
   ;;dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
@@ -31,33 +31,49 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /orbContribPlot,/orbTotPlot,/orbFreqPlot,/nEventPerOrbPlot,/orbPlots, $
                                         neventperorbrange=[0.0,5.0], nEventsRange=[0,1200], orbFreqRange=[0.0, 0.3], orbContribRange=[0,60], $
-                                        WHOLECAP=wc,midnight=midn,BYMIN=byMin,/polarcontour
+                                        WHOLECAP=wc,midnight=midn,BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
   
   ;;;;;;;;;;;;;;;
   ;electron plots
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
   ;;                                       /eplots,efluxplottype="Max",customerange=[-1,2.0],/logefplot,/nonegeflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",customerange=[-0.1,1.2],/logefplot,/abseflux,/medianplot,WHOLECAP=wc,midnight=midn
+                                        /eplots,efluxplottype="Max",eplotrange=[-0.1,1.2],/logefplot,/abseflux,/medianplot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
   
+  ;;;;;;;;;;;;;;;
+  ;ion plots
+  batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
+                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[0.0,10],/logifplot,/absiflux,/medianplot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
   ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,customprange=[0.01,3],/abspflux,/medianplot,WHOLECAP=wc,midnight=midn
+                                        /pplots,pplotrange=[0.01,3],/abspflux,/medianplot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 
   ;Better (for showing features) plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
   ;;                                       /pplots,/logpfplot,/nonegpflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,/abspflux,/medianplot,WHOLECAP=wc,midnight=midn
+                                        /pplots,/abspflux,/medianplot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf, directions=dirs,maskmin=mskm, $
-                                        /chareplot,charetype="lossCone",/logchareplot,/nonegchare,customcharerange=[0, 3.6], $
-                                        /medianplot,WHOLECAP=wc,midnight=midn
+                                        /chareplots,charetype="lossCone",/logchareplot,/nonegchare,charePlotRange=[0, 3.6], $
+                                        /medianplot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 
 END

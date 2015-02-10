@@ -77,11 +77,11 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
         printf,lun,"Min altitude: " + strcompress(altitudeRange[0],/remove_all)
         printf,lun,"Max altitude: " + strcompress(altitudeRange[1],/remove_all)
 
-        ind_n_orbs=where(maximus.altitude GE altitudeRange[0] AND maximus.altitude LE altitudeRange[1])
+        ind_n_orbs=where(maximus.alt GE altitudeRange[0] AND maximus.alt LE altitudeRange[1])
         ind_region_magc_geabs10=cgsetintersection(ind_region_magc_geabs10,ind_n_orbs)
      ENDIF ELSE BEGIN
         printf,lun,"Incorrect input for keyword 'altitudeRange'!!"
-        printf,lun,"Please use altitudeRange=[minOrb maxOrb]"
+        printf,lun,"Please use altitudeRange=[minAlt maxAlt]"
         RETURN, -1
      ENDELSE
   ENDIF

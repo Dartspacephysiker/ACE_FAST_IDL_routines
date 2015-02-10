@@ -35,6 +35,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   nLevels=12
 
   ;;Select color table
+  orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
   ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
   pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
   IF ePlotzz GT 0 OR pPlotzz GT 0 THEN BEGIN
@@ -84,9 +85,8 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;sempMLTS=REBIN(tempMLTS,4) & sempILATS=REBIN(tempILATS,4)
 
   ;integrals for each hemi
-  dawnIntegral=0
-  duskIntegral=0
-
+  dawnIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
+  duskIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   ;;binary matrix to tell us where masked values are
   masked=(h2dStr[nPlots].data GT 250.0)
 
@@ -110,7 +110,10 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         ;;Integrals
         IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
         ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j]
-        
+        ;; print,"masked["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(masked[i,j],/REMOVE_ALL)
+        ;; print,"temp.data["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(temp.data[i,j],/REMOVE_ALL)
+        ;; print,"dawnint is " + strcompress(dawnIntegral) + " and duskint is " + strcompress(duskIntegral)
+        ;; print,""
         ;  cgColorFill,[mlts[i],mlts[i+1],mlts[i+1],mlts[i]],[ilats[j:j+1],ilats[j:j+1]],color=h2descl(i,j) 
         cgColorFill,tempMLTS,tempILATS,color=(masked[i,j]) ? "gray" : h2descl[i,j]
 
@@ -152,14 +155,16 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;REMEMBER: h2dStr[nPlots].data is the MASK
   IF NOT KEYWORD_SET(noPlotIntegral) THEN BEGIN 
      IF logPlotzz THEN BEGIN
-        integ=TOTAL(10.0^(temp.data(WHERE(~masked))))
+        integ=ALOG10(TOTAL(10.0^(temp.data(WHERE(~masked)))))
         absInteg=integ
+        dawnIntegral=ALOG10(dawnIntegral)
+        duskIntegral=ALOG10(duskIntegral)
      ENDIF ELSE BEGIN
         integ=TOTAL(temp.data(WHERE(~masked)))
         absInteg=TOTAL(ABS(temp.data(WHERE(~masked))))
      ENDELSE
-     ;; dawnIntegral=
-     ;; duskIntegral=
+
+
      IF wholeCap NE !NULL THEN BEGIN
         lTexPos1=0.09
         lTexPos2=0.63
@@ -171,8 +176,9 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         bTexPos1=0.78
         bTexPos2=0.74
      ENDELSE
+     
+     IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize
      cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
-     IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
      cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
      cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
   ENDIF 

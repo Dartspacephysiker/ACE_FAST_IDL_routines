@@ -83,7 +83,7 @@
 ;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;
 ;                *CHAR E PLOTS
-;                    CHAREPLOT         :  Do characteristic electron energy plots
+;                    CHAREPLOTS        :  Do characteristic electron energy plots
 ;                    CHARETYPE         :  Options are 'lossCone' for electrons in loss cone or 'Total' for all electrons.
 ;                    LOGCHAREPLOT      :  Do log plots of characteristic electron energy.
 ;                    ABSCHARE          :  Use absolute value of characteristic electron (required for log plots).
@@ -168,7 +168,7 @@
 
 PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
+                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
                                      SATELLITE=satellite, $
@@ -178,9 +178,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NONEGEFLUX=noNegEflux, NOPOSEFLUX=noPosEflux, EPLOTRANGE=EPlotRange, $
                                      PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                      NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-                                     iPLOTS=iPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+                                     IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
                                      NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
-                                     CHAREPLOT=charEPlot, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+                                     CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
                                      NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
                                      ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, NEVENTPERORBRANGE=nEventPerOrbRange, $
@@ -218,8 +218,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; maxOrb=8500                   ;8292 for Strangeway study
   ;;nOrbits = maxOrb - minOrb + 1
   
-  IF NOT KEYWORD_SET(minE) THEN minE = 4                         ; 4 eV in Strangeway
-  IF NOT KEYWORD_SET(maxE) THEN maxE = 250                       ; ~300 eV in Strangeway
+  IF NOT KEYWORD_SET(charERange) THEN charERange = [4.0, 250.0]         ; 4,~300 eV in Strangeway
+
+  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = [1000.0, 5000.0] ;Rob Pfaff says no lower than 1000m
   
   IF NOT KEYWORD_SET(minM) THEN minM = 6L
   IF NOT KEYWORD_SET(maxM) THEN maxM = 18L
@@ -298,8 +299,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = "Max"   ;options are "Integ" and "Max"
   IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = "Max"   ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
   IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                    ;Poynting flux [estimate] plots?
-  IF N_ELEMENTS(iPlots) EQ 0 THEN iPlots =  0                    ;ion Plots?
-  IF N_ELEMENTS(charEPlot) EQ 0 THEN charEPlot =  0              ;char E plots?
+  IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                    ;ion Plots?
+  IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0              ;char E plots?
   IF N_ELEMENTS(charEType) EQ 0 THEN charEType = "lossCone"      ;options are "lossCone" and "Total"
   IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0                  ;Contributing orbits plot?
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
@@ -393,10 +394,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   ;;######Ion flux (up)
-  logIonFluxPlot=0
-  absIonFlux=0
   ;;For linear or log ion flux plotrange
-  IF NOT KEYWORD_SET(logIonFluxPlot) THEN IonPlotRange=[0,1.5e8] ELSE IonPlotRange=[1,8.5]
+  IF NOT KEYWORD_SET(iPlotRange) THEN iPlotRange=(KEYWORD_SET(logIfPlot)) ? [6,9.5] : [1e6,1.5e9]
   
   IF KEYWORD_SET(logIfPlot) AND NOT KEYWORD_SET(absIflux) AND NOT KEYWORD_SET(noNegIflux) AND NOT KEYWORD_SET(noPosIflux) THEN BEGIN 
      print,"Warning!: You're trying to do log(ionFlux) plots but you don't have 'absIflux', 'noNegIflux', or 'noPosIflux' set!"
@@ -407,12 +406,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      noNegIflux=1
   ENDIF
 
-  ;;######Oxy flux
-  logOFluxPlot=0
-  absOFlux=0
-  ;;For linear or log ion flux plotrange
-  ;;IF logOFluxPlot EQ 0 THEN OPlotRange=[0,1e4] ELSE PlotRange=ALOG10([0,1e4]
-    
+
   IF KEYWORD_SET(logCharEPlot) AND NOT KEYWORD_SET(absCharE) AND NOT KEYWORD_SET(noNegCharE) AND NOT KEYWORD_SET(noPosCharE) THEN BEGIN 
      print,"Warning!: You're trying to do log(charE) plots but you don't have 'absCharE', 'noNegCharE', or 'noPosCharE' set!"
      print,"Can't make log plots without using absolute value or only positive values..."
@@ -776,7 +770,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########ION FLUX########
 
-  IF KEYWORD_SET(iplots) THEN BEGIN
+  IF KEYWORD_SET(ionPlots) THEN BEGIN
      h2dIStr={h2dStr}
 
      ;;If not allowing negative fluxes
@@ -892,19 +886,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
      IF KEYWORD_SET(logIfPlot) THEN BEGIN 
         logIonStr="Log " 
+        print,"Log those ions"
         h2dIStr.data(where(h2dIStr.data GT 0,/NULL))=ALOG10(h2dIStr.data(where(h2dIStr.data GT 0,/null))) 
         IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN ionData(where(ionData GT 0,/null))=ALOG10(ionData(where(ionData GT 0,/null))) 
      ENDIF
      absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
 
      ;;Do custom range for Iflux plots, if requested
-     ;; IF  KEYWORD_SET(IonPlotRange) THEN h2dIStr.lim=TEMPORARY(IonPlotRange)$
-     IF  KEYWORD_SET(ionPlotRange) THEN h2dIStr.lim=ionPlotRange $
+     IF  KEYWORD_SET(iPlotRange) THEN h2dIStr.lim=iPlotRange $
      ELSE h2dIStr.lim = [MIN(h2dIStr.data),MAX(h2dIStr.data)]
 
      h2dIStr.title= absnegslogIonStr + "Ion Flux (ergs/cm!U2!N-s)"
-     ;; IF KEYWORD_SET(iplots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dIStr)] 
-     IF KEYWORD_SET(iplots) THEN BEGIN & h2dStr=[h2dStr,h2dIStr] 
+     IF KEYWORD_SET(ionPlots) THEN BEGIN & h2dStr=[h2dStr,h2dIStr] 
         IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(ionData)] 
@@ -917,7 +910,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########CHARACTERISTIC ENERGY########
 
-  IF KEYWORD_SET(chareplot) THEN BEGIN
+  IF KEYWORD_SET(charEPlots) THEN BEGIN
 
      h2dCharEStr={h2dStr}
 
@@ -1000,8 +993,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ELSE h2dCharEStr.lim = [MIN(h2dCharEStr.data),MAX(h2dCharEStr.data)]
 
      h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
-     ;; IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
-     IF KEYWORD_SET(charEPlot) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
+     ;; IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
+     IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
         IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 

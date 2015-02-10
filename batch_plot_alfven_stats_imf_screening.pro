@@ -12,7 +12,7 @@
 ;
 ;-
 PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
-                                          EPLOTS=ePlots,PPLOTS=pPlots,CHAREPLOT=charEPlot, ORBPLOTS=orbPlots, $
+                                          EPLOTS=ePlots, IONPLOTS=ionPlots, PPLOTS=pPlots,CHAREPLOTS=charEPlots, ORBPLOTS=orbPlots, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
 
@@ -46,14 +46,20 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
         plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, EPLOTS=ePlots, maskmin=maskMin, _extra=e
      ENDIF
 
+     ;;electron plots
+     IF KEYWORD_SET(ionPlots) THEN BEGIN
+;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, IONPLOTS=ionPlots, maskmin=maskMin, _extra=e
+     ENDIF
+
      ;;pflux plots
      IF KEYWORD_SET(pPlots) THEN BEGIN
 ;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,/logpfplot,PPLOTS=pPlots,/medianplot,maskmin=maskMin,customprange=[-1.3,1.7],/nonegpflux,_extra=e
         plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, maskmin=maskMin, PPLOTS=pPlots, _EXTRA=e
      ENDIF
 
-     IF KEYWORD_SET(charEPlot) THEN BEGIN
-        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, CHAREPLOT=charEPlot, maskmin=maskMin, _extra=e
+     IF KEYWORD_SET(charEPlots) THEN BEGIN
+        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, CHAREPLOTS=charEPlots, maskmin=maskMin, _extra=e
      ENDIF
 
      ;;various orbit plots
