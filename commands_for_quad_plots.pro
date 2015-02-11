@@ -1,17 +1,17 @@
 ;02/02/2015
 ;A quicker(?) way to make all the plots I want
 
-PRO commands_for_dusk_dawn_plots
+PRO commands_for_quad_plots
 
   date='02102015'
 
   ;dirs='all_IMF'
-  ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
-  dirs=['duskward', 'dawnward']
+  dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
+  ;;dirs=['duskward', 'dawnward']
 
   ;Plot prefix?
-  ;;plotprf="Foolin_round_" + date + "/quads/Dartdb_" + date
-  plotprf="Foolin_round_" + date + "/Dartdb_" + date
+  plotprf="Foolin_round_" + date + "/quads/Dartdb_" + date
+  ;;plotprf="Foolin_round_" + date + "/Dartdb_" + date
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + date
 
   ;; mask min?
@@ -30,7 +30,7 @@ PRO commands_for_dusk_dawn_plots
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /orbContribPlot,/orbTotPlot,/orbFreqPlot,/nEventPerOrbPlot,/orbPlots, $
-                                        neventperorbrange=[0.0,3.5], nEventsRange=[0,1000], orbFreqRange=[0.0, 0.15], orbContribRange=[0,45], $
+                                        neventperorbrange=[0.5,2.2], nEventsRange=[0,600], orbFreqRange=[0.05, 0.15], orbContribRange=[10,30], $
                                         WHOLECAP=wc,midnight=midn,BYMIN=byMin, $
                                         altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
   
@@ -46,7 +46,7 @@ PRO commands_for_dusk_dawn_plots
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[6.5,9.5],/logifplot,/absiflux,/medianplot, $
+                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[7.5,10.0],/logifplot,/absiflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 
@@ -56,7 +56,7 @@ PRO commands_for_dusk_dawn_plots
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
   ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[0.01,1.5],/abspflux,/medianplot, $
+                                        /pplots,pplotrange=[0.1,2.8],/abspflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 
@@ -71,7 +71,7 @@ PRO commands_for_dusk_dawn_plots
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf, directions=dirs,maskmin=mskm, $
-                                        /chareplots,charetype="lossCone",/logchareplot,/nonegchare,charePlotRange=[0.5, 2.5], $
+                                        /chareplots,charetype="lossCone",/logchareplot,/nonegchare,charePlotRange=[1.0, 2.5], $
                                         /medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]

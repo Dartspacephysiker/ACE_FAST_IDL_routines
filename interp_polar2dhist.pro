@@ -37,8 +37,9 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
   ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
+  iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
   pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
-  IF ePlotzz GT 0 OR pPlotzz GT 0 THEN BEGIN
+  IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 THEN BEGIN
      ;This is the one for doing sweet electron flux plots
      cgLoadCT, 16,/BREWER, NCOLORS=nLevels
   ENDIF ELSE BEGIN
