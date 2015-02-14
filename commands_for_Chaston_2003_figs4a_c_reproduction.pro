@@ -3,7 +3,7 @@
 
 PRO commands_for_Chaston_2003_figs4a_c_reproduction
 
-  date='02052015'
+  date='02142015'
 
   dirs='all_IMF'
   ;; dirs=['duskward', 'dawnward']
@@ -11,7 +11,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   plotprf="Foolin_round_" + date + "/midnight_nomask/Dartdb_" + date 
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Chaston_2003_fig4a-d/Dartdb_" + date 
 
-  mskm=25
+  mskm=21
   ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm,/orbplots, $
@@ -24,7 +24,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
   ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,/midnight
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/abseflux,/medianplot,/WHOLECAP,/midnight
+                                        /eplots,efluxplottype="Max",eplotrange=[-1,1.5],/logefplot,/abseflux,/medianplot,/WHOLECAP,/midnight
   
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
@@ -32,7 +32,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
   ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,customprange=[0.5,10],/abspflux,/medianplot,/WHOLECAP,/midnight
+                                        /pplots,pplotrange=[0.5,10],/abspflux,/medianplot,/WHOLECAP,/midnight
   
   ;Better (for showing features) plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
@@ -43,6 +43,6 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /chareplot,charetype="lossCone",/logchareplot,/nonegchare,/medianplot,/WHOLECAP,/midnight
+                                        /chareplot,charetype="lossCone",/medianplot,/WHOLECAP,/midnight
 
 END

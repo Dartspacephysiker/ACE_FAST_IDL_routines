@@ -12,14 +12,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
-  ;;IF maximus EQ !NULL THEN restore,dataDir + "/processed/maximus.dat"
 
-  ;;For doing Chaston db
-  ;;loaddatadir=dataDir
-  ;;dbfile="/processed/maximus.dat"
-
-  ;;for doing our own DB
-  ;;dbfile="Dartdb_01092015_maximus.sav"
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
      pref = "Dartdb_02112015--500-14999"
      dbfile = pref + "--maximus.sav"
@@ -30,6 +23,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
         dbfile = "maximus.dat"
         loaddataDir='/SPENCEdata/Research/Cusp/database/processed/'
+        cdbTimeFile = loaddataDir + 'cdbTime.sav'
+        IF FILE_TEST(cdbTimeFile) THEN restore,cdbTimeFile
      ENDIF
   ENDELSE
 
@@ -37,7 +32,6 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN 
      print,"There is already a maximus struct loaded! Not loading " + loaddataDir + dbfile + "..."
   ENDELSE
-
 
   ;;generate indices based on restrictions in interp_plots.pro
   ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM)
@@ -111,6 +105,10 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ind_region_magc_geabs10_ACEstart=ind_region_magc_geabs10(where(ind_region_magc_geabs10 GE ind_ACEstart,$
                                                                  nGood,complement=lost,ncomplement=nlost))
   lost=ind_region_magc_geabs10(lost)
+
+  ;;Now, clear out all the garbage (NaNs & Co.)
+  good_i = alfven_db_cleaner(maximus,LUN=lun)
+  IF good_i NE !NULL THEN ind_region_magc_geabs10_ACEstart=cgsetintersection(ind_region_magc_geabs10_ACEstart,good_i)
 
   ;Re-make cdbTime if we don't have it made already
   IF cdbTime EQ !NULL THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $

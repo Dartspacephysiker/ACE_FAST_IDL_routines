@@ -456,7 +456,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      OPENW,lun,plotDir+'fluxplots_'+paramStr+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
-  ;;Now run these to tap the databases and interpolate satellite data
+  ;;Now run these to clean and tap the databases and interpolate satellite data
   
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
