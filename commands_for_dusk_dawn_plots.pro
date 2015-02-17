@@ -3,7 +3,7 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='02142015'
+  date='02172015'
 
   ;dirs='all_IMF'
   ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
@@ -15,7 +15,7 @@ PRO commands_for_dusk_dawn_plots
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + date
 
   ;; mask min?
-  mskm=5
+  mskm=3
 
   ;; midnight?
   midn=!NULL
@@ -46,7 +46,7 @@ PRO commands_for_dusk_dawn_plots
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[7.0,9.5],/logifplot,/absiflux,/medianplot, $
+                                        /ionplots,ifluxplottype="Max",iplotrange=[7.0,8.5],/logifplot,/absiflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
 

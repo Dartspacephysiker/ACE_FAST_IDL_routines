@@ -36,35 +36,49 @@ function alfven_db_cleaner,maximus,LUN=lun
   n_events = n_elements(maximus.alfvenic)
 
   ; Cutoff values
-  dB_hcutOff = 1.0e3 ;junks 190 events
+  
+  ;; mag current cutoffs
+  magc_hcutOff = 5.0e2            ;junks 245 events above, 256 below
+  ;;magc_lcutOff = -1.0e3 ;
+  
+  ;; delta_B cutoffs
+  dB_hcutOff = 1.0e3            ;junks 190 events
   dB_lcutOff = -1.0e3 ;
   ;;  dB_lcutOff = 0.0 ; Below zero should be garbage?
-
-  dE_hcutoff = 1.0e4 ;junks 328 events
-  dE_lcutoff = -1.0e4
-  dE_lcutoff = 0.0 ; Below zero should be garbage?
-
-  ef_lc_integ_hcutoff = 1.0e7 ;junks 191 events
-  ef_lc_integ_lcutoff = -1.0e7
-
-  elec_ef_hcutoff = 1.0e3 ;junks 284 events
-  elec_ef_lcutoff = 0.0 ;because less than zero is garbage, right?
-
-  max_chare_hcutoff = 1.5e4 ;junks 120 events
-  max_chare_lcutoff = 0.0 ;less than zero must be garbage
   
-  iflux_hcutoff = 5.0e10 ;junks 122 events
-  iflux_lcutoff = -5.0e10 ;junks something like 100 events
-
-  ieflux_hcutoff = 1.0e1 ;cuts off 209 events
-  ieflux_lcutoff = 0.0 ;below zero is junk, eh?
-
-  iflux_up_hcutoff = 7.0e10 ;cuts off 286 events
-  iflux_up_lcutoff = 0.0 ;below zero is junk, eh?
-
-  char_ion_e_hcutoff = 250.0 ;cuts off 237 events
-  char_ion_e_lcutoff = 0.0 ;below zero is junk, eh?
-
+  ;; delta_E cutoffs
+  dE_hcutoff = 1.0e4            ;junks 328 events
+  dE_lcutoff = -1.0e4
+  ;; dE_lcutoff = 0.0              ; Below zero should be garbage?
+  
+  ;; losscone electron flux cutoffs
+  ef_lc_integ_hcutoff = 1.0e7   ;junks 191 events
+  ef_lc_integ_lcutoff = -1.0e7
+  
+  ;; electron energy flux cutoffs
+  elec_ef_hcutoff = 1.0e3       ;junks 284 events
+  elec_ef_lcutoff = 0.0         ;because less than zero is garbage, right?
+  
+  ;; max characteristic electron energy cutoffs
+  max_chare_hcutoff = 1.5e4     ;junks 120 events
+  max_chare_lcutoff = 0.0       ;less than zero must be garbage
+  
+  ;; ion flux cutoffs
+  iflux_hcutoff = 5.0e10        ;junks 122 events
+  iflux_lcutoff = -5.0e10       ;junks something like 100 events
+  
+  ;; ion energy flux cutoffs
+  ieflux_hcutoff = 1.0e1        ;cuts off 209 events
+  ieflux_lcutoff = 0.0          ;below zero is junk, eh?
+  
+  ;; upward ion flux cutoffs
+  iflux_up_hcutoff = 7.0e10     ;cuts off 286 events
+  iflux_up_lcutoff = 0.0        ;below zero is junk, eh?
+  
+  ;; characteristic ion energy cutoffs
+  char_ion_e_hcutoff = 250.0    ;cuts off 237 events
+  char_ion_e_lcutoff = 0.0      ;below zero is junk, eh?
+  
   ;**********
   ;   NaNs  *
   ;**********
@@ -104,12 +118,15 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;******************
   
   ;No delta_Bs above any absurd values
+  good_i = cgsetintersection(good_i,where(abs(maximus.mag_current) LE magc_hcutOff,/NULL))
+
+  ;No delta_Bs above any absurd values
   good_i = cgsetintersection(good_i,where(maximus.delta_b LE dB_hcutOff AND maximus.delta_b GT dB_lcutoff,/NULL))
 
   ;No delta_Es above any absurd values
   good_i = cgsetintersection(good_i,where(maximus.delta_e LE dE_hcutOff AND maximus.delta_e GT dE_lcutoff,/NULL))
 
-  ;No delta_Es above any absurd values
+  ;No losscone e- fluxes with any absurd values
   good_i = cgsetintersection(good_i,where(maximus.eflux_losscone_integ LE ef_lc_integ_hcutOff AND maximus.eflux_losscone_integ GT ef_lc_integ_lcutoff,/NULL))
   ;No absurd electron energy fluxes
   good_i = cgsetintersection(good_i,where(maximus.elec_energy_flux LE elec_ef_hcutOff AND maximus.elec_energy_flux GT elec_ef_lcutoff,/NULL)) 

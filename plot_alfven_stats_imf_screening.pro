@@ -479,6 +479,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Calculate Poynting flux estimate
   
   ;;1.0e-9 to take stock of delta_b being recordin in nT
+  ;;Since E is recorded in mV/m, units of POYNT_EST here are mW/m^2
   POYNT_EST=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
   ;; goodpoynt=where(poynt_est(plot_i) GT 0)
   ;; plot_i=plot_i(goodpoynt)

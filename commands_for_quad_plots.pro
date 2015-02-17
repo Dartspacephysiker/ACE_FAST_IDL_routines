@@ -21,7 +21,7 @@ PRO commands_for_quad_plots
   midn=!NULL
 
   ;; byMin?
-  byMin=3.0
+  byMin=1.0
 
   ;; whole cap?
   wc=!NULL
