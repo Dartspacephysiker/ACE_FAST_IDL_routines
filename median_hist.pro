@@ -9,14 +9,18 @@
 ;PTRHIST will return the ptrHist used to create the arrays of data for
 ;a given histo cell
 
+;02/18/2015
+;OUTFILE and PLOT_I are intended to provide more information about the statistics involved
+;in each dataset corresponding to a given MLT/ILAT bin. PLOT_I is otherwise useless for this routine
 
 function median_hist, MLT, ILAT, data, $
-                 BINSIZE1=Binsize1, BINSIZE2=Binsize2, $
-                 INPUT=Input, MAX1=Max1, MAX2=Max2, MIN1=Min1, MIN2=Min2,$
-                 OMAX1=Omax1, OMAX2=Omax2, OMIN1=Omin1, OMIN2=Omin2, $
-                 OBIN1=Obin1, OBIN2=Obin2, DENSITY=Density, $
-                 BINEDGE1=Binedge1, BINEDGE2=Binedge2, NONZERO=nonzeroHist,$
-                 PTRHIST=ptrHist,ABSMED=absMed
+                      BINSIZE1=Binsize1, BINSIZE2=Binsize2, $
+                      INPUT=Input, MAX1=Max1, MAX2=Max2, MIN1=Min1, MIN2=Min2,$
+                      OMAX1=Omax1, OMAX2=Omax2, OMIN1=Omin1, OMIN2=Omin2, $
+                      OBIN1=Obin1, OBIN2=Obin2, $
+                      BINEDGE1=Binedge1, BINEDGE2=Binedge2, NONZEROHIST=nonzeroHist,$
+                      PTRHIST=ptrHist,ABSMED=absMed,$
+                      OUTFILE=outFile,PLOT_I=plot_i
 
          ON_ERROR, 0          ; on error, return control to caller
 
@@ -120,6 +124,14 @@ function median_hist, MLT, ILAT, data, $
                medHist(hist_i[i])=MEDIAN(*ptrHist(hist_i[i]))
             ENDELSE
          ENDFOR
+
+         IF KEYWORD_SET(outFile) THEN BEGIN
+            IF (STRLOWCASE(TYPENAME(outFile)) EQ 'string') THEN BEGIN
+               save,ptrHist,nonzeroHist, $
+                    obin1,obin2,Omax1,Omax2,Omin1,Omin2,Binedge1,Binedge2, $
+                    plot_i,FILENAME=outFile
+            ENDIF ELSE PRINT,"medianHist: 'outFile' must be a string!"
+         ENDIF
             
          RETURN,medHist
 end

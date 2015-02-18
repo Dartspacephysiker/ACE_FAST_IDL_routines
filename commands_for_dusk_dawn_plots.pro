@@ -3,7 +3,7 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='02172015'
+  date='02182015'
 
   ;dirs='all_IMF'
   ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
@@ -26,6 +26,9 @@ PRO commands_for_dusk_dawn_plots
   ;; whole cap?
   wc=!NULL
 
+  ;;median histogram data?
+  medHistOutFile=1
+
   ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
@@ -41,14 +44,16 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /eplots,efluxplottype="Max",eplotrange=[-0.1,0.7],/logefplot,/abseflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0], $
+                                        MEDHISTOUTFILE=medHistOutFile
   
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
                                         /ionplots,ifluxplottype="Max",iplotrange=[7.0,8.5],/logifplot,/absiflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0], $
+                                        MEDHISTOUTFILE=medHistOutFile
 
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
@@ -58,7 +63,8 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
                                         /pplots,pplotrange=[0.01,1.5],/abspflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0], $
+                                        MEDHISTOUTFILE=medHistOutFile
 
   ;Better (for showing features) plotrange
   ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
@@ -66,7 +72,8 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
                                         /pplots,/abspflux,/medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0], $
+                                        MEDHISTOUTFILE=medHistOutFile
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
@@ -74,6 +81,7 @@ PRO commands_for_dusk_dawn_plots
                                         /chareplots,charetype="lossCone",/logchareplot,/nonegchare,charePlotRange=[0.5, 2.5], $
                                         /medianplot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0]
+                                        altitudeRange=[1000.0, 5000.0], charERange=[4.0,250.0], $
+                                        MEDHISTOUTFILE=medHistOutFile
 
 END

@@ -128,6 +128,7 @@
 ;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
 ;		     PLOTPREFIX        :     
 ;                    OUTPUTPLOTSUMMARY :  Make a text file with record of running params, various statistics
+;                    MEDHISTOUTFILE    :  If doing median plots, output the median pointer array. (Good for further inspection of the statistics involved in each bin
 ;
 ; KEYWORD PARAMETERS:
 ;
@@ -191,7 +192,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
-                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTFILE=medHistOutFile, $
                                      _EXTRA = e
 
   ;;variables to be used by interp_contplot.pro
@@ -283,8 +284,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF 
 
   ;;Write plot data output for Bin?
-
   IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
+
+  ;;Any of multifarious reasons for needing output?
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
+     keepMe = 1
+  ENDIF ELSE keepMe = 0
+
   ;;********************************************
   ;;Variables for histos
   ;;Bin sizes for 2d histos
@@ -528,7 +534,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                    MAX1=MAXM,MAX2=MAXI)
 
   h2dFluxNTitle="Number of events"
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF keepMe THEN BEGIN 
      dataName="nEvents_" 
      dataRawPtr=PTR_NEW() 
   ENDIF
@@ -544,7 +550,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dMaskStr.data(where(h2dStr.data GE maskMin,NULL))=0
   h2dMaskStr.title="Histogram mask"
 
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF keepMe THEN BEGIN 
      dataName=[dataName,"histoMask_"] 
      dataRawPtr=[dataRawPtr,PTR_NEW()] 
   ENDIF
@@ -553,16 +559,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
 
   ;;h2dStr={h2dStr, data : DBLARR(N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*))), title : "", lim : DBLARR(2) }
-
-
-  ;;########Medians?########
-  ;;IF medianplot GT 0 THEN $
-  ;;medHist=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-  ;;                           plot_i,MIN1=MINM,MIN2=MINI,$
-  ;;                           MAX1=MAXM,MAX2=MAXI,$
-  ;;                           BINSIZE1=binM,BINSIZE2=binI,$
-  ;;                           OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT)
-
 
   ;;########ELECTRON FLUX########
 
@@ -600,14 +596,28 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         ENDIF
      ENDELSE
 
+     ;;Handle name of data
+     ;;Log plots desired?
+     absEstr=""
+     negEstr=""
+     posEstr=""
+     logEstr=""
+     IF KEYWORD_SET(absEflux)THEN absEstr = "Abs--"
+     IF KEYWORD_SET(noNegEflux) THEN negEstr = "NoNegs--"
+     IF KEYWORD_SET(noPosEflux) THEN posEstr = "NoPos--"
+     IF KEYWORD_SET(logEfPlot) THEN logEstr="Log "
+     absnegslogEstr=absEstr + negEstr + posEstr + logEstr
+     efDatName = paramStr + STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"
+
      IF KEYWORD_SET(medianplot) THEN BEGIN 
+        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + efDatName+"medhist_data.sav"
         h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  elecData,$
                                  MIN1=MINM,MIN2=MINI,$
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absEflux) 
+                                 ABSMED=absEflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
      ENDIF ELSE BEGIN 
         h2dEStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
@@ -619,28 +629,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
      ENDELSE 
 
-     ;;Log plots desired?
-     absEstr=""
-     negEstr=""
-     posEstr=""
-     logEstr=""
+     ;data mods?
      IF KEYWORD_SET(absEflux)THEN BEGIN 
         h2dEStr.data = ABS(h2dEStr.data) 
-        absEstr= "Abs--" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN elecData=ABS(elecData) 
-     ENDIF
-     IF KEYWORD_SET(noNegEflux) THEN BEGIN
-        negEstr = "NoNegs--"
-     ENDIF
-     IF KEYWORD_SET(noPosEflux) THEN BEGIN
-        posEstr = "NoPos--"
+        IF keepMe THEN elecData=ABS(elecData) 
      ENDIF
      IF KEYWORD_SET(logEfPlot) THEN BEGIN 
-        logEstr="Log " 
         h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
+        IF keepMe THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
      ENDIF
-     absnegslogEstr=absEstr + negEstr + posEstr + logEstr
 
      ;;Do custom range for Eflux plots, if requested
      ;; IF  KEYWORD_SET(EPlotRange) THEN h2dEStr.lim=TEMPORARY(EPlotRange)$
@@ -650,13 +647,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
      ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
      IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-           dataName=[dataName,STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"] 
+        IF keepMe THEN BEGIN 
+           dataName=[dataName,efDatName] 
            dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
         ENDIF 
      ENDIF
-
-     ;;   undefine,h2dEStr   ;;,elecData 
 
   ENDIF
 
@@ -674,7 +669,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         plot_i = cgsetintersection(plot_i,goodPF_i)
      ENDIF
      
-     
      IF KEYWORD_SET(noNegPflux) THEN BEGIN
         no_negs_i=WHERE(poynt_est GE 0.0)
         plot_i=cgsetintersection(no_negs_i,plot_i)
@@ -685,15 +679,27 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         plot_i=cgsetintersection(no_pos_i,plot_i)
      ENDIF
 
+     ;;Log plots desired?
+     absPstr=""
+     negPstr=""
+     posPstr=""
+     logPstr=""
+     IF KEYWORD_SET(absPflux) THEN absPstr= "Abs"
+     IF KEYWORD_SET(noNegPflux) THEN negPstr = "NoNegs--"
+     IF KEYWORD_SET(noPosPflux) THEN posPstr = "NoPos--"
+     IF KEYWORD_SET(logPfPlot) THEN logPstr="Log "
+     absnegslogPstr=absPstr + negPstr + posPstr + logPstr
+     pfDatName = paramStr + STRTRIM(absnegslogPstr,2)+"pFlux_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
+        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + pfDatName+"medhist_data.sav"
         h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  poynt_est(plot_i),$
                                  MIN1=MINM,MIN2=MINI,$
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absPflux) 
+                                 ABSMED=absPflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
      ENDIF ELSE BEGIN 
         h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                             maximus.ilat(plot_i),$
@@ -706,33 +712,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=poynt_est(plot_i)
 
-     ;;Log plots desired?
-     absPstr=""
-     negPstr=""
-     posPstr=""
-     logPstr=""
+     ;;data mods?
      IF KEYWORD_SET(absPflux) THEN BEGIN 
         h2dPStr.data = ABS(h2dPStr.data) 
-        absPstr= "Abs" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=ABS(pData) 
-     ENDIF
-
-     IF KEYWORD_SET(noNegPflux) THEN BEGIN
-        negPstr = "NoNegs--"
-     ENDIF
-
-     IF KEYWORD_SET(noPosPflux) THEN BEGIN
-        posPstr = "NoPos--"
+        IF keepMe THEN pData=ABS(pData) 
      ENDIF
 
      IF KEYWORD_SET(logPfPlot) THEN BEGIN 
-        logPstr="Log " 
         h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN $
-           pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
+        IF keepMe THEN pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
      ENDIF
-
-     absnegslogPstr=absPstr + negPstr + posPstr + logPstr
 
      h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
 
@@ -747,8 +736,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;ENDIF
      ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
      IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-           dataName=[dataName,STRTRIM(absnegslogPstr,2)+"pFlux_"] 
+        IF keepMe THEN BEGIN 
+           dataName=[dataName,pfDatName] 
            dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
         ENDIF  
      ENDIF
@@ -850,14 +839,27 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         ENDELSE
      ENDELSE
 
+     ;;Log plots desired?
+     absIonStr=""
+     negIonStr=""
+     posIonStr=""
+     logIonStr=""
+     IF KEYWORD_SET(absIflux)THEN absIonStr= "Abs--" 
+     IF KEYWORD_SET(noNegIflux) THEN negIonStr = "NoNegs--"
+     IF KEYWORD_SET(noPosIflux) THEN posIonStr = "NoPos--"
+     IF KEYWORD_SET(logIfPlot) THEN logIonStr="Log "
+     absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
+     ifDatName = paramStr + STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
+
      IF KEYWORD_SET(medianplot) THEN BEGIN 
+        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + ifDatName+"medhist_data.sav"
         h2dIStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  ionData,$
                                  MIN1=MINM,MIN2=MINI,$
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absIflux) 
+                                 ABSMED=absIflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
      ENDIF ELSE BEGIN 
         h2dIStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
@@ -869,29 +871,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         h2dIStr.data(where(h2dFluxN NE 0,/NULL))=h2dIStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
      ENDELSE 
 
-     ;;Log plots desired?
-     absIonStr=""
-     negIonStr=""
-     posIonStr=""
-     logIonStr=""
+     ;;data mods?
      IF KEYWORD_SET(absIflux)THEN BEGIN 
         h2dIStr.data = ABS(h2dIStr.data) 
-        absIonStr= "Abs--" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN ionData=ABS(ionData) 
-     ENDIF
-     IF KEYWORD_SET(noNegIflux) THEN BEGIN
-        negIonStr = "NoNegs--"
-     ENDIF
-     IF KEYWORD_SET(noPosIflux) THEN BEGIN
-        posIonStr = "NoPos--"
+        IF keepMe THEN ionData=ABS(ionData) 
      ENDIF
      IF KEYWORD_SET(logIfPlot) THEN BEGIN 
-        logIonStr="Log " 
-        print,"Log those ions"
         h2dIStr.data(where(h2dIStr.data GT 0,/NULL))=ALOG10(h2dIStr.data(where(h2dIStr.data GT 0,/null))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN ionData(where(ionData GT 0,/null))=ALOG10(ionData(where(ionData GT 0,/null))) 
+        IF keepMe THEN ionData(where(ionData GT 0,/null))=ALOG10(ionData(where(ionData GT 0,/null))) 
      ENDIF
-     absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
 
      ;;Do custom range for Iflux plots, if requested
      IF  KEYWORD_SET(iPlotRange) THEN h2dIStr.lim=iPlotRange $
@@ -899,15 +887,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dIStr.title= absnegslogIonStr + "Ion Flux (ergs/cm!U2!N-s)"
      IF KEYWORD_SET(ionPlots) THEN BEGIN & h2dStr=[h2dStr,h2dIStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+        IF keepMe THEN BEGIN 
            dataName=[dataName,STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"] 
            dataRawPtr=[dataRawPtr,PTR_NEW(ionData)] 
         ENDIF 
      ENDIF
 
   ENDIF
-
-
 
   ;;########CHARACTERISTIC ENERGY########
 
@@ -946,14 +932,27 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         ENDIF
      ENDELSE
 
+     ;get data name ready
+     absCharEStr=""
+     negCharEStr=""
+     posCharEStr=""
+     logCharEStr=""
+     IF KEYWORD_SET(absCharE)THEN absCharEStr= "Abs--" 
+     IF KEYWORD_SET(noNegCharE) THEN negCharEStr = "NoNegs--"
+     IF KEYWORD_SET(noPosCharE) THEN posCharEStr = "NoPos--"
+     IF KEYWORD_SET(logCharEPlot) THEN logCharEStr="Log "
+     absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
+     chareDatName = paramStr + STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
+
      IF KEYWORD_SET(medianplot) THEN BEGIN 
+        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + chareDatName+"medhist_data.sav"
         h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                      charEData,$
                                      MIN1=MINM,MIN2=MINI,$
                                      MAX1=MAXM,MAX2=MAXI,$
                                      BINSIZE1=binM,BINSIZE2=binI,$
                                      OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                     ABSMED=absCharE) 
+                                     ABSMED=absCharE,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
      ENDIF ELSE BEGIN 
         h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
                                 maximus.ilat(plot_i),$
@@ -965,28 +964,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
      ENDELSE 
 
-     ;;Log plots desired?
-     absCharEStr=""
-     negCharEStr=""
-     posCharEStr=""
-     logCharEStr=""
+     ;;data mods?
      IF KEYWORD_SET(absCharE)THEN BEGIN 
         h2dCharEStr.data = ABS(h2dCharEStr.data) 
-        absCharEStr= "Abs--" 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN charEData=ABS(charEData) 
-     ENDIF
-     IF KEYWORD_SET(noNegCharE) THEN BEGIN
-        negCharEStr = "NoNegs--"
-     ENDIF
-     IF KEYWORD_SET(noPosCharE) THEN BEGIN
-        posCharEStr = "NoPos--"
+        IF keepMe THEN charEData=ABS(charEData) 
      ENDIF
      IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
-        logCharEStr="Log " 
         h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
+        IF keepMe THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
      ENDIF
-     absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
 
      ;;Do custom range for charE plots, if requested
      ;; IF  KEYWORD_SET(CharEPlotRange) THEN h2dCharEStr.lim=TEMPORARY(charEPlotRange)$
@@ -996,8 +982,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
      ;; IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
      IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
-           dataName=[dataName,STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"] 
+        IF keepMe THEN BEGIN 
+           dataName=[dataName,chareDatName] 
            dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
         ENDIF 
      ENDIF
@@ -1005,7 +991,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 ;;   undefine,h2dCharEStr   ;;,charEData 
 
   ENDIF
-
 
   ;;########################################
   ;;
@@ -1047,7 +1032,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF NOT KEYWORD_SET(orbContribRange) OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
 
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbsContributing_"] 
+        IF keepMe THEN dataName=[dataName,"orbsContributing_"] 
      ENDIF
 
   ENDIF
@@ -1094,7 +1079,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ELSE h2dTotOrbStr.lim=orbTotRange
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbTot_"] 
+        IF keepMe THEN dataName=[dataName,"orbTot_"] 
      ENDIF
      
   ENDIF
@@ -1111,7 +1096,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF NOT KEYWORD_SET(orbFreqRange) OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
 
      IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"orbFreq_"] 
+        IF keepMe THEN dataName=[dataName,"orbFreq_"] 
      ENDIF
 
      ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
@@ -1142,7 +1127,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
         h2dStr=[h2dStr,h2dNEvPerOrbStr] 
-        IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN dataName=[dataName,"nEventPerOrb_"] 
+        IF keepMe THEN dataName=[dataName,"nEventPerOrb_"] 
      ENDIF
 
   ENDIF
@@ -1163,7 +1148,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
 
   h2dStr=SHIFT(h2dStr,-1-(nPlots))
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN 
+  IF keepMe THEN BEGIN 
      dataName=SHIFT(dataName,-2) 
      dataRawPtr=SHIFT(dataRawPtr,-2) 
   ENDIF
