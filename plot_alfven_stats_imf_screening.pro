@@ -128,7 +128,10 @@
 ;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
 ;		     PLOTPREFIX        :     
 ;                    OUTPUTPLOTSUMMARY :  Make a text file with record of running params, various statistics
-;                    MEDHISTOUTFILE    :  If doing median plots, output the median pointer array. (Good for further inspection of the statistics involved in each bin
+;                    MEDHISTOUTDATA    :  If doing median plots, output the median pointer array. 
+;                                           (Good for further inspection of the statistics involved in each bin
+;                    MEDHISTOUTTXT     :  Use 'medhistoutdata' output to produce .txt files with
+;                                           median and average values for each MLT/ILAT bin.
 ;
 ; KEYWORD PARAMETERS:
 ;
@@ -192,7 +195,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
-                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTFILE=medHistOutFile, $
+                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                      _EXTRA = e
 
   ;;variables to be used by interp_contplot.pro
@@ -290,6 +293,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
      keepMe = 1
   ENDIF ELSE keepMe = 0
+
+  IF KEYWORD_SET(medHistOutTxt) AND NOT KEYWORD_SET(medHistOutData) THEN BEGIN
+     PRINT, "medHistOutTxt is enabled, but medHistOutData is not!"
+     print, "Enabling medHistOutData, since corresponding output is necessary for medHistOutTxt"
+     WAIT, 0.5
+     medHistOutData = 1
+  ENDIF
 
   ;;********************************************
   ;;Variables for histos
@@ -610,7 +620,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      efDatName = paramStr + STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + efDatName+"medhist_data.sav"
+
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + efDatName+"medhist_data.sav"
+
         h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  elecData,$
                                  MIN1=MINM,MIN2=MINI,$
@@ -618,6 +630,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absEflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
+
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + efDatName + "medhist.txt"
+
      ENDIF ELSE BEGIN 
         h2dEStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
@@ -692,7 +707,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      pfDatName = paramStr + STRTRIM(absnegslogPstr,2)+"pFlux_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + pfDatName+"medhist_data.sav"
+
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + pfDatName+"medhist_data.sav"
+
         h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  poynt_est(plot_i),$
                                  MIN1=MINM,MIN2=MINI,$
@@ -700,6 +717,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absPflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
+
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + pfDatName + "medhist.txt"
+
      ENDIF ELSE BEGIN 
         h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                             maximus.ilat(plot_i),$
@@ -852,7 +872,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ifDatName = paramStr + STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + ifDatName+"medhist_data.sav"
+
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + ifDatName+"medhist_data.sav"
+
         h2dIStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  ionData,$
                                  MIN1=MINM,MIN2=MINI,$
@@ -860,6 +882,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absIflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
+
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + ifDatName + "medhist.txt"
+
      ENDIF ELSE BEGIN 
         h2dIStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
@@ -945,7 +970,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      chareDatName = paramStr + STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutFile) THEN medHistDatFile = 'medHistData/' + chareDatName+"medhist_data.sav"
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + chareDatName+"medhist_data.sav"
+
         h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                      charEData,$
                                      MIN1=MINM,MIN2=MINI,$
@@ -953,6 +979,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      BINSIZE1=binM,BINSIZE2=binI,$
                                      OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                      ABSMED=absCharE,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
+
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + chareDatName + "medhist.txt"
+        
      ENDIF ELSE BEGIN 
         h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
                                 maximus.ilat(plot_i),$
