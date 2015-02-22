@@ -1,0 +1,10 @@
+;;
+;; IDLWAVE catalog for library ACE_FAST
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Sat Feb 21 22:32:20 2015
+;;
+(setq idlwave-library-catalog-libname "ACE_FAST")
+(setq idlwave-library-catalog-routines
+ '(("script_make_dart_histo" pro nil (lib "script_make_dart_histo.pro" nil "ACE_FAST") "%s, dart_width_dat, orbit, max_val, dart_histodata" (nil))
+   ("biz" pro nil (lib "script_for_AGU_mtg_w_Chaston.pro" nil "ACE_FAST") "%s, dat" (nil))
+   ("script_make_chast_histo" pro nil (lib "script_make_chast_histo.pro" nil "ACE_FAST") "%s, chast_width_dat, orbit, max_val, chast_histodata" (nil))))

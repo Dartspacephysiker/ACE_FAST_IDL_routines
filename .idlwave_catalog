@@ -1,0 +1,31 @@
+;;
+;; IDLWAVE catalog for library ACE_FAST
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Sat Feb 21 22:32:20 2015
+;;
+(setq idlwave-library-catalog-libname "ACE_FAST")
+(setq idlwave-library-catalog-routines
+ '(("commands_for_quad_plots" pro nil (lib "commands_for_quad_plots.pro" nil "ACE_FAST") "%s" (nil))
+   ("plot_alfven_stats_imf_screening" pro nil (lib "plot_alfven_stats_imf_screening.pro" nil "ACE_FAST") "%s, maximus" (nil ("_EXTRA") ("ABSCHARE") ("ABSEFLUX") ("ABSIFLUX") ("ABSPFLUX") ("ALTITUDERANGE") ("ANGLELIM1") ("ANGLELIM2") ("BINILAT") ("BINMLT") ("BYMIN") ("CHAREPLOTRANGE") ("CHAREPLOTS") ("CHARERANGE") ("CHARETYPE") ("CLOCKSTR") ("DATADIR") ("DBFILE") ("DELAY") ("DO_CHASTDB") ("EFLUXPLOTTYPE") ("EPLOTRANGE") ("EPLOTS") ("IFLUXPLOTTYPE") ("INCLUDENOCONSECDATA") ("IONPLOTS") ("IPLOTRANGE") ("LOGCHAREPLOT") ("LOGEFPLOT") ("LOGIFPLOT") ("LOGPFPLOT") ("LOGPLOT") ("MASKMIN") ("MAXILAT") ("maxMLT") ("MEDHISTOUTDATA") ("MEDHISTOUTTXT") ("MEDIANPLOT") ("MIN_NEVENTS") ("MINILAT") ("minMLT") ("NEVENTPERORBPLOT") ("NEVENTPERORBRANGE") ("NEVENTSRANGE") ("NONEGCHARE") ("NONEGEFLUX") ("NONEGIFLUX") ("NONEGPFLUX") ("NOPLOTSJUSTDATA") ("NOPOSCHARE") ("NOPOSEFLUX") ("NOPOSIFLUX") ("NOPOSPFLUX") ("NOSAVEPLOTS") ("NPLOTS") ("ORBCONTRIBPLOT") ("ORBCONTRIBRANGE") ("ORBFREQPLOT") ("ORBFREQRANGE") ("ORBRANGE") ("ORBTOTPLOT") ("ORBTOTRANGE") ("OUTPUTPLOTSUMMARY") ("PLOTPREFIX") ("POLARCONTOUR") ("PPLOTRANGE") ("PPLOTS") ("RAWDIR") ("SATELLITE") ("SAVERAW") ("SMOOTHWINDOW") ("SQUAREPLOT") ("STABLEIMF") ("WRITEASCII") ("WRITEHDF5") ("WRITEPROCESSEDH2D")))
+   ("polar_maplabels" fun nil (lib "polar_maplabels.pro" nil "ACE_FAST") "Result = %s(orientation, location, fractional, defaultlabel)" (nil))
+   ("density_plot" pro nil (lib "density_plot.pro" nil "ACE_FAST") "%s, x, y" (nil ("LOG_X") ("LOG_Y") ("LOGXRANGE") ("LOGYRANGE") ("PRINTBINSIZES") ("XBINSIZE") ("XRANGE") ("XTITLE") ("YBINSIZE") ("YRANGE") ("YTITLE")))
+   ("interp_mag_data" fun nil (lib "interp_mag_data.pro" nil "ACE_FAST") "Result = %s(ind_region_magc_geabs10_ACEstart, satellite, delay, lun)" (nil ("BYMIN") ("CDBACEPROPINTERP_I") ("CDBINTERP_I") ("CDBTIME") ("DATADIR") ("MAG_UTC") ("PHICLOCK") ("SMOOTHWINDOW")))
+   ("interp_contplot_multi" pro nil (lib "interp_contplot_multi.pro" nil "ACE_FAST") "%s, h2dData, h2dTitle" (nil ("CONTOUR")))
+   ("interp_contplot_multi" pro nil (lib "interp_contplot_multi_filledwithdetritus.pro" nil "ACE_FAST") "%s, h2dData, h2dTitle" (nil ("CONTOUR")))
+   ("interp_contplot" pro nil (lib "interp_contplot.pro" nil "ACE_FAST") "%s, h2dData, h2dTitle" (nil ("CONTOUR") ("MAX")))
+   ("commands_for_dusk_dawn_plots" pro nil (lib "commands_for_dusk_dawn_plots.pro" nil "ACE_FAST") "%s" (nil))
+   ("interp_contplotmulti_str" pro nil (lib "interp_contplotmulti_str.pro" nil "ACE_FAST") "%s, h2dStr" (nil ("CONTOUR") ("SAVERAW")))
+   ("check_imf_stability" fun nil (lib "check_imf_stability.pro" nil "ACE_FAST") "Result = %s(clockStr, angleLim1, angleLim2, phiChast, cdbAcepropInterp_i, stableIMF, mag_utc, phiclock)" (nil ("BX_OVER_BYBZ") ("INCLUDENOCONSECDATA") ("LUN")))
+   ("get_chaston_ind" fun nil (lib "get_chaston_ind.pro" nil "ACE_FAST") "Result = %s(maximus, satellite, lun)" (nil ("ALTITUDERANGE") ("CDBTIME") ("CHARERANGE") ("CHASTDB") ("DBFILE") ("ORBRANGE")))
+   ("commands_for_Chaston_2003_figs4a_c_reproduction__Labelle_Bin_mtg" pro nil (lib "commands_for_Chaston_2003_figs4a_c_reproduction__Labelle_Bin_mtg.pro" nil "ACE_FAST") "%s" (nil))
+   ("smooth_and_plot_IMF_data" pro nil (lib "smooth_and_plot_imf_data.pro" nil "ACE_FAST") "%s" (nil ("LINESTY") ("PLOTSYM") ("SMOOTHWINDOW") ("TIMES") ("XRANGE") ("YRANGE")))
+   ("BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING" pro nil (lib "batch_plot_alfven_stats_imf_screening.pro" nil "ACE_FAST") "%s" (nil ("_EXTRA") ("ALL") ("CHAREPLOTS") ("DIRECTIONS") ("EPLOTS") ("IONPLOTS") ("MASKMIN") ("ORBPLOTS") ("PLOTPREFIX") ("PPLOTS")))
+   ("median_hist" fun nil (lib "median_hist.pro" nil "ACE_FAST") "Result = %s(MLT, ILAT, data)" (nil ("ABSMED") ("BINEDGE1") ("BINEDGE2") ("BINSIZE1") ("BINSIZE2") ("INPUT") ("MAX1") ("MAX2") ("MIN1") ("MIN2") ("NONZEROHIST") ("OBIN1") ("OBIN2") ("OMAX1") ("OMAX2") ("OMIN1") ("OMIN2") ("OUTFILE") ("PLOT_I") ("PTRHIST")))
+   ("interp_polar2dcontour" pro nil (lib "interp_polar2dcontour.pro" nil "ACE_FAST") "%s, temp, tempname, ancillaryData" (nil ("_EXTRA") ("FNAME") ("MIDNIGHT") ("WHOLECAP")))
+   ("alfven_db_cleaner" fun nil (lib "alfven_db_cleaner.pro" nil "ACE_FAST") "Result = %s(maximus)" (nil ("LUN")))
+   ("new_entire_cap_plot" pro nil (lib "new_entire_cap_plot.pro" nil "ACE_FAST") "%s" (nil))
+   ("medHistAnalyzer" pro nil (lib "medhistanalyzer.pro" nil "ACE_FAST") "%s" (nil ("INFILE") ("OUTFILE")))
+   ("interp_polar_plot" pro nil (lib "interp_polar_plot.pro" nil "ACE_FAST") "%s, rawData, limits" (nil))
+   ("commands_for_Chaston_2003_figs4a_c_reproduction" pro nil (lib "commands_for_Chaston_2003_figs4a_c_reproduction.pro" nil "ACE_FAST") "%s" (nil))
+   ("plot_IMF_data" pro nil (lib "plot_IMF_data.pro" nil "ACE_FAST") "%s" (nil ("LINESTY") ("PLOTSYM") ("TIMES") ("XRANGE") ("YRANGE")))
+   ("INTERP_POLAR2DHIST" pro nil (lib "interp_polar2dhist.pro" nil "ACE_FAST") "%s, temp, tempName, ancillaryData" (nil ("_EXTRA") ("MIDNIGHT") ("NOPLOTINTEGRAL") ("WHOLECAP")))))
