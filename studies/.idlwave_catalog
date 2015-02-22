@@ -1,0 +1,10 @@
+;;
+;; IDLWAVE catalog for library ACE_FAST
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Sat Feb 21 22:32:20 2015
+;;
+(setq idlwave-library-catalog-libname "ACE_FAST")
+(setq idlwave-library-catalog-routines
+ '(("warped_histo" pro nil (lib "warped_histo.pro" nil "ACE_FAST") "%s" (nil))
+   ("STUDY_items_from_roadmeeting_en_route_from_haystack__02192015" pro nil (lib "STUDY_items_from_roadmeeting_en_route_from_haystack__20150219.pro" nil "ACE_FAST") "%s" (nil))
+   ("PointSourceOverlay" pro nil (lib "pointsourceoverlay.pro" nil "ACE_FAST") "%s" (nil))))
