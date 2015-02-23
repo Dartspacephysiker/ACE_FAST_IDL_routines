@@ -45,7 +45,8 @@
 ;
 ;                *IMF SATELLITE PARAMETERS
 ;                    SATELLITE         :  Satellite to use for checking FAST data against IMF.
-;                                           Can be any of "ACE", "wind", or "wind_ACE".
+;                                           Can be any of "ACE", "wind", "wind_ACE", or "OMNI" (default).
+;                    OMNI_COORDS       :  If using "OMNI" as the satellite, choose between GSE or GSM coordinates for the database.
 ;                    DELAY             :  Time (in seconds) to lag IMF behind FAST observations. 
 ;                                         Binzheng Zhang has found that current IMF conditions at ACE or WIND usually rear   
 ;                                            their heads in the ionosphere about 11 minutes after they are observed.
@@ -175,7 +176,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
-                                     SATELLITE=satellite, $
+                                     SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
                                      EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEflux, $
@@ -260,8 +261,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;satellite data options
   
-  IF NOT KEYWORD_SET(satellite) THEN satellite = "wind_ACE"      ;either "ACE", "wind", or "wind_ACE"
-  
+  IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"      ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSE"   ; either "GSE" or "GSM"
+
   IF NOT KEYWORD_SET(delay) THEN delay = 660                     ;Delay between ACE propagated data and ChastonDB data
                                                                  ;Bin recommends something like 11min
   
@@ -464,7 +466,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
   
   ;;parameter string
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+"_"+maskStr+byMinStr+polarContStr+hoyDia
+  omniStr = ""
+  IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+maskStr+byMinStr+polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -478,9 +482,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
-                            cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiclock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin)
-  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiclock,$
+                            cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,OMNI_COORDS=omni_Coords)
+  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
   plot_i=cdbInterp_i(phiImf_ii)

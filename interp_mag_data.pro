@@ -11,11 +11,28 @@
 FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun, $
                          CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
-                         DATADIR=datadir,BYMIN=byMin
+                         DATADIR=datadir,BYMIN=byMin, OMNI_COORDS=omni_Coords
 
   ;;********************************************************
   ;;Restore ACE data, if need be
   IF mag_utc EQ !NULL THEN restore,dataDir + "/processed/culled_"+satellite+"_magdata.dat"
+
+  IF satellite EQ "OMNI" THEN BEGIN ;We've got to select GSE or GSM coords. Default to GSE.
+     IF OMNI_COORDS EQ "GSE" THEN BEGIN
+        By = By_GSE
+        Bz = Bz_GSE
+     ENDIF ELSE BEGIN
+        IF OMNI_COORDS EQ "GSM" THEN BEGIN
+           By = By_GSM
+           Bz = Bz_GSM
+        ENDIF ELSE BEGIN
+           print,"Invalid coordinates chosen for OMNI data! Defaulting to GSE..."
+           WAIT,1.0
+           By = By_GSE
+           Bz = Bz_GSE
+        ENDELSE
+     ENDELSE 
+  ENDIF
 
   ;;***********************************************
   ;;Now, we call upon Craig Markwardt's elegant IDL practices 
