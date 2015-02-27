@@ -2,7 +2,7 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='02112015'
+  date='02272015'
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'
@@ -65,6 +65,8 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
                           MAX_L_PROBE:[maximus.MAX_L_PROBE,dat.MAX_L_PROBE],$
                           MIN_L_PROBE:[maximus.MIN_L_PROBE,dat.MIN_L_PROBE],$
                           MEDIAN_L_PROBE:[maximus.MEDIAN_L_PROBE,dat.MEDIAN_L_PROBE],$
+                          START_TIME:[maximus.START_TIME,dat.START_TIME],$
+                          STOP_TIME:[maximus.STOP_TIME,dat.STOP_TIME],$
                           TOTAL_ELECTRON_ENERGY_DFLUX_SINGLE:[maximus.TOTAL_ELECTRON_ENERGY_DFLUX_SINGLE,dat.TOTAL_ELECTRON_ENERGY_DFLUX_SINGLE],$
                           TOTAL_ELECTRON_ENERGY_DFLUX_MULTIPLE_TOT:[maximus.TOTAL_ELECTRON_ENERGY_DFLUX_MULTIPLE_TOT,dat.TOTAL_ELECTRON_ENERGY_DFLUX_MULTIPLE_TOT],$
                           TOTAL_ALFVEN_ELECTRON_ENERGY_DFLUX:[maximus.TOTAL_ALFVEN_ELECTRON_ENERGY_DFLUX,dat.TOTAL_ALFVEN_ELECTRON_ENERGY_DFLUX],$
