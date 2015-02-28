@@ -19,12 +19,16 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
 
   IF satellite EQ "OMNI" THEN BEGIN ;We've got to select GSE or GSM coords. Default to GSE.
      IF OMNI_COORDS EQ "GSE" THEN BEGIN
-        By = By_GSE
-        Bz = Bz_GSE
+        By        = By_GSE
+        Bz        = Bz_GSE
+        thetaCone = thetaCone_GSE
+        phiClock  = phiClock_GSE
      ENDIF ELSE BEGIN
         IF OMNI_COORDS EQ "GSM" THEN BEGIN
-           By = By_GSM
-           Bz = Bz_GSM
+           By        = By_GSM
+           Bz        = Bz_GSM
+           thetaCone = thetaCone_GSM
+           phiClock  = phiClock_GSM
         ENDIF ELSE BEGIN
            print,"Invalid coordinates chosen for OMNI data! Defaulting to GSE..."
            WAIT,1.0

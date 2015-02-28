@@ -2,7 +2,7 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='02272015'
+  date='02282015'
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'

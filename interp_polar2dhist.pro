@@ -34,21 +34,32 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ; Load the colors for the plot.
   nLevels=12
 
+  ;;Is this a log plot? If so, do integral of exponentiated value
+  logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
+
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
-  ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
-  iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
-  pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
-  IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 THEN BEGIN
-     ;This is the one for doing sweet electron flux plots
+  ;; orbEvPerBinzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
+  ;; ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
+  ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
+  ;; pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
+  ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
+  ;;    ;;This is the one for doing sweet electron flux plots
+  ;;    cgLoadCT, 16,/BREWER, NCOLORS=nLevels
+  ;; ENDIF ELSE BEGIN
+  ;;    ;;This one is the one we use for some orbit plots
+  ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
+  ;; ENDELSE
+
+  negs=WHERE(temp.data LT 0.0)
+  IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN
+     ;;This is the one for doing "all positive" plots
      cgLoadCT, 16,/BREWER, NCOLORS=nLevels
   ENDIF ELSE BEGIN
-     ;This one is the one we use for orbit plots
+     ;;This one is for data that includes negs
      cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ENDELSE
 
-  ;;Is this a log plot? If so, do integral of exponentiated value
-  logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
 
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
@@ -67,12 +78,20 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
 
   mlts=mlts*15
 
+  ;;binary matrix to tell us where masked values are
+  masked=(h2dStr[nPlots].data GT 250.0)
+  notMasked=WHERE(~masked)
+
+  h2descl=MAKE_ARRAY(SIZE(temp.data,/DIMENSIONS),VALUE=0)
+
   ;;Scale this stuff
   ;;The reason for all the trickery is that we want to know what values are out of bounds,
   ;; and bytscl doesn't do things quite the way we need them done.
-  h2descl=bytscl(temp.data,top=nLevels-3,MAX=temp.lim[1],MIN=temp.lim[0])+1B
-  h2descl(where(temp.data GT temp.lim[1])) = BYTE(nLevels-1)
-  h2descl(where(temp.data LT temp.lim[0])) = 0B
+  h2descl(notMasked)=bytscl(temp.data(notMasked),top=nLevels-3,MAX=temp.lim[1],MIN=temp.lim[0])+1B
+;;  h2descl(where(temp.data(notMasked) GT temp.lim[1])) = BYTE(nLevels-1)
+;;  h2descl(where(temp.data(notMasked) LT temp.lim[0])) = 0B
+  h2descl(where(temp.data GT temp.lim[1] AND ~masked)) = BYTE(nLevels-1)
+  h2descl(where(temp.data LT temp.lim[0] AND ~masked)) = 0B
 
 
   ;11 is "blue-red" color table
@@ -88,9 +107,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;integrals for each hemi
   dawnIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   duskIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
-  ;;binary matrix to tell us where masked values are
-  masked=(h2dStr[nPlots].data GT 250.0)
-
+  
   FOR j=0, N_ELEMENTS(ilats)-2 DO BEGIN 
      FOR i=0, N_ELEMENTS(mlts)-2 DO BEGIN 
         ;tempMLTS=[mlts[i],mlts[i+1]] 
@@ -186,7 +203,8 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
 
   IF wholeCap NE !NULL THEN BEGIN
      cgColorbar, NColors=nlevels-2, Divisions=nlevels-2, Bottom=1B, $
-                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
+;;                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
+                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, Title=temp.title, /Discrete, $
                  Position=[0.91, 0.10, 0.95, 0.90], TEXTTHICK=1.5, /VERTICAL, TLocation="RIGHT", TCharSize=cgDefCharsize()*1.0,$
                  ;; ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]

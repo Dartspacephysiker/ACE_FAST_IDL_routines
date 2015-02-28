@@ -104,6 +104,10 @@
 ;                                            divided by total orbits passing through the bin.
 ;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
 ;                    NEVENTPERORBRANGE :  Range for Neventperorbplot.
+;                    LOGNEVENTPERORB   :  Log of Neventperorbplot (for comparison with Chaston et al. [2003])
+;                    divNEvByApplicable:  Divide number of events in given bin by the number of orbits occurring 
+;                                            during specified IMF conditions. (Default is to divide by total number of orbits 
+;                                            pass through given bin for ANY IMF condition.)
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
@@ -187,8 +191,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
                                      CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
                                      NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
-                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, NEVENTPERORBPLOT=nEventPerOrbPlot, $
-                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
+                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                     DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -261,11 +267,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;satellite data options
   
-  IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"      ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSE"   ; either "GSE" or "GSM"
+  IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"                ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSE"             ; either "GSE" or "GSM"
 
-  IF NOT KEYWORD_SET(delay) THEN delay = 660                     ;Delay between ACE propagated data and ChastonDB data
-                                                                 ;Bin recommends something like 11min
+  defDelay = 660
+  IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
+                                                                       ;Bin recommends something like 11min
   
   IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = 0S                    ;Set to a time (in minutes) over which IMF stability is required
   IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
@@ -273,7 +280,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                                        ;Only valid for stableIMF GE 1
   IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = 0       ;
   
-  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = 0 ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
   
   
   ;;Want to make plots in plotDir?
@@ -468,7 +475,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;parameter string
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+maskStr+byMinStr+polarContStr+hoyDia
+  IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
+  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -1069,6 +1077,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
 
   ENDIF
+
   ;;########TOTAL Orbits########
 
   IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
@@ -1141,27 +1150,36 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      diff=where(h2dfreqorbstr.data NE h2dnewdata)
      ;;  print,diff
      wait, 2
-     ;;   undefine,h2dTotOrbStr
-     ;;   undefine,h2dOrbStr
-     ;;   undefine,h2dFreqOrbStr
   ENDIF
      
   ;;########NEvents/orbit########
 
-  IF KEYWORD_SET(neventperorbplot) THEN BEGIN
+  IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
 
      h2dNEvPerOrbStr={h2dStr}
      h2dNEvPerOrbStr.data=h2dStr(0).data
      h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
-     h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/h2dTotOrbStr.data(h2dNEvPerOrb_i)
-     h2dNEvPerOrbStr.title="N Events per Orbit"
-     ;;h2dNEvPerOrbStr.lim=[MIN(h2dNEvPerOrbStr.data),MAX(h2dNEvPerOrbStr.data)]
-     IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=nEventPerOrbRange
+     IF KEYWORD_SET(divNEvByApplicable) THEN BEGIN
+        divisor = h2dOrbStr.data(h2dNevPerOrb_i) ;Only dividing by number of orbits that occurred during specified IMF conditions
+     ENDIF ELSE BEGIN
+        divisor = h2dTotOrbStr.data(h2dNEvPerOrb_i) ;Only dividing by number of orbits that occurred during specified IMF conditions
+     ENDELSE
+     h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
 
-     IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
-        h2dStr=[h2dStr,h2dNEvPerOrbStr] 
-        IF keepMe THEN dataName=[dataName,"nEventPerOrb_"] 
+     logNEvStr=""
+     IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
+     h2dNEvPerOrbStr.title= logNEvStr + "N Events per Orbit"
+
+     IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
+        IF NOT KEYWORD_SET(logNEventPerOrb) THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=[-2,1]
+     ENDIF ELSE h2dNEvPerOrbStr.lim=nEventPerOrbRange
+     
+     IF KEYWORD_SET(logNEventPerOrb) THEN BEGIN 
+        h2dNEvPerOrbStr.data(where(h2dNEvPerOrbStr.data GT 0,/NULL))=ALOG10(h2dNEvPerOrbStr.data(where(h2dNEvPerOrbStr.data GT 0,/null))) 
      ENDIF
+
+     h2dStr=[h2dStr,h2dNEvPerOrbStr] 
+     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerOrb_"] 
 
   ENDIF
 

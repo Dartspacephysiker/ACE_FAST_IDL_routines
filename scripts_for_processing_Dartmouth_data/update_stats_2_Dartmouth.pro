@@ -120,7 +120,7 @@ pro update_stats_2_Dartmouth,maximus
 
   IF (doNewTime) THEN BEGIN
      cdbTime=str_to_time(maximus.time)
-     save,cdbTime,newTimeFile
+     save,cdbTime,filename=newTimeFile
   ENDIF
 
   return
