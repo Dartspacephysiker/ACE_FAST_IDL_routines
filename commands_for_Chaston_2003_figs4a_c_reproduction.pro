@@ -15,7 +15,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;delay=!NULL
   delay=1020
 
-  mskm=1
+  mskm=9
 
   ;;;;;;;;;;
   ;orb plots
@@ -37,20 +37,21 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
-  ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-  ;;                                       /pplots,customprange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[0.5,10],/abspflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
+                                        /pplots,pplotrange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
+  ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_ChastRange",directions=dirs,maskmin=mskm, $
+  ;;                                       /pplots,pplotrange=[0.5,10],/abspflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
   
   ;Better (for showing features) plotrange
-  ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
-  ;;                                       /pplots,/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
-                                        /pplots,/medianplot,/abspflux,/WHOLECAP,/midnight,DELAY=delay
+                                        /pplots,pplotrange=[-1.2,1.0],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
+  ;; batch_plot_alfven_stats_imf_screening,plotprefix=plotprf + "_otherRange",directions=dirs,maskmin=mskm, $
+  ;;                                       /pplots,/medianplot,/abspflux,/WHOLECAP,/midnight,DELAY=delay
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,plotprefix=plotprf,directions=dirs,maskmin=mskm, $
-                                        /chareplot,charetype="lossCone",/medianplot,/WHOLECAP,/midnight,DELAY=delay
+                                        /chareplot,charetype="lossCone",chareplotrange=[0,250], $
+                                        /medianplot,/WHOLECAP,/midnight,DELAY=delay
 
 END

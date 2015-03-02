@@ -105,7 +105,7 @@
 ;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
 ;                    NEVENTPERORBRANGE :  Range for Neventperorbplot.
 ;                    LOGNEVENTPERORB   :  Log of Neventperorbplot (for comparison with Chaston et al. [2003])
-;                    divNEvByApplicable:  Divide number of events in given bin by the number of orbits occurring 
+;                    DIVNEVBYAPPLICABLE:  Divide number of events in given bin by the number of orbits occurring 
 ;                                            during specified IMF conditions. (Default is to divide by total number of orbits 
 ;                                            pass through given bin for ANY IMF condition.)
 ;
@@ -1160,9 +1160,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data=h2dStr(0).data
      h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
      IF KEYWORD_SET(divNEvByApplicable) THEN BEGIN
-        divisor = h2dOrbStr.data(h2dNevPerOrb_i) ;Only dividing by number of orbits that occurred during specified IMF conditions
+        divisor = h2dOrbStr.data(h2dNevPerOrb_i) ;Only divide by number of orbits that occurred during specified IMF conditions
      ENDIF ELSE BEGIN
-        divisor = h2dTotOrbStr.data(h2dNEvPerOrb_i) ;Only dividing by number of orbits that occurred during specified IMF conditions
+        divisor = h2dTotOrbStr.data(h2dNEvPerOrb_i) ;Divide by all orbits passing through relevant bin
      ENDELSE
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
 
@@ -1240,7 +1240,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
         ;;Create a PNG file with a width of 800 pixels.
         cgPS2Raster, plotDir + 'fluxplots_'+paramStr+'.ps', $
-                     /PNG, Width=1000, /DELETE_PS 
+                     /PNG, Width=800, /DELETE_PS 
      
      ENDIF ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
@@ -1272,7 +1272,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               cgPS_Close 
               ;;Create a PNG file with a width of 800 pixels.
               cgPS2Raster, plotDir + 'plot_'+dataName[i]+paramStr+'.ps', $
-                           /PNG, Width=1000, /DELETE_PS
+                           /PNG, Width=800, /DELETE_PS
            ENDELSE
            
         ENDFOR    

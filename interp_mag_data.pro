@@ -116,16 +116,19 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
   ;;
   printf,lun,""
   printf,lun,"****From interp_mag_data.pro****"
-  printf,lun,"There are", $
-         n_elements(bigdiff_ii), $
-         " current events where the gap between consecutive ACE data is GT", maxdiff, " min."
-  printf,lun,"Those gaps are (in min)", $
-         (mag_utc(cdbAceprop_i(bigdiff_ii(unique_iii))+1) -$
-          mag_utc(cdbAceprop_i(bigdiff_ii(unique_iii))))/60
-  PRINTF,LUN,"Of those events with large gaps, there are " + strtrim(n_elements(cdbAceprop_i)-n_elements(cdbAcepropInterp_i),2) + " events for which ACE magdata can't be interpolated based on the max difference of " + strtrim(maxdiff,2) +" min provided."
-  printf,lun,STRTRIM(N_ELEMENTS(WHERE(cdbInterpTime[1:-2]-$
-                                      (SHIFT(cdbInterpTime,1))[1:-2] LE 60)),2) + $
-         " events are less than one minute apart."
+
+  ;; only print this if there are gaps in IMF data
+  IF bigDiff_ii[0] NE -1 THEN BEGIN
+     printf,lun,"There are", $
+            n_elements(bigdiff_ii), $
+            " current events where the gap between consecutive ACE data is GT", maxdiff, " min."
+     printf,lun,"Those gaps are (in min)", $
+            (mag_utc(cdbAceprop_i(bigdiff_ii(unique_iii))+1) -$
+             mag_utc(cdbAceprop_i(bigdiff_ii(unique_iii))))/60
+     PRINTF,LUN,"Of those events with large gaps, there are " + strtrim(n_elements(cdbAceprop_i)-n_elements(cdbAcepropInterp_i),2) + $
+            " events for which ACE magdata can't be interpolated based on the max difference of " + strtrim(maxdiff,2) +" min provided."
+     printf,lun,STRTRIM(N_ELEMENTS(WHERE(cdbInterpTime[1:-2]-(SHIFT(cdbInterpTime,1))[1:-2] LE 60)),2) + " events are less than one minute apart."
+  ENDIF
 
   IF KEYWORD_SET(smoothWindow) THEN printf,lun,"Smooth window is set to " + strcompress(smoothWindow,/remove_all) + " minutes"
 
@@ -167,12 +170,64 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
   ;;*********************************************************
   ;;If we're also going to smooth IMF data, it might as well happen here
   IF KEYWORD_SET(smoothWindow) THEN BEGIN
+
      IF smoothWindow EQ 1 THEN smoothWindow = 5 ;default to five-minute smoothing
-     bx(cdbAcepropInterp_i)=smooth(bx(cdbAcepropInterp_i),smoothWindow)
-     by(cdbAcepropInterp_i)=smooth(by(cdbAcepropInterp_i),smoothWindow)
-     bz(cdbAcepropInterp_i)=smooth(bz(cdbAcepropInterp_i),smoothWindow)
+
+     halfWind=floor(smoothWindow/2)
+
+     ;; goodSmooth_ii = where(((shift(mag_utc,-halfWind))(cdbAcepropInterp_i)-(shift(mag_utc,halfWind))(cdbAcepropInterp_i))/60 EQ halfWind*2, nGoodSmooth)
+     ;; IF nGoodSmooth EQ N_ELEMENTS(cdbAcepropInterp_i) THEN BEGIN
+     ;;    print,"All data can be smoothed, thank goodness"
+     ;; ENDIF ELSE BEGIN
+     ;;    print,"Not all data can be smoothed!"
+     ;;    print,"Losing "+strcompress(N_ELEMENTS(cdbAcepropInterp_i)-nGoodSmooth,/remove_all)+" events corresponding to IMF data that can't be smoothed..."
+     ;;    wait,0.5
+     ;;    cdbAcepropInterp_i=cdbAcepropInterp_i(goodSmooth_ii)
+     ;;    cdbInterp_i=cdbInterp_i(goodSmooth_ii)
+     ;;    cdbInterpTime=cdbInterpTime(goodSmooth_ii)
+     ;; ENDELSE
+     ;; bx(cdbAcepropInterp_i)=smooth(bx(cdbAcepropInterp_i),smoothWindow)
+     ;; by(cdbAcepropInterp_i)=smooth(by(cdbAcepropInterp_i),smoothWindow)
+     ;; bz(cdbAcepropInterp_i)=smooth(bz(cdbAcepropInterp_i),smoothWindow)
+
+     ;; a different approach
+     smoothRange=[cdbAcepropinterp_i[0]:cdbAcepropinterp_i[-1]]
+     magUTCTEMP=mag_utc(smoothRange[0]-halfWind:smoothRange[-1]+halfWind);ALL times for which we have mag data between first and last FAC event 
+     goodSmooth_k = where(((shift(magUTCTEMP,-halfWind))-(shift(magUTCTEMP,halfWind)))/60 EQ halfWind*2, $
+                           nGoodSmooth,COMPLEMENT=badSmooth_k,NCOMPLEMENT=nBadSmooth) ;use k for index to distinguish it from data indices
+
+     ;we know the ends won't work, so junk 'em
+     goodSmooth_k = goodSmooth_k - halfWind
+     magUTCTEMP = magUTCTEMP[halfWind:-halfWind-1]
+     IF N_ELEMENTS(badSmooth_k) GT halfWind*2 THEN BEGIN
+        badSmooth_k = badSmooth_k[halfWind:-halfWind-1] 
+        nBadSmooth -= halfWind*2
+
+        ;; find out if any of our events correspond to unsmoothable data
+        MATCH, magUTCTEMP(badSmooth_k), mag_utc(cdbAcepropInterp_i), magUTCTEMP_bad_i, mag_utccdbAceprop_bad_i,COUNT=nMatches,EPSILON=1.0
+
+        ;; magUTCTEMP_bad_i and mag_utccdbAceprop_bad_i are ordered such that 
+        ;; (magUTCTEMP(badSmooth_k))(magUTCTEMP_bad_i) equals (mag_utc(cdbAcepropInterp_i))(mag_utccdbAceprop_bad_i)
+
+        IF nMatches NE 0 THEN BEGIN ;get rid of unsmoothable data points
+           ;say what?
+        ENDIF
+
+        PRINT,"Some elements of IMF data can't be smoothed, and you haven't written code to handle this situation!"
+        PRINT,"Better pay a visit to interp_mag_data.pro..."
+        wait,1.0
+     ENDIF ELSE BEGIN
+        badSmooth_k = -1
+        nBadSmooth = 0
+     ENDELSE
+
+     ;; NOW you can smooth them
+     bx(smoothRange)=smooth(bx(smoothRange),smoothWindow)
+     by(smoothRange)=smooth(by(smoothRange),smoothWindow)
+     bz(smoothRange)=smooth(bz(smoothRange),smoothWindow)
+
   ENDIF
-  
+
   ;;********************************************************
   ;;Should we interpolate those guys?
   ;;Dah yeah
@@ -196,6 +251,7 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
      ;; cdbInterp_i=ind_region_magc_geabs10_acestart(cdbAcepropInterp_ii) 
      ;; cdbInterpTime=cdbTime(cdbAcepropInterp_ii) 
     
+     ;; byMin_ii are the indices (of indices) of events that meet the minimum By requirement
      byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
      
      bzChast=bzChast(byMin_ii)
