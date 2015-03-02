@@ -103,7 +103,7 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
         temp_ii=WHERE((mag_utc[cdbAcepropInterp_i(phiImf_ii)])[j:*]-$
                       (SHIFT(mag_utc[cdbAcepropInterp_i(phiImf_ii)],j))[j:*] $
                       LT (60*j+2),thisCount) 
-        ;;This tempArr biz checks to make sure that no element of imfDurArr
+        ;;This tempArr checks to make sure that no element of imfDurArr
         ;;gets replaced by a lower number, so that we know the MAX duration
         tempArr=imfDurArr[j:*] 
         tempArr(temp_ii)=j 
@@ -125,9 +125,11 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
      ;;The indices of the points which are awesome enough are
      checkWorthy_iii=WHERE(imfDurArr GE stableIMF) 
      
-     printf,lun,"Losing "+strtrim(N_ELEMENTS(WHERE(imfDurArr GE stableIMF))-$
-                                  N_ELEMENTS(checkWorthy_iii),2) + $
-            " events because of insufficient data to check IMF stability." 
+     nUnstable=N_ELEMENTS(WHERE(imfDurArr GE stableIMF))-N_ELEMENTS(checkWorthy_iii)
+     IF nUnstable GT 0 THEN BEGIN
+        printf,lun,"Losing "+strtrim(nUnstable,2) + " events because of insufficient data to check IMF stability." 
+        wait,0.5
+     ENDIF
      
      ;;The following is a reasonable index number for aceprop data
      ;;print,cdbacepropinterp_i[phiimf_ii[checkworthy_iii[1100]]]
@@ -196,9 +198,6 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
   ;;ENDELSE
   
   printf,lun,"****END check_imf_stability.pro****"
-  
-  ;;delvar,oldCount,thisCount,temp_ii,i,j,phiTemp,stableTemp,stableIMF_ii,tempArr,$
-  ;;checkWorthy_iii
   
   RETURN, phiIMF_ii
 
