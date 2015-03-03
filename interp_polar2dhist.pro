@@ -87,11 +87,18 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;Scale this stuff
   ;;The reason for all the trickery is that we want to know what values are out of bounds,
   ;; and bytscl doesn't do things quite the way we need them done.
-  h2descl(notMasked)=bytscl(temp.data(notMasked),top=nLevels-3,MAX=temp.lim[1],MIN=temp.lim[0])+1B
+  is_OOBHigh = 0
+  is_OOBLow = 0
+  OOB_HIGH_i = where(temp.data GT temp.lim[1] AND ~masked)
+  OOB_LOW_i = where(temp.data LT temp.lim[0] AND ~masked)
+  IF OOB_HIGH_i[0] NE -1 THEN is_OOBHigh = 1
+  IF OOB_LOW_i[0] NE -1 THEN is_OOBLow = 1
+  
+  h2descl(notMasked)=bytscl(temp.data(notMasked),top=nLevels-1-is_OOBHigh-is_OOBLow,MAX=temp.lim[1],MIN=temp.lim[0])+is_OOBLow
 ;;  h2descl(where(temp.data(notMasked) GT temp.lim[1])) = BYTE(nLevels-1)
 ;;  h2descl(where(temp.data(notMasked) LT temp.lim[0])) = 0B
-  h2descl(where(temp.data GT temp.lim[1] AND ~masked)) = BYTE(nLevels-1)
-  h2descl(where(temp.data LT temp.lim[0] AND ~masked)) = 0B
+  IF OOB_HIGH_i[0] NE -1 THEN h2descl(OOB_HIGH_i) = BYTE(nLevels-1)
+  IF OOB_LOW_i[0] NE -1 THEN h2descl(OOB_LOW_i) = 0B
 
 
   ;11 is "blue-red" color table
@@ -214,13 +221,14 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ENDIF ELSE BEGIN
      cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.
-     cgColorbar, NColors=nlevels-2, Bottom=1B, Divisions=nlevels-2, $
-                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
+     cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), Divisions=nlevels-is_OOBHigh-is_OOBLow, $
+                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
+                 OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, Title=temp.title, /Discrete, $
                  Position=[0.25, 0.88, 0.75, 0.92], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
                  ;; ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]
-                 ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
-                            String(((temp.lim[0]+temp.lim[1])/2), Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
+                 ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",(nLevels-1-is_OOBHigh-is_OOBLow)/2),$
+                            String(((temp.lim[0]+temp.lim[1])/2), Format='(D0.1)'),REPLICATE(" ",(nLevels-1-is_OOBHigh-is_OOBLow)/2),$
                             String(temp.lim[1], Format='(D0.1)')]
   ENDELSE
 

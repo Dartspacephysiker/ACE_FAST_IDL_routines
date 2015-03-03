@@ -415,7 +415,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log PFlux plotrange
   IF NOT KEYWORD_SET(PPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logPfPlot) THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1,0.5]
+     IF NOT KEYWORD_SET(logPfPlot) THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1,0.4]
   ENDIF
 
   ;;######Ion flux (up)
