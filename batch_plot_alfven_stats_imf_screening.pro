@@ -11,7 +11,8 @@
 ;      01/26/2014 Born in Wilder 315
 ;
 ;-
-PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
+PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                          MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
                                           EPLOTS=ePlots, IONPLOTS=ionPlots, PPLOTS=pPlots,CHAREPLOTS=charEPlots, ORBPLOTS=orbPlots, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
@@ -26,10 +27,10 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
   PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(5(A10)))',directions
 
   ;plot prefix
-  IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
-     plotPrefix='Foolin_round_01262015/Jan262015_DB'
+  IF NOT KEYWORD_SET(plotDir) THEN BEGIN
+     plotDir='Foolin_round_01262015/'
   ENDIF
-  PRINT,"Plot prefix: " + plotPrefix
+  PRINT,"Plot directory: " + plotDir
 
   ;mask min
   IF N_ELEMENTS(maskMin) EQ 0 THEN BEGIN
@@ -42,29 +43,35 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTPREFIX=plotPrefix,MASKMIN=maskMin,
 
      ;;electron plots
      IF KEYWORD_SET(ePlots) THEN BEGIN
-;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
-        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, EPLOTS=ePlots, maskmin=maskMin, _extra=e
+;;        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                         EPLOTS=ePlots, maskmin=maskMin, _extra=e
      ENDIF
-
+     
      ;;electron plots
      IF KEYWORD_SET(ionPlots) THEN BEGIN
-;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
-        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, IONPLOTS=ionPlots, maskmin=maskMin, _extra=e
+;;        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                         IONPLOTS=ionPlots, maskmin=maskMin, _extra=e
      ENDIF
-
+     
      ;;pflux plots
      IF KEYWORD_SET(pPlots) THEN BEGIN
-;;        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,/logpfplot,PPLOTS=pPlots,/medianplot,maskmin=maskMin,customprange=[-1.3,1.7],/nonegpflux,_extra=e
-        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, maskmin=maskMin, PPLOTS=pPlots, _EXTRA=e
+;;        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+;;                                        /logpfplot,PPLOTS=pPlots,/medianplot,maskmin=maskMin,customprange=[-1.3,1.7],/nonegpflux,_extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                         maskmin=maskMin, PPLOTS=pPlots, _EXTRA=e
      ENDIF
-
+     
      IF KEYWORD_SET(charEPlots) THEN BEGIN
-        plot_alfven_stats_imf_screening, clockstr=directions[i], plotprefix=plotPrefix, CHAREPLOTS=charEPlots, maskmin=maskMin, _extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                         CHAREPLOTS=charEPlots, maskmin=maskMin, _extra=e
      ENDIF
-
+     
      ;;various orbit plots
      IF KEYWORD_SET(orbPlots) OR KEYWORD_SET(orbFreqPlot) OR KEYWORD_SET(orbTotPlot) OR KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN
-        plot_alfven_stats_imf_screening,clockstr=directions[i],plotprefix=plotPrefix,maskmin=maskMin, _EXTRA=e
+        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                        maskmin=maskMin, _EXTRA=e
      ENDIF
      
 

@@ -131,12 +131,15 @@
 ;		     RAWDIR            :  Directory in which to store raw data
 ;                    NOPLOTSJUSTDATA   :  No plots whatsoever; just give me the dataz.
 ;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
+;		     PLOTDIR           :     
 ;		     PLOTPREFIX        :     
+;		     PLOTSUFFIX        :     
 ;                    OUTPUTPLOTSUMMARY :  Make a text file with record of running params, various statistics
 ;                    MEDHISTOUTDATA    :  If doing median plots, output the median pointer array. 
 ;                                           (Good for further inspection of the statistics involved in each bin
 ;                    MEDHISTOUTTXT     :  Use 'medhistoutdata' output to produce .txt files with
 ;                                           median and average values for each MLT/ILAT bin.
+;                    DEL_PS            :  Delete postscript outputted by plotting routines
 ;
 ; KEYWORD PARAMETERS:
 ;
@@ -201,8 +204,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NEVENTSRANGE=nEventsRange, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                     NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, PLOTPREFIX=plotPrefix, $
-                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                     NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, $
+                                     PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
+                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, DEL_PS=del_PS, $
                                      _EXTRA = e
 
   ;;variables to be used by interp_contplot.pro
@@ -229,7 +233,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; maxOrb=8500                   ;8292 for Strangeway study
   ;;nOrbits = maxOrb - minOrb + 1
   
-  IF NOT KEYWORD_SET(charERange) THEN charERange = [4.0, 250.0]         ; 4,~300 eV in Strangeway
+  IF NOT KEYWORD_SET(charERange) THEN charERange = [4.0,300]         ; 4,~300 eV in Strangeway
 
   IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = [1000.0, 5000.0] ;Rob Pfaff says no lower than 1000m
   
@@ -257,7 +261,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               minM=0
               maxM=24
               minI=60
-              maxI=88
+              maxI=84
            ENDIF
         ENDIF
      ENDELSE
@@ -445,20 +449,24 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log charE plotrange
   IF NOT KEYWORD_SET(CharEPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE EPlotRange=[0,3.6]
+     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60208]; [0,3.69897]
   ENDIF
 
   ;;********************************************
   ;;Stuff for output
   hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
           STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
-  IF KEYWORD_SET(medianplot) THEN plotSuff = "_med" ELSE plotSuff = "_avg"
-  IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
-     plotType='Eflux_' +eFluxPlotType
-     plotType=(N_ELEMENTS(logEfPlot) EQ 0) ? plotType : 'log' + plotType
-     plotType=(N_ELEMENTS(logPfPlot) EQ 0) ? plotType : 'logPf_' + plotType
-     plotDir=(KEYWORD_SET(squarePlot)) ? plotDir + plotType : plotDir + "polar/" + plotType + '/' 
-  ENDIF ELSE plotDir += plotPrefix + "--"
+
+  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "_med" ELSE plotMedOrAvg = "_avg"
+
+  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ELSE plotSuffix = "--" + plotSuffix
+  ;; IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
+  ;;    plotType='Eflux_' +eFluxPlotType
+  ;;    plotType=(N_ELEMENTS(logEfPlot) EQ 0) ? plotType : 'log' + plotType
+  ;;    plotType=(N_ELEMENTS(logPfPlot) EQ 0) ? plotType : 'logPf_' + plotType
+  ;;    plotDir=(KEYWORD_SET(squarePlot)) ? plotDir + plotType : plotDir + "polar/" + plotType + '/' 
+  ;; ENDIF ELSE 
+  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ELSE plotPrefix = plotPrefix + "--"
 
   smoothStr=""
 
@@ -476,12 +484,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
-  paramStr=hemStr+'_'+clockStr+plotSuff+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
+  paramStr=hemStr+'_'+clockStr+plotMedOrAvg+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir+'fluxplots_'+paramStr+'.txt',/GET_LUN $
+     OPENW,lun,plotDir + plotPrefix+'outputSummary_'+paramStr+plotSuffix+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;Now run these to clean and tap the databases and interpolate satellite data
@@ -629,7 +637,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(noPosEflux) THEN posEstr = "NoPos--"
      IF KEYWORD_SET(logEfPlot) THEN logEstr="Log "
      absnegslogEstr=absEstr + negEstr + posEstr + logEstr
-     efDatName = paramStr + STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"
+     efDatName = STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
@@ -716,7 +724,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(noPosPflux) THEN posPstr = "NoPos--"
      IF KEYWORD_SET(logPfPlot) THEN logPstr="Log "
      absnegslogPstr=absPstr + negPstr + posPstr + logPstr
-     pfDatName = paramStr + STRTRIM(absnegslogPstr,2)+"pFlux_"
+     pfDatName = STRTRIM(absnegslogPstr,2)+"pFlux_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
@@ -881,7 +889,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(noPosIflux) THEN posIonStr = "NoPos--"
      IF KEYWORD_SET(logIfPlot) THEN logIonStr="Log "
      absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
-     ifDatName = paramStr + STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
+     ifDatName = STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
@@ -979,7 +987,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(noPosCharE) THEN posCharEStr = "NoPos--"
      IF KEYWORD_SET(logCharEPlot) THEN logCharEStr="Log "
      absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
-     chareDatName = paramStr + STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
+     chareDatName = STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
         IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + chareDatName+"medhist_data.sav"
@@ -1167,7 +1175,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
 
      logNEvStr=""
-     IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
+     ;;IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
      h2dNEvPerOrbStr.title= logNEvStr + "N Events per Orbit"
 
      IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
@@ -1205,8 +1213,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   IF NOT KEYWORD_SET(squarePlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
-                           rawDir,clockStr,plotSuff,stableIMF,hoyDia,hemstr,$
-                           filename='temp/polarplots_'+paramStr+".dat"
+                           rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
+                           filename='temp/polarplots_'+paramStr+plotSuffix+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(noSavePlots) THEN BEGIN 
@@ -1214,18 +1222,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
-                  ' IMF, ' + strmid(plotSuff,1) $
+                  ' IMF, ' + strmid(plotMedOrAvg,1) $
      ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
         ;;    cgWindow,'interp_polar_plot',[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                 ;;             h2dStr[0].lim,Background="White",wxsize=800,wysize=600, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
-                ;;             ' IMF, ' + strmid(plotSuff,1) $
+                ;;             ' IMF, ' + strmid(plotMedOrAvg,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
            cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i], $
-                'temp/polarplots_'+paramStr+".dat",_extra=e,$
+                'temp/polarplots_'+paramStr+plotSuffix+".dat",_extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
-                ' IMF, ' + strmid(plotSuff,1) $
+                ' IMF, ' + strmid(plotMedOrAvg,1) $
                 
      ELSE PRINTF,LUN,"**Plots turned off with noPlotsJustData**" 
   ENDIF ELSE BEGIN 
@@ -1234,13 +1242,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         PRINTF,LUN, "Creating output files..." 
 
         ;;Create a PostScript file.
-        cgPS_Open, plotDir + 'fluxplots_'+paramStr+'.ps', /nomatch, xsize=1000, ysize=1000
+        cgPS_Open, plotDir + plotPrefix + 'fluxplots_'+paramStr+plotSuffix+'.ps', /nomatch, xsize=1000, ysize=1000
         interp_contplotmulti_str,h2dStr 
         cgPS_Close 
 
         ;;Create a PNG file with a width of 800 pixels.
-        cgPS2Raster, plotDir + 'fluxplots_'+paramStr+'.ps', $
-                     /PNG, Width=800, /DELETE_PS 
+        cgPS2Raster, plotDir + plotPrefix + 'fluxplots_'+paramStr+plotSuffix+'.ps', $
+                     /PNG, Width=800, DELETE_PS = del_PS
      
      ENDIF ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
@@ -1257,22 +1265,22 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               ;; Use DEVICE to set some PostScript device options:
               DEVICE, FILENAME='myfile.ps', /LANDSCAPE
               ;; Make a simple plot to the PostScript file:
-              interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat", $
-                                    fname=plotDir + 'plot_'+dataName[i]+paramStr+'.png', _extra=e
+              interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
+                                    fname=plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.png', _extra=e
               ;; Close the PostScript file:
               DEVICE, /CLOSE
               ;; Return plotting to the original device:
               SET_PLOT, mydevice
            ENDIF ELSE BEGIN
               ;;Create a PostScript file.
-              cgPS_Open, plotDir + 'plot_'+dataName[i]+paramStr+'.ps' 
+              cgPS_Open, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps' 
               ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
               ;;          h2dStr[0].lim 
-              interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+".dat",_extra=e 
+              interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",_extra=e 
               cgPS_Close 
               ;;Create a PNG file with a width of 800 pixels.
-              cgPS2Raster, plotDir + 'plot_'+dataName[i]+paramStr+'.ps', $
-                           /PNG, Width=800, /DELETE_PS
+              cgPS2Raster, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps', $
+                           /PNG, Width=800, DELETE_PS = del_PS
            ENDELSE
            
         ENDFOR    
@@ -1287,7 +1295,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Save raw data, if desired
   IF KEYWORD_SET(saveRaw) THEN BEGIN
-     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+".dat"
+     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+plotSuffix+".dat"
 
   ENDIF
 
@@ -1298,7 +1306,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
       FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-         fname=plotDir+dataName[j]+paramStr+'.h5' 
+         fname=plotDir + plotPrefix+dataName[j]+paramStr+plotSuffix+'.h5' 
          PRINT,"Writing HDF5 file: " + fname 
          fileID=H5F_CREATE(fname) 
          datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
@@ -1309,13 +1317,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ENDFOR 
       ;;loop style for individual structures
       ;;   FOR i=0, N_ELEMENTS(h2dStr)-1 DO BEGIN 
-      ;;      fname=plotDir+h2dStr[i].title+'_'+ $
-      ;;            paramStr+'.h5' 
+      ;;      fname=plotDir + plotPrefix+h2dStr[i].title+'_'+ $
+      ;;            paramStr+plotSuffix+'.h5' 
       ;;      fileID=H5F_CREATE(fname) 
       ;;      datatypeID=H5T_IDL_CREATE(h2dStr[i]) 
       ;;      dataspaceID=H5S_CREATE_SIMPLE(1) 
       ;;      datasetID = H5D_CREATE(fileID,$
-      ;;                             h2dStr[i].title+'_'+hemStr+'_'+clockStr+plotSuff, $
+      ;;                             h2dStr[i].title+'_'+hemStr+'_'+clockStr+plotMedOrAvg, $
       ;;                             datatypeID, dataspaceID) 
       ;;      H5D_WRITE,datasetID, h2dStr[i] 
       ;;      H5F_CLOSE,fileID    
@@ -1326,7 +1334,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;HELP, s.mydata._DATA, /STRUCTURE  
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-            fname=plotDir+dataName[j]+paramStr+'.h5' 
+            fname=plotDir + plotPrefix+dataName[j]+paramStr+plotSuffix+'.h5' 
             PRINT,"Writing HDF5 file: " + fname 
             fileID=H5F_CREATE(fname) 
             
@@ -1351,7 +1359,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    ENDIF
 
    ;;IF writeASCII NE 0 THEN BEGIN 
-   ;;  fname=plotDir+'fluxplots_'+paramStr+'.ascii' 
+   ;;  fname=plotDir + plotPrefix+'fluxplots_'+paramStr+plotSuffix+'.ascii' 
    ;;   PRINT,"Writing ASCII file: " + fname 
    ;;   OPENW,lun2, fname, /get_lun 
    ;;   PRINT_STRUCT,h2dStr,LUN_OUT=lun2 
@@ -1368,7 +1376,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeASCII) THEN BEGIN 
       ;;These are the "raw" data, just as we got them from Chris
       FOR j = 0, n_elements(dataRawPtr)-3 DO BEGIN 
-         fname=plotDir+dataName[j]+paramStr+'.ascii' 
+         fname=plotDir + plotPrefix+dataName[j]+paramStr+plotSuffix+'.ascii' 
          PRINT,"Writing ASCII file: " + fname 
          OPENW,lun2, fname, /get_lun 
 
@@ -1384,7 +1392,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;NOW DO PROCESSED H2D DATA 
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR i = 0, n_elements(h2dStr)-1 DO BEGIN 
-            fname=plotDir+"h2d_"+dataName[i]+paramStr+'.ascii' 
+            fname=plotDir + plotPrefix+"h2d_"+dataName[i]+paramStr+plotSuffix+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
             OPENW,lun2, fname, /get_lun 
             FOR j = 0, N_ELEMENTS(h2dBinsMLT) - 1 DO BEGIN 

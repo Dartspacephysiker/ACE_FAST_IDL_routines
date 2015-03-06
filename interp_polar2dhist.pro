@@ -1,4 +1,5 @@
-PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight,_EXTRA=e
+PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
+                       LABELFORMAT=labelFormat, _EXTRA=e
 
   restore,ancillaryData
 
@@ -20,7 +21,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   
   IF wholeCap NE !NULL THEN BEGIN
      position = [0.05, 0.05, 0.85, 0.85] 
-     lim=[minI,0,88,360]
+     lim=[minI,0,84,360]
   ENDIF ELSE BEGIN
      position = [0.1, 0.075, 0.9, 0.75] 
      lim=[minI,minM*15,maxI,maxM*15]
@@ -36,13 +37,16 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
 
   ;;Is this a log plot? If so, do integral of exponentiated value
   logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
+  ;; FOR charEplot, uncomment me: logPlotzz = 1
 
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
-  ;; orbEvPerBinzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
+  nEvPerOrbPlotzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
+  orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
+  charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
   ;; ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
   ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
-  ;; pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
+  pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
   ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
   ;;    ;;This is the one for doing sweet electron flux plots
   ;;    cgLoadCT, 16,/BREWER, NCOLORS=nLevels
@@ -208,28 +212,41 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
      cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
   ENDIF 
 
+  ;; colorbar label stuff
+  IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
+  ;;  labelFormat='(I0)'
+  lowerLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^(temp.lim[0]) : temp.lim[0]
+  midLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  UpperLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^temp.lim[1] : temp.lim[1]
+
+  IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
   IF wholeCap NE !NULL THEN BEGIN
-     cgColorbar, NColors=nlevels-2, Divisions=nlevels-2, Bottom=1B, $
+     cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Divisions=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), $
 ;;                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
-                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
-                 Range=temp.lim, Title=temp.title, /Discrete, $
-                 Position=[0.91, 0.10, 0.95, 0.90], TEXTTHICK=1.5, /VERTICAL, TLocation="RIGHT", TCharSize=cgDefCharsize()*1.0,$
-                 ;; ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]
-                 ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
-                            String(((temp.lim[0]+temp.lim[1])/2), Format='(D0.1)'),REPLICATE(" ",(nLevels-3)/2),$
-                            String(temp.lim[1], Format='(D0.1)')]
+                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
+                 OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
+                 Range=temp.lim, $
+                 Title=temp.title, $ ; Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
+                 /Discrete, $
+                 Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, TLocation="RIGHT", TCharSize=cgDefCharsize()*1.0,$
+                 ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
+                 ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
+                            String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                            String(UpperLab, Format=labelFormat)] ;for charE plot, uncomment me: String(UpperLab, Format='(I0)')]
   ENDIF ELSE BEGIN
      cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.
      cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), Divisions=nlevels-is_OOBHigh-is_OOBLow, $
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
                  OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
-                 Range=temp.lim, Title=temp.title, /Discrete, $
-                 Position=[0.25, 0.88, 0.75, 0.92], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
-                 ;; ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format='(D0.1)')]
-                 ticknames=[String(temp.lim[0], Format='(D0.1)'),REPLICATE(" ",(nLevels-1-is_OOBHigh-is_OOBLow)/2),$
-                            String(((temp.lim[0]+temp.lim[1])/2), Format='(D0.1)'),REPLICATE(" ",(nLevels-1-is_OOBHigh-is_OOBLow)/2),$
-                            String(temp.lim[1], Format='(D0.1)')]
+                 Range=temp.lim, $
+                 Title=temp.title, $
+                 /Discrete, $
+                 Position=[0.25, 0.89, 0.75, 0.91], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
+                 ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
+                 ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
+                            String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                            String(upperLab, Format=labelFormat)]
   ENDELSE
 
 END

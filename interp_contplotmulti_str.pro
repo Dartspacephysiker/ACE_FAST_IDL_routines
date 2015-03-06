@@ -9,17 +9,10 @@
 ; one window. NOTE: THE SECOND-TO-LAST AND LAST ARRAY MUST BE THE NUMBER
 ; OF FLUX EVENTS AND THE EVENT MASK, RESPECTIVELY  
 ;+
-; The purpose of interp_contplotmulti_str is to display three FAST database
-; parameters that have been binned by MLT and ILAT as 2D histograms in
-;one window.
-; 
 ; Program default colors can be set within the program; see below. 
 ;If no windows are currently open when the program is called,
 ;cgDisplay is used to create a window.
 ; 
-; The program requires the `Coyote Library <http://www.idlcoyote.com/documents/programs.php>`
-; to be installed on your machine.
-;
 ; :Categories:
 ;    Graphics
 ;    

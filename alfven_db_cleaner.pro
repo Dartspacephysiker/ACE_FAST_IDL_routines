@@ -38,7 +38,7 @@ function alfven_db_cleaner,maximus,LUN=lun
   ; Cutoff values
   
   ;; mag current cutoffs
-  magc_hcutOff = 5.0e2            ;junks 245 events above, 256 below
+  magc_hcutOff = 5.0e2          ;junks 245 events above, 256 below
   ;;magc_lcutOff = -1.0e3 ;
   
   ;; delta_B cutoffs
@@ -56,7 +56,10 @@ function alfven_db_cleaner,maximus,LUN=lun
   ef_lc_integ_lcutoff = -1.0e7
   
   ;; electron energy flux cutoffs
-  elec_ef_hcutoff = 1.0e3       ;junks 284 events
+  elec_ef_hcutoff = 1.0e3       ;junks 284 events. NOTE, units are ergs-cm^(-2)-s^(-1). 
+                                ;1e3 ergs corresponds to ~6x10^14 eV, and Nakajima et al. [2008]
+                                ;  call FAST observations of eflux > 10^12 eV-cm^(-2)-s^(-1)
+                                ;  "remarkable"; in short this cutoff gives plenty of room for good data.
   elec_ef_lcutoff = 0.0         ;because less than zero is garbage, right?
   
   ;; max characteristic electron energy cutoffs
