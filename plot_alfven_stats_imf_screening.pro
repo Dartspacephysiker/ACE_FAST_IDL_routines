@@ -42,6 +42,7 @@
 ;                                            Otherwise it gets shown as "no data". (Default: 1)
 ;                    BYMIN             :  Minimum value of IMF By during an event to accept the event for inclusion in the analysis.
 ;		     NPLOTS            :  Plot number of orbits.   
+;                    HEMI              :  Hemisphere for which to show statistics. Can be "North" or "South".
 ;
 ;                *IMF SATELLITE PARAMETERS
 ;                    SATELLITE         :  Satellite to use for checking FAST data against IMF.
@@ -184,6 +185,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
                                      SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                     HEMI=hemi, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
                                      EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEflux, $
@@ -240,9 +242,23 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(minM) THEN minM = 6L
   IF NOT KEYWORD_SET(maxM) THEN maxM = 18L
   
-  IF NOT KEYWORD_SET(minI) THEN minI = 60L
-  IF NOT KEYWORD_SET(maxI) THEN maxI = 84L
-  
+  IF NOT KEYWORD_SET(hemi) THEN hemi = "North"
+
+  ;take care of hemisphere
+  IF hemi EQ "North" THEN BEGIN
+     IF NOT KEYWORD_SET(minI) THEN minI = 60L
+     IF NOT KEYWORD_SET(maxI) THEN maxI = 84L
+  ENDIF ELSE BEGIN
+     IF hemi EQ "South" THEN BEGIN
+        IF NOT KEYWORD_SET(minI) THEN minI = -84L
+        IF NOT KEYWORD_SET(maxI) THEN maxI = -60L
+     ENDIF ELSE BEGIN
+        PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
+        PRINT,"Defaulting to 'North'."
+        hemi="North"
+     ENDELSE
+  ENDELSE
+
   IF NOT KEYWORD_SET(minMC) THEN minMC = 10                ; Minimum current derived from mag data, in microA/m^2
   IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -10         ; Current must be less than this, if it's going to make the cut
   
@@ -260,8 +276,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            IF e.wholecap GT 0 THEN BEGIN
               minM=0
               maxM=24
-              minI=60
-              maxI=84
+              IF hemi EQ "North" THEN BEGIN
+                 minI=60
+                 maxI=84
+              ENDIF ELSE BEGIN
+                 minI=-84
+                 maxI=-60
+              ENDELSE
            ENDIF
         ENDIF
      ENDELSE
@@ -272,7 +293,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;satellite data options
   
   IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"                ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSE"             ; either "GSE" or "GSM"
+  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSM"             ; either "GSE" or "GSM"
 
   defDelay = 660
   IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
@@ -374,7 +395,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Requirement for IMF By magnitude?
   byMinStr=''
   IF KEYWORD_SET(byMin) THEN BEGIN
-     byMinStr='byMin_' + STRCOMPRESS(byMin,/REMOVE_ALL) + '_'
+     byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
   ENDIF
 
   ;;doing polar contour?
@@ -459,14 +480,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "_med" ELSE plotMedOrAvg = "_avg"
 
-  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ELSE plotSuffix = "--" + plotSuffix
+  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
   ;; IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
   ;;    plotType='Eflux_' +eFluxPlotType
   ;;    plotType=(N_ELEMENTS(logEfPlot) EQ 0) ? plotType : 'log' + plotType
   ;;    plotType=(N_ELEMENTS(logPfPlot) EQ 0) ? plotType : 'logPf_' + plotType
   ;;    plotDir=(KEYWORD_SET(squarePlot)) ? plotDir + plotType : plotDir + "polar/" + plotType + '/' 
   ;; ENDIF ELSE 
-  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ELSE plotPrefix = plotPrefix + "--"
+  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
 
   smoothStr=""
 
@@ -521,6 +542,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; plot_i=plot_i(goodpoynt)
   ;;********************************************
   ;;Now time for data summary
+
+
+;; was using this to compare our Poynting flux estimates against Keiling et al. 2003 Fig. 3
+  plot_i=cgsetintersection(plot_i,where(poynt_est GE 0.1 AND poynt_est LE 1e3))
 
   printf,lun,""
   printf,lun,"**********DATA SUMMARY**********"
@@ -1175,7 +1200,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
 
      logNEvStr=""
-     ;;IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
+     IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
      h2dNEvPerOrbStr.title= logNEvStr + "N Events per Orbit"
 
      IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN

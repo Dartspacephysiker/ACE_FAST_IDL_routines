@@ -18,13 +18,13 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   delay=1020
 
   ;maskMin
-  mskm=5
+  mskm=3
 
   ;delete postscript?
   del_PS = 1
 
   ;charERange?
-  charERange=[4.0,4e3]
+  charERange=[4.0,5e3]
 
  ;;;;;;;;;;
   ;orb plots
@@ -56,8 +56,8 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   
   ;Better (for showing features) plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[-1.3,1.0],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS
+                                        /pplots,pplotrange=[0,2],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
+                                        /noplotintegral,DEL_PS = del_PS,/polarcontour
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
                                         /pplots,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
                                         /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange

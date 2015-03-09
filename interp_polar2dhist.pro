@@ -1,5 +1,11 @@
+;;03/07/2015
+;; Added mirror keyword so that data in the Southern hemisphere have the same orientation as that of
+;;data in the Northern hemisphere
+;; Right now I think I need to do something with reversing tempMLTS or changing the way tempMLTS is
+;; put together, but I can't be sure
+
 PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
-                       LABELFORMAT=labelFormat, _EXTRA=e
+                       LABELFORMAT=labelFormat, MIRROR=mirror, _EXTRA=e
 
   restore,ancillaryData
 
@@ -12,6 +18,14 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ; Open a graphics window.
   cgDisplay,color="black"
 
+  IF KEYWORD_SET(mirror) THEN BEGIN
+     IF mirror NE 0 THEN mirror = 1 ELSE mirror = 1
+  ENDIF ELSE mirror = 0
+
+  IF mirror THEN BEGIN
+     temp.data = REVERSE(temp.data)
+  ENDIF
+
   IF KEYWORD_SET(wholeCap) THEN BEGIN
      IF wholeCap EQ 0 THEN wholeCap=!NULL
   ENDIF
@@ -21,14 +35,26 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   
   IF wholeCap NE !NULL THEN BEGIN
      position = [0.05, 0.05, 0.85, 0.85] 
-     lim=[minI,0,84,360]
+     lim=[(mirror) ? -maxI : minI,0,(mirror) ? -minI : maxI,360]
   ENDIF ELSE BEGIN
      position = [0.1, 0.075, 0.9, 0.75] 
-     lim=[minI,minM*15,maxI,maxM*15]
+     lim=[(mirror) ? -maxI : minI,minM*15,(mirror) ? -minI : maxI,maxM*15]
   ENDELSE
 
-  
-  cgMap_Set, (minI GT 0) ? 90 : -90, (midnight NE !NULL) ? 0 : 180,/STEREOGRAPHIC, /HORIZON, $
+  IF mirror THEN BEGIN
+     IF minI GT 0 THEN centerLat = -90 ELSE centerLat = 90
+  ENDIF ELSE BEGIN
+     IF minI GT 0 THEN centerLat = 90 ELSE centerLat = -90
+  ENDELSE
+
+  IF mirror THEN BEGIN
+     IF midnight NE !NULL THEN centerLon = 180 ELSE centerLon = 0
+  ENDIF ELSE BEGIN
+     IF midnight NE !NULL THEN centerLon = 0 ELSE centerLon = 180
+  ENDELSE
+
+
+  cgMap_Set, centerLat, centerLon,/STEREOGRAPHIC, /HORIZON, $
              /ISOTROPIC, /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
                 ;;Limit=[minI-5,maxM*15-360,maxI+5,minM*15],
                 
@@ -80,6 +106,11 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   mlts=indgen(nXlines)*binM+minM
   ilats=indgen(nYlines)*binI+minI
 
+  IF mirror THEN BEGIN
+;;     ilats = -1.0 * REVERSE(ilats) ; this didn't work
+;;     mlts = reverse(mlts)
+  ENDIF
+
   mlts=mlts*15
 
   ;;binary matrix to tell us where masked values are
@@ -119,6 +150,9 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   dawnIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   duskIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   
+;;  IF mirror then mltFactor=-binM*15/2.0 ELSE mltFactor=binM*15/2.0
+  mltFactor=binM*15/2.0
+
   FOR j=0, N_ELEMENTS(ilats)-2 DO BEGIN 
      FOR i=0, N_ELEMENTS(mlts)-2 DO BEGIN 
         ;tempMLTS=[mlts[i],mlts[i+1]] 
@@ -134,8 +168,10 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         ;  tempMLTS=[tempMLTS,REVERSE(tempMLTS)] 
         ;  tempILATS=[tempILATS,tempILATS]
         tempILATS=[ilats[j],tempILATS,ilats[j+1],REVERSE(tempILATS)] 
-        tempMLTS=[mlts[i]+binM*15/2.0,tempMLTS,mlts[i]+binM*15/2.0,tempMLTS+binM*15]  
-        
+;;        tempMLTS=[mlts[i]+binM*15/2.0,tempMLTS,mlts[i]+binM*15/2.0,tempMLTS+binM*15]  
+        tempMLTS=[mlts[i]+mltFactor,tempMLTS,mlts[i]+mltFactor,tempMLTS+mltFactor*2]  
+        IF mirror THEN tempMLTS = 360.0 - tempMLTS
+
         ;;Integrals
         IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
         ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j]
@@ -157,13 +193,15 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   IF wholeCap NE !NULL THEN BEGIN
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
                  /NO_GRID,$
-                 latlabel=minM*15-5,lonlabel=minI,$ ;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
+                 latlabel=minM*15-5,lonlabel=(minI GT 0 ? minI : maxI),$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
+                 ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
                  LONNAMES=[STRTRIM(INDGEN(12,2))*2]
   ENDIF ELSE BEGIN
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
                  /NO_GRID,$
-                 latlabel=minM*15-5,lonlabel=minI,$ ;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
+                 latlabel=minM*15-5,lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
+                 ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN((maxM-minM)/1.0+1)+minM)*15,$
                  LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
   ENDELSE

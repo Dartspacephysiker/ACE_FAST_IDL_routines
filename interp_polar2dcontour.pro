@@ -22,7 +22,7 @@ PRO interp_polar2dcontour,temp,tempname,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT
   
   IF wholeCap NE !NULL THEN BEGIN
      position = [0.05, 0.05, 0.85, 0.85] 
-     lim=[minI,0,88,360]
+     lim=[minI,0,84,360]
   ENDIF ELSE BEGIN
      position = [0.1, 0.075, 0.9, 0.75] 
      lim=[minI,minM*15,maxI,maxM*15]
@@ -59,7 +59,39 @@ PRO interp_polar2dcontour,temp,tempname,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT
 
   mlts=mlts*15
 
-  ct = COLORTABLE(72, /reverse)
+  ; Load the colors for the plot.
+  nLevels=12
+
+  ;;Is this a log plot? If so, do integral of exponentiated value
+  logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
+  ;; FOR charEplot, uncomment me: logPlotzz = 1
+
+  ;;Select color table
+  orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
+  nEvPerOrbPlotzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
+  orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
+  charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
+  ;; ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
+  ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
+  pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
+  ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
+  ;;    ;;This is the one for doing sweet electron flux plots
+  ;;    cgLoadCT, 16,/BREWER, NCOLORS=nLevels
+  ;; ENDIF ELSE BEGIN
+  ;;    ;;This one is the one we use for some orbit plots
+  ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
+  ;; ENDELSE
+
+  negs=WHERE(temp.data LT 0.0)
+  IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN
+     ;;This is the one for doing "all positive" plots
+     cgLoadCT, 16,/BREWER, NCOLORS=nLevels,rgb_table=ct
+  ENDIF ELSE BEGIN
+     ;;This one is for data that includes negs
+     cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels,rgb_table=ct
+  ENDELSE
+
+  ;;  ct = COLORTABLE(72, /reverse)
 
   c = CONTOUR(temp.data, mlts, ilats, /FILL, overplot=map, GRID_UNITS='degrees', RGB_TABLE=ct, TITLE=temp.title)
   cb = COLORBAR(TITLE=temp.title,rgb_table=ct, RANGE=temp.lim)

@@ -178,9 +178,9 @@ end
 
 
 ;; for i=0,n_elements(max_tags)-1 do begin & $
-;; IDL> nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost)) & $
-;; IDL> printf,lun,"Maximus." + max_tags(i) + " is causing us to lose " + strcompress(nlost,/REMOVE_ALL) + " events." & $
-;; IDL> endfor
+;;     nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost)) & $
+;;     printf,lun,"Maximus." + max_tags(i) + " is causing us to lose " + strcompress(nlost,/REMOVE_ALL) + " events." & $
+;; endfor
 ;; Maximus.ORBIT is causing us to lose 0 events.
 ;; Maximus.ALFVENIC is causing us to lose 0 events.
 ;; Maximus.TIME is causing us to lose 0 events.
@@ -227,3 +227,9 @@ end
 ;; Maximus.TOTAL_UPWARD_ION_OUTFLOW_SINGLE is causing us to lose 0 events.
 ;; Maximus.TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT is causing us to lose 67864 events.
 ;; Maximus.TOTAL_ALFVEN_UPWARD_ION_OUTFLOW is causing us to lose 10039 events.
+
+;; max_tags=tag_names(maximus)
+;; for i=0,n_elements(max_tags)-1 do begin 
+;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost)) 
+;;    printf,lun,"Maximus." + max_tags(i) + " is causing us to lose " + strcompress(nlost,/REMOVE_ALL) + " events." 
+;; endfor

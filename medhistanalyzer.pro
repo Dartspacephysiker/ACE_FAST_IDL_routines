@@ -1,3 +1,26 @@
+;+
+; NAME: medHistAnalyzer
+;
+; PURPOSE: Produce text output of averages and means of data outputted by using the MEDHISTOUTDATA keyword in 
+;            plot_alfven_stats_imf_screening.pro. This allows for inspection of the differences between the mean and
+;            average of a given data product.
+;
+; INPUTS:            INFILE           :  IDL .sav file containing a pointer array, where each pointer points to an array
+;                                          of observations corresponding to a given MLT/ILAT bin.
+;
+; OPTIONAL INPUTS:   OUTFILE          :  Text file to be outputted. Otherwise, stdout is used.
+;
+; OUTPUTS:                               A text file with MLT, ILAT, median, average, and n_elements for each bin.
+;
+; EXAMPLE:
+;
+;
+;
+; MODIFICATION HISTORY:
+;
+;-
+;03/09/2015
+
 PRO medHistAnalyzer,INFILE=infile,OUTFILE=outFile
 
   medHistDataDir = 'medHistData/'
