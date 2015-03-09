@@ -191,19 +191,23 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   IF wholeCap NE !NULL THEN BEGIN
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*4,$
                  /NO_GRID,$
                  latlabel=minM*15-5,lonlabel=(minI GT 0 ? minI : maxI),$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
                  LONNAMES=[STRTRIM(INDGEN(12,2))*2]
   ENDIF ELSE BEGIN
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*2,$
-                 /NO_GRID,$
-                 latlabel=minM*15-5,lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
+;;                 latdelta=binI*4,$
+                 LATS=INDGEN((maxI-minI)/8.0+1)*8.0+minI, $
+                 LATNAMES=[string(minI,format='(I0)')+" ILAT",STRING((INDGEN((maxI-minI)/8.0)*8.0+(minI+1*8.0)),format='(I0)')], $
+                 LATLABEL=(mean([minM,maxM]))*15+15, $
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
-                 LONS=(1*INDGEN((maxM-minM)/1.0+1)+minM)*15,$
-                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
+                 LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
+;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
+                 LONNAMES=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')], $
+                 lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI)   
   ENDELSE
      
   ;charSize = cgDefCharSize()*0.75

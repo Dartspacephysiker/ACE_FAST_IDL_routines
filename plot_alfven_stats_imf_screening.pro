@@ -27,10 +27,13 @@
 ;                                            'dawn-north', 'dawn-south', 'dusk-north', or 'dusk-south'.
 ;		     ANGLELIM1         :     
 ;		     ANGLELIM2         :     
-;		     ORBRANGE          :  Two-element vector with lower and upper limit on orbits to include   
-;		     ALTITUDERANGE     :  Two-element vector with lower and upper limit on altitudes to include   
-;                    CHARERANGE        :  Two-element vector with lower ahd upper limit on characteristic energy of electrons in 
+;		     ORBRANGE          :  Two-element vector, lower and upper limit on orbits to include   
+;		     ALTITUDERANGE     :  Two-element vector, lower and upper limit on altitudes to include   
+;                    CHARERANGE        :  Two-element vector, lower ahd upper limit on characteristic energy of electrons in 
 ;                                            the LOSSCONE (could change it to total in get_chaston_ind.pro).
+;                    POYNTRANGE        :  Two-element vector, lower and upper limit Range of Poynting flux values to include.
+;                    NUMORBLIM         :  Minimum number of orbits passing through a given bin in order for the bin to be 
+;                                            included and not masked in the plot.
 ; 		     MINMLT            :  MLT min  (Default: 9)
 ; 		     MAXMLT            :  MLT max  (Default: 15)
 ; 		     BINMLT            :  MLT binsize  (Default: 0.5)
@@ -181,7 +184,7 @@
 
 PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
                                      SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
@@ -545,7 +548,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
 
 ;; was using this to compare our Poynting flux estimates against Keiling et al. 2003 Fig. 3
-  plot_i=cgsetintersection(plot_i,where(poynt_est GE 0.1 AND poynt_est LE 1e3))
+  
+  IF KEYWORD_SET(poyntRange) THEN BEGIN
+     IF N_ELEMENTS(poyntRange) NE 2 OR (poyntRange[1] LE poyntRange[0]) THEN BEGIN
+        PRINT,"Invalid Poynting range specified! poyntRange should be a two-element vector, [minPoynt maxPoynt]"
+        PRINT,"No Poynting range set..."
+        RETURN
+     ENDIF ELSE BEGIN
+        plot_i=cgsetintersection(plot_i,where(poynt_est GE poyntRange[0] AND poynt_est LE poyntRange[1]))
+     ENDELSE
+  ENDIF
 
   printf,lun,""
   printf,lun,"**********DATA SUMMARY**********"
@@ -602,7 +614,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dMaskStr={h2dStr}
   h2dMaskStr.data=h2dStr.data
   h2dMaskStr.data(where(h2dStr.data LT maskMin,/NULL))=255
-  h2dMaskStr.data(where(h2dStr.data GE maskMin,NULL))=0
+  h2dMaskStr.data(where(h2dStr.data GE maskMin,/NULL))=0
   h2dMaskStr.title="Histogram mask"
 
   IF keepMe THEN BEGIN 
@@ -1080,7 +1092,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
   nOrbs=n_elements(uniqueOrbs_ii)
   
-  IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
+  IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) OR KEYWORD_SET(numOrbLim) THEN BEGIN
      
      h2dOrbStr={h2dStr}
 
@@ -1105,6 +1117,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
      IF NOT KEYWORD_SET(orbContribRange) OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
 
+     ;;Mask all bins that don't have requisite number of orbits passing through
+     IF KEYWORD_SET(numOrbLim) THEN BEGIN 
+        h2dStr(KEYWORD_SET(nPlots)).data(WHERE(h2dOrbStr.data LT numOrbLim)) = 255 ;mask 'em!
+
+        ;;little check to see how many more elements are getting masked
+        ;;exc_orb_i = where(h2dOrbStr.data LT numOrbLim)
+        ;;masked_i = where(h2dStr(1).data EQ 255)
+        ;;print,n_elements(exc_orb_i) - n_elements(cgsetintersection(exc_orb_i,masked_i))
+        ;;8
+
+     ENDIF
+        
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
         IF keepMe THEN dataName=[dataName,"orbsContributing_"] 
      ENDIF
