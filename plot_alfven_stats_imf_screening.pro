@@ -473,7 +473,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log charE plotrange
   IF NOT KEYWORD_SET(CharEPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60208]; [0,3.69897]
+     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
   ENDIF
 
   ;;********************************************
