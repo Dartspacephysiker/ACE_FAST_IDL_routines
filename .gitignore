@@ -6,7 +6,7 @@ Compare_new_DB_with_Chastons/txtoutput/*.txt
 Compare_new_DB_with_Chastons/txtoutput/*.sav
 
 #plots dir is too big
-plots/*
+plots/*.png
 
 #No testcode pngs
 testcode/laTEST/*.png
