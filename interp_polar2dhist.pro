@@ -4,8 +4,9 @@
 ;; Right now I think I need to do something with reversing tempMLTS or changing the way tempMLTS is
 ;; put together, but I can't be sure
 
-PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
-                       LABELFORMAT=labelFormat, MIRROR=mirror, _EXTRA=e
+PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
+                       LABELFORMAT=labelFormat, MIRROR=mirror, CLOCKSTR=clockStr, $
+                       _EXTRA=e
 
   restore,ancillaryData
 
@@ -43,7 +44,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
      IF minI GT 0 THEN centerLat = 90 ELSE centerLat = -90
   ENDELSE
 
-  IF mirror THEN BEGIN
+  IF minI LT 0 AND NOT mirror THEN BEGIN
      IF midnight NE !NULL THEN centerLon = 180 ELSE centerLon = 0
   ENDIF ELSE BEGIN
      IF midnight NE !NULL THEN centerLon = 0 ELSE centerLon = 180
@@ -67,7 +68,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
   charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
   ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
-  iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
+  ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
   pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
   ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
   ;;    ;;This is the one for doing sweet electron flux plots
@@ -76,7 +77,8 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;    ;;This one is the one we use for some orbit plots
   ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ;; ENDELSE
-  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR iPlotzz)
+  ;; logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR iPlotzz)
+  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz )
 
   negs=WHERE(temp.data LT 0.0)
   IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN
@@ -200,16 +202,21 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ENDIF ELSE BEGIN
      lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
      lats=INDGEN((maxI-minI)/8.0+1)*8.0+minI
+     latNames=[minI, INDGEN((maxI-minI)/8.0)*8.0+(minI+1*8.0)]
 
      IF mirror THEN BEGIN
-        lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
-        lats = -1.0 * REVERSE(lats)
-     ENDIF
+        ;;    ;;IF wholeCap NE !NULL THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
+        lats = -1.0 * lats
+        latNames = -1.0 * latNames
+     ENDIF 
+     
+     latNames=STRING(latNames,format='(I0)')
+     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " MLT"
 
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
 ;;                 latdelta=binI*4,$
                  LATS=lats, $
-                 LATNAMES=[string(minI,format='(I0)')+" ILAT",STRING((INDGEN((maxI-minI)/8.0)*8.0+(minI+1*8.0)),format='(I0)')], $
+                 LATNAMES=latNames, $
                  LATLABEL=(mean([minM,maxM]))*15+15, $
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
@@ -249,11 +256,15 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         lTexPos2=0.63
         bTexPos1=0.88
         bTexPos2=0.84
+
+        cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
      ENDIF ELSE BEGIN
         lTexPos1=0.11
         lTexPos2=0.68
         bTexPos1=0.78
         bTexPos2=0.74
+
+        cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
      ENDELSE
      
      IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize

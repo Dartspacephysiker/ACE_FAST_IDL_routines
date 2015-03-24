@@ -268,7 +268,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
      IF $
-        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $ ;keywords for interp_polar2dhist
+        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") AND NOT tag_exist(e,"mirror") $ ;keywords for interp_polar2dhist
      THEN BEGIN                                                            ;Check for passed variables here
         help,e
         print,e
@@ -473,7 +473,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log charE plotrange
   IF NOT KEYWORD_SET(CharEPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
+;;     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
+     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
   ENDIF
 
   ;;********************************************
@@ -1278,8 +1279,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ;;             ' IMF, ' + strmid(plotMedOrAvg,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
-           cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i], $
-                'temp/polarplots_'+paramStr+plotSuffix+".dat",_extra=e,$
+           cgWindow,'interp_polar2dhist',h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
+                CLOCKSTR=clockStr, _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotMedOrAvg,1) $
@@ -1325,7 +1326,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               cgPS_Open, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps' 
               ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
               ;;          h2dStr[0].lim 
-              interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",_extra=e 
+              interp_polar2dhist,h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
               cgPS_Close 
               ;;Create a PNG file with a width of 800 pixels.
               cgPS2Raster, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps', $

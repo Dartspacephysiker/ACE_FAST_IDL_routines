@@ -1,16 +1,16 @@
 ;02/02/2015
 ;A quicker(?) way to make all the plots I want
 
-PRO commands_for_dusk_dawn_plots
+PRO commands_for_dusk_dawn_plots__altrange2000_3000
 
   date='03242015'
   dbDate='02282015'
 
- hemi='North'
-;;  mirror = !NULL
-  ;; hemi='South'
-  ;; mirror = 1
- ;;  mirror = !NULL
+ ;; hemi='North'
+ ;; mirror = !NULL
+ hemi='South'
+ mirror = 1
+ ;; mirror = !NULL
 
   ;dirs='all_IMF'
   ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
@@ -53,6 +53,9 @@ PRO commands_for_dusk_dawn_plots
   ;;median histogram text output?
   medHistOutTxt=1
 
+  ;;output plot summary?
+  outputPlotSummary=1
+
   ;;different delay?
   delay=!NULL
   ;;delay=1020
@@ -68,7 +71,7 @@ PRO commands_for_dusk_dawn_plots
   ;delete postscript?
   del_PS = 1
 ;;  noPlotIntegral=!NULL
-  noPlotIntegral=1
+  noPlotIntegral=!NULL
 
   ;charERange?
 ;;  charERange=[250,5e3]
@@ -91,25 +94,27 @@ PRO commands_for_dusk_dawn_plots
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        OUTPUTPLOTSUMMARY=outputPlotSummary
 
   ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
                                         /orbPlots, /orbContribPlot,/orbTotPlot,/orbFreqPlot, $
                                         /nEventPerOrbPlot, $
-                                        neventperorbrange=[0.0,2.5], $
-;;                                        /logneventperorb, neventperorbrange=[-1,0.4772], $
+;;                                        neventperorbrange=[0.0,2.5], $
+                                        /logneventperorb, neventperorbrange=[-1,0.4772], $
 ;;                                        /divNEvByApplicable, neventperorbrange=[0.0,40.0], $
 ;;                                        /logneventperorb, /divNEvByApplicable, neventperorbrange=[FLOOR(100.0*ALOG10(mskm))/100.0,2], $
 ;;                                        /logneventperorb, neventperorbrange=[-1,0.699], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='North', nEventsRange=[100,750], orbFreqRange=[0.0, 0.15], orbContribRange=[0,40], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='South', nEventsRange=[0,425], orbFreqRange=[0.0, 0.1], orbContribRange=[0,20], $
-                                        nEventsRange=[0,750], orbFreqRange=[0.0, 0.12], orbContribRange=[0,40], $
+                                        nEventsRange=[0,250], orbFreqRange=[0.0, 0.06], orbContribRange=[0,20], $
                                         WHOLECAP=wc,midnight=midn,BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        OUTPUTPLOTSUMMARY=outputPlotSummary
   
   ;;;;;;;;;;;;;;;
   ;ion plots
@@ -119,7 +124,8 @@ PRO commands_for_dusk_dawn_plots
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        OUTPUTPLOTSUMMARY=outputPlotSummary
 
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
@@ -132,7 +138,8 @@ PRO commands_for_dusk_dawn_plots
   ;;                                       ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
   ;;                                       MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
   ;;                                       SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-  ;;                                       DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+  ;;                                       DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+  ;;	                                   OUTPUTPLOTSUMMARY=outputPlotSummary
   
   ;Better (for showing features) plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
@@ -145,7 +152,8 @@ PRO commands_for_dusk_dawn_plots
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        OUTPUTPLOTSUMMARY=outputPlotSummary
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
@@ -156,6 +164,7 @@ PRO commands_for_dusk_dawn_plots
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        OUTPUTPLOTSUMMARY=outputPlotSummary
 
 END
