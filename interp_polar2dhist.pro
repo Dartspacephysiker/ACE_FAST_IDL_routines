@@ -19,12 +19,8 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   cgDisplay,color="black"
 
   IF KEYWORD_SET(mirror) THEN BEGIN
-     IF mirror NE 0 THEN mirror = 1 ELSE mirror = 1
+     IF mirror NE 0 THEN mirror = 1 ELSE mirror = 0
   ENDIF ELSE mirror = 0
-
-  IF mirror THEN BEGIN
-     temp.data = REVERSE(temp.data)
-  ENDIF
 
   IF KEYWORD_SET(wholeCap) THEN BEGIN
      IF wholeCap EQ 0 THEN wholeCap=!NULL
@@ -35,7 +31,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   
   IF wholeCap NE !NULL THEN BEGIN
      position = [0.05, 0.05, 0.85, 0.85] 
-     lim=[(mirror) ? -maxI : minI,0,(mirror) ? -minI : maxI,360]
+     lim=[(mirror) ? -maxI : minI, 0 ,(mirror) ? -minI : maxI,360] ; lim = [minimum lat, minimum long, maximum lat, maximum long]
   ENDIF ELSE BEGIN
      position = [0.1, 0.075, 0.9, 0.75] 
      lim=[(mirror) ? -maxI : minI,minM*15,(mirror) ? -minI : maxI,maxM*15]
@@ -70,8 +66,8 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   nEvPerOrbPlotzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
   orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
   charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
-  ;; ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
-  ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
+  ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
+  iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
   pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
   ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
   ;;    ;;This is the one for doing sweet electron flux plots
@@ -80,6 +76,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;;    ;;This one is the one we use for some orbit plots
   ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ;; ENDELSE
+  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR iPlotzz)
 
   negs=WHERE(temp.data LT 0.0)
   IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN
@@ -107,8 +104,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ilats=indgen(nYlines)*binI+minI
 
   IF mirror THEN BEGIN
-;;     ilats = -1.0 * REVERSE(ilats) ; this didn't work
-;;     mlts = reverse(mlts)
+     ilats = -1.0 * ilats 
   ENDIF
 
   mlts=mlts*15
@@ -150,7 +146,6 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   dawnIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   duskIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
   
-;;  IF mirror then mltFactor=-binM*15/2.0 ELSE mltFactor=binM*15/2.0
   mltFactor=binM*15/2.0
 
   FOR j=0, N_ELEMENTS(ilats)-2 DO BEGIN 
@@ -170,7 +165,7 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
         tempILATS=[ilats[j],tempILATS,ilats[j+1],REVERSE(tempILATS)] 
 ;;        tempMLTS=[mlts[i]+binM*15/2.0,tempMLTS,mlts[i]+binM*15/2.0,tempMLTS+binM*15]  
         tempMLTS=[mlts[i]+mltFactor,tempMLTS,mlts[i]+mltFactor,tempMLTS+mltFactor*2]  
-        IF mirror THEN tempMLTS = 360.0 - tempMLTS
+;;        IF mirror THEN tempMLTS = ((180 - tempMLTS) + 360) MOD 360
 
         ;;Integrals
         IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
@@ -190,24 +185,37 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
               color='black',londelta=binM*15,latdelta=binI
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
+  lonLabel=(minI GT 0 ? minI : maxI)
+  IF mirror THEN lonLabel = -1.0 * lonLabel ;mirror dat
+
   IF wholeCap NE !NULL THEN BEGIN
+     lonNames=[STRTRIM(INDGEN(12),2)*2]
+
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*4,$
                  /NO_GRID,$
-                 latlabel=minM*15-5,lonlabel=(minI GT 0 ? minI : maxI),$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
+                 LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
-                 LONNAMES=[STRTRIM(INDGEN(12,2))*2]
+                 LONNAMES=lonNames
   ENDIF ELSE BEGIN
+     lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
+     lats=INDGEN((maxI-minI)/8.0+1)*8.0+minI
+
+     IF mirror THEN BEGIN
+        lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
+        lats = -1.0 * REVERSE(lats)
+     ENDIF
+
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
 ;;                 latdelta=binI*4,$
-                 LATS=INDGEN((maxI-minI)/8.0+1)*8.0+minI, $
+                 LATS=lats, $
                  LATNAMES=[string(minI,format='(I0)')+" ILAT",STRING((INDGEN((maxI-minI)/8.0)*8.0+(minI+1*8.0)),format='(I0)')], $
                  LATLABEL=(mean([minM,maxM]))*15+15, $
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
 ;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
-                 LONNAMES=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')], $
-                 lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI)   
+                 LONNAMES=lonNames, $
+                 LONLABEL=lonLabel
   ENDELSE
      
   ;charSize = cgDefCharSize()*0.75
@@ -257,9 +265,9 @@ PRO INTERP_POLAR2DHIST,temp,tempName,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral
   ;; colorbar label stuff
   IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
   ;;  labelFormat='(I0)'
-  lowerLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^(temp.lim[0]) : temp.lim[0]
-  midLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
-  UpperLab=(logPlotzz AND (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz)) ? 10^temp.lim[1] : temp.lim[1]
+  lowerLab=(logPlotzz AND logLabels) ? 10^(temp.lim[0]) : temp.lim[0]
+  midLab=(logPlotzz AND logLabels) ? 10^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  UpperLab=(logPlotzz AND logLabels) ? 10^temp.lim[1] : temp.lim[1]
 
   IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
   IF wholeCap NE !NULL THEN BEGIN

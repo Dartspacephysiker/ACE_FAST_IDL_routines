@@ -3,13 +3,14 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='03182015'
+  date='03242015'
   dbDate='02282015'
 
 ;;  hemi='North'
 ;;  mirror = !NULL
-  hemi='North'
-  mirror = !NULL
+  hemi='South'
+  mirror = 1
+ ;;  mirror = !NULL
 
   ;dirs='all_IMF'
   ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
@@ -21,7 +22,8 @@ PRO commands_for_dusk_dawn_plots
   ;;plotprf="Foolin_round_" + date + "/quads/Dartdb_" + dbDate
   plotDir="plots/Foolin_round_" + date + "/"
 ;;  plotSuff="Dartdb_" + dbDate + "--" + "pFlux_GE_0.1"
-  plotSuff="Dartdb_" + dbDate + "--" + "charE_3e2_to_5e3--"
+;;  plotSuff="Dartdb_" + dbDate + "--" + "charE_3e2_to_5e3--"
+  plotSuff="Dartdb_" + dbDate
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + dbDate
 
   ;; mask min?
@@ -69,12 +71,25 @@ PRO commands_for_dusk_dawn_plots
   noPlotIntegral=1
 
   ;charERange?
-  charERange=[250,5e3]
-;;  charERange=[4,300]
+;;  charERange=[250,5e3]
+  charERange=[4,300]
 
   ;;Poynt range?
 ;; poyntRange=!NULL
   poyntRange=[1e-4,1e3]
+
+  
+  ;;;;;;;;;;;;;;;
+  ;electron plots
+  ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
+  ;;                                       /eplots,efluxplottype="Max",eplotrange=[-1,2.0],/logefplot,/nonegeflux,MEDIANPLOT=medPlot,WHOLECAP=wc,midnight=midn
+  batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
+                                        /eplots,efluxplottype="Max",eplotrange=[-0.5,1.3],/logefplot,/abseflux,MEDIANPLOT=medPlot, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        altitudeRange=[1000.0, 5000.0], CHARERANGE=charERange, POYNTRANGE=poyntRange, $
+                                        MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                        SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
 
   ;;;;;;;;;;
   ;orb plots
@@ -93,19 +108,6 @@ PRO commands_for_dusk_dawn_plots
                                         altitudeRange=[1000.0, 5000.0], CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
                                         DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
-  
-  ;;;;;;;;;;;;;;;
-  ;electron plots
-  ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-  ;;                                       /eplots,efluxplottype="Max",eplotrange=[-1,2.0],/logefplot,/nonegeflux,MEDIANPLOT=medPlot,WHOLECAP=wc,midnight=midn
-  batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",eplotrange=[-0.5,1.3],/logefplot,/abseflux,MEDIANPLOT=medPlot, $
-                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
-                                        altitudeRange=[1000.0, 5000.0], CHARERANGE=charERange, POYNTRANGE=poyntRange, $
-                                        MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                        SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
-
   
   ;;;;;;;;;;;;;;;
   ;ion plots
