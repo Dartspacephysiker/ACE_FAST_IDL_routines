@@ -3,13 +3,13 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='03242015'
+  date='03262015'
   dbDate='02282015'
 
- hemi='North'
-;;  mirror = !NULL
-  ;; hemi='South'
-  ;; mirror = 1
+  ;; hemi='North'
+  ;; mirror = !NULL
+  hemi='South'
+  mirror = 1
  ;;  mirror = !NULL
 
   ;dirs='all_IMF'
@@ -79,7 +79,7 @@ PRO commands_for_dusk_dawn_plots
   poyntRange=[1e-4,1e3]
 
   ;;altitude range?
-  altitudeRange=[2000.0, 3000.0]
+  altitudeRange=[1000.0, 5000.0]
   
   ;;;;;;;;;;;;;;;
   ;electron plots
