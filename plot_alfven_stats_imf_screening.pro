@@ -262,8 +262,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDELSE
 
-  IF NOT KEYWORD_SET(minMC) THEN minMC = 10                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -10         ; Current must be less than this, if it's going to make the cut
+  IF NOT KEYWORD_SET(minMC) THEN minMC = 1                ; Minimum current derived from mag data, in microA/m^2
+  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -1         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN

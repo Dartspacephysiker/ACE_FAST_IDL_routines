@@ -130,7 +130,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
      printf,lun,"Min characteristic electron energy: " + strcompress(charERange[0],/remove_all)
      printf,lun,"Max characteristic electron energy: " + strcompress(charERange[1],/remove_all)
   ENDIF
-  printf,lun,"There are " + strtrim(nGood,2) + " total events making the cut." 
+  printf,lun,"There are " + strtrim(n_elements(ind_region_magc_geabs10_ACEstart),2) + " total events making the cut." 
   IF (satellite EQ "ACE") THEN $
      printf,lun,"You're losing " + strtrim(nlost,2) + $
             " current events because ACE data doesn't start until " + strtrim(maximus.time(ind_ACEstart),2) + "."
