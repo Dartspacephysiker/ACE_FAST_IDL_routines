@@ -13,6 +13,9 @@
 ; You might want to consider the restriction on extremely high values, however, because you could be excluding the "most
 ;   interesting" events.
 
+; Still other cleaning happens in resize_maximus.pro, where all non-Alfven wave events (whatever
+; they are) get excluded for being such disgusting creatures.
+
 ;First, the northern hemisphere
  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegM
 minM = 0 & maxM = 24 & minI = 60 & maxI = 88 & binM = 0.5 & binI = 2 & minMC = 1 & maxNegMC = -1
@@ -32,5 +35,6 @@ save,clean_s_i,filename="cleaned_SOUTHERN_i_for_02282015_DB.sav"
 restore,"cleaned_SOUTHERN_i_for_02282015_DB.sav"
 restore,"cleaned_NORTHERN_i_for_02282015_DB.sav"
 clean_i=cgsetunion(cleaned_northern_i,cleaned_southern_i)
+
 save,clean_n_i,clean_s_i,clean_i,filename="cleaned_indices_for_02282015_DB.sav"
 exit

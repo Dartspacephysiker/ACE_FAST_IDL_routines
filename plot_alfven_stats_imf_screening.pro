@@ -541,9 +541,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   ;;1.0e-9 to take stock of delta_b being recordin in nT
   ;;Since E is recorded in mV/m, units of POYNTEST here are mW/m^2
-  ;;No need to worry about screening for FINITE(poyntEst), since both delta_B and delta_E are
+  ;;No need to worry about screening for FINITE(pfluxEst), since both delta_B and delta_E are
   ;;screened for finiteness in alfven_db_cleaner (which is called in get_chaston_ind.pro)
-  poyntEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
+  pfluxEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
   ;;********************************************
   ;;Now time for data summary
 
@@ -556,7 +556,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         PRINT,"No Poynting range set..."
         RETURN
      ENDIF ELSE BEGIN
-        plot_i=cgsetintersection(plot_i,where(poyntEst GE poyntRange[0] AND poyntEst LE poyntRange[1]))
+        plot_i=cgsetintersection(plot_i,where(pfluxEst GE poyntRange[0] AND pfluxEst LE poyntRange[1]))
      ENDELSE
   ENDIF
 
@@ -736,19 +736,19 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dPStr={h2dStr}
 
      ;;check for NaNs
-     goodPF_i = WHERE(FINITE(poyntEst),NCOMPLEMENT=lostNans)
+     goodPF_i = WHERE(FINITE(pfluxEst),NCOMPLEMENT=lostNans)
      IF goodPF_i[0] NE -1 THEN BEGIN
         print,"Found some NaNs in Poynting flux! Losing another " + strcompress(lostNans,/REMOVE_ALL) + " events..."
         plot_i = cgsetintersection(plot_i,goodPF_i)
      ENDIF
      
      IF KEYWORD_SET(noNegPflux) THEN BEGIN
-        no_negs_i=WHERE(poyntEst GE 0.0)
+        no_negs_i=WHERE(pfluxEst GE 0.0)
         plot_i=cgsetintersection(no_negs_i,plot_i)
      ENDIF
 
      IF KEYWORD_SET(noPosPflux) THEN BEGIN
-        no_pos_i=WHERE(poyntEst GE 0.0)
+        no_pos_i=WHERE(pfluxEst GE 0.0)
         plot_i=cgsetintersection(no_pos_i,plot_i)
      ENDIF
 
@@ -769,7 +769,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + pfDatName+"medhist_data.sav"
 
         h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                                 poyntEst(plot_i),$
+                                 pfluxEst(plot_i),$
                                  MIN1=MINM,MIN2=MINI,$
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
@@ -781,14 +781,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF ELSE BEGIN 
         h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                             maximus.ilat(plot_i),$
-                            poyntEst(plot_i),$
+                            pfluxEst(plot_i),$
                             MIN1=MINM,MIN2=MINI,$
                             MAX1=MAXM,MAX2=MAXI,$
                             BINSIZE1=binM,BINSIZE2=binI) 
         h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
      ENDELSE
 
-     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=poyntEst(plot_i)
+     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=pfluxEst(plot_i)
 
      ;;data mods?
      IF KEYWORD_SET(absPflux) THEN BEGIN 
@@ -829,7 +829,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         mlts=maximus.mlt(plot_i) 
         ilats=maximus.ilat(plot_i) 
         save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
-        pData=poyntEst(plot_i) 
+        pData=pfluxEst(plot_i) 
         save,pData,filename="testcode/pData.dat" 
      ENDIF
 
@@ -1475,18 +1475,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    ;;scatterplot of Poynting estimate vs. clock angle
 
    ;;cgscatter2d,phiChast,$
-   ;; poyntEst(cdbInterp_i),$
+   ;; pfluxEst(cdbInterp_i),$
    ;; xtitle="Clock angle",ytitle="|E||B| (Poynting flux estimate)",$
    ;; title="Poynt flux est. vs. IMF angle in "+hemStr+"ern hemisphere--"+strtrim(delay/60,2)+" min. delay",$
    ;; /ylog,yrange=[1.0e-5,1.0e-1],$
-   ;; xrange=[-180,180]  ;;,$output=hemStr+"_INTERP_poyntEst_vs_clock_angle.png"
+   ;; xrange=[-180,180]  ;;,$output=hemStr+"_INTERP_pfluxEst_vs_clock_angle.png"
 
    ;;********************************************************
    ;;SCATTERPLOTS
 
    ;;For all phi
    ;;cgscatter2d,maximus.mlt(cdbInterp_i),$
-   ;; poyntEst(cdbInterp_i),$
+   ;; pfluxEst(cdbInterp_i),$
    ;; xtitle="MLT", ytitle="|E||B| (Poynt flux est.)",$
    ;; title="Spread in latitude of Poynting flux for all phi"
    ;;output="Poynt_vs_MLT_Phi_all_'+hemStr+'.png"
@@ -1502,7 +1502,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    ;;For phi based on clockStr
    ;;window,0
    ;;cgscatter2d,maximus.mlt(plot_i),$
-   ;; poyntEst(plot_i),$
+   ;; pfluxEst(plot_i),$
    ;; xtitle="MLT", ytitle="|E||B| (Poynt flux est.)",$
    ;; title="Spread in latitude of Poynting flux for phiClock " + clockStr,$
    ;;output="Poynt_vs_MLT_'+clockStr+'_'+hemStr+'.png"
