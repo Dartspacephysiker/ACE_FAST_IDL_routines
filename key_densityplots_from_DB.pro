@@ -1,5 +1,5 @@
 ;+
-; NAME: KEY_HISTOS_PLOTS_FROM_DB
+; NAME: KEY_DENSITYPLOTS_FROM_DB
 ;
 ;
 ;
@@ -38,7 +38,7 @@
 ;                       Birth
 ;-
 
-PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR=chareScr,ABSMAGCSCR=absMagcScr
+PRO KEY_DENSITYPLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR=chareScr,ABSMAGCSCR=absMagcScr
 
   default_DBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
 
@@ -101,8 +101,8 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR
   maxStructLims[3,*] = [4,4e3] ; max_chare_losscone
   maxStructLims[4,*] = [5,1e3] ; delta_b
   maxStructLims[5,*] = [10,1e4] ; delta_e
-  database has no imposed limit for pflux
-  maxStructLims[6,*] = [1e-5,10] ; pfluxEst
+
+  maxStructLims[6,*] = [1e-5,10] ; pfluxEst -- database has no imposed limit for pflux, but here's one anyway
 
   maxStructLims[0,*] = [0,4300] ; alt
   maxStructLims[1,*] = [-250,250] ; mag_current
@@ -129,9 +129,21 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR
      ENDIF
   ENDFOR
 
+  ;; color table stuff
+  DEVICE, GET_DECOMPOSED=old_decomposed, DECOMPOSED = 0
+  LOADCT, 5
+
+  ;want filled circle plot symbol, so use plotsym, then set psym=8 in plotting procedure
+  plotsym, 0, 0.2
 
   ;; Here's a winning strategy to plot everything versus everything
   ;; This will loop over every unique pair in maxStructInd
+
+  ;from contour_plus
+  ;; clrz = findgen(n_elements(levels))/(n_elements(levels)+1)*254.
+  ;; if keyword_set(reverse) then $
+  ;;    clrz = (findgen(n_elements(levels))+1)/(n_elements(levels)+1)*254.
+
 
   FOR i=1,n_dataz DO BEGIN
 
@@ -146,29 +158,19 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR
 ;;        print,format='(A0,T20,A0)',maxTags(maxStructInd(i)),maxTags(tempStructInd(j))
         print,format='(I0,T5,I0)',mS_i,mS_j
 
-        ;; Now if we just create a [n_dataz-1]x2 matrix of limits for each data product, we can plot everything versus everything with ease!
-        ;; Something like this
-        ;; cgscatter2d,maximus.(mS_i),maximus.(mS_j), $
-        ;;             TRANSPARENCY=80,SYMSIZE=0.5,PSYM=9, $ ;This is necessary. There is such a high density of points that we need transparency
-        ;;             XRANGE=maxStructLims(i-1,*),YRANGE=tempStructLims(j,*), $
-        ;;             XTITLE=maxTags(mS_i),YTITLE=maxTags(mS_j), $
-        ;;             OUTFILENAME=maxTags(mS_i)+"_vs_"+maxTags(mS_j)+".png"
+        WINDOW, 0, XSIZE=600, YSIZE=600
 
-        curPlot = scatterplot(maximus.(mS_j),maximus.(mS_i), $
-                              SYMBOL="o",SYM_TRANSPARENCY=99,SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
-                              XRANGE=tempStructLims(j,*),YRANGE=maxStructLims(i-1,*), $
-                              XTITLE=maxTags(mS_j),YTITLE=maxTags(mS_i), $
-                              DIMENSIONS=[600,600])
-        
+        contour_plus,maximus.(mS_j),maximus.(mS_i), $
+;;                     PSYM=8,SYM_TRANSPARENCY=99,SYMSIZE=0.5, $ ;There is such a high density of points that we need transparency
+                     XRANGE=tempStructLims(j,*),YRANGE=maxStructLims(i-1,*), $
+                     XTITLE=maxTags(mS_j),YTITLE=maxTags(mS_i),/XSTYLE,/YSTYLE, $
+                     RETURN_LEVELS=retLevels, $
+                     NLEVELS=10, $
+                     BACKGROUND=255, COLOR = 0, DIMENSIONS=[600,600],TRIMLEVEL=3
 
-        curPlot.save,maxTags(mS_i)+"_vs_"+maxTags(mS_j)+plotSuff+".png",resolution=300
+        DEVICE, DECOMPOSED=old_decomposed
 
      ENDFOR
-
-     cghistoplot,maximus.(mS_i),TITLE=maxTags(mS_i), $
-                 MININPUT=maxStructLims(i-1,0),MAXINPUT=maxStructLims(i-1,1),$
-                 OUTPUT=maxTags(mS_i)+"_histogram"+plotSuff+".png"
-
   ENDFOR
 
 END
