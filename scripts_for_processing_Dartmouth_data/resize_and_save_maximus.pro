@@ -73,6 +73,6 @@ maximus={orbit:maximus.orbit(clean_i),$
          TOTAL_UPWARD_ION_OUTFLOW_SINGLE:maximus.TOTAL_UPWARD_ION_OUTFLOW_SINGLE(clean_i),$
          TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT:maximus.TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT(clean_i),$
          TOTAL_ALFVEN_UPWARD_ION_OUTFLOW:maximus.TOTAL_ALFVEN_UPWARD_ION_OUTFLOW(clean_i),$
-         PFLUXEST:maximus.delta_b(clean_i)*maximus.delta_e(clean_i)}
+         PFLUXEST:maximus.delta_b(clean_i)*maximus.delta_e(clean_i)*4.0e-7*!PI}
 
 save,maximus,filename=cleanDBFile

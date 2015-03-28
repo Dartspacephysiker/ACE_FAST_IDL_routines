@@ -2,6 +2,8 @@
 ;values of dst, ae, etc.
 ;10/24/2013, manyana
 
+pro get_storm_times
+
 ;go where is the data
 cd, '/home/spencerh/Research/Cusp/database/'
 
@@ -26,3 +28,5 @@ dst_storm_dur = comp_dur(dst_storm,WhereChange=dststormchange)
 
 ;I think this command will crash idlde
 ;cgboxplot,mag_prop.bz_gse(these),stats=bizz
+
+end

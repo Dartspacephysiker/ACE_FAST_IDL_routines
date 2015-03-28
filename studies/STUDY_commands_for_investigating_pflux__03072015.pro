@@ -1,7 +1,7 @@
 ;01/30/2015 6 PM
 ;Here I am, reproducing these figures on a Friday night. It's totally excellent, because things appear to line up with Chaston's picture!
 
-PRO commands_for_Chaston_2003_figs4a_c_reproduction
+PRO STUDY_commands_for_investigating_pflux__03072015
 
   date='03072015'
   dbDate = '02282015'
