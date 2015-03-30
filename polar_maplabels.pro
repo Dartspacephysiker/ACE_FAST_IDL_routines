@@ -1,3 +1,11 @@
+;from IDL docs for MAPGRID
+;; If you want more control over the grid labels, then you can set the LABEL_FORMAT property to an IDL function name. 
+;; The callback function is called with four parameters: Orientation, Location, Fractional, and DefaultLabel, where:
+;; --> Orientation is 0 for a line of longitude (e.g. 120°E) and 1 for a line of latitude (e.g. 45°S)
+;; --> Location is the location value (e.g. 120 for 120°E, or -45 for 45°S)
+;; --> Fractional is 0 if all of the grid lines are integers, and 1 if any of the grid lines are floating-point numbers (non-integers)
+;; --> DefaultLabel is a string giving the default label as computed by MAPGRID
+
 function polar_maplabels, orientation, location, fractional, defaultlabel
   
   if ((ABS(location) eq 0 OR abs(location) eq 180) AND orientation EQ 0) THEN BEGIN

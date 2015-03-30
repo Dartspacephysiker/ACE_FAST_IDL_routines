@@ -32,12 +32,14 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                       ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                       NEVENTSRANGE=nEventsRange, NUMORBLIM=numOrbLim, $
                       minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
+                      MIN_NEVENTS=min_nEvents, BYMIN=byMin, $
                       SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                       HEMI=hemi, $
                       DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                       DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                      INDPREFIX=indPrefix,INDSUFFIX=indSuffix, $
                       _EXTRA = e
+;;                      MASKMIN=maskMin, $
   
   ;; some commoners
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNEGMC
@@ -140,8 +142,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   ;;Setting angle limits 45 and 135, for example, gives a 90-deg
   ;;window for dawnward and duskward plots
   IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=45.0               ;in degrees
-     angleLim2=135.0              ;in degrees
+     angleLim1=30.0               ;in degrees
+     angleLim2=120.0              ;in degrees
   ENDIF ELSE BEGIN 
      angleLim1=180.0              ;for doing all IMF
      angleLim2=180.0 
@@ -151,14 +153,14 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   binM=(N_ELEMENTS(BinMLT) EQ 0) ? 0.5 : BinMLT
   binI=(N_ELEMENTS(BinILAT) EQ 0) ? 2.0 : BinILAT 
 
-  ;;Set minimum allowable number of events for a histo bin to be displayed
-  maskStr=''
-  IF NOT KEYWORD_SET(maskMin) THEN maskMin=1 $
-  ELSE BEGIN
-     IF maskMin GT 1 THEN BEGIN
-        maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
-     ENDIF
-  ENDELSE
+  ;; ;; Set minimum allowable number of events for a histo bin to be displayed
+  ;; maskStr=''
+  ;; IF NOT KEYWORD_SET(maskMin) THEN maskMin=1 $
+  ;; ELSE BEGIN
+  ;;    IF maskMin GT 1 THEN BEGIN
+  ;;       maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
+  ;;    ENDIF
+  ;; ENDELSE
   
   ;;Requirement for IMF By magnitude?
   byMinStr=''
@@ -259,7 +261,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
-  paramStr=hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+hoyDia
+;;  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+indSuffix+hoyDia
+  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+byMinStr+indSuffix+hoyDia
 
   ;;Now run these to clean and tap the databases and interpolate satellite data
   

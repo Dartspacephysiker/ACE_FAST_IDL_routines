@@ -101,6 +101,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   map = MAP('Polar Stereographic', $
             CENTER_LONGITUDE=centerLon, $
             TRUE_SCALE_LATITUDE=tsLat, $
+            LABEL_FORMAT='polar_maplabels', $
             FILL_COLOR="white",DIMENSIONS=[800,800])
 
   ; Change some grid properties.
@@ -109,6 +110,19 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   grid.TRANSPARENCY=30
   grid.color="blue"
   grid.linestyle=1
+  grid.label_angle = 0
+  grid.font_size = 12
+
+  mlats=grid.latitudes
+  FOR i=0,n_elements(mlats)-1 DO BEGIN
+     mlats(i).label_position=0.55
+     mlats(i).label_valign=1.0
+  ENDFOR
+
+  mlons=grid.longitudes
+  FOR i=0,n_elements(mlons)-1 DO BEGIN
+     mlons(i).label_position=0.02
+  ENDFOR
 
   ;;****************************************
   IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
