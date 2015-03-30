@@ -250,10 +250,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;take care of hemisphere
   IF hemi EQ "North" THEN BEGIN
      IF NOT KEYWORD_SET(minI) THEN minI = 60L
-     IF NOT KEYWORD_SET(maxI) THEN maxI = 84L
+     IF NOT KEYWORD_SET(maxI) THEN maxI = 88L
   ENDIF ELSE BEGIN
      IF hemi EQ "South" THEN BEGIN
-        IF NOT KEYWORD_SET(minI) THEN minI = -84L
+        IF NOT KEYWORD_SET(minI) THEN minI = -88L
         IF NOT KEYWORD_SET(maxI) THEN maxI = -60L
      ENDIF ELSE BEGIN
         PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."

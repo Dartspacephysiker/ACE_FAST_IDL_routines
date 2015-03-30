@@ -19,22 +19,21 @@
 ;First, the northern hemisphere
  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegM
 minM = 0 & maxM = 24 & minI = 60 & maxI = 88 & binM = 0.5 & binI = 2 & minMC = 1 & maxNegMC = -1
-plot_alfven_stats_imf_screening,maximus,clockStr="all_IMF",altituderange=[0,5000],charerange=[2,4e3],minILAT=60,maxILAT=88,minMLT=0,maxMLT=24,satellite="OMNI"
+plot_alfven_stats_imf_screening,maximus,clockStr="all_IMF",altituderange=[0,5000],charerange=[4,4e3],satellite="OMNI",/WHOLECAP,HEMI="North"
 clean_n_i=ind_region_magc_geabs10_ACEstart
 save,clean_n_i,filename="cleaned_NORTHERN_i_for_02282015_DB.sav"
 
 ;Now the southern
  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegM
 minM = 0 & maxM = 24 & minI = -88 & maxI = -60 & binM = 0.5 & binI = 2 & minMC = 1 & maxNegMC = -1
-plot_alfven_stats_imf_screening,maximus,clockStr="all_IMF",altituderange=[0,5000],charerange=[2,4e3],minILAT=-88,maxILAT=-60,minMLT=0,maxMLT=24,satellite="OMNI"
-minM = 0 & maxM = 24 & minI = -88 & maxI = -60 & binM = 0.5 & binI = 2 & minMC = 1 & maxNegMC = -1
+plot_alfven_stats_imf_screening,maximus,clockStr="all_IMF",altituderange=[0,5000],charerange=[2,4e3],satellite="OMNI",/WHOLECAP,HEMI="South"
 clean_s_i=ind_region_magc_geabs10_ACEstart
 save,clean_s_i,filename="cleaned_SOUTHERN_i_for_02282015_DB.sav"
 
 ;Now both!
 restore,"cleaned_SOUTHERN_i_for_02282015_DB.sav"
 restore,"cleaned_NORTHERN_i_for_02282015_DB.sav"
-clean_i=cgsetunion(cleaned_northern_i,cleaned_southern_i)
+clean_i=cgsetunion(clean_n_i,clean_s_i)
 
 save,clean_n_i,clean_s_i,clean_i,filename="cleaned_indices_for_02282015_DB.sav"
 exit
