@@ -48,7 +48,10 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   ;; Defaults
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defOutDir = 'histos_scatters/polar/'
   defOutFile = 'key_scatterplots_polarproj.png'
+  
+  IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
   IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutFile
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
@@ -199,6 +202,6 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   ;;                'o',/overplot,SYM_TRANSPARENCY=95);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
 ;                ,linestyle=6, $
 ;                 MAPPROJECTION=map,MAPGRID=grid,/overplot)
-  curPlot.save,outFile,resolution=600
+  curPlot.save,outDir+outFile,resolution=600
 
 END

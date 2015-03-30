@@ -38,6 +38,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                       DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                       DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                       INDPREFIX=indPrefix,INDSUFFIX=indSuffix, $
+                      OUTDIR=outDir, $
                       _EXTRA = e
 ;;                      MASKMIN=maskMin, $
   
@@ -54,6 +55,9 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   defCDBTimeFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--cdbTime--cleaned.sav"
   IF NOT KEYWORD_SET(cdbTimeFile) THEN cdbTimeFile = defCDBTimeFile 
   restore,cdbTimeFile
+
+  defOutDir='plot_indices_saves/'
+  IF NOT KEYWORD_SET(outDir) THEN outDir = defOutDir
 
   lun=-1 ;default to stdout
 
@@ -310,7 +314,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   printf,lun,"Percentage of current DB used: " + $
          strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
 
-  savFile="PLOT_INDICES_"+paramStr+".sav"
+  savFile=outDir+"PLOT_INDICES_"+paramStr+".sav"
   print,"Saving indices to " + savFile + "..."
   save,plot_i,paramStr, $
        angleLim1,angleLim2, $

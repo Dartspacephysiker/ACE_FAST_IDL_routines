@@ -210,13 +210,71 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   !EXCEPT=0                                                      ;Do report errors, please
   ;;***********************************************
+  ;;Tons of defaults
+  
+  ;ranges in MLT and ILAT
+  ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
+  ; has ilat bin size = 3.0 and mlt bin size = 1.0
+  defMinM = 6.0
+  defMaxM = 18.0
+  defBinM = 0.75
+  ;; defBinM = 0.5
 
+  defMinI = 60.0 ;these might need to be longs (i.e., '60L')
+  defMaxI = 88.0
+  defBinI = 3.0
+
+  defMinMagC = 10
+  defMaxNegMagC = -10
+
+  defCharERange = [4.0,300]
+  defAltRange = [1000.0, 5000.0]
+
+  defEFluxPlotType = "Max"
+  defIFluxPlotType = "Max"
+  defCharEPlotType = "lossCone"
+
+  ; satellite defaults
+  defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  defOmni_Coords = "GSM"             ; either "GSE" or "GSM"
+
+  defDelay = 660
+
+  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
+  defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
+                                ;there's no way to calculate IMF stability
+                                ;Only valid for stableIMF GE 1
+  defCheckBothWays = 0          
+  
+  defBx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  
+  defClockStr = 'dawnward'
+  
+  defAngleLim1 = 45.0
+  defAngleLim2 = 135.0
+
+  ; assorted
+  defMaskMin = 1
+
+  defPlotDir = 'plots/'
+  defRawDir = 'rawsaves/'
+
+  defOutSummary = 1 ;for output plot summary
+
+  defDataDir = "/SPENCEdata/Research/Cusp/database/"
+
+
+  ; Handle MLT and ILAT
   IF KEYWORD_SET(minMLT) then minM = minMLT
   IF KEYWORD_SET(maxMLT) then maxM = maxMLT
-  IF KEYWORD_SET(binMLT) then binM = binMLT
+
+  ;;Bin sizes for 2D histos
+  binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
+  binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
+
   IF KEYWORD_SET(minILAT) then minI = minILAT
   IF KEYWORD_SET(maxILAT) then maxI = maxILAT
-  IF KEYWORD_SET(binILAT) then binI = binILAT
+
 
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
@@ -229,23 +287,23 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; maxOrb=8500                   ;8292 for Strangeway study
   ;;nOrbits = maxOrb - minOrb + 1
   
-  IF NOT KEYWORD_SET(charERange) THEN charERange = [4.0,300]         ; 4,~300 eV in Strangeway
+  IF NOT KEYWORD_SET(charERange) THEN charERange = defCharERange         ; 4,~300 eV in Strangeway
 
-  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = [1000.0, 5000.0] ;Rob Pfaff says no lower than 1000m
+  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
   
-  IF NOT KEYWORD_SET(minM) THEN minM = 6L
-  IF NOT KEYWORD_SET(maxM) THEN maxM = 18L
+  IF NOT KEYWORD_SET(minM) THEN minM = defMinM
+  IF NOT KEYWORD_SET(maxM) THEN maxM = defMaxM
   
   IF NOT KEYWORD_SET(hemi) THEN hemi = "North"
 
   ;take care of hemisphere
   IF hemi EQ "North" THEN BEGIN
-     IF NOT KEYWORD_SET(minI) THEN minI = 60L
-     IF NOT KEYWORD_SET(maxI) THEN maxI = 88L
+     IF NOT KEYWORD_SET(minI) THEN minI = defMinI
+     IF NOT KEYWORD_SET(maxI) THEN maxI = defMaxI
   ENDIF ELSE BEGIN
      IF hemi EQ "South" THEN BEGIN
-        IF NOT KEYWORD_SET(minI) THEN minI = -88L
-        IF NOT KEYWORD_SET(maxI) THEN maxI = -60L
+        IF NOT KEYWORD_SET(minI) THEN minI = -defMaxI
+        IF NOT KEYWORD_SET(maxI) THEN maxI = -defMinI
      ENDIF ELSE BEGIN
         PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
         PRINT,"Defaulting to 'North'."
@@ -253,8 +311,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDELSE
 
-  IF NOT KEYWORD_SET(minMC) THEN minMC = 10                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -10         ; Current must be less than this, if it's going to make the cut
+  IF NOT KEYWORD_SET(minMC) THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
+  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -271,11 +329,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               minM=0
               maxM=24
               IF hemi EQ "North" THEN BEGIN
-                 minI=60
-                 maxI=84
+                 minI=defMinI
+                 maxI=defMaxI
               ENDIF ELSE BEGIN
-                 minI=-84
-                 maxI=-60
+                 minI=-defMaxI
+                 maxI=-defMinI
               ENDELSE
            ENDIF
         ENDIF
@@ -286,36 +344,35 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;satellite data options
   
-  IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"                ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSM"             ; either "GSE" or "GSM"
+  IF NOT KEYWORD_SET(satellite) THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
 
-  defDelay = 660
   IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
                                                                        ;Bin recommends something like 11min
   
-  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = 0S                    ;Set to a time (in minutes) over which IMF stability is required
-  IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
+  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
+  IF NOT KEYWORD_SET(includeNoConsecData) THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
                                                                        ;there's no way to calculate IMF stability
                                                                        ;Only valid for stableIMF GE 1
-  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = 0       ;
+  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = defCheckBothWays       ;
   
-  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = defBx_over_ByBz_Lim       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
   
   
   ;;Want to make plots in plotDir?
-  IF NOT KEYWORD_SET(plotDir) THEN plotDir = 'plots/'
+  IF NOT KEYWORD_SET(plotDir) THEN plotDir = defPlotDir
   ;;plotPrefix='NESSF2014_reproduction_Jan2015'
 
-  IF NOT KEYWORD_SET(rawDir) THEN rawDir="rawsaves/"
+  IF NOT KEYWORD_SET(rawDir) THEN rawDir=defRawDir
  
   ;;Write output file with data params? Only possible if noSavePlots=0...
   IF KEYWORD_SET(noSavePlots) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
      print, "Is it possible to have outputPlotSummary==1 while noSavePlots==0? You used to say no..."
-     outputPlotSummary=1   ;;Change to zero if not wanted
+     outputPlotSummary=defOutSummary   ;;Change to zero if not wanted
   ENDIF 
 
   ;;Write plot data output for Bin?
-  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir = defDataDir
 
   ;;Any of multifarious reasons for needing output?
   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
@@ -338,19 +395,19 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 ;;     polarPlot=1                                                 ;do Polar plots instead?
   ENDIF
 
-  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                     ; do num events plots?
-  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                    ;electron flux plots?
-  IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = "Max"   ;options are "Integ" and "Max"
-  IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = "Max"   ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
-  IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                    ;Poynting flux [estimate] plots?
-  IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                    ;ion Plots?
-  IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0              ;char E plots?
-  IF N_ELEMENTS(charEType) EQ 0 THEN charEType = "lossCone"      ;options are "lossCone" and "Total"
-  IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0                  ;Contributing orbits plot?
-  IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0            ;"Total orbits considered" plot?
-  IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0          ;Contributing/total orbits plot?
-  IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0 ;N Events/orbit plot?
-
+  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                              ; do num events plots?
+  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                             ;electron flux plots?
+  IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = defEFluxPlotType ;options are "Integ" and "Max"
+  IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = defIFluxPlotType ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
+  IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                             ;Poynting flux [estimate] plots?
+  IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                         ;ion Plots?
+  IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0                     ;char E plots?
+  IF N_ELEMENTS(charEType) EQ 0 THEN charEType = defCharEPlotType         ;options are "lossCone" and "Total"
+  IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0             ;Contributing orbits plot?
+  IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0                     ;"Total orbits considered" plot?
+  IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0                   ;Contributing/total orbits plot?
+  IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0         ;N Events/orbit plot?
+  
   IF KEYWORD_SET(nEventPerOrbPlot) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
      print,"Can't do nEventPerOrbPlot without nPlots!!"
      print,"Enabling nPlots..."
@@ -359,27 +416,23 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Which IMF clock angle are we doing?
   ;;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
-  IF NOT KEYWORD_SET(clockStr) THEN clockStr='dawnward'
+  IF NOT KEYWORD_SET(clockStr) THEN clockStr = defClockStr
 
   ;;How to set angles? Note, clock angle is measured with
   ;;Bz North at zero deg, ranging from -180<clock_angle<180
   ;;Setting angle limits 45 and 135, for example, gives a 90-deg
   ;;window for dawnward and duskward plots
   IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=45.0               ;in degrees
-     angleLim2=135.0              ;in degrees
+     angleLim1=defAngleLim1               ;in degrees
+     angleLim2=defAngleLim2              ;in degrees
   ENDIF ELSE BEGIN 
      angleLim1=180.0              ;for doing all IMF
      angleLim2=180.0 
   ENDELSE
 
-  ;;Bin sizes for 2D histos
-  binM=(N_ELEMENTS(BinMLT) EQ 0) ? 0.5 : BinMLT
-  binI=(N_ELEMENTS(BinILAT) EQ 0) ? 2.0 : BinILAT 
-
   ;;Set minimum allowable number of events for a histo bin to be displayed
   maskStr=''
-  IF NOT KEYWORD_SET(maskMin) THEN maskMin=1 $
+  IF NOT KEYWORD_SET(maskMin) THEN maskMin = defMaskMin $
   ELSE BEGIN
      IF maskMin GT 1 THEN BEGIN
         maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
@@ -476,12 +529,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "_med" ELSE plotMedOrAvg = "_avg"
 
   IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
-  ;; IF NOT KEYWORD_SET(plotPrefix) THEN BEGIN
-  ;;    plotType='Eflux_' +eFluxPlotType
-  ;;    plotType=(N_ELEMENTS(logEfPlot) EQ 0) ? plotType : 'log' + plotType
-  ;;    plotType=(N_ELEMENTS(logPfPlot) EQ 0) ? plotType : 'logPf_' + plotType
-  ;;    plotDir=(KEYWORD_SET(squarePlot)) ? plotDir + plotType : plotDir + "polar/" + plotType + '/' 
-  ;; ENDIF ELSE 
   IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
 
   smoothStr=""

@@ -1,6 +1,9 @@
 #No emacs temp files
 *~
 
+#Not various_untracked folder
+various_untracked/*
+
 #No txtoutput texts in 'Compare_Chaston_DB'
 Compare_new_DB_with_Chastons/txtoutput/*.txt
 Compare_new_DB_with_Chastons/txtoutput/*.sav
