@@ -1,9 +1,11 @@
 ; The purpose of this file is just what you'd expect--we want to resize maximus based on some stuff
 
-FUNCTION resize_maximus,maximus,maximus_ind,min_for_ind,max_for_ind
+FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,MAX_FOR_IND=max_for_ind,INDS=inds
 
-  allowed_i=where(maximus.(maximus_ind) GE min_for_ind AND maximus.(maximus_ind) LE max_for_ind)
-  ;;maximus is harder
+  IF KEYWORD_SET(inds) THEN allowed_i = inds ELSE BEGIN
+     allowed_i=where(maximus.(maximus_ind) GE min_for_ind AND maximus.(maximus_ind) LE max_for_ind)
+  ENDELSE
+
   maximus={orbit:maximus.orbit(allowed_i),$
            alfvenic:maximus.alfvenic(allowed_i),$
            TIME:maximus.time(allowed_i),$

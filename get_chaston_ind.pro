@@ -12,13 +12,18 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
+  
+  defLoaddataDir = '/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  defPref = "Dartdb_02282015--500-14999"
+  defCDBTimeFile = defLoaddataDir + defPref + "--cdbTime.sav"
+  defDBFile = defLoaddataDir + defPref + "--maximus.sav"
 
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
      pref = "Dartdb_02282015--500-14999"
      dbfile = pref + "--maximus.sav"
-     loaddataDir = '/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-     cdbTimeFile = loaddataDir + pref + "--cdbTime.sav"
-     IF FILE_TEST(cdbTimeFile) THEN restore,cdbTimeFile
+     loaddataDir = defLoaddataDir
+     cdbTimeFile = defCDBTimeFile
+     IF FILE_TEST(cdbTimeFile) AND cdbTime EQ !NULL THEN restore,cdbTimeFile
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
         dbfile = "maximus.dat"
@@ -30,7 +35,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
   ;;Load, if need be
   IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN 
-     print,"There is already a maximus struct loaded! Not loading " + loaddataDir + dbfile + "..."
+     print,"There is already a maximus struct loaded! Not loading " + defDBFile
   ENDELSE
 
   ;;generate indices based on restrictions in interp_plots.pro

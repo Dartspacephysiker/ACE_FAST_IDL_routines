@@ -38,42 +38,49 @@
 ;                       Birth
 ;-
 
-PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR=chareScr,ABSMAGCSCR=absMagcScr
+PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                             CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
+                             PLOTSUFF=plotSuff
 
-  default_DBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  ;;defaults
+  defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defaultDims = [600,600]
+  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
+  ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
+  plotSuff = "min10current"
 
-  IF NOT KEYWORD_SET(dbFile) THEN restore,default_DBFile ELSE restore,dbFile
-  
-  ;;names of the POSSIBILITIES
-  maxTags=tag_names(maximus)
 
   ;;****************************************
   ;;screen on maximus? YES
 
+  IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
+  
+  ;;names of the POSSIBILITIES
+  maxTags=tag_names(maximus)
+
   ;;dayside
   ;; IF KEYWORD_SET(dayside) THEN BEGIN
-  ;;    maximus = resize_maximus(maximus,4,6,18)  ;; Dayside MLTs
-  ;;    maximus = resize_maximus(maximus,5,60,84) ;; ILAT range
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)  ;; Dayside MLTs
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84) ;; ILAT range
   ;; ENDIF
 
   ;;nightside
   ;;Not currently functional, because resize_maximus can't handle selecting MLTS 18-6, you see
   ;; IF KEYWORD_SET(nightside) THEN BEGIN
-  ;;    maximus = resize_maximus(maximus,4,6,18)    ;; Nightside MLTs
-  ;;    maximus = resize_maximus(maximus,5,60,84)   ;; ILAT range
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)    ;; Nightside MLTs
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84)   ;; ILAT range
   ;; ENDIF
 
   ;; screen by characteristic energy
-  ;; IF KEYWORD_SET(charEScr) THEN maximus = resize_maximus(maximus,12,4,300)  
+  ;; IF KEYWORD_SET(charEScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=12,MIN_FOR_IND=4,MAX_FOR_IND=300)  
 
-  ;; screen by magnetometer current
+  ; screen by magnetometer current
+  min_absMagcScr=10
+  max_absMagcScr=500
+  IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)
   ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,6,-ABS(absMagcScr),ABS(absMagcScr))  
 
   ;;****************************************
-
-
-  plotSuff = ""
-  ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
 
   ;"Key" data products (I guess they're key)
   ;; print,maxTags(3)      ;alt
@@ -101,8 +108,7 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR
   maxStructLims[3,*] = [4,4e3] ; max_chare_losscone
   maxStructLims[4,*] = [5,1e3] ; delta_b
   maxStructLims[5,*] = [10,1e4] ; delta_e
-  database has no imposed limit for pflux
-  maxStructLims[6,*] = [1e-5,10] ; pfluxEst
+  maxStructLims[6,*] = [1e-5,10] ; pfluxEst--database has no imposed limit for pflux, but we impose one
 
   maxStructLims[0,*] = [0,4300] ; alt
   maxStructLims[1,*] = [-250,250] ; mag_current
@@ -158,10 +164,10 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR
                               SYMBOL="o",SYM_TRANSPARENCY=99,SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
                               XRANGE=tempStructLims(j,*),YRANGE=maxStructLims(i-1,*), $
                               XTITLE=maxTags(mS_j),YTITLE=maxTags(mS_i), $
-                              DIMENSIONS=[600,600])
+                              DIMENSIONS=defaultDims)
         
 
-        curPlot.save,maxTags(mS_i)+"_vs_"+maxTags(mS_j)+plotSuff+".png",resolution=300
+        curPlot.save,maxTags(mS_i)+"_vs_"+maxTags(mS_j)+plotSuff+".png",resolution=600
 
      ENDFOR
 

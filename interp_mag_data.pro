@@ -11,7 +11,13 @@
 FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun, $
                          CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
-                         DATADIR=datadir,BYMIN=byMin, OMNI_COORDS=omni_Coords
+                         DATADIR=datadir,BYMIN=byMin, OMNI_COORDS=omni_Coords;, $
+;;                         CLEANED_DB=cleaned_DB
+
+  ;;If using cleaned DB, use all indices!
+;;  IF KEYWORD_SET(cleaned_DB) THEN ind_region_magc_geabs10_ACEstart=lindgen(n_elements(cleaned_DB.time))
+
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
 
   ;;********************************************************
   ;;Restore ACE data, if need be
