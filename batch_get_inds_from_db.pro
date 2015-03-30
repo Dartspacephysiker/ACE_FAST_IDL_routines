@@ -25,8 +25,8 @@ PRO BATCH_GET_INDS_FROM_DB,INDPREFIX=indPrefix,INDSUFFIX=indSuffix, $
   PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(5(A10)))',directions
 
   ;mask min
-  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = 4
-  PRINT,"Mask min: " + strcompress(maskMin,/REMOVE_ALL)
+  ;; IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = 4
+  ;; PRINT,"Mask min: " + strcompress(maskMin,/REMOVE_ALL)
 
   ;;loop over IMF orientations
   FOR i=0,N_ELEMENTS(directions)-1 DO BEGIN

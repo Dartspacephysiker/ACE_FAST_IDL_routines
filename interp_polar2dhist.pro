@@ -64,6 +64,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
+  nEvPlotzz=STRMATCH(temp.title, '*Number*',/FOLD_CASE)
   nEvPerOrbPlotzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
   orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
   charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
@@ -78,7 +79,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ;; ENDELSE
   ;; logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR iPlotzz)
-  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz )
+  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR nEvPlotzz )
 
   negs=WHERE(temp.data LT 0.0)
   IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN

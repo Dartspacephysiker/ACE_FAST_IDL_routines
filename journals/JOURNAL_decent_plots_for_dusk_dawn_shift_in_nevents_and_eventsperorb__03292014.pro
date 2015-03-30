@@ -1,7 +1,7 @@
 ;02/02/2015
 ;A quicker(?) way to make all the plots I want
 
-PRO commands_for_dusk_dawn_plots
+PRO commands_for_dusk_dawn_plots_wider_MLT_ILAT_range
 
   date='03292015'
   dbDate='02282015'
@@ -98,19 +98,20 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
                                         /orbPlots, /orbContribPlot,/orbTotPlot,/orbFreqPlot, $
                                         /nEventPerOrbPlot, $
-                                        neventperorbrange=[0.0,2.5], $
+;;                                        neventperorbrange=[0.0,3.0], $
 ;;                                        /logneventperorb, neventperorbrange=[-1,0.4772], $
 ;;                                        /divNEvByApplicable, neventperorbrange=[0.0,40.0], $
-;;                                        /logneventperorb, /divNEvByApplicable, neventperorbrange=[FLOOR(100.0*ALOG10(mskm))/100.0,2], $
+                                        /logneventperorb, /divNEvByApplicable, neventperorbrange=[FLOOR(100.0*ALOG10(mskm))/100.0,2], $
 ;;                                        /logneventperorb, neventperorbrange=[-1,0.699], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='North', nEventsRange=[100,750], orbFreqRange=[0.0, 0.15], orbContribRange=[0,40], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='South', nEventsRange=[0,425], orbFreqRange=[0.0, 0.1], orbContribRange=[0,20], $
-                                        nEventsRange=[0,750], orbFreqRange=[0.0, 0.12], orbContribRange=[0,40], $
+                                        nEventsPlotRange=[400,1625], $;/LOGNEVENTSPLOT, $
+                                        orbFreqRange=[0.02, 0.15], orbContribRange=[20,60], $
                                         WHOLECAP=wc,midnight=midn,BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
                                         DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
-  
+
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $

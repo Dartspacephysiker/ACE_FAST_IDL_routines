@@ -18,11 +18,8 @@ PRO commands_for_dusk_dawn_inds
   indSuff=date
   ;; indprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + dbDate
 
-  ;; mask min?
-  mskm=3
-
   ;; byMin?
-  byMin=3.0 ;for bzNorth, bzSouth plots
+  byMin=5.0 ;for bzNorth, bzSouth plots
   ;; byMin=3.0
   numOrbLim=!NULL
   ;; numOrbLim=2
@@ -48,14 +45,14 @@ PRO commands_for_dusk_dawn_inds
   charERange=[4,250]
 
   ;;Poynt range?
-;; poyntRange=!NULL
-  poyntRange=[1e-4,1e3]
+  poyntRange=!NULL
+  ;; poyntRange=[1e-4,1e3]
 
   ;;altitude range?
   altitudeRange=[1000.0, 5000.0]
   
   ;; do it
-  batch_ind_alfven_stats_imf_screening,INDSUFFIX=indSuff,directions=dirs,maskmin=mskm, NUMORBLIM=numOrbLim, $
+  batch_get_inds_from_db,INDSUFFIX=indSuff,directions=dirs,maskmin=mskm, NUMORBLIM=numOrbLim, $
                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                        ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                        SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror

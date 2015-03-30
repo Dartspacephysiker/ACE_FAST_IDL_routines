@@ -61,23 +61,101 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   lun=-1 ;default to stdout
 
-  IF KEYWORD_SET(minMLT) then minM = minMLT ELSE minM = 6L
-  IF KEYWORD_SET(maxMLT) then maxM = maxMLT ELSE maxM = 18L
-  IF KEYWORD_SET(binMLT) then binM = binMLT
+  ;;***********************************************
+  ;;Tons of defaults
+  
+  ;ranges in MLT and ILAT
+  ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
+  ; has ilat bin size = 3.0 and mlt bin size = 1.0
+  defMinM = 6.0
+  defMaxM = 18.0
+  defBinM = 0.75
+  ;; defBinM = 0.5
+
+  defMinI = 60.0 ;these might need to be longs (i.e., '60L')
+  defMaxI = 88.0
+  defBinI = 3.0
+
+  defMinMagC = 10
+  defMaxNegMagC = -10
+
+  defCharERange = [4.0,300]
+  defAltRange = [1000.0, 5000.0]
+
+  defEFluxPlotType = "Max"
+  defIFluxPlotType = "Max"
+  defCharEPlotType = "lossCone"
+
+  ; satellite defaults
+  defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  defOmni_Coords = "GSM"             ; either "GSE" or "GSM"
+
+  defDelay = 660
+
+  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
+  defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
+                                ;there's no way to calculate IMF stability
+                                ;Only valid for stableIMF GE 1
+  defCheckBothWays = 0          
+  
+  defBx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  
+  defClockStr = 'dawnward'
+  
+  defAngleLim1 = 45.0
+  defAngleLim2 = 135.0
+
+  ; assorted
+  ;; defMaskMin = 1
+
+  defPlotDir = 'plots/'
+  defRawDir = 'rawsaves/'
+
+  defOutSummary = 1 ;for output plot summary
+
+  defDataDir = "/SPENCEdata/Research/Cusp/database/"
+
+
+  ; Handle MLT and ILAT
+  IF KEYWORD_SET(minMLT) then minM = minMLT
+  IF KEYWORD_SET(maxMLT) then maxM = maxMLT
+
+  ;;Bin sizes for 2D histos
+  binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
+  binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
+
   IF KEYWORD_SET(minILAT) then minI = minILAT
   IF KEYWORD_SET(maxILAT) then maxI = maxILAT
-  IF KEYWORD_SET(binILAT) then binI = binILAT
 
+
+  ;;***********************************************
+  ;;RESTRICTIONS ON DATA, SOME VARIABLES
+  ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
+  
+  mu_0 = 4.0e-7 * !PI                                            ;perm. of free space, for Poynt. est
+  
+  ;; Don't use minOrb or maxOrb; use orbRange as a keyword in call to this pro
+  ;; minOrb=8100                   ;8260 for Strangeway study
+  ;; maxOrb=8500                   ;8292 for Strangeway study
+  ;;nOrbits = maxOrb - minOrb + 1
+  
+  IF NOT KEYWORD_SET(charERange) THEN charERange = defCharERange         ; 4,~300 eV in Strangeway
+
+  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
+  
+  IF NOT KEYWORD_SET(minM) THEN minM = defMinM
+  IF NOT KEYWORD_SET(maxM) THEN maxM = defMaxM
+  
   IF NOT KEYWORD_SET(hemi) THEN hemi = "North"
 
   ;take care of hemisphere
   IF hemi EQ "North" THEN BEGIN
-     IF NOT KEYWORD_SET(minI) THEN minI = 60L
-     IF NOT KEYWORD_SET(maxI) THEN maxI = 88L
+     IF NOT KEYWORD_SET(minI) THEN minI = defMinI
+     IF NOT KEYWORD_SET(maxI) THEN maxI = defMaxI
   ENDIF ELSE BEGIN
      IF hemi EQ "South" THEN BEGIN
-        IF NOT KEYWORD_SET(minI) THEN minI = -88L
-        IF NOT KEYWORD_SET(maxI) THEN maxI = -60L
+        IF NOT KEYWORD_SET(minI) THEN minI = -defMaxI
+        IF NOT KEYWORD_SET(maxI) THEN maxI = -defMinI
      ENDIF ELSE BEGIN
         PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
         PRINT,"Defaulting to 'North'."
@@ -85,13 +163,58 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
      ENDELSE
   ENDELSE
 
+  IF NOT KEYWORD_SET(minMC) THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
+  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
+  
+  ;;Shouldn't be leftover unused params from batch call
+  IF ISA(e) THEN BEGIN
+     IF $
+        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") AND NOT tag_exist(e,"mirror") $ ;keywords for interp_polar2dhist
+     THEN BEGIN                                                            ;Check for passed variables here
+        help,e
+        print,e
+        print,"Why the extra parameters? They have no home..."
+        RETURN
+     ENDIF ELSE BEGIN
+        IF tag_exist(e,"wholecap") THEN BEGIN
+           IF e.wholecap GT 0 THEN BEGIN
+              minM=0
+              maxM=24
+              IF hemi EQ "North" THEN BEGIN
+                 minI=defMinI
+                 maxI=defMaxI
+              ENDIF ELSE BEGIN
+                 minI=-defMaxI
+                 maxI=-defMinI
+              ENDELSE
+           ENDIF
+        ENDIF
+     ENDELSE
+     
+  ENDIF
+  
+  ;;********************************************
+  ;;satellite data options
+  
+  IF NOT KEYWORD_SET(satellite) THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
+
+  IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
+                                                                       ;Bin recommends something like 11min
+  
+  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
+  IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = defIncludeNoConsecData ;Setting this to 1 includes Chaston data for which  
+                                                                       ;there's no way to calculate IMF stability
+                                                                       ;Only valid for stableIMF GE 1
+  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = defCheckBothWays       ;
+  
+  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = defBx_over_ByBz_Lim       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  
+    ;;Write plot data output for Bin?
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir = defDataDir
+
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
-  
-  IF NOT KEYWORD_SET(charERange) THEN charERange = [4.0,300]         ; 4,~300 eV in Strangeway
-  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = [1000.0, 5000.0] ;Rob Pfaff says no lower than 1000m
-  IF NOT KEYWORD_SET(minMC) THEN minMC = 10                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = -10         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -120,42 +243,21 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
      
   ENDIF
   
-  ;;********************************************
-  ;;satellite data options
-  
-  IF NOT KEYWORD_SET(satellite) THEN satellite = "OMNI"                ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = "GSM"             ; either "GSE" or "GSM"
+    ;;Which IMF clock angle are we doing?
+  ;;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
+  IF NOT KEYWORD_SET(clockStr) THEN clockStr = defClockStr
 
-  defDelay = 660
-  IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
-                                                                       ;Bin recommends something like 11min
-  
-  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = 0S                    ;Set to a time (in minutes) over which IMF stability is required
-  IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
-                                                                       ;there's no way to calculate IMF stability
-                                                                       ;Only valid for stableIMF GE 1
-  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = 0       ;
-  
-  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
-  
-  
-  IF NOT KEYWORD_SET(clockStr) THEN clockStr='duskward'
-
-  ;;Note, clock angle is measured with
+  ;;How to set angles? Note, clock angle is measured with
   ;;Bz North at zero deg, ranging from -180<clock_angle<180
   ;;Setting angle limits 45 and 135, for example, gives a 90-deg
   ;;window for dawnward and duskward plots
   IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=30.0               ;in degrees
-     angleLim2=120.0              ;in degrees
+     angleLim1=defAngleLim1               ;in degrees
+     angleLim2=defAngleLim2              ;in degrees
   ENDIF ELSE BEGIN 
      angleLim1=180.0              ;for doing all IMF
      angleLim2=180.0 
   ENDELSE
-
-  ;;Bin sizes for 2D histos
-  binM=(N_ELEMENTS(BinMLT) EQ 0) ? 0.5 : BinMLT
-  binI=(N_ELEMENTS(BinILAT) EQ 0) ? 2.0 : BinILAT 
 
   ;; ;; Set minimum allowable number of events for a histo bin to be displayed
   ;; maskStr=''
@@ -300,7 +402,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   printf,lun,"**********DATA SUMMARY**********"
   printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
   printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
-  printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
+  ;; printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
   printf,lun,"Screening parameters: [Min] [Max]"
   printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
   printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)

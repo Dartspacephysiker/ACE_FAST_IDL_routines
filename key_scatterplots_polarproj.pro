@@ -44,16 +44,23 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
                                CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
                                PLOTSUFF=plotSuff, $
                                OUTFILE=outFile, $
-                               PLOT_I_FILE=plot_i_file
+                               PLOT_I_FILE=plot_i_file, $
+                               STRANS=sTrans
 
   ;; Defaults
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defOutDir = 'histos_scatters/polar/'
-  defOutFile = 'key_scatterplots_polarproj.png'
-  
+  defOutPref = 'key_scatterplots_polarproj'
+  defExt = '.png'
+
+  ;; defSTrans = 99 ;use for plotting entire db
+  defSTrans = 90 ;use for very narrowed plot_i
+
+  IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
+
   IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
-  IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutFile
+  IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
 
   minM = 0
@@ -168,7 +175,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
      print,lun,"DBFile: " + dbFile
      printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
      printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
-     printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
+     ;; printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
      printf,lun,"Screening parameters: [Min] [Max]"
      printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
      printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
@@ -184,7 +191,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
      
      maximus = resize_maximus(maximus,INDS=plot_i)
 
-     outFile="key_nevents--"+paramStr+".png"
+     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+paramStr+plotSuff+defExt
 
   ENDIF
   ;;****************************************
@@ -197,7 +204,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   ;; Plotting
   curPlot = scatterplot(lons,lats,sym_size=0.8, $
-                 SYMBOL='o',/overplot,SYM_TRANSPARENCY=95);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
+                 SYMBOL='o',/overplot,SYM_TRANSPARENCY=sTrans);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
   ;; curPlot = plot(lons,lats,sym_size=0.8, $
   ;;                'o',/overplot,SYM_TRANSPARENCY=95);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
 ;                ,linestyle=6, $

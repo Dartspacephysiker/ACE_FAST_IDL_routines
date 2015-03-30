@@ -1,7 +1,7 @@
 ;02/02/2015
 ;A quicker(?) way to make all the plots I want
 
-PRO commands_for_dusk_dawn_plots
+PRO commands_for_dusk_dawn_plots_wider_MLT_ILAT_range
 
   date='03292015'
   dbDate='02282015'
@@ -34,18 +34,18 @@ PRO commands_for_dusk_dawn_plots
   ;; midn=1
 
   ;; byMin?
-  byMin=3.0 ;for bzNorth, bzSouth plots
+  byMin=5.0 ;for bzNorth, bzSouth plots
   ;; byMin=3.0
   numOrbLim=!NULL
-  ;; numOrbLim=2
+  ;; numOrbLim=3
 
   ;; whole cap?
   wc=!NULL
 ;;   wc=1
 
   ;;median plots?
-  ;; medPlot=!NULL
-  medPlot=1
+  medPlot=!NULL
+  ;; medPlot=1
 
   ;;median histogram data?
   medHistOutData=1
@@ -76,7 +76,7 @@ PRO commands_for_dusk_dawn_plots
 
   ;;Poynt range?
 ;; poyntRange=!NULL
-  poyntRange=[1e-4,1e3]
+  ;; poyntRange=[1e-4,1e3]
 
   ;;altitude range?
   altitudeRange=[1000.0, 5000.0]
@@ -86,7 +86,7 @@ PRO commands_for_dusk_dawn_plots
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
   ;;                                       /eplots,efluxplottype="Max",eplotrange=[-1,2.0],/logefplot,/nonegeflux,MEDIANPLOT=medPlot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",eplotrange=[-0.5,1.3],/logefplot,/abseflux,MEDIANPLOT=medPlot, $
+                                        /eplots,efluxplottype="Max",eplotrange=[-1,1.3],/logefplot,/abseflux,MEDIANPLOT=medPlot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
@@ -98,23 +98,27 @@ PRO commands_for_dusk_dawn_plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
                                         /orbPlots, /orbContribPlot,/orbTotPlot,/orbFreqPlot, $
                                         /nEventPerOrbPlot, $
-                                        neventperorbrange=[0.0,2.5], $
-;;                                        /logneventperorb, neventperorbrange=[-1,0.4772], $
+;;                                        neventperorbrange=[0.0,3.0], $
+;;                                        /logneventperorb, neventperorbrange=[-1,0.4772], $    ;0.1 to 3.0
+;;                                        /logneventperorb, neventperorbrange=[-0.301030,0.698970], $  ;0.5 to 5.0
+                                        /logneventperorb, neventperorbrange=[-0.522879,0.4772], $  ;0.5 to 5.0
 ;;                                        /divNEvByApplicable, neventperorbrange=[0.0,40.0], $
 ;;                                        /logneventperorb, /divNEvByApplicable, neventperorbrange=[FLOOR(100.0*ALOG10(mskm))/100.0,2], $
 ;;                                        /logneventperorb, neventperorbrange=[-1,0.699], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='North', nEventsRange=[100,750], orbFreqRange=[0.0, 0.15], orbContribRange=[0,40], $
 ;;                                        poyntRange=[0.1,1e3], HEMI='South', nEventsRange=[0,425], orbFreqRange=[0.0, 0.1], orbContribRange=[0,20], $
-                                        nEventsRange=[0,750], orbFreqRange=[0.0, 0.12], orbContribRange=[0,40], $
+                                        nEventsPlotRange=[100,1025], $
+                                        /LOGNEVENTSPLOT, $
+                                        orbFreqRange=[0.02, 0.10], orbContribRange=[0,35], $
                                         WHOLECAP=wc,midnight=midn,BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
                                         DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
-  
+
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[6.5,9.5],/logifplot,/absiflux,MEDIANPLOT=medPlot, $
+                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[7,9.5],/logifplot,/absiflux,MEDIANPLOT=medPlot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $

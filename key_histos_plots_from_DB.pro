@@ -40,19 +40,24 @@
 
 PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
                              CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
-                             PLOTSUFF=plotSuff
+                             PLOTSUFF=plotSuff,PLOT_I_FILE=plot_i_file, $
+                             STRANS=sTrans
 
   ;;defaults
+  ;; defSTrans = 99 ; use this for whole database
+  defSTrans = 90 ; use this when doing very restricted range
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defaultDims = [600,600]
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
-  ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
-  plotSuff = "min10current"
+  plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
+  ;; plotSuff = "min10current"
 
+  lun = -1 ;use stdout
 
   ;;****************************************
   ;;screen on maximus? YES
 
+  IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
   IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
   
   ;;names of the POSSIBILITIES
@@ -80,6 +85,31 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)
   ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,6,-ABS(absMagcScr),ABS(absMagcScr))  
 
+  IF KEYWORD_SET(plot_i_file) THEN BEGIN
+     restore,plot_i_file
+     printf,lun,""
+     printf,lun,"**********DATA SUMMARY**********"
+     print,lun,"DBFile: " + dbFile
+     printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
+     printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
+     printf,lun,"Screening parameters: [Min] [Max]"
+     printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
+     printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
+     printf,lun,"ILAT: " + strtrim(minI,2) + " " + strtrim(maxI,2)
+     printf,lun,"Hemisphere: " + hemStr
+     printf,lun,"IMF Predominance: " + clockStr
+     printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
+     printf,lun,"Angle lim 2: " + strtrim(angleLim2,2)
+     printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
+     printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
+     printf,lun,"Percentage of current DB used: " + $
+            strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
+     
+     maximus = resize_maximus(maximus,INDS=plot_i)
+
+     plotSuff = plotSuff + "key_scatters--"+paramStr
+
+  ENDIF
   ;;****************************************
 
   ;"Key" data products (I guess they're key)
@@ -96,19 +126,20 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;; print,maxTags(20)     ;width.time
   
   ;; maxStructInd = [3,6]
-  maxStructInd = [3,6,8,12,22,23,48]
+  ;; maxStructInd = [3,6,8,12,22,23,48]
+  maxStructInd = [3,6,8,12,22,23,48,4,5]
   n_dataz = n_elements(maxStructInd)
 
   maxStructLims=make_array(n_elements(maxStructInd),2)
 
   ;; limits imposed by alfven_db_cleaner
-  maxStructLims[0,*] = [0,5000] ; alt
-  maxStructLims[1,*] = [-500,500] ; mag_current
-  maxStructLims[2,*] = [0,1e3] ; elec_energy_flux
-  maxStructLims[3,*] = [4,4e3] ; max_chare_losscone
-  maxStructLims[4,*] = [5,1e3] ; delta_b
-  maxStructLims[5,*] = [10,1e4] ; delta_e
-  maxStructLims[6,*] = [1e-5,10] ; pfluxEst--database has no imposed limit for pflux, but we impose one
+  ;; maxStructLims[0,*] = [0,5000] ; alt
+  ;; maxStructLims[1,*] = [-500,500] ; mag_current
+  ;; maxStructLims[2,*] = [0,1e3] ; elec_energy_flux
+  ;; maxStructLims[3,*] = [4,4e3] ; max_chare_losscone
+  ;; maxStructLims[4,*] = [5,1e3] ; delta_b
+  ;; maxStructLims[5,*] = [10,1e4] ; delta_e
+  ;; maxStructLims[6,*] = [1e-5,10] ; pfluxEst--database has no imposed limit for pflux, but we impose one
 
   maxStructLims[0,*] = [0,4300] ; alt
   maxStructLims[1,*] = [-250,250] ; mag_current
@@ -118,6 +149,9 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   maxStructLims[5,*] = [10,10000] ; delta_e
   maxStructLims[6,*] = [1e-5,0.1]  ; pfluxEst
 
+  maxStructLims[7,*] = [0,24] ; MLT
+  maxStructLims[8,*] = [60,84]  ; ILAT
+  
 
   maxStructLog = MAKE_ARRAY(n_elements(maxStructInd), VALUE=0)
   maxStructLog[2] = 1
@@ -161,7 +195,7 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
         ;;             OUTFILENAME=maxTags(mS_i)+"_vs_"+maxTags(mS_j)+".png"
 
         curPlot = scatterplot(maximus.(mS_j),maximus.(mS_i), $
-                              SYMBOL="o",SYM_TRANSPARENCY=99,SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
+                              SYMBOL="o",SYM_TRANSPARENCY=sTrans,SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
                               XRANGE=tempStructLims(j,*),YRANGE=maxStructLims(i-1,*), $
                               XTITLE=maxTags(mS_j),YTITLE=maxTags(mS_i), $
                               DIMENSIONS=defaultDims)

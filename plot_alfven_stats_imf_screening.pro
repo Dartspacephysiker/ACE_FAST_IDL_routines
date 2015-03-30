@@ -97,6 +97,9 @@
 ;		     ORBFREQPLOT       :  Plot of orbits contributing to a given bin, 
 ;		     ORBFREQRANGE      :  Range for Orbfreqplot.
 ;                                            divided by total orbits passing through the bin.
+;                    NEVENTSPLOTRANGE  :  Range for nEvents plot.
+;                    LOGNEVENTSPLOT    :  Do log plot for n events
+;
 ;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
 ;                    NEVENTPERORBRANGE :  Range for Neventperorbplot.
 ;                    LOGNEVENTPERORB   :  Log of Neventperorbplot (for comparison with Chaston et al. [2003])
@@ -115,7 +118,6 @@
 ;		     DATADIR           :     
 ;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
 ;                                            (He used it for a few papers, I think, so it's good).
-;                    NEVENTSRANGE      :  Range for nEvents plot.
 ;
 ;                  *VARIOUS OUTPUT OPTIONS
 ;		     WRITEASCII        :     
@@ -197,7 +199,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
-                                     NEVENTSRANGE=nEventsRange, $
+                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, $
@@ -526,7 +528,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
           STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
 
-  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "_med" ELSE plotMedOrAvg = "_avg"
+  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE plotMedOrAvg = "avg_"
 
   IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
   IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
@@ -547,7 +549,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
-  paramStr=hemStr+'_'+clockStr+plotMedOrAvg+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
+  paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -647,7 +649,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
           title : "Number of events", $
-          lim : (KEYWORD_SET(nEventsRange) AND N_ELEMENTS(nEventsRange) EQ 2) ? DOUBLE(nEventsRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
+          lim : (KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
 
   ;;Make a mask for plots so that we can show where no data exists
   h2dMaskStr={h2dStr}
@@ -1263,8 +1265,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
 
      logNEvStr=""
+     nEvByAppStr=""
      IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
-     h2dNEvPerOrbStr.title= logNEvStr + "N Events per Orbit"
+     IF KEYWORD_SET(divNEvByApplicable) THEN nEvByAppStr="Applicable_"
+     h2dNEvPerOrbStr.title= logNEvStr + 'N Events per ' + nEvByAppStr + 'Orbit'
 
      IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
         IF NOT KEYWORD_SET(logNEventPerOrb) THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=[-2,1]
@@ -1275,7 +1279,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
 
      h2dStr=[h2dStr,h2dNEvPerOrbStr] 
-     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerOrb_"] 
+     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerOrb_" +nEvByAppStr] 
 
   ENDIF
 
@@ -1289,6 +1293,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      printf,lun,"Sorry, can't plot anything meaningful." & ENDIF
   ENDFOR
 
+  ;;Now that we're done using nplots, let's log it, if requested:
+  IF KEYWORD_SET(nPlots) AND KEYWORD_SET(logNEventsPlot) THEN BEGIN
+     dataName[0] = 'log_' + dataName[0]
+     h2dStr[0].data(where(h2dStr.data GT 0)) = ALOG10(h2dStr[0].data(where(h2dStr.data GT 0)))
+     h2dStr[0].lim = [(h2dStr[0].lim[0] LT 1) ? 0 : ALOG10(h2dStr[0].lim[0]),ALOG10(h2dStr[0].lim[1])] ;lower bound must be one
+     h2dStr[0].title = 'Log ' + h2dStr[0].title
+  ENDIF
   ;;********************************************************
   ;;Handle Plots all at once
 
