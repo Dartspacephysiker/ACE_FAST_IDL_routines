@@ -40,7 +40,8 @@
 
 PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
                              CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
-                             PLOTSUFF=plotSuff,PLOT_I_FILE=plot_i_file, $
+                             PLOTSUFF=plotSuff, $
+                             PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
                              STRANS=sTrans
 
   ;;defaults
@@ -52,6 +53,8 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
   ;; plotSuff = "min10current"
 
+  defPlot_i_dir = 'plot_indices_saves/'
+
   lun = -1 ;use stdout
 
   ;;****************************************
@@ -60,33 +63,13 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
   IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
   
+  IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
+
   ;;names of the POSSIBILITIES
   maxTags=tag_names(maximus)
 
-  ;;dayside
-  ;; IF KEYWORD_SET(dayside) THEN BEGIN
-  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)  ;; Dayside MLTs
-  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84) ;; ILAT range
-  ;; ENDIF
-
-  ;;nightside
-  ;;Not currently functional, because resize_maximus can't handle selecting MLTS 18-6, you see
-  ;; IF KEYWORD_SET(nightside) THEN BEGIN
-  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)    ;; Nightside MLTs
-  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84)   ;; ILAT range
-  ;; ENDIF
-
-  ;; screen by characteristic energy
-  ;; IF KEYWORD_SET(charEScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=12,MIN_FOR_IND=4,MAX_FOR_IND=300)  
-
-  ; screen by magnetometer current
-  min_absMagcScr=10
-  max_absMagcScr=500
-  IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)
-  ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,6,-ABS(absMagcScr),ABS(absMagcScr))  
-
   IF KEYWORD_SET(plot_i_file) THEN BEGIN
-     restore,plot_i_file
+     restore,plot_i_dir+plot_i_file
      printf,lun,""
      printf,lun,"**********DATA SUMMARY**********"
      print,lun,"DBFile: " + dbFile
@@ -110,6 +93,28 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      plotSuff = plotSuff + "key_scatters--"+paramStr
 
   ENDIF
+  ;;dayside
+  ;; IF KEYWORD_SET(dayside) THEN BEGIN
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)  ;; Dayside MLTs
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84) ;; ILAT range
+  ;; ENDIF
+
+  ;;nightside
+  ;;Not currently functional, because resize_maximus can't handle selecting MLTS 18-6, you see
+  ;; IF KEYWORD_SET(nightside) THEN BEGIN
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=4,MIN_FOR_IND=6,MAX_FOR_IND=18)    ;; Nightside MLTs
+  ;;    maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=60,MAX_FOR_IND=84)   ;; ILAT range
+  ;; ENDIF
+
+  ;; screen by characteristic energy
+  ;; IF KEYWORD_SET(charEScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=12,MIN_FOR_IND=4,MAX_FOR_IND=300)  
+
+  ; screen by magnetometer current
+  min_absMagcScr=10
+  max_absMagcScr=500
+  IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)
+  ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,6,-ABS(absMagcScr),ABS(absMagcScr))  
+
   ;;****************************************
 
   ;"Key" data products (I guess they're key)

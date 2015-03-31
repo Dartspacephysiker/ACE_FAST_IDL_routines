@@ -92,7 +92,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   defDelay = 660
 
-  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
+  defStableIMF = 1S             ;Set to a time (in minutes) over which IMF stability is required
   defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
                                 ;there's no way to calculate IMF stability
                                 ;Only valid for stableIMF GE 1

@@ -6,6 +6,17 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
      allowed_i=where(maximus.(maximus_ind) GE min_for_ind AND maximus.(maximus_ind) LE max_for_ind)
   ENDELSE
 
+  maxTags = tag_names(maximus)
+  print,''
+  print,"**********from resize_maximus.pro**********"
+  IF KEYWORD_SET(inds) THEN print,"Resizing based on indices" ELSE BEGIN
+     print,"Resizing based on " +  maxTags(maximus_ind)
+     print,"Upper limit: " + strcompress(max_for_ind,/remove_all)
+     print,"Lower limit: " + strcompress(min_for_ind,/remove_all)
+     print,''
+  ENDELSE
+  print,"N_elements before: " + strcompress(n_elements(maximus.orbit),/remove_all)
+
   maximus={orbit:maximus.orbit(allowed_i),$
            alfvenic:maximus.alfvenic(allowed_i),$
            TIME:maximus.time(allowed_i),$
@@ -55,6 +66,13 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
            TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT:maximus.TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT(allowed_i),$
            TOTAL_ALFVEN_UPWARD_ION_OUTFLOW:maximus.TOTAL_ALFVEN_UPWARD_ION_OUTFLOW(allowed_i),$
            PFLUXEST:maximus.delta_b(allowed_i)*maximus.delta_e(allowed_i)*4.0e-7*!PI}
+
+  
+  print,"N_elements after: " + strcompress(n_elements(maximus.orbit),/remove_all)
+  print,"***********end resize_maximus.pro**********"
+  print,''
+
+
 
   RETURN, maximus
 

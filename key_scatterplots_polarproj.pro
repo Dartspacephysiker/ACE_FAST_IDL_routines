@@ -44,14 +44,25 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
                                CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
                                PLOTSUFF=plotSuff, $
                                OUTFILE=outFile, $
-                               PLOT_I_FILE=plot_i_file, $
-                               STRANS=sTrans
+                               PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
+                               STRANS=sTrans, $
+                               _EXTRA = e
 
   ;; Defaults
+  defMinI = 60
+  defMaxI = 88
+  
+  defMinM = 0
+  defMaxM = 24
+
+  defTSLat = 75
+
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defOutDir = 'histos_scatters/polar/'
   defOutPref = 'key_scatterplots_polarproj'
   defExt = '.png'
+
+  defPlot_i_dir = 'plot_indices_saves/'
 
   ;; defSTrans = 99 ;use for plotting entire db
   defSTrans = 90 ;use for very narrowed plot_i
@@ -59,9 +70,11 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
   IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
-  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
+  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ELSE plotSuff
   IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
+
+  IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
 
   minM = 0
   maxM = 24
@@ -74,14 +87,14 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   ;; Deal with map stuff
   IF KEYWORD_SET(north) THEN BEGIN
-     maxI=88
-     minI=60
-     tsLat=75
+     maxI=defMaxI
+     minI=defMinI
+     tsLat=defTSLat
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(south) THEN BEGIN
-        maxI=-60
-        minI=-88
-        tsLat=-75
+        maxI=-defMinI
+        minI=-defMaxI
+        tsLat=-defTSLat
      ENDIF ELSE BEGIN
         PRINT,"Gotta select a hemisphere, bro"
         WAIT,0.5
@@ -140,6 +153,35 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   ;;names of the POSSIBILITIES
   maxTags=tag_names(maximus)
 
+  IF KEYWORD_SET(plot_i_file) THEN BEGIN
+     restore,plot_i_dir+plot_i_file
+     printf,lun,""
+     printf,lun,"**********DATA SUMMARY**********"
+     print,lun,"DBFile: " + dbFile
+     printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
+     printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
+     ;; printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
+     printf,lun,"Screening parameters: [Min] [Max]"
+     printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
+     printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
+     printf,lun,"ILAT: " + strtrim(minI,2) + " " + strtrim(maxI,2)
+     printf,lun,"Hemisphere: " + hemStr
+     printf,lun,"IMF Predominance: " + clockStr
+     printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
+     printf,lun,"Angle lim 2: " + strtrim(angleLim2,2)
+     printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
+     printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
+     printf,lun,"Percentage of current DB used: " + $
+            strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
+                                ;NOTE, sometimes percentage of current DB will be discrepant between
+                                ;key_scatterplots_polarproj and get_inds_from_db because
+                                ;key_scatterplots_polarproj actually resizes maximus
+     maximus = resize_maximus(maximus,INDS=plot_i)
+
+     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+paramStr+plotSuff+defExt
+
+  ENDIF
+  
   ;;northern_hemi
   IF KEYWORD_SET(north) OR KEYWORD_SET(south) THEN BEGIN
      maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=minI,MAX_FOR_IND=maxI)
@@ -168,32 +210,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   max_absMagcScr=500
   ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)  
 
-  IF KEYWORD_SET(plot_i_file) THEN BEGIN
-     restore,plot_i_file
-     printf,lun,""
-     printf,lun,"**********DATA SUMMARY**********"
-     print,lun,"DBFile: " + dbFile
-     printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
-     printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
-     ;; printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
-     printf,lun,"Screening parameters: [Min] [Max]"
-     printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
-     printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
-     printf,lun,"ILAT: " + strtrim(minI,2) + " " + strtrim(maxI,2)
-     printf,lun,"Hemisphere: " + hemStr
-     printf,lun,"IMF Predominance: " + clockStr
-     printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
-     printf,lun,"Angle lim 2: " + strtrim(angleLim2,2)
-     printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
-     printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
-     printf,lun,"Percentage of current DB used: " + $
-            strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
-     
-     maximus = resize_maximus(maximus,INDS=plot_i)
 
-     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+paramStr+plotSuff+defExt
-
-  ENDIF
   ;;****************************************
 
   lats=maximus.ilat
