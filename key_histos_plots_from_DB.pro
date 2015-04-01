@@ -125,6 +125,8 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;; print,maxTags(22)     ;delta_b
   ;; print,maxTags(23)     ;delta_e
   ;; print,maxTags(48)     ;pfluxEst
+  ;; print,maxTags(4)      ;MLT
+  ;; print,maxTags(5)      ;ILAT
 
   ;; optional
   ;; print,maxTags(21)     ;width_x
