@@ -18,6 +18,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   defCDBTimeFile = defLoaddataDir + defPref + "--cdbTime.sav"
   defDBFile = defLoaddataDir + defPref + "--maximus.sav"
 
+  defChastDB_cleanIndFile = 'plot_indices_saves/good_i_for_original_Chaston_DB_after_Alfven_cleaner__20150402.sav'
+
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
      pref = "Dartdb_02282015--500-14999"
      dbfile = pref + "--maximus.sav"
@@ -112,7 +114,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   lost=ind_region_magc_geabs10(lost)
 
   ;;Now, clear out all the garbage (NaNs & Co.)
-  good_i = alfven_db_cleaner(maximus,LUN=lun)
+  IF KEYWORD_SET(chastDB) THEN restore,defChastDB_cleanIndFile ELSE good_i = alfven_db_cleaner(maximus,LUN=lun)
   IF good_i NE !NULL THEN ind_region_magc_geabs10_ACEstart=cgsetintersection(ind_region_magc_geabs10_ACEstart,good_i)
 
   ;Re-make cdbTime if we don't have it made already

@@ -28,9 +28,10 @@
 
 PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
                            CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
-                           PLOTSUFF=plotSuff, $
+                           PLOTPREFIX=plotPrefix,OUTFILESUFFIX=outFileSuffix, $
                            PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
                            PLOT2_I_FILE=plot2_i_file, $
+                           KS_STATS_STRUCT=ks_stats, $
                            KS_STATS_FILENAME=ks_stats_filename
                            
   ; today
@@ -42,10 +43,12 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
 
   defKS_stats_filename = 'ks_stats--' ;we add paramStr1 to this as well
 
-  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
-  plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
-  ;; plotSuff = "min10current"
+  IF NOT KEYWORD_SET(outFileSuffix) THEN outFileSuffix = ""
+  ;; outFileSuffix = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"
+  ;; outFileSuffix = "min10current"
 
+  defPlotPrefix = ''
+  
   defPlot_i_dir = 'plot_indices_saves/'
 
   defAll_imf_I_file = "PLOT_INDICES_North_all_IMF--1stable--5min_IMFsmooth--OMNI_GSM_Mar_31_15.sav"
@@ -78,11 +81,16 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;**********************************
   ; set some defaults
 
+  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = defPlotPrefix
+
   IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
   
   IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
 
-  IF NOT KEYWORD_SET(ks_stats_filename) THEN ks_stats_filename = defKS_stats_filename ;add paramStr1 below
+  IF NOT KEYWORD_SET(ks_stats_filename) THEN BEGIN
+     buildFileName = 1 ;make our own filename?
+     ks_stats_filename = defKS_stats_filename ;add paramStr1 below
+  ENDIF ELSE buildFilename = 0
 
   ;;****************************************
   ;;screen on maximus? YES
@@ -98,7 +106,8 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      restore,plot_i_dir+plot_i_file
      printf,lun,""
      printf,lun,"**********DATA SUMMARY**********"
-     print,lun,"DBFile: " + dbFile
+     printf,lun,"Plot_i_file: " + plot_i_file
+     printf,lun,"DBFile: " + dbFile
      printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
      printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
      printf,lun,"Screening parameters: [Min] [Max]"
@@ -112,17 +121,17 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
      printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
      printf,lun,"Percentage of current DB used: " + $
-            strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
+            strtrim((N_ELEMENTS(plot_i))/DOUBLE(n_elements(maximus.orbit))*100.0,2) + "%"
      
      ;; maximus = resize_maximus(maximus,INDS=plot_i)
      comparison1_i = plot_i
 
-     plotSuff = "kolmogorov_smirnov--" + paramStr + plotSuff
+     ;; outFileSuffix = "kolmogorov_smirnov--" + paramStr + outFileSuffix
 
      histo1_title = paramStr
      paramStr1 = paramStr
-
-     ks_stats_filename = ks_stats_filename + paramStr1
+     
+     IF (buildFileName) THEN ks_stats_filename = ks_stats_filename + paramStr1
 
   ENDIF ELSE BEGIN
      print,"You must specify a plot indices file, via keyword 'PLOT_I_FILE', to compare with the all_IMF indices file!"
@@ -154,18 +163,24 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;;****************************************
   ;;all_IMF file
 
-  IF NOT KEYWORD_SET(second_i_file) OR KEYWORD_SET(compare_all_imf) THEN BEGIN
+  IF NOT KEYWORD_SET(plot2_i_file) OR KEYWORD_SET(compare_all_imf) THEN BEGIN
      print,"Using default all_imf_i_file, " + defAll_imf_i_file
      plot2_i_file = defAll_imf_i_file
      WAIT,0.5
      histo2_title = defAll_imf_title
-  ENDIF
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(plot2_i_file) THEN BEGIN
+        restore,plot_i_dir+plot2_i_file
+        histo2_title = paramStr
+     ENDIF
+  ENDELSE
 
   IF KEYWORD_SET(plot2_i_file) THEN BEGIN
      restore,plot_i_dir+plot2_i_file
      printf,lun,""
      printf,lun,"**********DATA SUMMARY FOR ALL_IMF_FILE**********"
-     print,lun,"DBFile: " + dbFile
+     printf,lun,"Plot_i_file: " + plot2_i_file
+     printf,lun,"DBFile: " + dbFile
      printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
      printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
      printf,lun,"Screening parameters: [Min] [Max]"
@@ -179,11 +194,11 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
      printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
      printf,lun,"Percentage of current DB used: " + $
-            strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
+            strtrim((N_ELEMENTS(plot_i))/DOUBLE(n_elements(maximus.orbit))*100.0,2) + "%"
      
      comparison2_i = plot_i
      paramStr2 = paramStr
-
+     IF (buildFileName) THEN ks_stats_filename = ks_stats_filename + "--" + paramStr2 + outFileSuffix
   ENDIF
 
   ;;****************************************
@@ -207,7 +222,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;; maxStructInd = [3,6]
   ;; maxStructInd = [3,6,8,12,22,23,48]
   ;; maxStructInd = [3,6,8,12,22,23,48,4,5]
-  maxStructInd = [4,5]
+  maxStructInd = [3,4]
   nDataz = n_elements(maxStructInd)
 
   maxStructLims=make_array(n_elements(maxStructInd),2)
@@ -258,11 +273,11 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;;    ENDIF
   ;; ENDFOR
 
-  ks_stats ={ks_statistic:make_array(nDataz,/FLOAT), $
-             pVal:make_array(nDataz,/FLOAT), $
+  ks_stats ={ks_statistic:make_array(nDataz,/DOUBLE), $
+             pVal:make_array(nDataz,/DOUBLE), $
              dataProd:make_array(nDataz,/STRING), $
-             histoBinSize:make_array(nDataz,/FLOAT), $
-             histoLims:make_array(nDataz,2,/FLOAT), $
+             histoBinSize:make_array(nDataz,/DOUBLE), $
+             histoLims:make_array(nDataz,2,/DOUBLE), $
              histo1:make_array(nDataz,maxHistoBins), $
              histo2:make_array(nDataz,maxHistoBins), $
              cHisto1:make_array(nDataz,maxHistoBins), $
@@ -280,12 +295,13 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
 
      ;histogram and histoplot the data
      ;PROBABILITY FUNCTION and OPROBABILITY give the CDF and a plot of the CDF scaled from 0 to 1, respectively
-     cghistoplot,(maximus.(mS_i))(comparison1_i),BINSIZE=maxStructBinSizes[i],HISTDATA=histo1,PROBABILITY_FUNCTION=cgCHisto1,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax1,OMIN=oMin1,TITLE=histo1_title,OUTPUT="histogram_"+maxTags[mS_i]+histo1_title+".png"
-     cghistoplot,(maximus.(mS_i))(comparison2_i),binsize=maxStructBinSizes[i],HISTDATA=histo2,PROBABILITY_FUNCTION=cgCHisto2,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax2,OMIN=oMin2,TITLE=histo2_title,OUTPUT="histogram_"+maxTags[mS_i]+histo2_title+".png"
+     cghistoplot,(maximus.(mS_i))(comparison1_i),BINSIZE=maxStructBinSizes[i],HISTDATA=histo1,PROBABILITY_FUNCTION=cHisto1,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax1,OMIN=oMin1,TITLE=histo1_title,OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo1_title+".png"
+     cghistoplot,(maximus.(mS_i))(comparison2_i),binsize=maxStructBinSizes[i],HISTDATA=histo2,PROBABILITY_FUNCTION=cHisto2,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax2,OMIN=oMin2,TITLE=histo2_title,OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo2_title+".png"
 
      ;cumulative histograms
-     cHisto1 = TOTAL(histo1,/CUMULATIVE) / N_ELEMENTS(comparison1_i)
-     cHisto2 = TOTAL(histo2,/CUMULATIVE) / N_ELEMENTS(comparison2_i)
+     ;just let cghistoplot make these for you--that routine does a better job
+     ;; cHisto1 = TOTAL(histo1,/CUMULATIVE) / N_ELEMENTS(comparison1_i)
+     ;; cHisto2 = TOTAL(histo2,/CUMULATIVE) / N_ELEMENTS(comparison2_i)
 
      ;perform the K-S test
      kstwo, histo1, histo2, KS_statistic, pVal
@@ -297,11 +313,11 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      ks_stats.ks_statistic(i)=KS_statistic
      ks_stats.pVal(i)=pVal
      ks_stats.dataProd(i)=maxTags[mS_i]
-     ks_stats.histoBinSize = maxStructBinSizes[i]
-     ks_stats.nHistBins = nHistBins
+     ks_stats.histoBinSize(i) = maxStructBinSizes(i)
+     ks_stats.nHistBins(i) = nHistBins
      ks_stats.histo1(i,0:nHistBins -1) = histo1
      ks_stats.histo2(i,0:nHistBins -1) = histo2
-     ks_stats.cHisto2(i,0:nHistBins -1) = cHisto1
+     ks_stats.cHisto1(i,0:nHistBins -1) = cHisto1
      ks_stats.cHisto2(i,0:nHistBins -1) = cHisto2
 
      ;summary time
@@ -312,7 +328,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      printf,lun,''
      printf,lun,FORMAT='("Data product: ",T30,A0)',maxTags(mS_i)
      printf,lun,FORMAT='("KS Statistic: ",T30,F0.8)',KS_statistic
-     printf,lun,FORMAT='("P Value: ",T30,F0.10)',pVal
+     printf,lun,FORMAT='("P Value: ",T30,G11.3)',pVal
 
   ENDFOR
 

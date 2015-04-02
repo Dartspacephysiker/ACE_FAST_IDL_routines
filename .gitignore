@@ -8,8 +8,17 @@ various_untracked/*
 Compare_new_DB_with_Chastons/txtoutput/*.txt
 Compare_new_DB_with_Chastons/txtoutput/*.sav
 
-#plots dir is too big
-plots/*.png
+#plots dir and other graphic/data dirs are too big (and secret!)
+#If you want to back these up, use your rsync stuff
+plots/*
+histos_scatters/*
+ks_output/*
+plot_indices_saves/*
+Compare_new_DB_with_Chastons/post_AGU_2014_various/boxplots/*
+Compare_new_DB_with_Chastons/post_AGU_2014_various/histos/*
+Compare_new_DB_with_Chastons/txtoutput/*
+medHistData/*
+
 
 #No testcode pngs
 testcode/laTEST/*.png

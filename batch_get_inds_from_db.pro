@@ -20,8 +20,8 @@ PRO BATCH_GET_INDS_FROM_DB,INDPREFIX=indPrefix,INDSUFFIX=indSuffix, $
   ENDIF
 
   IF NOT KEYWORD_SET(directions) THEN BEGIN
-     ;; directions=['dawnward', 'duskward'] ;default
-     directions=['all_IMF'] ;default
+     directions=['dawnward', 'duskward'] ;default
+     ;; directions=['all_IMF'] ;default
   ENDIF
   PRINT,FORMAT='("IMF ORIENTATIONS: ",T30,(5(A10)))',directions
 
