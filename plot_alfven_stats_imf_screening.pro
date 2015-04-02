@@ -267,15 +267,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
 
   ; Handle MLT and ILAT
-  IF KEYWORD_SET(minMLT) then minM = minMLT
-  IF KEYWORD_SET(maxMLT) then maxM = maxMLT
+  IF minMLT NE !NULL THEN minM = minMLT
+  IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
 
   ;;Bin sizes for 2D histos
   binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
   binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
 
-  IF KEYWORD_SET(minILAT) then minI = minILAT
-  IF KEYWORD_SET(maxILAT) then maxI = maxILAT
+  IF KEYWORD_SET(minILAT) THEN minI = minILAT
+  IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
 
 
   ;;***********************************************
@@ -349,11 +349,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF NOT KEYWORD_SET(satellite) THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
   IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
 
-  IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
+  IF delay EQ !NULL THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
                                                                        ;Bin recommends something like 11min
   
-  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
-  IF NOT KEYWORD_SET(includeNoConsecData) THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
+  IF stableIMF EQ !NULL THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
+  IF includeNoConsecData EQ !NULL THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
                                                                        ;there's no way to calculate IMF stability
                                                                        ;Only valid for stableIMF GE 1
   IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = defCheckBothWays       ;

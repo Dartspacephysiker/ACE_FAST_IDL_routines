@@ -31,7 +31,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                       CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                       ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                       NEVENTSRANGE=nEventsRange, NUMORBLIM=numOrbLim, $
-                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT, $
+                      MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                       MIN_NEVENTS=min_nEvents, BYMIN=byMin, $
                       SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                       HEMI=hemi, $
@@ -49,11 +50,15 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   ;; Default
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
-  IF NOT KEYWORD_SET(dbFile) THEN dbFile=defDBFILE 
+  IF NOT KEYWORD_SET(dbFile) AND NOT KEYWORD_SET(do_ChastDB) THEN dbFile=defDBFILE ELSE BEGIN
+     IF KEYWORD_SET(do_ChastDB) THEN dbFile = '/SPENCEdata/Research/Cusp/database/processed/maximus.dat' 
+  ENDELSE
   restore,dbFile
 
   defCDBTimeFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--cdbTime--cleaned.sav"
-  IF NOT KEYWORD_SET(cdbTimeFile) THEN cdbTimeFile = defCDBTimeFile 
+  IF NOT KEYWORD_SET(cdbTimeFile) AND NOT KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = defCDBTimeFile ELSE BEGIN
+     IF KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = '/SPENCEdata/Research/Cusp/database/processed/cdbTime.sav' 
+  ENDELSE
   restore,cdbTimeFile
 
   defOutDir='plot_indices_saves/'
@@ -117,15 +122,15 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
 
   ; Handle MLT and ILAT
-  IF KEYWORD_SET(minMLT) then minM = minMLT
-  IF KEYWORD_SET(maxMLT) then maxM = maxMLT
+  IF minMLT NE !NULL THEN minM = minMLT
+  IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
 
   ;;Bin sizes for 2D histos
   binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
   binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
 
-  IF KEYWORD_SET(minILAT) then minI = minILAT
-  IF KEYWORD_SET(maxILAT) then maxI = maxILAT
+  IF KEYWORD_SET(minILAT) THEN minI = minILAT
+  IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
 
 
   ;;***********************************************
@@ -143,19 +148,19 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
   
-  IF NOT KEYWORD_SET(minM) THEN minM = defMinM
-  IF NOT KEYWORD_SET(maxM) THEN maxM = defMaxM
+  IF minM EQ !NULL THEN minM = defMinM
+  IF maxM EQ !NULL THEN maxM = defMaxM
   
   IF NOT KEYWORD_SET(hemi) THEN hemi = "North"
 
   ;take care of hemisphere
   IF hemi EQ "North" THEN BEGIN
-     IF NOT KEYWORD_SET(minI) THEN minI = defMinI
-     IF NOT KEYWORD_SET(maxI) THEN maxI = defMaxI
+     IF minI EQ !NULL THEN minI = defMinI
+     IF maxI EQ !NULL THEN maxI = defMaxI
   ENDIF ELSE BEGIN
      IF hemi EQ "South" THEN BEGIN
-        IF NOT KEYWORD_SET(minI) THEN minI = -defMaxI
-        IF NOT KEYWORD_SET(maxI) THEN maxI = -defMinI
+        IF minI EQ !NULL THEN minI = -defMaxI
+        IF maxI EQ !NULL THEN maxI = -defMinI
      ENDIF ELSE BEGIN
         PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
         PRINT,"Defaulting to 'North'."
@@ -202,7 +207,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   IF NOT KEYWORD_SET(delay) THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
                                                                        ;Bin recommends something like 11min
   
-  IF NOT KEYWORD_SET(stableIMF) THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
+  IF stableIMF EQ !NULL THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
   IF NOT KEYWORD_SET(includeNoConsecData) THEN includeNoConsecData = defIncludeNoConsecData ;Setting this to 1 includes Chaston data for which  
                                                                        ;there's no way to calculate IMF stability
                                                                        ;Only valid for stableIMF GE 1
@@ -345,8 +350,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   ;;********************************************
   ;;Stuff for output
-  hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
-          STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
+  hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
+          STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
   IF NOT KEYWORD_SET(indSuffix) THEN indSuffix = "" ;; ELSE indSuffix = "--" + indSuffix
   IF NOT KEYWORD_SET(indPrefix) THEN indPrefix = "" ;; ELSE indPrefix = indPrefix + "--"
@@ -422,6 +427,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
        angleLim1,angleLim2, $
        minMC,maxNEGMC, $
        minM,maxM,minI,maxI, $
+       charERange,altitudeRange,poyntRange, $
        delay,stableIMF,smoothWindow,maskMin, $
        hemStr,clockStr,satellite,dbFile,filename=savFile
 

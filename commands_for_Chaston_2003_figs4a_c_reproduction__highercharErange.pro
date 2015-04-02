@@ -30,6 +30,9 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
   ;charERange?
   charERange=[4.0,4e3]
 
+  ;altRange?
+  altitudeRange=[0.0,5000.0]
+
  ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi,/orbplots, $
@@ -38,7 +41,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
                                         ;; neventperorbrange=[0.01,10.0], $
                                         neventperorbrange=[-2.0,1.0], $
                                         nEventsRange=[0,3000], orbFreqRange=[0.0, 0.8], orbcontribrange=[1,200], $
-                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
 
   ;;;;;;;;;;;;;;;
   ;electron plots
@@ -46,17 +49,17 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
   ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
                                         /eplots,efluxplottype="Max",eplotrange=[-1,2],/logefplot,/abseflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
   
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
                                         /pplots,pplotrange=[-1.7,1.698977],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
   ;;                                       /pplots,pplotrange=[0.05,10],/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
   
   ;Better (for showing features) plotrange
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
@@ -64,13 +67,13 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
   ;;                                       /noplotintegral,DEL_PS = del_PS
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
   ;;                                       /pplots,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
                                         /chareplot,charetype="lossCone",/logCharEPlot, $ ;chareplotrange=[0,4e3],
                                         /medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
 
 END
