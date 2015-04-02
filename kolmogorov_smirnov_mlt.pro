@@ -26,17 +26,18 @@
 ;                       Birth
 ;-
 
-PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
+PRO KOLMOGOROV_SMIRNOV_MLT,DBFILE=dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
                            CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
                            PLOTPREFIX=plotPrefix,OUTFILESUFFIX=outFileSuffix, $
                            PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
                            PLOT2_I_FILE=plot2_i_file, $
                            KS_STATS_STRUCT=ks_stats, $
-                           KS_STATS_FILENAME=ks_stats_filename
+                           KS_STATS_FILENAME=ks_stats_filename, $
+                           DO_CHASTDB=do_Chastdb
                            
   ; today
-  hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
-          STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
+  hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
+          STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
   ;;defaults
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
@@ -105,7 +106,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   IF KEYWORD_SET(plot_i_file) THEN BEGIN
      restore,plot_i_dir+plot_i_file
      printf,lun,""
-     printf,lun,"**********DATA SUMMARY**********"
+     printf,lun,"**********DATA SUMMARY FOR PLOT 1 FILE**********"
      printf,lun,"Plot_i_file: " + plot_i_file
      printf,lun,"DBFile: " + dbFile
      printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
@@ -178,7 +179,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   IF KEYWORD_SET(plot2_i_file) THEN BEGIN
      restore,plot_i_dir+plot2_i_file
      printf,lun,""
-     printf,lun,"**********DATA SUMMARY FOR ALL_IMF_FILE**********"
+     printf,lun,"**********DATA SUMMARY FOR "+histo2_title+"**********"
      printf,lun,"Plot_i_file: " + plot2_i_file
      printf,lun,"DBFile: " + dbFile
      printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
@@ -222,7 +223,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;; maxStructInd = [3,6]
   ;; maxStructInd = [3,6,8,12,22,23,48]
   ;; maxStructInd = [3,6,8,12,22,23,48,4,5]
-  maxStructInd = [3,4]
+  IF KEYWORD_SET(do_ChastDB) THEN maxStructInd = [3,4] ELSE maxStructInd = [4,5]
   nDataz = n_elements(maxStructInd)
 
   maxStructLims=make_array(n_elements(maxStructInd),2)
@@ -277,6 +278,8 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
              pVal:make_array(nDataz,/DOUBLE), $
              dataProd:make_array(nDataz,/STRING), $
              histoBinSize:make_array(nDataz,/DOUBLE), $
+             binLocs1:make_array(nDataz,maxHistoBins), $
+             binLocs2:make_array(nDataz,maxHistoBins), $
              histoLims:make_array(nDataz,2,/DOUBLE), $
              histo1:make_array(nDataz,maxHistoBins), $
              histo2:make_array(nDataz,maxHistoBins), $
@@ -295,8 +298,21 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
 
      ;histogram and histoplot the data
      ;PROBABILITY FUNCTION and OPROBABILITY give the CDF and a plot of the CDF scaled from 0 to 1, respectively
-     cghistoplot,(maximus.(mS_i))(comparison1_i),BINSIZE=maxStructBinSizes[i],HISTDATA=histo1,PROBABILITY_FUNCTION=cHisto1,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax1,OMIN=oMin1,TITLE=histo1_title,OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo1_title+".png"
-     cghistoplot,(maximus.(mS_i))(comparison2_i),binsize=maxStructBinSizes[i],HISTDATA=histo2,PROBABILITY_FUNCTION=cHisto2,/OPROBABILITY,MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1],OMAX=oMax2,OMIN=oMin2,TITLE=histo2_title,OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo2_title+".png"
+     cghistoplot,(maximus.(mS_i))(comparison1_i), $
+                 BINSIZE=maxStructBinSizes[i], LOCATIONS = locations1, $
+                 HISTDATA=histo1,PROBABILITY_FUNCTION=cHisto1,/OPROBABILITY, $
+                 MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1], $
+                 OMAX=oMax1,OMIN=oMin1, $
+                 TITLE=histo1_title, $
+                 OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo1_title+".png"
+
+     cghistoplot,(maximus.(mS_i))(comparison2_i), $
+                 BINSIZE=maxStructBinSizes[i], LOCATIONS = locations2, $
+                 HISTDATA=histo2,PROBABILITY_FUNCTION=cHisto2,/OPROBABILITY, $
+                 MININPUT=maxStructLims[i,0],MAXINPUT=maxStructLims[i,1], $
+                 OMAX=oMax2,OMIN=oMin2, $
+                 TITLE=histo2_title, $
+                 OUTPUT="histo_cdf--"+plotPrefix+maxTags[mS_i]+"--"+histo2_title+".png"
 
      ;cumulative histograms
      ;just let cghistoplot make these for you--that routine does a better job
@@ -315,6 +331,8 @@ PRO KOLMOGOROV_SMIRNOV_MLT,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
      ks_stats.dataProd(i)=maxTags[mS_i]
      ks_stats.histoBinSize(i) = maxStructBinSizes(i)
      ks_stats.nHistBins(i) = nHistBins
+     ks_stats.binLocs1(i,0:nHistBins -1) = locations1 + maxStructBinSizes(i)/2.0
+     ks_stats.binLocs2(i,0:nHistBins -1) = locations2 + maxStructBinSizes(i)/2.0
      ks_stats.histo1(i,0:nHistBins -1) = histo1
      ks_stats.histo2(i,0:nHistBins -1) = histo2
      ks_stats.cHisto1(i,0:nHistBins -1) = cHisto1

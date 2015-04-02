@@ -94,7 +94,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
         printf,lun,"Min characteristic electron energy: " + strcompress(charERange[0],/remove_all)
         printf,lun,"Max characteristic electron energy: " + strcompress(charERange[1],/remove_all)
 
-        ind_n_orbs=where(maximus.max_chare_losscone GE charERange[0] AND maximus.max_chare_losscone LE charERange[1])
+        IF KEYWORD_SET(chastDB) THEN  ind_n_orbs=where(maximus.char_elec_energy GE charERange[0] AND maximus.char_elec_energy LE charERange[1]) $
+           ELSE ind_n_orbs=where(maximus.max_chare_losscone GE charERange[0] AND maximus.max_chare_losscone LE charERange[1])
         ind_region_magc_geabs10=cgsetintersection(ind_region_magc_geabs10,ind_n_orbs)
      ENDIF ELSE BEGIN
         printf,lun,"Incorrect input for keyword 'charERange'!!"
