@@ -4,21 +4,24 @@
 ;the particle data).
 PRO combine_fastloc_intervals,fastLoc
 
-  date='20150407'
+  date='20150408'
 
   fastLoc_DB='/SPENCEdata/software/sdt/batch_jobs/FASTlocation/batch_output__intervals/'
   contents_file='./orbits_contained_in_fastloc_'+date+'.txt'
 
   ;; fNamePrefix='Dartmouth_fastloc_intervals'
   fNamePrefix='Dartmouth_fastloc_intervals2'
-
   outSuffix='intervals2'
+
+  outFileSansPref = 'fastLoc_'+outSuffix+'--'+date
+  outFile = outFileSansPref+'.sav'
+  outTimeFile = outFileSansPref+'--times.sav'
 
  ;open file to write list of orbits included
   OPENW,outlun,contents_file,/get_lun
 
   min_orbit=500
-  max_orbit=999
+  max_orbit=8600
 
   FOR j=min_orbit,max_orbit DO BEGIN
 
@@ -53,6 +56,10 @@ PRO combine_fastloc_intervals,fastLoc
   
   save,fastLoc,filename='fastLoc_'+outSuffix+'--'+date+'.sav'
   
+  ;do fastloctimes
+  fastloc_times = str_to_time(fastLoc.time)
+  save,fastloc_times,filename='fastLoc_'+outSuffix+'--'+date+'--times.sav'
+
   RETURN
   
 END
