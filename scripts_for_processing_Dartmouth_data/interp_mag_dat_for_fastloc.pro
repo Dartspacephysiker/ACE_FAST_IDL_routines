@@ -18,7 +18,7 @@
 FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
                                       FASTLOC_TIMES=fastLoc_Times, FASTLOCINTERP_I=fastLocInterp_i,SATDBINTERP_I=SATdbInterp_i, $
                                       MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, MAXDIFF=maxDiff, $
-                                      SATDBDIR=satDBDir,BYMIN=bybMin, OMNI_COORDS=OMNI_Coords ;, $
+                                      SATDBDIR=satDBDir,BYMIN=bybMin, OMNI_COORDS=OMNI_Coords 
 
   ;def IMF params
   defSatellite = 'OMNI'

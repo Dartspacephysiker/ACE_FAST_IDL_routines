@@ -21,7 +21,7 @@ PRO combine_fastloc_intervals,fastLoc
   OPENW,outlun,contents_file,/get_lun
 
   min_orbit=500
-  max_orbit=8600
+  max_orbit=11000
 
   FOR j=min_orbit,max_orbit DO BEGIN
 
