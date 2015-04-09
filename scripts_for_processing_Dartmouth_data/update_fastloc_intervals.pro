@@ -1,4 +1,4 @@
-pro update_fastloc_intervals,maximus
+pro update_fastloc_intervals,fastLoc
 ;01/20/2015
 ;We're in the middle of processing tons of FAST data, and it's inconvenient to run
 ;this routine for the full list of files in batch_output every time. The strategy here
@@ -36,15 +36,16 @@ pro update_fastloc_intervals,maximus
   OPENW,outlun,newContentsFile,/get_lun
 
   ;restore old DBfile
-  restore,filename=oldDBFile
+  restore,filename=oldOutFile
 
   ;;Print it
-  PRINT,"Old DBFile: " + oldDBFile
-  PRINT,"New DBFile: " + newDBFile
+  PRINT,"Old DBFile: " + oldOutFile
+  PRINT,"New DBFile: " + newOutFile
 
   ;get latest orbit processed in old db
-  latestOrb=MAX(maximus.orbit)
+  latestOrb=MAX(fastloc.orbit,MIN=firstOrb)
   PRINT,"Latest orb found in oldDBFile is " + strcompress(latestOrb,/REMOVE_ALL)
+  PRINT,"Earliest orb found in oldDBFile is " + strcompress(firstOrb,/REMOVE_ALL)
 
   IF latestOrb GE max_orbit THEN BEGIN
      PRINT, "What are you thinking? latestOrb is greater than max_orbit!"
@@ -64,19 +65,15 @@ pro update_fastloc_intervals,maximus
               print,j,jj
               printf,outlun,j,jj
               rd_fastloc_output,result,dat
-              IF j GT min_orbit THEN BEGIN
-                 fastLoc={ORBIT:[fastLoc.orbit,dat.orbit],$
-                          TIME:[fastLoc.time,dat.time],$
-                          ALT:[fastLoc.alt,dat.alt],$
-                          MLT:[fastLoc.mlt,dat.mlt],$
-                          ILAT:[fastLoc.ilat,dat.ilat],$
-                          FIELDS_MODE:[fastLoc.FIELDS_MODE,dat.FIELDS_MODE],$
-                          INTERVAL:[fastLoc.INTERVAL,dat.INTERVAL],$
-                          INTERVAL_START:[fastLoc.INTERVAL_START,dat.INTERVAL_START],$
-                          INTERVAL_STOP:[fastLoc.INTERVAL_STOP,dat.INTERVAL_STOP]}
-              ENDIF ELSE BEGIN
-                 fastLoc=dat
-              ENDELSE
+              fastLoc={ORBIT:[fastLoc.orbit,dat.orbit],$
+                       TIME:[fastLoc.time,dat.time],$
+                       ALT:[fastLoc.alt,dat.alt],$
+                       MLT:[fastLoc.mlt,dat.mlt],$
+                       ILAT:[fastLoc.ilat,dat.ilat],$
+                       FIELDS_MODE:[fastLoc.FIELDS_MODE,dat.FIELDS_MODE],$
+                       INTERVAL:[fastLoc.INTERVAL,dat.INTERVAL],$
+                       INTERVAL_START:[fastLoc.INTERVAL_START,dat.INTERVAL_START],$
+                       INTERVAL_STOP:[fastLoc.INTERVAL_STOP,dat.INTERVAL_STOP]}
            ENDIF
            filename=fNamePrefix+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
         ENDFOR
