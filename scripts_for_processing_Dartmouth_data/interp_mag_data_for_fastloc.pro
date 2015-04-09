@@ -16,6 +16,7 @@
 ;use the right ones.
 ; HISTORY 2015/04/08 Born
 FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
+                                      FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
                                       FASTLOC_TIMES=fastLoc_Times, FASTLOCINTERP_I=fastLocInterp_i,SATDBINTERP_I=SATdbInterp_i, $
                                       MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, MAXDIFF=maxDiff, $
                                       SATDBDIR=satDBDir,BYMIN=bybMin, OMNI_COORDS=OMNI_Coords 
@@ -30,8 +31,8 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
 
   ;defaults
   defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150407.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150407--times.sav'
+  defFastLocFile = 'fastLoc_intervals2--20150408.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--20150408--times.sav'
 
   ;def SAT db stuff
   defSATdbDir = '/home/spencerh/Research/Cusp/database/processed/'
@@ -88,6 +89,9 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   ;; IF NOT KEYWORD_SET(binALT) THEN binALT = defBinALT
 
   IF NOT KEYWORD_SET(satDBDir) THEN satDBDir = defSatDBDir
+
+
+
 
   ;open dem files
   RESTORE,fastLocDir+fastLocFile
@@ -147,7 +151,7 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   mag_idiff=abs( mag_utc( fastLocSatProp_i )- fastLoc_Times)
   mag_iplusdiff=abs( mag_utc( fastLocSatProp_i )- fastLoc_Times)
 
-  ;;trouble gives where i+1 is closer to fastLocdb 5-min segment
+  ;;trouble gives where i+1 is closer to fastLocdb time segment
   trouble=where(abs(mag_idiff) GT abs(mag_iplusdiff))
 
 
@@ -360,7 +364,7 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
 
      printf,lun,""
      printf,lun,"ByMin magnitude requirement: " + strcompress(byMin,/REMOVE_ALL) + " nT"
-     printf,lun,"Losing " + strcompress(byMinLost,/REMOVE_ALL) + " 5-min segments because of minimum By requirement."
+     printf,lun,"Losing " + strcompress(byMinLost,/REMOVE_ALL) + " time segments because of minimum By requirement."
      printf,lun,""
 
   ENDIF

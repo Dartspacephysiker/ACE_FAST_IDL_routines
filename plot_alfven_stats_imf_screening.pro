@@ -107,6 +107,10 @@
 ;                                            during specified IMF conditions. (Default is to divide by total number of orbits 
 ;                                            pass through given bin for ANY IMF condition.)
 ;
+;                    NEVENTPERMINPLOT  :  Plot of number of events per minute that FAST spent in a given MLT/ILAT region when
+;                                           FAST electron survey data were available (since that's the only time we looked
+;                                           for Alfvén activity.
+;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
 ;		     LOGPLOT           :     
@@ -196,6 +200,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                                     NEVENTPERMINPLOT=nEventPerMinPlot, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -242,7 +247,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDelay = 660
 
-  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
+  defstableIMF = 1S             ;Set to a time (in minutes) over which IMF stability is required
   defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
                                 ;there's no way to calculate IMF stability
                                 ;Only valid for stableIMF GE 1
@@ -409,8 +414,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0                     ;"Total orbits considered" plot?
   IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0                   ;Contributing/total orbits plot?
   IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0         ;N Events/orbit plot?
+  IF N_ELEMENTS(nEventPerMinPlot) EQ 0 THEN nEventPerMinPlot =  0         ;N Events/min plot?
   
-  IF KEYWORD_SET(nEventPerOrbPlot) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
+  IF (KEYWORD_SET(nEventPerOrbPlot) OR KEYWORD_SET(nEventPerMinPlot) ) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
      print,"Can't do nEventPerOrbPlot without nPlots!!"
      print,"Enabling nPlots..."
      nPlots=1
@@ -525,8 +531,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;********************************************
   ;;Stuff for output
-  hoyDia= STRMID(SYSTIME(0), 4, 3) + "_" + $
-          STRMID(SYSTIME(0), 8,2) + "_" + STRMID(SYSTIME(0), 22, 2)
+  hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
+          STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
   IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE plotMedOrAvg = "avg_"
 
@@ -1254,15 +1260,17 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
 
+     ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
+     ;This makes h2dStr(1) the mask histo.
      h2dNEvPerOrbStr={h2dStr}
      h2dNEvPerOrbStr.data=h2dStr(0).data
-     h2dNEvPerOrb_i=WHERE(h2dStr(0).data NE 0,/NULL)
+     h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
      IF KEYWORD_SET(divNEvByApplicable) THEN BEGIN
         divisor = h2dOrbStr.data(h2dNevPerOrb_i) ;Only divide by number of orbits that occurred during specified IMF conditions
      ENDIF ELSE BEGIN
-        divisor = h2dTotOrbStr.data(h2dNEvPerOrb_i) ;Divide by all orbits passing through relevant bin
+        divisor = h2dTotOrbStr.data(h2dNonzeroNEv_i) ;Divide by all orbits passing through relevant bin
      ENDELSE
-     h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)=h2dNEvPerOrbStr.data(h2dNEvPerOrb_i)/divisor
+     h2dNEvPerOrbStr.data(h2dNonzeroNEv_i)=h2dNEvPerOrbStr.data(h2dNonzeroNEv_i)/divisor
 
      logNEvStr=""
      nEvByAppStr=""
@@ -1280,6 +1288,51 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dStr=[h2dStr,h2dNEvPerOrbStr] 
      IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerOrb_" +nEvByAppStr] 
+
+  ENDIF
+
+  ;;########NEvents/minute########
+
+  IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
+
+     ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
+     ;This makes h2dStr(1) the mask histo.
+     h2dNEvPerMinStr={h2dStr}
+     h2dNEvPerMinStr.data=h2dStr(0).data
+     h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
+
+     ;Get the appropriate divisor for IMF conditions
+     fastLoc_inds = get_fastloc_inds__IMF_conds(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                     BYMIN=byMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                     DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                     MAKE_OUTINDSFILE=make_outIndsFile, $
+                                     FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir)
+     make_fastloc_histo,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
+                        MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                        MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                        DELTA_T=delta_T, $
+                        FASTLOCFILE=fastLocFile,FASTLOCTIMEFILE=fastLocTimeFile, $
+                        OUTFILEPREFIX=outFilePrefix,OUTFILESUFFIX=outFileSuffix, OUTDIR=outDir, $
+                        OUTPUT_TEXTFILE=output_textFile
+
+     ;output is in seconds, but we'll do minutes
+     divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
+     h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
+
+     logNEvStr=""
+     IF KEYWORD_SET(logNEventPerMin) THEN logNEvStr="Log "
+     h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
+
+     IF NOT KEYWORD_SET(nEventPerMinRange) OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
+        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,100] ELSE h2dNEvPerMinStr.lim=[-2,1]
+     ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
+     
+     IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
+        h2dNEvPerMinStr.data(where(h2dNEvPerMinStr.data GT 0,/NULL))=ALOG10(h2dNEvPerMinStr.data(where(h2dNEvPerMinStr.data GT 0,/null))) 
+     ENDIF
+
+     h2dStr=[h2dStr,h2dNEvPerMinStr] 
+     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMin"] 
 
   ENDIF
 
@@ -1507,62 +1560,5 @@ PRO plot_alfven_stats_imf_screening, maximus, $
          ENDFOR 
       ENDIF 
    ENDIF
-
-;;   IF KEYWORD_SET(writeHDF5) OR KEYWORD_SET(writeASCII) THEN BEGIN & undefine,dataRawPtr & HEAP_GC & ENDIF
-   ;;********************************************************
-   ;;OLD THINGS FOR SINGLE PLOTS FOLLOW HERE
-
-   ;;********************************************************
-   ;;histo for current event based on clock angle
-
-   ;;cghistoplot,phiChast,$
-   ;; xtickvalues=(indgen(5)*90-180),$
-   ;; xtitle="Clock angle",$
-   ;; title="> 10 microA/m^2 current events in "+hemStr+"ern hemisphere"  ;;,$output=hemStr+"_INTERP_clock_angle_cur_event_histo.png"
-
-   ;;********************************************************
-   ;;scatterplot of Poynting estimate vs. clock angle
-
-   ;;cgscatter2d,phiChast,$
-   ;; pfluxEst(cdbInterp_i),$
-   ;; xtitle="Clock angle",ytitle="|E||B| (Poynting flux estimate)",$
-   ;; title="Poynt flux est. vs. IMF angle in "+hemStr+"ern hemisphere--"+strtrim(delay/60,2)+" min. delay",$
-   ;; /ylog,yrange=[1.0e-5,1.0e-1],$
-   ;; xrange=[-180,180]  ;;,$output=hemStr+"_INTERP_pfluxEst_vs_clock_angle.png"
-
-   ;;********************************************************
-   ;;SCATTERPLOTS
-
-   ;;For all phi
-   ;;cgscatter2d,maximus.mlt(cdbInterp_i),$
-   ;; pfluxEst(cdbInterp_i),$
-   ;; xtitle="MLT", ytitle="|E||B| (Poynt flux est.)",$
-   ;; title="Spread in latitude of Poynting flux for all phi"
-   ;;output="Poynt_vs_MLT_Phi_all_'+hemStr+'.png"
-   ;;write_png,'Poynt_vs_MLT_Phi_all_'+hemStr+'.png',tvrd()
-   ;;
-   ;;cgscatter2d,maximus.mlt(cdbInterp_i),$
-   ;; maximus.elec_energy_flux(cdbInterp_i),$
-   ;; xtitle="MLT", ytitle="Electron [number?] flux",$
-   ;; title="Spread in latitude of electron flux for all phi",$
-   ;;output="elecflux_vs_MLT_Phi_all_'+hemStr+'.png"
-   ;;  ;;write_png,'elecflux_vs_MLT_Phi_all_'+hemStr+'.png',tvrd()
-   ;;
-   ;;For phi based on clockStr
-   ;;window,0
-   ;;cgscatter2d,maximus.mlt(plot_i),$
-   ;; pfluxEst(plot_i),$
-   ;; xtitle="MLT", ytitle="|E||B| (Poynt flux est.)",$
-   ;; title="Spread in latitude of Poynting flux for phiClock " + clockStr,$
-   ;;output="Poynt_vs_MLT_'+clockStr+'_'+hemStr+'.png"
-   ;;write_png,'Poynt_vs_MLT_'+clockStr+'.png',tvrd()
-   ;;
-   ;;window,2
-   ;;cgscatter2d,maximus.mlt(plot_i),$
-   ;; maximus.elec_energy_flux(plot_i),$
-   ;; xtitle="MLT", ytitle="Electron [number?] flux",$
-   ;; title="Spread in latitude of electron flux for phiClock " + clockStr,$
-   ;;output="elecflux_vs_MLT_'+clockStr+'_'+hemStr+'.png"
-   ;;write_png,'elecflux_vs_MLT_' + clockStr + '_'+hemStr+'.png',tvrd()
 
 END

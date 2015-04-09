@@ -5,7 +5,7 @@
 ;For the histogram, these things should only be divided up by altitude,mlt,and ilat.
 ;The default in all fastloc* programs is that delta_t=5 between data points, so I'm hardcoding that here.
 
-PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
+PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
                        MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT, $
                        MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                        MINALT=minAlt,MAXALT=maxAlt,BINALT=binAlt, $
@@ -64,15 +64,43 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
 
   ;open dem files
   RESTORE,fastLocDir+fastLocFile
-  IF FILE_TEST(fastLocDir+fastLocTimeFile) THEN RESTORE, fastLocDir+fastLocTimeFile ELSE BEGIN
-     fastLoc_Times = str_to_time(fastLoc.time)
+  IF FILE_TEST(fastLocDir+fastLocTimeFile) THEN RESTORE, fastLocDir+fastLocTimeFile 
+  
+  ;avoid any trickery
+  nFastLoc = N_ELEMENTS(fastLoc.orbit)
+  nFastLoc_Times = N_ELEMENTS(fastLoc_Times)
+  IF nFastLoc NE nFastLoc_Times THEN BEGIN
+     PRINT,"Something is wrong. nFastLoc = " + strcompress(nFastLoc) + " while nFastLoc_Times = " + strcompress(nFastLoc_Times) + "."
+     PRINT,"Fix it! In the meantime, we're quitting."
+     RETURN
+  ENDIF
+
+  IF fastLoc_delta_t EQ !NULL THEN BEGIN
+     IF fastLoc_Times EQ !NULL THEN fastLoc_Times = str_to_time(fastLoc.time)
      fastLoc_delta_t = shift(fastLoc_Times,-1)-fastLoc_Times
      save,fastLoc_Times,fastLoc_delta_t,FILENAME=fastLocDir+fastLocTimeFile+'_raw'
      fastLoc_delta_t[-1] = 10.0                             ;treat last element specially, since otherwise it is a huge negative number
-     fastLoc_delta_t = ROUND(fastLoc_delta_t*4.0)/4.0 ;round to nearest quarter of a second
+     fastLoc_delta_t = ROUND(fastLoc_delta_t*8.0)/8.0 ;round to nearest eigth of a second
      fastLoc_delta_t(WHERE(fastLoc_delta_t GT 10.0)) = 10.0 ;many events with a large delta_t correspond to ends of intervals/orbits
      save,fastLoc_Times,fastLoc_delta_t,FILENAME=fastLocDir+fastLocTimeFile
-  ENDELSE
+  ENDIF
+
+  ;Are we only using a user-supplied array of indices?
+  IF KEYWORD_SET(fastLoc_inds) THEN BEGIN
+     fastLoc={ORBIT:fastLoc.orbit(fastLoc_inds),$
+                          TIME:fastLoc.time(fastLoc_inds),$
+                          ALT:fastLoc.alt(fastLoc_inds),$
+                          MLT:fastLoc.mlt(fastLoc_inds),$
+                          ILAT:fastLoc.ilat(fastLoc_inds),$
+                          FIELDS_MODE:fastLoc.FIELDS_MODE(fastLoc_inds),$
+                          INTERVAL:fastLoc.INTERVAL(fastLoc_inds),$
+                          INTERVAL_START:fastLoc.INTERVAL_START(fastLoc_inds),$
+                          INTERVAL_STOP:fastLoc.INTERVAL_STOP(fastLoc_inds)$
+             }
+
+     fastLoc_Times = fastLoc_Times(fastLoc_inds)
+     fastLoc_delta_t = fastLoc_delta_t(fastLoc_inds)
+  ENDIF
 
   ;set up outfilename
   ;It's gotta be standardized!
@@ -101,7 +129,7 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
   nMLT = N_ELEMENTS(mlts)
   nILAT = N_ELEMENTS(ilats)
 
-  timeHisto = MAKE_ARRAY(nMLT,nILAT,/L64) ;how long FAST spends in each bin
+  timeHisto = MAKE_ARRAY(nMLT,nILAT,/DOUBLE) ;how long FAST spends in each bin
 
   ;loop over MLTs and ILATs
   FOR j=0, nILAT-2 DO BEGIN 
@@ -111,15 +139,17 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
         ;; tempBinTime = tempNCounts * delta_T
         tempInds = WHERE(fastLoc.MLT GE mlts[i] AND fastLoc.MLT LT mlts[i+1] AND $
                                        fastLoc.ILAT GE ilats[j] AND fastLoc.ILAT LT ilats[j+1],/NULL)
-        tempBinTime = TOTAL(fastLoc_delta_t(tempInds))
-        timeHisto[i,j] = tempBinTime
-        
-        IF KEYWORD_SET(output_textFile) THEN PRINTF,textLun,FORMAT='(G0.2,T10,G0.2,T20,G0.3)',mlts[i],ilats[j],FLOAT(tempBinTime)/60.0
+        IF tempInds NE !NULL THEN BEGIN
+           tempBinTime = TOTAL(DOUBLE(fastLoc_delta_t(tempInds)))
+           timeHisto[i,j] = tempBinTime
+
+           IF KEYWORD_SET(output_textFile) THEN PRINTF,textLun,FORMAT='(F0.2,T10,F0.2,T20,F0.3)',mlts[i],ilats[j],DOUBLE(tempBinTime)/60.0
+        ENDIF ELSE tempBinTime = DOUBLE(0.0)
      ENDFOR
   ENDFOR
 
   ;save the file
-  save,timeHisto,FILENAME=outDir+outFileName
+  IF NOT KEYWORD_SET(fastLoc_Inds) THEN save,timeHisto,FILENAME=outDir+outFileName
 
   IF KEYWORD_SET(output_textFile) THEN CLOSE,textLun
   

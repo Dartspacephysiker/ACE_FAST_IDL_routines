@@ -88,7 +88,7 @@ FUNCTION check_imf_stability_for_fastloc,clockStr,angleLim1,angleLim2,phiFastLoc
   ENDELSE
   
   
-  printf,lun,strtrim(N_ELEMENTS(phiImf_ii),2)+" events with IMF predominantly " $
+  printf,lun,strtrim(N_ELEMENTS(phiImf_ii),2)+" time segments with IMF predominantly " $
          + clockStr + "."
   
   IF stableIMF GT 0 THEN BEGIN 
@@ -110,8 +110,8 @@ FUNCTION check_imf_stability_for_fastloc,clockStr,angleLim1,angleLim2,phiFastLoc
         tempArr(temp_ii)=j 
         tempArr=[INTARR(j),tempArr] 
         imfDurArr(WHERE(tempArr GT imfDurArr))=j 
-        printf,lun,"There are " +strtrim(thisCount-oldCount,2)+ " events" + $
-               " prior to which we have " +strtrim(j,2)+ " minutes of consecutive" + $
+        printf,lun,"There are " +strtrim(thisCount-oldCount,2)+ " time segments" + $
+               " prior to which we have  at least " +strtrim(j,2)+ " minutes of consecutive" + $
                " mag data."    
         ;;      sumCount += thisCount-oldCount 
         oldCount = thisCount  
@@ -128,7 +128,7 @@ FUNCTION check_imf_stability_for_fastloc,clockStr,angleLim1,angleLim2,phiFastLoc
      
      nUnstable=N_ELEMENTS(WHERE(imfDurArr GE stableIMF))-N_ELEMENTS(checkWorthy_iii)
      IF nUnstable GT 0 THEN BEGIN
-        printf,lun,"Losing "+strtrim(nUnstable,2) + " events because of insufficient data to check IMF stability." 
+        printf,lun,"Losing "+strtrim(nUnstable,2) + " time segments because of insufficient data to check IMF stability." 
         wait,0.5
      ENDIF
      
