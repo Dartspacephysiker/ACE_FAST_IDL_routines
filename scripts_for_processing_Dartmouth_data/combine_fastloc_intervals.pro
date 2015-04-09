@@ -58,7 +58,12 @@ PRO combine_fastloc_intervals,fastLoc
   
   ;do fastloctimes
   fastloc_times = str_to_time(fastLoc.time)
-  save,fastloc_times,filename='fastLoc_'+outSuffix+'--'+date+'--times.sav'
+  fastLoc_delta_t = shift(fastLoc_Times,-1)-fastLoc_Times
+  save,fastLoc_Times,fastLoc_delta_t,FILENAME='fastLoc_'+outSuffix+'--'+date+'--times.sav_raw'
+  fastLoc_delta_t[-1] = 10.0                                ;treat last element specially, since otherwise it is a huge negative number
+  fastLoc_delta_t = ROUND(fastLoc_delta_t*4.0)/4.0          ;round to nearest quarter of a second
+  fastLoc_delta_t(WHERE(fastLoc_delta_t GT 10.0)) = 10.0    ;many events with a large delta_t correspond to ends of intervals/orbits
+  save,fastloc_times,fastLoc_delta_t,filename='fastLoc_'+outSuffix+'--'+date+'--times.sav'
 
   RETURN
   

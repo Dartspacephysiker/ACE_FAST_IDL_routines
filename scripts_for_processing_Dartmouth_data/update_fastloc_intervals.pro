@@ -84,7 +84,12 @@ pro update_fastloc_intervals,fastLoc
   
   IF (doNewTime) THEN BEGIN
      fastLoc_Times=str_to_time(fastLoc.time)
-     save,fastLoc_Times,filename=newOutTimeFile
+     fastLoc_delta_t = shift(fastLoc_Times,-1)-fastLoc_Times
+     save,fastLoc_Times,fastLoc_delta_t,FILENAME=newOutTimeFile+'_raw'
+     fastLoc_delta_t[-1] = 10.0                          ;treat last element specially, since otherwise it is a huge negative number
+     fastLoc_delta_t = ROUND(fastLoc_delta_t*4.0)/4.0    ;round to nearest quarter of a second
+     fastLoc_delta_t(WHERE(fastLoc_delta_t GT 10.0)) = 10.0 ;many events with a large delta_t correspond to ends of intervals/orbits
+     save,fastLoc_Times,fastLoc_delta_t,filename=newOutTimeFile
   ENDIF
 
   return

@@ -16,8 +16,8 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
 
   ;defaults
   defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150407.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150407--times.sav'
+  defFastLocFile = 'fastLoc_intervals2--20150408.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--20150408--times.sav'
   defOutFilePrefix = 'fastLoc_intervals2--'
   defOutFileSuffix = '--timeHisto'
   defOutDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
@@ -64,7 +64,15 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
 
   ;open dem files
   RESTORE,fastLocDir+fastLocFile
-  IF FILE_TEST(fastLocDir+fastLocTimeFile) THEN RESTORE, fastLocDir+fastLocTimeFile ELSE fastLoc_Times = str_to_time(fastLoc.time)
+  IF FILE_TEST(fastLocDir+fastLocTimeFile) THEN RESTORE, fastLocDir+fastLocTimeFile ELSE BEGIN
+     fastLoc_Times = str_to_time(fastLoc.time)
+     fastLoc_delta_t = shift(fastLoc_Times,-1)-fastLoc_Times
+     save,fastLoc_Times,fastLoc_delta_t,FILENAME=fastLocDir+fastLocTimeFile+'_raw'
+     fastLoc_delta_t[-1] = 10.0                             ;treat last element specially, since otherwise it is a huge negative number
+     fastLoc_delta_t = ROUND(fastLoc_delta_t*4.0)/4.0 ;round to nearest quarter of a second
+     fastLoc_delta_t(WHERE(fastLoc_delta_t GT 10.0)) = 10.0 ;many events with a large delta_t correspond to ends of intervals/orbits
+     save,fastLoc_Times,fastLoc_delta_t,FILENAME=fastLocDir+fastLocTimeFile
+  ENDELSE
 
   ;set up outfilename
   ;It's gotta be standardized!
@@ -98,9 +106,12 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, $
   ;loop over MLTs and ILATs
   FOR j=0, nILAT-2 DO BEGIN 
      FOR i=0, nMLT-2 DO BEGIN 
-        tempNCounts = N_ELEMENTS(WHERE(fastLoc.MLT GE mlts[i] AND fastLoc.MLT LT mlts[i+1] AND $
-                                       fastLoc.ILAT GE ilats[j] AND fastLoc.ILAT LT ilats[j+1],/NULL))
-        tempBinTime = tempNCounts * delta_T
+        ;; tempNCounts = N_ELEMENTS(WHERE(fastLoc.MLT GE mlts[i] AND fastLoc.MLT LT mlts[i+1] AND $
+        ;;                                fastLoc.ILAT GE ilats[j] AND fastLoc.ILAT LT ilats[j+1],/NULL))
+        ;; tempBinTime = tempNCounts * delta_T
+        tempInds = WHERE(fastLoc.MLT GE mlts[i] AND fastLoc.MLT LT mlts[i+1] AND $
+                                       fastLoc.ILAT GE ilats[j] AND fastLoc.ILAT LT ilats[j+1],/NULL)
+        tempBinTime = TOTAL(fastLoc_delta_t(tempInds))
         timeHisto[i,j] = tempBinTime
         
         IF KEYWORD_SET(output_textFile) THEN PRINTF,textLun,FORMAT='(G0.2,T10,G0.2,T20,G0.3)',mlts[i],ilats[j],FLOAT(tempBinTime)/60.0
