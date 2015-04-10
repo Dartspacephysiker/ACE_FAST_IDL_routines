@@ -1,2 +1,0 @@
-2015/03/18
-Well, I came here after reading Massetti [2006], page 2303, where he states that the characteristic energy associated with soft electron precipitation is ~100-200eV (as you might expect); it got me thinking that I should see if the signature of the particle cusp appeared by changing the charE range to specifically EXCLUDE soft precipitating electrons. The results you see here are what came out--not much that is intelligible to me. The relevant script is commands_for_dusk_dawn_plots__charE_3e2_to_5e3.pro.

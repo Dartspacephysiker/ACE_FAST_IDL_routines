@@ -43,3 +43,4 @@ testcode/laTEST/goodplots
 scripts_for_processing_Dartmouth_data/*.sav
 scripts_for_processing_Dartmouth_data/*.sav_raw
 scripts_for_processing_Dartmouth_data/*.txt
+scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/*

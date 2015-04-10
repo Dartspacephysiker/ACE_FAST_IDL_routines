@@ -5,7 +5,7 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
                                      BYMIN=byMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      MAKE_OUTINDSFILE=make_outIndsFile, $
-                                     FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir
+                                     FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir
 
 ;                    CLOCKSTR          :  Interplanetary magnetic field clock angle.
 ;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', 'all_IMF',
@@ -29,7 +29,7 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
   defAngleLim1 = 45.0
   defAngleLim2 = 135.0
 
-  defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  defFastLocOutputDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
   defFastLocFile = 'fastLoc_intervals2--20150409.sav'
   defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
 
@@ -57,11 +57,11 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
   
   IF NOT KEYWORD_SET(lun) THEN lun = defLun
 
-  IF NOT KEYWORD_SET(byMin) THEN byMin = defByMin
+  IF N_ELEMENTS(byMin) EQ 0 THEN byMin = defByMin
 
   IF NOT KEYWORD_SET(smoothWindow) THEN smoothWindow = defSmoothWindow  ;in Min
 
-  IF NOT KEYWORD_SET(fastLocDir) THEN fastLocDir = defFastLocDir
+  IF NOT KEYWORD_SET(fastLocOutputDir) THEN fastLocOutputDir = defFastLocOutputDir
   IF NOT KEYWORD_SET(fastLocFile) THEN fastLocFile = defFastLocFile
   IF NOT KEYWORD_SET(fastLocTimeFile) THEN fastLocTimeFile = defFastLocTimeFile
 
@@ -79,13 +79,14 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
   basenameFormat = '(A0,"--",A0,"_",F0.2,"-",F0.2,"deg--",A0,"_",A0,"--byMin_",F0.1,"--stableIMF_",I0,"min--delay_",I0,"--smoothWindow_",I0,"min")'
   outIndsFileBasename = STRING(FORMAT=basenameFormat,defOutIndsPrefix,clockStr,angleLim1,angleLim2,satellite,omni_Coords,byMin,stableIMF,delay,smoothWindow)
 
+  outIndsFilename = fastLocOutputDir+outIndsFileBasename+defOutIndsFileExt
   ;;********************************************
   ;;If this file already exists, see if it will work for us!
-  IF FILE_TEST(outIndsFileBasename+defOutIndsFileExt) THEN BEGIN 
+  IF FILE_TEST(outIndsFilename) THEN BEGIN 
      ;; desiredAngleLim1 = angleLim1
      ;; desiredAngleLim2 = angleLim2
-     PRINT,"Restoring " + outIndsFileBasename+defOutIndsFileExt + "..."
-     RESTORE,outIndsFileBasename+defOutIndsFileExt
+     PRINT,"Restoring " + outIndsFilename + "..."
+     RESTORE,outIndsFilename
      ;now, if the restored angleLims match the desired ones, we're in business!
      ;; IF desiredAngleLim1 NE angleLim1 OR desiredAngleLim2 NE angleLim2 THEN BEGIN
   ENDIF ELSE BEGIN
@@ -100,7 +101,7 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
      
      fastLocInterped_i=fastLocInterp_i(phiImf_ii)
      
-     IF KEYWORD_SET(make_outIndsFile) THEN save,fastLocInterped_i,clockStr,angleLim1,angleLim2,smoothWindow,byMin,delay,satdbdir,omni_coords,fastLocDir,fastLocFile,fastLocTimeFile,filename=outIndsFileBasename+defOutIndsFileExt
+     IF KEYWORD_SET(make_outIndsFile) THEN save,fastLocInterped_i,clockStr,angleLim1,angleLim2,smoothWindow,byMin,delay,satdbdir,omni_coords,fastLocOutputDir,fastLocFile,fastLocTimeFile,filename=outIndsFilename
   ENDELSE
 
   RETURN, fastLocInterped_i

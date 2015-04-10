@@ -202,8 +202,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  LONNAMES=lonNames
   ENDIF ELSE BEGIN
      lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
-     lats=INDGEN((maxI-minI)/8.0+1)*8.0+minI
-     latNames=[minI, INDGEN((maxI-minI)/8.0)*8.0+(minI+1*8.0)]
+     lats=INDGEN((maxI-minI)/binI*2.0+1)*binI*2.0+minI
+     latNames=[minI, INDGEN((maxI-minI)/binI*2.0)*binI*2.0+(minI+1*binI*2.0)]
 
      IF mirror THEN BEGIN
         ;;    ;;IF wholeCap NE !NULL THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]

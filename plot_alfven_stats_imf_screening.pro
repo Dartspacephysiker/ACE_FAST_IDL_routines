@@ -229,8 +229,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; defBinM = 0.5
 
   defMinI = 60.0 ;these might need to be longs (i.e., '60L')
-  defMaxI = 89.0
-  defBinI = 3.0
+  defMaxI = 84.0
+  defBinI = 2.0
 
   defMinMagC = 10
   defMaxNegMagC = -10
@@ -1304,10 +1304,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;Get the appropriate divisor for IMF conditions
      fastLoc_inds = get_fastloc_inds__IMF_conds(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                     BYMIN=byMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                     DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                     MAKE_OUTINDSFILE=make_outIndsFile, $
-                                     FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir)
+                                                BYMIN=byMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
+                                                /MAKE_OUTINDSFILE)
      make_fastloc_histo,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
                         MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
                         MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
@@ -1334,7 +1334,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
 
      IF NOT KEYWORD_SET(nEventPerMinRange) OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
-        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,60] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(60.0)]
+        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,35] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(40.0)]
      ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
      
      IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
@@ -1342,7 +1342,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
 
      h2dStr=[h2dStr,h2dNEvPerMinStr] 
-     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMinLog10-Log60"] 
+     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMin"] 
 
   ENDIF
 

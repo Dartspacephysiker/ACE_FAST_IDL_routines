@@ -19,7 +19,7 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
                                       FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
                                       FASTLOC_TIMES=fastLoc_Times, FASTLOCINTERP_I=fastLocInterp_i,SATDBINTERP_I=SATdbInterp_i, $
                                       MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, MAXDIFF=maxDiff, $
-                                      SATDBDIR=satDBDir,BYMIN=bybMin, OMNI_COORDS=OMNI_Coords 
+                                      SATDBDIR=satDBDir,BYMIN=byMin, OMNI_COORDS=OMNI_Coords 
 
   ;def IMF params
   defSatellite = 'OMNI'
@@ -345,7 +345,7 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
 
   ;*********************************************************
   ;Any requirement for by magnitude?
-  IF KEYWORD_SET(byMin) THEN BEGIN 
+  IF N_ELEMENTS(byMin NE 0) AND byMin NE 0 THEN BEGIN 
      ;;As they are after interpolation
      ;; SATdbInterp_i=fastLocSatProp_i(SATdbInterp_ii) 
      ;; fastLocInterp_i=SATdbInterp_ii 
