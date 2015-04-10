@@ -4,7 +4,7 @@
 ;the particle data).
 PRO combine_fastloc_intervals,fastLoc
 
-  date='20150408'
+  date='20150410'
 
   fastLoc_DB='/SPENCEdata/software/sdt/batch_jobs/FASTlocation/batch_output__intervals/'
   contents_file='./orbits_contained_in_fastloc_'+date+'.txt'

@@ -110,6 +110,7 @@
 ;                    NEVENTPERMINPLOT  :  Plot of number of events per minute that FAST spent in a given MLT/ILAT region when
 ;                                           FAST electron survey data were available (since that's the only time we looked
 ;                                           for Alfvén activity.
+;                    LOGNEVENTPERMIN   :  Log of Neventpermin plot 
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
@@ -200,7 +201,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                                     NEVENTPERMINPLOT=nEventPerMinPlot, $
+                                     NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
                                      MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -228,7 +229,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; defBinM = 0.5
 
   defMinI = 60.0 ;these might need to be longs (i.e., '60L')
-  defMaxI = 88.0
+  defMaxI = 89.0
   defBinI = 3.0
 
   defMinMagC = 10
@@ -1316,6 +1317,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                         OUTPUT_TEXTFILE=output_textFile
 
      ;output is in seconds, but we'll do minutes
+     ;
+     ;; divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
+     ;; h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
+
+     ;2015/04/09 TEMPORARILY skip the lines above because our fastLoc file currently only includes orbits 500-11000.
+     ; This means that, according to fastLoc and maximus, there are events where FAST has never been!
+     ; So we have to do some trickery
+     divisor_nonZero_i = WHERE(divisor GT 0.0)
+     h2dNonzeroNEv_i = cgsetintersection(divisor_nonZero_i,h2dNonzeroNEv_i)
      divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
      h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
 
@@ -1324,7 +1334,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
 
      IF NOT KEYWORD_SET(nEventPerMinRange) OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
-        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,100] ELSE h2dNEvPerMinStr.lim=[-2,1]
+        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,60] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(60.0)]
      ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
      
      IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
@@ -1332,7 +1342,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
 
      h2dStr=[h2dStr,h2dNEvPerMinStr] 
-     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMin"] 
+     IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMinLog10-Log60"] 
 
   ENDIF
 

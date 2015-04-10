@@ -25,14 +25,14 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   defSatellite = 'OMNI'
   defDelay = 660
   defLun = -1 ;stdout
-  defByMin = 5
+  defByMin = 0
   defSmoothWindow = 5
   defMaxDiff=5.0 ; (in minutes)
 
   ;defaults
   defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150408.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150408--times.sav'
+  defFastLocFile = 'fastLoc_intervals2--20150409.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
 
   ;def SAT db stuff
   defSATdbDir = '/home/spencerh/Research/Cusp/database/processed/'

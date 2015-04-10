@@ -30,8 +30,8 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
   defAngleLim2 = 135.0
 
   defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150408.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150408--times.sav'
+  defFastLocFile = 'fastLoc_intervals2--20150409.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
 
   defLun = -1 ;stdout
   defOutIndsPrefix = 'fastLoc_intervals2'

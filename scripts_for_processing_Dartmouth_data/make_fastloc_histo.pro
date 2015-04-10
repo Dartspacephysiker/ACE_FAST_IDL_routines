@@ -16,8 +16,8 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
 
   ;defaults
   defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150408.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150408--times.sav'
+  defFastLocFile = 'fastLoc_intervals2--20150409.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
   defOutFilePrefix = 'fastLoc_intervals2--'
   defOutFileSuffix = '--timeHisto'
   defOutDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'

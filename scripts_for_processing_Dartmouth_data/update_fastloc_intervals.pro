@@ -8,9 +8,9 @@ pro update_fastloc_intervals,fastLoc
   fastLoc_DB='/SPENCEdata/software/sdt/batch_jobs/FASTlocation/batch_output__intervals/'
 
   ;Files to deal with
-  oldDBDate='20150408'
+  oldDBDate='20150409'
 
-  newDBDate='20150409'
+  newDBDate='20150410'
 
   ;; fNamePrefix='Dartmouth_fastloc_intervals'
   fNamePrefix='Dartmouth_fastloc_intervals2'
@@ -80,7 +80,7 @@ pro update_fastloc_intervals,fastLoc
      ENDIF ELSE PRINT,"Couldn't open " + filename + "!!!"
   endfor
   
-  save,maximus,filename=newOutFile
+  save,fastLoc,filename=newOutFile
   
   IF (doNewTime) THEN BEGIN
      fastLoc_Times=str_to_time(fastLoc.time)
