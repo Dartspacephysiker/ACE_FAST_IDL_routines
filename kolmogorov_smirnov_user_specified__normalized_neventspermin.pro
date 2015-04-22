@@ -1,8 +1,11 @@
-;The default for this file is to get K-S statistics for the N Events per Min plots
+;Here we do K-S statistics by normalizing the nevents plot according to the method suggested by
+;Prof. LaBelle, where we find the min
 
-PRO kolmogorov_smirnov_user_specified
+PRO kolmogorov_smirnov_user_specified__normalized_neventspermin
   
-  ksNEvPerMinOutFile = 'ks_stats_neventpermin__20150410.sav'
+  date='20150420'
+  ksNEvPerMinOutFile = 'ks_stats_neventpermin__'+date+'.sav'
+;  normalized_timeFile = 
 
   ;various
   nDataz=2
@@ -12,16 +15,36 @@ PRO kolmogorov_smirnov_user_specified
   ;h2dStr index to use for data
   ;0 = nEventsPerMin
   ;1 = nEvents_
+  h2dStr_ind = 1 ;do nEvents
+  
+  nFiles=3
+  datFiles=MAKE_ARRAY(nFiles,/STRING)
+  timeHistoFiles=MAKE_ARRAY(nFiles,/STRING)
 
-;restore the three files, all_IMF, duskward, 
-  restore,'temp/polarplots_North_avg_all_IMF--0stable--5min_IMFsmooth--OMNI_GSM_Apr_10_15.dat'
-  all_IMF_dat=h2dStr(0).data
-  restore,'temp/polarplots_North_avg_duskward--1stable--5min_IMFsmooth--OMNI_GSM_byMin_5.0_Apr_10_15.dat'
-  duskward_dat=h2dStr(0).data
-  restore,'temp/polarplots_North_avg_dawnward--1stable--5min_IMFsmooth--OMNI_GSM_byMin_5.0_Apr_10_15.dat'
-  dawnward_dat=h2dStr(0).data
+  datFiles[0]='temp/polarplots_North_avg_dawnward--1stable--5min_IMFsmooth--OMNI_GSM_byMin_5.0_Apr_10_15.dat'
+  datFiles[1]='temp/polarplots_North_avg_duskward--1stable--5min_IMFsmooth--OMNI_GSM_byMin_5.0_Apr_10_15.dat'
+  datFiles[2]='temp/polarplots_North_avg_all_IMF--0stable--5min_IMFsmooth--OMNI_GSM_Apr_10_15.dat'
+
+  timeHistoFiles[0]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--dawnward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs520-10983--timehisto--20150420.sav'
+  timeHistoFiles[1]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--duskward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14976--timehisto--20150420.sav'
+  timeHistoFiles[2]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--all_IMF_180.00-180.00deg--OMNI_GSM--byMin_0.0--stableIMF_0min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14999--timehisto--20150420.sav'
+
+  ;restore the three file groups
+  restore,datFiles[0]
+  dawnward_dat=h2dStr(h2dStr_ind).data
+  restore,datFiles[1]
+  duskward_dat=h2dStr(h2dStr_ind).data
+  restore,datFiles[2]
+  all_IMF_dat=h2dStr(h2dStr_ind).data
 ;  print,12.0/0.75
 ;      16.0000
+
+  restore,timeHistoFiles[0]
+  dawnward_timeHist=timehisto
+  restore,timeHistoFiles[1]
+  duskward_timeHist=timeHisto
+  restore,timeHistoFiles[2]
+  all_IMF_timeHist=timeHisto
 
   ;get reduced histograms
   all_IMF_mlt=total(all_IMF_dat,2)
@@ -31,17 +54,28 @@ PRO kolmogorov_smirnov_user_specified
   duskward_ilat=total(duskward_dat,1)
   duskward_mlt=total(duskward_dat,2)
 
+  ;now time histos
+  all_IMF_mlt_timeHisto=total(all_IMF_timeHisto,2)
+  all_IMF_ilat_timeHisto=total(all_IMF_timeHisto,1)
+  dawnward_ilat_timeHisto=total(dawnward_timeHisto,1)
+  dawnward_mlt_timeHisto=total(dawnward_timeHisto,2)
+  duskward_ilat_timeHisto=total(duskward_timeHisto,1)
+  duskward_mlt_timeHisto=total(duskward_timeHisto,2)
+  
   ;because why not?
   mltHistos = TRANSPOSE([[all_imf_mlt],[dawnward_mlt],[duskward_mlt]])
   ilatHistos = TRANSPOSE([[all_imf_ilat],[dawnward_ilat],[duskward_ilat]])
+
+  mltTimeHistos = TRANSPOSE([[all_imf_mlt_timeHisto],[dawnward_mlt_timeHisto],[duskward_mlt_timeHisto]])
+  ilatTimeHistos = TRANSPOSE([[all_imf_ilat_timeHisto],[dawnward_ilat_timeHisto],[duskward_ilat_timeHisto]])
 
   rounded_MLTHistos=round(mltHistos)
   rounded_ILATHistos=round(mltHistos)
 
   ;what are the mlts and ilats involved here?
   ;get them from restored file
-  nMLTBins = n_elements(h2dStr(0).data(*,0))
-  nILATBins = n_elements(h2dStr(0).data(0,*))
+  nMLTBins = n_elements(h2dStr(h2dStr_ind).data(*,0))
+  nILATBins = n_elements(h2dStr(h2dStr_ind).data(0,*))
   mlts=indgen(nMLTBins)*binM + minM
   ilats=indgen(nILATBins)*binI + minI
 

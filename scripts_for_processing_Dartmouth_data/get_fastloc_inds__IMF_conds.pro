@@ -10,7 +10,7 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
 ;                    CLOCKSTR          :  Interplanetary magnetic field clock angle.
 ;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', 'all_IMF',
 ;                                            'dawn-north', 'dawn-south', 'dusk-north', or 'dusk-south'.
-  defClockStr = 'dawnward'
+  defClockStr = 'duskward'
   
   defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
   defOmni_Coords = "GSM"             ; either "GSE" or "GSM"

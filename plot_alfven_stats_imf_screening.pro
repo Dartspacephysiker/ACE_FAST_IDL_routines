@@ -111,6 +111,7 @@
 ;                                           FAST electron survey data were available (since that's the only time we looked
 ;                                           for Alfvén activity.
 ;                    LOGNEVENTPERMIN   :  Log of Neventpermin plot 
+;                    MAKESMALLESTBINMIN:  Find the smallest bin, make that 
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
@@ -131,8 +132,8 @@
 ;                                            can share with others!
 ;		     SAVERAW           :  Save all raw data
 ;		     RAWDIR            :  Directory in which to store raw data
-;                    NOPLOTSJUSTDATA   :  No plots whatsoever; just give me the dataz.
-;                    NOSAVEPLOTS       :  Don't save plots, just show them immediately
+;                    JUSTDATA          :  No plots whatsoever; just give me the dataz.
+;                    SHOWPLOTSNOSAVE   :  Don't save plots, just show them immediately
 ;		     PLOTDIR           :     
 ;		     PLOTPREFIX        :     
 ;		     PLOTSUFFIX        :     
@@ -208,7 +209,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                     NOPLOTSJUSTDATA=noPlotsJustData, NOSAVEPLOTS=noSavePlots, $
+                                     JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                      PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, DEL_PS=del_PS, $
                                      _EXTRA = e
@@ -373,9 +374,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF NOT KEYWORD_SET(rawDir) THEN rawDir=defRawDir
  
-  ;;Write output file with data params? Only possible if noSavePlots=0...
-  IF KEYWORD_SET(noSavePlots) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
-     print, "Is it possible to have outputPlotSummary==1 while noSavePlots==0? You used to say no..."
+  ;;Write output file with data params? Only possible if showPlotsNoSave=0...
+  IF KEYWORD_SET(showPlotsNoSave) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
+     print, "Is it possible to have outputPlotSummary==1 while showPlotsNoSave==0? You used to say no..."
      outputPlotSummary=defOutSummary   ;;Change to zero if not wanted
   ENDIF 
 
@@ -1379,13 +1380,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                            filename='temp/polarplots_'+paramStr+plotSuffix+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
-  IF KEYWORD_SET(noSavePlots) THEN BEGIN 
-     IF NOT KEYWORD_SET(noPlotsJustData) AND KEYWORD_SET(squarePlot) THEN $
+  IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
+     IF NOT KEYWORD_SET(justData) AND KEYWORD_SET(squarePlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotMedOrAvg,1) $
-     ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
+     ELSE IF NOT KEYWORD_SET(justData) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
         ;;    cgWindow,'interp_polar_plot',[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                 ;;             h2dStr[0].lim,Background="White",wxsize=800,wysize=600, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
@@ -1397,9 +1398,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotMedOrAvg,1) $
                 
-     ELSE PRINTF,LUN,"**Plots turned off with noPlotsJustData**" 
+     ELSE PRINTF,LUN,"**Plots turned off with justData**" 
   ENDIF ELSE BEGIN 
-     IF KEYWORD_SET(squarePlot) AND NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
+     IF KEYWORD_SET(squarePlot) AND NOT KEYWORD_SET(justData) THEN BEGIN 
         CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
         PRINTF,LUN, "Creating output files..." 
 
@@ -1412,42 +1413,44 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         cgPS2Raster, plotDir + plotPrefix + 'fluxplots_'+paramStr+plotSuffix+'.ps', $
                      /PNG, Width=800, DELETE_PS = del_PS
      
-     ENDIF ELSE IF NOT KEYWORD_SET(noPlotsJustData) THEN BEGIN 
-        CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
-        PRINTF,LUN, "Creating output files..." 
-        
-        FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN  
+     ENDIF ELSE BEGIN
+        IF NOT KEYWORD_SET(justData) THEN BEGIN 
+           CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
+           PRINTF,LUN, "Creating output files..." 
            
-           IF KEYWORD_SET(polarContour) THEN BEGIN
-              ;; The NAME field of the !D system variable contains the name of the
-              ;; current plotting device.
-              mydevice = !D.NAME
-              ;; Set plotting to PostScript:
-              SET_PLOT, 'PS'
-              ;; Use DEVICE to set some PostScript device options:
-              DEVICE, FILENAME='myfile.ps', /LANDSCAPE
-              ;; Make a simple plot to the PostScript file:
-              interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
-                                    fname=plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.png', _extra=e
-              ;; Close the PostScript file:
-              DEVICE, /CLOSE
-              ;; Return plotting to the original device:
-              SET_PLOT, mydevice
-           ENDIF ELSE BEGIN
-              ;;Create a PostScript file.
-              cgPS_Open, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps' 
-              ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
-              ;;          h2dStr[0].lim 
-              interp_polar2dhist,h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
-              cgPS_Close 
-              ;;Create a PNG file with a width of 800 pixels.
-              cgPS2Raster, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps', $
-                           /PNG, Width=800, DELETE_PS = del_PS
-           ENDELSE
-           
-        ENDFOR    
+           FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN  
+              
+              IF KEYWORD_SET(polarContour) THEN BEGIN
+                 ;; The NAME field of the !D system variable contains the name of the
+                 ;; current plotting device.
+                 mydevice = !D.NAME
+                 ;; Set plotting to PostScript:
+                 SET_PLOT, 'PS'
+                 ;; Use DEVICE to set some PostScript device options:
+                 DEVICE, FILENAME='myfile.ps', /LANDSCAPE
+                 ;; Make a simple plot to the PostScript file:
+                 interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
+                                       fname=plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.png', _extra=e
+                 ;; Close the PostScript file:
+                 DEVICE, /CLOSE
+                 ;; Return plotting to the original device:
+                 SET_PLOT, mydevice
+              ENDIF ELSE BEGIN
+                 ;;Create a PostScript file.
+                 cgPS_Open, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps' 
+                 ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
+                 ;;          h2dStr[0].lim 
+                 interp_polar2dhist,h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
+                 cgPS_Close 
+                 ;;Create a PNG file with a width of 800 pixels.
+                 cgPS2Raster, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps', $
+                              /PNG, Width=800, DELETE_PS = del_PS
+              ENDELSE
+              
+           ENDFOR    
         
-     ENDIF 
+        ENDIF
+     ENDELSE
   ENDELSE
 
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 

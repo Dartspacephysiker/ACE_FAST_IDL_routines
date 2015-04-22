@@ -39,6 +39,9 @@ testcode/laTEST/*.ps
 *dat_and_plots*
 testcode/laTEST/goodplots
 
+#No raw saves
+rawsaves/*
+
 #No DB files
 scripts_for_processing_Dartmouth_data/*.sav
 scripts_for_processing_Dartmouth_data/*.sav_raw
