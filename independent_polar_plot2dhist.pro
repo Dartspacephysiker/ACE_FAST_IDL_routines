@@ -12,6 +12,9 @@
 
 PRO independent_polar_plot2dhist,temp_or_rawfile,histStructure,OUTPSFNAME=outPSFName
 
+  ;delete postscripts if created
+  DEL_PS=1
+
   IF FILE_TEST(temp_or_rawfile) THEN restore,temp_or_rawfile $
   ELSE BEGIN
      print,"Can't open file " + temp_or_rawfile
@@ -36,9 +39,9 @@ PRO independent_polar_plot2dhist,temp_or_rawfile,histStructure,OUTPSFNAME=outPSF
   ENDIF ELSE BEGIN
      PRINT,'Using user-supplied data structure...'
      histoStr=histStructure
-     IF ISA(histoStr,/ARRAY) THEN BEGIN
-        histoStr={data:histoStr,title:"User-supplied data",lim:[min(histoStr),max(histoStr)]}
-     ENDIF
+     ;; IF ISA(histoStr,/ARRAY) THEN BEGIN
+     ;;    histoStr={data:histoStr,title:"User-supplied data",lim:[min(histoStr),max(histoStr)]}
+     ;; ENDIF
   ENDELSE
 
   ;do either postscript output or cgWindow here
@@ -49,7 +52,7 @@ PRO independent_polar_plot2dhist,temp_or_rawfile,histStructure,OUTPSFNAME=outPSF
   
   
      cgPS_Close 
-     cgPS2Raster, outPSFName, /PNG, Width=800, DELETE_PS = del_PS
+     cgPS2Raster, outPSFName, /PNG, Width=800, DELETE_PS =DEL_PS
   ENDIF ELSE BEGIN
      cgWindow,'interp_polar2dhist',histoStr,temp_or_rawfile,CLOCKSTR=clockStr,_extra=e
   ENDELSE
