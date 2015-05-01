@@ -19,13 +19,14 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
                                       FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
                                       FASTLOC_TIMES=fastLoc_Times, FASTLOCINTERP_I=fastLocInterp_i,SATDBINTERP_I=SATdbInterp_i, $
                                       MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, MAXDIFF=maxDiff, $
-                                      SATDBDIR=satDBDir,BYMIN=byMin, OMNI_COORDS=OMNI_Coords 
+                                      SATDBDIR=satDBDir,BYMIN=byMin, BZMIN=bzMin, OMNI_COORDS=OMNI_Coords 
 
   ;def IMF params
   defSatellite = 'OMNI'
   defDelay = 660
   defLun = -1 ;stdout
   defByMin = 0
+  defBzMin = 0
   defSmoothWindow = 5
   defMaxDiff=5.0 ; (in minutes)
 
@@ -58,37 +59,38 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   ;; defBinALT = 1000.0
 
   ;Handle all defaults
-  IF NOT KEYWORD_SET(satellite) THEN satellite = defSatellite
-  IF NOT KEYWORD_SET(delay) THEN delay = defDelay
-  IF NOT KEYWORD_SET(lun) THEN lun = defLun
-  IF NOT KEYWORD_SET(ByMin) THEN ByMin = defByMin
-  IF NOT KEYWORD_SET(maxDiff) THEN maxDiff = defMaxDiff
+  IF N_ELEMENTS(satellite) EQ 0 THEN satellite = defSatellite
+  IF N_ELEMENTS(delay) EQ 0 THEN delay = defDelay
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = defLun
+  IF N_ELEMENTS(ByMin) EQ 0 THEN ByMin = defByMin
+  IF N_ELEMENTS(BzMin) EQ 0 THEN BzMin = defBzMin
+  IF N_ELEMENTS(maxDiff) EQ 0 THEN maxDiff = defMaxDiff
 
   ;files
-  IF NOT KEYWORD_SET(fastLocDir) THEN fastLocDir = defFastLocDir
-  IF NOT KEYWORD_SET(fastLocFile) THEN fastLocFile = defFastLocFile
-  IF NOT KEYWORD_SET(fastLocTimeFile) THEN fastLocTimeFile = defFastLocTimeFile
-  IF NOT KEYWORD_SET(outFilePrefix) THEN outFilePrefix = defOutFilePrefix
-  IF NOT KEYWORD_SET(outFileSuffix) THEN outFileSuffix = defOutFileSuffix
-  IF NOT KEYWORD_SET(outDir) THEN outDir = defOutDir
+  IF N_ELEMENTS(fastLocDir) EQ 0 THEN fastLocDir = defFastLocDir
+  IF N_ELEMENTS(fastLocFile) EQ 0 THEN fastLocFile = defFastLocFile
+  IF N_ELEMENTS(fastLocTimeFile) EQ 0 THEN fastLocTimeFile = defFastLocTimeFile
+  IF N_ELEMENTS(outFilePrefix) EQ 0 THEN outFilePrefix = defOutFilePrefix
+  IF N_ELEMENTS(outFileSuffix) EQ 0 THEN outFileSuffix = defOutFileSuffix
+  IF N_ELEMENTS(outDir) EQ 0 THEN outDir = defOutDir
 
   ;MLT
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = defMinMLT
-  IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = defMaxMLT
-  IF NOT KEYWORD_SET(binMLT) THEN binMLT = defBinMLT
+  IF N_ELEMENTS(minMLT) EQ 0 THEN minMLT = defMinMLT
+  IF N_ELEMENTS(maxMLT) EQ 0 THEN maxMLT = defMaxMLT
+  IF N_ELEMENTS(binMLT) EQ 0 THEN binMLT = defBinMLT
 
   ;ILAT
-  IF NOT KEYWORD_SET(minILAT) THEN minILAT = defMinILAT
-  IF NOT KEYWORD_SET(maxILAT) THEN maxILAT = defMaxILAT
-  IF NOT KEYWORD_SET(binILAT) THEN binILAT = defBinILAT
+  IF N_ELEMENTS(minILAT) EQ 0 THEN minILAT = defMinILAT
+  IF N_ELEMENTS(maxILAT) EQ 0 THEN maxILAT = defMaxILAT
+  IF N_ELEMENTS(binILAT) EQ 0 THEN binILAT = defBinILAT
 
   ;Don't do altitudes now
   ;; IF 
-  ;; IF NOT KEYWORD_SET(minALT) THEN minALT = defMinALT
-  ;; IF NOT KEYWORD_SET(maxALT) THEN maxALT = defMaxALT
-  ;; IF NOT KEYWORD_SET(binALT) THEN binALT = defBinALT
+  ;; IF N_ELEMENTS(minALT) EQ 0 THEN minALT = defMinALT
+  ;; IF N_ELEMENTS(maxALT) EQ 0 THEN maxALT = defMaxALT
+  ;; IF N_ELEMENTS(binALT) EQ 0 THEN binALT = defBinALT
 
-  IF NOT KEYWORD_SET(satDBDir) THEN satDBDir = defSatDBDir
+  IF N_ELEMENTS(satDBDir) EQ 0 THEN satDBDir = defSatDBDir
 
 
 
@@ -368,6 +370,34 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
      printf,lun,""
 
   ENDIF
+
+  ;*********************************************************
+  ;Any requirement for bz magnitude?
+  IF N_ELEMENTS(bzMin NE 0) AND bzMin NE 0 THEN BEGIN 
+     ;;As they are after interpolation
+     ;; SATdbInterp_i=fastLocSatProp_i(SATdbInterp_ii) 
+     ;; fastLocInterp_i=SATdbInterp_ii 
+     ;; fastLocInterpTime=fastLoc_Times(SATdbInterp_ii) 
+    
+     ;; bzMin_ii are the indices (of indices) of events that meet the minimum Bz requirement
+     bzMin_ii=WHERE(bzFastLoc LE -ABS(bzMin) OR bzFastLoc GE ABS(bzMin),NCOMPLEMENT=bzminLost)
+     
+     bzFastLoc=bzFastLoc(bzMin_ii)
+     byFastLoc=byFastLoc(bzMin_ii)
+     bxFastLoc=bxFastLoc(bzMin_ii)
+     
+     SATdbInterp_i=SATdbInterp_i(bzMin_ii)
+     fastLocInterp_i=fastLocInterp_i(bzMin_ii)
+     fastLocInterpTime=fastLocInterpTime(bzMin_ii)
+
+     printf,lun,""
+     printf,lun,"BzMin magnitude requirement: " + strcompress(bzMin,/REMOVE_ALL) + " nT"
+     printf,lun,"Losing " + strcompress(bzMinLost,/REMOVE_ALL) + " time segments because of minimum Bz requirement."
+     printf,lun,""
+
+  ENDIF
+
+
 
   printf,lun,"****END text from interp_mag_data_for_fastloc.pro****"
   printf,lun,""

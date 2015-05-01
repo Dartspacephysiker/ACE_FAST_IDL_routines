@@ -35,6 +35,7 @@
 ;                    MASKMIN           :  Minimum number of events a given MLT/ILAT bin must contain to show up on the plot.
 ;                                            Otherwise it gets shown as "no data". (Default: 1)
 ;                    BYMIN             :  Minimum value of IMF By during an event to accept the event for inclusion in the analysis.
+;                    BZMIN             :  Minimum value of IMF Bz during an event to accept the event for inclusion in the analysis.
 ;		     NPLOTS            :  Plot number of orbits.   
 ;                    HEMI              :  Hemisphere for which to show statistics. Can be "North" or "South".
 ;
@@ -184,7 +185,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, BYMIN=byMin, $
+                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+                                     BYMIN=byMin, BZMIN=bzMin, $
                                      SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      HEMI=hemi, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -454,6 +456,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
   ENDIF
 
+  ;;Requirement for IMF By magnitude?
+  bzMinStr=''
+  IF KEYWORD_SET(bzMin) THEN BEGIN
+     bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)
+  ENDIF
+
   ;;doing polar contour?
   polarContStr=''
   IF KEYWORD_SET(polarContour) THEN BEGIN
@@ -571,7 +579,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,OMNI_COORDS=omni_Coords)
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,BZMIN=bzMin,OMNI_COORDS=omni_Coords)
   phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
@@ -1304,7 +1312,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;Get the appropriate divisor for IMF conditions
      fastLoc_inds = get_fastloc_inds__IMF_conds(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                                BYMIN=byMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                                BYMIN=byMin,BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                                 FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
                                                 /MAKE_OUTINDSFILE)

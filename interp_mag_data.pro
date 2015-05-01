@@ -11,7 +11,8 @@
 FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun, $
                          CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
-                         DATADIR=datadir,BYMIN=byMin, OMNI_COORDS=omni_Coords;, $
+                         DATADIR=datadir, $
+                         BYMIN=byMin, BZMIN=bzMin, OMNI_COORDS=omni_Coords ;, $
 ;;                         CLEANED_DB=cleaned_DB
 
   ;;If using cleaned DB, use all indices!
@@ -271,6 +272,32 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
      printf,lun,""
      printf,lun,"ByMin magnitude requirement: " + strcompress(byMin,/REMOVE_ALL) + " nT"
      printf,lun,"Losing " + strcompress(byMinLost,/REMOVE_ALL) + " events because of minimum By requirement."
+     printf,lun,""
+
+  ENDIF
+
+  ;*********************************************************
+  ;Any requirement for bz magnitude?
+  IF KEYWORD_SET(bzMin) THEN BEGIN 
+     ;;As they are after interpolation
+     ;; cdbAcepropInterp_i=cdbAceprop_i(cdbAcepropInterp_ii) 
+     ;; cdbInterp_i=ind_region_magc_geabs10_acestart(cdbAcepropInterp_ii) 
+     ;; cdbInterpTime=cdbTime(cdbAcepropInterp_ii) 
+    
+     ;; bzMin_ii are the indices (of indices) of events that meet the minimum Bz requirement
+     bzMin_ii=WHERE(bzChast LE -ABS(bzMin) OR bzChast GE ABS(bzMin),NCOMPLEMENT=bzminLost)
+     
+     bzChast=bzChast(bzMin_ii)
+     byChast=byChast(bzMin_ii)
+     bxChast=bxChast(bzMin_ii)
+     
+     cdbAcepropInterp_i=cdbAcepropInterp_i(bzMin_ii)
+     cdbInterp_i=cdbInterp_i(bzMin_ii)
+     cdbInterpTime=cdbInterpTime(bzMin_ii)
+
+     printf,lun,""
+     printf,lun,"BzMin magnitude requirement: " + strcompress(bzMin,/REMOVE_ALL) + " nT"
+     printf,lun,"Losing " + strcompress(bzMinLost,/REMOVE_ALL) + " events because of minimum Bz requirement."
      printf,lun,""
 
   ENDIF
