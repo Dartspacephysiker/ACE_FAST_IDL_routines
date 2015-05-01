@@ -20,17 +20,22 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
   defOutFilePrefix = 'fastLoc_intervals2--'
   defOutFileSuffix = '--timeHisto'
+  defSmallestMinBinStr = '--smallestBinMin'
   defOutDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
 
   defDelta_T = 5 ;5 seconds
 
-  defMinMLT = 0.0
-  defMaxMLT = 24.0
+  ;; defMinMLT = 0.0
+  ;; defMaxMLT = 24.0
+  defMinMLT = 6.0
+  defMaxMLT = 18.0
   defBinMLT = 0.75
 
   defMinILAT = 60
-  defMaxILAT = 89.0
-  defBinILAT = 3.0
+  ;; defMaxILAT = 89.0
+  ;; defBinILAT = 3.0
+  defMaxILAT = 84.0
+  defBinILAT = 2.0
 
   ;; defMinALT = 0.0
   ;; defMaxALT = 5000.0
@@ -149,7 +154,11 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   ENDFOR
 
   ;save the file
-  IF NOT KEYWORD_SET(fastLoc_Inds) THEN save,timeHisto,FILENAME=outDir+outFileName
+  IF NOT KEYWORD_SET(fastLoc_Inds) AND $
+  NOT (outFilePrefix EQ defOutFilePrefix) OR NOT (outFileSuffix EQ defOutFileSuffix) THEN BEGIN
+     save,timeHisto,FILENAME=outDir+outFileName
+     print,'Saving ' + outDir+outFileName + '...'
+  ENDIF
 
   IF KEYWORD_SET(output_textFile) THEN CLOSE,textLun
   
