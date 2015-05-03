@@ -31,9 +31,9 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                       CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                       ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                       NEVENTSRANGE=nEventsRange, NUMORBLIM=numOrbLim, $
-                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT, $
-                      MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                      MIN_NEVENTS=min_nEvents, BYMIN=byMin, $
+                      minMLT=minMLT,maxMLT=maxMLT, $ ;BINMLT=binMLT, $
+                      MINILAT=minILAT,MAXILAT=maxILAT, $ ;BINILAT=binILAT, $
+                      MIN_NEVENTS=min_nEvents, BYMIN=byMin, BZMIN=bzMin, $
                       SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                       HEMI=hemi, $
                       DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -72,14 +72,14 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   ;ranges in MLT and ILAT
   ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
   ; has ilat bin size = 3.0 and mlt bin size = 1.0
-  defMinM = 6.0
-  defMaxM = 18.0
-  defBinM = 0.75
+  defMinM = 0.0
+  defMaxM = 24.0
+  ;; defBinM = 0.75
   ;; defBinM = 0.5
 
   defMinI = 60.0 ;these might need to be longs (i.e., '60L')
   defMaxI = 88.0
-  defBinI = 3.0
+  ;; defBinI = 3.0
 
   defMinMagC = 10
   defMaxNegMagC = -10
@@ -126,8 +126,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
 
   ;;Bin sizes for 2D histos
-  binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
-  binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
+  ;; binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
+  ;; binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
 
   IF KEYWORD_SET(minILAT) THEN minI = minILAT
   IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
@@ -279,6 +279,12 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
      byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
   ENDIF
 
+  ;;Requirement for IMF Bz magnitude?
+  bzMinStr=''
+  IF KEYWORD_SET(bzMin) THEN BEGIN
+     bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)
+  ENDIF
+
   ;;######ELECTRONS
   ;;Eflux max abs. value in interval, or integrated flux?
   ;;NOTE: max value has negative values, which can mess with
@@ -373,7 +379,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
 ;;  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+indSuffix+hoyDia
-  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+byMinStr+indSuffix+hoyDia
+  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+byMinStr+bzMinStr+indSuffix+hoyDia
 
   ;;Now run these to clean and tap the databases and interpolate satellite data
   
@@ -382,7 +388,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,OMNI_COORDS=omni_Coords)
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,BZMIN=bzMin,OMNI_COORDS=omni_Coords)
   phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   

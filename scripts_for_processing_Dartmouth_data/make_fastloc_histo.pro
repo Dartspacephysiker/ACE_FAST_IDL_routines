@@ -3,7 +3,15 @@
 ;'denominator histogram', so to speak, so we know where events are actually happening. 
 ;This should be standardized so that these files don't get remade all the time.
 ;For the histogram, these things should only be divided up by altitude,mlt,and ilat.
-;The default in all fastloc* programs is that delta_t=5 between data points, so I'm hardcoding that here.
+;
+;2015/05/01
+;I originally thought that we should have a default delta_t=5 sec between data points in all fastloc* programs, so I hardcoded
+;that here. I have since commented it out, and now just use the actual time between data points. If the time between points is
+;longer than 10 seconds, I just treat it like a 10-second delta_t (see combine_fastloc_intervals.pro).
+
+;So let's say you wanted to make a time histo for duskward IMF, with By>=5 nT. First get the
+;indices file by running get_fastloc_inds__IMF_conds with keyword /MAKE_OUTINDSFILE, then provide
+;those indices as the keyword FASTLOC_INDS here.
 
 PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
                        MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT, $
@@ -20,10 +28,10 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
   defOutFilePrefix = 'fastLoc_intervals2--'
   defOutFileSuffix = '--timeHisto'
-  defSmallestMinBinStr = '--smallestBinMin'
   defOutDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
 
-  defDelta_T = 5 ;5 seconds
+  ;; defSmallestMinBinStr = '--smallestBinMin'
+  ;; defDelta_T = 5 ;5 seconds
 
   ;; defMinMLT = 0.0
   ;; defMaxMLT = 24.0
@@ -49,7 +57,7 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   IF NOT KEYWORD_SET(outFileSuffix) THEN outFileSuffix = defOutFileSuffix
   IF NOT KEYWORD_SET(outDir) THEN outDir = defOutDir
 
-  IF NOT KEYWORD_SET(delta_T) THEN delta_T = defDelta_T
+  ;; IF NOT KEYWORD_SET(delta_T) THEN delta_T = defDelta_T
 
   ;MLT
   IF NOT KEYWORD_SET(minMLT) THEN minMLT = defMinMLT

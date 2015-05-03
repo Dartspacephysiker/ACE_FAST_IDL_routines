@@ -457,7 +457,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
   ENDIF
 
-  ;;Requirement for IMF By magnitude?
+  ;;Requirement for IMF Bz magnitude?
   bzMinStr=''
   IF KEYWORD_SET(bzMin) THEN BEGIN
      bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)

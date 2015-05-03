@@ -107,7 +107,12 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
      
      fastLocInterped_i=fastLocInterp_i(phiImf_ii)
      
-     IF KEYWORD_SET(make_outIndsFile) THEN save,fastLocInterped_i,clockStr,angleLim1,angleLim2,smoothWindow,byMin,bzMin,delay,satdbdir,omni_coords,fastLocOutputDir,fastLocFile,fastLocTimeFile,filename=outIndsFilename
+     IF KEYWORD_SET(make_outIndsFile) THEN BEGIN
+        PRINT,'Saving outindsfile ' + outIndsFilename + '...'
+        save,fastLocInterped_i,clockStr,angleLim1,angleLim2,smoothWindow,byMin,bzMin, $
+             delay,satdbdir,omni_coords,fastLocOutputDir,fastLocFile,fastLocTimeFile, $
+             filename=outIndsFilename
+     ENDIF
   ENDELSE
 
   RETURN, fastLocInterped_i

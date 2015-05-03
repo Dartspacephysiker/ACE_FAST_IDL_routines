@@ -64,8 +64,8 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   defPlot_i_dir = 'plot_indices_saves/'
 
-  ;; defSTrans = 99 ;use for plotting entire db
-  defSTrans = 90 ;use for very narrowed plot_i
+  ;; defSTrans = 99                ;use for plotting entire db
+  defSTrans = 90                ;use for very narrowed plot_i
 
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
@@ -134,7 +134,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   grid.color="blue"
   grid.linestyle=1
   grid.label_angle = 0
-  grid.font_size = 12
+  grid.font_size = 15
 
   mlats=grid.latitudes
   FOR i=0,n_elements(mlats)-1 DO BEGIN
