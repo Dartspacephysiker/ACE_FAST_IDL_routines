@@ -228,7 +228,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ; has ilat bin size = 3.0 and mlt bin size = 1.0
   defMinM = 6.0
   defMaxM = 18.0
-  defBinM = 0.75
+  defBinM = 1.0
+  ;; defBinM = 0.75
   ;; defBinM = 0.5
 
   defMinI = 60.0 ;these might need to be longs (i.e., '60L')
@@ -1343,7 +1344,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
 
      IF NOT KEYWORD_SET(nEventPerMinRange) OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
-        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,35] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(40.0)]
+        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,28] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(40.0)]
      ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
      
      IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 

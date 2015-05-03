@@ -64,8 +64,8 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   defPlot_i_dir = 'plot_indices_saves/'
 
-  ;; defSTrans = 99                ;use for plotting entire db
-  defSTrans = 90                ;use for very narrowed plot_i
+  defSTrans = 99                ;use for plotting entire db
+  ;; defSTrans = 90                ;use for very narrowed plot_i
 
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
@@ -206,8 +206,8 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   ;; IF KEYWORD_SET(charEScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=12,MIN_FOR_IND=4,MAX_FOR_IND=300)  
 
   ;; screen by magnetometer current
-  min_absMagcScr=10
-  max_absMagcScr=500
+  ;; min_absMagcScr=10
+  ;; max_absMagcScr=500
   ;; IF KEYWORD_SET(absMagcScr) THEN maximus = resize_maximus(maximus,MAXIMUS_IND=6,MIN_FOR_IND=min_absMagcScr,MAX_FOR_IND=max_absMagcScr)  
 
 

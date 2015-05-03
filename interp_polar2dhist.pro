@@ -202,8 +202,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  LONNAMES=lonNames
   ENDIF ELSE BEGIN
      lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
-     lats=INDGEN((maxI-minI)/binI*2.0+1)*binI*2.0+minI
-     latNames=[minI, INDGEN((maxI-minI)/binI*2.0)*binI*2.0+(minI+1*binI*2.0)]
+     lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
+     latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
 
      IF mirror THEN BEGIN
         ;;    ;;IF wholeCap NE !NULL THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
@@ -212,7 +212,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
      ENDIF 
      
      latNames=STRING(latNames,format='(I0)')
-     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " MLT"
+     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " ILAT"
 
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
 ;;                 latdelta=binI*4,$
@@ -232,7 +232,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;cgText, 90, minI-1, '6 MLT',Alignment=0.5,Charsize=charSize
   ;cgText, -90, minI-1, '18',Alignment=0.5,Charsize=charSize
   
-  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 0.75)
+  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 1.0)
   ;cgText, 0, minI-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=charSize      
   ;cgText, 180, minI-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charSize   
   ;cgText, 90, minI-5, 'dawnward',Alignment=0.5,Charsize=charSize
@@ -240,38 +240,40 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 
   ;;Integral text
   ;;REMEMBER: h2dStr[nPlots].data is the MASK
-  IF NOT KEYWORD_SET(noPlotIntegral) THEN BEGIN 
-     IF logPlotzz THEN BEGIN
-        integ=ALOG10(TOTAL(10.0^(temp.data(WHERE(~masked)))))
-        absInteg=integ
-        dawnIntegral=ALOG10(dawnIntegral)
-        duskIntegral=ALOG10(duskIntegral)
-     ENDIF ELSE BEGIN
-        integ=TOTAL(temp.data(WHERE(~masked)))
-        absInteg=TOTAL(ABS(temp.data(WHERE(~masked))))
-     ENDELSE
-
-
-     IF wholeCap NE !NULL THEN BEGIN
-        lTexPos1=0.09
-        lTexPos2=0.63
-        bTexPos1=0.88
-        bTexPos2=0.84
-
-        cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-     ENDIF ELSE BEGIN
-        lTexPos1=0.11
-        lTexPos2=0.68
-        bTexPos1=0.78
-        bTexPos2=0.74
-
-        cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-     ENDELSE
-     
-     IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize
-     cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
-     cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
-     cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
+  IF NOT (noPlotIntegral EQ !NULL) THEN BEGIN 
+     IF NOT (noPlotIntegral) THEN BEGIN
+        IF logPlotzz THEN BEGIN
+           integ=ALOG10(TOTAL(10.0^(temp.data(WHERE(~masked)))))
+           absInteg=integ
+           dawnIntegral=ALOG10(dawnIntegral)
+           duskIntegral=ALOG10(duskIntegral)
+        ENDIF ELSE BEGIN
+           integ=TOTAL(temp.data(WHERE(~masked)))
+           absInteg=TOTAL(ABS(temp.data(WHERE(~masked))))
+        ENDELSE
+        
+        
+        IF wholeCap NE !NULL THEN BEGIN
+           lTexPos1=0.09
+           lTexPos2=0.63
+           bTexPos1=0.88
+           bTexPos2=0.84
+           
+           cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
+        ENDIF ELSE BEGIN
+           lTexPos1=0.11
+           lTexPos2=0.68
+           bTexPos1=0.78
+           bTexPos2=0.74
+           
+           cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
+        ENDELSE
+        
+        IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize
+        cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
+        cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
+        cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
+     ENDIF
   ENDIF 
 
   ;; colorbar label stuff
@@ -296,7 +298,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                             String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
                             String(UpperLab, Format=labelFormat)] ;for charE plot, uncomment me: String(UpperLab, Format='(I0)')]
   ENDIF ELSE BEGIN
-     cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
+     ;; cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.
      cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), Divisions=nlevels-is_OOBHigh-is_OOBLow, $
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
