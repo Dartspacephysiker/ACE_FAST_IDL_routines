@@ -1,8 +1,8 @@
 ; GET ALL THOSE NORMALIZED TIME HISTOS
-;2015/05/02
+;2015/05/04
 
 fastLocDir='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
-date='20150502'
+date='20150504'
 
 ;files
 inFileName='allIMF_dawndusk_bzNorthSouth_timehistos--20150502.sav'
@@ -114,5 +114,5 @@ save,allimf_timehisto,allimf_timehisto_normalized,allimf_min_i, $
      bzNorth_timehisto,bzNorth_timehisto_normalized,bzNorth_min_i, $
      bzSouth_timehisto,bzSouth_timehisto_normalized,bzSouth_min_i, $
      allimf_normedTimeHisto_struct,dawn_normedTimeHisto_struct,dusk_normedTimeHisto_struct,bzNorth_normedTimeHisto_struct,bzSouth_normedTimeHisto_struct,$
-     allimf_temp_or_rawfile,dawn_temp_or_rawfile,dusk_temp_or_rawfile,bzSouth_temp_or_rawfile,bzSouth_temp_or_rawfile, $
+     allimf_temp_or_rawfile,dawn_temp_or_rawfile,dusk_temp_or_rawfile,bzNorth_temp_or_rawfile,bzSouth_temp_or_rawfile, $
      filename=outFileName

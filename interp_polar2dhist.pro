@@ -13,6 +13,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;want me to output integral of plot?
   ;;noPlotIntegral=1
 
+  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 1.0)
+
   ;Subtract one since last array is the mask
   nPlots=N_ELEMENTS(h2dStr)-1
 
@@ -199,11 +201,14 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
-                 LONNAMES=lonNames
+                 LONNAMES=lonNames, $
+                 CHARSIZE=charSize
   ENDIF ELSE BEGIN
      lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
-     lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
-     latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
+     ;; lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
+     ;; latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
+     lats=[60,70,80]
+     latNames=[60,70,80]
 
      IF mirror THEN BEGIN
         ;;    ;;IF wholeCap NE !NULL THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
@@ -223,7 +228,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
 ;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
                  LONNAMES=lonNames, $
-                 LONLABEL=lonLabel
+                 LONLABEL=lonLabel, $
+                 CHARSIZE=charSize
   ENDELSE
      
   ;charSize = cgDefCharSize()*0.75
@@ -232,7 +238,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;cgText, 90, minI-1, '6 MLT',Alignment=0.5,Charsize=charSize
   ;cgText, -90, minI-1, '18',Alignment=0.5,Charsize=charSize
   
-  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 1.0)
+  charSize = cgDefCharSize()*((wholeCap NE !NULL) ? 0.7 : 1.3)
   ;cgText, 0, minI-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=charSize      
   ;cgText, 180, minI-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charSize   
   ;cgText, 90, minI-5, 'dawnward',Alignment=0.5,Charsize=charSize

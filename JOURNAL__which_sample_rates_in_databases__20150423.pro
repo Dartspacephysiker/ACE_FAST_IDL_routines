@@ -3,10 +3,13 @@
 ; Working directory: /SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F
 ; Date: Thu Apr 23 12:03 2015
  
-dbFile='/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus.sav'
+dbFile='/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav'
 restore,dbFile
-print,maximus.sample_t[0-99]
 
+;only for given current sizes
+maximus=resize_maximus(maximus,maximus_ind=6,min_for_ind=10,max_for_ind=2000,/ONLY_ABSVALS)
+
+print,maximus.sample_t[0-99]
 print,maximus.sample_t[0:99]
 
 uniq_sample_ts_i=uniq(maximus.sample_t,sort(maximus.sample_t))
@@ -21,7 +24,7 @@ print,uniq_sample_ts
 ;Output file located here: /SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/Histogram_of_FAST_fields_sample_ts_for_Dartmouth_DB_20150228.png
 ;Output File: /SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/Histogram_of_FAST_fields_sample_ts_for_Dartmouth_DB_20150228.png
 
-outHistTxtFile='Histogram_of_FAST_fields_sample_ts_for_Dartmouth_DB_20150228.txt'
+outHistTxtFile='Histogram_of_FAST_fields_sample_ts_for_Dartmouth_DB_20150228--cleaned--absmagc_GE_10.txt'
 OPENW,outHistLun,outHistTxtFile,/GET_LUN
 
 

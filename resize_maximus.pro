@@ -1,16 +1,20 @@
 ; The purpose of this file is just what you'd expect--we want to resize maximus based on some stuff
 
-FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,MAX_FOR_IND=max_for_ind,INDS=inds
+FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,MAX_FOR_IND=max_for_ind,ONLY_ABSVALS=only_absVals,INDS=inds
 
   IF KEYWORD_SET(inds) THEN allowed_i = inds ELSE BEGIN
-     allowed_i=where(maximus.(maximus_ind) GE min_for_ind AND maximus.(maximus_ind) LE max_for_ind)
+     IF KEYWORD_SET(only_absVals) THEN BEGIN
+        allowed_i=where(abs(maximus.(maximus_ind)) GE min_for_ind AND abs(maximus.(maximus_ind)) LE max_for_ind)
+     ENDIF ELSE BEGIN
+        allowed_i=where(maximus.(maximus_ind) GE min_for_ind AND maximus.(maximus_ind) LE max_for_ind)
+     ENDELSE
   ENDELSE
 
   maxTags = tag_names(maximus)
   print,''
   print,"**********from resize_maximus.pro**********"
   IF KEYWORD_SET(inds) THEN print,"Resizing based on indices" ELSE BEGIN
-     print,"Resizing based on " +  maxTags(maximus_ind)
+     print,"Resizing based on " +  (KEYWORD_SET(only_absVals) ? 'ABS(' + maxTags(maximus_ind)  + ')' : maxTags(maximus_ind) )
      print,"Upper limit: " + strcompress(max_for_ind,/remove_all)
      print,"Lower limit: " + strcompress(min_for_ind,/remove_all)
      print,''

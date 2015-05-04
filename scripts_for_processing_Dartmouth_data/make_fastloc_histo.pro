@@ -37,7 +37,7 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   ;; defMaxMLT = 24.0
   defMinMLT = 6.0
   defMaxMLT = 18.0
-  defBinMLT = 0.75
+  defBinMLT = 1.0
 
   defMinILAT = 60
   ;; defMaxILAT = 89.0

@@ -64,14 +64,14 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   defPlot_i_dir = 'plot_indices_saves/'
 
-  defSTrans = 99                ;use for plotting entire db
-  ;; defSTrans = 90                ;use for very narrowed plot_i
+  ;; defSTrans = 98                ;use for plotting entire db
+  defSTrans = 93                ;use for very narrowed plot_i
 
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
   IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ELSE plotSuff
-  IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt
+  IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt ;otherwise handled by plot_i_file
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
 
   IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
