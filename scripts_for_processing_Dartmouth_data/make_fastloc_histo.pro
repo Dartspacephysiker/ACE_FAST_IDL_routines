@@ -124,7 +124,7 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
 
   ;are we doing a text file?
   IF KEYWORD_SET(output_textFile) THEN BEGIN
-     textFileName=fNameSansPref + ".txt"
+     textFileName='txtoutput/'+fNameSansPref + ".txt"
      
      OPENW,textLun,outDir+textFileName,/GET_LUN
      PRINTF,textLun,"Output from make_fastloc_histo"
@@ -163,10 +163,12 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
 
   ;save the file
   IF NOT KEYWORD_SET(fastLoc_Inds) AND $
-  NOT (outFilePrefix EQ defOutFilePrefix) OR NOT (outFileSuffix EQ defOutFileSuffix) THEN BEGIN
+  NOT ((outFilePrefix EQ defOutFilePrefix) AND (outFileSuffix EQ defOutFileSuffix)) THEN BEGIN
      save,timeHisto,FILENAME=outDir+outFileName
      print,'Saving ' + outDir+outFileName + '...'
-  ENDIF
+  ENDIF ELSE BEGIN
+     print,'Not saving ' + outDir+outFileName+'...'
+  ENDELSE
 
   IF KEYWORD_SET(output_textFile) THEN CLOSE,textLun
   

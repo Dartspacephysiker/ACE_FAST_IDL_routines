@@ -7,11 +7,12 @@ restore,datFile
 ;now we've got [orientation]_normedTimeHisto_struct, [orientation]_temp_or_rawfile, which
 ;should be all we need
 
-allIMF_outPS='timehisto_normalized--allIMF.ps'
-dawn_outPS='timehisto_normalized--dawnward.ps'
-dusk_outPS='timehisto_normalized--duskward.ps'
-bzSouth_outPS='timehisto_normalized--bzSouthward.ps'
-bzNorth_outPS='timehisto_normalized--bzNorthward.ps'
+date='20150504'
+allIMF_outPS='timehisto_normalized--allIMF--'+date+'.ps'
+dawn_outPS='timehisto_normalized--dawnward--'+date+'.ps'
+dusk_outPS='timehisto_normalized--duskward--'+date+'.ps'
+bzSouth_outPS='timehisto_normalized--bzSouthward--'+date+'.ps'
+bzNorth_outPS='timehisto_normalized--bzNorthward--'+date+'.ps'
 
 ;allIMF
 independent_polar_plot2dhist,allIMF_temp_or_rawfile,allIMF_normedTimeHisto_struct,outpsfname=allIMF_outPS
