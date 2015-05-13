@@ -44,8 +44,9 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
                                CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
                                PLOTSUFF=plotSuff, $
                                OUTFILE=outFile, $
-                               PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
+                               PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, JUST_PLOT_I=just_plot_i, $
                                STRANS=sTrans, $
+                               PLOTTITLE=plotTitle, $
                                _EXTRA = e
 
   ;; Defaults
@@ -178,9 +179,15 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
                                 ;key_scatterplots_polarproj actually resizes maximus
      maximus = resize_maximus(maximus,INDS=plot_i)
 
-     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+paramStr+plotSuff+defExt
+     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+'--'+paramStr+plotSuff+defExt
 
-  ENDIF
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(just_plot_i) THEN BEGIN
+        print,"User-supplied inds using 'just_plot_i' keyword..."
+        maximus=resize_maximus(maximus,INDS=just_plot_i)
+        IF NOT KEYWORD_SET(outFile) then outFile = defOutPref + '--user-supplied' +defExt
+     ENDIF
+  ENDELSE
   
   ;;northern_hemi
   IF KEYWORD_SET(north) OR KEYWORD_SET(south) THEN BEGIN
@@ -221,7 +228,8 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   ;; Plotting
   curPlot = scatterplot(lons,lats,sym_size=0.8, $
-                 SYMBOL='o',/overplot,SYM_TRANSPARENCY=sTrans);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
+                        SYMBOL='o',/overplot,SYM_TRANSPARENCY=sTrans, $
+                       TITLE=plotTitle)        ;,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
   ;; curPlot = plot(lons,lats,sym_size=0.8, $
   ;;                'o',/overplot,SYM_TRANSPARENCY=95);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
 ;                ,linestyle=6, $
