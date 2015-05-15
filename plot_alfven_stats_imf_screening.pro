@@ -53,8 +53,8 @@
 ;                *ELECTRON FLUX PLOT OPTIONS
 ;		     EPLOTS            :     
 ;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
-;                    LOGEFPLOT         :  Do log plots of electron flux.
-;                    ABSEFLUX          :  Use absolute value of electron flux (required for log plots).
+;                    LOGEFPLOT         :  Do log plots of electron energy flux.
+;                    ABSEFLUX          :  Use absolute value of electron energy flux (required for log plots).
 ;                    NONEGEFLUX        :  Do not use negative e fluxes in any of the plots (positive is earthward for eflux)
 ;                    NOPOSEFLUX        :  Do not use positive e fluxes in any of the plots
 ;                    EPLOTRANGE        :  Range of allowable values for e- flux plots. 
@@ -116,6 +116,7 @@
 ;
 ;                *ASSORTED PLOT OPTIONS--APPLICABLE TO ALL PLOTS
 ;		     MEDIANPLOT        :  Do median plots instead of averages.
+;                    LOGAVGPLOT        :  Do log averaging instead of straight averages
 ;		     LOGPLOT           :     
 ;		     SQUAREPLOT        :  Do plots in square bins. (Default plot is in polar stereo projection)    
 ;                    POLARCONTOUR      :  Do polar plot, but do a contour instead
@@ -205,7 +206,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                      NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
-                                     MEDIANPLOT=medianPlot, LOGPLOT=logPlot, $
+                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
+                                     LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
                                      DBFILE=dbfile, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                      NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
@@ -506,7 +508,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;For linear or log PFlux plotrange
   IF NOT KEYWORD_SET(PPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logPfPlot) THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1,0.4]
+     IF NOT KEYWORD_SET(logPfPlot) THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1.5288,0.39794]
   ENDIF
 
   ;;######Ion flux (up)
@@ -545,7 +547,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
           STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
-  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE plotMedOrAvg = "avg_"
+  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE BEGIN
+     IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
+  ENDELSE
 
   IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
   IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
@@ -703,7 +707,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               plot_i=cgsetintersection(no_pos_i,plot_i)        
            ENDIF
         ENDELSE
-        elecData=maximus.integ_elec_energy_flux(plot_i) 
+        elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.integ_elec_energy_flux(plot_i)) : maximus.integ_elec_energy_flux(plot_i) 
      ENDIF ELSE BEGIN
         IF eFluxPlotType EQ "Max" THEN BEGIN
            plot_i=cgsetintersection(WHERE(FINITE(maximus.elec_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -717,7 +721,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
               ENDIF
            ENDELSE
-           elecData=maximus.elec_energy_flux(plot_i)
+           elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.elec_energy_flux(plot_i)) : maximus.elec_energy_flux(plot_i)
         ENDIF
      ENDELSE
 
@@ -757,8 +761,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                             BINSIZE1=binM,BINSIZE2=binI,$
                             OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-     ENDELSE 
-
+        IF KEYWORD_SET(logAvgPlot) THEN h2dEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dEStr.data(where(h2dFluxN NE 0,/null)))        
+     ENDELSE
+  
      ;data mods?
      IF KEYWORD_SET(absEflux)THEN BEGIN 
         h2dEStr.data = ABS(h2dEStr.data) 
@@ -836,6 +841,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + pfDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
+        IF KEYWORD_SET(logAvgPlot) THEN BEGIN
+           pfluxEst(where(pfluxEst NE 0,/null)) = ALOG10(pfluxEst(where(pfluxEst NE 0,/null)))
+        ENDIF
+
         h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                             maximus.ilat(plot_i),$
                             pfluxEst(plot_i),$
@@ -843,6 +852,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                             MAX1=MAXM,MAX2=MAXI,$
                             BINSIZE1=binM,BINSIZE2=binI) 
         h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
+        IF KEYWORD_SET(logAvgPlot) THEN h2dPStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dPStr.data(where(h2dFluxN NE 0,/null)))
      ENDELSE
 
      IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=pfluxEst(plot_i)
@@ -1360,7 +1370,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;If something screwy goes on, better take stock of it and alert user
 
   FOR i = 2, N_ELEMENTS(h2dStr)-1 DO BEGIN 
-     IF n_elements(where(h2dStr[i].data EQ 0,/NULL)) NE $
+     IF n_elements(where(h2dStr[i].data EQ 0,/NULL)) LT $
         n_elements(where(h2dStr[0].data EQ 0,/NULL)) THEN BEGIN 
         printf,lun,"h2dStr."+h2dStr[i].title + " has ", strtrim(n_elements(where(h2dStr[i].data EQ 0)),2)," elements that are zero, whereas FluxN has ", strtrim(n_elements(where(h2dStr[0].data EQ 0)),2),"." 
      printf,lun,"Sorry, can't plot anything meaningful." & ENDIF

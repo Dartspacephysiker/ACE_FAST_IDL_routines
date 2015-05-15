@@ -3,7 +3,7 @@
 
 PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
 
-  date='03232015'
+  date='20150514'
   dbDate = '02282015'
 
   dirs='all_IMF'
@@ -14,15 +14,15 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
   ;; plotDir="LaBelle_Bin_mtg--02042015/Chaston_2003_fig4a-d/"
 
   ;;hemisphere?
-  ;; hemi="North"
-  hemi="South"
+  hemi="North"
+  ;; hemi="South"
 
   ;;different delay?
   ;delay=!NULL
   delay=1020
 
   ;maskMin
-  mskm=5
+  mskm=3
 
   ;delete postscript?
   del_PS = 1
@@ -41,22 +41,25 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
                                         ;; neventperorbrange=[0.01,10.0], $
                                         neventperorbrange=[-2.0,1.0], $
                                         nEventsRange=[0,3000], orbFreqRange=[0.0, 0.8], orbcontribrange=[1,200], $
-                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
+                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, $
+                                        CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
 
   ;;;;;;;;;;;;;;;
   ;electron plots
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
   ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
-                                        /eplots,efluxplottype="Max",eplotrange=[-1,2],/logefplot,/abseflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
+                                        /eplots,efluxplottype="Max",eplotrange=[-1,2],/logefplot,/abseflux,/WHOLECAP,/midnight, $
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange, $
+                                        /logavgplot ;,/medianplot
   
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
-                                        /pplots,pplotrange=[-1.7,1.698977],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
+                                        /pplots,pplotrange=[-1.7,1.698977],/logpfplot,/nonegpflux,/WHOLECAP,/midnight, $
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange, $
+                                        /logavgplot ;, /medianplot
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
   ;;                                       /pplots,pplotrange=[0.05,10],/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
   ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
@@ -73,7 +76,8 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, HEMI=hemi, $
                                         /chareplot,charetype="lossCone",/logCharEPlot, $ ;chareplotrange=[0,4e3],
-                                        /medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange
+                                        /WHOLECAP,/midnight,DELAY=delay, $
+                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange, $
+                                        /logavgplot ;,/medianplot
 
 END

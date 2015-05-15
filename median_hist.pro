@@ -20,7 +20,7 @@ function median_hist, MLT, ILAT, data, $
                       OBIN1=Obin1, OBIN2=Obin2, $
                       BINEDGE1=Binedge1, BINEDGE2=Binedge2, NONZEROHIST=nonzeroHist,$
                       PTRHIST=ptrHist,ABSMED=absMed,$
-                      OUTFILE=outFile,PLOT_I=plot_i
+                      OUTFILE=outFile,PLOT_I=plot_i,LOGNORMSTATS=lorNormStats
 
          ON_ERROR, 0          ; on error, return control to caller
 
@@ -115,15 +115,31 @@ function median_hist, MLT, ILAT, data, $
 ;            print,wgtc[i]
          ENDFOR 
 
-;    Now calculate the median of each bin using ptrHist
-         hist_i=WHERE(nonzeroHist GT 0)
-         FOR i=0, N_ELEMENTS(hist_i)-1 DO BEGIN
+
+         IF KEYWORD_SET(logNormStats) THEN BEGIN
+            hist_i=WHERE(nonzeroHist GT 0)
+
             IF N_ELEMENTS(*(ptrHist(hist_i[i]))) EQ 1 THEN BEGIN
+               ;geometric mean of 1 sample is just the sample itself
+               ;also, geometric standard deviation 
                medHist(hist_i[i])=*(ptrHist(hist_i[i])) 
             ENDIF ELSE BEGIN
+               ;trickier here
                medHist(hist_i[i])=MEDIAN(*ptrHist(hist_i[i]))
             ENDELSE
-         ENDFOR
+           
+         ENDIF ELSE BEGIN
+;    Now calculate the median of each bin using ptrHist
+;    ...if we're not doing log-normal stats, that is
+            hist_i=WHERE(nonzeroHist GT 0)
+            FOR i=0, N_ELEMENTS(hist_i)-1 DO BEGIN
+               IF N_ELEMENTS(*(ptrHist(hist_i[i]))) EQ 1 THEN BEGIN
+                  medHist(hist_i[i])=*(ptrHist(hist_i[i])) 
+               ENDIF ELSE BEGIN
+                  medHist(hist_i[i])=MEDIAN(*ptrHist(hist_i[i]))
+               ENDELSE
+            ENDFOR
+         ENDELSE
 
          IF KEYWORD_SET(outFile) THEN BEGIN
             IF (STRLOWCASE(TYPENAME(outFile)) EQ 'string') THEN BEGIN

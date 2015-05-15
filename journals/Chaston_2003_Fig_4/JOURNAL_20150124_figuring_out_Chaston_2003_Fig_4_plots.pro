@@ -4,73 +4,7 @@
 ;If I restrict these to be between 0.01 and 100, they make way more sense.
 
 restore,'scripts_for_processing_Dartmouth_data/Dartdb_01242015_maximus.sav'
-help,maximus,/str
-;;** Structure <98b488>, 46 tags, length=52204440, data length=52204430, refs=1:
-;;  ORBIT           INT       Array[269095]
-;;  ALFVENIC        FLOAT     Array[269095]
-;;  TIME            STRING    Array[269095]
-;;  ALT             FLOAT     Array[269095]
-;;  MLT             FLOAT     Array[269095]
-;;  ILAT            FLOAT     Array[269095]
-;;  MAG_CURRENT     FLOAT     Array[269095]
-;;  ESA_CURRENT     FLOAT     Array[269095]
-;;  ELEC_ENERGY_FLUX
-;;                  FLOAT     Array[269095]
-;;  INTEG_ELEC_ENERGY_FLUX
-;;                  FLOAT     Array[269095]
-;;  EFLUX_LOSSCONE_INTEG
-;;                  FLOAT     Array[269095]
-;;  TOTAL_EFLUX_INTEG
-;;                  FLOAT     Array[269095]
-;;  MAX_CHARE_LOSSCONE
-;;                  FLOAT     Array[269095]
-;;  MAX_CHARE_TOTAL FLOAT     Array[269095]
-;;  ION_ENERGY_FLUX FLOAT     Array[269095]
-;;                  < Press Spacebar to continue, ? for help > 
-;;  ION_FLUX        FLOAT     Array[269095]
-;;  ION_FLUX_UP     FLOAT     Array[269095]
-;;  INTEG_ION_FLUX  FLOAT     Array[269095]
-;;  INTEG_ION_FLUX_UP
-;;                  FLOAT     Array[269095]
-;;  CHAR_ION_ENERGY FLOAT     Array[269095]
-;;  WIDTH_TIME      FLOAT     Array[269095]
-;;  WIDTH_X         FLOAT     Array[269095]
-;;  DELTA_B         FLOAT     Array[269095]
-;;  DELTA_E         FLOAT     Array[269095]
-;;  SAMPLE_T        FLOAT     Array[269095]
-;;  MODE            FLOAT     Array[269095]
-;;  PROTON_FLUX_UP  FLOAT     Array[269095]
-;;  PROTON_CHAR_ENERGY
-;;                  FLOAT     Array[269095]
-;;  OXY_FLUX_UP     FLOAT     Array[269095]
-;;  OXY_CHAR_ENERGY FLOAT     Array[269095]
-;;  HELIUM_FLUX_UP  FLOAT     Array[269095]
-;;  HELIUM_CHAR_ENERGY
-;;                  FLOAT     Array[269095]
-;;  SC_POT          FLOAT     Array[269095]
-;;  L_PROBE         FLOAT     Array[269095]
-;;                  < Press Spacebar to continue, ? for help > 
-;;  MAX_L_PROBE     FLOAT     Array[269095]
-;;  MIN_L_PROBE     FLOAT     Array[269095]
-;;  MEDIAN_L_PROBE  FLOAT     Array[269095]
-;;  TOTAL_ELECTRON_ENERGY_DFLUX_SINGLE
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ELECTRON_ENERGY_DFLUX_MULTIPLE_TOT
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ALFVEN_ELECTRON_ENERGY_DFLUX
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ION_OUTFLOW_SINGLE
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ION_OUTFLOW_MULTIPLE_TOT
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ALFVEN_ION_OUTFLOW
-;;                  FLOAT     Array[269095]
-;;  TOTAL_UPWARD_ION_OUTFLOW_SINGLE
-;;                  FLOAT     Array[269095]
-;;  TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT
-;;                  FLOAT     Array[269095]
-;;  TOTAL_ALFVEN_UPWARD_ION_OUTFLOW
-;;                  FLOAT     Array[269095]
+
 cghistoplot,maximus.ELEC_ENERGY_FLUX,locations=locs,omax=omax,omin=omin,histdata=hdata
 print,omax
 ;;     113914.

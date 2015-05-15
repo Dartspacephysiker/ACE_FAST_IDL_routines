@@ -17,8 +17,8 @@ curThresh=10 ;only those events with sufficiently large current
 curThresh_i=where(abs(maximus.mag_current) GE curThresh)
 
 ;find an orbit that has lots of events
-minOrb=9901
-maxOrb=10000
+minOrb=1000
+maxOrb=14999
 ;; minOrb=4700
 ;; maxOrb=5000
 
@@ -45,9 +45,6 @@ orbArr[*,1]=orbArr[orbSortI,1]
 FOR i=0,n_elements(orbSortI)-1 DO BEGIN
    print,format='("Orbit:",T10,I0,T20,"N events:",T32,I0)',orbArr[i,0],orbArr[i,1]
 ENDFOR
-
-
-
 
 ;; here are some good ones
 ;later DB
@@ -80,12 +77,12 @@ key_scatterplots_polarproj,just_plot_i=orb_i,outfile='scatterplot--northHemi--or
 
 
 ;what about orbs with big events?
-bigNEvent_i=where(orbArr[*,1] GT 400)
+bigNEvent_i=where(orbArr[*,1] GT 250)
 nBigEvOrbs=n_elements(bigNEvent_i)
 ;; print,format='("[",19(I0, :, ", "),"]")',orbArr[bigNEvent_i,0]
 ;; bigNEvorbs=[3354, 4019, 4288, 5583, 6465, 6605, 6606, 6692, 6693, 6694, 6720, 8758, 8759, 8760, 9589, 9792, 9797, 9987, 11739]
 bigNEvOrbs=orbArr[bigNEvent_i,0]
-bigNEvOrbs_i=make_array(150000,/L64)
+bigNEvOrbs_i=make_array(350000,/L64)
 
 evCount=0
 FOR I=0,NBIGEVORBS-1 DO BEGIN
@@ -111,3 +108,18 @@ key_scatterplots_polarproj,just_plot_i=bigNEvOrbs_and_current_i, $
 ;just a spot check
 ;; print,maximus.orbit(bignevorbs_i[6000])
 ;; print,maximus.orbit(bignevorbs_i[-1])
+
+
+;print text file with orbit number, number of events, and first observed event for that orbit
+inds_250_or_gt = where(orbArr(*,1) GE 250)
+openw,lun,'orbs_w_more_than_250_events_above_Jpar_10microA_invm2.txt',/get_lun
+
+printf,lun,format='("Orb num",T15,"Num events",T30,"First event")'
+
+FOR i=0,n_elements(inds_250_or_gt)-1 DO BEGIN
+   curOrb=orbArr[inds_250_or_gt[i],0]
+   first_ev_i = MIN(WHERE(maximus.orbit EQ curOrb))
+   printf,lun,FORMAT='(I0,T15,I0,T30,A0)',curOrb,orbArr[inds_250_or_gt[i],1],maximus.time[first_ev_i]
+ENDFOR
+
+close,lun
