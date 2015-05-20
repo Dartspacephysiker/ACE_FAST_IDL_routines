@@ -1,16 +1,19 @@
 ;2015/04/09
 ;this can be used as a standalone routine or else called by plot_alfven_stats_imf_screening when
 ;making a plot of n events per minute
-FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+FUNCTION get_fastloc_inds_IMF__conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      BYMIN=byMin, BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      MAKE_OUTINDSFILE=make_outIndsFile, $
                                      FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir
 
+  defClockStr = 'duskward'
+
+  
 ;                    CLOCKSTR          :  Interplanetary magnetic field clock angle.
 ;                                            Can be 'dawnward', 'duskward', 'bzNorth', 'bzSouth', 'all_IMF',
 ;                                            'dawn-north', 'dawn-south', 'dusk-north', or 'dusk-south'.
-  defClockStr = 'duskward'
+
   
   defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
   defOmni_Coords = "GSM"             ; either "GSE" or "GSM"

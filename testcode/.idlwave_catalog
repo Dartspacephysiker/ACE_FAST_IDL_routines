@@ -1,11 +1,11 @@
 ;;
-;; IDLWAVE catalog for library ACE_FAST
+;; IDLWAVE catalog for library spence
 ;; Automatically Generated -- do not edit.
-;; Created by idlwave_catalog on Sat Feb 21 22:32:20 2015
+;; Created by idlwave_catalog on Wed May 20 15:26:37 2015
 ;;
-(setq idlwave-library-catalog-libname "ACE_FAST")
+(setq idlwave-library-catalog-libname "spence")
 (setq idlwave-library-catalog-routines
- '(("warped_histo" pro nil (lib "warped_histo_POINTSOURCE_WORKSBUTJUNK.pro" nil "ACE_FAST") "%s" (nil))
-   ("gonnadoit2" pro nil (lib "gonnadoit2.pro" nil "ACE_FAST") "%s" (nil))
-   ("interp_polar2dcontour_with_neventsdata" pro nil (lib "interp_polar2dcontour_with_neventsdata.pro" nil "ACE_FAST") "%s" (nil ("MIDNIGHT") ("WHOLECAP")))
-   ("PointSourceOverlay" pro nil (lib "pointsourceoverlay.pro" nil "ACE_FAST") "%s" (nil))))
+ '(("warped_histo" pro nil (lib "warped_histo_POINTSOURCE_WORKSBUTJUNK.pro" nil "spence") "%s" (nil))
+   ("gonnadoit2" pro nil (lib "gonnadoit2.pro" nil "spence") "%s" (nil))
+   ("interp_polar2dcontour_with_neventsdata" pro nil (lib "interp_polar2dcontour_with_neventsdata.pro" nil "spence") "%s" (nil ("MIDNIGHT") ("WHOLECAP")))
+   ("PointSourceOverlay" pro nil (lib "pointsourceoverlay.pro" nil "spence") "%s" (nil))))

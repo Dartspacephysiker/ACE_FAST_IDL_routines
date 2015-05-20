@@ -1,0 +1,9 @@
+;;
+;; IDLWAVE catalog for library spence
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Wed May 20 15:26:37 2015
+;;
+(setq idlwave-library-catalog-libname "spence")
+(setq idlwave-library-catalog-routines
+ '(("commands_for_dusk_dawn_plots_wider_MLT_ILAT_range" pro nil (lib "JOURNAL_decent_plots_for_dusk_dawn_shift_in_nevents_and_eventsperorb__20140330.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots_wider_MLT_ILAT_range" pro nil (lib "JOURNAL_better_plots_for_dusk_dawn_shift_in_nevents_and_eventsperorb__byMin5__20140330.pro" nil "spence") "%s" (nil))))

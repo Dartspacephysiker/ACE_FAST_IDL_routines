@@ -1,0 +1,21 @@
+;;
+;; IDLWAVE catalog for library spence
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Wed May 20 15:26:37 2015
+;;
+(setq idlwave-library-catalog-libname "spence")
+(setq idlwave-library-catalog-routines
+ '(("commands_for_quad_plots" pro nil (lib "commands_for_quad_plots.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__altrange3000_4000" pro nil (lib "commands_for_dusk_dawn_plots__altrange3000_4000.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_inds" pro nil (lib "commands_for_dusk_dawn_inds.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__heavily_screened_appropriate_ranges" pro nil (lib "commands_for_dusk_dawn_plots__heavily_screened_appropriate_ranges.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__altrange0_1000" pro nil (lib "commands_for_dusk_dawn_plots__altrange0_1000.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots" pro nil (lib "commands_for_dusk_dawn_plots.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__pflux_ge1" pro nil (lib "commands_for_dusk_dawn_plots__pflux_ge1.pro" nil "spence") "%s" (nil))
+   ("commands_for_Chaston_2003_figs4a_c_reproduction__Labelle_Bin_mtg" pro nil (lib "commands_for_Chaston_2003_figs4a_c_reproduction__Labelle_Bin_mtg.pro" nil "spence") "%s" (nil))
+   ("commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange" pro nil (lib "commands_for_Chaston_2003_figs4a_c_reproduction__highercharErange.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__altrange2000_3000" pro nil (lib "commands_for_dusk_dawn_plots__altrange2000_3000.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots_wider_MLT_ILAT_range" pro nil (lib "commands_for_dusk_dawn_plots_wider_MLT_ILAT_range.pro" nil "spence") "%s" (nil))
+   ("commands_for_Chaston_2003_figs4a_c_reproduction" pro nil (lib "commands_for_Chaston_2003_figs4a_c_reproduction.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__altrange1000_2000" pro nil (lib "commands_for_dusk_dawn_plots__altrange1000_2000.pro" nil "spence") "%s" (nil))
+   ("commands_for_dusk_dawn_plots__charE_3e2_to_5e3" pro nil (lib "commands_for_dusk_dawn_plots__charE_3e2_to_5e3.pro" nil "spence") "%s" (nil))))

@@ -5,5 +5,4 @@
 ;;
 (setq idlwave-library-catalog-libname "spence")
 (setq idlwave-library-catalog-routines
- '(("warped_histo" pro nil (lib "warped_histo.pro" nil "spence") "%s" (nil))
-   ("PointSourceOverlay" pro nil (lib "pointsourceoverlay.pro" nil "spence") "%s" (nil))))
+ '(("interp_contplot_multi" pro nil (lib "interp_contplot_multi_filledwithdetritus.pro" nil "spence") "%s, h2dData, h2dTitle" (nil ("CONTOUR")))))

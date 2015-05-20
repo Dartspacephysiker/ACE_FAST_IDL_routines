@@ -1,0 +1,10 @@
+;;
+;; IDLWAVE catalog for library spence
+;; Automatically Generated -- do not edit.
+;; Created by idlwave_catalog on Wed May 20 15:26:37 2015
+;;
+(setq idlwave-library-catalog-libname "spence")
+(setq idlwave-library-catalog-routines
+ '(("STUDY_items_from_roadmeeting_en_route_from_haystack__02192015" pro nil (lib "JOURNAL__items_from_roadmeeting_en_route_from_haystack__20150219.pro" nil "spence") "%s" (nil))
+   ("STUDY_commands_for_investigating_pflux__03072015" pro nil (lib "JOURNAL__commands_for_investigating_pflux__03072015.pro" nil "spence") "%s" (nil))
+   ("JOURNAL_make_smallest_minbin_histos__20150420" pro nil (lib "JOURNAL__make_smallest_minbin_histos__20150420.pro" nil "spence") "%s" (nil))))
