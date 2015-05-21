@@ -45,7 +45,8 @@ function median_hist, MLT, ILAT, data, $
 ;   Take care of INPUT KEYWORDS
          if not keyword_set( MAX1 ) then Max1 = m1
          if not keyword_set( MAX2 ) then Max2 = m2
-         if not keyword_set( MIN1 ) then Min1 = mm1
+         ;; if not keyword_set( MIN1 ) then Min1 = mm1
+         if MIN1 EQ !NULL  then Min1 = mm1
          if not keyword_set( MIN2 ) then Min2 = mm2
          if not keyword_set( BINSIZE1 ) then Binsize1 = 1.0
          if not keyword_set( BINSIZE2 ) then Binsize2 = 1.0

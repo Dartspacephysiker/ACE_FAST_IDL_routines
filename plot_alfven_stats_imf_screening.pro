@@ -340,8 +340,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF ELSE BEGIN
         IF tag_exist(e,"wholecap") THEN BEGIN
            IF e.wholecap GT 0 THEN BEGIN
-              minM=0
-              maxM=24
+              minM=0.0
+              maxM=24.0
               IF hemi EQ "North" THEN BEGIN
                  minI=defMinI
                  maxI=defMaxI
@@ -399,6 +399,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      WAIT, 0.5
      medHistOutData = 1
   ENDIF
+
+  IF DEL_PS EQ !NULL THEN del_ps = 1
 
   ;;********************************************
   ;;Variables for histos
@@ -665,23 +667,31 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   h2dFluxNTitle="Number of events"
   IF keepMe THEN BEGIN 
      dataName="nEvents_" 
-     dataRawPtr=PTR_NEW() 
+     dataRawPtr=PTR_NEW(h2dFluxN) 
   ENDIF
 
-  h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
+  ;; h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
+  ;;         title : "Number of events", $
+  ;;         lim : (KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
+  h2dStrTemplate={h2dStrTemplate, data: DBLARR(n_elements(h2dFluxN(*,1)),n_elements(h2dFluxN(1,*))), $
           title : "Number of events", $
-          lim : (KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
+          lim : DOUBLE((KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? nEventsPlotRange : [MIN(h2dFluxN),MAX(h2dFluxN)]) }
+
+  h2dStr={h2dStrTemplate}
+  h2dStr.data=h2dFluxN
+  h2dStr.title="Number of events"
+  h2dStr.lim=(KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) 
 
   ;;Make a mask for plots so that we can show where no data exists
-  h2dMaskStr={h2dStr}
-  h2dMaskStr.data=h2dStr.data
+  h2dMaskStr={h2dStrTemplate}
+  h2dMaskStr.data=h2dFluxN
   h2dMaskStr.data(where(h2dStr.data LT maskMin,/NULL))=255
   h2dMaskStr.data(where(h2dStr.data GE maskMin,/NULL))=0
   h2dMaskStr.title="Histogram mask"
 
   IF keepMe THEN BEGIN 
      dataName=[dataName,"histoMask_"] 
-     dataRawPtr=[dataRawPtr,PTR_NEW()] 
+     dataRawPtr=[dataRawPtr,PTR_NEW(h2dMaskStr.data)] 
   ENDIF
 
 ;  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
@@ -692,7 +702,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########ELECTRON FLUX########
 
   IF KEYWORD_SET(eplots) THEN BEGIN
-     h2dEStr={h2dStr}
+     h2dEStr={h2dStrTemplate}
 
      ;;If not allowing negative fluxes
      IF eFluxPlotType EQ "Integ" THEN BEGIN
@@ -707,7 +717,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               plot_i=cgsetintersection(no_pos_i,plot_i)        
            ENDIF
         ENDELSE
-        elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.integ_elec_energy_flux(plot_i)) : maximus.integ_elec_energy_flux(plot_i) 
+        ;; elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.integ_elec_energy_flux(plot_i)) : maximus.integ_elec_energy_flux(plot_i) 
+        elecData= maximus.integ_elec_energy_flux(plot_i) 
      ENDIF ELSE BEGIN
         IF eFluxPlotType EQ "Max" THEN BEGIN
            plot_i=cgsetintersection(WHERE(FINITE(maximus.elec_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -721,7 +732,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
               ENDIF
            ENDELSE
-           elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.elec_energy_flux(plot_i)) : maximus.elec_energy_flux(plot_i)
+           elecData = maximus.elec_energy_flux(plot_i)
         ENDIF
      ENDELSE
 
@@ -753,6 +764,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + efDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
+
+        elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(elecData) : elecData
+
         h2dEStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
                             elecData,$
@@ -762,8 +776,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                             OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
         IF KEYWORD_SET(logAvgPlot) THEN h2dEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dEStr.data(where(h2dFluxN NE 0,/null)))        
+
      ENDELSE
-  
+
      ;data mods?
      IF KEYWORD_SET(absEflux)THEN BEGIN 
         h2dEStr.data = ABS(h2dEStr.data) 
@@ -795,7 +810,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(pplots) THEN BEGIN
 
-     h2dPStr={h2dStr}
+     h2dPStr={h2dStrTemplate}
 
      ;;check for NaNs
      goodPF_i = WHERE(FINITE(pfluxEst),NCOMPLEMENT=lostNans)
@@ -906,7 +921,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########ION FLUX########
 
   IF KEYWORD_SET(ionPlots) THEN BEGIN
-     h2dIStr={h2dStr}
+     h2dIStr={h2dStrTemplate}
 
      ;;If not allowing negative fluxes
      IF iFluxPlotType EQ "Integ" THEN BEGIN
@@ -1011,6 +1026,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + ifDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
+        ionData=(KEYWORD_SET(logAvgPlot)) ? alog10(ionData) : ionData
         h2dIStr.data=hist2d(maximus.mlt(plot_i), $
                             maximus.ilat(plot_i),$
                             ionData,$
@@ -1019,6 +1035,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                             BINSIZE1=binM,BINSIZE2=binI,$
                             OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dIStr.data(where(h2dFluxN NE 0,/NULL))=h2dIStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
+        IF KEYWORD_SET(logAvgPlot) THEN h2dIStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dIStr.data(where(h2dFluxN NE 0,/null)))        
      ENDELSE 
 
      ;;data mods?
@@ -1049,7 +1066,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(charEPlots) THEN BEGIN
 
-     h2dCharEStr={h2dStr}
+     h2dCharEStr={h2dStrTemplate}
 
      ;;If not allowing negative fluxes
      IF charEType EQ "lossCone" THEN BEGIN
@@ -1108,6 +1125,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + chareDatName + "medhist.txt"
         
      ENDIF ELSE BEGIN 
+        charEData=(KEYWORD_SET(logAvgPlot)) ? alog10(charEData) : charEData
+
         h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
                                 maximus.ilat(plot_i),$
                                 charEData,$
@@ -1116,6 +1135,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                 BINSIZE1=binM,BINSIZE2=binI,$
                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
+        IF KEYWORD_SET(logAvgPlot) THEN h2dCharEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dCharEStr.data(where(h2dFluxN NE 0,/null)))        
      ENDELSE 
 
      ;;data mods?
@@ -1138,7 +1158,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
         IF keepMe THEN BEGIN 
            dataName=[dataName,chareDatName] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(charEData)] 
+           dataRawPtr=[dataRawPtr,PTR_NEW(charEData)]
         ENDIF 
      ENDIF
 
@@ -1162,7 +1182,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) OR KEYWORD_SET(numOrbLim) THEN BEGIN
      
-     h2dOrbStr={h2dStr}
+     h2dOrbStr={h2dStrTemplate}
 
      h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
      orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
@@ -1210,7 +1230,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;uniqueOrbs_ii=UNIQ(maximus.orbit(ind_region_magc_geabs10_acestart),SORT(maximus.orbit(ind_region_magc_geabs10_acestart)))
      uniqueOrbs_ii=UNIQ(maximus.orbit,SORT(maximus.orbit))
 
-     h2dTotOrbStr={h2dStr}
+     h2dTotOrbStr={h2dStrTemplate}
      orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
      h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
 
@@ -1255,7 +1275,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(orbfreqplot) THEN BEGIN
 
-     h2dFreqOrbStr={h2dStr}
+     h2dFreqOrbStr={h2dStrTemplate}
      h2dFreqOrbStr.data=h2dOrbStr.data
      h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
      h2dFreqOrbStr.title="Orbit Frequency"
@@ -1283,7 +1303,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
      ;This makes h2dStr(1) the mask histo.
-     h2dNEvPerOrbStr={h2dStr}
+     h2dNEvPerOrbStr={h2dStrTemplate}
      h2dNEvPerOrbStr.data=h2dStr(0).data
      h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
      IF KEYWORD_SET(divNEvByApplicable) THEN BEGIN
@@ -1318,7 +1338,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
      ;This makes h2dStr(1) the mask histo.
-     h2dNEvPerMinStr={h2dStr}
+     h2dNEvPerMinStr={h2dStrTemplate}
      h2dNEvPerMinStr.data=h2dStr(0).data
      h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
 

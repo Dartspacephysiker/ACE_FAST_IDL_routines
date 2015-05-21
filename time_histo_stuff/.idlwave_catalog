@@ -1,7 +1,7 @@
 ;;
 ;; IDLWAVE catalog for library spence
 ;; Automatically Generated -- do not edit.
-;; Created by idlwave_catalog on Wed May 20 15:26:37 2015
+;; Created by idlwave_catalog on Thu May 21 13:17:05 2015
 ;;
 (setq idlwave-library-catalog-libname "spence")
 (setq idlwave-library-catalog-routines
@@ -9,7 +9,7 @@
    ("make_fastloc_histo" pro nil (lib "make_fastloc_histo.pro" nil "spence") "%s" (nil ("BINALT") ("BINILAT") ("BINMLT") ("DELTA_T") ("FASTLOC_INDS") ("FASTLOCFILE") ("FASTLOCTIMEFILE") ("MAXALT") ("MAXILAT") ("MAXMLT") ("MINALT") ("MINILAT") ("MINMLT") ("OUTDIR") ("OUTFILEPREFIX") ("OUTFILESUFFIX") ("OUTPUT_TEXTFILE") ("TIMEHISTO")))
    ("interp_mag_data_for_fastloc" fun nil (lib "interp_mag_data_for_fastloc.pro" nil "spence") "Result = %s(satellite)" (nil ("BYMIN") ("BZMIN") ("DELAY") ("FASTLOC_TIMES") ("FASTLOCDIR") ("FASTLOCFILE") ("FASTLOCINTERP_I") ("FASTLOCTIMEFILE") ("LUN") ("MAG_UTC") ("MAXDIFF") ("OMNI_COORDS") ("PHICLOCK") ("SATDBDIR") ("SATDBINTERP_I") ("SMOOTHWINDOW")))
    ("combine_fastloc" pro nil (lib "combine_fastloc.pro" nil "spence") "%s, fastLoc" (nil))
-   ("get_fastloc_inds_IMF__conds" fun nil (lib "get_fastloc_inds__IMF_conds.pro" nil "spence") "Result = %s" (nil ("ANGLELIM1") ("ANGLELIM2") ("BYMIN") ("BZMIN") ("CLOCKSTR") ("DELAY") ("FASTLOCDIR") ("FASTLOCFILE") ("FASTLOCTIMEFILE") ("INCLUDENOCONSECDATA") ("MAKE_OUTINDSFILE") ("OMNI_COORDS") ("SATELLITE") ("SMOOTHWINDOW") ("STABLEIMF")))
+   ("get_fastloc_inds__IMF_conds" fun nil (lib "get_fastloc_inds__IMF_conds.pro" nil "spence") "Result = %s" (nil ("ANGLELIM1") ("ANGLELIM2") ("BYMIN") ("BZMIN") ("CLOCKSTR") ("DELAY") ("FASTLOCDIR") ("FASTLOCFILE") ("FASTLOCTIMEFILE") ("INCLUDENOCONSECDATA") ("MAKE_OUTINDSFILE") ("OMNI_COORDS") ("SATELLITE") ("SMOOTHWINDOW") ("STABLEIMF")))
    ("combine_fastloc_intervals" pro nil (lib "combine_fastloc_intervals.pro" nil "spence") "%s, fastLoc" (nil))
    ("rd_fastloc_output" pro nil (lib "rd_fastloc_output.pro" nil "spence") "%s, filename, dat, outname" (nil))
    ("update_fastloc_intervals" pro nil (lib "update_fastloc_intervals.pro" nil "spence") "%s, fastLoc" (nil))))

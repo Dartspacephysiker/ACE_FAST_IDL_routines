@@ -3,7 +3,7 @@
 
 PRO commands_for_Chaston_2003_figs4a_c_reproduction
 
-  date='03072015'
+  date='20150521'
   dbDate = '02282015'
 
   dirs='all_IMF'
@@ -18,7 +18,7 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   delay=1020
 
   ;maskMin
-  mskm=5
+  mskm=3
 
   ;delete postscript?
   del_PS = 1
@@ -26,7 +26,13 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
   ;charERange?
   charERange=[4.0,4e3]
 
- ;;;;;;;;;;
+  ;; logavg=!NULL
+  logavgPlot=1
+
+  medPlot=!NULL
+  ;; medPlot=1
+
+  ;;;;;;;;;;
   ;orb plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm,/orbplots, $
                                         /orbcontribplot,/orbtotplot,/orbfreqplot, $
@@ -34,39 +40,45 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
                                         ;; neventperorbrange=[0.01,10.0], $
                                         neventperorbrange=[-2.0,1.0], $
                                         nEventsRange=[0,3000], orbFreqRange=[0.0, 0.8], orbcontribrange=[1,200], $
-                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
   ;;;;;;;;;;;;;;;
   ;electron plots
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-  ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay
+  ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/WHOLECAP,/midnight,DELAY=delay
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",eplotrange=[-1,1.5],/logefplot,/abseflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /eplots,efluxplottype="Max",eplotrange=[-1,1.5],/logefplot,/abseflux,/WHOLECAP,/midnight, $
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
   
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
   ;Chaston's plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[-1.7,1.3],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight, $
-                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
-  batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[0.05,10],/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /pplots,pplotrange=[-1.7,1.3],/logpfplot,/nonegpflux,/WHOLECAP,/midnight, $
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
+  ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="ChastRange_" + plotSuff,directions=dirs,maskmin=mskm, $
+  ;;                                       /pplots,pplotrange=[0.05,10],/WHOLECAP,/midnight,DELAY=delay, $
+  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange,/logavgplot
   
   ;Better (for showing features) plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,pplotrange=[-1.3,1.0],/logpfplot,/nonegpflux,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS
-  batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,/medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /pplots,pplotrange=[-1.0,1.0],/logpfplot,/nonegpflux,/WHOLECAP,/midnight,DELAY=delay, $
+                                        /noplotintegral,DEL_PS = del_PS,CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
+  ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
+  ;;                                       /pplots,/WHOLECAP,/midnight,DELAY=delay, $
+  ;;                                       /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+  ;;                                       LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
                                         /chareplot,charetype="lossCone",/logCharEPlot, $ ;chareplotrange=[0,4e3],
-                                        /medianplot,/WHOLECAP,/midnight,DELAY=delay, $
-                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange
+                                        /WHOLECAP,/midnight,DELAY=delay, $
+                                        /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
 END

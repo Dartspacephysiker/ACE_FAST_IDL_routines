@@ -1,7 +1,7 @@
 ;2015/04/09
 ;this can be used as a standalone routine or else called by plot_alfven_stats_imf_screening when
 ;making a plot of n events per minute
-FUNCTION get_fastloc_inds_IMF__conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      BYMIN=byMin, BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      MAKE_OUTINDSFILE=make_outIndsFile, $
