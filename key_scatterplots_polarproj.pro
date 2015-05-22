@@ -42,6 +42,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
                                DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                NORTH=north,SOUTH=south, $
                                CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
+                               OVERLAYAURZONE=overlayAurZone, $
                                PLOTSUFF=plotSuff, $
                                OUTFILE=outFile, $
                                PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, JUST_PLOT_I=just_plot_i, $
@@ -149,6 +150,23 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   ENDFOR
 
   ;;****************************************
+  ; Add auroral zone to plot?
+
+  IF KEYWORD_SET(overlayAurZone) THEN BEGIN
+
+     ;;get boundaries
+     nMLTs=96
+     activity_level=0
+     MLTs=indgen(nMLTs,/FLOAT)*(maxM-minM)/nMLTs+minM
+     bndry_eqWard = get_auroral_zone(nMLTs,minM,maxM,BNDRY_POLEWARD=bndry_poleWard,ACTIVITY_LEVEL=activity_level)
+     ;; aurPlot = plot([MLTS,MLTs,MLTS[0]]*15,[bndry_eqWard,bndry_poleWard,bndry_poleWard[0]],LINESTYLE='-', THICK=4,/overplot)
+     aurEqWardPlot = plot([MLTS,MLTs[0]]*15,[bndry_eqWard,bndry_eqWard[0]],LINESTYLE='-', THICK=2.5,/overplot)
+     aurPoleWardPlot = plot([MLTS,MLTs[0]]*15,[bndry_poleWard,bndry_poleWard[0]],LINESTYLE='-', THICK=2.5,/overplot)
+
+  ENDIF
+
+  ;;****************************************
+  ;; Now the rest of the stuff
   IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
   
   ;;names of the POSSIBILITIES
