@@ -82,6 +82,26 @@ function alfven_db_cleaner,maximus,LUN=lun
   char_ion_e_hcutoff = 250.0    ;cuts off 237 events
   char_ion_e_lcutoff = 0.0      ;below zero is junk, eh?
   
+  ;; cutoffs for sample_t, fields instrument
+  ;; 512 Hz
+  ;; sample_t_hcutoff = 0.0023
+  ;; sample_t_lcutoff = 0.0014
+
+  ;; 128 Hz
+  ;; sample_t_hcutoff = 0.009
+  ;; sample_t_lcutoff = 0.007
+
+  ;; 32 Hz
+  ;; sample_t_hcutoff = 0.033
+  ;; sample_t_lcutoff = 0.029
+
+  ;; 8 Hz
+  ;; sample_t_hcutoff = 0.120
+  ;; sample_t_lcutoff = 0.030
+
+  ;; < 0.8 Hz, which is too small
+  sample_t_hcutoff = 1.25
+
   ;**********
   ;   NaNs  *
   ;**********
@@ -107,7 +127,6 @@ function alfven_db_cleaner,maximus,LUN=lun
   good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux),/NULL))
   good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux_up),/NULL))
   good_i = cgsetintersection(good_i,where(FINITE(maximus.char_ion_energy),/NULL))
-
 
   printf,lun,""
   printf,lun,"****From alfven_db_cleaner.pro****"
@@ -148,6 +167,10 @@ function alfven_db_cleaner,maximus,LUN=lun
 
   ;No weird characteristic ion energies
   good_i = cgsetintersection(good_i,where(maximus.char_ion_energy LE char_ion_e_hcutOff AND maximus.char_ion_energy GT char_ion_e_lcutoff,/NULL)) 
+
+  ;; Now sample_t stuff
+  good_i = cgsetintersection(good_i,where(maximus.sample_t LE sample_t_hcutoff,/NULL))
+  ;; good_i = cgsetintersection(good_i,where(maximus.sample_t GE sample_t_lcutoff,/NULL))
 
   ;; for i=0,n_elements(max_tags)-1 do begin
   ;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost))

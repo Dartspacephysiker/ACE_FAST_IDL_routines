@@ -95,7 +95,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
   defOmni_Coords = "GSM"             ; either "GSE" or "GSM"
 
-  defDelay = 660
+  defDelay = 900
 
   defStableIMF = 1S             ;Set to a time (in minutes) over which IMF stability is required
   defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  

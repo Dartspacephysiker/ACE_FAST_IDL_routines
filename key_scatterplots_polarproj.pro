@@ -67,7 +67,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   defPlot_i_dir = 'plot_indices_saves/'
 
   ;; defSTrans = 98                ;use for plotting entire db
-  defSTrans = 93                ;use for very narrowed plot_i
+  defSTrans = 95                ;use for very narrowed plot_i
 
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
