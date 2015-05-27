@@ -1,6 +1,6 @@
 ; The purpose of this file is just what you'd expect--we want to resize maximus based on some stuff
 
-FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,MAX_FOR_IND=max_for_ind,ONLY_ABSVALS=only_absVals,INDS=inds
+FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,MAX_FOR_IND=max_for_ind,ONLY_ABSVALS=only_absVals,INDS=inds,CDBTIME=cdbTime
 
   IF KEYWORD_SET(inds) THEN allowed_i = inds ELSE BEGIN
      IF KEYWORD_SET(only_absVals) THEN BEGIN
@@ -73,10 +73,18 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
 
   
   print,"N_elements after: " + strcompress(n_elements(maximus.orbit),/remove_all)
+
+  IF KEYWORD_SET(cdbTime) THEN BEGIN
+     print,''    
+     print,"Also doing cdbTime!"
+     print,"N cdbTime before: " + strcompress(n_elements(cdbTime),/remove_all)
+     cdbTime=cdbTime(allowed_i)
+     print,"N cdbTime after: " + strcompress(n_elements(cdbTime),/remove_all)
+     print,''
+  ENDIF
+
   print,"***********end resize_maximus.pro**********"
   print,''
-
-
 
   RETURN, maximus
 
