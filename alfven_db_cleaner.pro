@@ -100,7 +100,10 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;; sample_t_lcutoff = 0.030
 
   ;; < 0.8 Hz, which is too small
-  sample_t_hcutoff = 1.25
+  ;; sample_t_hcutoff = 1.25
+
+  ;; < 100 Hz—exclude all of these per meeting with Professor LaBelle 2015/05/28
+  sample_t_hcutoff = 0.01
 
   ;**********
   ;   NaNs  *

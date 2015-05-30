@@ -78,8 +78,10 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
 
-  minM = 0
-  maxM = 24
+  IF minM EQ !NULL THEN minM = defMinM
+  IF maxM EQ !NULL THEN maxM = 24
+  ;; minM = 0
+  ;; maxM = 24
 
   IF NOT KEYWORD_SET(north) AND NOT KEYWORD_SET(south) THEN north = 1 ;default to northern hemi
 

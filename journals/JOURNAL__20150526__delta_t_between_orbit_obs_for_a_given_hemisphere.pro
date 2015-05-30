@@ -103,4 +103,6 @@ PRO JOURNAL__20150526__delta_t_between_orbit_obs_for_a_given_hemisphere,HEMI=hem
      
   ENDFOR
   
+  CLOSE,lun
+
 END
