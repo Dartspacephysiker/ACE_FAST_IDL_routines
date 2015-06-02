@@ -57,7 +57,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   defMinM = 0
   defMaxM = 24
 
-  defTSLat = 75
+  defTSLat = 75  ;true-scale latitude
 
   defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defOutDir = 'histos_scatters/polar/'
@@ -79,13 +79,13 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
   IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
 
   IF minM EQ !NULL THEN minM = defMinM
-  IF maxM EQ !NULL THEN maxM = 24
+  IF maxM EQ !NULL THEN maxM = defMaxM
   ;; minM = 0
   ;; maxM = 24
 
   IF NOT KEYWORD_SET(north) AND NOT KEYWORD_SET(south) THEN north = 1 ;default to northern hemi
 
-  centerLon=180
+  centerLon=south ? 0 : 180
 
   lun=-1
 
@@ -148,7 +148,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
   mlons=grid.longitudes
   FOR i=0,n_elements(mlons)-1 DO BEGIN
-     mlons(i).label_position=0.02
+     mlons(i).label_position=south ? 1.0 : 0.02
   ENDFOR
 
   ;;****************************************
@@ -158,9 +158,9 @@ PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
 
      ;;get boundaries
      nMLTs=96
-     activity_level=0
+     activity_level=7
      MLTs=indgen(nMLTs,/FLOAT)*(maxM-minM)/nMLTs+minM
-     bndry_eqWard = get_auroral_zone(nMLTs,minM,maxM,BNDRY_POLEWARD=bndry_poleWard,ACTIVITY_LEVEL=activity_level)
+     bndry_eqWard = get_auroral_zone(nMLTs,minM,maxM,BNDRY_POLEWARD=bndry_poleWard,ACTIVITY_LEVEL=activity_level,SOUTH=south)
      ;; aurPlot = plot([MLTS,MLTs,MLTS[0]]*15,[bndry_eqWard,bndry_poleWard,bndry_poleWard[0]],LINESTYLE='-', THICK=4,/overplot)
      aurEqWardPlot = plot([MLTS,MLTs[0]]*15,[bndry_eqWard,bndry_eqWard[0]],LINESTYLE='-', THICK=2.5,/overplot)
      aurPoleWardPlot = plot([MLTS,MLTs[0]]*15,[bndry_poleWard,bndry_poleWard[0]],LINESTYLE='-', THICK=2.5,/overplot)

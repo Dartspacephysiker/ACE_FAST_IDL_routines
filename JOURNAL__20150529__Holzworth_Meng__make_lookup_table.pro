@@ -41,18 +41,23 @@ PRO JOURNAL__20150529__Holzworth_Meng__make_lookup_table
   negOneOver_m_k = - 1 / m_k
      
   ;; normVectors = [ [ make_array(nMLTs,VALUE=1) ], [ negOneOver_m_k ] ]
-  normFactor = 1/SQRT(1+negOneOver_m_k^2)
+  normFactor = 1/SQRT(1+negOneOver_m_k^2.)
   normVectors = make_array(2,nMLTs,/DOUBLE,VALUE=1)
-  normVectors(1,*) = negOneOver_m_k
+  ;; normVectors(1,*) = negOneOver_m_k
+  normVectors(1,*) = ABS(negOneOver_m_k)   ;Use ABS so that all vectors point to more extreme latitude value
   normVectors = transpose([[normFactor],[normFactor]])*normVectors
 
-  normF = 1/SQRT(1+m_k^2)
+  normF = 1/SQRT(1+m_k^2.)
   vectors = make_array(2,nMLTs,/DOUBLE,VALUE=1)
   vectors(1,*) = m_k
   vectors = transpose([[normF],[normF]])*vectors
 
+  ;; Check that the vectors pointing around the auroral oval and their normal vectors are, in fact, normal.
+  ;; Note, by making normVectors(1,*) = ABS(negOneOver_m_k), we lose a touch of orthogonality, but it's OK
   dotProds=normVectors(0,*)*vectors(0,*)+normVectors(1,*)*vectors(1,*)
-  dotProds(where(dotProds LT 1e-15)) = 0.
+  dotProds(where(dotProds LT 1e-17)) = 0.
+  normMag=normVectors(0,*)*normvectors(0,*)+normVectors(1,*)*normvectors(1,*) ;these are all one, as they should be
+
   tStamp=TIMESTAMP()
   hwM_normVecS={hwM_normVecS, $
                       NMLTS:nMLTs,MLTS:mlts, $
@@ -67,86 +72,3 @@ PRO JOURNAL__20150529__Holzworth_Meng__make_lookup_table
   save,hwM_normVecS,filename='hwMeng_normVectorStruct.sav'
 
 END
-
-  ;; defTSLat = 75
-
-  ;; defOutDir = 'histos_scatters/polar/'
-  ;; defOutPref = 'key_scatterplots_polarproj'
-  ;; defExt = '.png'
-
-  ;; defPlot_i_dir = 'plot_indices_saves/'
-
-  ;; IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
-  ;; IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ELSE plotSuff
-  ;; IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt ;otherwise handled by plot_i_file
-  ;; ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
-
-  ;; IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
-
-  ;; IF NOT KEYWORD_SET(north) AND NOT KEYWORD_SET(south) THEN north = 1 ;default to northern hemi
-
-  ;; centerLon=180
-
-  ;; lun=-1
-
-  ;; ;; Deal with map stuff
-  ;; IF KEYWORD_SET(north) THEN BEGIN
-  ;;    maxI=defMaxI
-  ;;    minI=defMinI
-  ;;    tsLat=defTSLat
-  ;; ENDIF ELSE BEGIN
-  ;;    IF KEYWORD_SET(south) THEN BEGIN
-  ;;       maxI=-defMinI
-  ;;       minI=-defMaxI
-  ;;       tsLat=-defTSLat
-  ;;    ENDIF ELSE BEGIN
-  ;;       PRINT,"Gotta select a hemisphere, bro"
-  ;;       WAIT,0.5
-  ;;       RETURN
-  ;;    ENDELSE
-  ;; ENDELSE
-
-  ;; IF KEYWORD_SET(mirror) THEN BEGIN
-  ;;    IF mirror NE 0 THEN mirror = 1 ELSE mirror = 0
-  ;; ENDIF ELSE mirror = 0
-
-  ;; IF KEYWORD_SET(wholeCap) THEN BEGIN
-  ;;    IF wholeCap EQ 0 THEN wholeCap=!NULL
-  ;; ENDIF
-  ;; IF KEYWORD_SET(midnight) THEN BEGIN
-  ;;    IF midnight EQ 0 THEN midnight=!NULL
-  ;; ENDIF
-  
-  ;; IF wholeCap NE !NULL THEN BEGIN
-  ;;    lim=[ minI, 0, maxI, 360] ; lim = [minimum lat, minimum long, maximum lat, maximum long]
-  ;; ENDIF ELSE BEGIN
-  ;;    lim=[minI, minM*15, maxI, maxM*15]
-  ;; ENDELSE
-
-  ;; ;Polar Stereographic
-  ;; ;SEMIMAJOR_AXIS, SEMIMINOR_AXIS, CENTER_LONGITUDE, TRUE_SCALE_LATITUDE, FALSE_EASTING, FALSE_NORTHING
-  ;; map = MAP('Polar Stereographic', $
-  ;;           CENTER_LONGITUDE=centerLon, $
-  ;;           TRUE_SCALE_LATITUDE=tsLat, $
-  ;;           LABEL_FORMAT='polar_maplabels', $
-  ;;           FILL_COLOR="white",DIMENSIONS=[800,800])
-
-  ;; ; Change some grid properties.
-  ;; grid = map.MAPGRID
-  ;; IF KEYWORD_SET(north) THEN grid.LATITUDE_MIN = minI ELSE IF KEYWORD_SET(south) THEN grid.LATITUDE_MAX = maxI
-  ;; grid.TRANSPARENCY=30
-  ;; grid.color="blue"
-  ;; grid.linestyle=1
-  ;; grid.label_angle = 0
-  ;; grid.font_size = 15
-
-  ;; mlats=grid.latitudes
-  ;; FOR i=0,n_elements(mlats)-1 DO BEGIN
-  ;;    mlats(i).label_position=0.55
-  ;;    mlats(i).label_valign=1.0
-  ;; ENDFOR
-
-  ;; mlons=grid.longitudes
-  ;; FOR i=0,n_elements(mlons)-1 DO BEGIN
-  ;;    mlons(i).label_position=0.02
-  ;; ENDFOR

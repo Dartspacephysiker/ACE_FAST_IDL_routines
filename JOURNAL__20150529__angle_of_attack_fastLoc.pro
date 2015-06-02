@@ -52,7 +52,9 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
   ;; Go on an orbit-by-orbit basis
   
   ;; angle_of_attack =make_array(n_elements(maximus.orbit),/float)
-  angle_of_attack =make_array(n_elements(fastLoc.orbit),/float)
+  angle_of_attack =make_array(n_elements(fastLoc.orbit),/DOUBLE)
+  orbVectors = make_array(2,n_elements(fastLoc.orbit),/DOUBLE,VALUE=1)
+  dotProds=make_array(n_elements(fastLoc.orbit),/DOUBLE)
 
   orbMin = 500
   orbMax = 15000
@@ -86,9 +88,10 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
            sign  = delt_MLT/abs(delt_MLT)
            normFactor = 1/SQRT(1+slope^2)
 
-           orbVectors = make_array(2,curOrb_nEvents,/DOUBLE,VALUE=1)
-           orbVectors(1,*) = slope
-           orbVectors = transpose([[normFactor],[normFactor]])*orbVectors
+           ;; orbVectors = make_array(2,curOrb_nEvents,/DOUBLE,VALUE=1)
+           orbVectors(1,cur_i:cur_i+curOrb_nEvents-1) = slope
+           ;; orbVectors(cur_i:cur_i+curOrb_nEvents-1) = transpose([[normFactor],[normFactor]])*orbVectors(cur_i:cur_i+curOrb_nEvents-1)
+           FOR k=0,1 DO orbVectors(k,cur_i:cur_i+curOrb_nEvents-1) = normFactor*orbVectors(k,cur_i:cur_i+curOrb_nEvents-1)
 
            ;now match the MLTs of FAST data points with the closest value in the hwM_normVecs lookup table
            FOR j=0,curOrb_nEvents-1 DO BEGIN
@@ -97,12 +100,12 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
            ENDFOR
 
            ;now dot product
-           dotProds=orbVectors(0,*)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
-                    hemi*orbVectors(1,*)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
-           dotProds(where(dotProds LT 1e-15)) = 0.
+           dotProds(cur_i:cur_i+curOrb_nEvents-1)=orbVectors(0,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
+                    hemi*orbVectors(1,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
+           ;; dotProds(where(ABS(dotProds) LT 1e-15)) = 0.
                                 
            ;new angles of attack
-           angle_of_attack(cur_i:cur_i+curOrb_nEvents-1)=180/!PI*ACOS(dotProds)*sign
+           angle_of_attack(cur_i:cur_i+curOrb_nEvents-1)=180/!PI*ACOS(dotProds(cur_i:cur_i+curOrb_nEvents-1))*sign
            
            ;update counter
            cur_i = cur_i + curOrb_nEvents
@@ -123,9 +126,11 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
            sign  = delt_MLT/abs(delt_MLT)
            normFactor = 1/SQRT(1+slope^2)
 
-           orbVectors = make_array(2,curOrb_nEvents,/DOUBLE,VALUE=1)
-           orbVectors(1,*) = slope
-           orbVectors = transpose([[normFactor],[normFactor]])*orbVectors
+           ;; orbVectors = make_array(2,curOrb_nEvents,/DOUBLE,VALUE=1)
+           orbVectors(1,cur_i:cur_i+curOrb_nEvents-1) = slope
+           orbVectors(cur_i:cur_i+curOrb_nEvents-1) = transpose([[normFactor],[normFactor]])*orbVectors(cur_i:cur_i+curOrb_nEvents-1)
+           ;; orbVectors(1,*) = slope
+           ;; orbVectors = transpose([[normFactor],[normFactor]])*orbVectors
 
            ;now match the MLTs of FAST data points with the closest value in the hwM_normVecs lookup table
            ;; hwM_inds = VALUE_LOCATE(hwM_normVecs.MLTs,fastLoc.MLT(curOrb_i))
@@ -135,12 +140,12 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
            ENDFOR
            
            ;now dot product
-           dotProds=orbVectors(0,*)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
-                    hemi*orbVectors(1,*)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
-           dotProds(where(dotProds LT 1e-15)) = 0.
+           dotProds(cur_i:cur_i+curOrb_nEvents-1)=orbVectors(0,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
+                                                  hemi*orbVectors(1,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
+           ;; dotProds(where(ABS(dotProds) LT 1e-15)) = 0.
                                 
            ;new angles of attack
-           angle_of_attack(cur_i:cur_i+curOrb_nEvents-1)=180/!PI*ACOS(dotProds)*sign
+           angle_of_attack(cur_i:cur_i+curOrb_nEvents-1)=180/!PI*ACOS(dotProds(cur_i:cur_i+curOrb_nEvents-1))*sign
            
            ;update counter
            cur_i = cur_i + curOrb_nEvents
@@ -151,9 +156,13 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK_FASTLOC
 
   ENDFOR
 
+  dotProds(where(ABS(dotProds) LT 1e-15)) = 0.
+
   print,"Whoa."
   cghistoplot,angle_of_attack,mininput=-90,maxinput=90,binsize=5
-  cghistoplot,angle_of_attack,mininput=-90,maxinput=90,binsize=5,output='histogram_angle_of_attack__for_fastLoc.png'
+  cghistoplot,angle_of_attack,mininput=-90,maxinput=90,binsize=5,output='histogram_angle_of_attack__for_fastLoc_20150601.png'
+
+  save,angle_of_attack,dotProds,orbVectors,filename='angle_of_attack__fastLocDB_20150409--20150601.sav'
 
   fastLoc={fastLoc, orbit:fastLoc.orbit, interval:fastLoc.interval, time:fastLoc.time, $
            alt:fastLoc.alt, mlt:fastLoc.mlt, ilat:fastLoc.ilat, $
