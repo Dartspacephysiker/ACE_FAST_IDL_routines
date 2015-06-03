@@ -5,6 +5,7 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
 
   dataDir='/SPENCEdata/Research/Cusp/ACE_FAST/'
 
+  ;; hwMengFile='hwMeng_normVectorStruct_CARTESIAN.sav'
   hwMengFile='hwMeng_normVectorStruct.sav'
   aOaFile='angle_of_attack__fastLocDB_20150409--20150601.sav'
   fastLocFile='time_histo_stuff/fastLoc_intervals2--20150409.sav'
@@ -13,6 +14,12 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
   restore,dataDir+fastLocFile
 
   ;; Defaults
+
+  ;; fLorb1=10000  ;orbs to plot
+  ;; fLorb2=9000
+  fLorb1=FIX(10000*RANDOMU(seed,/UNIFORM,/DOUBLE))
+  fLorb2=FIX(10000*RANDOMU(seed,/UNIFORM,/DOUBLE))
+
   defMinI = 60
   defMaxI = 88
   
@@ -86,7 +93,8 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
             CENTER_LONGITUDE=centerLon, $
             TRUE_SCALE_LATITUDE=tsLat, $
             LABEL_FORMAT='polar_maplabels', $
-            FILL_COLOR="white",DIMENSIONS=[800,800])
+            FILL_COLOR="white",DIMENSIONS=[800,800], $
+            TITLE=STRING(FORMAT='("Orbits ",I0," and ",I0)',fLorb1,fLorb2))
 
   ; Change some grid properties.
   grid = map.MAPGRID
@@ -136,8 +144,7 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
      nFastLocVecs=15
      ;; fastLoc_plotInds=indgen(nfastLocVecs)*10+200000
      
-     fLorb=10000
-     fastLoc_plotInds=cgsetintersection(WHERE(fastLoc.ILAT GT 0),WHERE(fastLoc.orbit EQ fLorb))
+     fastLoc_plotInds=cgsetintersection(WHERE(fastLoc.ILAT GT 0),WHERE(fastLoc.orbit EQ fLorb1))
      ;; fLMax=max(fastLoc_plotInds,fLindMax,SUBSCRIPT_MIN=fLindMin)
      fLnEl=N_ELEMENTS(fastLoc_plotInds)
      fLsubset=FIX(indgen(nFastLocVecs,/FLOAT)/(nFastLocVecs-1)*(fLnEl-1))
@@ -150,17 +157,24 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
         hwM_inds(j) = temp
      ENDFOR
      
+     ;; hwMVecPlot1=VECTOR(TRANSPOSE(hwM_normVecs.normVectors(0,hwM_inds(0:nFastLocVecs-1))), $
+     ;;                    ABS(TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1)))), $
+     ;;                    fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
+     ;;                    COLOR='k',SYM_SIZE=0.3, $;HEAD_ANGLE=60,HEAD_INDENT=0.6, ARROW_STYLE=0, $
+     ;;                    NAME='Orbit '+STRCOMPRESS(fLorb1),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb1))
+     ;; fastLocVecPlot1=VECTOR(TRANSPOSE(orbV_fastLoc(0,fastLoc_plotInds)),ABS(TRANSPOSE(orbV_fastLoc(1,fastLoc_plotInds))), $
+     ;;                        fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
+     ;;                        COLOR='r',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb1),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb1))
      hwMVecPlot1=VECTOR(TRANSPOSE(hwM_normVecs.normVectors(0,hwM_inds(0:nFastLocVecs-1))), $
-                        ABS(TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1)))), $
+                        TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1))), $
                         fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
                         COLOR='k',SYM_SIZE=0.3, $;HEAD_ANGLE=60,HEAD_INDENT=0.6, ARROW_STYLE=0, $
-                        NAME='Orbit '+STRCOMPRESS(fLorb),TITLE='Orbit '+STRCOMPRESS(fLorb),/OVERPLOT)
-     fastLocVecPlot1=VECTOR(TRANSPOSE(orbVectors(0,fastLoc_plotInds)),ABS(TRANSPOSE(orbVectors(1,fastLoc_plotInds))), $
+                        NAME='Orbit '+STRCOMPRESS(fLorb1),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb1))
+     fastLocVecPlot1=VECTOR(TRANSPOSE(orbV_fastLoc(0,fastLoc_plotInds)),TRANSPOSE(orbV_fastLoc(1,fastLoc_plotInds)), $
                             fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
-                            COLOR='r',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb),TITLE='Orbit '+STRCOMPRESS(fLorb),/OVERPLOT)
+                            COLOR='r',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb1),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb1))
      
-     fLorb=9000
-     fastLoc_plotInds=cgsetintersection(WHERE(fastLoc.ILAT GT 0),WHERE(fastLoc.orbit EQ fLorb))
+     fastLoc_plotInds=cgsetintersection(WHERE(fastLoc.ILAT GT 0),WHERE(fastLoc.orbit EQ fLorb2))
      ;; fLMax=max(fastLoc_plotInds,fLindMax,SUBSCRIPT_MIN=fLindMin)
      fLnEl=N_ELEMENTS(fastLoc_plotInds)
      fLsubset=FIX(indgen(nFastLocVecs,/FLOAT)/(nFastLocVecs-1)*(fLnEl-1))
@@ -173,14 +187,22 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
         hwM_inds(j) = temp
      ENDFOR
 
+     ;; hwMVecPlot2=VECTOR(TRANSPOSE(hwM_normVecs.normVectors(0,hwM_inds(0:nFastLocVecs-1))), $
+     ;;                    ABS(TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1)))), $
+     ;;                    fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
+     ;;                    COLOR='k',SYM_SIZE=0.3, $ ;HEAD_ANGLE=60,HEAD_INDENT=0.6, ARROW_STYLE=0, $
+     ;;                    NAME='Orbit '+STRCOMPRESS(fLorb2),TITLE='Orbit '+STRCOMPRESS(fLorb2),/OVERPLOT)
+     ;; fastLocVecPlot2=VECTOR(TRANSPOSE(orbV_fastLoc(0,fastLoc_plotInds)),ABS(TRANSPOSE(orbV_fastLoc(1,fastLoc_plotInds))), $
+     ;;                        fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
+     ;;                        COLOR='g',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb2),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb2))
      hwMVecPlot2=VECTOR(TRANSPOSE(hwM_normVecs.normVectors(0,hwM_inds(0:nFastLocVecs-1))), $
-                        ABS(TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1)))), $
+                        TRANSPOSE(hwM_normVecs.normVectors(1,hwM_inds(0:nFastLocVecs-1))), $
                         fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
                         COLOR='k',SYM_SIZE=0.3, $ ;HEAD_ANGLE=60,HEAD_INDENT=0.6, ARROW_STYLE=0, $
-                        NAME='Orbit '+STRCOMPRESS(fLorb),TITLE='Orbit '+STRCOMPRESS(fLorb),/OVERPLOT)
-     fastLocVecPlot2=VECTOR(TRANSPOSE(orbVectors(0,fastLoc_plotInds)),ABS(TRANSPOSE(orbVectors(1,fastLoc_plotInds))), $
+                        NAME='Orbit '+STRCOMPRESS(fLorb2),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb2))
+     fastLocVecPlot2=VECTOR(TRANSPOSE(orbV_fastLoc(0,fastLoc_plotInds)),TRANSPOSE(orbV_fastLoc(1,fastLoc_plotInds)), $
                             fastLoc.MLT(fastLoc_plotInds)*15,fastLoc.ILAT(fastLoc_plotInds), $
-                            COLOR='g',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb),TITLE='Orbit '+STRCOMPRESS(fLorb),/OVERPLOT)
+                            COLOR='g',SYM_SIZE=0.3,NAME='Orbit '+STRCOMPRESS(fLorb2),/OVERPLOT);,TITLE='Orbit '+STRCOMPRESS(fLorb2))
 
 
      ; Add the legend.
@@ -188,14 +210,14 @@ PRO JOURNAL__20150601__plot_Holzworth_Meng_normVectors
                   /NORMAL, /AUTO_TEXT_COLOR)
 
      ; check normalization
-     ;; dotProds(cur_i:cur_i+curOrb_nEvents-1)=orbVectors(0,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
-     ;;                hemi*orbVectors(1,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
+     ;; dotProds(cur_i:cur_i+curOrb_nEvents-1)=orbV_fastLoc(0,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(0,hwM_inds(0:curOrb_nEvents-1)) + $
+     ;;                hemi*orbV_fastLoc(1,cur_i:cur_i+curOrb_nEvents-1)*hwM_normVecs.normVectors(1,hwM_inds(0:curOrb_nEvents-1))
 
      PRINT,FORMAT='("MLT",T12,"ILAT",T24,"Magnitude")'
      FOR j=0,nFastLocVecs-1 DO PRINT,FORMAT='(F0.3,T12,F0.3,T24,F0.3)', $
-                                     orbVectors(0,fastLoc_plotInds(j)),ABS(orbVectors(1,fastLoc_plotInds(j))), $
-                                     orbVectors(0,fastLoc_plotInds(j))^2+ABS(orbVectors(1,fastLoc_plotInds(j)))^2
-     
+                                     orbV_fastLoc(0,fastLoc_plotInds(j)),ABS(orbV_fastLoc(1,fastLoc_plotInds(j))), $
+                                     orbV_fastLoc(0,fastLoc_plotInds(j))^2+ABS(orbV_fastLoc(1,fastLoc_plotInds(j)))^2
+     PRINT,"DONE"
                                      
 ;;fastLoc_plotInds(-1)-fastLoc_plotInds(0))
 
