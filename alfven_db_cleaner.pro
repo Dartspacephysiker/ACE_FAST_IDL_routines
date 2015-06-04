@@ -29,6 +29,7 @@ function alfven_db_cleaner,maximus,LUN=lun
   IF N_ELEMENTS(maximus) EQ 0 THEN BEGIN
      printf,lun,"No such structure as maximus! Can't clean up Alfven database."
      printf,lun,"Returning..."
+     ;; RETURN, !NULL
      RETURN, !NULL
   ENDIF
 
