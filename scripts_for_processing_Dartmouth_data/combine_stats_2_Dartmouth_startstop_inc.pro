@@ -2,22 +2,28 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='02282015'
+  date='20150608'
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'
-  outfile='Dartdb_' + date + '--500-14999--maximus.sav'
+  ;; outfile='Dartdb_' + date + '--500-14999--maximus.sav'
+  outfile='Dartdb_' + date + '--16150-16169--maximus.sav'
+
+  ;; below_aur_ovalStr=''
+  below_aur_ovalStr='below_aur_oval'
 
 ;open file to write list of orbits included
   OPENW,outlun,contents_file,/get_lun
 
-  min_orbit=500
-  max_orbit=15000
+  ;; min_orbit=500
+  ;; max_orbit=15000
+  min_orbit=16150
+  max_orbit=16169
 
   for j=min_orbit,max_orbit do begin
 
 ;    filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_0'
-     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'
+     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr
                                 ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
      result=file_which(Dartmouth_DB,filename)
      if result then begin
@@ -81,7 +87,8 @@ pro combine_stats_2_Dartmouth_startstop_inc,maximus
               endelse
            endif
 ;           filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
-           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
+;           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
+           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr
 ;    filename='dflux'+'_startstop_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
         endfor
      endif

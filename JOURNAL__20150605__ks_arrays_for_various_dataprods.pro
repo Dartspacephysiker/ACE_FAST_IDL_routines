@@ -1,0 +1,23 @@
+
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_mlt,N=10000
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_magcurrent,N=10000,MAXIND=6
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_ilat,N=10000,MAXIND=5
+
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_mlt_maxnsamp_10,N=10000,MAXNSAMPPERORB=10
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_magcurrent_maxnsamp_10,N=10000,MAXNSAMPPERORB=10,MAXIND=6
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_ilat_maxnsamp_10,N=10000,MAXNSAMPPERORB=10,MAXIND=5
+
+;; monte_carlo_compare_distributions,ks_pval_arr=ks_pval_mlt_rednsampbyfactor_10,N=10000,REDUCENSAMPBYFACTOR=10
+;; monte_carlo_compare_distributions,ks_pval_arr=ks_pval_magcurrent_rednsampbyfactor_10,N=10000,REDUCENSAMPBYFACTOR=10,MAXIND=6
+;; monte_carlo_compare_distributions,ks_pval_arr=ks_pval_ilat_rednsampbyfactor_10,N=10000,REDUCENSAMPBYFACTOR=10,MAXIND=5
+
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_mlt_rednsampbyfactor_3,N=10000,REDUCENSAMPBYFACTOR=3
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_magcurrent_rednsampbyfactor_3,N=10000,REDUCENSAMPBYFACTOR=3,MAXIND=6
+monte_carlo_compare_distributions,ks_pval_arr=ks_pval_ilat_rednsampbyfactor_3,N=10000,REDUCENSAMPBYFACTOR=3,MAXIND=5
+
+save,ks_pval_mlt,ks_pval_ilat,ks_pval_magcurrent, $
+     ks_pval_mlt_maxnsamp_10,ks_pval_magcurrent_maxnsamp_10,ks_pval_ilat_maxnsamp_10, $
+     ks_pval_mlt_rednsampbyfactor_10,ks_pval_magcurrent_rednsampbyfactor_10,ks_pval_ilat_rednsampbyfactor_10, $
+     ks_pval_mlt_rednsampbyfactor_3,ks_pval_magcurrent_rednsampbyfactor_3,ks_pval_ilat_rednsampbyfactor_3, $
+     filename='spread_of_ks_statistics_for_dawndusk_comparison--N_eq_10000_some_maxnsampsperorb.sav'
+help

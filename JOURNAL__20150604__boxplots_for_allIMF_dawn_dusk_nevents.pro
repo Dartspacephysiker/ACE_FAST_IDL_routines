@@ -27,6 +27,8 @@ PRO JOURNAL__20150604__boxplots_for_allIMF_dawn_dusk_nevents,MAXIND=maxInd
   restore,dbFile
   curDBFile = dbFile
 
+  dataProd=(TAG_NAMES(maximus))(maxInd)
+
   PRINT,"Doing boxplots (without regard to orbit number) for maximus data prod ",dataProd
 
   ;************************************************************

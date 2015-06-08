@@ -38,6 +38,9 @@ function alfven_db_cleaner,maximus,LUN=lun
 
   ; Cutoff values
   
+  ;Gots to be alfvenic
+  alfvenic=1
+
   ;; mag current cutoffs
   magc_hcutOff = 5.0e2          ;junks 245 events above, 256 below
   ;;magc_lcutOff = -1.0e3 ;
@@ -104,16 +107,20 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;; sample_t_hcutoff = 1.25
 
   ;; < 100 Hz—exclude all of these per meeting with Professor LaBelle 2015/05/28
-  sample_t_hcutoff = 0.01
-
+  ;; sample_t_hcutoff = 0.01
+  sample_t_hcutoff = 0.2
+  
   ;**********
   ;   NaNs  *
   ;**********
 
   ;; Get rid of junk in various dangerous quantities we might be using
   
+  ;; alfvenicness
+  good_i = where(maximus.alfvenic GT 0.1,/NULL )
+
   ;; delta Bs and delta Es
-  good_i = WHERE(FINITE(maximus.delta_B),/NULL)
+  good_i = cgsetintersection(good_i,WHERE(FINITE(maximus.delta_B),/NULL))
   good_i = cgsetintersection(good_i,where(FINITE(maximus.delta_E),/NULL))
   
   ;; Now electron stuff

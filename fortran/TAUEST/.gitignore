@@ -1,0 +1,14 @@
+tauest1
+tauest2
+tauest3
+tauest4
+
+#No plot files
+*.plt
+
+#No temp files
+*.tmp
+
+#No shared object or object files
+*.so
+*.o

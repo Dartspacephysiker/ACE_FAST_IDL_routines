@@ -38,12 +38,13 @@
 ;                       Birth
 ;-
 
-PRO KEY_SCATTERPLOTS_POLARPROJ,dbFile, $
+PRO KEY_SCATTERPLOTS_POLARPROJ, $
                                DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                NORTH=north,SOUTH=south, $
                                CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
                                OVERLAYAURZONE=overlayAurZone, $
                                PLOTSUFF=plotSuff, $
+                               DBFILE=dbFile, $
                                OUTFILE=outFile, $
                                PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, JUST_PLOT_I=just_plot_i, $
                                STRANS=sTrans, $
