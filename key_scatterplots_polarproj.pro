@@ -86,7 +86,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   IF NOT KEYWORD_SET(north) AND NOT KEYWORD_SET(south) THEN north = 1 ;default to northern hemi
 
-  centerLon=south ? 0 : 180
+  centerLon=KEYWORD_SET(south) ? 0 : 180
 
   lun=-1
 
@@ -149,7 +149,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   mlons=grid.longitudes
   FOR i=0,n_elements(mlons)-1 DO BEGIN
-     mlons(i).label_position=south ? 1.0 : 0.02
+     mlons(i).label_position=KEYWORD_SET(south) ? 1.0 : 0.02
   ENDFOR
 
   ;;****************************************

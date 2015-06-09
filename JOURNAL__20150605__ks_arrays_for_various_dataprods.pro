@@ -19,5 +19,5 @@ save,ks_pval_mlt,ks_pval_ilat,ks_pval_magcurrent, $
      ks_pval_mlt_maxnsamp_10,ks_pval_magcurrent_maxnsamp_10,ks_pval_ilat_maxnsamp_10, $
      ks_pval_mlt_rednsampbyfactor_10,ks_pval_magcurrent_rednsampbyfactor_10,ks_pval_ilat_rednsampbyfactor_10, $
      ks_pval_mlt_rednsampbyfactor_3,ks_pval_magcurrent_rednsampbyfactor_3,ks_pval_ilat_rednsampbyfactor_3, $
-     filename='spread_of_ks_statistics_for_dawndusk_comparison--N_eq_10000_some_maxnsampsperorb.sav'
+     filename='spread_of_ks_statistics_for_dawndusk_comparison--N_eq_10000_some_maxnsampsperorb_rednsampsby_10_3.sav'
 help
