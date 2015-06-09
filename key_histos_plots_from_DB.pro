@@ -47,7 +47,7 @@ PRO KEY_HISTOS_PLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
   ;;defaults
   ;; defSTrans = 99 ; use this for whole database
   defSTrans = 90 ; use this when doing very restricted range
-  defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defaultDims = [600,600]
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = ""
   plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE_min10current"

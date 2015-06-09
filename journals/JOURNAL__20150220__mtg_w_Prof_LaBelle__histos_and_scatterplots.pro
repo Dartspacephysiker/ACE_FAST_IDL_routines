@@ -19,19 +19,19 @@ cgscatter2d,maximus.mag_current(ind),maximus.esa_current(ind),yrange=[-100,100],
 
 
 ;poynting flux with current
-restore,'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 mu_0 = 4.0e-7 * !PI
 POYNT_EST=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
 cgscatter2d,poynt_est(ind),maximus.mag_current(ind),yrange=[-100,100],xrange=[-50,50]
 
 
 ;Now screening by altitude on flux vs. current
-restore,'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 ind=where((maximus.mag_current LE -10 OR maximus.mag_current GE 10) AND maximus.alt GE 3000)
 cgscatter2d,maximus.total_eflux_integ(ind),maximus.mag_current(ind),xrange=[-4e4,4e4],yrange=[-50,50]
 
 ;Now screening by altitude on flux vs. current
-restore,'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 ind=where(maximus.mag_current GE 10 AND maximus.alt GE 3000)
 cghistoplot,maximus.total_eflux_integ(ind),mininput=-1e4,maxinput=1e4
 n_pos_for_posmagc=n_elements(where(maximus.total_eflux_integ(ind) GT 0))

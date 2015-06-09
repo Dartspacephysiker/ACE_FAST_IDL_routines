@@ -17,7 +17,7 @@
 
 ; The following is my attempt to actually implement what Chris was talking about
 
-restore, 'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+restore, '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 
 ;output file
 date = "20150327"
@@ -83,7 +83,7 @@ currentClosureEst = TOTAL(currentEst(orbit[blah]_indices))
 ;Commands from meeting with Professors LaBelle and Cairns, 2015/03/26
 ;************************************************************
 
-;; restore, 'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+;; restore, '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 
 ;; currentEst=maximus.width_x*maximus.mag_current
 ;; cghistoplot,currentEst
@@ -98,7 +98,7 @@ currentClosureEst = TOTAL(currentEst(orbit[blah]_indices))
 ;; print,n_elements(where(currentEst LT 0))
 ;; print,n_elements(where(currentEst GT 0))
 
-restore, 'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+restore, '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 
 inds=where(ABS(maximus.mag_current) GT 10)
 

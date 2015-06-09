@@ -60,7 +60,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   defTSLat = 75  ;true-scale latitude
 
-  defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defOutDir = 'histos_scatters/polar/'
   defOutPref = 'key_scatterplots_polarproj'
   defExt = '.png'

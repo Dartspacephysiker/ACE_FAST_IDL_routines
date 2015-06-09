@@ -23,10 +23,10 @@
 
 PRO medHistAnalyzer,INFILE=infile,OUTFILE=outFile
 
-  medHistDataDir = 'medHistData/'
+  medHistDataDir = 'out/medHistData/'
   
   ;;open database
-  ;; restore,'scripts_for_processing_Dartmouth_data/Dartdb_02112015--500-14999--maximus.sav'
+  ;; restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
   
   ;;get your favorite hist file
   IF KEYWORD_SET(inFile) THEN restore,inFile $

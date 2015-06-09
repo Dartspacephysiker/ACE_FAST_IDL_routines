@@ -40,7 +40,7 @@ PRO KOLMOGOROV_SMIRNOV_NEVENTS,DBFILE=dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside
           STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
   ;;defaults
-  defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   defDartmouthdb_nEvents_I_file = 'PLOT_INDICES_for_nEvent_comparison--DartDB_02282015--North_all_IMF--wholecap--OMNI_GSM_Apr_2_15.sav'
   defHisto1_title = "Dartmouth DB"
 

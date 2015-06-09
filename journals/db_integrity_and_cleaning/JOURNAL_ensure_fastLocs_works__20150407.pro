@@ -3,10 +3,10 @@
 ; Working directory: /SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data
 ; Date: Tue Apr  7 15:43:49 2015
  
-restore,'scripts_for_processing_Dartmouth_data/fastLoc_intervals2--20150409.sav'
+restore,'/SPENCEdata/Research/Cusp/database/time_histos/fastLoc_intervals2--20150409.sav'
 cd,current=___cur & print,___cur
 ;/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data
-restore,'scripts_for_processing_Dartmouth_data/fastLoc_intervals2--20150409--times.sav'
+restore,'/SPENCEdata/Research/Cusp/database/time_histos/fastLoc_intervals2--20150409--times.sav'
 diff=shift(fastloc_times,-1)-fastloc_times
 inds=where(diff GT 10)
 print,fastloc.orbit(inds+1)-fastloc.orbit(inds)

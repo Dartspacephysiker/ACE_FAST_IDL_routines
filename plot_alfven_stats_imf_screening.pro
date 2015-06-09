@@ -751,7 +751,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + efDatName+"medhist_data.sav"
+        medHistDataDir = 'out/medHistData/'
+
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
 
         h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  elecData,$
@@ -761,7 +763,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absEflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + efDatName + "medhist.txt"
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + efDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
 
@@ -843,7 +845,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + pfDatName+"medhist_data.sav"
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + pfDatName+"medhist_data.sav"
 
         h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  pfluxEst(plot_i),$
@@ -853,7 +855,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absPflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + pfDatName + "medhist.txt"
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + pfDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
         IF KEYWORD_SET(logAvgPlot) THEN BEGIN
@@ -1013,7 +1015,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + ifDatName+"medhist_data.sav"
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + ifDatName+"medhist_data.sav"
 
         h2dIStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                  ionData,$
@@ -1023,7 +1025,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                  ABSMED=absIflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + ifDatName + "medhist.txt"
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + ifDatName + "medhist.txt"
 
      ENDIF ELSE BEGIN 
         ionData=(KEYWORD_SET(logAvgPlot)) ? alog10(ionData) : ionData
@@ -1112,7 +1114,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      chareDatName = STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = 'medHistData/' + chareDatName+"medhist_data.sav"
+        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + chareDatName+"medhist_data.sav"
 
         h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
                                      charEData,$
@@ -1122,7 +1124,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                      ABSMED=absCharE,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile='medHistData/' + chareDatName + "medhist.txt"
+        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + chareDatName + "medhist.txt"
         
      ENDIF ELSE BEGIN 
         charEData=(KEYWORD_SET(logAvgPlot)) ? alog10(charEData) : charEData

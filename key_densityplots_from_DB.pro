@@ -40,7 +40,7 @@
 
 PRO KEY_DENSITYPLOTS_FROM_DB,dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside,CHARESCR=chareScr,ABSMAGCSCR=absMagcScr
 
-  default_DBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  default_DBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
 
   IF NOT KEYWORD_SET(dbFile) THEN restore,default_DBFile ELSE restore,dbFile
   

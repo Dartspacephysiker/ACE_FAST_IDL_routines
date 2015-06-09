@@ -61,7 +61,7 @@ cd,current=___cur & print,___cur
 ;/SPENCEdata/Research/Cusp/ACE_FAST
 cd,current=___cur & print,___cur
 ;/SPENCEdata/Research/Cusp/ACE_FAST
-restore,'scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus.sav'
+restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav'
 print,tag_names(maximus)
 ;ORBIT ALFVENIC TIME ALT MLT ILAT MAG_CURRENT ESA_CURRENT ELEC_ENERGY_FLUX
 ;INTEG_ELEC_ENERGY_FLUX EFLUX_LOSSCONE_INTEG TOTAL_EFLUX_INTEG MAX_CHARE_LOSSCONE

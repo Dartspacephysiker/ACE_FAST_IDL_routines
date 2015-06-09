@@ -25,9 +25,9 @@ PRO kolmogorov_smirnov_user_specified__normalized_neventspermin
   datFiles[1]='temp/polarplots_North_avg_duskward--1stable--5min_IMFsmooth--OMNI_GSM_byMin_5.0_Apr_10_15.dat'
   datFiles[2]='temp/polarplots_North_avg_all_IMF--0stable--5min_IMFsmooth--OMNI_GSM_Apr_10_15.dat'
 
-  timeHistoFiles[0]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--dawnward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs520-10983--timehisto--20150420.sav'
-  timeHistoFiles[1]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--duskward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14976--timehisto--20150420.sav'
-  timeHistoFiles[2]='scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/fastLoc_intervals2--all_IMF_180.00-180.00deg--OMNI_GSM--byMin_0.0--stableIMF_0min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14999--timehisto--20150420.sav'
+  timeHistoFiles[0]='../database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--dawnward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs520-10983--timehisto--20150420.sav'
+  timeHistoFiles[1]='../database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--duskward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14976--timehisto--20150420.sav'
+  timeHistoFiles[2]='../database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--all_IMF_180.00-180.00deg--OMNI_GSM--byMin_0.0--stableIMF_0min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14999--timehisto--20150420.sav'
 
   ;restore the three file groups
   restore,datFiles[0]

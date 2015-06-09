@@ -4,11 +4,11 @@ pro combine_Chaston_Dartmouth_maximus,maximus
 ;See 'as5_as3_conversion_matrix.ods' to get the scoop.
 
   ;; Chaston db file
-  Chaston_DBfile='/SPENCEdata2/Research/Cusp/database/processed/maximus.dat'
+  Chaston_DBfile='/SPENCEdata/Research/Cusp/database/processed/maximus.dat'
   
   ;; Dartmouth db file
   date='01142015'
-  Dartmouth_DB='/SPENCEdata2//Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  Dartmouth_DB='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
   Dart_DBfile=Dartmouth_DB + 'Dartdb_' + date + '_maximus.sav'
 
   ;; Output db file

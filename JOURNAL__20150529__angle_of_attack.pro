@@ -18,12 +18,12 @@ PRO JOURNAL__20150529__ANGLE_OF_ATTACK
   dataDir='/home/spencerh/Research/Cusp/ACE_FAST/'
   
   ;;Get DB file
-  dbFile='scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav'
-  ;; dbFile='scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus.sav'
+  dbFile='/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav'
+  ;; dbFile='/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav'
   restore,dataDir+dbFile
 
-  dbTimeFile='scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--cdbTime--cleaned.sav'
-  ;; dbTimeFile='scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--cdbTime.sav'
+  dbTimeFile='/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--cdbTime--cleaned.sav'
+  ;; dbTimeFile='/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--cdbTime.sav'
   restore,dataDir+dbTimeFile
 
   ;; ephemeris file  

@@ -9,7 +9,7 @@ PRO MONTE_CARLO_COMPARE_DISTRIBUTIONS,plot1_i,plot2_i,MAXIMUS=maximus,N=N,MAXIND
                                       KS_PVAL_ARR=ks_pval_arr,MAXNSAMPPERORB=maxNSampPerOrb,REDUCENSAMPBYFACTOR=reduceNSampByFactor
   
 
-  defDBFile='scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus.sav'
+  defDBFile='/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav'
 
   defPlot_i_dir = 'plot_indices_saves/'
   defPlot1_i_file='PLOT_INDICES_20150604_dawnward_inds_for_KS_analysis--6-18MLTNorth_dawnward--0stable--OMNI_GSM_byMin_5.0_Jun_4_15.sav'

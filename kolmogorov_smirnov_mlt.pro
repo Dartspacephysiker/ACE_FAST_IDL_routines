@@ -40,7 +40,7 @@ PRO KOLMOGOROV_SMIRNOV_MLT,DBFILE=dbFile,DAYSIDE=dayside,NIGHTSIDE=nightside, $
           STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
 
   ;;defaults
-  defDBFile = "scripts_for_processing_Dartmouth_data/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
 
   defKS_stats_filename = 'ks_stats--' ;we add paramStr1 to this as well
 

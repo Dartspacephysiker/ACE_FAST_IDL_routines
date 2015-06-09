@@ -13,7 +13,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
   
-  defLoaddataDir = '/SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
+  defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
   defPref = "Dartdb_02282015--500-14999"
   defCDBTimeFile = defLoaddataDir + defPref + "--cdbTime.sav"
   defDBFile = defLoaddataDir + defPref + "--maximus.sav"
