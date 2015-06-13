@@ -3,8 +3,8 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='03292015'
-  dbDate='02282015'
+  date='20150611'
+  dbDate='20150611'
 
   hemi='North'
   mirror = !NULL
@@ -34,7 +34,7 @@ PRO commands_for_dusk_dawn_plots
   ;; midn=1
 
   ;; byMin?
-  byMin=3.0 ;for bzNorth, bzSouth plots
+  byMin=5.0 ;for bzNorth, bzSouth plots
   ;; byMin=3.0
   numOrbLim=!NULL
   ;; numOrbLim=2
@@ -43,19 +43,22 @@ PRO commands_for_dusk_dawn_plots
   wc=!NULL
 ;;   wc=1
 
+  ;; logavg=!NULL
+  logavgPlot=1
+
   ;;median plots?
   ;; medPlot=!NULL
-  medPlot=1
+  medPlot=0
 
   ;;median histogram data?
-  medHistOutData=1
+  medHistOutData=0
 
   ;;median histogram text output?
-  medHistOutTxt=1
+  medHistOutTxt=0
 
   ;;different delay?
-  delay=!NULL
-  ;;delay=1020
+  ;; delay=!NULL
+  delay=1020
 
   ;;smooth IMF data?
   ;; smoothWindow=!NULL
@@ -76,7 +79,7 @@ PRO commands_for_dusk_dawn_plots
 
   ;;Poynt range?
 ;; poyntRange=!NULL
-  poyntRange=[1e-4,1e3]
+  ;; poyntRange=[1e-4,1e3]
 
   ;;altitude range?
   altitudeRange=[1000.0, 5000.0]
@@ -86,12 +89,13 @@ PRO commands_for_dusk_dawn_plots
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
   ;;                                       /eplots,efluxplottype="Max",eplotrange=[-1,2.0],/logefplot,/nonegeflux,MEDIANPLOT=medPlot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /eplots,efluxplottype="Max",eplotrange=[-0.5,1.3],/logefplot,/abseflux,MEDIANPLOT=medPlot, $
+                                        /eplots,efluxplottype="Max",eplotrange=[-0.5,1.3],/logefplot,/abseflux, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
   ;;;;;;;;;;
   ;orb plots
@@ -114,12 +118,13 @@ PRO commands_for_dusk_dawn_plots
   ;;;;;;;;;;;;;;;
   ;ion plots
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
-                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[6.5,9.5],/logifplot,/absiflux,MEDIANPLOT=medPlot, $
+                                        /ionplots,ifluxplottype="Max_Up",iplotrange=[6.5,9.5],/logifplot,/absiflux, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
   ;;;;;;;;;;;;;;;;;;;;
   ;Poynting flux plots
@@ -136,7 +141,7 @@ PRO commands_for_dusk_dawn_plots
   
   ;Better (for showing features) plotrange
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX="otherRange_" + plotSuff,directions=dirs,maskmin=mskm, $
-                                        /pplots,/nonegpflux,MEDIANPLOT=medPlot, $
+                                        /pplots,/nonegpflux, $
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir + "otherRange_",directions=dirs,maskmin=mskm, $
   ;;                                       /pplots,/abspflux,MEDIANPLOT=medPlot, $
                                         /logpfplot, pplotrange=[-1,1], $
@@ -145,17 +150,29 @@ PRO commands_for_dusk_dawn_plots
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;characteristic energy plot
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff, directions=dirs,maskmin=mskm, $
                                         /chareplots,charetype="lossCone",/logchareplot,/nonegchare, $ ;charePlotRange=[2.3, 3.4], $ ;charePlotRange=[1.3, 2.477], $
-                                        MEDIANPLOT=medPlot, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                         SMOOTHWINDOW=smoothWindow, STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
-                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+                                        DEL_PS=del_PS, NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;n ev per min plots
+  batch_plot_alfven_stats_imf_screening,/NEVENTPERMINPLOT, $
+                                        PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,DIRECTIONS=dirs,MASKMIN=mskm, $
+                                        ALTITUDERANGE=altitudeRange,CHARERANGE=charERange, $
+                                        WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
+                                        MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                        SMOOTHWINDOW=smoothWindow,STABLEIMF=stableIMF, HEMI=hemi, MIRROR=mirror, $
+                                        DEL_PS=del_ps,NOPLOTINTEGRAL=noPlotIntegral, NUMORBLIM=numOrbLim
+  
 END

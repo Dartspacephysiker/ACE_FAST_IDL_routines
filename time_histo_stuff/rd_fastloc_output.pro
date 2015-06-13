@@ -3,7 +3,7 @@
 PRO rd_fastloc_output,filename,dat,outname
   fieldtypes=[3,7,4,4,4,4]
   fieldnames=['Orbit','Time','ALT','MLT','ILAT','fields_mode']
-  fieldlocations=[0,10,33,46,59,72]
+  fieldlocations=[0,10,34,47,60,73]
   fieldgroups=[0,1,2,3,4,5]
   data_template={version:1.0,$
                  datastart:7,$

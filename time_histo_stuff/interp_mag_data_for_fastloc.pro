@@ -3,8 +3,10 @@
 ;getting appropriate indices of events in the Alfvén wave database. Here, we are simply using it to find out how long FAST spent
 ;in a given MLT/ILAT bin under user-specified magnetic field conditions.
 ;It will be important to use a standardized method of naming the output files so that we're not generating them every single time.
-;satdbInterp_i are indices corresponding to the NASA OMNI data set. fastLocInterp_i are indices of data in the arrays of the
-;fastLoc struct outputted by fastLoc* files that correspond to user-specified IMF conditions.
+
+;-->satdbInterp_i are indices corresponding to the NASA OMNI data set. 
+;-->fastLocInterp_i are indices of data in the arrays of the
+;-->fastLoc struct outputted by fastLoc* files that correspond to user-specified IMF conditions.
 
 ;FROM THE ORIGINAL INTERP_MAG_DATA_HEADER
 ;It uses an extremely simple linear interpolation between
@@ -31,9 +33,9 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   defMaxDiff=5.0 ; (in minutes)
 
   ;defaults
-  defFastLocDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/'
-  defFastLocFile = 'fastLoc_intervals2--20150409.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
+  defFastLocDir = '/SPENCEdata/Research/Cusp/database/time_histos/'
+  defFastLocFile = 'fastLoc_intervals2--500-16361_all--20150613.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--500-16361_all--20150613--times.sav'
 
   ;def SAT db stuff
   defSATdbDir = '/home/spencerh/Research/Cusp/database/processed/'
@@ -44,7 +46,7 @@ FUNCTION interp_mag_data_for_fastloc, satellite,DELAY=delay,LUN=lun, $
   defOutFilePrefix = 'fastLoc_intervals2--timeHisto--INDS_from_interp_mag_data_for_fastloc'
   ;; defOutFileSuffix = '--timeHisto'
   defOutFileSuffix = ''
-  defOutDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
+  defOutDir = '/SPENCEdata/Research/Cusp/database/time_histos/'
 
   defMinMLT = 0.0
   defMaxMLT = 24.0

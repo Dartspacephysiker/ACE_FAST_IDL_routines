@@ -1,9 +1,0 @@
-;;
-;; IDLWAVE catalog for library spence
-;; Automatically Generated -- do not edit.
-;; Created by idlwave_catalog on Tue Jun  9 10:03:25 2015
-;;
-(setq idlwave-library-catalog-libname "spence")
-(setq idlwave-library-catalog-routines
- '(("saveme1" pro nil (lib "saveme1.pro" nil "spence") "%s, temp, tempName, ancillaryData" (nil))
-   ("interp_contplot_polar" pro nil (lib "interp_contplot_polar.pro" nil "spence") "%s, h2dStr" (nil))))

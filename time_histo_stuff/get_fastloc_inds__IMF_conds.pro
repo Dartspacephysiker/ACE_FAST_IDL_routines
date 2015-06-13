@@ -1,7 +1,7 @@
 ;2015/04/09
 ;this can be used as a standalone routine or else called by plot_alfven_stats_imf_screening when
 ;making a plot of n events per minute
-FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+PRO get_fastloc_inds__IMF_conds,fastLoc_interped_i,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      BYMIN=byMin, BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      MAKE_OUTINDSFILE=make_outIndsFile, $
@@ -33,9 +33,9 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
   defAngleLim1 = 45.0
   defAngleLim2 = 135.0
 
-  defFastLocOutputDir = '/home/spencerh/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/'
-  defFastLocFile = 'fastLoc_intervals2--20150409.sav'
-  defFastLocTimeFile = 'fastLoc_intervals2--20150409--times.sav'
+  defFastLocOutputDir = '/SPENCEdata/Research/Cusp/database/time_histos/'
+  defFastLocFile = 'fastLoc_intervals2--500-16361_all--20150613.sav'
+  defFastLocTimeFile = 'fastLoc_intervals2--500-16361_all--20150613--times.sav'
 
   defLun = -1 ;stdout
   defOutIndsPrefix = 'fastLoc_intervals2'
@@ -118,6 +118,6 @@ FUNCTION get_fastloc_inds__IMF_conds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANG
      ENDIF
   ENDELSE
 
-  RETURN, fastLocInterped_i
+  RETURN
 
 END

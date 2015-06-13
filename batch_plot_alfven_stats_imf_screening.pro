@@ -14,6 +14,7 @@
 PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
                                           MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
                                           EPLOTS=ePlots, IONPLOTS=ionPlots, PPLOTS=pPlots,CHAREPLOTS=charEPlots, ORBPLOTS=orbPlots, $
+                                          NEVENTPERMINPLOT=nEventPerMinPlot, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
 
@@ -74,6 +75,11 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,
                                         maskmin=maskMin, _EXTRA=e
      ENDIF
      
+     ;;N event per min
+     IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN
+        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                        maskmin=maskMin,/NEVENTPERMINPLOT, _EXTRA=e
+     ENDIF
 
 
   ENDFOR

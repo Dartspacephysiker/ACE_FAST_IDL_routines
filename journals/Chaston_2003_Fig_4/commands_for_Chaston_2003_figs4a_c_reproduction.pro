@@ -3,8 +3,8 @@
 
 PRO commands_for_Chaston_2003_figs4a_c_reproduction
 
-  date='20150521'
-  dbDate = '02282015'
+  date='20150611'
+  dbDate = '20150611'
 
   dirs='all_IMF'
   ;; dirs=['duskward', 'dawnward']
@@ -79,6 +79,16 @@ PRO commands_for_Chaston_2003_figs4a_c_reproduction
                                         /chareplot,charetype="lossCone",/logCharEPlot, $ ;chareplotrange=[0,4e3],
                                         /WHOLECAP,/midnight,DELAY=delay, $
                                         /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
+                                        LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
+  ;;;;;;;;;;;;;;;
+  ;ion plots
+  ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
+  ;;                                       /eplots,efluxplottype="Max",customerange=[-1,1.5],/logefplot,/nonegeflux,/WHOLECAP,/midnight,DELAY=delay
+  batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
+                                        /ionplots,ifluxplottype="Integ_Up",iplotrange=[8,13], $
+                                        /WHOLECAP,/midnight, $
+                                        /noposiflux,/logifplot, $
+                                        DELAY=delay,/noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, $
                                         LOGAVGPLOT=logAvgPlot, MEDIANPLOT=medPlot
 
 END

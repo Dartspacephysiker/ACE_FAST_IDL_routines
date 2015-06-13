@@ -1,8 +1,0 @@
-;;
-;; IDLWAVE catalog for library spence
-;; Automatically Generated -- do not edit.
-;; Created by idlwave_catalog on Tue Jun  9 10:03:25 2015
-;;
-(setq idlwave-library-catalog-libname "spence")
-(setq idlwave-library-catalog-routines
- '(("warped_histo" pro nil (lib "untitled_1.pro" nil "spence") "%s" (nil))))

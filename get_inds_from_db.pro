@@ -50,13 +50,15 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   ;; Default
   ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
-  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav"
+  ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav"
+  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav"
   IF NOT KEYWORD_SET(dbFile) AND NOT KEYWORD_SET(do_ChastDB) THEN dbFile=defDBFILE ELSE BEGIN
      IF KEYWORD_SET(do_ChastDB) THEN dbFile = '/SPENCEdata/Research/Cusp/database/processed/maximus.dat' 
   ENDELSE
   restore,dbFile
 
-  defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--cdbTime--cleaned.sav"
+  ;; defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--cdbTime--cleaned.sav"
+  defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--cdbTime.sav"
   IF NOT KEYWORD_SET(cdbTimeFile) AND NOT KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = defCDBTimeFile ELSE BEGIN
      IF KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = '/SPENCEdata/Research/Cusp/database/processed/cdbTime.sav' 
   ENDELSE
@@ -67,6 +69,8 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   lun=-1 ;default to stdout
 
+  PRINT,"You know this thing hasn't been updated to include Holzworth/Meng stuff..."
+  STOP
   ;;***********************************************
   ;;Tons of defaults
   

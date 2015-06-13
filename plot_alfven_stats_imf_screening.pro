@@ -50,6 +50,10 @@
 ;                                            NOTE! Cannot be less than 1 minute.
 ;                    SMOOTHWINDOW      :  Smooth IMF data over a given window (default: 5 minutes)
 ;
+;                *HOLZWORTH/MENG STATISTICAL AURORAL OVAL PARAMETERS 
+;                    HWMAUROVAL        :  Only include those data that are above the statistical auroral oval.
+;                    HWMKPIND          :  Kp Index to use for determining the statistical auroral oval (def: 7)
+;
 ;                *ELECTRON FLUX PLOT OPTIONS
 ;		     EPLOTS            :     
 ;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
@@ -187,6 +191,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                     HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      BYMIN=byMin, BZMIN=bzMin, $
                                      SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
@@ -234,7 +239,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; defBinM = 0.75
   ;; defBinM = 0.5
 
-  defMinI = 60.0 ;these might need to be longs (i.e., '60L')
+  defMinI = 50.0 ;these might need to be longs (i.e., '60L')
   defMaxI = 84.0
   defBinI = 2.0
 
@@ -262,6 +267,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   defBx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
   
+  ;for statistical auroral oval
+  defHwMAurOval=0
+  defHwMKpInd=7
+
   defClockStr = 'dawnward'
   
   defAngleLim1 = 45.0
@@ -277,7 +286,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
 
-
   ; Handle MLT and ILAT
   IF minMLT NE !NULL THEN minM = minMLT
   IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
@@ -288,7 +296,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(minILAT) THEN minI = minILAT
   IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
-
 
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
@@ -324,6 +331,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         hemi="North"
      ENDELSE
   ENDELSE
+
+  ;Auroral oval
+  IF ~KEYWORD_SET(HwMAurOval) THEN HwMAurOval = defHwMAurOval
+  IF ~KEYWORD_SET(HwMKpInd) THEN HwMKpInd = defHwMKpInd
 
   IF NOT KEYWORD_SET(minMC) THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
   IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
@@ -584,7 +595,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
-                                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange)
+                                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                                     HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,BZMIN=bzMin,OMNI_COORDS=omni_Coords)
@@ -710,11 +722,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegEflux) THEN BEGIN
            no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+           print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(no_negs_i)
            plot_i=cgsetintersection(no_negs_i,plot_i)
+           print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(no_negs_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosEflux) THEN BEGIN
               no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
+              print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(no_pos_i)
               plot_i=cgsetintersection(no_pos_i,plot_i)        
+              print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(no_pos_i)
            ENDIF
         ENDELSE
         ;; elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.integ_elec_energy_flux(plot_i)) : maximus.integ_elec_energy_flux(plot_i) 
@@ -725,11 +741,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegEflux) THEN BEGIN
               no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+              print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(no_negs_i)
               plot_i=cgsetintersection(no_negs_i,plot_i)        
+              print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(no_negs_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosEflux) THEN BEGIN
                  no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
+                 print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(no_pos_i)
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(no_pos_i)
               ENDIF
            ENDELSE
            elecData = maximus.elec_energy_flux(plot_i)
@@ -742,9 +762,25 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      negEstr=""
      posEstr=""
      logEstr=""
-     IF KEYWORD_SET(absEflux)THEN absEstr = "Abs--"
-     IF KEYWORD_SET(noNegEflux) THEN negEstr = "NoNegs--"
-     IF KEYWORD_SET(noPosEflux) THEN posEstr = "NoPos--"
+     IF KEYWORD_SET(absEflux)THEN BEGIN
+        absEStr= "Abs--" 
+        print,"N pos elements in elec data: ",N_ELEMENTS(where(elecData GT 0.))
+        print,"N neg elements in elec data: ",N_ELEMENTS(where(elecData LT 0.))
+        elecData = ABS(elecData)
+     ENDIF
+     IF KEYWORD_SET(noNegEflux) THEN BEGIN
+        negEStr = "NoNegs--"
+        print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(elecData)
+        elecData = elecData(where(elecData GT 0.))
+        print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(elecData)
+     ENDIF
+     IF KEYWORD_SET(noPosEflux) THEN BEGIN
+        posEStr = "NoPos--"
+        print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(elecData)
+        elecData = elecData(where(elecData LT 0.))
+        print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(elecData)
+        elecData = ABS(elecData)
+     ENDIF
      IF KEYWORD_SET(logEfPlot) THEN logEstr="Log "
      absnegslogEstr=absEstr + negEstr + posEstr + logEstr
      efDatName = STRTRIM(absnegslogEstr,2)+"eFlux"+eFluxPlotType+"_"
@@ -827,7 +863,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
 
      IF KEYWORD_SET(noPosPflux) THEN BEGIN
-        no_pos_i=WHERE(pfluxEst GE 0.0)
+        no_pos_i=WHERE(pfluxEst LE 0.0)
         plot_i=cgsetintersection(no_pos_i,plot_i)
      ENDIF
 
@@ -931,11 +967,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegIflux) THEN BEGIN
            no_negs_i=WHERE(maximus.integ_ion_flux GE 0.0)
+           print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(no_negs_i)
            plot_i=cgsetintersection(no_negs_i,plot_i)
+           print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(no_negs_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosIflux) THEN BEGIN
               no_pos_i=WHERE(maximus.integ_ion_flux LE 0.0)
+              print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(no_pos_i)
               plot_i=cgsetintersection(no_pos_i,plot_i)        
+              print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(no_pos_i)
            ENDIF
         ENDELSE
      ionData=maximus.integ_ion_flux(plot_i) 
@@ -945,11 +985,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegIflux) THEN BEGIN
               no_negs_i=WHERE(maximus.ion_flux GE 0.0)
+              print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(no_negs_i)
               plot_i=cgsetintersection(no_negs_i,plot_i)        
+              print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(no_negs_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosIflux) THEN BEGIN
                  no_pos_i=WHERE(maximus.ion_flux LE 0.0)
+                 print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(no_pos_i)
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(no_pos_i)
               ENDIF
            ENDELSE
            ionData=maximus.ion_flux(plot_i)
@@ -959,11 +1003,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
               IF KEYWORD_SET(noNegIflux) THEN BEGIN
                  no_negs_i=WHERE(maximus.ion_flux_up GE 0.0)
+                 print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(no_negs_i)
                  plot_i=cgsetintersection(no_negs_i,plot_i)        
+                 print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(no_negs_i)
               ENDIF ELSE BEGIN
                  IF KEYWORD_SET(noPosIflux) THEN BEGIN
                     no_pos_i=WHERE(maximus.ion_flux_up LE 0.0)
+                    print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(no_pos_i)
                     plot_i=cgsetintersection(no_pos_i,plot_i)        
+                    print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(no_pos_i)
                  ENDIF
               ENDELSE
               ionData=maximus.ion_flux_up(plot_i)
@@ -973,11 +1021,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
                  IF KEYWORD_SET(noNegIflux) THEN BEGIN
                     no_negs_i=WHERE(maximus.integ_ion_flux_up GE 0.0)
+                    print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(no_negs_i)
                     plot_i=cgsetintersection(no_negs_i,plot_i)        
+                    print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(no_negs_i)
                  ENDIF ELSE BEGIN
                     IF KEYWORD_SET(noPosIflux) THEN BEGIN
                        no_pos_i=WHERE(maximus.integ_ion_flux_up LE 0.0)
+                       print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(no_pos_i)
                        plot_i=cgsetintersection(no_pos_i,plot_i)        
+                       print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(no_pos_i)
                     ENDIF
                  ENDELSE
                  ionData=maximus.integ_ion_flux_up(plot_i)
@@ -987,11 +1039,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                     print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
                     IF KEYWORD_SET(noNegIflux) THEN BEGIN
                        no_negs_i=WHERE(maximus.ion_energy_flux GE 0.0)
+                       print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(no_negs_i)
                        plot_i=cgsetintersection(no_negs_i,plot_i)        
+                       print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(no_negs_i)
                     ENDIF ELSE BEGIN
                        IF KEYWORD_SET(noPosIflux) THEN BEGIN
                           no_pos_i=WHERE(maximus.ion_energy_flux LE 0.0)
+                          print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(no_pos_i)
                           plot_i=cgsetintersection(no_pos_i,plot_i)        
+                          print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(no_pos_i)
                        ENDIF
                     ENDELSE
                     ionData=maximus.ion_energy_flux(plot_i)
@@ -1006,9 +1062,24 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      negIonStr=""
      posIonStr=""
      logIonStr=""
-     IF KEYWORD_SET(absIflux)THEN absIonStr= "Abs--" 
-     IF KEYWORD_SET(noNegIflux) THEN negIonStr = "NoNegs--"
-     IF KEYWORD_SET(noPosIflux) THEN posIonStr = "NoPos--"
+     IF KEYWORD_SET(absIflux)THEN BEGIN
+        absIonStr= "Abs--" 
+        print,"N pos elements in ion data: ",N_ELEMENTS(where(ionData GT 0.))
+        print,"N neg elements in ion data: ",N_ELEMENTS(where(ionData LT 0.))
+        ionData = ABS(ionData)
+     ENDIF
+     IF KEYWORD_SET(noNegIflux) THEN BEGIN
+        negIonStr = "NoNegs--"
+        ionData = ionData(where(ionData GT 0.))
+        print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(ionData)
+     ENDIF
+     IF KEYWORD_SET(noPosIflux) THEN BEGIN
+        posIonStr = "NoPos--"
+        print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(ionData)
+        ionData = ionData(where(ionData LT 0.))
+        print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(ionData)
+        ionData = ABS(ionData)
+     ENDIF
      IF KEYWORD_SET(logIfPlot) THEN logIonStr="Log "
      absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
      ifDatName = STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
@@ -1076,11 +1147,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegCharE) THEN BEGIN
            no_negs_i=WHERE(maximus.max_chare_losscone GE 0.0)
+           print,"N elements in elec data before junking negs elecData: ",N_ELEMENTS(no_negs_i)
            plot_i=cgsetintersection(no_negs_i,plot_i)
+           print,"N elements in elec data after junking negs elecData: ",N_ELEMENTS(no_negs_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosCharE) THEN BEGIN
               no_pos_i=WHERE(maximus.max_chare_losscone LT 0.0)
+              print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(no_pos_i)
               plot_i=cgsetintersection(no_pos_i,plot_i)        
+              print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(no_pos_i)
            ENDIF
         ENDELSE
         charEData=maximus.max_chare_losscone(plot_i) 
@@ -1090,11 +1165,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegCharE) THEN BEGIN
               no_negs_i=WHERE(maximus.max_chare_total GE 0.0)
+              print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(no_negs_i)
               plot_i=cgsetintersection(no_negs_i,plot_i)        
+              print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(no_negs_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosCharE) THEN BEGIN
                  no_pos_i=WHERE(maximus.max_chare_total LT 0.0)
+                 print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(no_pos_i)
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(no_pos_i)
               ENDIF
            ENDELSE
            charEData=maximus.max_chare_total(plot_i)
@@ -1345,11 +1424,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
 
      ;Get the appropriate divisor for IMF conditions
-     fastLoc_inds = get_fastloc_inds__IMF_conds(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+     get_fastloc_inds__IMF_conds,fastLoc_inds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                                 BYMIN=byMin,BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                                 FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
-                                                /MAKE_OUTINDSFILE)
+                                                /MAKE_OUTINDSFILE
      make_fastloc_histo,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
                         MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
                         MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
@@ -1418,7 +1497,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF NOT KEYWORD_SET(squarePlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
                            rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
-                           filename='temp/polarplots_'+paramStr+plotSuffix+".dat"
+                           filename='/SPENCEdata/Research/Cusp/ACE_FAST/temp/polarplots_'+paramStr+plotSuffix+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 

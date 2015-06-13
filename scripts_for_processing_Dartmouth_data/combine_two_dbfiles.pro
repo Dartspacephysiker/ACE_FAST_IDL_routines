@@ -1,22 +1,27 @@
-pro combine_two_dbfiles,maximus,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFILE2=dbFile2,DB_TFILE2=db_tFile2
+pro combine_two_dbfiles,maximus,cdbTime,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFILE2=dbFile2,DB_TFILE2=db_tFile2
   ;2015/06/09
   ;This will take two separate maximus saves and smash them together, ordered by time
+
+  date='20150611'
   
   defDBDir1 ='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  defDBFile1='Dartdb_02282015--500-14999--maximus.sav'
-  defDB_tFile1='Dartdb_02282015--500-14999--cdbTime.sav'
+  defDBFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--maximus_diff.sav'
+  defDB_tFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--cdbtime_diff.sav'
+  ;; defDBFile1='Dartdb_20150611--15000-16361--maximus--below_aur_oval.sav'
+  ;; defDB_tFile1='Dartdb_20150611--15000-16361--cdbtime--below_aur_oval.sav'
 
   defDBDir2 ='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  defDBFile2='Dartdb_20150609--500-10000--maximus--only_below_aur_oval.sav'
-  defDB_tFile2='Dartdb_20150609--500-10000--cdbtime--only_below_aur_oval.sav'
+  ;; defDBFile2='Dartdb_20150611--10001-14999--maximus--only_below_aur_oval.sav'
+  ;; defDB_tFile2='Dartdb_20150611--10001-14999--cdbtime--only_below_aur_oval.sav'
+  defDBFile2='tempmaximus.sav'
+  defDB_tFile2='tempcdbtime.sav'
 
-  date='20150609'
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
 
   outDir='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  outFile=outDir+'Dartdb_' + date + '--500-10000_below_aur_oval--10001-14999_above--maximus.sav'
-  out_tFile=outDir+'Dartdb_' + date + '--500-10000_below_aur_oval--10001-14999_above--cdbTime.sav'
+  outFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--maximus.sav'
+  out_tFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--cdbtime.sav'
 
   ;first DB file
   IF ~KEYWORD_SET(dbFile1) THEN dbFile1=defDBDir1+defDBFile1
@@ -95,6 +100,8 @@ pro combine_two_dbfiles,maximus,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFILE2=dbFi
 
   ;check 'em
   IF ARRAY_EQUAL(sort(cdbTime),indgen(n_elements(cdbTime),/L64)) THEN PRINT, "They're equal!"
+
+  ;; max_resize=resize_maximus(maximus,maximus_ind=1,min_for_ind=0.5,max_for_ind=2)
 
   save,maximus,filename=outFile
   save,cdbTime,filename=out_tFile

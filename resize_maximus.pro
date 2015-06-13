@@ -21,7 +21,7 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
   ENDELSE
   print,"N_elements before: " + strcompress(n_elements(maximus.orbit),/remove_all)
 
-  maximus={orbit:maximus.orbit(allowed_i),$
+  resize_maximus={orbit:maximus.orbit(allowed_i),$
            alfvenic:maximus.alfvenic(allowed_i),$
            TIME:maximus.time(allowed_i),$
            ALT:maximus.alt(allowed_i),$
@@ -86,6 +86,6 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
   print,"***********end resize_maximus.pro**********"
   print,''
 
-  RETURN, maximus
+  RETURN, resize_maximus
 
 END

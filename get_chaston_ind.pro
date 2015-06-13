@@ -6,26 +6,51 @@
 ;more info, since that's where this code comes from.
 
 FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB, $
-                         ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange
+                         ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange, $
+                         NORTHANDSOUTH=northAndSouth,HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd
 
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; If no provided locations, then don't restrict based on ILAT, MLT
+  defMinM     = 0
+  defMaxM     = 24
+  defMinI     = 50
+  defMaxI     = 85
+  defMinMC    = 10
+  defMaxNegMC = -10
+
+  ;For statistical auroral oval
+  defHwMAurOval=0
+  defHwMKpInd=7
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
   
   defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  defPref = "Dartdb_02282015--500-14999"
-  defCDBTimeFile = defLoaddataDir + defPref + "--cdbTime.sav"
-  defDBFile = defLoaddataDir + defPref + "--maximus.sav"
+  ;; defPref = "Dartdb_02282015--500-14999"
+  defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
+  defDBFile = defPref + "--maximus.sav"
 
+  defCDBTimeFile = defPref + "--cdbTime.sav"
   defChastDB_cleanIndFile = 'plot_indices_saves/good_i_for_original_Chaston_DB_after_Alfven_cleaner__20150402.sav'
 
+  IF ~KEYWORD_SET(minM) THEN minM=defMinM
+  IF ~KEYWORD_SET(maxM) THEN maxM=defMaxM
+  IF ~KEYWORD_SET(minI) THEN minI=defMinI
+  IF ~KEYWORD_SET(maxI) THEN maxI=defMaxI
+  IF ~KEYWORD_SET(minMC) THEN minMC=defMinMC
+  IF ~KEYWORD_SET(maxMC) THEN maxNegMC=defMaxNegMC
+
+  IF ~KEYWORD_SET(HwMAurOval) THEN HwMAurOval = defHwMAurOval
+  IF ~KEYWORD_SET(HwMKpInd) THEN HwMKpInd = defHwMKpInd
+
   IF NOT KEYWORD_SET(dbfile) AND NOT KEYWORD_SET(CHASTDB) THEN BEGIN
-     pref = "Dartdb_02282015--500-14999"
-     dbfile = pref + "--maximus.sav"
+
      loaddataDir = defLoaddataDir
+     dbFile = defDBFile
      cdbTimeFile = defCDBTimeFile
      IF FILE_TEST(cdbTimeFile) AND cdbTime EQ !NULL THEN restore,cdbTimeFile
+
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
         dbfile = "maximus.dat"
@@ -41,7 +66,15 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ENDELSE
 
   ;;generate indices based on restrictions in interp_plots.pro
-  ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM)
+  IF KEYWORD_SET(northAndSouth) THEN BEGIN
+     ind_region=cgsetunion( $
+                where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM), $
+                where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM))
+  ENDIF ELSE ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM)
+
+  ;want just Holzworth/Meng statistical auroral oval?
+  IF HwMAurOval THEN ind_region=cgsetintersection(ind_region,where(abs(maximus.ilat) GT auroral_zone(maximus.mlt,HwMKpInd,/lat)/(!DPI)*180.))
+
   ind_magc_ge10=where(maximus.mag_current GE minMC)
   ind_magc_leneg10=where(maximus.mag_current LE maxNegMC)
   ind_magc_geabs10=where(maximus.mag_current LE maxNegMC OR maximus.mag_current GE minMC)

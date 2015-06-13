@@ -5,16 +5,17 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='20150609'
+  date='20150611'
   Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'
   ;; outfile='Dartdb_' + date + '--500-14999--maximus.sav'
-  outfile='Dartdb_' + date + '--500-10000--maximus--only_below_aur_oval.sav'
+  ;; outfile='Dartdb_' + date + '--10001-14999--maximus--only_below_aur_oval.sav'
+  outfile='Dartdb_' + date + '--15000-16361--maximus--below_aur_oval.sav'
 
   ;; below_aur_ovalStr=''
-  ;; below_aur_ovalStr='below_aur_oval'
-  below_aur_ovalStr='--only_below_aur_oval'
+  ;; below_aur_ovalStr='--only_below_aur_oval'
+  below_aur_ovalStr='below_aur_oval'
 
   only_alfvenic=1
 
@@ -23,8 +24,10 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
 
   ;; min_orbit=500
   ;; max_orbit=15000
-  min_orbit=500
-  max_orbit=10000
+  ;; min_orbit=10001
+  ;; max_orbit=14999
+  min_orbit=15000
+  max_orbit=16999
 
   for j=min_orbit,max_orbit do begin
 
@@ -41,7 +44,7 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
               rdf_stats_dartmouth_as5_startstop_inc,result,dat
               if j GT min_orbit then begin
 
-                 IF only_alfvenic THEN alfvenic_i = WHERE(dat.alfvenic GT 0.5,/NULL) ELSE alfvenic_i = indgen(n_elements(dat.orbit)-1)
+                 IF only_alfvenic THEN alfvenic_i = WHERE(dat.alfvenic GT 0.5,/NULL) ELSE alfvenic_i = indgen(n_elements(dat.orbit))
                  IF n_elements(alfvenic_i) GT 0 THEN BEGIN
                     maximus={orbit:[maximus.orbit,dat.orbit(alfvenic_i)],$
                              alfvenic:[maximus.alfvenic,dat.alfvenic(alfvenic_i)],$

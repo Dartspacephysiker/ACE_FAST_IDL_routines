@@ -1,4 +1,4 @@
-;These are the money-makers. I think they'll work for showing the result!
+;These are the money makers. I think they'll work for showing the result!
 
 ;scatterplots of everything vs. everything plus histograms of individual quantities
 key_histos_plots_from_db,plot_i_file="PLOT_INDICES_North_all_IMF--0stable--OMNI_GSM_May_2_15.sav"

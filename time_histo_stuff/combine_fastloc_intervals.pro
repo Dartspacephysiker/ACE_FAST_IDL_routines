@@ -4,28 +4,32 @@
 ;the particle data).
 PRO combine_fastloc_intervals,fastLoc
 
-  date='20150410'
+  date='20150613'
 
   fastLoc_DB='/SPENCEdata/software/sdt/batch_jobs/FASTlocation/batch_output__intervals/'
   contents_file='./orbits_contained_in_fastloc_'+date+'.txt'
 
   ;; fNamePrefix='Dartmouth_fastloc_intervals'
+  ;; fNameSuffix=''
   fNamePrefix='Dartmouth_fastloc_intervals2'
-  outSuffix='intervals2'
+  fNameSuffix='below_aur_oval'
 
-  outFileSansPref = 'fastLoc_'+outSuffix+'--'+date
-  outFile = outFileSansPref+'.sav'
-  outTimeFile = outFileSansPref+'--times.sav'
+  outDir='/SPENCEdata/Research/Cusp/database/time_histos/'
+  outSuffix='15000-16361--below_aur_oval'
+  outFileSansFExt = 'fastLoc_intervals2--'+outSuffix+'--'+date
+  outFile = outFileSansFExt+'.sav'
+  outTimeFile = outFileSansFExt+'--times.sav'
+  outTimeFile_raw = outFileSansFExt+'--times.sav_raw'
 
  ;open file to write list of orbits included
   OPENW,outlun,contents_file,/get_lun
 
-  min_orbit=500
-  max_orbit=11000
+  min_orbit=15000
+  max_orbit=16361
 
   FOR j=min_orbit,max_orbit DO BEGIN
      
-     filename=fNamePrefix+'_'+strcompress(j,/remove_all)+'_0'
+     filename=fNamePrefix+'_'+strcompress(j,/remove_all)+'_0'+fNameSuffix
                                 ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
      result=file_which(fastLoc_DB,filename)
      IF result THEN BEGIN
@@ -49,21 +53,21 @@ PRO combine_fastloc_intervals,fastLoc
                  fastLoc=dat
               ENDELSE
            ENDIF
-           filename=fNamePrefix+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
+           filename=fNamePrefix+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+fNameSuffix
         ENDFOR
      ENDIF ELSE PRINT,"Couldn't open " + filename + "!!!"
   ENDFOR
   
-  save,fastLoc,filename='fastLoc_'+outSuffix+'--'+date+'.sav'
+  save,fastLoc,FILENAME=outDir+outFile
   
   ;do fastloctimes
   fastloc_times = str_to_time(fastLoc.time)
   fastLoc_delta_t = shift(fastLoc_Times,-1)-fastLoc_Times
-  save,fastLoc_Times,fastLoc_delta_t,FILENAME='fastLoc_'+outSuffix+'--'+date+'--times.sav_raw'
+  save,fastLoc_Times,fastLoc_delta_t,FILENAME=outDir+outTimeFile_raw
   fastLoc_delta_t[-1] = 10.0                                ;treat last element specially, since otherwise it is a huge negative number
   fastLoc_delta_t = ROUND(fastLoc_delta_t*4.0)/4.0          ;round to nearest quarter of a second
   fastLoc_delta_t(WHERE(fastLoc_delta_t GT 10.0)) = 10.0    ;many events with a large delta_t correspond to ends of intervals/orbits
-  save,fastloc_times,fastLoc_delta_t,filename='fastLoc_'+outSuffix+'--'+date+'--times.sav'
+  save,fastloc_times,fastLoc_delta_t,filename=outDir+outTimeFile
 
   RETURN
   

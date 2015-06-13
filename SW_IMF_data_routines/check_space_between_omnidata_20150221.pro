@@ -7,7 +7,7 @@
 
 
 ;db in memory
-restore,'../../database/sw_omnidata/sw_data.dat'
+restore,dataDir+'sw_omnidata/sw_data.dat'
 
 ;where to save data
 culledDataStr="/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata.dat"

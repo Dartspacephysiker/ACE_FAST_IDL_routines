@@ -1,8 +1,0 @@
-;;
-;; IDLWAVE catalog for library spence
-;; Automatically Generated -- do not edit.
-;; Created by idlwave_catalog on Tue Jun  9 10:03:25 2015
-;;
-(setq idlwave-library-catalog-libname "spence")
-(setq idlwave-library-catalog-routines
- '(("interp_contplot_multi" pro nil (lib "interp_contplot_multi_filledwithdetritus.pro" nil "spence") "%s, h2dData, h2dTitle" (nil ("CONTOUR")))))
