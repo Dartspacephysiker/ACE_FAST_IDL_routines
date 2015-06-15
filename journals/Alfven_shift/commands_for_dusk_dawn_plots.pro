@@ -3,7 +3,7 @@
 
 PRO commands_for_dusk_dawn_plots
 
-  date='20150611'
+  date='20150613'
   dbDate='20150611'
 
   hemi='North'
@@ -14,8 +14,8 @@ PRO commands_for_dusk_dawn_plots
 
   ;dirs='all_IMF'
   ;; dirs=['dawn-north', 'dawn-south', 'dusk-north', 'dusk-south']
-  ;; dirs=['duskward', 'dawnward','bzSouth','bzNorth']
-  dirs=['duskward', 'dawnward']
+  dirs=['duskward', 'dawnward','bzSouth','bzNorth']
+  ;; dirs=['duskward', 'dawnward']
   ;; dirs=['bzNorth','bzSouth']
 
   ;Plot prefix?
@@ -23,11 +23,12 @@ PRO commands_for_dusk_dawn_plots
   plotDir="plots/Foolin_round_" + date + "/"
 ;;  plotSuff="Dartdb_" + dbDate + "--" + "pFlux_GE_0.1"
 ;;  plotSuff="Dartdb_" + dbDate + "--" + "charE_3e2_to_5e3--"
-  plotSuff="Dartdb_" + dbDate
+  ;; plotSuff="--high_chare_range--Dartdb_" + dbDate
+  plotSuff="--Dartdb_" + dbDate
   ;; plotprf="LaBelle_Bin_mtg--" + date + "/Dartdb_" + dbDate
 
   ;; mask min?
-  mskm=3
+  mskm=2
 
   ;; midnight?
   midn=!NULL
@@ -40,8 +41,8 @@ PRO commands_for_dusk_dawn_plots
   ;; numOrbLim=2
 
   ;; whole cap?
-  wc=!NULL
-;;   wc=1
+  ;; wc=!NULL
+  wc=1
 
   ;; logavg=!NULL
   logavgPlot=1
@@ -75,7 +76,8 @@ PRO commands_for_dusk_dawn_plots
 
   ;charERange?
 ;;  charERange=[250,5e3]
-  charERange=[4,250]
+  ;; charERange=[300,4e3]
+ charERange=[4,300]
 
   ;;Poynt range?
 ;; poyntRange=!NULL

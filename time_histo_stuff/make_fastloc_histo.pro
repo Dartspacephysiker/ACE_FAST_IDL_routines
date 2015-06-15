@@ -60,7 +60,7 @@ PRO make_fastloc_histo,TIMEHISTO=timeHisto, FASTLOC_INDS=fastLoc_inds, $
   ;; IF NOT KEYWORD_SET(delta_T) THEN delta_T = defDelta_T
 
   ;MLT
-  IF NOT KEYWORD_SET(minMLT) THEN minMLT = defMinMLT
+  IF NOT N_ELEMENTS(minMLT) EQ 0 THEN minMLT = defMinMLT
   IF NOT KEYWORD_SET(maxMLT) THEN maxMLT = defMaxMLT
   IF NOT KEYWORD_SET(binMLT) THEN binMLT = defBinMLT
 

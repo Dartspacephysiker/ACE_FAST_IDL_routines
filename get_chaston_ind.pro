@@ -49,7 +49,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
      loaddataDir = defLoaddataDir
      dbFile = defDBFile
      cdbTimeFile = defCDBTimeFile
-     IF FILE_TEST(cdbTimeFile) AND cdbTime EQ !NULL THEN restore,cdbTimeFile
+     IF FILE_TEST(cdbTimeFile) AND N_ELEMENTS(cdbTime) EQ 0 THEN restore,cdbTimeFile
 
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
@@ -152,8 +152,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   IF good_i NE !NULL THEN ind_region_magc_geabs10_ACEstart=cgsetintersection(ind_region_magc_geabs10_ACEstart,good_i)
 
   ;Re-make cdbTime if we don't have it made already
-  IF cdbTime EQ !NULL THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $
-  ELSE cdbTime = cdbTime(ind_region_magc_geabs10_ACEstart)
+  ;; IF N_ELEMENTS(cdbTime) EQ 0 THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $
+  ;; ELSE cdbTime = cdbTime(ind_region_magc_geabs10_ACEstart)
   
   printf,lun,""
   printf,lun,"****From get_chaston_ind.pro****"

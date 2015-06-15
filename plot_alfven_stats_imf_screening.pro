@@ -1,15 +1,12 @@
 ;+
 ; NAME: PLOT_ALFVEN_STATS_IMF_SCREENING
 ;
-;
-;
 ; PURPOSE: Plot FAST data processed by Chris Chaston's ALFVEN_STATS_5 procedure (with mods).
 ;          All data are binned by MLT and ILAT (bin sizes can be set manually).
 ;
 ; CALLING SEQUENCE: PLOT_ALFVEN_STATS_IMF_SCREENING
 ;
 ; INPUTS:
-;
 ;
 ; OPTIONAL INPUTS:   
 ;                *DATABASE PARAMETERS
@@ -152,28 +149,16 @@
 ;
 ; KEYWORD PARAMETERS:
 ;
-;
-;
 ; OUTPUTS:
-;
-;
 ;
 ; OPTIONAL OUTPUTS: 
 ;                    MAXIMUS           :  Return maximus structure used in this pro.
 ;
-;
-;
 ; COMMON BLOCKS:
-;
-;
 ;
 ; RESTRICTIONS:
 ;
-;
-;
 ; PROCEDURE:
-;
-;
 ;
 ; EXAMPLE: 
 ;     Use Chaston's original (ALFVEN_STATS_3) database, only including orbits falling in the range 1000-4230
@@ -273,13 +258,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defClockStr = 'dawnward'
   
-  defAngleLim1 = 45.0
-  defAngleLim2 = 135.0
+  ;; defAngleLim1 = 45.0
+  ;; defAngleLim2 = 135.0
+  defAngleLim1 = 60.0
+  defAngleLim2 = 120.0
 
   ; assorted
   defMaskMin = 1
 
-  defPlotDir = 'plots/'
+  defPlotDir = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'
   defRawDir = 'rawsaves/'
 
   defOutSummary = 1 ;for output plot summary
@@ -287,7 +274,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
 
   ; Handle MLT and ILAT
-  IF minMLT NE !NULL THEN minM = minMLT
+  IF N_ELEMENTS(minMLT) NE 0 THEN minM = minMLT
   IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
 
   ;;Bin sizes for 2D histos
@@ -308,23 +295,23 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;; maxOrb=8500                   ;8292 for Strangeway study
   ;;nOrbits = maxOrb - minOrb + 1
   
-  IF NOT KEYWORD_SET(charERange) THEN charERange = defCharERange         ; 4,~300 eV in Strangeway
+  IF N_ELEMENTS(charERange) EQ 0 THEN charERange = defCharERange         ; 4,~300 eV in Strangeway
 
-  IF NOT KEYWORD_SET(altitudeRange) THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
+  IF N_ELEMENTS(altitudeRange) EQ 0 THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
   
-  IF NOT KEYWORD_SET(minM) THEN minM = defMinM
-  IF NOT KEYWORD_SET(maxM) THEN maxM = defMaxM
+  IF N_ELEMENTS(minM) EQ 0 THEN minM = defMinM
+  IF N_ELEMENTS(maxM) EQ 0 THEN maxM = defMaxM
   
-  IF NOT KEYWORD_SET(hemi) THEN hemi = "North"
+  IF N_ELEMENTS(hemi) EQ 0 THEN hemi = "North"
 
   ;take care of hemisphere
   IF hemi EQ "North" THEN BEGIN
-     IF NOT KEYWORD_SET(minI) THEN minI = defMinI
-     IF NOT KEYWORD_SET(maxI) THEN maxI = defMaxI
+     IF N_ELEMENTS(minI) EQ 0 THEN minI = defMinI
+     IF N_ELEMENTS(maxI) EQ 0 THEN maxI = defMaxI
   ENDIF ELSE BEGIN
      IF hemi EQ "South" THEN BEGIN
-        IF NOT KEYWORD_SET(minI) THEN minI = -defMaxI
-        IF NOT KEYWORD_SET(maxI) THEN maxI = -defMinI
+        IF N_ELEMENTS(minI) EQ 0 THEN minI = -defMaxI
+        IF N_ELEMENTS(maxI) EQ 0 THEN maxI = -defMinI
      ENDIF ELSE BEGIN
         PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
         PRINT,"Defaulting to 'North'."
@@ -333,11 +320,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDELSE
 
   ;Auroral oval
-  IF ~KEYWORD_SET(HwMAurOval) THEN HwMAurOval = defHwMAurOval
-  IF ~KEYWORD_SET(HwMKpInd) THEN HwMKpInd = defHwMKpInd
+  IF N_ELEMENTS(HwMAurOval) EQ 0 THEN HwMAurOval = defHwMAurOval
+  IF N_ELEMENTS(HwMKpInd) EQ 0 THEN HwMKpInd = defHwMKpInd
 
-  IF NOT KEYWORD_SET(minMC) THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
+  IF N_ELEMENTS(minMC) EQ 0 THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
+  IF N_ELEMENTS(maxNEGMC) EQ 0 THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -369,8 +356,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;satellite data options
   
-  IF NOT KEYWORD_SET(satellite) THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF NOT KEYWORD_SET(omni_Coords) THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
+  IF N_ELEMENTS(satellite) EQ 0 THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
+  IF N_ELEMENTS(omni_Coords) EQ 0 THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
 
   IF delay EQ !NULL THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
                                                                        ;Bin recommends something like 11min
@@ -379,16 +366,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF includeNoConsecData EQ !NULL THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
                                                                        ;there's no way to calculate IMF stability
                                                                        ;Only valid for stableIMF GE 1
-  IF NOT KEYWORD_SET(checkBothWays) THEN checkBothWays = defCheckBothWays       ;
+  IF N_ELEMENTS(checkBothWays) EQ 0 THEN checkBothWays = defCheckBothWays       ;
   
-  IF NOT KEYWORD_SET(Bx_over_ByBz_Lim) THEN Bx_over_ByBz_Lim = defBx_over_ByBz_Lim       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
+  IF N_ELEMENTS(Bx_over_ByBz_Lim) EQ 0 THEN Bx_over_ByBz_Lim = defBx_over_ByBz_Lim       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
   
   
   ;;Want to make plots in plotDir?
-  IF NOT KEYWORD_SET(plotDir) THEN plotDir = defPlotDir
+  IF N_ELEMENTS(plotDir) EQ 0 THEN plotDir = defPlotDir
   ;;plotPrefix='NESSF2014_reproduction_Jan2015'
 
-  IF NOT KEYWORD_SET(rawDir) THEN rawDir=defRawDir
+  IF N_ELEMENTS(rawDir) EQ 0 THEN rawDir=defRawDir
  
   ;;Write output file with data params? Only possible if showPlotsNoSave=0...
   IF KEYWORD_SET(showPlotsNoSave) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
@@ -397,7 +384,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF 
 
   ;;Write plot data output for Bin?
-  IF NOT KEYWORD_SET(dataDir) THEN dataDir = defDataDir
+  IF N_ELEMENTS(dataDir) EQ 0 THEN dataDir = defDataDir
 
   ;;Any of multifarious reasons for needing output?
   IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
@@ -444,7 +431,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Which IMF clock angle are we doing?
   ;;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
-  IF NOT KEYWORD_SET(clockStr) THEN clockStr = defClockStr
+  IF N_ELEMENTS(clockStr) EQ 0 THEN clockStr = defClockStr
 
   ;;How to set angles? Note, clock angle is measured with
   ;;Bz North at zero deg, ranging from -180<clock_angle<180
@@ -460,7 +447,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Set minimum allowable number of events for a histo bin to be displayed
   maskStr=''
-  IF NOT KEYWORD_SET(maskMin) THEN maskMin = defMaskMin $
+  IF ~N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
   ELSE BEGIN
      IF maskMin GT 1 THEN BEGIN
         maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
@@ -503,8 +490,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(noPosEflux) AND KEYWORD_SET (logEfPlot) THEN absEflux = 1
 
   ;;For linear or log EFlux plotrange
-  IF NOT KEYWORD_SET(EPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logEfPlot) THEN EPlotRange=[0.01,100] ELSE EPlotRange=[-2,2]
+  IF N_ELEMENTS(EPlotRange) EQ 0 THEN BEGIN
+     IF N_ELEMENTS(logEfPlot) EQ 0 THEN EPlotRange=[0.01,100] ELSE EPlotRange=[-2,2]
   ENDIF
   
   ;;######Poynting flux
@@ -520,13 +507,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(noPosPflux) AND KEYWORD_SET (logPfPlot) THEN absPflux = 1
 
   ;;For linear or log PFlux plotrange
-  IF NOT KEYWORD_SET(PPlotRange) THEN BEGIN
-     IF NOT KEYWORD_SET(logPfPlot) THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1.5288,0.39794]
+  IF N_ELEMENTS(PPlotRange) EQ 0 THEN BEGIN
+     IF N_ELEMENTS(logPfPlot) EQ 0 THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1.5288,0.39794]
   ENDIF
 
   ;;######Ion flux (up)
   ;;For linear or log ion flux plotrange
-  IF NOT KEYWORD_SET(iPlotRange) THEN iPlotRange=(KEYWORD_SET(logIfPlot)) ? [6,9.5] : [1e6,1.5e9]
+  IF N_ELEMENTS(iPlotRange) EQ 0 THEN iPlotRange=(KEYWORD_SET(logIfPlot)) ? [6,9.5] : [1e6,1.5e9]
   
   IF KEYWORD_SET(logIfPlot) AND NOT KEYWORD_SET(absIflux) AND NOT KEYWORD_SET(noNegIflux) AND NOT KEYWORD_SET(noPosIflux) THEN BEGIN 
      print,"Warning!: You're trying to do log(ionFlux) plots but you don't have 'absIflux', 'noNegIflux', or 'noPosIflux' set!"
@@ -550,9 +537,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(noPosCharE) AND KEYWORD_SET (logCharEPlot) THEN absCharE = 1
 
   ;;For linear or log charE plotrange
-  IF NOT KEYWORD_SET(CharEPlotRange) THEN BEGIN
-;;     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
-     IF NOT KEYWORD_SET(logCharEPlot) THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
+  IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN
+;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
+     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
   ENDIF
 
   ;;********************************************
@@ -564,8 +551,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
   ENDELSE
 
-  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
-  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
+  IF N_ELEMENTS(plotSuffix) EQ 0 THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
+  IF N_ELEMENTS(plotPrefix) EQ 0 THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
 
   smoothStr=""
 
@@ -1284,7 +1271,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dOrbStr.title="Num Contributing Orbits"
 
      ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-     IF NOT KEYWORD_SET(orbContribRange) OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
+     IF N_ELEMENTS(orbContribRange) EQ 0 OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
 
      ;;Mask all bins that don't have requisite number of orbits passing through
      IF KEYWORD_SET(numOrbLim) THEN BEGIN 
@@ -1343,7 +1330,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDFOR
 
      h2dTotOrbStr.title="Total Orbits"
-     IF NOT KEYWORD_SET(orbTotRange) OR N_ELEMENTS(orbTotRange) NE 2 THEN h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)] $ 
+     IF N_ELEMENTS(orbTotRange) EQ 0 OR N_ELEMENTS(orbTotRange) NE 2 THEN h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)] $ 
      ELSE h2dTotOrbStr.lim=orbTotRange
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
@@ -1361,7 +1348,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
      h2dFreqOrbStr.title="Orbit Frequency"
      ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
-     IF NOT KEYWORD_SET(orbFreqRange) OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
+     IF N_ELEMENTS(orbFreqRange) EQ 0 OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
 
      IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
         IF keepMe THEN dataName=[dataName,"orbFreq_"] 
@@ -1400,8 +1387,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(divNEvByApplicable) THEN nEvByAppStr="Applicable_"
      h2dNEvPerOrbStr.title= logNEvStr + 'N Events per ' + nEvByAppStr + 'Orbit'
 
-     IF NOT KEYWORD_SET(nEventPerOrbRange) OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
-        IF NOT KEYWORD_SET(logNEventPerOrb) THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=[-2,1]
+     IF N_ELEMENTS(nEventPerOrbRange) EQ 0 OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
+        IF N_ELEMENTS(logNEventPerOrb) EQ 0 THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=[-2,1]
      ENDIF ELSE h2dNEvPerOrbStr.lim=nEventPerOrbRange
      
      IF KEYWORD_SET(logNEventPerOrb) THEN BEGIN 
@@ -1424,11 +1411,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
 
      ;Get the appropriate divisor for IMF conditions
-     get_fastloc_inds__IMF_conds,fastLoc_inds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                                BYMIN=byMin,BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, $
-                                                /MAKE_OUTINDSFILE
+     get_fastloc_inds_IMF_conds,fastLoc_inds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                 BYMIN=byMin,BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                 FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, /MAKE_OUTINDSFILE
+
      make_fastloc_histo,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
                         MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
                         MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
@@ -1454,8 +1441,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF KEYWORD_SET(logNEventPerMin) THEN logNEvStr="Log "
      h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
 
-     IF NOT KEYWORD_SET(nEventPerMinRange) OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
-        IF NOT KEYWORD_SET(logNEventPerMin) THEN h2dNEvPerMinStr.lim=[0,28] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(40.0)]
+     IF N_ELEMENTS(nEventPerMinRange) EQ 0 OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
+        IF N_ELEMENTS(logNEventPerMin) EQ 0 THEN h2dNEvPerMinStr.lim=[0,21] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(40.0)]
      ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
      
      IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
@@ -1495,18 +1482,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      dataRawPtr=SHIFT(dataRawPtr,-2) 
   ENDIF
 
-  IF NOT KEYWORD_SET(squarePlot) THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
+  IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
                            rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
                            filename='/SPENCEdata/Research/Cusp/ACE_FAST/temp/polarplots_'+paramStr+plotSuffix+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
-     IF NOT KEYWORD_SET(justData) AND KEYWORD_SET(squarePlot) THEN $
+     IF N_ELEMENTS(justData) EQ 0 AND KEYWORD_SET(squarePlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
                   Background='White', $
                   WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotMedOrAvg,1) $
-     ELSE IF NOT KEYWORD_SET(justData) THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
+     ELSE IF N_ELEMENTS(justData) EQ 0 THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
         ;;    cgWindow,'interp_polar_plot',[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                 ;;             h2dStr[0].lim,Background="White",wxsize=800,wysize=600, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
@@ -1534,7 +1521,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                      /PNG, Width=800, DELETE_PS = del_PS
      
      ENDIF ELSE BEGIN
-        IF NOT KEYWORD_SET(justData) THEN BEGIN 
+        IF N_ELEMENTS(justData) EQ 0 THEN BEGIN 
            CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
            PRINTF,LUN, "Creating output files..." 
            
