@@ -231,7 +231,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
      ENDFOR
   ENDFOR
 
-  IF saveFile THEN saveStr+=',startDate,stopDate,stormType,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
+  IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
   ;Now plot geomag quantities
   IF KEYWORD_SET(no_superpose) THEN BEGIN
      plotWind=WINDOW(WINDOW_TITLE="SYM-H plots", $
@@ -350,17 +350,19 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
            IF KEYWORD_SET(nEventHists) THEN BEGIN                                                ;Histos of Alfvén events relative to storm epoch
               
-              IF i GT 0 THEN BEGIN
+              IF i EQ 0 THEN BEGIN
+                 nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
+                                   MAX=tAfterStorm,MIN=-tBeforeStorm, $
+                                   BINSIZE=nEvBinsize/60.)
+                 nEvTot=N_ELEMENTS(plot_i)
+                 tot_plot_i_list=LIST(plot_i)
+              ENDIF ELSE BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
                                    MAX=tAfterStorm,MIN=-tBeforeStorm, $
                                    BINSIZE=nEvBinsize/60., $
                                    INPUT=nEvHist)
                  nEvTot+=N_ELEMENTS(plot_i)
-              ENDIF ELSE BEGIN
-                 nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-                                   MAX=tAfterStorm,MIN=-tBeforeStorm, $
-                                   BINSIZE=nEvBinsize/60.)
-                 nEvTot=N_ELEMENTS(plot_i)
+                 tot_plot_i_list.add,plot_i
               ENDELSE
            ENDIF                                                                                 ;end nEventHists
         ENDIF
@@ -385,7 +387,8 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                      YTITLE='Cumulative number of Alfvén events', $
                      /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
 
-        IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize'
+        ;; IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize'
+        IF saveFile THEN saveStr+=',cNEvHist,nEvHist,tBin,nEvBinsize,tot_plot_i_list'
      ENDIF
 
   ENDIF

@@ -19,6 +19,7 @@
 ;                              STATFILE          : Save generated K-S statistics to this file.
 ;                              DO_KSSTATS        : Calculate Kolmogorov-Smirnov statistic and associated p-value for the
 ;                                                  storm-time cdf and random-time cdf. (Two-sample K-S statistic.)
+;                                                  USE COMPARE_STORMTIMES_AND_RANDOMTIMES TO DO K-S ANALYSIS.
 ;
 ; OUTPUTS:                     
 ;
@@ -33,18 +34,20 @@
 ;-
 
 
-PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDATE=startDate, STOPDATE=stopDate,STORMTYPE=stormType, $
+PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE=startDate, STOPDATE=stopDate,STORMTYPE=stormType, $
    TBEFORERANDTIME=tBeforeRandTime,TAFTERRANDTIME=tAfterRandTime, $
    MAXIND=maxInd,LOG_DBQUANTITY=log_DBquantity, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    USE_SYMH=use_symh, $
    NO_SUPERPOSE=no_superpose, $
    NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, $
-   USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
-   DO_KSSTATS=do_ksstats
+   USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate ;, $
+   ;; DO_KSSTATS=do_ksstats
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
-
+  ;; hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
+  ;;         STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
+  date='20150615'
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
   defTBeforeRandTime  = 22.0D                                                                       ;in hours
@@ -80,12 +83,14 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
   ;; ;For nEvent histos
   defnEvBinsize    = 60.0D                                                                        ;in minutes
 
-  defDo_KSStats    = 0
+  ;; defDo_KSStats    = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Check defaults
-  IF N_ELEMENTS(tBeforeRandTime) EQ 0 THEN tBeforeRandTime = defTBeforeRandTime
-  IF N_ELEMENTS(tAfterRandTime) EQ 0 THEN tAfterRandTime = defTAfterRandTime
+
+  ;; ;; Actually, let's handle these below when we re-load one of the storm files
+  ;; IF N_ELEMENTS(tBeforeRandTime) EQ 0 THEN tBeforeRandTime = defTBeforeRandTime
+  ;; IF N_ELEMENTS(tAfterRandTime) EQ 0 THEN tAfterRandTime = defTAfterRandTime
 
   IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
   IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
@@ -106,19 +111,44 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
 
   IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
 
-  IF N_ELEMENTS(do_KSStats) EQ 0 THEN do_KSStats = defDo_KSStats
+  ;; IF N_ELEMENTS(do_KSStats) EQ 0 THEN do_KSStats = defDo_KSStats
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
   restore,dataDir+swDBDir+swDBFile
-  restore,dataDir+stormDir+stormFile
-  totNRandTime=N_ELEMENTS(randTStruct.time)
 
   IF ~use_SYMH THEN restore,dataDir+DST_AEDir+DST_AEFile
 
   restore,dataDir+defDBDir+DBFile
   restore,dataDir+defDBDir+DB_tFile
 
+  ;; Check storm type to determine which file we restore
+  IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
+  IF stormType EQ 1 THEN BEGIN  ;Only large storms
+     stormStr='large'
+  ENDIF ELSE BEGIN
+     IF stormType EQ 0 THEN BEGIN
+        stormStr='small'
+     ENDIF ELSE BEGIN
+        IF stormType EQ 2 THEN BEGIN
+           stormStr='all'
+        ENDIF
+     ENDELSE
+  ENDELSE
+  restore,dataDir+stormDir+stormFile[stormType]
+
+  ;get a few variables from restored storm file
+  totNRandTime=N_ELEMENTS(geomag_plot_i_list)
+  tBeforeRandTime=tBeforeStorm
+  tAfterRandTime=tAfterStorm
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;Make a randomtimes struct which parallels that of the stormStruct used in the pro superpose_storms[...]
+  
+  tempTimes=RANDOMU(seed,totNRandTime,/DOUBLE)*(stopDate-startDate)+startDate
+  tempTimes=tempTimes(SORT(tempTimes))
+  randTStruct={time:tempTimes, $
+               tStamp:time_to_str(tempTimes)}
+ 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all randomtimes occuring within specified range
 
@@ -138,28 +168,11 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
      
      randTStruct_inds=WHERE(randTStruct.time GE startDate AND randTStruct.time LE stopDate,/NULL)
      
-     ;; Check storm type
-     IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
-     IF stormType EQ 1 THEN BEGIN                                                                ;Only large storms
-        ;; stormStruct_inds=cgsetintersection(stormStruct_inds,WHERE(stormStruct.is_largeStorm EQ 1,/NULL))
-        stormStr='large'
-     ENDIF ELSE BEGIN
-        IF stormType EQ 0 THEN BEGIN
-           ;; stormStruct_inds=cgsetintersection(stormStruct_inds,WHERE(stormStruct.is_largeStorm EQ 0,/NULL))
-           stormStr='small'
-        ENDIF ELSE BEGIN
-           IF stormType EQ 2 THEN BEGIN
-              stormStr='all'
-           ENDIF
-        ENDELSE
-     ENDELSE
-     restore,dataDir+stormDir+stormFile[stormType]
-
      PRINT,"Looking at " + stormStr + " storms per user instruction..."
-     PRINT,STRCOMPRESS(N_ELEMENTS(stormStruct_inds),/REMOVE_ALL)+" storms out of " + STRCOMPRESS(totNStorm,/REMOVE_ALL) + " selected"
+     PRINT,STRCOMPRESS(N_ELEMENTS(randTStruct_inds),/REMOVE_ALL)+" storms out of " + STRCOMPRESS(totNRandTime,/REMOVE_ALL) + " selected"
 
-     nRandTimes=N_ELEMENTS(randTStruct_inds)
-     IF nRandTimes EQ 0 THEN BEGIN
+     nRandTime=N_ELEMENTS(randTStruct_inds)
+     IF nRandTime EQ 0 THEN BEGIN
         PRINT,"No randTimes found for given time range:"
         PRINT,"Start date: ",time_to_str(startDate)
         PRINT,"Stop date: ",time_to_str(stopDate)
@@ -169,8 +182,8 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
      
      ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
      datStartStop = MAKE_ARRAY(totNRandTime,2,/DOUBLE)
-     datStartStop(*,0) = randTStruct.time - tBeforeStorm*3600.                          ;(*,0) are the times before which we don't want data for each storm
-     datStartStop(*,1) = randTStruct.time + tAfterStorm*3600.                           ;(*,1) are the times after which we don't want data for each storm
+     datStartStop(*,0) = randTStruct.time - tBeforeRandTime*3600.                    ;(*,0) are the times before which we don't want data for each storm
+     datStartStop(*,1) = randTStruct.time + tAfterRandTime*3600.                     ;(*,1) are the times after which we don't want data for each storm
      
      IF ~use_SYMH THEN BEGIN                               ;Use DST for plots, not SYM-H
         ;; Now get a list of indices for DST data to be plotted for the storms found above
@@ -182,7 +195,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
         geomag_min = MIN(geomag_dat_list(0))                                                     ;For plots, we need the range
         geomag_max = MAX(geomag_dat_list(0))
 
-        FOR i=1,nStorms-1 DO BEGIN                                                               ;Then update it
+        FOR i=1,nRandTime-1 DO BEGIN                                                               ;Then update it
            geomag_plot_i_list.add,WHERE(DST.time GE datStartStop(randTStruct_inds(i),0) AND $
                                         DST.time LE datStartStop(randTStruct_inds(i),1))
            geomag_dat_list.add,dst.dst(geomag_plot_i_list(i))
@@ -205,7 +218,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
         geomag_min = MIN(geomag_dat_list(0))                                                     ;For plots, we need the range
         geomag_max = MAX(geomag_dat_list(0))
 
-        FOR i=1,nStorms-1 DO BEGIN                                                               ;Then update it
+        FOR i=1,nRandTime-1 DO BEGIN                                                               ;Then update it
            geomag_plot_i_list.add,WHERE(swDat_UTC GE datStartStop(randTStruct_inds(i),0) AND $
                                         swDat_UTC LE datStartStop(randTStruct_inds(i),1))
            geomag_dat_list.add,sw_data.sym_h.dat(geomag_plot_i_list(i))
@@ -224,9 +237,9 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
   ;Get nearest events in Chaston DB
   ;; cdb_randT_t=MAKE_ARRAY(totNRandT,2,/DOUBLE)
   ;; cdb_randT_i=MAKE_ARRAY(totNRandT,2,/L64)
-  cdb_randT_t=MAKE_ARRAY(nRandTs,2,/DOUBLE)
-  cdb_randT_i=MAKE_ARRAY(nRandTs,2,/L64)
-  FOR i=0,nRandTs-1 DO BEGIN
+  cdb_randT_t=MAKE_ARRAY(nRandTime,2,/DOUBLE)
+  cdb_randT_i=MAKE_ARRAY(nRandTime,2,/L64)
+  FOR i=0,nRandTime-1 DO BEGIN
      FOR j=0,1 DO BEGIN
         tempClosest=MIN(ABS(datStartStop(randTStruct_inds(i),j)-cdbTime),tempClosest_i)
         cdb_randT_i(i,j)=tempClosest_i
@@ -258,11 +271,11 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
      xTitle='Hours since randT commencement'
      yTitle=(~use_SYMH) ? 'DST (nT)' : 'SYM-H (nT)'
      
-     xRange=[-tBeforeRandT,tAfterRandT]
+     xRange=[-tBeforeRandTime,tAfterRandTime]
      yRange=[geomag_min,geomag_max]
      ;; yRange=[-350,50]
      
-     FOR i=0,nRandTs-1 DO BEGIN
+     FOR i=0,nRandTime-1 DO BEGIN
 
         plot=plot((geomag_time_list(i)-randTStruct.time(randTStruct_inds(i)))/3600.,geomag_dat_list(i), $
                   XTITLE=xTitle, $
@@ -288,10 +301,9 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
      
      ;; Get ranges for plots
      maxMinutes=MAX((cdbTime(cdb_randT_i(*,1))-cdbTime(cdb_randT_i(*,0)))/3600.,longestRandT_i,MIN=minMinutes)
-     minMaxDat=MAKE_ARRAY(nRandTs,2,/DOUBLE)
-     
-     
-     FOR i=0,nRandTs-1 DO BEGIN
+
+     minMaxDat=MAKE_ARRAY(nRandTime,2,/DOUBLE) 
+     FOR i=0,nRandTime-1 DO BEGIN
         minMaxDat(i,1)=MAX(maximus.(maxInd)(cdb_randT_i(i,0):cdb_randT_i(i,1)),MIN=tempMin)
         minMaxDat(i,0)=tempMin
      ENDFOR
@@ -305,12 +317,13 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
      ENDELSE
      
      ;; now plot DB quantity
-     xTitle='Hours since randT commencement'
+     xTitle='Hours since randomly selected time'
      ;; yTitle='Maximus:
      
-     xRange=[-tBeforeRandT,tAfterRandT]
+     xRange=[-tBeforeRandTime,tAfterRandTime]
      yRange=[geomag_min,geomag_max]
-     FOR i=0,nRandTs-1 DO BEGIN
+
+     FOR i=0,nRandTime-1 DO BEGIN
         
         ;; get appropriate indices
         plot_i=cgsetintersection(good_i,indgen(cdb_randT_i(i,1)-cdb_randT_i(i,0)+1)+cdb_randT_i(i,0))
@@ -352,19 +365,28 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
 
            IF KEYWORD_SET(nEventHists) THEN BEGIN                                                ;Histos of Alfvén events relative to randT epoch
               
-              IF i GT 0 THEN BEGIN
+              IF i EQ 0 THEN BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-                                   MAX=tAfterRandT,MIN=-tBeforeRandT, $
-                                   BINSIZE=nEvBinsize/60., $
-                                   INPUT=nEvHist)
-                 nEvTot+=N_ELEMENTS(plot_i)
+                                   MAX=tAfterRandTime,MIN=-tBeforeRandTime, $
+                                   BINSIZE=nEvBinsize/60.)
+
+                 nEvTot=N_ELEMENTS(plot_i)
+
+                 ;; IF KEYWORD_SET(do_KSStats) THEN tot_plot_i = plot_i
+
               ENDIF ELSE BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-                                   MAX=tAfterRandT,MIN=-tBeforeRandT, $
-                                   BINSIZE=nEvBinsize/60.)
-                 nEvTot=N_ELEMENTS(plot_i)
+                                   MAX=tAfterRandTime,MIN=-tBeforeRandTime, $
+                                   BINSIZE=nEvBinsize/60., $
+                                   INPUT=nEvHist)
+
+                 nEvTot+=N_ELEMENTS(plot_i) 
+
+                 ;; IF KEYWORD_SET(do_KSStats) THEN tot_plot_i = [tot_plot_i,plot_i]                ;Gather inds for K-S analysis
+
               ENDELSE
            ENDIF                                                                                 ;end nEventHists
+           
         ENDIF
      
      ENDFOR
@@ -374,27 +396,26 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIMES=nRandTimes,STARTDA
                         DIMENSIONS=[1200,900])
         plot_nEv=plot(tBin,nEvHist, $
                       /STAIRSTEP, $
-                      TITLE='Number of Alfvén events relative to randT epoch for ' + randTStr + ' randTs, ' + $
+                      TITLE='Random epochs for comparison with ' + STRCOMPRESS(nRandTime,/REMOVE_ALL) + $
+                      ' ' + stormStr + ' storms, ' + $
                       randTStruct.tStamp(randTStruct_inds(0)) + " - " + $
                       randTStruct.tStamp(randTStruct_inds(-1)), $
-                      XTITLE='Hours since randT commencement', $
+                      XTITLE='Hours since randomly selected time', $
                       YTITLE='Number of Alfvén events', $
                       /CURRENT, LAYOUT=[2,1,1],COLOR='red')
 
         cNEvHist = TOTAL(nEvHist, /CUMULATIVE) / nEvTot
         cdf_nEv=plot(tBin,cNEvHist, $
-                     XTITLE='Hours since randT commencement', $
+                     XTITLE='Hours since randomly selected time', $
                      YTITLE='Cumulative number of Alfvén events', $
                      /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
 
-        IF do_KSStats THEN BEGIN                                                                 ;Calculate K-S statistics
+        ;; IF do_KSStats THEN BEGIN                                                                 ;Calculate K-S statistics
            
-        ENDIF
+        ;; ENDIF
 
      ENDIF
 
   ENDIF
-
-  ;; IF statFile THEN save,randt
 
 END
