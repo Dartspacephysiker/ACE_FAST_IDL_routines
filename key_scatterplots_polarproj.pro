@@ -52,7 +52,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
                                _EXTRA = e
 
   ;; Defaults
-  defMinI = 60
+  defMinI = 50
   defMaxI = 88
   
   defMinM = 0
@@ -60,20 +60,20 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   defTSLat = 75  ;true-scale latitude
 
-  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
+  defDBFile = '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
   defOutDir = 'histos_scatters/polar/'
   defOutPref = 'key_scatterplots_polarproj'
   defExt = '.png'
 
   defPlot_i_dir = 'plot_indices_saves/'
 
-  ;; defSTrans = 98                ;use for plotting entire db
-  defSTrans = 95                ;use for very narrowed plot_i
+  defSTrans = 98                ;use for plotting entire db
+  ;; defSTrans = 95                ;use for very narrowed plot_i
 
   IF NOT KEYWORD_SET(sTrans) THEN sTrans = defSTrans
 
   IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
-  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ELSE plotSuff
+  IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ; ELSE plotSuff
   IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt ;otherwise handled by plot_i_file
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
 
