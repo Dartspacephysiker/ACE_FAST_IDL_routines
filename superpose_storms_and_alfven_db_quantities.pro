@@ -81,8 +81,6 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
   defSymTransp         = 97
   defLineTransp        = 85
-  ;; plotScaleString='Hours'
-  ;; plotScaleString='Minutes'
 
   ;; ;For nEvent histos
   defnEvBinsize        = 60.0D                                                                        ;in minutes
@@ -139,7 +137,6 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all storms occuring within specified range
-  startDate=911930400.0000000000
 
   IF KEYWORD_SET(use_dartdb_start_enddate) THEN BEGIN
      startDate=str_to_time(maximus.time(0))
@@ -241,11 +238,11 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
   ENDELSE
 
   ;Get nearest events in Chaston DB
-  ;; cdb_storm_t=MAKE_ARRAY(totNStorm,2,/DOUBLE)
-  ;; cdb_storm_i=MAKE_ARRAY(totNStorm,2,/L64)
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
   cdb_storm_i=MAKE_ARRAY(nStorms,2,/L64)
-  good_i=get_chaston_ind(maximus,"OMNI",-1,/NORTHANDSOUTH)
+  good_i=get_chaston_ind(maximus,"OMNI",-1,/NORTHANDSOUTH,ALTITUDERANGE=[1000,5000], $
+                         CHARERANGE=[4,300])
+
   FOR i=0,nStorms-1 DO BEGIN
      FOR j=0,1 DO BEGIN
         tempClosest=MIN(ABS(datStartStop(stormStruct_inds(i),j)-cdbTime(good_i)),tempClosest_ii)
@@ -260,16 +257,6 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
      geomagWindow=WINDOW(WINDOW_TITLE="SYM-H plots", $
                      DIMENSIONS=[1200,900])
      
-     ;; FOR i=0,3 DO BEGIN
-        
-     ;;                                                                                             ;make a string array for plot
-     ;;    factor=1440                                   ;leave this as 1440 (n minutes in a day), since storm_i has a separation of 1 min between data points
-     ;;    nTimes=(storm_i(i,1) - storm_i(i,0)) / factor + 1
-     ;;    tArr=INDGEN(nTimes,/L64)*factor/60.
-     ;;    tStr=MAKE_ARRAY(nTimes,/STRING)
-     ;;    FOR t=0L,nTimes-1 DO tStr[t] = cdf_encode_epoch(sw_data.epoch.dat(storm_i(i,0)+factor*t)) ;strings for each day
-        
-     ;; ENDFOR
   ENDIF ELSE BEGIN ;Just do a regular superposition of all the plots
 
      geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormStr + " storms: "+ $
@@ -281,7 +268,6 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
      
      xRange=[-tBeforeStorm,tAfterStorm]
      yRange=[geomag_min,geomag_max]
-     ;; yRange=[-350,50]
      
      FOR i=0,nStorms-1 DO BEGIN
 
@@ -307,7 +293,6 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                      DIMENSIONS=[1200,900])
      
      ;; Get ranges for plots
-     ;; maxMinutes=MAX((cdbTime(cdb_storm_i(*,1))-cdbTime(cdb_storm_i(*,0)))/3600.,longestStorm_i,MIN=minMinutes)
      minMaxDat=MAKE_ARRAY(nStorms,2,/DOUBLE)
      
      IF neg_and_pos_separ OR (log_DBQuantity) THEN BEGIN
@@ -330,28 +315,46 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
            PRINT,"There are negs in this quantity, and you've asked me to log it. I'm setting neg_and_pos_separ."
 
-           ;; maxDat_neg=ALOG10(MAX(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0,/NULL),1))))
-           ;; minDat_neg=ALOG10(MIN(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0,/NULL),1))))
-           ;; maxDat_neg=ALOG10(MAX(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0),1))))
-           ;; minDat_neg=ALOG10(MIN(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0),1))))
-           maxDat_neg=MAX(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0),1)))
-           minDat_neg=MIN(ABS(minMaxDat(WHERE(minMaxDat(*,1) LT 0),1)))
+           temp=WHERE(minMaxDat(*,1) LT 0.,/NULL)
+           IF N_ELEMENTS(temp) GT 0 THEN maxDat_neg=MAX(ABS(minMaxDat(temp,1)))
+           temp=WHERE(minMaxDat(*,0) LT 0.,/NULL)
+           IF N_ELEMENTS(temp) GT 0 THEN minDat_neg=MIN(ABS(minMaxDat(temp,0)))
 
         ENDIF
 
-           ;; maxDat=ALOG10(MAX(minMaxDat(*,1)))
-           ;; minDat=ALOG10(MIN(minMaxDat(*,0)))
-
         IF pos_cdb_ind(0) NE -1 THEN BEGIN
-           ;; maxDat_pos=ALOG10(MAX(minMaxDat(WHERE(minMaxDat(*,1) GT 0,/NULL),1)))
-           ;; minDat_pos=ALOG10(MIN(minMaxDat(WHERE(minMaxDat(*,1) GT 0,/NULL),1)))
-           ;; maxDat_pos=ALOG10(MAX(minMaxDat(WHERE(minMaxDat(*,1) GT 0),1)))
-           ;; minDat_pos=ALOG10(MIN(minMaxDat(WHERE(minMaxDat(*,1) GT 0),1)))
-           maxDat_pos=MAX(minMaxDat(WHERE(minMaxDat(*,1) GT 0),1))
-           minDat_pos=MIN(minMaxDat(WHERE(minMaxDat(*,1) GT 0),1))
+
+           temp=WHERE(minMaxDat(*,1) GT 0.,/NULL)
+           IF N_ELEMENTS(temp) NE 0 THEN maxDat_pos=MAX(ABS(minMaxDat(temp,1)))
+           temp=WHERE(minMaxDat(*,0) GT 0.,/NULL)
+           IF N_ELEMENTS(temp) NE 0 THEN minDat_pos=MIN(ABS(minMaxDat(temp,0)))
+
         ENDIF
 
         IF pos_cdb_ind(0) NE -1 AND neg_cdb_ind(0) NE -1 THEN BEGIN
+           
+           IF N_ELEMENTS(maxDat_pos) EQ 0 THEN BEGIN
+              IF N_ELEMENTS(maxDat_neg) EQ 0 THEN BEGIN
+                 PRINT,"something's up; neither maxdat_pos nor maxdat_neg are defined..."
+                 RETURN
+              ENDIF
+              maxDat_pos=maxDat_neg
+           ENDIF
+           IF N_ELEMENTS(maxDat_neg) EQ 0 THEN BEGIN
+              maxDat_neg=maxDat_pos
+           ENDIF
+
+           IF N_ELEMENTS(minDat_pos) EQ 0 THEN BEGIN
+              IF N_ELEMENTS(minDat_neg) EQ 0 THEN BEGIN
+                 PRINT,"something's up; neither maxdat_pos nor maxdat_neg are defined..."
+                 RETURN
+              ENDIF
+              minDat_pos=minDat_neg
+           ENDIF
+           IF N_ELEMENTS(minDat_neg) EQ 0 THEN BEGIN
+              minDat_neg=minDat_pos
+           ENDIF
+
            IF maxDat_pos GE maxDat_neg THEN maxDat_neg=maxDat_pos $
            ELSE maxDat_pos=maxDat_neg
 
@@ -390,13 +393,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
            IF plot_i_pos(0) GT -1 AND N_ELEMENTS(plot_i_pos) GT 1 THEN BEGIN
 
               plot_pos=plot(cdb_t_pos, $
-                            ;; (log_DBquantity) ? ALOG10(cdb_y_pos) : cdb_y_pos, $
                             cdb_y_pos, $
                             XTITLE='Hours since storm commencement', $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
-                            ;; YRANGE=[-300,300], $
-                            ;; YRANGE=(log_DBquantity) ? [-10.0,10.0] : [minDat_pos,maxDat_pos], $
                             YRANGE=[minDat_pos,maxDat_pos], $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
@@ -434,22 +434,18 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
            IF plot_i_neg(0) GT -1 AND (N_ELEMENTS(plot_i_neg) GT 1) THEN BEGIN
 
               plot_neg=plot(cdb_t_neg, $
-                            ;; (log_DBquantity) ? ALOG10(cdb_y_neg) : cdb_y_neg, $
                             cdb_y_neg, $
                             XTITLE='Hours since storm commencement', $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
-                            ;; YRANGE=[-300,300], $
-                            ;; YRANGE=(log_DBquantity) ? [-10.0,10.0] : [minDat_neg,maxDat_neg], $
                             YRANGE=[minDat_neg,maxDat_neg], $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
                             SYMBOL='+', $
-                            SYM_COLOR='g', $
+                            SYM_COLOR='SEA GREEN', $
                             XTICKFONT_SIZE=10, $
                             XTICKFONT_STYLE=1, $
                             /CURRENT, $
-                            ;; OVERPLOT=(i EQ 0) ? 0: 1, $
                             OVERPLOT=1, $
                             LAYOUT=neg_layout, $
                             SYM_TRANSPARENCY=defSymTransp)
@@ -482,36 +478,23 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
            
            ;; get relevant time range
            cdb_t=(DOUBLE(cdbTime(plot_i))-DOUBLE(stormStruct.time(stormStruct_inds(i))))/3600.
-           ;; minTime=MIN(cdb_t)
-           ;; minTime=(minTime LT 0) ? minTime : 0.
            
            ;; get corresponding data
-           ;; cdb_y=maximus.(maxInd)(cdb_storm_i(i,0):cdb_storm_i(i,1))
            cdb_y=maximus.(maxInd)(plot_i)
            
            IF plot_i(0) GT -1 AND N_ELEMENTS(plot_i) GT 1 THEN BEGIN
-              ;; print,'n plot points: ',n_elements(plot_i)
-              ;; print,min(cdb_y)
-              ;; print,max(cdb_y)
-              ;; print,min(cdb_t)
-              ;; print,max(cdb_t)
+
               plot=plot(cdb_t, $
                         (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
                         XTITLE='Hours since storm commencement', $
-                        ;; XTITLE='Hours since '+time_to_str(storm_utc(i,0),/msec), $
                         YTITLE=mTags(maxInd), $
                         XRANGE=xRange, $
                         YRANGE=[minDat,maxDat], $
-                        ;; YRANGE=[-300,300], $
                         YLOG=(log_DBQuantity) ? 1 : 0, $
-                        ;; YAXIS=1, $
                         LINESTYLE=' ', $
                         SYMBOL='+', $
                         XTICKFONT_SIZE=10, $
                         XTICKFONT_STYLE=1, $
-                        ;; XTICKNAME=STRMID(tStr,0,12), $
-                        ;; XTICKVALUES=tArr, $
-                        ;; LAYOUT=[1,4,i+1], $
                         /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
                         SYM_TRANSPARENCY=defSymTransp)
               
@@ -564,8 +547,8 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
               ENDFOR
 
               Avgs_pos=MAKE_ARRAY(nBins,/DOUBLE)
-              avg_data_pos=log_DBQuantity ? ALOG10(maximus.(maxInd)(tot_plot_i_pos)) : maximus.(maxInd)(tot_plot_i_pos)
-              ;; avg_time_pos=(DOUBLE(cdbTime(tot_plot_i))-DOUBLE(stormStruct.time(stormStruct_inds(i))))/3600.
+              avg_data_pos=log_DBQuantity ? ALOG10(ABS(maximus.(maxInd)(tot_plot_i_pos))) : ABS(maximus.(maxInd)(tot_plot_i_pos))
+
               ;;now loop over histogram bins, perform average
               FOR i=0,nBins-1 DO BEGIN
                  temp_inds=WHERE(tot_cdb_t_pos GE (tBin(0) + i*NEvBinsize) AND tot_cdb_t_pos LT (tBin(0)+(i+1)*nEvBinSize))
@@ -576,25 +559,18 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
               plot_pos=plot(tBin(safe_i)+0.5*nEvBinsize, $
                             (log_DBQuantity) ? 10^Avgs_pos(safe_i) : Avgs_pos(safe_i), $
                             XTITLE='Hours since storm commencement', $
-                            ;; XTITLE='Hours since '+time_to_str(storm_utc(i,0),/msec), $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
                             YRANGE=[minDat_pos,maxDat_pos], $
-                            ;; YRANGE=[-300,300], $
-                            ;; YAXIS=1, $
                             LINESTYLE='--', $
-                            COLOR='CYAN', $
+                            COLOR='MAROON', $
                             SYMBOL='d', $
                             XTICKFONT_SIZE=10, $
                             XTICKFONT_STYLE=1, $
-                            ;; XTICKNAME=STRMID(tStr,0,12), $
-                            ;; XTICKVALUES=tArr, $
                             LAYOUT=pos_layout, $
-                            ;; LAYOUT=[1,4,i+1], $
                             /CURRENT,/OVERPLOT, $
                             SYM_SIZE=1.5, $
-                            SYM_COLOR='CYAN') ;, $
-              ;; SYM_TRANSPARENCY=defSymTransp)
+                            SYM_COLOR='MAROON') ;, $
               
            ENDIF
 
@@ -608,7 +584,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
               Avgs_neg=MAKE_ARRAY(nBins,/DOUBLE)
               avg_data_neg=log_DBQuantity ? ALOG10(ABS(maximus.(maxInd)(tot_plot_i_neg))) : ABS(maximus.(maxInd)(tot_plot_i_neg))
-              ;; avg_time_neg=(DOUBLE(cdbTime(tot_plot_i))-DOUBLE(stormStruct.time(stormStruct_inds(i))))/3600.
+
               ;;now loop over histogram bins, perform average
               FOR i=0,nBins-1 DO BEGIN
                  temp_inds=WHERE(tot_cdb_t_neg GE (tBin(0) + i*NEvBinsize) AND tot_cdb_t_neg LT (tBin(0)+(i+1)*nEvBinSize))
@@ -619,25 +595,18 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
               plot_neg=plot(tBin(safe_i)+0.5*nEvBinsize, $
                             (log_DBQuantity) ? 10^Avgs_neg(safe_i) : Avgs_neg(safe_i), $
                             XTITLE='Hours since storm commencement', $
-                            ;; XTITLE='Hours since '+time_to_str(storm_utc(i,0),/msec), $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
                             YRANGE=[minDat_neg,maxDat_neg], $
-                            ;; YRANGE=[-300,300], $
-                            ;; YAXIS=1, $
                             LINESTYLE='-:', $
-                            COLOR='PURPLE', $
+                            COLOR='DARK GREEN', $
                             SYMBOL='d', $
                             XTICKFONT_SIZE=10, $
                             XTICKFONT_STYLE=1, $
-                            ;; XTICKNAME=STRMID(tStr,0,12), $
-                            ;; XTICKVALUES=tArr, $
                             LAYOUT=neg_layout, $
-                            ;; LAYOUT=[1,4,i+1], $
                             /CURRENT,/OVERPLOT, $
                             SYM_SIZE=1.5, $
-                            SYM_COLOR='PURPLE') ;, $
-              ;; SYM_TRANSPARENCY=defSymTransp)
+                            SYM_COLOR='DARK GREEN') ;, $
               
            ENDIF
 
@@ -653,42 +622,32 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
 
            Avgs=MAKE_ARRAY(nBins,/DOUBLE)
            avg_data=maximus.(maxInd)(tot_plot_i)
-           ;; avg_time=(DOUBLE(cdbTime(tot_plot_i))-DOUBLE(stormStruct.time(stormStruct_inds(i))))/3600.
            ;now loop over histogram bins, perform average
            FOR i=0,nBins-1 DO BEGIN
               temp_inds=WHERE(tot_cdb_t GE (tBin(0) + i*NEvBinsize) AND tot_cdb_t LT (tBin(0)+(i+1)*nEvBinSize))
               Avgs[i] = TOTAL(avg_data(temp_inds))/DOUBLE(nEvHist[i])
            ENDFOR
 
-              safe_i=WHERE(FINITE(Avgs) AND Avgs GT 0.)
+              safe_i=(log_DBQuantity) ? WHERE(FINITE(Avgs) AND Avgs GT 0.) : WHERE(FINITE(Avgs))
               plot=plot(tBin(safe_i)+0.5*nEvBinsize, $
                         Avgs(safe_i), $
                         XTITLE='Hours since storm commencement', $
-                        ;; XTITLE='Hours since '+time_to_str(storm_utc(i,0),/msec), $
                         YTITLE=mTags(maxInd), $
                         XRANGE=xRange, $
                         YRANGE=[minDat,maxDat], $
-                        ;; YRANGE=[-300,300], $
-                        ;; YAXIS=1, $
                         LINESTYLE='--', $
                         SYMBOL='d', $
                         XTICKFONT_SIZE=10, $
                         XTICKFONT_STYLE=1, $
-                        ;; XTICKNAME=STRMID(tStr,0,12), $
-                        ;; XTICKVALUES=tArr, $
-                        ;; LAYOUT=[1,4,i+1], $
                         /CURRENT,/OVERPLOT, $
                         SYM_SIZE=1.5, $
                         SYM_COLOR='g') ;, $
-                        ;; SYM_TRANSPARENCY=defSymTransp)
 
         ENDELSE
 
 
 
      ENDIF
-
-     PRINT,'started from the bottom'
 
      IF KEYWORD_SET(nEventHists) THEN BEGIN
         IF neg_and_pos_separ THEN BEGIN
