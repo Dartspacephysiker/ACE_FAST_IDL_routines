@@ -7,7 +7,8 @@
 
 FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB, $
                          ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange, $
-                         NORTHANDSOUTH=northAndSouth,HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd
+                         BOTH_HEMIS=both_hemis,NORTH=north,SOUTH=south, $
+                         HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd
 
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
@@ -66,11 +67,22 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ENDELSE
 
   ;;generate indices based on restrictions in interp_plots.pro
-  IF KEYWORD_SET(northAndSouth) THEN BEGIN
+  IF KEYWORD_SET(both_hemis) THEN BEGIN
      ind_region=cgsetunion( $
                 where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM), $
                 where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM))
-  ENDIF ELSE ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM)
+     PRINT,'Hemisphere: Northern AND Southern'
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(SOUTH) THEN BEGIN
+        ind_region=where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+        PRINT,'Hemisphere: Southern'
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(NORTH) THEN BEGIN
+           ind_region=where(maximus.ilat GE ABS(minI) AND maximus.ilat LE ABS(maxI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+           PRINT,'Hemisphere: Northern'
+        ENDIF ELSE ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+     ENDELSE
+  ENDELSE
 
   ;want just Holzworth/Meng statistical auroral oval?
   IF HwMAurOval THEN ind_region=cgsetintersection(ind_region,where(abs(maximus.ilat) GT auroral_zone(maximus.mlt,HwMKpInd,/lat)/(!DPI)*180.))
