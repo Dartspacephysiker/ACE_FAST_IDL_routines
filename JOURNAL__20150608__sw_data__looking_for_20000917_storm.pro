@@ -94,7 +94,7 @@ ENDFOR
 
 ;And NOW let's plot quantity from the Alfven DB to see how it fares during storms
 
-good_i=get_chaston_ind(maximus,"OMNI",-1,/NORTHANDSOUTH)
+good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS)
 mTags=TAG_NAMES(maximus)
 
 plotWind=WINDOW(WINDOW_TITLE="Maximus plots", $
@@ -115,6 +115,9 @@ ENDIF ELSE BEGIN
    maxDat=MAX(minMaxDat(*,1))
    minDat=MIN(minMaxDat(*,0))
 ENDELSE
+
+;colors for each storm
+color_list=['b','r','g','olive']
 
 ;now plot DB quantity
 FOR i=0,3 DO BEGIN
@@ -145,4 +148,18 @@ FOR i=0,3 DO BEGIN
                                      ;; XTICKVALUES=tArr, $
                                      LAYOUT=[1,4,i+1], $
                                      /CURRENT)
+
+   IF i EQ 0 THEN BEGIN
+      plot_i_master=plot_i
+      plot_i_list=LIST(plot_i)
+      plot_i_color=MAKE_ARRAY(N_ELEMENTS(plot_i),/STRING,VALUE=color_list[i])
+
+   ENDIF ELSE BEGIN
+      plot_i_master=[plot_i_master,plot_i]
+      plot_i_list.add,plot_i
+      plot_i_color=[plot_i_color,MAKE_ARRAY(N_ELEMENTS(plot_i),/STRING,VALUE=color_list[i])]
+   ENDELSE
+
 ENDFOR
+
+;save,plot_i_master,plot_i_list,plot_i_color,color_list,filename='PLOT_INDICES--four_storms_from_2000--Yao_et_al_2008.sav'

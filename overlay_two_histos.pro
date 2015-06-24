@@ -1,7 +1,7 @@
 PRO OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
                        DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
                        BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
-                       OUTFILE=outFile
+                       OUTFILE=outFile,POS=pos
 
   ;; Defaults
   defData_1_col='yellow'
@@ -14,6 +14,8 @@ PRO OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col
 
   defYRange=[0,1]
 
+  defPos=[0.15,0.15,0.85,0.85]
+
   ;; histTitle='Relative freq. of Alfven activity'
   
   ;; Set defaults
@@ -25,25 +27,31 @@ PRO OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col
 
   IF N_ELEMENTS(yRange) LT 2 THEN yRange=defYRange
 
+  IF ~KEYWORD_SET(pos) THEN pos=defPos
+
   cgHistoplot, data_2, POLYCOLOR=data_2_col, $
                /FREQUENCY, /FILL, XRANGE=xRange, YRANGE=yRange, BINSIZE=binSize, $
-               XTITLE=xTitle,TITLE=histTitle
+               XTITLE=xTitle,TITLE=histTitle,CHARSIZE=2.1,THICK=2.0, $
+               POSITION=pos
   cgHistoplot, data_1, POLYCOLOR=data_1_col, $
                /FREQUENCY, /OPLOT, /FILL, YRANGE=yRange, BINSIZE=binSize, $
-               XTITLE=xTitle,TITLE=histTitle
+               XTITLE=xTitle,TITLE=histTitle,CHARSIZE=2.1,THICK=2.0, $
+               POSITION=pos
   firstPlot = cgSnapshot()
   
   cgHistoplot, data_1, POLYCOLOR=data_1_col, /FILL, $
                /FREQUENCY, XRANGE=xRange, YRANGE=yRange, BINSIZE=binSize, $
-               XTITLE=xTitle,TITLE=histTitle
+               XTITLE=xTitle,TITLE=histTitle,CHARSIZE=2.1,THICK=2.0, $
+               POSITION=pos
   cgHistoplot, data_2, POLYCOLOR=data_2_col, $
                /FREQUENCY, /OPLOT, /FILL, YRANGE=yRange, BINSIZE=binSize, $
-               XTITLE=xTitle,TITLE=histTitle
+               XTITLE=xTitle,TITLE=histTitle,CHARSIZE=2.1,THICK=2.0, $
+               POSITION=pos
   secondPlot = cgSnapshot()
   
   cgBlendimage, firstPlot, secondPlot, ALPHA=0.75
   
-  cgLegend, SymColors=[data_1_col, data_2_col], PSyms=[15,15], Symsize=1.5, Location=[0.675, 0.85], $
+  cgLegend, SymColors=[data_1_col, data_2_col], PSyms=[15,15], Symsize=1.5, Location=[0.175, 0.85], $
             Titles=[data_1_title, data_2_title], Length=0, /Box, VSpace=2.75, /Background, BG_Color='rose'
   
   finalPlot = cgSnapshot(FILENAME=outFile)

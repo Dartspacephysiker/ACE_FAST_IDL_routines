@@ -39,17 +39,19 @@
 ;-
 
 PRO KEY_SCATTERPLOTS_POLARPROJ, $
-                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
-                               NORTH=north,SOUTH=south, $
-                               CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
-                               OVERLAYAURZONE=overlayAurZone, $
-                               PLOTSUFF=plotSuff, $
-                               DBFILE=dbFile, $
-                               OUTFILE=outFile, $
-                               PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, JUST_PLOT_I=just_plot_i, $
-                               STRANS=sTrans, $
-                               PLOTTITLE=plotTitle, $
-                               _EXTRA = e
+   DAYSIDE=dayside,NIGHTSIDE=nightside, $
+   NORTH=north,SOUTH=south, $
+   CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
+   OVERLAYAURZONE=overlayAurZone, $
+   PLOTSUFF=plotSuff, $
+   DBFILE=dbFile, $
+   OUTFILE=outFile, $
+   PLOT_I_FILE=plot_i_file, PLOT_I_DIR=plot_i_dir, $
+   JUST_PLOT_I=just_plot_i, $
+   PLOT_I_LIST=plot_i_list, COLOR_LIST=color_list, $
+   STRANS=sTrans, $
+   PLOTTITLE=plotTitle, $
+   _EXTRA = e
 
   ;; Defaults
   defMinI = 50
@@ -138,8 +140,9 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
   grid.TRANSPARENCY=30
   grid.color="blue"
   grid.linestyle=1
+  grid.thick=2
   grid.label_angle = 0
-  grid.font_size = 15
+  grid.font_size = 18
 
   mlats=grid.latitudes
   FOR i=0,n_elements(mlats)-1 DO BEGIN
@@ -155,6 +158,7 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
   ;;****************************************
   ; Add auroral zone to plot?
 
+  print,'dat'
   IF KEYWORD_SET(overlayAurZone) THEN BEGIN
 
      ;;get boundaries
@@ -208,11 +212,36 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
         maximus=resize_maximus(maximus,INDS=just_plot_i)
         IF NOT KEYWORD_SET(outFile) then outFile = defOutPref + '--user-supplied' +defExt
      ENDIF
+     IF KEYWORD_SET(plot_i_list) THEN BEGIN
+        print,"User-supplied inds using 'plot_i_list' keyword..."
+        ;; temp_plot_i=plot_i_list(0)
+        ;; IF N_ELEMENTS(plot_i_list) GT 1 THEN BEGIN
+        ;;    FOR i=1,N_ELEMENTS(plot_i_list)-1 DO temp_plot_i=[temp_plot_i,plot_i_list(i)]
+        ;; ENDIF
+        ;; maximus=resize_maximus(maximus,INDS=temp_plot_i)
+        IF NOT KEYWORD_SET(outFile) then outFile = defOutPref + '--user-supplied' +defExt
+     ENDIF
   ENDELSE
   
   ;;northern_hemi
   IF KEYWORD_SET(north) OR KEYWORD_SET(south) THEN BEGIN
-     maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=minI,MAX_FOR_IND=maxI)
+     IF KEYWORD_SET(plot_i_list) THEN BEGIN
+        IF KEYWORD_SET(north) THEN BEGIN
+           FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+              plot_i_list(i)=cgsetintersection(plot_i_list(i), $
+                                                  WHERE(maximus.ILAT GT minI AND maximus.ILAT LT maxI))
+           ENDFOR
+        ENDIF ELSE BEGIN
+           IF KEYWORD_SET(south) THEN BEGIN
+              FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+                 plot_i_list(i)=cgsetintersection(plot_i_list(i), $
+                                                  WHERE(maximus.ILAT GT minI AND maximus.ILAT LT maxI))
+              ENDFOR
+           ENDIF
+        ENDELSE
+     ENDIF ELSE BEGIN
+        maximus = resize_maximus(maximus,MAXIMUS_IND=5,MIN_FOR_IND=minI,MAX_FOR_IND=maxI)
+     ENDELSE
   END
 
   ;;screen on maximus? YES
@@ -240,21 +269,49 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
 
   ;;****************************************
-
-  lats=maximus.ilat
-  lons=maximus.mlt*15
-  ;; lats=[65,65,65,65]
-  ;; lons=[0,90,180,270]
-
-
   ;; Plotting
-  curPlot = scatterplot(lons,lats,sym_size=0.8, $
-                        SYMBOL='o',/overplot,SYM_TRANSPARENCY=sTrans, $
-                       TITLE=plotTitle)        ;,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
+
+  IF KEYWORD_SET(plot_i_list) THEN BEGIN
+
+     FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+        IF (plot_i_list(i))(0) NE -1 THEN BEGIN
+           lats=maximus.ilat(plot_i_list(i))
+           lons=maximus.mlt(plot_i_list(i))*15
+           ;; lats=[65,65,65,65]
+           ;; lons=[0,90,180,270]
+           
+           curPlot = scatterplot(lons,lats,sym_size=1.0, $
+                                 SYMBOL='o',/overplot, $
+                                 SYM_TRANSPARENCY=sTrans, $
+                                 SYM_THICK=1.5, $
+                                 SYM_COLOR=(N_ELEMENTS(color_list) GT 1) ? color_list(i) : color_list, $
+                                 TITLE=plotTitle) ;,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need tranparency
+        ENDIF
+     ENDFOR
+
+  ENDIF ELSE BEGIN
+     lats=maximus.ilat
+     lons=maximus.mlt*15
+     ;; lats=[65,65,65,65]
+     ;; lons=[0,90,180,270]
+     
+     curPlot = scatterplot(lons,lats,sym_size=1.0, $
+                           SYMBOL='o',/overplot, $
+                           SYM_TRANSPARENCY=sTrans, $
+                           SYM_COLOR=plot_i_color, $
+                           TITLE=plotTitle) ;,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
+
+  ENDELSE     
+     
+
+
   ;; curPlot = plot(lons,lats,sym_size=0.8, $
   ;;                'o',/overplot,SYM_TRANSPARENCY=95);,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need transparency
 ;                ,linestyle=6, $
 ;                 MAPPROJECTION=map,MAPGRID=grid,/overplot)
+
+
+
   curPlot.save,outDir+outFile,resolution=600
 
 END
