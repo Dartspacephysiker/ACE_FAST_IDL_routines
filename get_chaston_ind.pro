@@ -8,8 +8,9 @@
 FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB, $
                          ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange, $
                          BOTH_HEMIS=both_hemis,NORTH=north,SOUTH=south, $
-                         HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd
-
+                         HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+                         DAYSIDE=dayside,NIGHTSIDE=nightside
+  
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,20 +68,56 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ENDELSE
 
   ;;generate indices based on restrictions in interp_plots.pro
+
+  ;;;;;;;;;;;;
+  ;;handle latitudes
   IF KEYWORD_SET(both_hemis) THEN BEGIN
-     ind_region=cgsetunion( $
-                where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM), $
-                where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM))
+     ind_ilat=cgsetunion( $
+                ;; where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM), $
+                ;; where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM))
+                where(maximus.ilat GE minI AND maximus.ilat LE maxI), $
+                where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI)))
+
      PRINT,'Hemisphere: Northern AND Southern'
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(SOUTH) THEN BEGIN
-        ind_region=where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+        ;; ind_ilat=where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+        ind_ilat=where(maximus.ilat GE -ABS(maxI) AND maximus.ilat LE -ABS(minI)) 
         PRINT,'Hemisphere: Southern'
      ENDIF ELSE BEGIN
         IF KEYWORD_SET(NORTH) THEN BEGIN
-           ind_region=where(maximus.ilat GE ABS(minI) AND maximus.ilat LE ABS(maxI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+           ;; ind_ilat=where(maximus.ilat GE ABS(minI) AND maximus.ilat LE ABS(maxI) AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+           ind_ilat=where(maximus.ilat GE ABS(minI) AND maximus.ilat LE ABS(maxI)) 
            PRINT,'Hemisphere: Northern'
-        ENDIF ELSE ind_region=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+        ;; ENDIF ELSE ind_ilat=where(maximus.ilat GE minI AND maximus.ilat LE maxI AND maximus.mlt GE minM AND maximus.mlt LE maxM) 
+        ENDIF ELSE ind_ilat=where(maximus.ilat GE minI AND maximus.ilat LE maxI)
+     ENDELSE
+  ENDELSE
+
+  ;;;;;;;;;;;;
+  ;;handle longitudes
+  IF KEYWORD_SET(dayside) THEN BEGIN
+     dayside_i = WHERE(maximus.mlt GE 0.0 AND maximus.mlt LE 18.0)
+     ind_region=cgsetintersection(ind_ilat,dayside_i)
+
+     PRINT,"Only dayside!"
+     PRINT,"n events on dayside: " + STRCOMPRESS(N_ELEMENTS(dayside_i),/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+
+     ;;special treatment for nightside
+     IF KEYWORD_SET(nightside) THEN BEGIN
+        nightside_i = WHERE(maximus.mlt LE 6.0 OR maximus.mlt GE 18.0)
+        ind_region=cgsetintersection(ind_ilat,nightside_i)
+        
+        PRINT,"Only nightside!"
+        PRINT,"n events on nightside: " + STRCOMPRESS(N_ELEMENTS(nightside_i),/REMOVE_ALL)
+     ENDIF ELSE BEGIN
+        mlt_i = WHERE(maximus.mlt LE maxM and maximus.mlt GE minM)
+        ind_region=cgsetintersection(ind_ilat,mlt_i)
+
+        PRINT,"n events " + STRCOMPRESS(minM,/REMOVE_ALL) + $
+              STRCOMPRESS(maxM,/REMOVE_ALL) + $
+              " MLT: " + STRCOMPRESS(N_ELEMENTS(mlt_i),/REMOVE_ALL)
      ENDELSE
   ENDELSE
 

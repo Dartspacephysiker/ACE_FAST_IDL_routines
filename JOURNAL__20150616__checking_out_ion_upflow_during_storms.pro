@@ -105,3 +105,4 @@ cghistoplot,maximus.mlt(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0
 ;; 45       TOTAL_UPWARD_ION_OUTFLOW_SINGLE
 ;; 46       TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT
 ;; 47       TOTAL_ALFVEN_UPWARD_ION_OUTFLOW
+;; 48       PFLUXEST
