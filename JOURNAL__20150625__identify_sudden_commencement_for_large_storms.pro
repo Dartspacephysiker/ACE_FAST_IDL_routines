@@ -34,7 +34,7 @@ PRO JOURNAL__20150625__identify_sudden_commencement_for_large_storms
   defNeg_layout= [1,1,1]
   
   defSymTransp         = 97
-  defLineTransp        = 85
+  defLineTransp        = 60
   
   ;; ;For nEvent histos
   defnEvBinsize        = 60.0D  ;in minutes
@@ -199,17 +199,7 @@ PRO JOURNAL__20150625__identify_sudden_commencement_for_large_storms
   ;;    IF N_ELEMENTS(geomag_time_list(i)) GT 1 THEN $
 
   ;;use this to plot storms and pick sudden commencement
-i=3 & FOR j=0,N_ELEMENTS(geomag_time_list(i))-1 DO PRINT,FORMAT='(F0.4,T15,F0.4)',((geomag_time_list(i))(j)-stormStruct.time(stormStruct_inds(i)))/3600.,(geomag_dat_list(i))(j) & geomagPlot=plot((geomag_time_list(i)-stormStruct.time(stormStruct_inds(i)))/3600.,geomag_dat_list(i), $
-                           XTITLE=xTitle, $
-                           YTITLE=yTitle, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           XTICKFONT_SIZE=10, $
-                           XTICKFONT_STYLE=1, $
-                           ;; LAYOUT=[1,4,i+1], $
-                           /CURRENT,/OVERPLOT, $
-                           SYM_TRANSPARENCY=defSymTransp, $
-                           TRANSPARENCY=defLineTransp)
+i=3 & FOR j=0,N_ELEMENTS(geomag_time_list(i))-1 DO PRINT,FORMAT='(F0.4,T15,F0.4)',((geomag_time_list(i))(j)-stormStruct.time(stormStruct_inds(i)))/3600.,(geomag_dat_list(i))(j) & geomagPlot=plot((geomag_time_list(i)-stormStruct.time(stormStruct_inds(i)))/3600.,geomag_dat_list(i),XTITLE=xTitle,YTITLE=yTitle, XRANGE=xRange,YRANGE=yRange,XTICKFONT_SIZE=10,XTICKFONT_STYLE=1,/CURRENT,/OVERPLOT,SYM_TRANSPARENCY=defSymTransp,TRANSPARENCY=defLineTransp)
 
   ;; geomagPlot=plot((geomag_time_list(i)-stormStruct.time(stormStruct_inds(i)))/3600.,geomag_dat_list(i), $
   ;;                 XTITLE=xTitle, $

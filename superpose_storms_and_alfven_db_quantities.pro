@@ -52,7 +52,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
    USE_SYMH=use_SYMH, $
    USE_AE=use_AE, $
    NO_SUPERPOSE=no_superpose, $
-   NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, OVERLAY_NEVENTHISTS=overlay_nEventHists, $
+   NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, OVERLAY_NEVENTHISTS=overlay_nEventHists, NEVRANGE=nEvRange, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
    SUBSET_OF_STORMS=subset_of_storms,HOUR_OFFSET_OF_SUBSET=hour_offset_of_subset, $
    RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
@@ -287,7 +287,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                                            swDat_UTC LE datStartStop(stormStruct_inds(i),1))
               geomag_dat_list.add,sw_data.sym_h.dat(geomag_plot_i_list(i))
               geomag_time_list.add,swDat_UTC(geomag_plot_i_list(i))
-p              
+
               tempMin = MIN(geomag_dat_list(i),MAX=tempMax)
               IF tempMin LT geomag_min THEN geomag_min=tempMin
               IF tempMax GT geomag_max THEN geomag_max=tempMax
@@ -845,41 +845,9 @@ p
            IF overlay_nEventHists THEN BEGIN
               ;; geomagWindow.setCurrent
 
-                 ;; plot_cdb=plot(cdb_t/3600., $
-                 ;;               (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
-                 ;;               ;; XTITLE='Hours since '+maximus.time(cdb_storm_i(i,0)), $a
-                 ;;               ;; XTITLE='Hours since '+time_to_str(storm_utc(i,0),/msec),
-                 ;;               ;; YTITLE=mTags(maxInd), $
-                 ;;               XRANGE=[0,120], $
-                 ;;               ;; ;; XRANGE=[minTime,maxMinutes], $
-                 ;;               ;; YRANGE=[minDat,maxDat], $
-                 ;;               YRANGE=[-200,200], $
-                 ;;               NAME='Alfven event', $
-                 ;;               AXIS_STYLE=0, $
-                 ;;               LINESTYLE=' ', $
-                 ;;               THICK=6.0, $
-                 ;;               SYMBOL='x', $
-                 ;;               SYM_TRANSPARENCY=70, $
-                 ;;               SYM_COLOR='blue', $
-                 ;;               ;; XTICKFONT_SIZE=10, $
-                 ;;               ;; XTICKFONT_STYLE=max_xtickfont_style, $
-                 ;;               ;; XTICKNAME=STRMID(tStr,0,12), $
-                 ;;               ;; XTICKVALUES=tArr, $
-                 ;;               LAYOUT=[1,4,i+1], $
-                 ;;               MARGIN = plotMargin, $
-                 ;;               /CURRENT)
-                 
-           ;; plot_nEv=plot(tBin,nEvHist, $
-           ;;               /STAIRSTEP, $
-           ;;               XRANGE=[-tBeforeStorm,tAfterStorm+nEvBinsize], $
-           ;;               XTITLE='Hours since storm commencement', $
-           ;;               YTITLE='Number of Alfvén events', $
-           ;;               THICK=6.0, $
-           ;;               /CURRENT,COLOR='red')
-
            plot_nEv=plot(tBin,nEvHist, $
                          /STAIRSTEP, $
-                         YRANGE=[0,12500], $
+                         YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
                          NAME='Event histogram', $
                          XRANGE=xRange, $
                          AXIS_STYLE=0, $

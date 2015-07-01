@@ -12,7 +12,8 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
                          CDBTIME=cdbTime, CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbacepropinterp_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
                          DATADIR=datadir, $
-                         BYMIN=byMin, BZMIN=bzMin, OMNI_COORDS=omni_Coords ;, $
+                         BYMIN=byMin, BZMIN=bzMin,BYMAX=byMax, BZMAX=bzMax, $
+                         OMNI_COORDS=omni_Coords ;, $
 ;;                         CLEANED_DB=cleaned_DB
 
   ;;If using cleaned DB, use all indices!
@@ -276,6 +277,31 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
 
   ENDIF
 
+  IF KEYWORD_SET(byMax) THEN BEGIN 
+     ;;As they are after interpolation
+     ;; cdbAcepropInterp_i=cdbAceprop_i(cdbAcepropInterp_ii) 
+     ;; cdbInterp_i=ind_region_magc_geabs10_acestart(cdbAcepropInterp_ii) 
+     ;; cdbInterpTime=cdbTime(cdbAcepropInterp_ii) 
+    
+     ;; byMax_ii are the indices (of indices) of events that meet the Maximum By requirement
+     ;; byMax_ii=WHERE(byChast GE -ABS(byMax) OR byChast LE ABS(byMax),NCOMPLEMENT=byMaxLost)
+     byMax_ii=WHERE(ABS(byChast) LE ABS(byMax),NCOMPLEMENT=byMaxLost)
+     
+     bzChast=bzChast(byMax_ii)
+     byChast=byChast(byMax_ii)
+     bxChast=bxChast(byMax_ii)
+     
+     cdbAcepropInterp_i=cdbAcepropInterp_i(byMax_ii)
+     cdbInterp_i=cdbInterp_i(byMax_ii)
+     cdbInterpTime=cdbInterpTime(byMax_ii)
+
+     printf,lun,""
+     printf,lun,"ByMax magnitude requirement: " + strcompress(byMax,/REMOVE_ALL) + " nT"
+     printf,lun,"Losing " + strcompress(byMaxLost,/REMOVE_ALL) + " events because of Maximum By requirement."
+     printf,lun,""
+
+  ENDIF
+
   ;*********************************************************
   ;Any requirement for bz magnitude?
   IF KEYWORD_SET(bzMin) THEN BEGIN 
@@ -298,6 +324,31 @@ FUNCTION interp_mag_data,ind_region_magc_geabs10_ACEstart, satellite, delay, lun
      printf,lun,""
      printf,lun,"BzMin magnitude requirement: " + strcompress(bzMin,/REMOVE_ALL) + " nT"
      printf,lun,"Losing " + strcompress(bzMinLost,/REMOVE_ALL) + " events because of minimum Bz requirement."
+     printf,lun,""
+
+  ENDIF
+
+  IF KEYWORD_SET(bzMax) THEN BEGIN 
+     ;;As they are after interpolation
+     ;; cdbAcepropInterp_i=cdbAceprop_i(cdbAcepropInterp_ii) 
+     ;; cdbInterp_i=ind_region_magc_geabs10_acestart(cdbAcepropInterp_ii) 
+     ;; cdbInterpTime=cdbTime(cdbAcepropInterp_ii) 
+    
+     ;; bzMax_ii are the indices (of indices) of events that meet the Maximum Bz requirement
+     ;; bzMax_ii=WHERE(bzChast GE -ABS(bzMax) OR bzChast LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
+     bzMax_ii=WHERE(ABS(bzChast) LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
+     
+     bzChast=bzChast(bzMax_ii)
+     byChast=byChast(bzMax_ii)
+     bxChast=bxChast(bzMax_ii)
+     
+     cdbAcepropInterp_i=cdbAcepropInterp_i(bzMax_ii)
+     cdbInterp_i=cdbInterp_i(bzMax_ii)
+     cdbInterpTime=cdbInterpTime(bzMax_ii)
+
+     printf,lun,""
+     printf,lun,"BzMax magnitude requirement: " + strcompress(bzMax,/REMOVE_ALL) + " nT"
+     printf,lun,"Losing " + strcompress(bzMaxLost,/REMOVE_ALL) + " events because of Maximum Bz requirement."
      printf,lun,""
 
   ENDIF

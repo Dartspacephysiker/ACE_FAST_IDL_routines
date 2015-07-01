@@ -33,7 +33,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
   defDBFile = defPref + "--maximus.sav"
 
-  defCDBTimeFile = defPref + "--cdbTime.sav"
+  defCDBTimeFile = defPref + "--cdbtime.sav"
   defChastDB_cleanIndFile = 'plot_indices_saves/good_i_for_original_Chaston_DB_after_Alfven_cleaner__20150402.sav'
 
   IF ~KEYWORD_SET(minM) THEN minM=defMinM
@@ -50,7 +50,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
 
      loaddataDir = defLoaddataDir
      dbFile = defDBFile
-     cdbTimeFile = defCDBTimeFile
+     cdbTimeFile = loaddataDir+defCDBTimeFile
      IF FILE_TEST(cdbTimeFile) AND N_ELEMENTS(cdbTime) EQ 0 THEN restore,cdbTimeFile
 
   ENDIF ELSE BEGIN
@@ -201,8 +201,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   IF good_i NE !NULL THEN ind_region_magc_geabs10_ACEstart=cgsetintersection(ind_region_magc_geabs10_ACEstart,good_i)
 
   ;Re-make cdbTime if we don't have it made already
-  ;; IF N_ELEMENTS(cdbTime) EQ 0 THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $
-  ;; ELSE cdbTime = cdbTime(ind_region_magc_geabs10_ACEstart)
+  IF N_ELEMENTS(cdbTime) EQ 0 THEN cdbTime=str_to_time( maximus.time( ind_region_magc_geabs10_ACEstart ) ) $
+  ELSE cdbTime = cdbTime(ind_region_magc_geabs10_ACEstart)
   
   printf,lun,""
   printf,lun,"****From get_chaston_ind.pro****"

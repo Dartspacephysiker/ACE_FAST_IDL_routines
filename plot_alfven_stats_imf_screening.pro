@@ -33,6 +33,8 @@
 ;                                            Otherwise it gets shown as "no data". (Default: 1)
 ;                    BYMIN             :  Minimum value of IMF By during an event to accept the event for inclusion in the analysis.
 ;                    BZMIN             :  Minimum value of IMF Bz during an event to accept the event for inclusion in the analysis.
+;                    BYMAX             :  Maximum value of IMF By during an event to accept the event for inclusion in the analysis.
+;                    BZMAX             :  Maximum value of IMF Bz during an event to accept the event for inclusion in the analysis.
 ;		     NPLOTS            :  Plot number of orbits.   
 ;                    HEMI              :  Hemisphere for which to show statistics. Can be "North" or "South".
 ;
@@ -179,6 +181,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      BYMIN=byMin, BZMIN=bzMin, $
+                                     BYMAX=byMax, BZMAX=bzMax, $
                                      SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                      HEMI=hemi, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -447,7 +450,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Set minimum allowable number of events for a histo bin to be displayed
   maskStr=''
-  IF ~N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
+  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
   ELSE BEGIN
      IF maskMin GT 1 THEN BEGIN
         maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
@@ -456,14 +459,24 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   ;;Requirement for IMF By magnitude?
   byMinStr=''
+  byMaxStr=''
+
   IF KEYWORD_SET(byMin) THEN BEGIN
      byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
+  ENDIF
+  IF KEYWORD_SET(byMax) THEN BEGIN
+     byMaxStr='byMax_' + String(byMax,format='(D0.1)') + '_' ;STRCOMPRESS(byMax,/REMOVE_ALL)
   ENDIF
 
   ;;Requirement for IMF Bz magnitude?
   bzMinStr=''
+  bzMaxStr=''
+
   IF KEYWORD_SET(bzMin) THEN BEGIN
      bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)
+  ENDIF
+  IF KEYWORD_SET(bzMax) THEN BEGIN
+     bzMaxStr='bzMax_' + String(bzMax,format='(D0.1)') + '_' ;STRCOMPRESS(bzMax,/REMOVE_ALL)
   ENDIF
 
   ;;doing polar contour?
@@ -570,7 +583,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
-  paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+polarContStr+hoyDia
+  paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+$
+           byMinStr+byMaxStr+bzMinStr+bzMaxStr+$
+           polarContStr+hoyDia
 
 
   ;;Open file for text summary, if desired
@@ -586,7 +601,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                      HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,BZMIN=bzMin,OMNI_COORDS=omni_Coords)
+                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
+                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
+                             OMNI_COORDS=omni_Coords)
   phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
@@ -1426,16 +1443,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;output is in seconds, but we'll do minutes
      ;
-     ;; divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
-     ;; h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
+     divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
+     h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
 
      ;2015/04/09 TEMPORARILY skip the lines above because our fastLoc file currently only includes orbits 500-11000.
      ; This means that, according to fastLoc and maximus, there are events where FAST has never been!
      ; So we have to do some trickery
-     divisor_nonZero_i = WHERE(divisor GT 0.0)
-     h2dNonzeroNEv_i = cgsetintersection(divisor_nonZero_i,h2dNonzeroNEv_i)
-     divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
-     h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
+     ;; divisor_nonZero_i = WHERE(divisor GT 0.0)
+     ;; h2dNonzeroNEv_i = cgsetintersection(divisor_nonZero_i,h2dNonzeroNEv_i)
+     ;; divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
+     ;; h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
 
      logNEvStr=""
      IF KEYWORD_SET(logNEventPerMin) THEN logNEvStr="Log "

@@ -8,8 +8,21 @@
 PRO JOURNAL__20150625__use_arreglado_storm_commencement
 
   ;This commencement file is generated in the read_storm_commencement_textFile routine
-  commencementFile='commencement_offsets_for_largestorms--20150625.sav'
+  ;; commencementFile='commencement_offsets_for_largestorms--20150625.sav'
+  commencementFile='commencement_offsets_for_largestorms--20150629--HEAVILY_PARED.sav'
   restore,commencementFile
+
+
+  min_rating=3
+  subset_i=WHERE(lrg_commencement.rating GE 3)
+
+  lrg_commencement={ind:lrg_commencement.ind(subset_i), $
+                    dst_min:lrg_commencement.dst_min(subset_i), $
+                    offset:lrg_commencement.offset(subset_i), $
+                    offset_dst:lrg_commencement.offset_dst(subset_i), $
+                    rating:lrg_commencement.rating(subset_i), $
+                    comment:lrg_commencement.comment(subset_i)}
+
 
   ;Added some new keywords to superpose_storm[...] routine so that we can specify offsets etc.
   superpose_storms_and_alfven_db_quantities,MAXIND=6,STORMTYPE=1, $
