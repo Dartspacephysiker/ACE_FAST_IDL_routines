@@ -8,7 +8,7 @@
 ;; DB_tFile='dartdb/saves/Dartdb_02282015--500-14999--cdbTime.sav'
 ;-
 
-PRO JOURNAL__20150701__huge_storm_20000406_w_Alfvens_overlaid__Alfven_storm_GRL,PS_OUTPUT=ps_output
+PRO JOURNAL__20150701__huge_storm_20000406_w_Alfvens_overlaid__Alfven_storm_GRL,OUTFILENAME=outFileName
 
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -168,12 +168,8 @@ PRO JOURNAL__20150701__huge_storm_20000406_w_Alfvens_overlaid__Alfven_storm_GRL,
 
   ;; ENDFOR
   
-  ;; IF KEYWORD_SET(ps_output) THEN BEGIN
-
-  ;;    device, /close
-  ;;    set_plot, 'x'
-  ;;    !p.font=-1
-
-  ;; ENDIF
+  IF KEYWORD_SET(outFileName) THEN BEGIN
+     plot_cdb.save,outFileName,HEIGHT=1200
+  ENDIF
 
 END

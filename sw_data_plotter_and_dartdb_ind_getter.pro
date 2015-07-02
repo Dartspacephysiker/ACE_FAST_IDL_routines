@@ -27,6 +27,8 @@
 ;                       RESTRICT_CHARERANGE  : Restrict returned Dartmouth DB inds to those within restricted characteristic energy
 ;range
 ;                       RESTRICT_ALTRANGE    : Restrict returned Dartmouth DB inds to those within restricted altitude range
+;                       OUTFILE              : Output a gif with this filename
+;
 ;
 ; KEYWORD PARAMETERS:
 ;
@@ -53,7 +55,8 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
    CENTER_T=center_t,AFTER_T=after_t,BEFORE_T=before_t, $
    START_T=start_t,STOP_T=stop_t, $
    OMNI_INDS_LIST=omni_inds_list, $
-   DARTDB_INDS_LIST=dartDB_inds_list, DAYSIDE=dayside,NIGHTSIDE=nightside,RESTRICT_CHARERANGE=restrict_charerange,RESTRICT_ALTRANGE=restrict_altRange
+   DARTDB_INDS_LIST=dartDB_inds_list, DAYSIDE=dayside,NIGHTSIDE=nightside,RESTRICT_CHARERANGE=restrict_charerange,RESTRICT_ALTRANGE=restrict_altRange, $
+   OUTFILE=outFile
 
 
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -79,13 +82,14 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
   defDBFile            = 'Dartdb_20150611--500-16361_inc_lower_lats--maximus--wpFlux.sav'  
   defDB_tFile          = 'Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
   
-  defSymTransp         = 97
-  defLineTransp        = 85
-  defLineThick         = 2.5
+  defSymTransp         = 0
+  defLineTransp        = 0
+  defLineThick         = 1.5
   
   plotMargin=[0.13, 0.20, 0.13, 0.15]
   
   defSaveFile          = 0
+  defOutFile           = 'sw_data_plotter.gif'
 
   defTitleSuff         = ''
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -126,6 +130,14 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
   restore,dataDir+stormDir+stormFile
   totNStorm=N_ELEMENTS(stormStruct.time)
   
+  ;;Any output?
+  IF KEYWORD_SET(outFile) THEN BEGIN
+     outFType = SIZE(outFile, /TYPE)
+     IF outFType NE 7 THEN outFile=defOutFile
+
+     PRINT,'Outputting plot to ' + outFile + '...'
+  ENDIF
+
   ;;want corresponding inds for Alfven database
   restore,dataDir+defDBDir+DBFile
   restore,dataDir+defDBDir+DB_tFile
@@ -311,7 +323,7 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
   FOR i=0,nStorms-1 DO BEGIN
      ;; geomagPlot=plot((geomag_time_list(i)-stormRef(i))/3600.,geomag_dat_list(i), $
      geomagPlot=plot((geomag_time_list(i)-cnt_t(i))/3600.,geomag_dat_list(i), $
-                     ;; XTITLE=xTitle+titleSuff, $
+                     XTITLE='Hours since '+TIME_TO_STR(cnt_t[i]), $
                      YTITLE=yTitle, $
                      XRANGE=xRange, $
                      YRANGE=yRange, $
@@ -324,9 +336,11 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
                      /CURRENT,OVERPLOT=(N_ELEMENTS(i) EQ 0) ? 0 : 1, $
                      SYM_TRANSPARENCY=defSymTransp, $
                      TRANSPARENCY=defLineTransp, $
-                     THICK=2.5)
+                     THICK=defLineThick)
   ENDFOR
   
+  IF KEYWORD_SET(outFile) THEN geomagPlot.save,outFile,HEIGHT=1200
+
   omni_inds_list=geomag_plot_i_list
 
 END
