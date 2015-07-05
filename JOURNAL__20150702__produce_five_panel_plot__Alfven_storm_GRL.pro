@@ -69,7 +69,6 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   ;; print,maximus.ilat[cgsetintersection(WHERE(maximus.orbit EQ 14370),storm_i)]
   ;; print,maximus.orbit[storm_i]
   
-
   acf_p='fa_k0_acf_'            ;AC fields prefix
   dcf_p='fa_k0_dcf_'            ;DC fields prefix
   ees_p='fa_k0_ees_'            ;Electron survey prefix
@@ -102,7 +101,7 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
      PLOT_FA_K0_ORB
 
      LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-     ;; PLOT_FA_K0_TMS
+     PLOT_FA_K0_TMS
      GEN_FA_K0_TMS_GIFPS
 
      LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
