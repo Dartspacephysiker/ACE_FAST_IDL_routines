@@ -274,14 +274,17 @@ OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
 
 ;just southern
 data_1_ind=CGSETINTERSECTION(largeStorm_ind,WHERE(maximus.ilat LT 0))
-data_1=maximus.ilat(data_1_ind)
+;; data_1=maximus.ilat(data_1_ind)
+data_1=ABS(maximus.ilat(data_1_ind))
 
 data_2_ind=cgsetdifference(good_i_south,largeStorm_ind)
-data_2=maximus.ilat(data_2_ind)
+;; data_2=maximus.ilat(data_2_ind)
+data_2=ABS(maximus.ilat(data_2_ind))
 
 data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
 data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
-xRange=-REVERSE(xRange_ILAT)
+;; xRange=-REVERSE(xRange_ILAT)
+xRange=xRange_ILAT
 histTitle='Relative freq. of activity, Southern'
 
 outFile='ILAT--Southern--largeStorms--HEAVILY_PARED--overlaid_w_all_events.png'

@@ -1,7 +1,7 @@
 ;2015/04/02
 ;The idea is to plot all cdfs together on the same plot 
 
-PRO plot_dawnward_duskward_all_IMF__nEventsPerMin_cdfs ;,DO_CHASTDB=do_ChastDB
+PRO JOURNAL_20150402__plot_dawnward_duskward_all_IMF__nEventsPerMin_cdfs ;,DO_CHASTDB=do_ChastDB
 
   ;first, make the ks_stats files
   ;dawnward/all IMF

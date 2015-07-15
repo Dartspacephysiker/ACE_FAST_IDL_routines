@@ -72,8 +72,6 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
            PFLUXEST:maximus.delta_b(allowed_i)*maximus.delta_e(allowed_i)*4.0e-7*!PI}
 
   
-  print,"N_elements after: " + strcompress(n_elements(maximus.orbit),/remove_all)
-
   IF KEYWORD_SET(cdbTime) THEN BEGIN
      print,''    
      print,"Also doing cdbTime!"
@@ -83,6 +81,7 @@ FUNCTION resize_maximus,maximus,MAXIMUS_IND=maximus_ind,MIN_FOR_IND=min_for_ind,
      print,''
   ENDIF
 
+  print,"N_elements after: " + strcompress(n_elements(resize_maximus.orbit),/remove_all)
   print,"***********end resize_maximus.pro**********"
   print,''
 

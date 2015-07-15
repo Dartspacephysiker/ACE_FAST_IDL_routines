@@ -43,7 +43,8 @@ function alfven_db_cleaner,maximus,LUN=lun
 
   ;; mag current cutoffs
   magc_hcutOff = 5.0e2          ;junks 245 events above, 256 below
-  ;;magc_lcutOff = -1.0e3 ;
+  magc_hcutOff = 8.0e2
+  ;; magc_lcutOff = -1.0e3 ;
   
   ;; delta_B cutoffs
   dB_hcutOff = 1.0e3            ;junks 190 events

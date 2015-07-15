@@ -39,6 +39,8 @@
 
 PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
 
+  DEVICE,DECOMPOSED=0
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Get relevant SYM-H plots AND when Alfven events are happening
 
@@ -92,6 +94,7 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   ;;That is, don't use orbs[20:21]
 
   firstOrb=14359
+  firstOrb=14369
   orbs=INDGEN(23,/L64)+firstOrb
 
   ;; This works great for loading, plotting, and making hard copies of plots of TEAMS data.

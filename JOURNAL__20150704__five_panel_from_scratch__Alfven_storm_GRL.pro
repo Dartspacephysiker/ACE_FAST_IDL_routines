@@ -38,9 +38,22 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
   ;; time range of interest
   ;; t1=str_to_time('2000-04-06/21:53:38')
   ;; t2=str_to_time('2000-04-06/22:11:16')
-  t1=str_to_time('2000-04-06/21:50:00')
-  t2=str_to_time('2000-04-06/22:12:00')
+  OK=get_fa_orbit_times(14369,t1,t2)
 
+  IF ~OK THEN BEGIN
+     t1=str_to_time('2000-04-06/21:50:00')
+     t2=str_to_time('2000-04-06/22:12:00')
+  ENDIF 
+
+  print,'TIMES :',time_to_str([t1,t2])
+
+  dat = get_fa_ees(t1,/st)                     ; get electron esa survey
+  ;; spec2d,dat,/label                       ; plot spectra
+  ;; pitch2d,dat,/label,energy=[2000,10000]  ; plot pitch angle
+  ;; contour2d,dat,/label,ncont=20           ; plot contour plot
+  ;; dat = get_fa_ies(t1)                     ; get ion esa survey data
+  ;; contour2d,dat,/label,ncont=20           ; plot contour plot
+  ;; fu_spec2d,'n_2d_fs',dat,/integ_f,/integ_r ; plot partial density, partial integral densities  
   ;; Yank out relevant B plots
 
   ;; Yank out relevant Je, Jee plots
@@ -53,6 +66,7 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
   ;; tplot,['Je','el']
 
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Electron spectrogram - survey data, remove retrace, downgoing electrons
   get_en_spec,"fa_ees_c",units='eflux',name='el_0',angle=[-22.5,22.5],retrace=1,t1=t1,t2=t2,/calib
   get_data,'el_0', data=tmp                                          ; get data structure
@@ -93,7 +107,8 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
   
   ;; Ion pitch angle spectrogram - survey data, remove retrace, >30 ions
   ;; get_pa_spec,"fa_ies_c",units='eflux',name='ion_pa',energy=[30,30000],retrace=1,/shift90,t1=t1,t2=t2
-  get_pa_spec,"fa_ies_c",units='eflux',name='ion_pa',energy=[30,30000],/shift90,t1=t1,t2=t2
+  ;; get_pa_spec,"fa_ies_c",units='eflux',name='ion_pa',energy=[30,30000],/shift90,t1=t1,t2=t2
+  get_pa_spec_ts,"fa_ies",units='eflux',name='ion_pa',energy=[30,30000],/shift90,t1=t1,t2=t2
   get_data,'ion_pa',data=tmp                                ; get data structure
   tmp.y=tmp.y > 1.                                          ; Remove zeros
   tmp.y = alog10(tmp.y)                                     ; Pre-log
@@ -110,10 +125,11 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
   options,'ion_pa','ytickv',[-90,0,90,180,270]              ; set y-axis labels
   options,'ion_pa','panel_size',2                           ; set panel size
   
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;get orbit data
   get_data,'ion_pa',data=tmp_pa
   get_fa_orbit,tmp_pa.x,/time_array,/all
-
   ;; Make L-shell data
   get_data,'ILAT',data=ilat
   lShell={x:ilat.x,y:(cos(ilat.y*!PI/180.))^(-2),yTitle:"L-shell"}
@@ -131,13 +147,102 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
      orb=tmp.y(ntmp-1)
      orbit_num=strcompress(string(orb),/remove_all)
   endelse
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; For getting s/c pot
+  spacecraft_potential=get_fa_fields('V8_S',t1,t2)
+
+  spin_period=4.946             ; seconds
   
+  ;;get_sample_rate
+  
+  v8={x:spacecraft_potential.time,y:spacecraft_potential.comp1}
+  
+  v8_dt=abs(v8.x-shift(v8.x,-1))
+  v8_dt(0)=v8_dt(1)
+  v8_dt(n_elements(v8.x)-1)=v8_dt(n_elements(v8.x)-2)
+  
+  ;;get maxima within a 1 spin window
+  j_range=where(v8.x LT v8.x(n_elements(v8.x)-1)-spin_period)
+  index_max=max(j_range)
+  print,index_max
+  pot=make_array(n_elements(v8.x),/double)
+  for j=0L,index_max do begin
+     ;;spin_range=where(v8.x GE v8.x(j) and v8.x LE v8.x(j)+spin_period)
+     spin_range=j+findgen(ceil(spin_period/V8_dt(j)))
+     pot(j)=max(abs(v8.y(spin_range)),ind)
+     sign=v8.y(spin_range(ind))/abs(v8.y(spin_range(ind)))
+     pot(j)=sign*pot(j)
+     ;;print,j,pot(j)
+  endfor
+  pot(index_max+1:n_elements(v8.x)-1)=pot(j_range(index_max))
+  sc_pot={x:v8.x,y:pot}
+  store_data,'S_Pot',data=sc_pot ;note this is actualy the negative of the sp. potential this corrected in the file output
+  
+  ;;Which angle depends on which hemisphere
+  ;;For the orbit in question, 14369, the expansion I want to do is in the Southern hemi
+  get_data,'ALT',data=alt
+  loss_cone_alt=alt.y(0)*1000.0
+  lcw=loss_cone_width(loss_cone_alt)*180.0/!DPI
+  get_data,'ILAT',data=ilat
+  north_south=abs(ilat.y(0))/ilat.y(0)
+  
+  if north_south EQ -1 then begin
+     e_angle=[180.-lcw,180+lcw] ; for Southern Hemis.
+     ;;i_angle=[270.0,90.0]	
+     ;;elimnate ram from data
+     i_angle=[180.0,360.0]
+     i_angle_up=[270.0,360.0]
+     
+  endif else begin
+     e_angle=[360.-lcw,lcw]     ;	for Northern Hemis.
+     ;;i_angle=[90.,270.0]
+     ;;eliminate ram from data
+     i_angle=[0.0,180.0]
+     i_angle_up=[90.0,180.0]
+     
+  endelse
+
+  IF NOT KEYWORD_SET(energy_electrons) THEN energy_electrons=[0.,30000.] ;use 0.0 for lower bound since the sc_pot is used to set this
+  IF NOT KEYWORD_SET(energy_ions) THEN energy_ions=[0.,500.]             ;use 0.0 for lower bound since the sc_pot is used to set this
+
+  ;; Electron and ion fluxes from alfven_stats_5
+  get_2dt_ts_pot,'je_2d_b','fa_ees',t1=t1,t2=t2,name='JEe_tot',energy=energy_electrons,sc_pot=sc_pot
+  get_2dt_ts_pot,'je_2d_b','fa_ees',t1=t1,t2=t2,name='JEe',angle=e_angle,energy=energy_electrons,sc_pot=sc_pot
+  get_2dt_ts_pot,'j_2d_b','fa_ees',t1=t1,t2=t2,name='Je',energy=energy_electrons,sc_pot=sc_pot
+  get_2dt_ts_pot,'j_2d_b','fa_ees',t1=t1,t2=t2,name='Je_lc',energy=energy_electrons,angle=e_angle,sc_pot=sc_pot
+  
+  get_2dt_ts_pot,'je_2d_b','fa_ies',t1=t1,t2=t2,name='JEi',energy=energy_ions,angle=i_angle,sc_pot=sc_pot
+  get_2dt_ts_pot,'j_2d_b','fa_ies',t1=t1,t2=t2,name='Ji',energy=energy_ions,angle=i_angle,sc_pot=sc_pot
+  get_2dt_ts_pot,'je_2d_b','fa_ies',t1=t1,t2=t2,name='JEi_up',energy=energy_ions,angle=i_angle_up,sc_pot=sc_pot
+  get_2dt_ts_pot,'j_2d_b','fa_ies',t1=t1,t2=t2,name='Ji_up',energy=energy_ions,angle=i_angle_up,sc_pot=sc_pot
+  
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; want Je and Ji
+  ylim,'Je',1.e7,1.e9,1 ; set y limits
+  options,'Je','ytitle','Electrons!C!C1/(cm!U2!N-s)'                   ; set y title
+  options,'Je','tplot_routine','pmplot'                                ; set 2 color plot
+  options,'Je','labels',['Downgoing!C Electrons','Upgoing!C Electrons '] ; set color label
+  options,'Je','labflag',3                                               ; set color label
+  options,'Je','labpos',[4.e8,5.e7]                                      ; set color label
+  options,'Je','panel_size',1                                            ; set panel size
+
+  ylim,'Ji',1.e5,1.e8,1                                        ; set y limits
+  options,'Ji','ytitle','Ions!C!C1/(cm!U2!N-s)'              ; set y title
+  options,'Ji','tplot_routine','pmplot'                      ; set 2 color plot
+  options,'Ji','labels',['Downgoing!C Ions','Upgoing!C Ions '] ; set color label
+  options,'Ji','labflag',3                                     ; set color label
+  options,'Ji','labpos',[2.e7,1.e6]                            ; set color label
+  options,'Ji','panel_size',1                                  ; set panel size
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; and then the plots
   ;; loadct2,39
   ;; Plot the data
   DEVICE,decomposed=0
   loadct2,43
   ;; tplot,['el_0','el_pa','ion_pa','JEe','Je','Ji'],$
-  tplot,['el_0','el_pa','ion_pa'],$
+  tplot,['el_0','el_pa','ion_pa','Je','Ji'],$
         var_label=['ALT','ILAT','LSHELL','MLT'],title='FAST ORBIT '+orbit_num
   
 END
