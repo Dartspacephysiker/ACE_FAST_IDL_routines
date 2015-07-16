@@ -45,7 +45,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
    MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
    USER_SPECIFIED_MAXQUANTITY=user_specified_maxQuantity, $
-   YRANGE_MAXIND=yRange_maxInd, $
+   YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
    LOG_DBQUANTITY=log_DBquantity, $
    NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
@@ -504,8 +504,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                  plot_pos=plot(cdb_t_pos, $
                                cdb_y_pos, $
                                XTITLE='Hours since storm commencement'+titleSuff, $
-                               YTITLE=mTags(maxInd), $
-                               ;; YTITLE="Upward ion flux (N/$cm^3$)", $
+                               ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                               YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                       yTitle_maxInd : $
+                                       mTags(maxInd)), $
                                XRANGE=xRange, $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                                yRange_maxInd : [minDat_pos,maxDat_pos], $
@@ -553,7 +555,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                  plot_neg=plot(cdb_t_neg, $
                                cdb_y_neg, $
                                XTITLE='Hours since storm commencement'+titleSuff, $
-                               YTITLE=mTags(maxInd), $
+                               ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                               YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                       yTitle_maxInd : $
+                                       mTags(maxInd)), $
                                XRANGE=xRange, $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                                yRange_maxInd : [minDat_neg,maxDat_neg], $
@@ -607,8 +612,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                  plot=plot(cdb_t, $
                            (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
                            XTITLE='Hours since storm commencement'+titleSuff, $
-                           ;; YTITLE="Upward ion flux (N/$cm^3$)", $
-                           YTITLE=mTags(maxInd), $
+                           ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                           YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                   yTitle_maxInd : $
+                                   mTags(maxInd)), $
                            XRANGE=xRange, $
                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                            yRange_maxInd : [minDat,maxDat], $
@@ -683,8 +690,11 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                  plot_pos=plot(tBin(safe_i)+0.5*nEvBinsize, $
                                (log_DBQuantity) ? 10^Avgs_pos(safe_i) : Avgs_pos(safe_i), $
                                XTITLE='Hours since storm commencement'+titleSuff, $
-                               YTITLE=mTags(maxInd), $
                                ;; YTITLE="Upward ion flux (N/$cm^3$)", $
+                               ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                               YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                       yTitle_maxInd : $
+                                       mTags(maxInd)), $
                                XRANGE=xRange, $
                                ;; YRANGE=[1e5,1e10], $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
@@ -730,7 +740,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                  plot_neg=plot(tBin(safe_i)+0.5*nEvBinsize, $
                                (log_DBQuantity) ? 10^Avgs_neg(safe_i) : Avgs_neg(safe_i), $
                                XTITLE='Hours since storm commencement'+titleSuff, $
-                               YTITLE=mTags(maxInd), $
+                               ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                               YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                       yTitle_maxInd : $
+                                       mTags(maxInd)), $
                                XRANGE=xRange, $
                                ;; YRANGE=[minDat_neg,maxDat_neg], $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
@@ -774,8 +787,10 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
               plot=plot(tBin(safe_i)+0.5*nEvBinsize, $
                         Avgs(safe_i), $
                         XTITLE='Hours since storm commencement'+titleSuff, $
-                        ;; YTITLE="Upward ion flux (N/$cm^3$)", $
-                        YTITLE=mTags(maxInd), $
+                        ;; YTITLE="Maximum upward ion flux (N/$cm^3$)", $
+                        YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                yTitle_maxInd : $
+                                mTags(maxInd)), $
                         XRANGE=xRange, $
                         YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                         yRange_maxInd : [minDat,maxDat], $

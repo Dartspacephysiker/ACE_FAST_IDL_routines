@@ -46,10 +46,11 @@ PRO JOURNAL__20150625__use_arreglado_storm_commencement
                                             /USE_DARTDB_START_ENDDATE, $
                                             AVG_TYPE_MAXIND=1, $
                                             /NEG_AND_POS_SEPAR,/LOG_DBQUANTITY, $
-                                            NEVBINSIZE=300,TBEFORESTORM=60,TAFTERSTORM=60, $
+                                            NEVBINSIZE=600,TBEFORESTORM=60,TAFTERSTORM=60, $
                                             SUBSET_OF_STORMS=lrg_commencement.ind, $
                                             HOUR_OFFSET_OF_SUBSET=lrg_commencement.offset, $
                                             YRANGE_MAXIND=[1e5,1e10], $
+                                            YTITLE_MAXIND="Maximum upward ion flux (N/$cm^3$)", $
                                             /USE_SYMH
                                             
   ;ION_ENERGY_FLUX
