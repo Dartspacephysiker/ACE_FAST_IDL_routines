@@ -50,9 +50,21 @@ PRO JOURNAL__20150625__use_arreglado_storm_commencement
                                             SUBSET_OF_STORMS=lrg_commencement.ind, $
                                             HOUR_OFFSET_OF_SUBSET=lrg_commencement.offset, $
                                             YRANGE_MAXIND=[1e5,1e10], $
-                                            YTITLE_MAXIND="Maximum upward ion flux (N/$cm^3$)", $
+                                            YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)", $
                                             /USE_SYMH
                                             
+  ;INTEG_ION_FLUX_UP
+  SUPERPOSE_STORMS_AND_ALFVEN_DB_QUANTITIES,MAXIND=18,STORMTYPE=1, $
+                                            /USE_DARTDB_START_ENDDATE, $
+                                            AVG_TYPE_MAXIND=1, $
+                                            /NEG_AND_POS_SEPAR,/LOG_DBQUANTITY, $
+                                            NEVBINSIZE=600,TBEFORESTORM=60,TAFTERSTORM=60, $
+                                            SUBSET_OF_STORMS=lrg_commencement.ind, $
+                                            HOUR_OFFSET_OF_SUBSET=lrg_commencement.offset, $
+                                            YRANGE_MAXIND=[1e7,1e13], $
+                                            YTITLE_MAXIND="Integrated upward ion flux (N $s^{-1}$)", $
+                                            /USE_SYMH
+
   ;ION_ENERGY_FLUX
   SUPERPOSE_STORMS_AND_ALFVEN_DB_QUANTITIES,MAXIND=14,STORMTYPE=1, $
                                             /USE_DARTDB_START_ENDDATE, $
@@ -64,6 +76,8 @@ PRO JOURNAL__20150625__use_arreglado_storm_commencement
                                             YRANGE_MAXIND=[1e-5,1e0], $
                                             /USE_SYMH
   
+
+
   ;EFLUX_LOSSCONE_INTEG
   SUPERPOSE_STORMS_AND_ALFVEN_DB_QUANTITIES,MAXIND=10,STORMTYPE=1, $
                                             /USE_DARTDB_START_ENDDATE, $

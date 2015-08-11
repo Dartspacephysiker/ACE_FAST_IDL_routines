@@ -50,7 +50,9 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   ;; sw_data_plotter_and_dartdb_ind_getter,prod='SYM-H',center_t='2000-04-07/00:00:00',before_t=2,after_t=2,OUTFILE='/home/spencerh/Desktop/SYM-H--Storm_2000-04-07--zoomed_for_orb14370.gif',DARTDB_INDS_LIST=dartDB_14370_inds
 
   ;;just the inds, please
-  sw_data_plotter_and_dartdb_ind_getter,prod='SYM-H',center_t='2000-04-07/00:00:00',before_t=2,after_t=2,DARTDB_INDS_LIST=storm_i_list
+  ;; ct='2000-04-07/00:00:00'
+  ct='2000-05-24/00:00:00'
+  sw_data_plotter_and_dartdb_ind_getter,prod='SYM-H',center_t=ct,before_t=1,after_t=1,DARTDB_INDS_LIST=storm_i_list
   storm_i=storm_i_list[0]
 
   restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
@@ -58,11 +60,13 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
 
   tmpTime=str_to_time(maximus.time[storm_i[0]])
   baseTime=tmpTime-(tmpTime MOD 3600)
-  plot=plot((str_to_time(maximus.time[storm_i])-baseTime)/3600.,maximus.mag_current, $
-            XTITLE='Hours since ' + time_to_str(baseTime), $
+  ;; plot=plot((str_to_time(maximus.time[storm_i])-baseTime)/3600.,maximus.mag_current, $
+  plot=plot((str_to_time(maximus.time[storm_i])-str_to_time(ct))/3600.,maximus.mag_current, $
+            ;; XTITLE='Hours since ' + time_to_str(baseTime), $
+            XTITLE='Hours since ' + time_to_str(ct), $
             LINESTYLE='', $
             SYMBOL='x', $
-            SYM_SIZE=1.5)
+            SYM_SIZE=1.5,/OVERPLOT)
 
   ;; ;; From the following command, we know that the events happen on orbit 14369 OUTGOING SOUTH,
   ;; and orbit 14370, both OUTGOING NORTH and OUTGOING SOUTH
@@ -93,33 +97,35 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   ;;DC,AC fields missing orbs 14379-80
   ;;That is, don't use orbs[20:21]
 
-  firstOrb=14359
-  firstOrb=14369
+  ;; firstOrb=14359
+  ;; firstOrb=14369
+  firstOrb=14884
   orbs=INDGEN(23,/L64)+firstOrb
 
   ;; This works great for loading, plotting, and making hard copies of plots of TEAMS data.
   ;; The issue is to decide which data products are most relevant
-  FOR i=9,10 DO BEGIN
-     LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+  ;; FOR i=9,10 DO BEGIN
+  FOR i=0,0 DO BEGIN
+     LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_ORB
 
-     LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+     LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_TMS
      GEN_FA_K0_TMS_GIFPS
 
-     LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+     LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_EES
      GEN_FA_K0_EES_GIFPS
 
-     LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+     LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_IES
      GEN_FA_K0_IES_GIFPS
 
-     LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+     LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_ACF
      GEN_FA_K0_ACF_GIFPS
 
-     LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+     LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
      GEN_FA_K0_DCF_GIFPS
 
   ENDFOR
