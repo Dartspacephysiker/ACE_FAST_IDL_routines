@@ -105,8 +105,8 @@ PRO commands_for_dusk_dawn_plots__withburstdata
   ;; batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff,directions=dirs,maskmin=mskm, $
   ;;                                       /eplots,efluxplottype="Max",eplotrange=[-1,2.0],/logefplot,/nonegeflux,MEDIANPLOT=medPlot,WHOLECAP=wc,midnight=midn
   batch_plot_alfven_stats_imf_screening,PLOTDIR=plotDir,PLOTSUFFIX=plotSuff, $
-                                        /INCLUDE_BURSTDATA, directions=dirs,maskmin=mskm, $
-                                        /enumfplots,enumfplottype="ESA_number_flux",enumfluxplotrange=[1e6,1e10],/logenumfplot,/absenumflux, $
+                                        /INCLUDE_BURSTDATA, DIRECTIONS=dirs,MASKMIN=mskm, $
+                                        /ENUMFLPLOTS,ENUMFLPLOTTYPE="ESA_number_flux",ENUMFLPLOTRANGE=[1e6,1e10],/LOGENUMFLPLOT,/ABSENUMFL, $
                                         WHOLECAP=wc,midnight=midn, BYMIN=byMin, $
                                         ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                         MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $

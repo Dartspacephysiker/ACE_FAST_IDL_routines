@@ -64,13 +64,13 @@
 ;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;
 ;                *ELECTRON NUMBER FLUX PLOT OPTIONS
-;		     ENUMFPLOTS         :  Do plots of max electron number flux
-;                    ENUMFPLOTTYPE     :  Options are 'Total_Eflux_Integ', 'Eflux_Losscone_Integ', 'ESA_Number_flux'.
-;                    LOGENUMFPLOT      :  Do log plots of electron number flux.
-;                    ABSENUMFLUX       :  Use absolute value of electron number flux (required for log plots).
-;                    NONEGENUMFLUX     :  Do not use negative e num fluxes in any of the plots (positive is earthward for eflux)
-;                    NOPOSENUMFLUX     :  Do not use positive e num fluxes in any of the plots
-;                    ENUMFLUXPLOTRANGE : Range of allowable values for e- num flux plots. 
+;		     ENUMFLPLOTS       :  Do plots of max electron number flux
+;                    ENUMFLPLOTTYPE    :  Options are 'Total_Eflux_Integ', 'Eflux_Losscone_Integ', 'ESA_Number_flux'.
+;                    LOGENUMFLPLOT     :  Do log plots of electron number flux.
+;                    ABSENUMFL         :  Use absolute value of electron number flux (required for log plots).
+;                    NONEGENUMFL       :  Do not use negative e num fluxes in any of the plots (positive is earthward for eflux)
+;                    NOPOSENUMFL       :  Do not use positive e num fluxes in any of the plots
+;                    ENUMFLPLOTRANGE   :  Range of allowable values for e- num flux plots. 
 ;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;                    
 ;                *POYNTING FLUX PLOT OPTIONS
@@ -200,8 +200,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NPLOTS=nPlots, $
                                      EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, ABSEFLUX=absEflux, $
-                                     ENUMFPLOTS=eNumFPlots, ENUMFPLOTTYPE=eNumFPlotType, LOGENUMFPLOT=logENumfPlot, ABSENUMFLUX=absENumflux, $
-                                     NONEGENUMFLUX=noNegENumFlux, NOPOSENUMFLUX=noPosENumFlux, ENUMFLUXPLOTRANGE=ENumFluxPlotRange, $
+                                     ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
+                                     NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
                                      PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                      NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                      IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -252,7 +252,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defAltRange = [1000.0, 5000.0]
 
   defEFluxPlotType = "Max"
-  defENumFPlotType = "ESA_Number_flux" 
+  defENumFlPlotType = "ESA_Number_flux" 
   defIFluxPlotType = "Max"
   defCharEPlotType = "lossCone"
 
@@ -425,17 +425,17 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
-  IF N_ELEMENTS(squarePlot) EQ 1 THEN BEGIN
+  ;; IF N_ELEMENTS(squarePlot) EQ 1 THEN BEGIN
 ;;     IF N_ELEMENTS(wholeCap) EQ 1 THEN PRINT,"Keyword WHOLECAP set without POLARPLOT! I'm doing it for you..."
 ;;     polarPlot=1                                                 ;do Polar plots instead?
-  ENDIF
+  ;; ENDIF
 
   IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                              ; do num events plots?
   IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                             ;electron energy flux plots?
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = defEFluxPlotType ;options are "Integ" and "Max"
   IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = defIFluxPlotType ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
-  IF N_ELEMENTS(eNumFPlots) EQ 0 THEN eNumFPlots = 0                      ;electron number flux plots?
-  IF N_ELEMENTS(eNumFPlotType) EQ 0 THEN eNumFPlotType = defENumFPlotType ;options are "Total_Eflux_Integ","Eflux_Losscone_Integ", "ESA_Number_flux" 
+  IF N_ELEMENTS(eNumFlPlots) EQ 0 THEN eNumFlPlots = 0                    ;electron number flux plots?
+  IF N_ELEMENTS(eNumFlPlotType) EQ 0 THEN eNumFlPlotType = defENumFlPlotType ;options are "Total_Eflux_Integ","Eflux_Losscone_Integ", "ESA_Number_flux" 
   IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                             ;Poynting flux [estimate] plots?
   IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                         ;ion Plots?
   IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0                     ;char E plots?
@@ -506,32 +506,38 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
 
-  ;;######ELECTRONS
+  ;;######ELECTRON FLUXES, ENERGY AND NUMBER 
+
+  ;;#########e- energy flux
   ;;Eflux max abs. value in interval, or integrated flux?
   ;;NOTE: max value has negative values, which can mess with
   ;;color bars
-  
   IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(absEflux) AND NOT KEYWORD_SET(noNegEflux) AND NOT KEYWORD_SET(noPosEflux) THEN BEGIN 
      print,"Warning!: You're trying to do log Eflux plots but you don't have 'absEflux', 'noNegEflux', or 'noPosEflux' set!"
      print,"Can't make log plots without using absolute value or only positive values..."
      print,"Default: junking all negative Eflux values"
      WAIT, 1
-;;     absEflux=1
      noNegEflux=1
   ENDIF
-
   IF KEYWORD_SET(noPosEflux) AND KEYWORD_SET (logEfPlot) THEN absEflux = 1
 
-  IF KEYWORD_SET(noPosENumflux) AND KEYWORD_SET (logENumfPlot) THEN absENumflux = 1
-
-  ;;For linear or log EFlux plotrange
-  IF N_ELEMENTS(EPlotRange) EQ 0 THEN BEGIN
+  IF N_ELEMENTS(EPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- energy Flux plotrange
      IF N_ELEMENTS(logEfPlot) EQ 0 THEN EPlotRange=[0.01,100] ELSE EPlotRange=[-2,2]
   ENDIF
   
-  ;;For linear or log EFlux plotrange
-  IF N_ELEMENTS(ENumFluxPlotRange) EQ 0 THEN BEGIN
-     IF N_ELEMENTS(logENumfPlot) EQ 0 THEN ENumFluxPlotRange=[1e5,1e9] ELSE ENumFluxPlotRange=[5,11]
+  ;;#########e- number flux
+  ;; Safety for electron number flux plots 
+  IF KEYWORD_SET(logENumFlPlot) AND NOT KEYWORD_SET(absENumFl) AND NOT KEYWORD_SET(noNegENumFl) AND NOT KEYWORD_SET(noPosENumFl) THEN BEGIN 
+     print,"Warning!: You're trying to do log e- number flux plots but you don't have 'absENumFl', 'noNegENumFl', or 'noPosENumFl' set!"
+     print,"Can't make log plots without using absolute value or only positive values..."
+     print,"Default: junking all negative ENumFl values"
+     WAIT, 1
+     noNegENumFl=1
+  ENDIF
+  IF KEYWORD_SET(noPosENumFl) AND KEYWORD_SET (logENumFlPlot) THEN absENumFl = 1
+
+  IF N_ELEMENTS(ENumFlPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- number flux plotrange
+     IF N_ELEMENTS(logENumFlPlot) EQ 0 THEN ENumFlPlotRange=[1e5,1e9] ELSE ENumFlPlotRange=[5,11]
   ENDIF
 
   ;;######Poynting flux
@@ -564,6 +570,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      noNegIflux=1
   ENDIF
 
+  ;;######e- characteristic energy stuff
   IF KEYWORD_SET(logCharEPlot) AND NOT KEYWORD_SET(absCharE) AND NOT KEYWORD_SET(noNegCharE) AND NOT KEYWORD_SET(noPosCharE) THEN BEGIN 
      print,"Warning!: You're trying to do log(charE) plots but you don't have 'absCharE', 'noNegCharE', or 'noPosCharE' set!"
      print,"Can't make log plots without using absolute value or only positive values..."
@@ -575,8 +582,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(noPosCharE) AND KEYWORD_SET (logCharEPlot) THEN absCharE = 1
 
-  ;;For linear or log charE plotrange
-  IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN
+  IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
 ;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
      IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
   ENDIF
@@ -635,7 +641,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;Now run these to clean and tap the databases and interpolate satellite data
-  
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
@@ -659,7 +664,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;***********************************************
   ;;Calculate Poynting flux estimate
   
-  ;;1.0e-9 to take stock of delta_b being recordin in nT
+  ;;1.0e-9 to take stock of delta_b being recorded in nT
   ;;Since E is recorded in mV/m, units of POYNTEST here are mW/m^2
   ;;No need to worry about screening for FINITE(pfluxEst), since both delta_B and delta_E are
   ;;screened for finiteness in alfven_db_cleaner (which is called in get_chaston_ind.pro)
@@ -670,7 +675,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
 
 ;; was using this to compare our Poynting flux estimates against Keiling et al. 2003 Fig. 3
-  
   IF KEYWORD_SET(poyntRange) THEN BEGIN
      IF N_ELEMENTS(poyntRange) NE 2 OR (poyntRange[1] LE poyntRange[0]) THEN BEGIN
         PRINT,"Invalid Poynting range specified! poyntRange should be a two-element vector, [minPoynt maxPoynt]"
@@ -752,13 +756,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      dataRawPtr=[dataRawPtr,PTR_NEW(h2dMaskStr.data)] 
   ENDIF
 
-;  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,TEMPORARY(h2dMaskStr)] ELSE h2dStr = TEMPORARY(h2dMaskStr)
   IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
 
-  ;;h2dStr={h2dStr, data : DBLARR(N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*))), title : "", lim : DBLARR(2) }
-
   ;;########ELECTRON FLUX########
-
   IF KEYWORD_SET(eplots) THEN BEGIN
      h2dEStr={h2dStrTemplate}
 
@@ -779,7 +779,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(no_pos_i)
            ENDIF
         ENDELSE
-        ;; elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.integ_elec_energy_flux(plot_i)) : maximus.integ_elec_energy_flux(plot_i) 
         elecData= maximus.integ_elec_energy_flux(plot_i) 
      ENDIF ELSE BEGIN
         IF eFluxPlotType EQ "Max" THEN BEGIN
@@ -880,42 +879,41 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dEStr.title= absnegslogEstr + "Electron Flux (ergs/cm!U2!N-s)"
      ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dEStr)] 
-     IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,h2dEStr] 
-        IF keepMe THEN BEGIN 
-           dataName=[dataName,efDatName] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
-        ENDIF 
-     ENDIF
+     ;; IF KEYWORD_SET(ePlots) THEN BEGIN 
+     h2dStr=[h2dStr,h2dEStr] 
+     IF keepMe THEN BEGIN 
+        dataName=[dataName,efDatName] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(elecData)] 
+     ENDIF 
+     ;; ENDIF
 
   ENDIF
 
   ;;########ELECTRON NUMBER FLUX########
-
-  IF KEYWORD_SET(eNumFPlots) THEN BEGIN
+  IF KEYWORD_SET(eNumFlPlots) THEN BEGIN
 
      h2dENumStr={h2dStrTemplate}
 
      ;;If not allowing negative fluxes
-     IF STRLOWCASE(eNumFPlotType) EQ STRLOWCASE("Total_Eflux_Integ") THEN BEGIN
+     IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("Total_Eflux_Integ") THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.total_eflux_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-        IF KEYWORD_SET(noNegENumflux) THEN BEGIN
+        IF KEYWORD_SET(noNegENumFl) THEN BEGIN
            no_negs_i=WHERE(maximus.total_eflux_integ GE 0.0)
            print,"N elements in elec #flux data before junking neg elecNumFData: ",N_ELEMENTS(no_negs_i)
            plot_i=cgsetintersection(no_negs_i,plot_i)
            print,"N elements in elec #flux data after junking neg elecNumFData: ",N_ELEMENTS(no_negs_i)
         ENDIF ELSE BEGIN
-           IF KEYWORD_SET(noPosENumflux) THEN BEGIN
+           IF KEYWORD_SET(noPosENumFl) THEN BEGIN
               no_pos_i=WHERE(maximus.total_eflux_integ LT 0.0)
               print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(no_pos_i)
               plot_i=cgsetintersection(no_pos_i,plot_i)        
               print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(no_pos_i)
            ENDIF
         ENDELSE
-        ;; elecNumFData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.total_eflux_integ(plot_i)) : maximus.total_eflux_integ(plot_i) 
         elecNumFData= maximus.total_eflux_integ(plot_i) 
      ENDIF ELSE BEGIN
-        IF STRLOWCASE(eNumFPlotType) EQ STRLOWCASE("Eflux_Losscone_Integ") THEN BEGIN
+        IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("Eflux_Losscone_Integ") THEN BEGIN
            plot_i=cgsetintersection(WHERE(FINITE(maximus.eflux_losscone_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegEflux) THEN BEGIN
@@ -933,16 +931,16 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            ENDELSE
            elecNumFData = maximus.eflux_losscone_integ(plot_i)
         ENDIF ELSE BEGIN
-           IF STRLOWCASE(eNumFPlotType) EQ STRLOWCASE("ESA_Number_flux") THEN BEGIN
+           IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("ESA_Number_flux") THEN BEGIN
               plot_i=cgsetintersection(WHERE(FINITE(maximus.esa_current),NCOMPLEMENT=lost),plot_i) ;;NaN check
               print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-              IF KEYWORD_SET(noNegENumflux) THEN BEGIN
+              IF KEYWORD_SET(noNegENumFl) THEN BEGIN
                  no_negs_i=WHERE(maximus.esa_current GE 0.0)
                  print,"N elements in elec #flux data before junking neg elecNumFData: ",N_ELEMENTS(no_negs_i)
                  plot_i=cgsetintersection(no_negs_i,plot_i)
                  print,"N elements in elec #flux data after junking neg elecNumFData: ",N_ELEMENTS(no_negs_i)
               ENDIF ELSE BEGIN
-                 IF KEYWORD_SET(noPosENumflux) THEN BEGIN
+                 IF KEYWORD_SET(noPosENumFl) THEN BEGIN
                     no_pos_i=WHERE(maximus.esa_current LT 0.0)
                     print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(no_pos_i)
                     plot_i=cgsetintersection(no_pos_i,plot_i)        
@@ -950,7 +948,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ENDIF
               ENDELSE
            ENDIF
-           ;; elecNumFData=(KEYWORD_SET(logAvgPlot)) ? alog10(maximus.esa_current(plot_i)) : maximus.esa_current(plot_i) 
            ;;NOTE: microCoul_per_m2__to_num_per_cm2 = 1. / 1.6e-9
            elecNumFData= maximus.esa_current(plot_i) * 1. / 1.6e-9
         ENDELSE
@@ -968,22 +965,22 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         print,"N neg elements in elec data: ",N_ELEMENTS(where(elecNumFData LT 0.))
         elecNumFData = ABS(elecNumFData)
      ENDIF
-     IF KEYWORD_SET(noNegENumFlux) THEN BEGIN
+     IF KEYWORD_SET(noNegENumFl) THEN BEGIN
         negEStr = "NoNegs--"
         print,"N elements in elec data before junking neg elecNumFData: ",N_ELEMENTS(elecNumFData)
         elecNumFData = elecNumFData(where(elecNumFData GT 0.))
         print,"N elements in elec data after junking neg elecNumFData: ",N_ELEMENTS(elecNumFData)
      ENDIF
-     IF KEYWORD_SET(noPosENumFlux) THEN BEGIN
+     IF KEYWORD_SET(noPosENumFl) THEN BEGIN
         posEStr = "NoPos--"
         print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(elecNumFData)
         elecNumFData = elecNumFData(where(elecNumFData LT 0.))
         print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(elecNumFData)
         elecNumFData = ABS(elecNumFData)
      ENDIF
-     IF KEYWORD_SET(logEnumfPlot) THEN logEFStr="Log "
+     IF KEYWORD_SET(logENumFlPlot) THEN logEFStr="Log "
      absnegslogEFStr=absEFStr + negEFStr + posEFStr + logEFStr
-     efDatName = STRTRIM(absnegslogEFStr,2)+"eNumFlux"+eNumFPlotType+"_"
+     efDatName = STRTRIM(absnegslogEFStr,2)+"eNumFl"+eNumFlPlotType+"_"
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
@@ -997,7 +994,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
                                  OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absENumFlux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
+                                 ABSMED=absENumFl,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + efDatName + "medhist.txt"
 
@@ -1018,33 +1015,31 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
 
      ;data mods?
-     IF KEYWORD_SET(absENumFlux)THEN BEGIN 
+     IF KEYWORD_SET(absENumFl)THEN BEGIN 
         h2dENumStr.data = ABS(h2dENumStr.data) 
         IF keepMe THEN elecNumFData=ABS(elecNumFData) 
      ENDIF
-     IF KEYWORD_SET(logEnumfPlot) THEN BEGIN 
+     IF KEYWORD_SET(logENumFlPlot) THEN BEGIN 
         h2dENumStr.data(where(h2dENumStr.data GT 0,/NULL))=ALOG10(h2dENumStr.data(where(h2dENumStr.data GT 0,/null))) 
         IF keepMe THEN elecNumFData(where(elecNumFData GT 0,/null))=ALOG10(elecNumFData(where(elecNumFData GT 0,/null))) 
      ENDIF
 
-     ;;Do custom range for ENumFlux plots, if requested
-     ;; IF  KEYWORD_SET(EPlotRange) THEN h2dENumStr.lim=TEMPORARY(EPlotRange)$
-     IF  KEYWORD_SET(ENumFluxPlotRange) THEN h2dENumStr.lim=ENumFluxPlotRange $
+     ;;Do custom range for ENumFl plots, if requested
+     IF  KEYWORD_SET(ENumFlPlotRange) THEN h2dENumStr.lim=ENumFlPlotRange $
      ELSE h2dENumStr.lim = [MIN(h2dENumStr.data),MAX(h2dENumStr.data)]
 
      h2dENumStr.title= absnegslogEFstr + "Electron Number Flux (#/cm!U2!N-s)"
-     ;; IF KEYWORD_SET(ePlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dENumStr)] 
-     IF KEYWORD_SET(eNumFPlots) THEN BEGIN & h2dStr=[h2dStr,h2dENumStr] 
-        IF keepMe THEN BEGIN 
-           dataName=[dataName,efDatName] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(elecNumFData)] 
-        ENDIF 
-     ENDIF
+     ;; IF KEYWORD_SET(eNumFlPlots) THEN BEGIN 
+     h2dStr=[h2dStr,h2dENumStr] 
+     IF keepMe THEN BEGIN 
+        dataName=[dataName,efDatName] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(elecNumFData)] 
+     ENDIF 
+     ;; ENDIF
 
   ENDIF
 
   ;;########Poynting Flux########
-
   IF KEYWORD_SET(pplots) THEN BEGIN
 
      h2dPStr={h2dStrTemplate}
@@ -1132,31 +1127,20 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
      ;;ENDIF
      ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
-     IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,h2dPStr] 
-        IF keepMe THEN BEGIN 
-           dataName=[dataName,pfDatName] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
-        ENDIF  
-     ENDIF
+     ;; IF KEYWORD_SET(pPlots) THEN BEGIN & 
+     h2dStr=[h2dStr,h2dPStr] 
+     IF keepMe THEN BEGIN 
+        dataName=[dataName,pfDatName] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(pData)] 
+     ENDIF  
+     ;; ENDIF
 
 ;;   undefine,h2dPStr
-
-     ;;use these n stuff
-     IF KEYWORD_SET(tempSAVE) THEN BEGIN 
-        print,"saving tempdata..." 
-        save,elecData,filename="testcode/elecdata.dat" 
-        mlts=maximus.mlt(plot_i) 
-        ilats=maximus.ilat(plot_i) 
-        save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
-        pData=pfluxEst(plot_i) 
-        save,pData,filename="testcode/pData.dat" 
-     ENDIF
 
   ENDIF
 
 
   ;;########ION FLUX########
-
   IF KEYWORD_SET(ionPlots) THEN BEGIN
      h2dIStr={h2dStrTemplate}
 
@@ -1325,17 +1309,17 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ELSE h2dIStr.lim = [MIN(h2dIStr.data),MAX(h2dIStr.data)]
 
      h2dIStr.title= absnegslogIonStr + "Ion Flux (ergs/cm!U2!N-s)"
-     IF KEYWORD_SET(ionPlots) THEN BEGIN & h2dStr=[h2dStr,h2dIStr] 
-        IF keepMe THEN BEGIN 
-           dataName=[dataName,STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(ionData)] 
-        ENDIF 
-     ENDIF
+     ;; IF KEYWORD_SET(ionPlots) THEN BEGIN & 
+     h2dStr=[h2dStr,h2dIStr] 
+     IF keepMe THEN BEGIN 
+        dataName=[dataName,STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(ionData)] 
+     ENDIF 
+     ;; ENDIF
 
   ENDIF
 
   ;;########CHARACTERISTIC ENERGY########
-
   IF KEYWORD_SET(charEPlots) THEN BEGIN
 
      h2dCharEStr={h2dStrTemplate}
@@ -1435,12 +1419,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
      ;; IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
-     IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,h2dCharEStr] 
-        IF keepMe THEN BEGIN 
-           dataName=[dataName,chareDatName] 
-           dataRawPtr=[dataRawPtr,PTR_NEW(charEData)]
-        ENDIF 
-     ENDIF
+     ;; IF KEYWORD_SET(charEPlots) THEN BEGIN 
+     h2dStr=[h2dStr,h2dCharEStr] 
+     IF keepMe THEN BEGIN 
+        dataName=[dataName,chareDatName] 
+        dataRawPtr=[dataRawPtr,PTR_NEW(charEData)]
+     ENDIF 
+     ;; ENDIF
 
 ;;   undefine,h2dCharEStr   ;;,charEData 
 
@@ -1497,14 +1482,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ENDIF
         
-     IF KEYWORD_SET(orbContribPlot) THEN BEGIN & h2dStr=[h2dStr,h2dOrbStr] 
+     IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
+        h2dStr=[h2dStr,h2dOrbStr] 
         IF keepMe THEN dataName=[dataName,"orbsContributing_"] 
      ENDIF
 
   ENDIF
 
   ;;########TOTAL Orbits########
-
   IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
 
      ;;uniqueOrbs_ii=UNIQ(maximus.orbit(ind_region_magc_geabs10_acestart),SORT(maximus.orbit(ind_region_magc_geabs10_acestart)))
@@ -1552,7 +1537,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   ;;########Orbit FREQUENCY########
-
   IF KEYWORD_SET(orbfreqplot) THEN BEGIN
 
      h2dFreqOrbStr={h2dStrTemplate}
@@ -1562,9 +1546,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
      IF N_ELEMENTS(orbFreqRange) EQ 0 OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
 
-     IF KEYWORD_SET(orbFreqPlot) THEN BEGIN & h2dStr=[h2dStr,h2dFreqOrbStr] 
-        IF keepMe THEN dataName=[dataName,"orbFreq_"] 
-     ENDIF
+     h2dStr=[h2dStr,h2dFreqOrbStr] 
+     IF keepMe THEN dataName=[dataName,"orbFreq_"] 
 
      ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
      orbs_w_events_histo_i=where(h2dorbstr.data NE 0)
@@ -1578,7 +1561,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
      
   ;;########NEvents/orbit########
-
   IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
 
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
@@ -1613,7 +1595,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   ;;########NEvents/minute########
-
   IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
 
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
@@ -1665,6 +1646,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      h2dStr=[h2dStr,h2dNEvPerMinStr] 
      IF keepMe THEN dataName=[dataName,logNEvStr + "nEventPerMin"] 
 
+  ENDIF
+
+  ;; Temporary data thing
+  ;;use these n stuff
+  IF KEYWORD_SET(tempSAVE) THEN BEGIN 
+     print,"saving tempdata..." 
+     IF KEYWORD_SET(ePlots) THEN save,elecData,filename="testcode/elecdata.dat" 
+     mlts=maximus.mlt(plot_i) 
+     ilats=maximus.ilat(plot_i) 
+     save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
+     pData=pfluxEst(plot_i) 
+     IF KEYWORD_SET(pplots) THEN save,pData,filename="testcode/pData.dat" 
   ENDIF
 
   ;;********************************************************
