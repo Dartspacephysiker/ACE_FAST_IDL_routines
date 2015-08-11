@@ -130,7 +130,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   IF OOB_HIGH_i[0] NE -1 THEN is_OOBHigh = 1
   IF OOB_LOW_i[0] NE -1 THEN is_OOBLow = 1
   
-  h2descl(notMasked)=bytscl(temp.data(notMasked),top=nLevels-1-is_OOBHigh-is_OOBLow,MAX=temp.lim[1],MIN=temp.lim[0])+is_OOBLow
+  h2descl(notMasked)= bytscl( temp.data(notMasked),top=nLevels-1-is_OOBHigh-is_OOBLow,MAX=temp.lim[1],MIN=temp.lim[0] ) + is_OOBLow
 ;;  h2descl(where(temp.data(notMasked) GT temp.lim[1])) = BYTE(nLevels-1)
 ;;  h2descl(where(temp.data(notMasked) LT temp.lim[0])) = 0B
   IF OOB_HIGH_i[0] NE -1 THEN h2descl(OOB_HIGH_i) = BYTE(nLevels-1)
@@ -173,8 +173,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;        IF mirror THEN tempMLTS = ((180 - tempMLTS) + 360) MOD 360
 
         ;;Integrals
-        IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j] $
-        ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10^temp.data[i,j] : temp.data[i,j]
+        IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10.^temp.data[i,j] : temp.data[i,j] $
+        ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10.^temp.data[i,j] : temp.data[i,j]
         ;; print,"masked["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(masked[i,j],/REMOVE_ALL)
         ;; print,"temp.data["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(temp.data[i,j],/REMOVE_ALL)
         ;; print,"dawnint is " + strcompress(dawnIntegral) + " and duskint is " + strcompress(duskIntegral)
@@ -322,13 +322,15 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ENDIF 
 
   ;; colorbar label stuff
-  IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
+  ;; IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
+  IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(E0.4)'
   ;;  labelFormat='(I0)'
-  lowerLab=(logPlotzz AND logLabels) ? 10^(temp.lim[0]) : temp.lim[0]
-  midLab=(logPlotzz AND logLabels) ? 10^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
-  UpperLab=(logPlotzz AND logLabels) ? 10^temp.lim[1] : temp.lim[1]
+  lowerLab=(logPlotzz AND logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
+  midLab=(logPlotzz AND logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  UpperLab=(logPlotzz AND logLabels) ? 10.^temp.lim[1] : temp.lim[1]
 
-  IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
+  ;; IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
+  IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(E0.4)'
   IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
      ;; cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.

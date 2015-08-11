@@ -57,8 +57,10 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;; dE_lcutoff = 0.0              ; Below zero should be garbage?
   
   ;; losscone electron flux cutoffs
-  ef_lc_integ_hcutoff = 1.0e7   ;junks 191 events
-  ef_lc_integ_lcutoff = -1.0e7
+  ;; ef_lc_integ_hcutoff = 1.0e7   ;junks 191 events
+  ;; ef_lc_integ_lcutoff = -1.0e7
+  ef_lc_integ_hcutoff = 1.0e5   ;junks 191 events
+  ef_lc_integ_lcutoff = -1.0e5
   
   ;; electron energy flux cutoffs
   elec_ef_hcutoff = 1.0e3       ;junks 284 events. NOTE, units are ergs-cm^(-2)-s^(-1). 
