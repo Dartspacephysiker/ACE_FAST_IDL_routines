@@ -5,17 +5,24 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
 ;12/14/2014 
 ;This might not work as written; it still needs to be tested
   
-  date='20150611'
-  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
+;;  date='20150611'
+  date='20150810'
+;;  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
+  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output__burst/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'
   ;; outfile='Dartdb_' + date + '--500-14999--maximus.sav'
   ;; outfile='Dartdb_' + date + '--10001-14999--maximus--only_below_aur_oval.sav'
-  outfile='Dartdb_' + date + '--15000-16361--maximus--below_aur_oval.sav'
+  ;; outfile='Dartdb_' + date + '--15000-16361--maximus--below_aur_oval.sav'
+  
+  ;;From burst mode stuff 2015/08/10
+  outfile='Dartdb_' + date + '--1000-16361--maximus--burstmode.sav'
+  outTimefile='Dartdb_' + date + '--1000-16361--cdbtime--burstmode.sav'
 
   ;; below_aur_ovalStr=''
   ;; below_aur_ovalStr='--only_below_aur_oval'
-  below_aur_ovalStr='below_aur_oval'
+  ;; below_aur_ovalStr='below_aur_oval'
+  below_aur_ovalStr='--below_aur_oval'
 
   only_alfvenic=1
 
@@ -26,17 +33,20 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
   ;; max_orbit=15000
   ;; min_orbit=10001
   ;; max_orbit=14999
-  min_orbit=15000
-  max_orbit=16999
+
+  ;;From burst mode runs 2015/08/08
+  min_orbit=1102
+  max_orbit=16361
 
   for j=min_orbit,max_orbit do begin
 
 ;    filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_0'
-     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr
+;     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr
+     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr+'--burst'
                                 ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
      result=file_which(Dartmouth_DB,filename)
      if result then begin
-        for jj=0,9 do begin
+        for jj=0,11 do begin
            result=file_which(Dartmouth_DB,filename)
            if result then begin
               print,j,jj
@@ -101,13 +111,19 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
               endif
 ;           filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
 ;           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
-           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr
+;           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr
+           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr+'--burst'
 ;    filename='dflux'+'_startstop_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
         endfor
      endif
   endfor
 
   save,maximus,filename=outfile
+
+  ;;do time
+  print,"Doing time file, '"+outTimefile+"'..."
+  cdbtime=str_to_time(maximus.time)
+  save,cdbtime,filename=outTimefile
 
   return
 

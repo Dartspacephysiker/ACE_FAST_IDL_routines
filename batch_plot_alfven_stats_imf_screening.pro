@@ -13,7 +13,8 @@
 ;-
 PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
                                           MASKMIN=maskMin,DIRECTIONS=directions, ALL=all, $
-                                          EPLOTS=ePlots, IONPLOTS=ionPlots, PPLOTS=pPlots,CHAREPLOTS=charEPlots, ORBPLOTS=orbPlots, $
+                                          EPLOTS=ePlots, ENUMFPLOTS=eNumFPlots, IONPLOTS=ionPlots, $
+                                          PPLOTS=pPlots,CHAREPLOTS=charEPlots, ORBPLOTS=orbPlots, $
                                           NEVENTPERMINPLOT=nEventPerMinPlot, $
                                           _EXTRA=e
 ;                                          _REF_EXTRA=e
@@ -49,7 +50,14 @@ PRO BATCH_PLOT_ALFVEN_STATS_IMF_SCREENING,PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,
                                          EPLOTS=ePlots, maskmin=maskMin, _extra=e
      ENDIF
      
-     ;;electron plots
+     ;;electron number flux plots
+     IF KEYWORD_SET(eNumFPlots) THEN BEGIN
+;;        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
+        plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $
+                                         ENUMFPLOTS=eNumFPlots, maskmin=maskMin, _extra=e
+     ENDIF
+
+     ;;ion plots
      IF KEYWORD_SET(ionPlots) THEN BEGIN
 ;;        plot_alfven_stats_imf_screening,clockstr=directions[i],PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix,efluxplottype="Max",/logefplot,EPLOTS=ePlots,/medianplot,maskmin=maskMin,customerange=[-1,1.5],/nonegeflux, _extra=e
         plot_alfven_stats_imf_screening, clockstr=directions[i], PLOTDIR=plotDir,PLOTPREFIX=plotPrefix,PLOTSUFFIX=plotSuffix, $

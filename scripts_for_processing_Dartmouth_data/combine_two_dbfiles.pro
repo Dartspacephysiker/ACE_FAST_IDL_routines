@@ -1,14 +1,18 @@
-pro combine_two_dbfiles,maximus,cdbTime,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFILE2=dbFile2,DB_TFILE2=db_tFile2
+pro combine_two_dbfiles,maximus,cdbTime,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFILE2=dbFile2,DB_TFILE2=db_tFile2,SAVE_COMBINED_FILE=save_combined_file
   ;2015/06/09
   ;This will take two separate maximus saves and smash them together, ordered by time
 
   date='20150611'
   
   defDBDir1 ='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  defDBFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--maximus_diff.sav'
-  defDB_tFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--cdbtime_diff.sav'
+  ;; defDBFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--maximus_diff.sav'
+  ;; defDB_tFile1='Dartdb_20150609--500-10000_below_aur_oval--10001-14999_above--cdbtime_diff.sav'
+
   ;; defDBFile1='Dartdb_20150611--15000-16361--maximus--below_aur_oval.sav'
   ;; defDB_tFile1='Dartdb_20150611--15000-16361--cdbtime--below_aur_oval.sav'
+
+  defDBFile1='Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+  defDB_tFile1='Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
 
   defDBDir2 ='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
   ;; defDBFile2='Dartdb_20150611--10001-14999--maximus--only_below_aur_oval.sav'
@@ -16,12 +20,15 @@ pro combine_two_dbfiles,maximus,cdbTime,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFI
   defDBFile2='tempmaximus.sav'
   defDB_tFile2='tempcdbtime.sav'
 
-  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
-  contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
+  ;;now-unused lines?
+  ;; Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
+  ;; contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
 
-  outDir='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  outFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--maximus.sav'
-  out_tFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--cdbtime.sav'
+  IF KEYWORD_SET(save_combined_file) THEN BEGIN
+     outDir='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
+     outFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--maximus.sav'
+     out_tFile=outDir+'Dartdb_' + date + '--500-16361_inc_lower_lats--cdbtime.sav'
+  ENDIF
 
   ;first DB file
   IF ~KEYWORD_SET(dbFile1) THEN dbFile1=defDBDir1+defDBFile1
@@ -103,8 +110,10 @@ pro combine_two_dbfiles,maximus,cdbTime,DBFILE1=dbFile1,DB_TFILE1=db_tFile1,DBFI
 
   ;; max_resize=resize_maximus(maximus,maximus_ind=1,min_for_ind=0.5,max_for_ind=2)
 
-  save,maximus,filename=outFile
-  save,cdbTime,filename=out_tFile
+  IF KEYWORD_SET(save_combined_file) THEN BEGIN
+     save,maximus,filename=outFile
+     save,cdbTime,filename=out_tFile
+  ENDIF
 
   return
 

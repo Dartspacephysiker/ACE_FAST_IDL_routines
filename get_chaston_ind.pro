@@ -51,7 +51,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
      loaddataDir = defLoaddataDir
      dbFile = defDBFile
      cdbTimeFile = loaddataDir+defCDBTimeFile
-     IF FILE_TEST(cdbTimeFile) AND N_ELEMENTS(cdbTime) EQ 0 THEN restore,cdbTimeFile
+     IF FILE_TEST(cdbTimeFile) AND N_ELEMENTS(cdbTime) EQ 0 THEN restore,cdbTimeFile ELSE print,"cdbTimeFile already provided! Not loading default..."
 
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(CHASTDB) THEN BEGIN
@@ -115,9 +115,9 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
         mlt_i = WHERE(maximus.mlt LE maxM and maximus.mlt GE minM)
         ind_region=cgsetintersection(ind_ilat,mlt_i)
 
-        PRINT,"n events " + STRCOMPRESS(minM,/REMOVE_ALL) + $
+        PRINT,"MLT range: " + STRCOMPRESS(minM,/REMOVE_ALL) + "–" + $
               STRCOMPRESS(maxM,/REMOVE_ALL) + $
-              " MLT: " + STRCOMPRESS(N_ELEMENTS(mlt_i),/REMOVE_ALL)
+              " N events: " + STRCOMPRESS(N_ELEMENTS(mlt_i),/REMOVE_ALL)
      ENDELSE
   ENDELSE
 
