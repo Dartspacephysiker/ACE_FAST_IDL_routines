@@ -7,7 +7,8 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
                                BYMIN=byMin, BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                MAKE_OUTINDSFILE=make_outIndsFile, $
-                               FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir
+                               FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir, $
+                               BURSTDATA_INCLUDED=burstData_included
 
   defClockStr = 'duskward'
 
@@ -73,13 +74,18 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
   IF NOT KEYWORD_SET(fastLocFile) THEN fastLocFile = defFastLocFile
   IF NOT KEYWORD_SET(fastLocTimeFile) THEN fastLocTimeFile = defFastLocTimeFile
 
-  IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=defAngleLim1               ;in degrees
-     angleLim2=defAngleLim2              ;in degrees
-  ENDIF ELSE BEGIN 
-     angleLim1=180.0              ;for doing all IMF
-     angleLim2=180.0 
-  ENDELSE
+
+  IF ~KEYWORD_SET(angleLim1) THEN BEGIN
+     IF clockStr NE "all_IMF" THEN BEGIN
+        angleLim1=defAngleLim1  ;in degrees
+     ENDIF ELSE angleLim1=180.0 ;for doing all IMF
+  ENDIF
+
+  IF ~KEYWORD_SET(angleLim2) THEN BEGIN
+     IF clockStr NE "all_IMF" THEN BEGIN
+        angleLim2=defAngleLim2  ;in degrees
+     ENDIF ELSE angleLim2=180.0 ;for doing all IMF
+  ENDIF 
 
   ;;********************************************
   ;;Build output filename based on stuff provided
@@ -88,6 +94,8 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
                    '"--stableIMF_",I0,"min--delay_",I0,"--smoothWindow_",I0,"min")'
   outIndsFileBasename = STRING(FORMAT=basenameFormat,defOutIndsPrefix,clockStr,angleLim1,angleLim2,satellite,omni_Coords, $
                                byMin,bzMin,stableIMF,delay,smoothWindow)
+
+  IF KEYWORD_SET(burstData_included) THEN outIndsFileBasename += "_burstData_included"
 
   outIndsFilename = fastLocOutputDir+outIndsFileBasename+defOutIndsFileExt
   ;;********************************************
