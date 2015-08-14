@@ -34,7 +34,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   defDBFile = defPref + "--maximus.sav"
 
   defCDBTimeFile = defPref + "--cdbtime.sav"
-  defChastDB_cleanIndFile = 'plot_indices_saves/good_i_for_original_Chaston_DB_after_Alfven_cleaner__20150402.sav'
+  ;; defChastDB_cleanIndFile = 'plot_indices_saves/good_i_for_original_Chaston_DB_after_Alfven_cleaner__20150402.sav'
 
   IF ~KEYWORD_SET(minM) THEN minM=defMinM
   IF ~KEYWORD_SET(maxM) THEN maxM=defMaxM
