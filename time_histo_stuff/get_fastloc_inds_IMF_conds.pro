@@ -8,7 +8,7 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                MAKE_OUTINDSFILE=make_outIndsFile, $
                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir, $
-                               BURSTDATA_INCLUDED=burstData_included
+                               BURSTDATA_EXCLUDED=burstData_excluded
 
   defClockStr = 'duskward'
 
@@ -95,7 +95,7 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
   outIndsFileBasename = STRING(FORMAT=basenameFormat,defOutIndsPrefix,clockStr,angleLim1,angleLim2,satellite,omni_Coords, $
                                byMin,bzMin,stableIMF,delay,smoothWindow)
 
-  IF KEYWORD_SET(burstData_included) THEN outIndsFileBasename += "_burstData_included"
+  IF KEYWORD_SET(burstData_excluded) THEN outIndsFileBasename += "_burstData_excluded"
 
   outIndsFilename = fastLocOutputDir+outIndsFileBasename+defOutIndsFileExt
   ;;********************************************

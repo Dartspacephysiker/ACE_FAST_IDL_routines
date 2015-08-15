@@ -136,7 +136,7 @@
 ;                    WHOLECAP*         :   *(Only for polar plot!) Plot the entire polar cap, not just a range of MLTs and ILATs
 ;                    MIDNIGHT*         :   *(Only for polar plot!) Orient polar plot with midnight (24MLT) at bottom
 ;		     DBFILE            :  Which database file to use?
-;                    INCLUDE_BURSTDATA :  Include data from burst runs of Alfven_stats_5 (which were produced 2015/08/10)
+;                    NO_BURSTDATA      :  Exclude data from burst runs of Alfven_stats_5 (burst data were produced 2015/08/10)
 ;		     DATADIR           :     
 ;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
 ;                                            (He used it for a few papers, I think, so it's good).
@@ -181,10 +181,11 @@
 ;
 ;
 ; MODIFICATION HISTORY: Best to follow my mod history on the Github repository...
-;                       Aug 2015: Added INCLUDE_BURST option, which includes all Alfvén waves identified by as5 while FAST
-;                                 was running in burst mode.
-;                       Jan 2015: Finally turned interp_plots_str into a procedure! Here you have
-;                                 the result.
+;                       2015/08/15 : Changed INCLUDE_BURST to NO_BURSTDATA, because why wouldn't we want to use it?
+;                       Aug 2015   : Added INCLUDE_BURST option, which includes all Alfvén waves identified by as5 while FAST
+;                                    was running in burst mode.
+;                       Jan 2015  :  Finally turned interp_plots_str into a procedure! Here you have
+;                                    the result.
 ;-
 
 PRO plot_alfven_stats_imf_screening, maximus, $
@@ -216,7 +217,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                     DBFILE=dbfile, INCLUDE_BURSTDATA=include_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                     DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                      NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -291,8 +292,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
 
-  defBurstDBFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--maximus--burstmode.sav'
-  defBurstDB_tFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--cdbtime--burstmode.sav'
+  defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
+  ;; defPref = "Dartdb_02282015--500-14999"
+  ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
+  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
+  defDBFile = defPref + "--maximus.sav"
+  defCDBTimeFile = defPref + "--cdbtime.sav"
+
+  ;; defBurstDBFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--maximus--burstmode.sav'
+  ;; defBurstDB_tFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--cdbtime--burstmode.sav'
 
   ; Handle MLT and ILAT
   IF N_ELEMENTS(minMLT) NE 0 THEN minM = minMLT
@@ -626,23 +634,23 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
 
   ;; are we including burst data?
-  IF KEYWORD_SET(include_burstData) THEN BEGIN
-     IF ~KEYWORD_SET(burstDBFile) THEN burstDBFile = defBurstDBFile
-     IF ~KEYWORD_SET(burstDB_File) THEN burstDB_tFile = defBurstDB_tFile
-     inc_burstStr='w_burstData--'
+  ;; IF KEYWORD_SET(include_burstData) THEN BEGIN
+     ;; IF ~KEYWORD_SET(burstDBFile) THEN burstDBFile = defBurstDBFile
+     ;; IF ~KEYWORD_SET(burstDB_File) THEN burstDB_tFile = defBurstDB_tFile
+     ;; inc_burstStr='w_burstData--'
 
-     PRINT,"Including all burst DB events..."
-     PRINT,"Burst DB File: " + burstDBFile
+     ;; PRINT,"Including all burst DB events..."
+     ;; PRINT,"Burst DB File: " + burstDBFile
      
-     combine_two_dbfiles,maximus,cdbTime,DBFILE2=burstDBFile,DB_TFILE2=burstDB_tFile
+     ;; combine_two_dbfiles,maximus,cdbTime,DBFILE2=burstDBFile,DB_TFILE2=burstDB_tFile
 
-  ENDIF ELSE inc_burstStr=''
+  ;; ENDIF ELSE inc_burstStr=''
+  IF KEYWORD_SET(no_burstData) THEN inc_burstStr = '' ELSE inc_burstStr='burstData_excluded--'
 
   ;;parameter string
   paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+$
            byMinStr+byMaxStr+bzMinStr+bzMaxStr+inc_burstStr + $
            polarContStr+hoyDia
-
 
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN $
@@ -653,7 +661,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                                                     HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd)
+                                                     HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
@@ -1617,7 +1625,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                 BYMIN=byMin,BZMIN=bzMin, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                 FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocDir, /MAKE_OUTINDSFILE, $
-                                BURSTDATA_INCLUDED=include_burstData
+                                BURSTDATA_EXCLUDED=no_burstData
 
      make_fastloc_histo,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
                         MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $

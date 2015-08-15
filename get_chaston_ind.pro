@@ -5,11 +5,14 @@
 ;See 'current_event_Poynt_flux_vs_imf.pro' for
 ;more info, since that's where this code comes from.
 
+;2015/08/15 Added NO_BURSTDATA keyword
+
 FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHASTDB=CHASTDB, $
                          ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange,CHARERANGE=charERange, $
                          BOTH_HEMIS=both_hemis,NORTH=north,SOUTH=south, $
                          HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                         DAYSIDE=dayside,NIGHTSIDE=nightside
+                         DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                         NO_BURSTDATA=no_burstData
   
   COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNegMC
 
@@ -30,7 +33,8 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   
   defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
   ;; defPref = "Dartdb_02282015--500-14999"
-  defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
+  ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
+  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
   defDBFile = defPref + "--maximus.sav"
 
   defCDBTimeFile = defPref + "--cdbtime.sav"
@@ -224,9 +228,17 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   IF (satellite EQ "ACE") THEN $
      printf,lun,"You're losing " + strtrim(nlost,2) + $
             " current events because ACE data doesn't start until " + strtrim(maximus.time(ind_ACEstart),2) + "."
+
+  IF KEYWORD_SET(no_burstData) THEN BEGIN
+     burst_i = WHERE(maximus.burst,nBurst,COMPLEMENT=survey_i,NCOMPLEMENT=nSurvey,/NULL)
+     ind_region_magc_geabs10_ACEstart = cgsetintersection(survey_i,ind_region_magc_geabs10_ACEstart)
+
+     printf,lun,""
+     printf,lun,"You're losing " + strtrim(nBurst) + " events because you've excluded burst data."
+  ENDIF
+
   printf,lun,"****END get_chaston_ind.pro****"
   printf,lun,""
-
   ;;***********************************************
   ;;Delete all the unnecessaries
 ;;  undefine,ind_region,ind_magc_ge10,ind_magc_leneg10,ind_magc_geabs10,$

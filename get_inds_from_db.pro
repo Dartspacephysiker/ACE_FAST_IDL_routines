@@ -33,8 +33,12 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
                       NEVENTSRANGE=nEventsRange, NUMORBLIM=numOrbLim, $
                       minMLT=minMLT,maxMLT=maxMLT, $ ;BINMLT=binMLT, $
                       MINILAT=minILAT,MAXILAT=maxILAT, $ ;BINILAT=binILAT, $
-                      MIN_NEVENTS=min_nEvents, BYMIN=byMin, BZMIN=bzMin, $
+                      MIN_NEVENTS=min_nEvents, $
+                      HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+                      BYMIN=byMin, BZMIN=bzMin, $
+                      BYMAX=byMax, BZMAX=bzMax, $
                       SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                      NO_BURSTDATA=no_burstData, $
                       HEMI=hemi, $
                       DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                       DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
@@ -48,17 +52,27 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   !EXCEPT=0                                                      ;Do report errors, please
 
-  ;; Default
+  ;; Defaults
+
   ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus--cleaned.sav"
   ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav"
-  defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav"
+  defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
+
+  ;; defPref = "Dartdb_02282015--500-14999"
+  ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
+  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
+
+  ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav"
+  defDBFile = defPref + "--maximus.sav"
+
   IF NOT KEYWORD_SET(dbFile) AND NOT KEYWORD_SET(do_ChastDB) THEN dbFile=defDBFILE ELSE BEGIN
      IF KEYWORD_SET(do_ChastDB) THEN dbFile = '/SPENCEdata/Research/Cusp/database/processed/maximus.dat' 
   ENDELSE
   restore,dbFile
 
   ;; defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--cdbTime--cleaned.sav"
-  defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--cdbTime.sav"
+  ;; defCDBTimeFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--cdbTime.sav"
+  defCDBTimeFile = defPref + "--cdbtime.sav"
   IF NOT KEYWORD_SET(cdbTimeFile) AND NOT KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = defCDBTimeFile ELSE BEGIN
      IF KEYWORD_SET(do_ChastDB) THEN cdbTimeFile = '/SPENCEdata/Research/Cusp/database/processed/cdbTime.sav' 
   ENDELSE
@@ -110,6 +124,10 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   
   defBx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
   
+  ;for statistical auroral oval
+  defHwMAurOval=0
+  defHwMKpInd=7
+
   defClockStr = 'dawnward'
   
   defAngleLim1 = 45.0
@@ -173,8 +191,12 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
      ENDELSE
   ENDELSE
 
-  IF NOT KEYWORD_SET(minMC) THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
-  IF NOT KEYWORD_SET(maxNEGMC) THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
+  ;Auroral oval
+  IF N_ELEMENTS(HwMAurOval) EQ 0 THEN HwMAurOval = defHwMAurOval
+  IF N_ELEMENTS(HwMKpInd) EQ 0 THEN HwMKpInd = defHwMKpInd
+
+  IF N_ELEMENTS(minMC) EQ 0 THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
+  IF N_ELEMENTS(maxNEGMC) EQ 0 THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -280,14 +302,24 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   
   ;;Requirement for IMF By magnitude?
   byMinStr=''
+  byMaxStr=''
+
   IF KEYWORD_SET(byMin) THEN BEGIN
      byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
+  ENDIF
+  IF KEYWORD_SET(byMax) THEN BEGIN
+     byMaxStr='byMax_' + String(byMax,format='(D0.1)') + '_' ;STRCOMPRESS(byMax,/REMOVE_ALL)
   ENDIF
 
   ;;Requirement for IMF Bz magnitude?
   bzMinStr=''
+  bzMaxStr=''
+
   IF KEYWORD_SET(bzMin) THEN BEGIN
      bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)
+  ENDIF
+  IF KEYWORD_SET(bzMax) THEN BEGIN
+     bzMaxStr='bzMax_' + String(bzMax,format='(D0.1)') + '_' ;STRCOMPRESS(bzMax,/REMOVE_ALL)
   ENDIF
 
   ;;######ELECTRONS
@@ -380,20 +412,26 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
   ENDELSE
   
   ;;parameter string
+  IF KEYWORD_SET(no_burstData) THEN inc_burstStr = '' ELSE inc_burstStr='burstData_excluded--'
+
   omniStr = ""
   IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
   IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
 ;;  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+byMinStr+indSuffix+hoyDia
-  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+byMinStr+bzMinStr+indSuffix+hoyDia
+  paramStr=indPrefix+hemStr+'_'+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+ $
+                      byMinStr+byMaxStr+bzMinStr+bzMaxStr+inc_burstStr + indSuffix+hoyDia
 
   ;;Now run these to clean and tap the databases and interpolate satellite data
-  
+
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
                                                      CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
-                                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange)
+                                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                                     HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
-                            cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
-                            DATADIR=dataDir,SMOOTHWINDOW=smoothWindow,BYMIN=byMin,BZMIN=bzMin,OMNI_COORDS=omni_Coords)
+                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
+                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
+                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
+                             OMNI_COORDS=omni_Coords)
   phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
