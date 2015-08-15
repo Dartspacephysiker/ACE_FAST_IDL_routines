@@ -60,7 +60,7 @@ PRO GET_INDS_FROM_DB, DBFILE=dbfile, CDBTIMEFILE=cdbTimeFile, $
 
   ;; defPref = "Dartdb_02282015--500-14999"
   ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
-  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
+  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361'
 
   ;; defDBFile = "/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav"
   defDBFile = defPref + "--maximus.sav"

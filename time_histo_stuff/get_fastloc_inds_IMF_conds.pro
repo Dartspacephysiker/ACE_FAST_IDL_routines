@@ -10,6 +10,9 @@ PRO GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=an
                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir, $
                                BURSTDATA_EXCLUDED=burstData_excluded
 
+  PRINT,"This is not updated at all relative to get_inds_from_db.pro or get_chaston_inds.pro. You'd better be awfully careful."
+  STOP
+
   defClockStr = 'duskward'
 
   

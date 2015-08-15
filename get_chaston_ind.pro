@@ -34,7 +34,7 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
   ;; defPref = "Dartdb_02282015--500-14999"
   ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
-  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
+  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361'
   defDBFile = defPref + "--maximus.sav"
 
   defCDBTimeFile = defPref + "--cdbtime.sav"
