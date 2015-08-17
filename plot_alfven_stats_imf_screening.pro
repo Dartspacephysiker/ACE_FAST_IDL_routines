@@ -244,7 +244,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defMinI = 50.0 ;these might need to be longs (i.e., '60L')
   defMaxI = 84.0
-  defBinI = 3.0
+  defBinI = 2.0
 
   defMinMagC = 10
   defMaxNegMagC = -10
@@ -263,7 +263,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDelay = 900
 
-  defstableIMF = 1S             ;Set to a time (in minutes) over which IMF stability is required
+  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
   defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
                                 ;there's no way to calculate IMF stability
                                 ;Only valid for stableIMF GE 1
@@ -301,6 +301,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;; defBurstDBFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--maximus--burstmode.sav'
   ;; defBurstDB_tFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--cdbtime--burstmode.sav'
+
+  defTempDir='/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Now set up vars
 
   ; Handle MLT and ILAT
   IF N_ELEMENTS(minMLT) NE 0 THEN minM = minMLT
@@ -358,7 +363,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
      IF $
-        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") AND NOT tag_exist(e,"mirror") $ ;keywords for interp_polar2dhist
+        NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $
+        AND NOT tag_exist(e,"mirror") AND NOT tag_exist(e,"labelFormat") $ ;keywords for interp_polar2dhist
      THEN BEGIN                                                            ;Check for passed variables here
         help,e
         print,e
@@ -397,11 +403,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(satellite) EQ 0 THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
   IF N_ELEMENTS(omni_Coords) EQ 0 THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
 
-  IF delay EQ !NULL THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
+  IF N_ELEMENTS(delay) EQ 0 THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
                                                                        ;Bin recommends something like 11min
   
-  IF stableIMF EQ !NULL THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
-  IF includeNoConsecData EQ !NULL THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
+  IF N_ELEMENTS(stableIMF) EQ 0 THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
+  IF N_ELEMENTS(includeNoConsecData) EQ 0 THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
                                                                        ;there's no way to calculate IMF stability
                                                                        ;Only valid for stableIMF GE 1
   IF N_ELEMENTS(checkBothWays) EQ 0 THEN checkBothWays = defCheckBothWays       ;
@@ -436,7 +442,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      medHistOutData = 1
   ENDIF
 
-  IF DEL_PS EQ !NULL THEN del_ps = 1
+  IF N_ELEMENTS(DEL_PS) EQ 0 THEN del_ps = 1
 
   ;;********************************************
   ;;Variables for histos
@@ -645,7 +651,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;; combine_two_dbfiles,maximus,cdbTime,DBFILE2=burstDBFile,DB_TFILE2=burstDB_tFile
 
   ;; ENDIF ELSE inc_burstStr=''
-  IF KEYWORD_SET(no_burstData) THEN inc_burstStr = '' ELSE inc_burstStr='burstData_excluded--'
+  IF KEYWORD_SET(no_burstData) THEN inc_burstStr ='burstData_excluded--' ELSE inc_burstStr=''
 
   ;;parameter string
   paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+$
@@ -1596,7 +1602,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      nEvByAppStr=""
      IF KEYWORD_SET(logNEventPerOrb) THEN logNEvStr="Log "
      IF KEYWORD_SET(divNEvByApplicable) THEN nEvByAppStr="Applicable_"
-     h2dNEvPerOrbStr.title= logNEvStr + 'N Events per ' + nEvByAppStr + 'Orbit'
+     h2dNEvPerOrbStr.title= logNEvStr + 'Number of Events per ' + nEvByAppStr + 'Orbit'
 
      IF N_ELEMENTS(nEventPerOrbRange) EQ 0 OR N_ELEMENTS(nEventPerOrbRange) NE 2 THEN BEGIN
         IF N_ELEMENTS(logNEventPerOrb) EQ 0 THEN h2dNEvPerOrbStr.lim=[0,7] ELSE h2dNEvPerOrbStr.lim=[-2,1]
@@ -1707,7 +1713,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStr,dataName,maxM,minM,maxI,minI,binM,binI,$
                            rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
-                           filename='/SPENCEdata/Research/Cusp/ACE_FAST/temp/polarplots_'+paramStr+plotSuffix+".dat"
+                           filename=defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
@@ -1722,7 +1728,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 ;;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ;;             ' IMF, ' + strmid(plotMedOrAvg,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
-           cgWindow,'interp_polar2dhist',h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
+           cgWindow,'interp_polar2dhist',h2dStr[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat", $
                 CLOCKSTR=clockStr, _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
@@ -1759,7 +1765,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ;; Use DEVICE to set some PostScript device options:
                  DEVICE, FILENAME='myfile.ps', /LANDSCAPE
                  ;; Make a simple plot to the PostScript file:
-                 interp_polar2dcontour,h2dStr[i],dataName[i],'temp/polarplots_'+paramStr+plotSuffix+".dat", $
+                 interp_polar2dcontour,h2dStr[i],dataName[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat", $
                                        fname=plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.png', _extra=e
                  ;; Close the PostScript file:
                  DEVICE, /CLOSE
@@ -1770,7 +1776,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  cgPS_Open, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps' 
                  ;;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                  ;;          h2dStr[0].lim 
-                 interp_polar2dhist,h2dStr[i],'temp/polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
+                 interp_polar2dhist,h2dStr[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
                  cgPS_Close 
                  ;;Create a PNG file with a width of 800 pixels.
                  cgPS2Raster, plotDir + plotPrefix+dataName[i]+paramStr+plotSuffix+'.ps', $

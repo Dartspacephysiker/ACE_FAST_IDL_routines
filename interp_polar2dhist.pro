@@ -14,6 +14,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;;noPlotIntegral=1
 
   charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.0 : 0.7 )
+  charsize_grid=2.0
 
   ;Subtract one since last array is the mask
   nPlots=N_ELEMENTS(h2dStr)-1
@@ -63,6 +64,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;;Is this a log plot? If so, do integral of exponentiated value
   logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
   ;; FOR charEplot, uncomment me: logPlotzz = 1
+  IF logPlotzz THEN temp.title = STRMID(temp.title, STRPOS(temp.title,"Log ")+4)
 
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
@@ -232,12 +234,18 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;                  CHARSIZE=charSize
 ;;   ENDELSE
      
-  IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
-     lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
+  ;; IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
+  IF N_ELEMENTS(wholeCap) GT 0 THEN BEGIN
+     factor=6.0
+     mltSites=(INDGEN((maxM-minM)/factor)*factor+minM)
+     lonNames=[string(minM,format='(I0)')+" MLT",STRING(mltSites[1:-1],format='(I0)')]
+     ;; lonNames=[string(mltSites[0],format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/3.0)*3.0+(minM+1*3.0)),format='(I0)')]
      ;; lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
      ;; latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
      lats=[60,70,80]
      latNames=[60,70,80]
+     lats=[50,60,70,80]
+     latNames=[50,60,70,80]
 
      IF mirror THEN BEGIN
         ;;    ;;IF N_ELEMENTS(wholeCap) NE 0 THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
@@ -252,13 +260,14 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;                 latdelta=binI*4,$
                  LATS=lats, $
                  LATNAMES=latNames, $
-                 LATLABEL=(mean([minM,maxM]))*15+15, $
+                 ;; LATLABEL=(mean([minM,maxM]))*15+15, $
+                 LATLABEL=45, $
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
-                 LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
+                 LONS=mltSites*15, $
 ;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
                  LONNAMES=lonNames, $
                  LONLABEL=lonLabel, $
-                 CHARSIZE=charSize
+                 CHARSIZE=charSize_grid
   ENDIF ELSE BEGIN
      lonNames=[STRTRIM(INDGEN(12),2)*2]
 
@@ -268,7 +277,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
                  LONNAMES=lonNames, $
-                 CHARSIZE=charSize
+                 CHARSIZE=charSize_grid
   ENDELSE
 
   ;charSize = cgDefCharSize()*0.75
@@ -325,12 +334,14 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;; IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
   IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(E0.4)'
   ;;  labelFormat='(I0)'
+
   lowerLab=(logPlotzz AND logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
-  midLab=(logPlotzz AND logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  ;; midLab=(logPlotzz AND logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  midLab=''
   UpperLab=(logPlotzz AND logLabels) ? 10.^temp.lim[1] : temp.lim[1]
 
   ;; IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
-  IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(E0.4)'
+  ;; IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(E0.4)'
   IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
      ;; cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.
@@ -351,12 +362,16 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
                  OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, $
-                 Title=temp.title, $ ; Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
+                 Title=temp.title, $ ; 
+                 ;; Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
                  /Discrete, $
-                 Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, TLocation="RIGHT", TCharSize=cgDefCharsize()*1.0,$
+                 Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, $
+                 TLocation="RIGHT", TCharSize=charsize_grid,$
+                 CharSize=charsize_grid,$
                  ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
                  ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
-                            String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                            ;; String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                            " ",REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$   ;kluge for now
                             String(UpperLab, Format=labelFormat)] ;for charE plot, uncomment me: String(UpperLab, Format='(I0)')]
   ENDELSE
 
