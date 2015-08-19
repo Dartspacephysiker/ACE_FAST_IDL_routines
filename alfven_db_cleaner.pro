@@ -12,15 +12,20 @@
 ; OUTPUTS:
 ;
 ; MODIFICATION HISTORY:  
+; 2015/08/19    A bunch of limits got changed yesterday. I think I include more extreme events, but based on the distributions of the
+;                 relevant quantities, they don't seem to be physically unreasonable.
+; 2015/08/18    Thought about adding specific keyword so that ChastDB gets treated on its own each time.
+
 ; 02/14/2015 Born  
 ;; Note, there are also several bad measurements of TOTAL_ELECTRON_ENERGY_DFLUX_MULTIPLE_TOT,
 ;;   TOTAL_ALFVEN_ELECTRON_ENERGY_DFLUX, TOTAL_ION_OUTFLOW_MULTIPLE_TOT, TOTAL_ALFVEN_ION_OUTFLOW, 
 ;;   TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT, TOTAL_ALFVEN_UPWARD_ION_OUTFLOW
 ;; I never use these quantities, so I'm ignoring their NaNs.
-;
+; 
+; 
 ;-
 
-function alfven_db_cleaner,maximus,LUN=lun
+function alfven_db_cleaner,maximus,IS_CHASTDB=is_chastDB,LUN=lun
 
   ;;If not lun, just send to stdout
   IF NOT KEYWORD_SET(lun) THEN lun = -1
@@ -33,13 +38,6 @@ function alfven_db_cleaner,maximus,LUN=lun
      RETURN, !NULL
   ENDIF
 
-  ;number of events in total
-  n_events = n_elements(maximus.alfvenic)
-
-  ; Cutoff values
-  
-  ;Gots to be alfvenic
-  alfvenic=1
 
   ;; mag current cutoffs
   magc_hcutOff = 5.0e2          ;junks 245 events above, 256 below
@@ -59,10 +57,14 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;; losscone electron flux cutoffs
   ;; ef_lc_integ_hcutoff = 1.0e7   ;junks 191 events
   ;; ef_lc_integ_lcutoff = -1.0e7
-  ef_lc_integ_hcutoff = 1.0e5   ;junks 191 events
-  ef_lc_integ_lcutoff = -1.0e5
+  ef_lc_integ_hcutoff = 1.0e9   ;junks 191 events
+  ef_lc_integ_lcutoff = -1.0e9
   
   ;; electron energy flux cutoffs
+  ;; 2015/08/19
+  ;; NOTE: For Dartmouth DBs, 'maximus.elec_energy_flux' only takes on absurd values for elec_energy_flux < 0
+  ;; However, in the original Chaston DB, 'maximus.elec_energy_flux' takes on perfectly reasonable values and has a reasonable
+  ;; distribution for elec_energy_flux < 0, generally ABS(maximus.elec_energy_flux) in ChastDB is < 10^2.
   elec_ef_hcutoff = 1.0e3       ;junks 284 events. NOTE, units are ergs-cm^(-2)-s^(-1). 
                                 ;1e3 ergs corresponds to ~6x10^14 eV, and Nakajima et al. [2008]
                                 ;  call FAST observations of eflux > 10^12 eV-cm^(-2)-s^(-1)
@@ -70,24 +72,24 @@ function alfven_db_cleaner,maximus,LUN=lun
   elec_ef_lcutoff = 0.0         ;because less than zero is garbage, right?
   
   ;; max characteristic electron energy cutoffs
-  max_chare_hcutoff = 1.5e4     ;junks 120 events
-  max_chare_lcutoff = 0.0       ;less than zero must be garbage
+  max_chare_hcutoff = 2.0e4
+  max_chare_lcutoff = 0.0  
   
   ;; ion flux cutoffs
-  iflux_hcutoff = 5.0e10        ;junks 122 events
-  iflux_lcutoff = -5.0e10       ;junks something like 100 events
+  iflux_hcutoff = 8.0e11
+  iflux_lcutoff = -8.0e11
   
   ;; ion energy flux cutoffs
-  ieflux_hcutoff = 1.0e1        ;cuts off 209 events
+  ieflux_hcutoff = 5.0e1
   ieflux_lcutoff = 0.0          ;below zero is junk, eh?
   
   ;; upward ion flux cutoffs
-  iflux_up_hcutoff = 7.0e10     ;cuts off 286 events
-  iflux_up_lcutoff = 0.0        ;below zero is junk, eh?
+  iflux_up_hcutoff = 1.0e11
+  iflux_up_lcutoff = 0.0   
   
   ;; characteristic ion energy cutoffs
-  char_ion_e_hcutoff = 250.0    ;cuts off 237 events
-  char_ion_e_lcutoff = 0.0      ;below zero is junk, eh?
+  char_ion_e_hcutoff = 1.0e4
+  char_ion_e_lcutoff = 1.0e-2  
   
   ;; cutoffs for sample_t, fields instrument
   ;; 512 Hz
@@ -111,36 +113,70 @@ function alfven_db_cleaner,maximus,LUN=lun
 
   ;; < 100 Hz—exclude all of these per meeting with Professor LaBelle 2015/05/28
   ;; sample_t_hcutoff = 0.01
+
+  ;; Keep all with sample rate > 5 Hz, which is good (I hope)
   sample_t_hcutoff = 0.2
   
   ;**********
   ;   NaNs  *
   ;**********
 
-  ;; Get rid of junk in various dangerous quantities we might be using
+  IF ~KEYWORD_SET(IS_CHASTDB) THEN BEGIN
+     ;; Get rid of junk in various dangerous quantities we might be using
+     
+     ;;number of events in total
+     n_events = n_elements(maximus.alfvenic)
+     
+     ;; Cutoff values
   
-  ;; alfvenicness
-  good_i = where(maximus.alfvenic GT 0.1,/NULL )
+     ;;Gots to be alfvenic
+     alfvenic=1
 
-  ;; delta Bs and delta Es
-  good_i = cgsetintersection(good_i,WHERE(FINITE(maximus.delta_B),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.delta_E),/NULL))
-  
-  ;; Now electron stuff
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.elec_energy_flux),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_elec_energy_flux),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.eflux_losscone_integ),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.total_eflux_integ),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.max_chare_losscone),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.max_chare_total),/NULL))
+     ;; alfvenicness
+     good_i = where(maximus.alfvenic GT 0.1,/NULL )
+     
+     ;; delta Bs and delta Es
+     good_i = cgsetintersection(good_i,WHERE(FINITE(maximus.delta_B),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.delta_E),/NULL))
+     
+     ;; Now electron stuff
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.elec_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_elec_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.eflux_losscone_integ),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.total_eflux_integ),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.max_chare_losscone),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.max_chare_total),/NULL))
+     
+     ;; Now ion stuff
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux_up),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux_up),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.char_ion_energy),/NULL))
+     
+  ENDIF ELSE BEGIN
 
-  ;; Now ion stuff
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_energy_flux),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux_up),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux_up),/NULL))
-  good_i = cgsetintersection(good_i,where(FINITE(maximus.char_ion_energy),/NULL))
+     n_events = n_ELEMENTS(maximus.time)
+     ;; delta Bs and delta Es
+     good_i = indgen(n_events,/L64)
+     good_i = cgsetintersection(good_i,WHERE(FINITE(maximus.delta_B),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.delta_E),/NULL))
+     
+     ;; Now electron stuff
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.elec_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_elec_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.char_elec_energy),/NULL))
+     
+     ;; Now ion stuff
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_energy_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.ion_flux_up),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.integ_ion_flux_up),/NULL))
+     good_i = cgsetintersection(good_i,where(FINITE(maximus.char_ion_energy),/NULL))
+
+  ENDELSE 
 
   printf,lun,""
   printf,lun,"****From alfven_db_cleaner.pro****"
@@ -153,43 +189,91 @@ function alfven_db_cleaner,maximus,LUN=lun
   ;   Other limits  *
   ;******************
   
-  ;No delta_Bs above any absurd values
-  good_i = cgsetintersection(good_i,where(abs(maximus.mag_current) LE magc_hcutOff,/NULL))
+  IF ~KEYWORD_SET(is_chastDB) THEN BEGIN
+     ;;No delta_Bs above any absurd values
+     good_i = cgsetintersection(good_i,where(abs(maximus.mag_current) LE magc_hcutOff,/NULL))
+   
+     ;;No delta_Bs above any absurd values
+     good_i = cgsetintersection(good_i,where(maximus.delta_b LE dB_hcutOff AND maximus.delta_b GT dB_lcutoff,/NULL))
+     
+     ;;No delta_Es above any absurd values
+     good_i = cgsetintersection(good_i,where(maximus.delta_e LE dE_hcutOff AND maximus.delta_e GT dE_lcutoff,/NULL))
 
-  ;No delta_Bs above any absurd values
-  good_i = cgsetintersection(good_i,where(maximus.delta_b LE dB_hcutOff AND maximus.delta_b GT dB_lcutoff,/NULL))
+     ;;No losscone e- fluxes with any absurd values
+     good_i = cgsetintersection(good_i,where(maximus.eflux_losscone_integ LE ef_lc_integ_hcutOff AND maximus.eflux_losscone_integ GT ef_lc_integ_lcutoff,/NULL))
+     ;;No absurd electron energy fluxes ;At least for the dartDBs, negative values are absurd (like 10^-8, 10^-9--total garbage)
+     ;; good_i = cgsetintersection(good_i,where(maximus.elec_energy_flux LE elec_ef_hcutOff AND maximus.elec_energy_flux GT elec_ef_lcutoff,/NULL)) 
+     good_i = cgsetintersection(good_i,where(maximus.elec_energy_flux LE elec_ef_hcutOff AND maximus.elec_energy_flux GT elec_ef_lcutoff,/NULL)) 
 
-  ;No delta_Es above any absurd values
-  good_i = cgsetintersection(good_i,where(maximus.delta_e LE dE_hcutOff AND maximus.delta_e GT dE_lcutoff,/NULL))
-
-  ;No losscone e- fluxes with any absurd values
-  good_i = cgsetintersection(good_i,where(maximus.eflux_losscone_integ LE ef_lc_integ_hcutOff AND maximus.eflux_losscone_integ GT ef_lc_integ_lcutoff,/NULL))
-  ;No absurd electron energy fluxes
-  good_i = cgsetintersection(good_i,where(maximus.elec_energy_flux LE elec_ef_hcutOff AND maximus.elec_energy_flux GT elec_ef_lcutoff,/NULL)) 
-
-  ;No absurd characteristic electron energies
-  good_i = cgsetintersection(good_i,where(maximus.max_chare_losscone LE max_chare_hcutOff AND maximus.max_chare_losscone GT max_chare_lcutoff,/NULL)) 
+     ;;No absurd characteristic electron energies
+     good_i = cgsetintersection(good_i,where(maximus.max_chare_losscone LE max_chare_hcutOff AND maximus.max_chare_losscone GT max_chare_lcutoff,/NULL)) 
   
-  ;No absurd ion fluxes
-  good_i = cgsetintersection(good_i,where(maximus.ion_flux LE iflux_hcutOff AND maximus.ion_flux GT iflux_lcutoff,/NULL)) 
+     ;;No absurd ion fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_flux LE iflux_hcutOff AND maximus.ion_flux GT iflux_lcutoff,/NULL)) 
 
-  ;No weird ion energy fluxes
-  good_i = cgsetintersection(good_i,where(maximus.ion_energy_flux LE ieflux_hcutOff AND maximus.ion_energy_flux GT ieflux_lcutoff,/NULL)) 
+     ;;No weird ion energy fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_energy_flux LE ieflux_hcutOff AND maximus.ion_energy_flux GT ieflux_lcutoff,/NULL)) 
 
-  ;No wonky upward ion fluxes
-  good_i = cgsetintersection(good_i,where(maximus.ion_flux_up LE iflux_up_hcutOff AND maximus.ion_flux_up GT iflux_up_lcutoff,/NULL)) 
+     ;;No wonky upward ion fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_flux_up LE iflux_up_hcutOff AND maximus.ion_flux_up GT iflux_up_lcutoff,/NULL)) 
 
-  ;No weird characteristic ion energies
-  good_i = cgsetintersection(good_i,where(maximus.char_ion_energy LE char_ion_e_hcutOff AND maximus.char_ion_energy GT char_ion_e_lcutoff,/NULL)) 
+     ;;No weird characteristic ion energies
+     good_i = cgsetintersection(good_i,where(ABS(maximus.char_ion_energy) LE char_ion_e_hcutOff AND ABS(maximus.char_ion_energy) GT char_ion_e_lcutoff,/NULL)) 
 
-  ;; Now sample_t stuff
-  good_i = cgsetintersection(good_i,where(maximus.sample_t LE sample_t_hcutoff,/NULL))
+     ;; Now sample_t stuff
+     good_i = cgsetintersection(good_i,where(maximus.sample_t LE sample_t_hcutoff,/NULL))
   ;; good_i = cgsetintersection(good_i,where(maximus.sample_t GE sample_t_lcutoff,/NULL))
 
   ;; for i=0,n_elements(max_tags)-1 do begin
   ;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost))
   ;;    printf,lun,"Maximus." + max_tags(i) + " is causing us to lose " + strcompress(nlost,/REMOVE_ALL) + " events." 
   ;; endfor
+
+  ENDIF ELSE BEGIN
+
+     ;;No currents above any absurd values
+     good_i = cgsetintersection(good_i,where(abs(maximus.mag_current) LE magc_hcutOff,/NULL))
+   
+     ;;No delta_Bs above any absurd values
+     good_i = cgsetintersection(good_i,where(maximus.delta_b LE dB_hcutOff AND maximus.delta_b GT dB_lcutoff,/NULL))
+     
+     ;;No delta_Es above any absurd values
+     good_i = cgsetintersection(good_i,where(maximus.delta_e LE dE_hcutOff AND maximus.delta_e GT dE_lcutoff,/NULL))
+
+     ;;No losscone e- fluxes with any absurd values
+     ;; good_i = cgsetintersection(good_i,where(maximus.integ_elec_energy_flux LE ef_lc_integ_hcutOff AND maximus.integ_elec_energy_flux GT ef_lc_integ_lcutoff,/NULL))
+     good_i = cgsetintersection(good_i,where(ABS(maximus.integ_elec_energy_flux) LE ef_lc_integ_hcutOff,/NULL))
+
+     ;;No absurd electron energy fluxes
+     ;; good_i = cgsetintersection(good_i,where(maximus.elec_energy_flux LE elec_ef_hcutOff AND maximus.elec_energy_flux GT elec_ef_lcutoff,/NULL)) 
+     good_i = cgsetintersection(good_i,where(ABS(maximus.elec_energy_flux) LE elec_ef_hcutOff,/NULL)) 
+
+     ;;No absurd characteristic electron energies
+     good_i = cgsetintersection(good_i,where(maximus.char_elec_energy LE max_chare_hcutOff AND maximus.char_elec_energy GT max_chare_lcutoff,/NULL)) 
+  
+     ;;No absurd ion fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_flux LE iflux_hcutOff AND maximus.ion_flux GT iflux_lcutoff,/NULL)) 
+
+     ;;No weird ion energy fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_energy_flux LE ieflux_hcutOff AND maximus.ion_energy_flux GT ieflux_lcutoff,/NULL)) 
+
+     ;;No wonky upward ion fluxes
+     good_i = cgsetintersection(good_i,where(maximus.ion_flux_up LE iflux_up_hcutOff AND maximus.ion_flux_up GT iflux_up_lcutoff,/NULL)) 
+
+     ;;No weird characteristic ion energies
+     good_i = cgsetintersection(good_i,where(maximus.char_ion_energy LE char_ion_e_hcutOff AND maximus.char_ion_energy GT char_ion_e_lcutoff,/NULL)) 
+
+     ;; Now sample_t stuff
+     ;;This is screwed up in the original DB; MODE = SAMPLE_T and SAMPLE_T = MODE
+     good_i = cgsetintersection(good_i,where(maximus.mode LE sample_t_hcutoff,/NULL))
+  ;; good_i = cgsetintersection(good_i,where(maximus.sample_t GE sample_t_lcutoff,/NULL))
+
+  ;; for i=0,n_elements(max_tags)-1 do begin
+  ;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost))
+  ;;    printf,lun,"Maximus." + max_tags(i) + " is causing us to lose " + strcompress(nlost,/REMOVE_ALL) + " events." 
+  ;; endfor
+
+  ENDELSE
 
   nlost = n_events-n_elements(good_i)
   printf,lun,"Lost " + strcompress(nlost,/REMOVE_ALL) + " events to user-defined cutoffs for various quantities..."

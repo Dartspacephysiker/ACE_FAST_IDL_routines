@@ -608,7 +608,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
 ;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
      IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
-  ENDIF
+  ENDIF ELSE BEGIN
+     IF N_ELEMENTS(logCharEPlot) GT 0 THEN CharEPlotRange=ALOG10(charEPlotRange)
+  ENDELSE
 
   ;;********************************************
   ;;Stuff for output

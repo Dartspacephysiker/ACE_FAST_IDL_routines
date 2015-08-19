@@ -362,8 +362,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
                  OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, $
-                 Title=temp.title, $ ; 
-                 ;; Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
+                 ;; Title=temp.title, $ ; 
+                 Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
                  /Discrete, $
                  Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, $
                  TLocation="RIGHT", TCharSize=charsize_grid,$
