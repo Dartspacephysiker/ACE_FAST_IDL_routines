@@ -6,9 +6,11 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
 ;This might not work as written; it still needs to be tested
   
 ;;  date='20150611'
-  date='20150810'
+  ;; date='20150810'
+  date='20150820'
 ;;  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output/'
-  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output__burst/'
+  ;; Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output__burst/'
+  Dartmouth_DB='/SPENCEdata/software/sdt/batch_jobs/Alfven_study/as5_14F/batch_output__ucla_mag_despin/'
   contents_file='./orbits_contained_in_DartDBfile_' + date + '--startstops_included.txt'
   ;;  contents_file='./orbits_contained_in_DartDBfile_' + date + '--first5000--startstops_included.txt'
   ;; outfile='Dartdb_' + date + '--500-14999--maximus.sav'
@@ -16,8 +18,12 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
   ;; outfile='Dartdb_' + date + '--15000-16361--maximus--below_aur_oval.sav'
   
   ;;From burst mode stuff 2015/08/10
-  outfile='Dartdb_' + date + '--1000-16361--maximus--burstmode.sav'
-  outTimefile='Dartdb_' + date + '--1000-16361--cdbtime--burstmode.sav'
+  ;; outfile='Dartdb_' + date + '--1000-16361--maximus--burstmode.sav'
+  ;; outTimefile='Dartdb_' + date + '--1000-16361--cdbtime--burstmode.sav'
+
+  ;;From a peek into despun stuff 2015/08/20
+  outfile='Dartdb_' + date + '--500-1560--maximus--despun.sav'
+  outTimefile='Dartdb_' + date + '--500-1560--cdbtime--despun.sav'
 
   ;; below_aur_ovalStr=''
   ;; below_aur_ovalStr='--only_below_aur_oval'
@@ -35,14 +41,20 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
   ;; max_orbit=14999
 
   ;;From burst mode runs 2015/08/08
-  min_orbit=1102
-  max_orbit=16361
+  ;; min_orbit=1102
+  ;; max_orbit=16361
+
+  ;;From despun runs 2015/08/20
+  min_orbit=502
+  max_orbit=1560
 
   for j=min_orbit,max_orbit do begin
 
 ;    filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_0'
 ;     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr
-     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr+'--burst'
+     ;; filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr+'--burst'
+     ;;                            ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
+     filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_0'+below_aur_ovalStr+'--ucla_mag_despin'
                                 ;filename='orb'+strcompress(j,/remove_all)+'_dflux'
      result=file_which(Dartmouth_DB,filename)
      if result then begin
@@ -112,7 +124,8 @@ pro combine_stats_2_Dartmouth_startstop_inc_only_alfvenic,maximus
 ;           filename='Dartmouth_as5_startstop_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
 ;           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
 ;           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr
-           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr+'--burst'
+           ;; filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr+'--burst'
+           filename='Dartmouth_as5_dflux'+'_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)+below_aur_ovalStr+'--ucla_mag_despin'
 ;    filename='dflux'+'_startstop_'+strcompress(j,/remove_all)+'_'+strcompress(jj+1,/remove_all)
         endfor
      endif

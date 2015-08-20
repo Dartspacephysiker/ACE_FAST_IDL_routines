@@ -1,4 +1,8 @@
+;2015/08/20 Add burst too
+
 PRO add_pflux_to_maximus,maximus
+
+  is_burst = 0B
 
                    maximus={orbit:maximus.orbit,$
                             alfvenic:maximus.alfvenic,$
@@ -48,6 +52,7 @@ PRO add_pflux_to_maximus,maximus
                             TOTAL_UPWARD_ION_OUTFLOW_SINGLE:maximus.TOTAL_UPWARD_ION_OUTFLOW_SINGLE,$
                             TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT:maximus.TOTAL_UPWARD_ION_OUTFLOW_MULTIPLE_TOT,$
                             TOTAL_ALFVEN_UPWARD_ION_OUTFLOW:maximus.TOTAL_ALFVEN_UPWARD_ION_OUTFLOW, $
+                            BURST:MAKE_ARRAY(N_ELEMENTS(maximus.time),VALUE=is_Burst,/BYTE), $
                             PFLUXEST:maximus.delta_e*maximus.delta_b * 1.0e-9 / (4.0e-7 * !PI)}
 
 

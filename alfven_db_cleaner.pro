@@ -112,11 +112,18 @@ function alfven_db_cleaner,maximus,IS_CHASTDB=is_chastDB,LUN=lun
   ;; sample_t_hcutoff = 1.25
 
   ;; < 100 Hz—exclude all of these per meeting with Professor LaBelle 2015/05/28
-  ;; sample_t_hcutoff = 0.01
+  sample_t_hcutoff = 0.01
 
-  ;; Keep all with sample rate > 5 Hz, which is good (I hope)
-  sample_t_hcutoff = 0.2
+  ;; Keep all with sample rate > 5 Hz, which is good (I hope) 
+  ;; --> IT ISN'T! Try the following:
+  ;; cghistoplot,maximus.width_time(where(maximus.sample_t LE 0.01)),maxinput=4
+  ;; cghistoplot,maximus.width_time(where(maximus.sample_t LE 0.1)),maxinput=4
+  ;; cghistoplot,maximus.width_time(where(maximus.sample_t LE 0.2)),maxinput=4
+  ;; sample_t_hcutoff = 0.2
   
+  ;;Cutoff for width_time (FAST spin period is 4.946 s)
+  width_t_cutoff = 4.946*0.5
+
   ;**********
   ;   NaNs  *
   ;**********
@@ -222,7 +229,8 @@ function alfven_db_cleaner,maximus,IS_CHASTDB=is_chastDB,LUN=lun
 
      ;; Now sample_t stuff
      good_i = cgsetintersection(good_i,where(maximus.sample_t LE sample_t_hcutoff,/NULL))
-  ;; good_i = cgsetintersection(good_i,where(maximus.sample_t GE sample_t_lcutoff,/NULL))
+
+     good_i = cgsetintersection(good_i,where(maximus.width_time LE width_t_cutoff,/NULL))
 
   ;; for i=0,n_elements(max_tags)-1 do begin
   ;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost))
@@ -266,7 +274,9 @@ function alfven_db_cleaner,maximus,IS_CHASTDB=is_chastDB,LUN=lun
      ;; Now sample_t stuff
      ;;This is screwed up in the original DB; MODE = SAMPLE_T and SAMPLE_T = MODE
      good_i = cgsetintersection(good_i,where(maximus.mode LE sample_t_hcutoff,/NULL))
-  ;; good_i = cgsetintersection(good_i,where(maximus.sample_t GE sample_t_lcutoff,/NULL))
+
+     ;;Remove that spin-plane stuff
+     good_i = cgsetintersection(good_i,where(maximus.width_time LE width_t_cutoff,/NULL))
 
   ;; for i=0,n_elements(max_tags)-1 do begin
   ;;    nkept=n_elements(where(FINITE(maximus.(i)),NCOMPLEMENT=nlost))
@@ -283,7 +293,7 @@ function alfven_db_cleaner,maximus,IS_CHASTDB=is_chastDB,LUN=lun
 
   RETURN, good_i
 
-end
+END
 
 ;; ORBIT ALFVENIC TIME ALT MLT ILAT MAG_CURRENT ESA_CURRENT ELEC_ENERGY_FLUX
 ;; INTEG_ELEC_ENERGY_FLUX EFLUX_LOSSCONE_INTEG TOTAL_EFLUX_INTEG MAX_CHARE_LOSSCONE

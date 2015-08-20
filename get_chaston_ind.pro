@@ -28,6 +28,9 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;For statistical auroral oval
   defHwMAurOval=0
   defHwMKpInd=7
+
+  defSatellite = 'OMNI'
+  defLun = -1
   ;;***********************************************
   ;;Load up all the dater, working from ~/Research/ACE_indices_data/idl
   
@@ -65,6 +68,13 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
         IF FILE_TEST(cdbTimeFile) THEN restore,cdbTimeFile
      ENDIF
   ENDELSE
+
+  IF ~KEYWORD_SET(lun) THEN lun = defLun ;stdout
+
+  IF ~KEYWORD_SET(satellite) THEN BEGIN
+     PRINTF,lun,"No satellite provided! Setting to '" + defSatellite + "' by default..."
+     satellite = defSatellite
+  ENDIF
 
   ;;Load, if need be
   IF maximus EQ !NULL THEN restore,loaddataDir + dbfile ELSE BEGIN 
@@ -232,16 +242,18 @@ FUNCTION get_chaston_ind,maximus,satellite,lun,DBFILE=dbfile,CDBTIME=cdbTime,CHA
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now some other user-specified exclusions set by keyword
 
-  burst_i = WHERE(maximus.burst,nBurst,COMPLEMENT=survey_i,NCOMPLEMENT=nSurvey,/NULL)
-  IF KEYWORD_SET(no_burstData) THEN BEGIN
-     ind_region_magc_geabs10_ACEstart = cgsetintersection(survey_i,ind_region_magc_geabs10_ACEstart)
-
-     printf,lun,""
-     printf,lun,"You're losing " + strtrim(nBurst) + " events because you've excluded burst data."
+  IF ~KEYWORD_SET(chastDB) THEN BEGIN
+     burst_i = WHERE(maximus.burst,nBurst,COMPLEMENT=survey_i,NCOMPLEMENT=nSurvey,/NULL)
+     IF KEYWORD_SET(no_burstData) THEN BEGIN
+        ind_region_magc_geabs10_ACEstart = cgsetintersection(survey_i,ind_region_magc_geabs10_ACEstart)
+        
+        printf,lun,""
+        printf,lun,"You're losing " + strtrim(nBurst) + " events because you've excluded burst data."
+     ENDIF
+     PRINTF,lun,'N burst elements: ' + STRCOMPRESS(nBurst,/REMOVE_ALL)
+     PRINTF,lun,'N survey elements: ' + STRCOMPRESS(nSurvey,/REMOVE_ALL)
+     PRINTF,lun,''
   ENDIF
-  PRINTF,lun,'N burst elements: ' + STRCOMPRESS(nBurst,/REMOVE_ALL)
-  PRINTF,lun,'N survey elements: ' + STRCOMPRESS(nSurvey,/REMOVE_ALL)
-  PRINTF,lun,''
 
   IF KEYWORD_SET (orbRange) AND N_ELEMENTS(orbRange) EQ 2 THEN BEGIN
      printf,lun,"Min orbit: " + strcompress(orbRange[0],/remove_all)
