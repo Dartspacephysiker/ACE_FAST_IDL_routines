@@ -365,7 +365,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF $
         NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $
         AND NOT tag_exist(e,"mirror") AND NOT tag_exist(e,"labelFormat") $ ;keywords for interp_polar2dhist
-     THEN BEGIN                                                            ;Check for passed variables here
+        AND NOT tag_exist(e,"plottitle") $
+     THEN BEGIN                 ;Check for passed variables here
         help,e
         print,e
         print,"Why the extra parameters? They have no home..."

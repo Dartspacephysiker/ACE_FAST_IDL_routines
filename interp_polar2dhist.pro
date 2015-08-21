@@ -5,7 +5,7 @@
 ;; put together, but I can't be sure
 
 PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
-                       LABELFORMAT=labelFormat, MIRROR=mirror, CLOCKSTR=clockStr, $
+                       PLOTTITLE=plotTitle, LABELFORMAT=labelFormat, MIRROR=mirror, CLOCKSTR=clockStr, $
                        _EXTRA=e
 
   restore,ancillaryData
@@ -64,7 +64,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;;Is this a log plot? If so, do integral of exponentiated value
   logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
   ;; FOR charEplot, uncomment me: logPlotzz = 1
-  IF logPlotzz THEN temp.title = STRMID(temp.title, STRPOS(temp.title,"Log ")+4)
+
+  IF N_ELEMENTS(plotTitle) EQ 0 THEN BEGIN
+     plotTitle = temp.title
+     IF logPlotzz THEN plotTitle = STRMID(plotTitle, STRPOS(plotTitle,"Log ")+4)
+  ENDIF
 
   ;;Select color table
   orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
@@ -187,8 +191,15 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
      ENDFOR 
   ENDFOR
 
-  ; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
-  cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 3 : 2,$
+  ;;add grid to 10-deg latitude lines
+  nBoldLats = ROUND((maxM-minM)/10.) + 1
+  firstBoldLat =  minM - ( minM MOD 10 ) 
+  boldLats = INDGEN(nBoldLats) * 10 + firstBoldLat
+  cgMap_Grid, Clip_Text=1, /NoClip, thick=(!D.Name EQ 'PS') ? 7 : 6,$
+              color='black',LATDELTA=10,LONDELTA=90, linestyle=0
+
+  ;; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
+  cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 1 : 1,$
               color='black',londelta=binM*15,latdelta=binI
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
@@ -349,7 +360,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
                  OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
                  Range=temp.lim, $
-                 Title=temp.title, $
+                 Title=plotTitle, $
                  /Discrete, $
                  Position=[0.25, 0.89, 0.75, 0.91], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
                  ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
@@ -361,10 +372,9 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
                  OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
                  OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
-                 Range=temp.lim, $
-                 ;; Title=temp.title, $ ; 
-                 Title="Characteristic Energy (eV)", $ ;Title="Poynting flux (mW/m!U2!N)", $
                  /Discrete, $
+                 Range=temp.lim, $
+                 Title=plotTitle, $ ; 
                  Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, $
                  TLocation="RIGHT", TCharSize=charsize_grid,$
                  CharSize=charsize_grid,$
@@ -372,7 +382,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
                             ;; String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
                             " ",REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$   ;kluge for now
-                            String(UpperLab, Format=labelFormat)] ;for charE plot, uncomment me: String(UpperLab, Format='(I0)')]
+                            String(UpperLab, Format=labelFormat)] 
+                            ;; String(UpperLab, Format='(I0)')] ;for chareplot, uncomment me
   ENDELSE
 
 END
