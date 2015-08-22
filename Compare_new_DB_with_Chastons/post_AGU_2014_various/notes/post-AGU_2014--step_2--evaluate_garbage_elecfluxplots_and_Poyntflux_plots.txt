@@ -1,9 +1,0 @@
-;Here are steps two through four as they stand in 'post_AGU_2014_1_through_5.pro':
-
-;2. Almost inevitably there will be some garbage events--Determine what makes them garbage, write down the numbers, then find out if these values are orders of magnitude above what is ever expected in the cusp or observed in general
-;(I should know order-of-magnitude values for flux, integrated and otherwise)
-;3. Have plots of these ready to see if it’s an instrument error or something else--what causes them to be “bad”?
-;4. Write your little screening routine to filter through, produce statistics, and (ideally) produce plots of the relevant quantities
-;Would be bonus if we could slap this into Alfvèn stats 5 to make the plot generation/screening happen on the fly and get outputted in some sort of summary file.
-
-
