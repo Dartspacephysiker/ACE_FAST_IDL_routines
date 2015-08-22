@@ -38,7 +38,7 @@
 ;                       Birth
 ;-
 
-PRO KEY_SCATTERPLOTS_POLARPROJ, $
+PRO KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
    NORTH=north,SOUTH=south, $
    CHARESCR=chareScr,ABSMAGCSCR=absMagcScr, $
@@ -62,8 +62,10 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   defTSLat = 75  ;true-scale latitude
 
-  defDBFile = '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
-  defOutDir = 'histos_scatters/polar/'
+  ;; defDBFile = '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+  defDBFile = '/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
+  ;; defOutDir = 'histos_scatters/polar/'
+  defOutDir = './'
   defOutPref = 'key_scatterplots_polarproj'
   defExt = '.png'
 
@@ -76,7 +78,8 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   IF NOT KEYWORD_SET(outDir) then outDir = defOutDir
   IF NOT KEYWORD_SET(plotSuff) THEN plotSuff = "" ; ELSE plotSuff
-  IF NOT KEYWORD_SET (outFile) AND NOT KEYWORD_SET(plot_i_file) THEN outFile=defOutPref + plotSuff + defExt ;otherwise handled by plot_i_file
+  IF SIZE(outFile,/TYPE) NE 0 AND SIZE(outFile,/TYPE) NE 7 AND NOT KEYWORD_SET(plot_i_file) THEN $
+     outFile=defOutPref + plotSuff + defExt ;otherwise handled by plot_i_file
   ;; plotSuff = "--Dayside--6-18MLT--60-84ILAT--4-250CHARE"
 
   IF NOT KEYWORD_SET(plot_i_dir) THEN plot_i_dir = defPlot_i_dir
@@ -137,12 +140,12 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
   ; Change some grid properties.
   grid = map.MAPGRID
   IF KEYWORD_SET(north) THEN grid.LATITUDE_MIN = minI ELSE IF KEYWORD_SET(south) THEN grid.LATITUDE_MAX = maxI
-  grid.TRANSPARENCY=30
-  grid.color="blue"
-  grid.linestyle=1
-  grid.thick=2
+  grid.TRANSPARENCY=50
+  grid.color="black"
+  grid.linestyle=0
+  grid.thick=0.5
   grid.label_angle = 0
-  grid.font_size = 18
+  grid.font_size = 16
 
   mlats=grid.latitudes
   FOR i=0,n_elements(mlats)-1 DO BEGIN
@@ -174,8 +177,16 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   ;;****************************************
   ;; Now the rest of the stuff
-  IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
-  
+
+  ;; IF NOT KEYWORD_SET(dbFile) THEN restore,defDBFile ELSE restore,dbFile
+  IF N_ELEMENTS(dbFile) EQ 0 AND maximus EQ !NULL THEN BEGIN
+     print,'Restoring default DBfile...'
+     dbFile = defDBFile
+     RESTORE,dbFile
+  ENDIF ELSE BEGIN
+     IF N_ELEMENTS(maximus) GT 0 THEN PRINT, "maximus struct already provided! Not restoring any DB file..."
+  ENDELSE
+
   ;;names of the POSSIBILITIES
   maxTags=tag_names(maximus)
 
@@ -204,13 +215,13 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
                                 ;key_scatterplots_polarproj actually resizes maximus
      maximus = resize_maximus(maximus,INDS=plot_i)
 
-     IF NOT KEYWORD_SET(outFile) THEN outFile=defOutPref+'--'+paramStr+plotSuff+defExt
+     IF SIZE(outFile,/TYPE) NE 0 AND SIZE(outFile,/TYPE) NE 7 THEN outFile=defOutPref+'--'+paramStr+plotSuff+defExt
 
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(just_plot_i) THEN BEGIN
         print,"User-supplied inds using 'just_plot_i' keyword..."
         maximus=resize_maximus(maximus,INDS=just_plot_i)
-        IF NOT KEYWORD_SET(outFile) then outFile = defOutPref + '--user-supplied' +defExt
+        IF SIZE(outFile,/TYPE) NE 0 AND SIZE(outFile,/TYPE) NE 7 THEN outFile = defOutPref + '--user-supplied' +defExt
      ENDIF
      IF KEYWORD_SET(plot_i_list) THEN BEGIN
         print,"User-supplied inds using 'plot_i_list' keyword..."
@@ -219,22 +230,23 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
         ;;    FOR i=1,N_ELEMENTS(plot_i_list)-1 DO temp_plot_i=[temp_plot_i,plot_i_list(i)]
         ;; ENDIF
         ;; maximus=resize_maximus(maximus,INDS=temp_plot_i)
-        IF NOT KEYWORD_SET(outFile) then outFile = defOutPref + '--user-supplied' +defExt
+        IF SIZE(outFile,/TYPE) NE 0 AND SIZE(outFile,/TYPE) NE 7 THEN outFile = defOutPref + '--user-supplied' +defExt
      ENDIF
   ENDELSE
   
   ;;northern_hemi
   IF KEYWORD_SET(north) OR KEYWORD_SET(south) THEN BEGIN
      IF KEYWORD_SET(plot_i_list) THEN BEGIN
+        modPlot_i_list = plot_i_list[*]
         IF KEYWORD_SET(north) THEN BEGIN
-           FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
-              plot_i_list(i)=cgsetintersection(plot_i_list(i), $
+           FOR i=0,N_ELEMENTS(modPlot_i_list)-1 DO BEGIN
+              modPlot_i_list(i)=cgsetintersection(modPlot_i_list(i), $
                                                   WHERE(maximus.ILAT GT minI AND maximus.ILAT LT maxI))
            ENDFOR
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(south) THEN BEGIN
-              FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
-                 plot_i_list(i)=cgsetintersection(plot_i_list(i), $
+              FOR i=0,N_ELEMENTS(modPlot_i_list)-1 DO BEGIN
+                 modPlot_i_list(i)=cgsetintersection(modPlot_i_list(i), $
                                                   WHERE(maximus.ILAT GT minI AND maximus.ILAT LT maxI))
               ENDFOR
            ENDIF
@@ -273,16 +285,17 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
   IF KEYWORD_SET(plot_i_list) THEN BEGIN
 
-     FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
-        IF (plot_i_list(i))(0) NE -1 THEN BEGIN
-           lats=maximus.ilat(plot_i_list(i))
-           lons=maximus.mlt(plot_i_list(i))*15
+     FOR i=0,N_ELEMENTS(modPlot_i_list)-1 DO BEGIN
+        IF (modPlot_i_list(i))(0) NE -1 THEN BEGIN
+           lats=maximus.ilat(modPlot_i_list(i))
+           lons=maximus.mlt(modPlot_i_list(i))*15
            ;; lats=[65,65,65,65]
            ;; lons=[0,90,180,270]
            
            curPlot = scatterplot(lons,lats,sym_size=1.0, $
                                  SYMBOL='o',/overplot, $
-                                 SYM_TRANSPARENCY=sTrans, $
+                                 ;; SYM_TRANSPARENCY=(i EQ 2) ? 60 : sTrans, $ ;this line is for making events on plot #3 stand out
+                                 SYM_TRANSPARENCY=sTrans, $ 
                                  SYM_THICK=1.5, $
                                  SYM_COLOR=(N_ELEMENTS(color_list) GT 1) ? color_list(i) : color_list, $
                                  TITLE=plotTitle) ;,$;SYM_SIZE=0.5, $ ;There is such a high density of points that we need tranparency
@@ -312,6 +325,9 @@ PRO KEY_SCATTERPLOTS_POLARPROJ, $
 
 
 
-  curPlot.save,outDir+outFile,resolution=600
+  IF SIZE(outFile,/TYPE) GT 0 THEN BEGIN
+     PRINT,'Scatterplot output: ' + outDir + outFile
+     curPlot.save,outDir+outFile,resolution=600
+  ENDIF
 
 END
