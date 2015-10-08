@@ -36,7 +36,7 @@
 ;                    BYMAX             :  Maximum value of IMF By during an event to accept the event for inclusion in the analysis.
 ;                    BZMAX             :  Maximum value of IMF Bz during an event to accept the event for inclusion in the analysis.
 ;		     NPLOTS            :  Plot number of orbits.   
-;                    HEMI              :  Hemisphere for which to show statistics. Can be "North" or "South".
+;                    HEMI              :  Hemisphere for which to show statistics. Can be "North", "South", or "Both".
 ;
 ;                *IMF SATELLITE PARAMETERS
 ;                    SATELLITE         :  Satellite to use for checking FAST data against IMF.
@@ -236,15 +236,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;ranges in MLT and ILAT
   ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
   ; has ilat bin size = 3.0 and mlt bin size = 1.0
-  defMinM = 6.0
-  defMaxM = 18.0
-  defBinM = 1.0
-  ;; defBinM = 0.75
-  ;; defBinM = 0.5
-
-  defMinI = 50.0 ;these might need to be longs (i.e., '60L')
-  defMaxI = 84.0
-  defBinI = 2.0
 
   defMinMagC = 10
   defMaxNegMagC = -10
@@ -292,13 +283,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
 
-  defLoaddataDir = '/SPENCEdata/Research/Cusp/database/dartdb/saves/'
-  ;; defPref = "Dartdb_02282015--500-14999"
-  ;; defPref = "Dartdb_20150611--500-16361_inc_lower_lats"
-  defPref = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--'
-  defDBFile = defPref + "--maximus.sav"
-  defCDBTimeFile = defPref + "--cdbtime.sav"
-
   ;; defBurstDBFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--maximus--burstmode.sav'
   ;; defBurstDB_tFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--cdbtime--burstmode.sav'
 
@@ -318,6 +302,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(minILAT) THEN minI = minILAT
   IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
 
+  SETDEFAULTMLT_ILAT_MAGC,MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                          MINILAT=minI,MAXILAT=maxI,BINI=binI,MIN_MAGCURRENT=minMC, $
+                          MAX_NEGMAGCURRENT=maxNegMC, $
+                          HEMI=hemi
+
   ;;***********************************************
   ;;RESTRICTIONS ON DATA, SOME VARIABLES
   ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
@@ -333,32 +322,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF N_ELEMENTS(altitudeRange) EQ 0 THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
   
-  IF N_ELEMENTS(minM) EQ 0 THEN minM = defMinM
-  IF N_ELEMENTS(maxM) EQ 0 THEN maxM = defMaxM
-  
-  IF N_ELEMENTS(hemi) EQ 0 THEN hemi = "North"
-
-  ;take care of hemisphere
-  IF STRLOWCASE(hemi) EQ "north" THEN BEGIN
-     IF N_ELEMENTS(minI) EQ 0 THEN minI = defMinI
-     IF N_ELEMENTS(maxI) EQ 0 THEN maxI = defMaxI
-  ENDIF ELSE BEGIN
-     IF STRLOWCASE(hemi) EQ "south" THEN BEGIN
-        IF N_ELEMENTS(minI) EQ 0 THEN minI = -defMaxI
-        IF N_ELEMENTS(maxI) EQ 0 THEN maxI = -defMinI
-     ENDIF ELSE BEGIN
-        PRINT,"Invalid hemisphere name provided! Should be 'North' or 'South'."
-        PRINT,"Defaulting to 'North'."
-        hemi="North"
-     ENDELSE
-  ENDELSE
 
   ;Auroral oval
   IF N_ELEMENTS(HwMAurOval) EQ 0 THEN HwMAurOval = defHwMAurOval
   IF N_ELEMENTS(HwMKpInd) EQ 0 THEN HwMKpInd = defHwMKpInd
 
-  IF N_ELEMENTS(minMC) EQ 0 THEN minMC = defMinMagC                ; Minimum current derived from mag data, in microA/m^2
-  IF N_ELEMENTS(maxNEGMC) EQ 0 THEN maxNEGMC = defMaxNegMagC         ; Current must be less than this, if it's going to make the cut
   
   ;;Shouldn't be leftover unused params from batch call
   IF ISA(e) THEN BEGIN
@@ -376,7 +344,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            IF e.wholecap GT 0 THEN BEGIN
               minM=0.0
               maxM=24.0
-              IF STRLOWCASE(hemi) EQ "north" THEN BEGIN
+              IF STRUPCASE(hemi) EQ "NORTH" THEN BEGIN
                  minI=defMinI
                  maxI=defMaxI
               ENDIF ELSE BEGIN
@@ -668,7 +636,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   ;;Now run these to clean and tap the databases and interpolate satellite data
   ind_region_magc_geabs10_ACEstart = get_chaston_ind(maximus,satellite,lun, $
-                                                     CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, $
+                                                     CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
                                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                                      HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
   phiChast = interp_mag_data(ind_region_magc_geabs10_ACEstart,satellite,delay,lun, $
