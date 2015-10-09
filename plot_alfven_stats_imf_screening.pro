@@ -263,7 +263,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, NUMORBLIM=numOrbLim, $
                                   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                  BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, $
+                                  BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -510,6 +510,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Since E is recorded in mV/m, units of POYNTEST here are mW/m^2
   ;;No need to worry about screening for FINITE(pfluxEst), since both delta_B and delta_E are
   ;;screened for finiteness in alfven_db_cleaner (which is called in get_chaston_ind.pro)
+  mu_0 = 4.0e-7 * !PI                                            ;perm. of free space, for Poynt. est
   pfluxEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
 
   ;;********************************************

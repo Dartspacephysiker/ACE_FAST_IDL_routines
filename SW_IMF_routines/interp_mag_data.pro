@@ -111,7 +111,7 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
   ENDIF ELSE BEGIN 
      fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+     fastDBInterpTime=dbTimes[fastDBSatProppedInterped_ii]
   ENDELSE
 
   ;;********************************************************

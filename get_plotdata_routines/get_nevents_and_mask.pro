@@ -16,7 +16,7 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
   ;; h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
   ;;         title : "Number of events", $
   ;;         lim : (KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
-  tmplt_h2dStr={tmplt_h2dStr, data: DBLARR(n_elements(h2dFluxN(*,1)),n_elements(h2dFluxN(1,*))), $
+  tmplt_h2dStr={tmplt_h2dStr, data: DBLARR(n_elements(h2dFluxN[*,1]),n_elements(h2dFluxN[1,*])), $
           title : "Number of events", $
           lim : DOUBLE((KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? nEventsPlotRange : [MIN(h2dFluxN),MAX(h2dFluxN)]) }
 
