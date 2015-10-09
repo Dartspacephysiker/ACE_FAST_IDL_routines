@@ -235,13 +235,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;***********************************************
   ;;Tons of defaults
   
-  ;ranges in MLT and ILAT
-  ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
-  ; has ilat bin size = 3.0 and mlt bin size = 1.0
-
-  defCharERange = [4.0,300]
-  defAltRange = [1000.0, 5000.0]
-
   defeFluxPlotType = "Max"
   defENumFlPlotType = "ESA_Number_flux" 
   defIFluxPlotType = "Max"
@@ -260,14 +253,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defTempDir='/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
   
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, NUMORBLIM=numOrbLim, $
+                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                   BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
-                                  LUN=lun
+                                  HOYDIA=hoyDia,LUN=lun
   
   ;;Shouldn't be leftover unused params from batch call
   
@@ -338,6 +331,60 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF N_ELEMENTS(DEL_PS) EQ 0 THEN del_ps = 1
 
   ;;********************************************
+  ;;A few other strings to tack on
+  ;;tap DBs, and setup output
+  IF KEYWORD_SET(no_burstData) THEN inc_burstStr ='burstData_excluded--' ELSE inc_burstStr=''
+
+  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE BEGIN
+     IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
+  ENDELSE
+
+  ;;Set minimum allowable number of events for a histo bin to be displayed
+  maskStr=''
+  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
+  ELSE BEGIN
+     IF maskMin GT 1 THEN BEGIN
+        maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
+     ENDIF
+  ENDELSE
+  
+  ;;doing polar contour?
+  polarContStr=''
+  IF KEYWORD_SET(polarContour) THEN BEGIN
+     polarContStr='polarCont_'
+  ENDIF
+
+  ;;parameter string
+  paramStr=paramStr+plotMedOrAvg+maskStr+inc_burstStr + polarContStr
+
+  ;;Open file for text summary, if desired
+  IF KEYWORD_SET(outputPlotSummary) THEN $
+     OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
+  ELSE lun=-1                   ;-1 is lun for STDOUT
+  
+  ;;Now run these to clean and tap the databases and interpolate satellite data
+  final_i = get_chaston_ind(maximus,satellite,lun, $
+                            DBTIMES=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
+                            ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                            HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
+  phiChast = interp_mag_data(final_i,satellite,delay,lun,DBTIMES=cdbTime, $
+                             FASTDBINTERP_I=cdbInterp_i,FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i,MAG_UTC=mag_utc,PHICLOCK=phiClock, $
+                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
+                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
+                             OMNI_COORDS=omni_Coords)
+  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbSatProppedInterped_i,stableIMF,mag_utc,phiClock,$
+                                 LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
+  
+  plot_i=cdbInterp_i[phiImf_ii]
+
+  ;;********************************************************
+  ;;WHICH ORBITS ARE UNIQUE?
+  uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
+  nOrbs=n_elements(uniqueOrbs_ii)
+  ;;printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
+  
+  ;;********************************************
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
@@ -362,13 +409,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      print,"Enabling nPlots..."
      nPlots=1
   ENDIF
-
-  ;;doing polar contour?
-  polarContStr=''
-  IF KEYWORD_SET(polarContour) THEN BEGIN
-     polarContStr='polarCont_'
-  ENDIF
-
 
   ;;######ELECTRON FLUXES, ENERGY AND NUMBER 
 
@@ -453,56 +493,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF N_ELEMENTS(logCharEPlot) GT 0 THEN CharEPlotRange=ALOG10(charEPlotRange)
   ENDELSE
 
-  ;;********************************************
-  ;;Stuff for output
-  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE BEGIN
-     IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
-  ENDELSE
-
-  ;;********************************************
-  ;;A few other strings to tack on
-  ;;tap DBs, and setup output
-  IF KEYWORD_SET(no_burstData) THEN inc_burstStr ='burstData_excluded--' ELSE inc_burstStr=''
-
-  ;;Set minimum allowable number of events for a histo bin to be displayed
-  maskStr=''
-  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
-  ELSE BEGIN
-     IF maskMin GT 1 THEN BEGIN
-        maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
-     ENDIF
-  ENDELSE
-  
-  ;;parameter string
-  paramStr=paramStr+plotMedOrAvg+maskStr+inc_burstStr + polarContStr
-
-  ;;Open file for text summary, if desired
-  IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
-  ELSE lun=-1                   ;-1 is lun for STDOUT
-  
-  ;;Now run these to clean and tap the databases and interpolate satellite data
-  final_i = get_chaston_ind(maximus,satellite,lun, $
-                            DBTIMES=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
-                            ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                            HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
-  phiChast = interp_mag_data(final_i,satellite,delay,lun,DBTIMES=cdbTime, $
-                             FASTDBINTERP_I=cdbInterp_i,FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i,MAG_UTC=mag_utc,PHICLOCK=phiClock, $
-                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
-                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
-                             OMNI_COORDS=omni_Coords)
-  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbSatProppedInterped_i,stableIMF,mag_utc,phiClock,$
-                                 LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
-  
-  plot_i=cdbInterp_i[phiImf_ii]
-
-  ;;********************************************************
-  ;;WHICH ORBITS ARE UNIQUE?
-  uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
-  nOrbs=n_elements(uniqueOrbs_ii)
-  printf,lun,"There are " + strtrim(nOrbs,2) + " unique orbits in the data you've provided for predominantly " + clockStr + " IMF."
-  
   ;;***********************************************
   ;;Calculate Poynting flux estimate
   
@@ -527,13 +517,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDIF
 
-  printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
-  printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
-  printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
-;; printf,lun,"Percentage of Chaston DB used: " + $
+  printf,lun,FORMAT='("Events per bin req            : >=",T35,I8)',maskMin
+  printf,lun,FORMAT='("Number of orbits used         :",T35,I8)',N_ELEMENTS(uniqueOrbs_ii)
+  printf,lun,FORMAT='("Total N events                :",T35,I8)',N_ELEMENTS(plot_i)
+;; printf,lun,FORMAT='("Percentage of Chaston DB used: ",T35,I0)' + $
 ;;        strtrim((N_ELEMENTS(plot_i))/134925.0*100.0,2) + "%"
-  printf,lun,"Percentage of current DB used: " + $
-         strtrim((N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0,2) + "%"
+  printf,lun,FORMAT='("Percentage of DB used         :",T35,G8.4,"%")',(FLOAT(N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0)
 
   ;;********************************************
   ;;junk=where(cdbInterp_i(phi_dusk_ii) EQ cdbInterp_i(phi_dawn_ii))
@@ -543,11 +532,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************************
   ;;HISTOS
 
-  minM=FLOOR(minM*4.0)/4.0  ;to 1/4 precision
-  maxM=FLOOR(maxM*4.0)/4.0 
-  minI=FLOOR(minI*4.0)/4.0 
-  maxI=FLOOR(maxI*4.0)/4.0 
-  
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
 
@@ -1367,7 +1351,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStr,dataNameArr,maxM,minM,maxI,minI,binM,binI,$
-                           rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
+                           rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemi,$
                            filename=defTempDir + 'polarplots_'+paramStr+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
@@ -1375,18 +1359,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      IF N_ELEMENTS(justData) EQ 0 AND KEYWORD_SET(squarePlot) THEN $
         cgWindow, 'interp_contplotmulti_str', h2dStr,$
                   Background='White', $
-                  WTitle='Flux plots for '+hemStr+'ern Hemisphere, '+clockStr+ $
+                  WTitle='Flux plots for '+hemi+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotMedOrAvg,1) $
-     ELSE IF N_ELEMENTS(justData) EQ 0 THEN $  ;FOR j=0, N_ELEMENTS(h2dStr)-1 DO $
-        ;;    cgWindow,'interp_polar_plot',[[*dataRawPtrArr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
-                ;;             h2dStr[0].lim,Background="White",wxsize=800,wysize=600, $
-                ;;             WTitle='Polar plot_'+dataNameArr[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
-                ;;             ' IMF, ' + strmid(plotMedOrAvg,1) $
+     ELSE IF N_ELEMENTS(justData) EQ 0 THEN $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
            cgWindow,'interp_polar2dhist',h2dStr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
                 CLOCKSTR=clockStr, _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
-                WTitle='Polar plot_'+dataNameArr[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
+                WTitle='Polar plot_'+dataNameArr[i]+','+hemi+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotMedOrAvg,1) $
                 
      ELSE PRINTF,LUN,"**Plots turned off with justData**" 
@@ -1479,7 +1459,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;      datatypeID=H5T_IDL_CREATE(h2dStr[i]) 
       ;;      dataspaceID=H5S_CREATE_SIMPLE(1) 
       ;;      datasetID = H5D_CREATE(fileID,$
-      ;;                             h2dStr[i].title+'_'+hemStr+'_'+clockStr+plotMedOrAvg, $
+      ;;                             h2dStr[i].title+'_'+hemi+'_'+clockStr+plotMedOrAvg, $
       ;;                             datatypeID, dataspaceID) 
       ;;      H5D_WRITE,datasetID, h2dStr[i] 
       ;;      H5F_CLOSE,fileID    
