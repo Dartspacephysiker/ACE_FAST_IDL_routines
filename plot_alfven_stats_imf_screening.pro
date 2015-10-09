@@ -360,22 +360,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
-  ;;Now run these to clean and tap the databases and interpolate satellite data
-  final_i = get_chaston_ind(maximus,satellite,lun, $
-                            DBTIMES=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
-                            ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                            HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
-  phiChast = interp_mag_data(final_i,satellite,delay,lun,DBTIMES=cdbTime, $
-                             FASTDBINTERP_I=cdbInterp_i,FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i,MAG_UTC=mag_utc,PHICLOCK=phiClock, $
-                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
-                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
-                             OMNI_COORDS=omni_Coords)
-  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbSatProppedInterped_i,stableIMF,mag_utc,phiClock,$
-                                 LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
-  
-  plot_i=cdbInterp_i[phiImf_ii]
-
+  ;;Now clean and tap the databases and interpolate satellite data
+    plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
+                                                    DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
+                                                    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                                    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                    BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                    STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
+                                                    HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
+    
   ;;********************************************************
   ;;WHICH ORBITS ARE UNIQUE?
   uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))

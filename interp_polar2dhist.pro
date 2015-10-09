@@ -98,15 +98,13 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
      cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
   ENDELSE
 
-
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
   
-  minM=FLOOR(minM*4.0)/4.0 ;to 1/4 precision
-  maxM=FLOOR(maxM*4.0)/4.0 
-  minI=FLOOR(minI*4.0)/4.0 
-  maxI=FLOOR(maxI*4.0)/4.0 
-  
+  ;; minM=FLOOR(minM*4.0)/4.0 ;to 1/4 precision
+  ;; maxM=FLOOR(maxM*4.0)/4.0 
+  ;; minI=FLOOR(minI*4.0)/4.0 
+  ;; maxI=FLOOR(maxI*4.0)/4.0 
 
   nXlines=(maxM-minM)/binM + 1
   nYlines=(maxI-minI)/binI + 1
