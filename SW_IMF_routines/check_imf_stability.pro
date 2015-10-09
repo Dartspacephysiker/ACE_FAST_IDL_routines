@@ -1,6 +1,7 @@
 ;*************************************************
 ;The purpose of this routine is to check the
-;stability of IMF for Chaston data so that, if we
+;stability of IMF for either data in the Alfven wave 
+;DB or in the FAST ephemeris DB so that, if we
 ;have unstable IMF, we can screen out those events
 ;It is meant to be used following 'get_chaston_ind' 
 ;and 'interp_mag_data'.
@@ -13,10 +14,12 @@
 ;ensure that the angle doesn't deviate too sharply
 ;from its initial 'approved' value
 
-FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
-                             cdbAcepropInterp_i, stableIMF, mag_utc, phiclock, $
+FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiDB, $
+                             fastDBSatProppedInterped_i, stableIMF, mag_utc, phiclock, $
                              BX_OVER_BYBZ=bx_over_bybz,INCLUDENOCONSECDATA=includenoconsecdata, $
                              LUN=lun
+
+  COMPILE_OPT idl2
 
   printf,lun,"****From check_imf_stability.pro****"
 
@@ -76,13 +79,13 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
   ;;NOTE: /NULL used in WHERE so that if no elements are returned,
   ;;we don't append a value of -1 to phiImf_ii
   IF clockStr NE 'bzSouth' AND clockStr NE 'all_IMF' THEN BEGIN
-     phiImf_ii=where(phiChast GE negAngle AND phiChast LE posAngle)
+     phiImf_ii=where(phiDB GE negAngle AND phiDB LE posAngle)
   ENDIF ELSE BEGIN
      IF clockStr EQ 'bzSouth' THEN BEGIN
-        phiImf_ii=cgSetUnion(where(phiChast GE negAngle, /NULL),$
-        where(phiChast LE posAngle, /NULL)) 
+        phiImf_ii=cgSetUnion(where(phiDB GE negAngle, /NULL),$
+        where(phiDB LE posAngle, /NULL)) 
      ENDIF ELSE BEGIN
-        IF clockStr EQ 'all_IMF' THEN phiImf_ii=where(phiChast EQ phiChast, /NULL)
+        IF clockStr EQ 'all_IMF' THEN phiImf_ii=where(phiDB EQ phiDB, /NULL)
      ENDELSE
   ENDELSE
   
@@ -100,15 +103,15 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
         ;;      printf,lun,"Sumcount is " + strtrim(sumCount,2) 
         ;;Uh-oh, it's going to be complicated
         ;;How can I possibly know which situation we're dealing with?
-        temp_ii=WHERE((mag_utc[cdbAcepropInterp_i(phiImf_ii)])[j:*]-$
-                      (SHIFT(mag_utc[cdbAcepropInterp_i(phiImf_ii)],j))[j:*] $
+        temp_ii=WHERE((mag_utc[fastDBSatProppedInterped_i[phiImf_ii]])[j:*]-$
+                      (SHIFT(mag_utc[fastDBSatProppedInterped_i[phiImf_ii]],j))[j:*] $
                       LT (60*j+2),thisCount) 
         ;;This tempArr checks to make sure that no element of imfDurArr
         ;;gets replaced by a lower number, so that we know the MAX duration
         tempArr=imfDurArr[j:*] 
-        tempArr(temp_ii)=j 
+        tempArr[temp_ii]=j 
         tempArr=[INTARR(j),tempArr] 
-        imfDurArr(WHERE(tempArr GT imfDurArr))=j 
+        imfDurArr[WHERE(tempArr GT imfDurArr)]=j 
         printf,lun,"There are " +strtrim(thisCount-oldCount,2)+ " events" + $
                " prior to which we have " +strtrim(j,2)+ " minutes of consecutive" + $
                " mag data."    
@@ -132,15 +135,15 @@ FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiChast, $
      ENDIF
      
      ;;The following is a reasonable index number for aceprop data
-     ;;print,cdbacepropinterp_i[phiimf_ii[checkworthy_iii[1100]]]
+     ;;print,fastDBSatProppedInterped_i[phiimf_ii[checkworthy_iii[1100]]]
      ;;      133290
      
      ;;Initialize stableIMF_ii
      stableIMF_ii=0 
      FOR i=0,N_ELEMENTS(checkWorthy_iii)-1 DO BEGIN 
         temp_ii=phiImf_ii[checkWorthy_iii[i]] 
-        phiTemp=phiClock[cdbAcepropInterp_i[temp_ii]-$
-                         stableIMF+1:cdbAcepropInterp_i[temp_ii]] 
+        phiTemp=phiClock[fastDBSatProppedInterped_i[temp_ii]-$
+                         stableIMF+1:fastDBSatProppedInterped_i[temp_ii]] 
         IF clockStr NE 'bzSouth' THEN $
            stableTemp=where(phiTemp GE negAngle AND phiTemp LE posAngle) $
         ELSE stableTemp=cgSetUnion(where(phiTemp GE negAngle),$

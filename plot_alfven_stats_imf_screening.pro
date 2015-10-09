@@ -226,8 +226,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, DEL_PS=del_PS, $
                                      _EXTRA = e
 
+;;  COMPILE_OPT idl2
+
   ;;variables to be used by interp_contplot.pro
-  COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNEGMC
+  ;;COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNEGMC
 
   !EXCEPT=0                                                      ;Do report errors, please
   ;;***********************************************
@@ -237,9 +239,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;Note, in Chaston's 2007 paper, "How important are dispersive Alfvén waves?", the occurrence plot
   ; has ilat bin size = 3.0 and mlt bin size = 1.0
 
-  defMinMagC = 10
-  defMaxNegMagC = -10
-
   defCharERange = [4.0,300]
   defAltRange = [1000.0, 5000.0]
 
@@ -247,31 +246,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defENumFlPlotType = "ESA_Number_flux" 
   defIFluxPlotType = "Max"
   defCharEPlotType = "lossCone"
-
-  ; satellite defaults
-  defSatellite = "OMNI"    ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  defOmni_Coords = "GSM"             ; either "GSE" or "GSM"
-
-  defDelay = 900
-
-  defstableIMF = 0S             ;Set to a time (in minutes) over which IMF stability is required
-  defIncludeNoConsecData = 0    ;Setting this to 1 includes Chaston data for which  
-                                ;there's no way to calculate IMF stability
-                                ;Only valid for stableIMF GE 1
-  defCheckBothWays = 0          
-  
-  defBx_over_ByBz_Lim = 0       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
-  
-  ;for statistical auroral oval
-  defHwMAurOval=0
-  defHwMKpInd=7
-
-  defClockStr = 'dawnward'
-  
-  ;; defAngleLim1 = 45.0
-  ;; defAngleLim2 = 135.0
-  defAngleLim1 = 60.0
-  defAngleLim2 = 120.0
 
   ; assorted
   defMaskMin = 1
@@ -283,52 +257,20 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
 
-  ;; defBurstDBFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--maximus--burstmode.sav'
-  ;; defBurstDB_tFile = defDataDir+'dartdb/saves/Dartdb_20150810--1000-16361--cdbtime--burstmode.sav'
-
   defTempDir='/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Now set up vars
-
-  ; Handle MLT and ILAT
-  IF N_ELEMENTS(minMLT) NE 0 THEN minM = minMLT
-  IF KEYWORD_SET(maxMLT) THEN maxM = maxMLT
-
-  ;;Bin sizes for 2D histos
-  binM=(N_ELEMENTS(BinMLT) EQ 0) ? defBinM : BinMLT
-  binI=(N_ELEMENTS(BinILAT) EQ 0) ? defBinI : BinILAT 
-
-  IF KEYWORD_SET(minILAT) THEN minI = minILAT
-  IF KEYWORD_SET(maxILAT) THEN maxI = maxILAT
-
-  SET_DEFAULT_MLT_ILAT_AND_MAGC,MINMLT=minM,MAXMLT=maxM,BINM=binM, $
-                                MINILAT=minI,MAXILAT=maxI,BINI=binI,MIN_MAGCURRENT=minMC, $
-                                MAX_NEGMAGCURRENT=maxNegMC, $
-                                HEMI=hemi,LUN=lun
-
-  ;;***********************************************
-  ;;RESTRICTIONS ON DATA, SOME VARIABLES
-  ;;(Originally from JOURNAL_Oct112013_orb_avg_plots_extended.pro)
   
-  mu_0 = 4.0e-7 * !PI                                            ;perm. of free space, for Poynt. est
-  
-  ;; Don't use minOrb or maxOrb; use orbRange as a keyword in call to this pro
-  ;; minOrb=8100                   ;8260 for Strangeway study
-  ;; maxOrb=8500                   ;8292 for Strangeway study
-  ;;nOrbits = maxOrb - minOrb + 1
-  
-  IF N_ELEMENTS(charERange) EQ 0 THEN charERange = defCharERange         ; 4,~300 eV in Strangeway
-
-  IF N_ELEMENTS(altitudeRange) EQ 0 THEN altitudeRange = defAltRange ;Rob Pfaff says no lower than 1000m
-  
-
-  ;Auroral oval
-  IF N_ELEMENTS(HwMAurOval) EQ 0 THEN HwMAurOval = defHwMAurOval
-  IF N_ELEMENTS(HwMKpInd) EQ 0 THEN HwMKpInd = defHwMKpInd
-
+  SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, NUMORBLIM=numOrbLim, $
+                                  minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                  HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+                                  BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, $
+                                  PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
+                                  SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                  HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
+                                  LUN=lun
   
   ;;Shouldn't be leftover unused params from batch call
+  
   IF ISA(e) THEN BEGIN
      IF $
         NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $
@@ -366,24 +308,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDIF
 
-  ;;********************************************
-  ;;satellite data options
-  
-  IF N_ELEMENTS(satellite) EQ 0 THEN satellite = defSatellite          ;either "ACE", "wind", "wind_ACE", or "OMNI" (default, you see)
-  IF N_ELEMENTS(omni_Coords) EQ 0 THEN omni_Coords = defOmni_Coords    ; either "GSE" or "GSM"
-
-  IF N_ELEMENTS(delay) EQ 0 THEN delay = defDelay                      ;Delay between ACE propagated data and ChastonDB data
-                                                                       ;Bin recommends something like 11min
-  
-  IF N_ELEMENTS(stableIMF) EQ 0 THEN stableIMF = defStableIMF                    ;Set to a time (in minutes) over which IMF stability is required
-  IF N_ELEMENTS(includeNoConsecData) EQ 0 THEN defIncludeNoConsecData = 0 ;Setting this to 1 includes Chaston data for which  
-                                                                       ;there's no way to calculate IMF stability
-                                                                       ;Only valid for stableIMF GE 1
-  IF N_ELEMENTS(checkBothWays) EQ 0 THEN checkBothWays = defCheckBothWays       ;
-  
-  IF N_ELEMENTS(Bx_over_ByBz_Lim) EQ 0 THEN Bx_over_ByBz_Lim = defBx_over_ByBz_Lim       ;Set this to the max ratio of Bx / SQRT(By*By + Bz*Bz)
-  
-  
   ;;Want to make plots in plotDir?
   IF N_ELEMENTS(plotDir) EQ 0 THEN plotDir = defPlotDir
   ;;plotPrefix='NESSF2014_reproduction_Jan2015'
@@ -417,11 +341,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Variables for histos
   ;;Bin sizes for 2d histos
 
-  ;; IF N_ELEMENTS(squarePlot) EQ 1 THEN BEGIN
-;;     IF N_ELEMENTS(wholeCap) EQ 1 THEN PRINT,"Keyword WHOLECAP set without POLARPLOT! I'm doing it for you..."
-;;     polarPlot=1                                                 ;do Polar plots instead?
-  ;; ENDIF
-
   IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                              ; do num events plots?
   IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                             ;electron energy flux plots?
   IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = defEFluxPlotType ;options are "Integ" and "Max"
@@ -442,53 +361,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      print,"Can't do nEventPerOrbPlot without nPlots!!"
      print,"Enabling nPlots..."
      nPlots=1
-  ENDIF
-
-  ;;Which IMF clock angle are we doing?
-  ;;options are 'duskward', 'dawnward', 'bzNorth', 'bzSouth', and 'all_IMF'
-  IF N_ELEMENTS(clockStr) EQ 0 THEN clockStr = defClockStr
-
-  ;;How to set angles? Note, clock angle is measured with
-  ;;Bz North at zero deg, ranging from -180<clock_angle<180
-  ;;Setting angle limits 45 and 135, for example, gives a 90-deg
-  ;;window for dawnward and duskward plots
-  IF clockStr NE "all_IMF" THEN BEGIN
-     angleLim1=defAngleLim1               ;in degrees
-     angleLim2=defAngleLim2              ;in degrees
-  ENDIF ELSE BEGIN 
-     angleLim1=180.0              ;for doing all IMF
-     angleLim2=180.0 
-  ENDELSE
-
-  ;;Set minimum allowable number of events for a histo bin to be displayed
-  maskStr=''
-  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
-  ELSE BEGIN
-     IF maskMin GT 1 THEN BEGIN
-        maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
-     ENDIF
-  ENDELSE
-  
-  ;;Requirement for IMF By magnitude?
-  byMinStr=''
-  byMaxStr=''
-
-  IF KEYWORD_SET(byMin) THEN BEGIN
-     byMinStr='byMin_' + String(byMin,format='(D0.1)') + '_' ;STRCOMPRESS(byMin,/REMOVE_ALL)
-  ENDIF
-  IF KEYWORD_SET(byMax) THEN BEGIN
-     byMaxStr='byMax_' + String(byMax,format='(D0.1)') + '_' ;STRCOMPRESS(byMax,/REMOVE_ALL)
-  ENDIF
-
-  ;;Requirement for IMF Bz magnitude?
-  bzMinStr=''
-  bzMaxStr=''
-
-  IF KEYWORD_SET(bzMin) THEN BEGIN
-     bzMinStr='bzMin_' + String(bzMin,format='(D0.1)') + '_' ;STRCOMPRESS(bzMin,/REMOVE_ALL)
-  ENDIF
-  IF KEYWORD_SET(bzMax) THEN BEGIN
-     bzMaxStr='bzMax_' + String(bzMax,format='(D0.1)') + '_' ;STRCOMPRESS(bzMax,/REMOVE_ALL)
   ENDIF
 
   ;;doing polar contour?
@@ -583,71 +455,47 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;********************************************
   ;;Stuff for output
-  hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
-          STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
-
   IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE BEGIN
      IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
   ENDELSE
 
-  IF N_ELEMENTS(plotSuffix) EQ 0 THEN plotSuffix = "" ;; ELSE plotSuffix = "--" + plotSuffix
-  IF N_ELEMENTS(plotPrefix) EQ 0 THEN plotPrefix = "" ;; ELSE plotPrefix = plotPrefix + "--"
-
-  smoothStr=""
-
-  IF KEYWORD_SET(smoothWindow) THEN smoothStr = strtrim(smoothWindow,2)+"min_IMFsmooth--"
-
   ;;********************************************
-  ;;Figure out both hemisphere and plot indices, 
+  ;;A few other strings to tack on
   ;;tap DBs, and setup output
-  IF minI GT 0 THEN hemStr='North' ELSE IF maxI LT 0 THEN hemStr='South' $
-  ELSE BEGIN 
-     printf,lun,"Which hemisphere?" & hemStr = '??'
-  ENDELSE
-  
-  ;;satellite string
-  omniStr = ""
-  IF satellite EQ "OMNI" then omniStr = "_" + omni_Coords 
-  IF delay NE defDelay THEN delayStr = strcompress(delay/60,/remove_all) + "mindelay_" ELSE delayStr = ""
-
-  ;; are we including burst data?
-  ;; IF KEYWORD_SET(include_burstData) THEN BEGIN
-     ;; IF ~KEYWORD_SET(burstDBFile) THEN burstDBFile = defBurstDBFile
-     ;; IF ~KEYWORD_SET(burstDB_File) THEN burstDB_tFile = defBurstDB_tFile
-     ;; inc_burstStr='w_burstData--'
-
-     ;; PRINT,"Including all burst DB events..."
-     ;; PRINT,"Burst DB File: " + burstDBFile
-     
-     ;; combine_two_dbfiles,maximus,cdbTime,DBFILE2=burstDBFile,DB_TFILE2=burstDB_tFile
-
-  ;; ENDIF ELSE inc_burstStr=''
   IF KEYWORD_SET(no_burstData) THEN inc_burstStr ='burstData_excluded--' ELSE inc_burstStr=''
 
+  ;;Set minimum allowable number of events for a histo bin to be displayed
+  maskStr=''
+  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
+  ELSE BEGIN
+     IF maskMin GT 1 THEN BEGIN
+        maskStr='maskMin_' + STRCOMPRESS(maskMin,/REMOVE_ALL) + '_'
+     ENDIF
+  ENDELSE
+  
   ;;parameter string
-  paramStr=hemStr+'_'+plotMedOrAvg+clockStr+"--"+strtrim(stableIMF,2)+"stable--"+smoothStr+satellite+omniStr+"_"+delayStr+maskStr+$
-           byMinStr+byMaxStr+bzMinStr+bzMaxStr+inc_burstStr + $
-           polarContStr+hoyDia
+  paramStr=paramStr+plotMedOrAvg+maskStr+inc_burstStr + polarContStr
 
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir + plotPrefix+'outputSummary_'+paramStr+plotSuffix+'.txt',/GET_LUN $
+     OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;Now run these to clean and tap the databases and interpolate satellite data
   final_i = get_chaston_ind(maximus,satellite,lun, $
-                            CDBTIME=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
+                            DBTIMES=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb, HEMI=hemi, $
                             ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                             HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
-  phiChast = interp_mag_data(final_i,satellite,delay,lun, $
-                             cdbTime=cdbTime,CDBINTERP_I=cdbInterp_i,CDBACEPROPINTERP_I=cdbAcepropInterp_i,MAG_UTC=mag_utc, PHICLOCK=phiClock, $
+  phiChast = interp_mag_data(final_i,satellite,delay,lun,DBTIMES=cdbTime, $
+                             FASTDBINTERP_I=cdbInterp_i,FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i,MAG_UTC=mag_utc,PHICLOCK=phiClock, $
                              DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
                              BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
                              OMNI_COORDS=omni_Coords)
-  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbAcepropInterp_i,stableIMF,mag_utc,phiClock,$
+  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2,phiChast,cdbSatProppedInterped_i,stableIMF,mag_utc,phiClock,$
                                  LUN=lun,bx_over_bybz=Bx_over_ByBz_Lim)
   
-  plot_i=cdbInterp_i(phiImf_ii)
+  plot_i=cdbInterp_i[phiImf_ii]
 
   ;;********************************************************
   ;;WHICH ORBITS ARE UNIQUE?
@@ -678,19 +526,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDIF
 
-  printf,lun,""
-  printf,lun,"**********DATA SUMMARY**********"
-  printf,lun,satellite+" satellite data delay: " + strtrim(delay,2) + " seconds"
-  printf,lun,"IMF stability requirement: " + strtrim(stableIMF,2) + " minutes"
   printf,lun,"Events per bin requirement: >= " +strtrim(maskMin,2)+" events"
-  printf,lun,"Screening parameters: [Min] [Max]"
-  printf,lun,"Mag current: " + strtrim(maxNEGMC,2) + " " + strtrim(minMC,2)
-  printf,lun,"MLT: " + strtrim(minM,2) + " " + strtrim(maxM,2)
-  printf,lun,"ILAT: " + strtrim(minI,2) + " " + strtrim(maxI,2)
-  printf,lun,"Hemisphere: " + hemStr
-  printf,lun,"IMF Predominance: " + clockStr
-  printf,lun,"Angle lim 1: " + strtrim(angleLim1,2)
-  printf,lun,"Angle lim 2: " + strtrim(angleLim2,2)
   printf,lun,"Number of orbits used: " + strtrim(N_ELEMENTS(uniqueOrbs_ii),2)
   printf,lun,"Total number of events used: " + strtrim(N_ELEMENTS(plot_i),2)
 ;; printf,lun,"Percentage of Chaston DB used: " + $
@@ -1531,7 +1367,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStr,dataNameArr,maxM,minM,maxI,minI,binM,binI,$
                            rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemstr,$
-                           filename=defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat"
+                           filename=defTempDir + 'polarplots_'+paramStr+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
@@ -1546,7 +1382,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                 ;;             WTitle='Polar plot_'+dataNameArr[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                 ;;             ' IMF, ' + strmid(plotMedOrAvg,1) $
         FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
-           cgWindow,'interp_polar2dhist',h2dStr[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat", $
+           cgWindow,'interp_polar2dhist',h2dStr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
                 CLOCKSTR=clockStr, _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataNameArr[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
@@ -1559,12 +1395,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         PRINTF,LUN, "Creating output files..." 
 
         ;;Create a PostScript file.
-        cgPS_Open, plotDir + plotPrefix + 'fluxplots_'+paramStr+plotSuffix+'.ps', /nomatch, xsize=1000, ysize=1000
+        cgPS_Open, plotDir + plotPrefix + 'fluxplots_'+paramStr+'.ps', /nomatch, xsize=1000, ysize=1000
         interp_contplotmulti_str,h2dStr 
         cgPS_Close 
 
         ;;Create a PNG file with a width of 800 pixels.
-        cgPS2Raster, plotDir + plotPrefix + 'fluxplots_'+paramStr+plotSuffix+'.ps', $
+        cgPS2Raster, plotDir + plotPrefix + 'fluxplots_'+paramStr+'.ps', $
                      /PNG, Width=800, DELETE_PS = del_PS
      
      ENDIF ELSE BEGIN
@@ -1583,21 +1419,21 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ;; Use DEVICE to set some PostScript device options:
                  DEVICE, FILENAME='myfile.ps', /LANDSCAPE
                  ;; Make a simple plot to the PostScript file:
-                 interp_polar2dcontour,h2dStr[i],dataNameArr[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat", $
-                                       fname=plotDir + plotPrefix+dataNameArr[i]+paramStr+plotSuffix+'.png', _extra=e
+                 interp_polar2dcontour,h2dStr[i],dataNameArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
+                                       fname=plotDir + dataNameArr[i]+paramStr+'.png', _extra=e
                  ;; Close the PostScript file:
                  DEVICE, /CLOSE
                  ;; Return plotting to the original device:
                  SET_PLOT, mydevice
               ENDIF ELSE BEGIN
                  ;;Create a PostScript file.
-                 cgPS_Open, plotDir + plotPrefix+dataNameArr[i]+paramStr+plotSuffix+'.ps' 
+                 cgPS_Open, plotDir + dataNameArr[i]+paramStr+'.ps' 
                  ;;interp_polar_plot,[[*dataRawPtrArr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
                  ;;          h2dStr[0].lim 
-                 interp_polar2dhist,h2dStr[i],defTempDir + 'polarplots_'+paramStr+plotSuffix+".dat",CLOCKSTR=clockStr,_extra=e 
+                 interp_polar2dhist,h2dStr[i],defTempDir + 'polarplots_'+paramStr+".dat",CLOCKSTR=clockStr,_extra=e 
                  cgPS_Close 
                  ;;Create a PNG file with a width of 800 pixels.
-                 cgPS2Raster, plotDir + plotPrefix+dataNameArr[i]+paramStr+plotSuffix+'.ps', $
+                 cgPS2Raster, plotDir + dataNameArr[i]+paramStr+'.ps', $
                               /PNG, Width=800, DELETE_PS = del_PS
               ENDELSE
               
@@ -1614,7 +1450,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Save raw data, if desired
   IF KEYWORD_SET(saveRaw) THEN BEGIN
-     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+plotSuffix+".dat"
+     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+".dat"
 
   ENDIF
 
@@ -1625,7 +1461,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
       FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-         fname=plotDir + plotPrefix+dataNameArr[j]+paramStr+plotSuffix+'.h5' 
+         fname=plotDir + dataNameArr[j]+paramStr+'.h5' 
          PRINT,"Writing HDF5 file: " + fname 
          fileID=H5F_CREATE(fname) 
          datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
@@ -1636,8 +1472,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ENDFOR 
       ;;loop style for individual structures
       ;;   FOR i=0, N_ELEMENTS(h2dStr)-1 DO BEGIN 
-      ;;      fname=plotDir + plotPrefix+h2dStr[i].title+'_'+ $
-      ;;            paramStr+plotSuffix+'.h5' 
+      ;;      fname=plotDir + h2dStr[i].title+'_'+ $
+      ;;            paramStr+'.h5' 
       ;;      fileID=H5F_CREATE(fname) 
       ;;      datatypeID=H5T_IDL_CREATE(h2dStr[i]) 
       ;;      dataspaceID=H5S_CREATE_SIMPLE(1) 
@@ -1653,7 +1489,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;HELP, s.mydata._DATA, /STRUCTURE  
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
-            fname=plotDir + plotPrefix+dataNameArr[j]+paramStr+plotSuffix+'.h5' 
+            fname=plotDir + dataNameArr[j]+paramStr+'.h5' 
             PRINT,"Writing HDF5 file: " + fname 
             fileID=H5F_CREATE(fname) 
             
@@ -1678,7 +1514,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    ENDIF
 
    ;;IF writeASCII NE 0 THEN BEGIN 
-   ;;  fname=plotDir + plotPrefix+'fluxplots_'+paramStr+plotSuffix+'.ascii' 
+   ;;  fname=plotDir + 'fluxplots_'+paramStr+'.ascii' 
    ;;   PRINT,"Writing ASCII file: " + fname 
    ;;   OPENW,lun2, fname, /get_lun 
    ;;   PRINT_STRUCT,h2dStr,LUN_OUT=lun2 
@@ -1695,7 +1531,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
    IF KEYWORD_SET(writeASCII) THEN BEGIN 
       ;;These are the "raw" data, just as we got them from Chris
       FOR j = 0, n_elements(dataRawPtrArr)-3 DO BEGIN 
-         fname=plotDir + plotPrefix+dataNameArr[j]+paramStr+plotSuffix+'.ascii' 
+         fname=plotDir + dataNameArr[j]+paramStr+'.ascii' 
          PRINT,"Writing ASCII file: " + fname 
          OPENW,lun2, fname, /get_lun 
 
@@ -1711,7 +1547,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;NOW DO PROCESSED H2D DATA 
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
          FOR i = 0, n_elements(h2dStr)-1 DO BEGIN 
-            fname=plotDir + plotPrefix+"h2d_"+dataNameArr[i]+paramStr+plotSuffix+'.ascii' 
+            fname=plotDir + "h2d_"+dataNameArr[i]+paramStr+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
             OPENW,lun2, fname, /get_lun 
             FOR j = 0, N_ELEMENTS(h2dBinsMLT) - 1 DO BEGIN 
