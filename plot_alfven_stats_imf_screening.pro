@@ -57,9 +57,9 @@
 ;		     EPLOTS            :     
 ;                    EFLUXPLOTTYPE     :  Options are 'Integ' for integrated or 'Max' for max data point.
 ;                    LOGEFPLOT         :  Do log plots of electron energy flux.
-;                    ABS_EFLUX          :  Use absolute value of electron energy flux (required for log plots).
-;                    NONEG_EFLUX        :  Do not use negative e fluxes in any of the plots (positive is earthward for eflux)
-;                    NOPOS_EFLUX        :  Do not use positive e fluxes in any of the plots
+;                    ABS_EFLUX         :  Use absolute value of electron energy flux (required for log plots).
+;                    NONEG_EFLUX       :  Do not use negative e fluxes in any of the plots (positive is earthward for eflux)
+;                    NOPOS_EFLUX       :  Do not use positive e fluxes in any of the plots
 ;                    EPLOTRANGE        :  Range of allowable values for e- flux plots. 
 ;                                         (Default: [-500000,500000]; [1,5] for log plots)
 ;
@@ -167,8 +167,7 @@
 ; OPTIONAL OUTPUTS: 
 ;                    MAXIMUS           :  Return maximus structure used in this pro.
 ;
-; COMMON BLOCKS:
-;
+
 ; RESTRICTIONS:
 ;
 ; PROCEDURE:
@@ -229,7 +228,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 ;;  COMPILE_OPT idl2
 
   ;;variables to be used by interp_contplot.pro
-  ;;COMMON ContVars, minM, maxM, minI, maxI,binM,binI,minMC,maxNEGMC
 
   !EXCEPT=0                                                      ;Do report errors, please
   ;;***********************************************
@@ -335,8 +333,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;tap DBs, and setup output
   IF KEYWORD_SET(no_burstData) THEN inc_burstStr ='burstData_excluded--' ELSE inc_burstStr=''
 
-  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "med_" ELSE BEGIN
-     IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "logAvg_" ELSE plotMedOrAvg = "avg_"
+  IF KEYWORD_SET(medianplot) THEN plotMedOrAvg = "_med" ELSE BEGIN
+     IF KEYWORD_SET(logAvgPlot) THEN plotMedOrAvg = "_logAvg" ELSE plotMedOrAvg = "_avg"
   ENDELSE
 
   ;;Set minimum allowable number of events for a histo bin to be displayed
@@ -536,7 +534,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;First, histo to show where events are
 
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                       H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
+                       NEVENTSPLOTRANGE=nEventsPlotRange, $
+                       H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
 
   IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
@@ -545,8 +544,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   IF KEYWORD_SET(eplots) THEN BEGIN
 
      GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                           EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,LOGEFPLOT=logEfPlot, $
-                           H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                           EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
+                           H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                            DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
                            MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
   ENDIF
@@ -983,114 +982,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########CHARACTERISTIC ENERGY########
   IF KEYWORD_SET(charEPlots) THEN BEGIN
-
-     h2dCharEStr={tmplt_h2dStr}
-
-     ;;If not allowing negative fluxes
-     IF charEType EQ "lossCone" THEN BEGIN
-        plot_i=cgsetintersection(WHERE(FINITE(maximus.max_chare_losscone),NCOMPLEMENT=lost),plot_i) ;;NaN check
-        print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-        IF KEYWORD_SET(noNegCharE) THEN BEGIN
-           no_negs_i=WHERE(maximus.max_chare_losscone GE 0.0)
-           print,"N elements in elec data before junking negs elecData: ",N_ELEMENTS(plot_i)
-           plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in elec data after junking negs elecData: ",N_ELEMENTS(plot_i)
-        ENDIF ELSE BEGIN
-           IF KEYWORD_SET(noPosCharE) THEN BEGIN
-              no_pos_i=WHERE(maximus.max_chare_losscone LT 0.0)
-              print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(plot_i)
-           ENDIF
-        ENDELSE
-        charEData=maximus.max_chare_losscone(plot_i) 
-     ENDIF ELSE BEGIN
-        IF charEType EQ "Total" THEN BEGIN
-           plot_i=cgsetintersection(WHERE(FINITE(maximus.max_chare_total),NCOMPLEMENT=lost),plot_i) ;;NaN check
-           print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-           IF KEYWORD_SET(noNegCharE) THEN BEGIN
-              no_negs_i=WHERE(maximus.max_chare_total GE 0.0)
-              print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(plot_i)
-           ENDIF ELSE BEGIN
-              IF KEYWORD_SET(noPosCharE) THEN BEGIN
-                 no_pos_i=WHERE(maximus.max_chare_total LT 0.0)
-                 print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(plot_i)
-              ENDIF
-           ENDELSE
-           charEData=maximus.max_chare_total(plot_i)
-        ENDIF
-     ENDELSE
-
-     ;get data name ready
-     absCharEStr=""
-     negCharEStr=""
-     posCharEStr=""
-     logCharEStr=""
-     IF KEYWORD_SET(absCharE)THEN absCharEStr= "Abs--" 
-     IF KEYWORD_SET(noNegCharE) THEN negCharEStr = "NoNegs--"
-     IF KEYWORD_SET(noPosCharE) THEN posCharEStr = "NoPos--"
-     IF KEYWORD_SET(logCharEPlot) THEN logCharEStr="Log "
-     absnegslogCharEStr=absCharEStr + negCharEStr + posCharEStr + logCharEStr
-     chareDatName = STRTRIM(absnegslogCharEStr,2)+"charE"+charEType+"_"
-
-     IF KEYWORD_SET(medianplot) THEN BEGIN 
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + chareDatName+"medhist_data.sav"
-
-        h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                                     charEData,$
-                                     MIN1=MINM,MIN2=MINI,$
-                                     MAX1=MAXM,MAX2=MAXI,$
-                                     BINSIZE1=binM,BINSIZE2=binI,$
-                                     OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                     ABSMED=absCharE,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
-
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + chareDatName + "medhist.txt"
-        
-     ENDIF ELSE BEGIN 
-        charEData=(KEYWORD_SET(logAvgPlot)) ? alog10(charEData) : charEData
-
-        h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
-                                maximus.ilat(plot_i),$
-                                charEData,$
-                                MIN1=MINM,MIN2=MINI,$
-                                MAX1=MAXM,MAX2=MAXI,$
-                                BINSIZE1=binM,BINSIZE2=binI,$
-                                OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-        h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-        IF KEYWORD_SET(logAvgPlot) THEN h2dCharEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dCharEStr.data(where(h2dFluxN NE 0,/null)))        
-     ENDELSE 
-
-     ;;data mods?
-     IF KEYWORD_SET(absCharE)THEN BEGIN 
-        h2dCharEStr.data = ABS(h2dCharEStr.data) 
-        IF keepMe THEN charEData=ABS(charEData) 
-     ENDIF
-     IF KEYWORD_SET(logCharEPlot) THEN BEGIN 
-        h2dCharEStr.data(where(h2dCharEStr.data GT 0,/NULL))=ALOG10(h2dCharEStr.data(where(h2dCharEStr.data GT 0,/null))) 
-        IF keepMe THEN charEData(where(charEData GT 0,/null))=ALOG10(charEData(where(charEData GT 0,/null))) 
-     ENDIF
-
-     ;;Do custom range for charE plots, if requested
-     ;; IF  KEYWORD_SET(CharEPlotRange) THEN h2dCharEStr.lim=TEMPORARY(charEPlotRange)$
-     IF  KEYWORD_SET(CharEPlotRange) THEN h2dCharEStr.lim=CharEPlotRange $
-     ELSE h2dCharEStr.lim = [MIN(h2dCharEStr.data),MAX(h2dCharEStr.data)]
-
-     h2dCharEStr.title= absnegslogCharEStr + "Characteristic Energy (eV)"
-     ;; IF KEYWORD_SET(charEPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dCharEStr)] 
-     ;; IF KEYWORD_SET(charEPlots) THEN BEGIN 
-     h2dStr=[h2dStr,h2dCharEStr] 
-     IF keepMe THEN BEGIN 
-        dataNameArr=[dataNameArr,chareDatName] 
-        dataRawPtrArr=[dataRawPtrArr,PTR_NEW(charEData)]
-     ENDIF 
-     ;; ENDIF
-
-;;   undefine,h2dCharEStr   ;;,charEData 
-
+     GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        CHARETYPE=charEType,CHAREPLOTRANGE=charEPlotRange, $
+                        NOPOSCHARE=noPosCharE,NONEGCHARE=noNegCharE,ABSCHARE=absCharE,LOGCHAREPLOT=logCharEPlot, $
+                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange, $
+                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
   ENDIF
 
   ;;########################################
@@ -1372,7 +1269,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ELSE PRINTF,LUN,"**Plots turned off with justData**" 
   ENDIF ELSE BEGIN 
      IF KEYWORD_SET(squarePlot) AND NOT KEYWORD_SET(justData) THEN BEGIN 
-        CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
+        CD, CURRENT=c ;; & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
         PRINTF,LUN, "Creating output files..." 
 
         ;;Create a PostScript file.
@@ -1435,7 +1332,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ENDIF
 
-
    ;;********************************************************
    ;;Thanks, IDL Coyote--time to write out lots of data
 
@@ -1451,19 +1347,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
          H5D_WRITE,datasetID, h2dStr[j].data 
          H5F_CLOSE,fileID 
       ENDFOR 
-      ;;loop style for individual structures
-      ;;   FOR i=0, N_ELEMENTS(h2dStr)-1 DO BEGIN 
-      ;;      fname=plotDir + h2dStr[i].title+'_'+ $
-      ;;            paramStr+'.h5' 
-      ;;      fileID=H5F_CREATE(fname) 
-      ;;      datatypeID=H5T_IDL_CREATE(h2dStr[i]) 
-      ;;      dataspaceID=H5S_CREATE_SIMPLE(1) 
-      ;;      datasetID = H5D_CREATE(fileID,$
-      ;;                             h2dStr[i].title+'_'+hemi+'_'+clockStr+plotMedOrAvg, $
-      ;;                             datatypeID, dataspaceID) 
-      ;;      H5D_WRITE,datasetID, h2dStr[i] 
-      ;;      H5F_CLOSE,fileID    
-      ;;   ENDFOR 
 
       ;;To read your newly produced HDF5 file, do this:
       ;;s = H5_PARSE(fname, /READ_DATA)
@@ -1493,21 +1376,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
          ENDFOR 
       ENDIF 
    ENDIF
-
-   ;;IF writeASCII NE 0 THEN BEGIN 
-   ;;  fname=plotDir + 'fluxplots_'+paramStr+'.ascii' 
-   ;;   PRINT,"Writing ASCII file: " + fname 
-   ;;   OPENW,lun2, fname, /get_lun 
-   ;;   PRINT_STRUCT,h2dStr,LUN_OUT=lun2 
-   ;;   FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN 
-   ;;    PRINTF,lun2,h2dStr[i].title 
-   ;;    PRINT,h2dStr[i].title 
-   ;;    PRINTF,lun2,h2dStr[i].data 
-   ;;    PRINTF,lun2,"" 
-   ;;   ENDFOR 
-   ;;   CLOSE, lun2 
-   ;;   FREE_LUN, lun2 
-   ;;ENDIF
 
    IF KEYWORD_SET(writeASCII) THEN BEGIN 
       ;;These are the "raw" data, just as we got them from Chris

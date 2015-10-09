@@ -1,4 +1,9 @@
-PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI,H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr,DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                         NEVENTSPLOTRANGE=nEventsPlotRange, $
+                         H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin, $
+                         TMPLT_H2DSTR=tmplt_h2dStr, $
+                         DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   h2dFluxN=hist_2d(maximus.mlt(plot_i),$
@@ -36,7 +41,5 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
      dataNameArr=[dataNameArr,"histoMask_"] 
      dataRawPtrArr=[dataRawPtrArr,PTR_NEW(h2dMaskStr.data)] 
   ENDIF
-
-  IF KEYWORD_SET(do_nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
 
 END
