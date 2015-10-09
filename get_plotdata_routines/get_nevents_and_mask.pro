@@ -1,4 +1,4 @@
-PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI,H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,TMPLT_h2dStr=tmplt_h2dStr,DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI,H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr,DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   h2dFluxN=hist_2d(maximus.mlt(plot_i),$

@@ -552,7 +552,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;First, histo to show where events are
 
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                       H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,TMPLT_h2dStr=tmplt_h2dStr, $
+                       H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
 
   IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
