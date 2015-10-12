@@ -1,8 +1,7 @@
 PRO GET_NEVENTS_PER_ORBIT_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                                   ORBFREQRANGE=orbFreqRange,DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                   H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
-                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
-                                  NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
 
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
      ;This makes h2dStr(1) the mask histo.
@@ -14,7 +13,7 @@ PRO GET_NEVENTS_PER_ORBIT_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
      ENDIF ELSE BEGIN
         divisor = h2dTotOrbStr.data(h2dNonzeroNEv_i) ;Divide by all orbits passing through relevant bin
      ENDELSE
-     h2dNEvPerOrbStr.data(h2dNonzeroNEv_i)=h2dNEvPerOrbStr.data(h2dNonzeroNEv_i)/divisor
+     h2dNEvPerOrbStr.data[h2dNonzeroNEv_i]=h2dNEvPerOrbStr.data[h2dNonzeroNEv_i]/divisor
 
      logNEvStr=""
      nEvByAppStr=""
@@ -27,7 +26,7 @@ PRO GET_NEVENTS_PER_ORBIT_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
      ENDIF ELSE h2dNEvPerOrbStr.lim=nEventPerOrbRange
      
      IF KEYWORD_SET(logNEventPerOrb) THEN BEGIN 
-        h2dNEvPerOrbStr.data(where(h2dNEvPerOrbStr.data GT 0,/NULL))=ALOG10(h2dNEvPerOrbStr.data(where(h2dNEvPerOrbStr.data GT 0,/null))) 
+        h2dNEvPerOrbStr.data[where(h2dNEvPerOrbStr.data GT 0,/NULL)]=ALOG10(h2dNEvPerOrbStr.data[where(h2dNEvPerOrbStr.data GT 0,/null)])
      ENDIF
 
      h2dStr=[h2dStr,h2dNEvPerOrbStr] 
