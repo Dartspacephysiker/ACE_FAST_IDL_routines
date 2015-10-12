@@ -364,13 +364,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;Now clean and tap the databases and interpolate satellite data
-    plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
-                                                    DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
-                                                    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                                                    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                    BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                    STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
-                                                    HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
+  plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
+                                                  DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
+                                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
+                                                  MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                  BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                  STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
+                                                  HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
     
   ;;********************************************************
   ;;WHICH ORBITS ARE UNIQUE?
@@ -419,10 +419,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
   IF KEYWORD_SET(noPos_eFlux) AND KEYWORD_SET (logEfPlot) THEN abs_eFlux = 1
 
-  IF N_ELEMENTS(EPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- energy Flux plotrange
-     IF N_ELEMENTS(logEfPlot) EQ 0 THEN EPlotRange=[0.01,100] ELSE EPlotRange=[-2,2]
-  ENDIF
-  
   ;;#########e- number flux
   ;; Safety for electron number flux plots 
   IF KEYWORD_SET(logENumFlPlot) AND NOT KEYWORD_SET(absENumFl) AND NOT KEYWORD_SET(noNegENumFl) AND NOT KEYWORD_SET(noPosENumFl) THEN BEGIN 
@@ -433,10 +429,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      noNegENumFl=1
   ENDIF
   IF KEYWORD_SET(noPosENumFl) AND KEYWORD_SET (logENumFlPlot) THEN absENumFl = 1
-
-  IF N_ELEMENTS(ENumFlPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- number flux plotrange
-     IF N_ELEMENTS(logENumFlPlot) EQ 0 THEN ENumFlPlotRange=[1e5,1e9] ELSE ENumFlPlotRange=[1,9]
-  ENDIF
 
   ;;######Poynting flux
   IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPflux) AND NOT KEYWORD_SET(noNegPflux) AND NOT KEYWORD_SET(noPosPflux) THEN BEGIN 
@@ -449,11 +441,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   IF KEYWORD_SET(noPosPflux) AND KEYWORD_SET (logPfPlot) THEN absPflux = 1
-
-  ;;For linear or log PFlux plotrange
-  IF N_ELEMENTS(PPlotRange) EQ 0 THEN BEGIN
-     IF N_ELEMENTS(logPfPlot) EQ 0 THEN PPlotRange=[0.1,2.5] ELSE PPlotRange=[-1.5288,0.39794]
-  ENDIF
 
   ;;######Ion flux (up)
   ;;For linear or log ion flux plotrange
@@ -480,13 +467,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   IF KEYWORD_SET(noPosCharE) AND KEYWORD_SET (logCharEPlot) THEN absCharE = 1
 
-  IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
-;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=[1,4000] ELSE CharEPlotRange=[0,3.60206]; [0,3.69897]
-     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
-  ENDIF ELSE BEGIN
-     IF N_ELEMENTS(logCharEPlot) GT 0 THEN CharEPlotRange=ALOG10(charEPlotRange)
-  ENDELSE
-
+  ;;;;;;;;;;;;;;;;;;;;;;
+  ;;Plot lims
+  SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
+                             PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
+                             ENUMFLPLOTRANGE=ENumFlPlotRange,LOGENUMFLPLOT=logENumFlPlot, $
+                             EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot
+  
   ;;***********************************************
   ;;Calculate Poynting flux estimate
   
@@ -500,17 +487,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;Now time for data summary
 
-;; was using this to compare our Poynting flux estimates against Keiling et al. 2003 Fig. 3
-  IF KEYWORD_SET(poyntRange) THEN BEGIN
-     IF N_ELEMENTS(poyntRange) NE 2 OR (poyntRange[1] LE poyntRange[0]) THEN BEGIN
-        PRINT,"Invalid Poynting range specified! poyntRange should be a two-element vector, [minPoynt maxPoynt]"
-        PRINT,"No Poynting range set..."
-        RETURN
-     ENDIF ELSE BEGIN
-        plot_i=cgsetintersection(plot_i,where(pfluxEst GE poyntRange[0] AND pfluxEst LE poyntRange[1]))
-     ENDELSE
-  ENDIF
-
   printf,lun,FORMAT='("Events per bin req            : >=",T35,I8)',maskMin
   printf,lun,FORMAT='("Number of orbits used         :",T35,I8)',N_ELEMENTS(uniqueOrbs_ii)
   printf,lun,FORMAT='("Total N events                :",T35,I8)',N_ELEMENTS(plot_i)
@@ -518,11 +494,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 ;;        strtrim((N_ELEMENTS(plot_i))/134925.0*100.0,2) + "%"
   printf,lun,FORMAT='("Percentage of DB used         :",T35,G8.4,"%")',(FLOAT(N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0)
 
-  ;;********************************************
-  ;;junk=where(cdbInterp_i(phi_dusk_ii) EQ cdbInterp_i(phi_dawn_ii))
-  ;;IF n_elements(junk) EQ 1 THEN BEGIN 
-  ;;	IF junk NE -1 THEN PRINTF,LUN,"NO!!!! JUNK ISN'T JUNK!!!" 
-  ;;ENDIF
   ;;********************************************************
   ;;HISTOS
 
@@ -532,9 +503,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                        NEVENTSPLOTRANGE=nEventsPlotRange, $
                        H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
-                       DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
-
-  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
+                       DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme,NPLOTS=nPlots
 
   ;;########ELECTRON FLUX########
   IF KEYWORD_SET(eplots) THEN BEGIN
@@ -641,61 +610,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########NEvents/minute########
   IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
-
-     ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
-     ;This makes h2dStr(1) the mask histo.
-     h2dNEvPerMinStr={tmplt_h2dStr}
-     h2dNEvPerMinStr.data=h2dStr[0].data
-     h2dNonzeroNEv_i=WHERE(h2dStr[0].data NE 0,/NULL)
-
-     ;Get the appropriate divisor for IMF conditions
-     GET_FASTLOC_INDS_IMF_CONDS,fastLocInterped_i,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                                BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                HEMI='BOTH', DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                HWMAUROVAL=0,HWMKPIND=!NULL, $
-                                MAKE_OUTINDSFILE=1,OUTINDSFILEBASENAME=outIndsBasename, $
-                                FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
-                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
-                                BURSTDATA_EXCLUDED=burstData_excluded
-
-     ;; MAKE_FASTLOC_HISTO,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
-     MAKE_FASTLOC_HISTO,FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastloc_delta_t, $
-                        FASTLOC_INDS=fastLocInterped_i, OUTTIMEHISTO=divisor, $
-                        MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
-                        MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                        FASTLOCFILE=fastLocFile,FASTLOCTIMEFILE=fastLocTimeFile, $
-                        OUTFILEPREFIX=outIndsBasename,OUTFILESUFFIX=outFileSuffix, OUTDIR=fastLocOutputDir, $
-                        OUTPUT_TEXTFILE=output_textFile
-
-     ;output is in seconds, but we'll do minutes
-     ;
-     divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
-     h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
-
-     ;2015/04/09 TEMPORARILY skip the lines above because our fastLoc file currently only includes orbits 500-11000.
-     ; This means that, according to fastLoc and maximus, there are events where FAST has never been!
-     ; So we have to do some trickery
-     ;; divisor_nonZero_i = WHERE(divisor GT 0.0)
-     ;; h2dNonzeroNEv_i = cgsetintersection(divisor_nonZero_i,h2dNonzeroNEv_i)
-     ;; divisor = divisor(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
-     ;; h2dNEvPerMinStr.data(h2dNonzeroNEv_i)=h2dNEvPerMinStr.data(h2dNonzeroNEv_i)/divisor
-
-     logNEvStr=""
-     IF KEYWORD_SET(logNEventPerMin) THEN logNEvStr="Log "
-     h2dNEvPerMinStr.title= logNEvStr + 'N Events per minute'
-
-     IF N_ELEMENTS(nEventPerMinRange) EQ 0 OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
-        IF N_ELEMENTS(logNEventPerMin) EQ 0 THEN h2dNEvPerMinStr.lim=[0,25] ELSE h2dNEvPerMinStr.lim=[1,ALOG10(25.0)]
-     ENDIF ELSE h2dNEvPerMinStr.lim=nEventPerMinRange
-     
-     IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
-        h2dNEvPerMinStr.data(where(h2dNEvPerMinStr.data GT 0,/NULL))=ALOG10(h2dNEvPerMinStr.data(where(h2dNEvPerMinStr.data GT 0,/null))) 
-     ENDIF
-
-     h2dStr=[h2dStr,h2dNEvPerMinStr] 
-     IF keepMe THEN dataNameArr=[dataNameArr,logNEvStr + "nEventPerMin"] 
-
+     GET_NEVENTPERMIN_PLOTDATA,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                               ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                               BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                               LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
+                               HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                               MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                               MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                               FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
+                               FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
+                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                               BURSTDATA_EXCLUDED=burstData_excluded, $
+                               DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
   ENDIF
 
   ;; Temporary data thing
