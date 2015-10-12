@@ -156,6 +156,7 @@
 ;                    OUTPUTPLOTSUMMARY :  Make a text file with record of running params, various statistics
 ;                    MEDHISTOUTDATA    :  If doing median plots, output the median pointer array. 
 ;                                           (Good for further inspection of the statistics involved in each bin
+;                    MEDHISTDATADIR    :  Directory where median histogram data is outputted.
 ;                    MEDHISTOUTTXT     :  Use 'medhistoutdata' output to produce .txt files with
 ;                                           median and average values for each MLT/ILAT bin.
 ;                    DEL_PS            :  Delete postscript outputted by plotting routines
@@ -222,7 +223,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                      PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
-                                     OUTPUTPLOTSUMMARY=outputPlotSummary, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, DEL_PS=del_PS, $
+                                     MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                     OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
                                      _EXTRA = e
 
 ;;  COMPILE_OPT idl2
@@ -247,7 +249,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defOutSummary = 1 ;for output plot summary
 
   defDataDir = "/SPENCEdata/Research/Cusp/database/"
-
+  defMedHistDataDir = 'out/medHistData/'
   defTempDir='/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
   
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
@@ -323,6 +325,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      PRINT, "medHistOutTxt is enabled, but medHistOutData is not!"
      print, "Enabling medHistOutData, since corresponding output is necessary for medHistOutTxt"
      WAIT, 0.5
+     IF ~KEYWORD_SET(medHistDataDir) THEN medHistDataDir = defMedHistDataDir 
      medHistOutData = 1
   ENDIF
 
@@ -535,442 +538,47 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########ELECTRON FLUX########
   IF KEYWORD_SET(eplots) THEN BEGIN
-
      GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                           EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
-                           H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                           DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
-                           MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
+                            EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
+                            H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                            DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                            MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                            LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
   ENDIF
 
   ;;########ELECTRON NUMBER FLUX########
   IF KEYWORD_SET(eNumFlPlots) THEN BEGIN
-
-     h2dENumStr={tmplt_h2dStr}
-
-     ;;If not allowing negative fluxes
-     IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("Total_Eflux_Integ") THEN BEGIN
-        plot_i=cgsetintersection(WHERE(FINITE(maximus.total_eflux_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
-        print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-        IF KEYWORD_SET(noNegENumFl) THEN BEGIN
-           no_negs_i=WHERE(maximus.total_eflux_integ GE 0.0)
-           print,"N elements in elec #flux data before junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-           plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in elec #flux data after junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-        ENDIF ELSE BEGIN
-           IF KEYWORD_SET(noPosENumFl) THEN BEGIN
-              no_pos_i=WHERE(maximus.total_eflux_integ LT 0.0)
-              print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-           ENDIF
-        ENDELSE
-        elecNumFData= maximus.total_eflux_integ(plot_i) 
-     ENDIF ELSE BEGIN
-        IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("Eflux_Losscone_Integ") THEN BEGIN
-           plot_i=cgsetintersection(WHERE(FINITE(maximus.eflux_losscone_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
-           print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-           IF KEYWORD_SET(noNegENumFl) THEN BEGIN
-              no_negs_i=WHERE(maximus.eflux_losscone_integ GE 0.0)
-              print,"N elements in elec data before junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in elec data after junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-           ENDIF ELSE BEGIN
-              IF KEYWORD_SET(noPosENumFl) THEN BEGIN
-                 no_pos_i=WHERE(maximus.eflux_losscone_integ LT 0.0)
-                 print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-              ENDIF
-           ENDELSE
-           elecNumFData = maximus.eflux_losscone_integ(plot_i)
-        ENDIF ELSE BEGIN
-           IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("ESA_Number_flux") THEN BEGIN
-              plot_i=cgsetintersection(WHERE(FINITE(maximus.esa_current),NCOMPLEMENT=lost),plot_i) ;;NaN check
-              print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-              IF KEYWORD_SET(noNegENumFl) THEN BEGIN
-                 no_negs_i=WHERE(maximus.esa_current GE 0.0)
-                 print,"N elements in elec #flux data before junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_negs_i,plot_i)
-                 print,"N elements in elec #flux data after junking neg elecNumFData: ",N_ELEMENTS(plot_i)
-              ENDIF ELSE BEGIN
-                 IF KEYWORD_SET(noPosENumFl) THEN BEGIN
-                    no_pos_i=WHERE(maximus.esa_current LT 0.0)
-                    print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-                    plot_i=cgsetintersection(no_pos_i,plot_i)        
-                    print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(plot_i)
-                 ENDIF
-              ENDELSE
-           ENDIF
-           ;;NOTE: microCoul_per_m2__to_num_per_cm2 = 1. / 1.6e-9
-           elecNumFData= maximus.esa_current(plot_i) * 1. / 1.6e-9
-        ENDELSE
-     ENDELSE
-
-     ;;Handle name of data
-     ;;Log plots desired?
-     absEFStr=""
-     negEFStr=""
-     posEFStr=""
-     logEFStr=""
-     IF KEYWORD_SET(abs_eFlux)THEN BEGIN
-        absEFStr= "Abs--" 
-        print,"N pos elements in elec data: ",N_ELEMENTS(where(elecNumFData GT 0.))
-        print,"N neg elements in elec data: ",N_ELEMENTS(where(elecNumFData LT 0.))
-        elecNumFData = ABS(elecNumFData)
-     ENDIF
-     IF KEYWORD_SET(noNegENumFl) THEN BEGIN
-        negEStr = "NoNegs--"
-        print,"N elements in elec data before junking neg elecNumFData: ",N_ELEMENTS(elecNumFData)
-        elecNumFData = elecNumFData(where(elecNumFData GT 0.))
-        print,"N elements in elec data after junking neg elecNumFData: ",N_ELEMENTS(elecNumFData)
-     ENDIF
-     IF KEYWORD_SET(noPosENumFl) THEN BEGIN
-        posEStr = "NoPos--"
-        print,"N elements in elec data before junking pos elecNumFData: ",N_ELEMENTS(elecNumFData)
-        elecNumFData = elecNumFData(where(elecNumFData LT 0.))
-        print,"N elements in elec data after junking pos elecNumFData: ",N_ELEMENTS(elecNumFData)
-        elecNumFData = ABS(elecNumFData)
-     ENDIF
-     IF KEYWORD_SET(logENumFlPlot) THEN logEFStr="Log "
-     absnegslogEFStr=absEFStr + negEFStr + posEFStr + logEFStr
-     efDatName = STRTRIM(absnegslogEFStr,2)+"eNumFl"+eNumFlPlotType+"_"
-
-     IF KEYWORD_SET(medianplot) THEN BEGIN 
-
-        medHistDataDir = 'out/medHistData/'
-
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
-
-        h2dENumStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                                 elecNumFData,$
-                                 MIN1=MINM,MIN2=MINI,$
-                                 MAX1=MAXM,MAX2=MAXI,$
-                                 BINSIZE1=binM,BINSIZE2=binI,$
-                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absENumFl,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
-
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + efDatName + "medhist.txt"
-
-     ENDIF ELSE BEGIN 
-
-        elecNumFData=(KEYWORD_SET(logAvgPlot)) ? alog10(elecNumFData) : elecNumFData
-
-        h2dENumStr.data=hist2d(maximus.mlt(plot_i), $
-                            maximus.ilat(plot_i),$
-                            elecNumFData,$
-                            MIN1=MINM,MIN2=MINI,$
-                            MAX1=MAXM,MAX2=MAXI,$
-                            BINSIZE1=binM,BINSIZE2=binI,$
-                            OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-        h2dENumStr.data(where(h2dFluxN NE 0,/NULL))=h2dENumStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-        IF KEYWORD_SET(logAvgPlot) THEN h2dENumStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dENumStr.data(where(h2dFluxN NE 0,/null)))        
-
-     ENDELSE
-
-     ;data mods?
-     IF KEYWORD_SET(absENumFl)THEN BEGIN 
-        h2dENumStr.data = ABS(h2dENumStr.data) 
-        IF keepMe THEN elecNumFData=ABS(elecNumFData) 
-     ENDIF
-     IF KEYWORD_SET(logENumFlPlot) THEN BEGIN 
-        h2dENumStr.data(where(h2dENumStr.data GT 0,/NULL))=ALOG10(h2dENumStr.data(where(h2dENumStr.data GT 0,/null))) 
-        IF keepMe THEN elecNumFData(where(elecNumFData GT 0,/null))=ALOG10(elecNumFData(where(elecNumFData GT 0,/null))) 
-     ENDIF
-
-     ;;Do custom range for ENumFl plots, if requested
-     IF  KEYWORD_SET(ENumFlPlotRange) THEN h2dENumStr.lim=ENumFlPlotRange $
-     ELSE h2dENumStr.lim = [MIN(h2dENumStr.data),MAX(h2dENumStr.data)]
-
-     h2dENumStr.title= absnegslogEFstr + "Electron Number Flux (#/cm!U2!N-s)"
-     ;; IF KEYWORD_SET(eNumFlPlots) THEN BEGIN 
-     h2dStr=[h2dStr,h2dENumStr] 
-     IF keepMe THEN BEGIN 
-        dataNameArr=[dataNameArr,efDatName] 
-        dataRawPtrArr=[dataRawPtrArr,PTR_NEW(elecNumFData)] 
-     ENDIF 
-     ;; ENDIF
-
+     GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                               ENUMFLPLOTTYPE=eNumFlPlotType,EPLOTRANGE=ePlotRange, $
+                               NOPOSENUMFL=noPosENumFl,NONEGENUMFL=noNegENumFl,ABSENUMFL=absENumFl,LOGEFPLOT=logEfPlot, $
+                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                               DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                               MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                               LOGAVGPLOT=logAvgPlot, $
+                               OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
   ENDIF
 
   ;;########Poynting Flux########
   IF KEYWORD_SET(pplots) THEN BEGIN
-
-     h2dPStr={tmplt_h2dStr}
-
-     ;;check for NaNs
-     goodPF_i = WHERE(FINITE(pfluxEst),NCOMPLEMENT=lostNans)
-     IF goodPF_i[0] NE -1 THEN BEGIN
-        print,"Found some NaNs in Poynting flux! Losing another " + strcompress(lostNans,/REMOVE_ALL) + " events..."
-        plot_i = cgsetintersection(plot_i,goodPF_i)
-     ENDIF
-     
-     IF KEYWORD_SET(noNegPflux) THEN BEGIN
-        no_negs_i=WHERE(pfluxEst GE 0.0)
-        plot_i=cgsetintersection(no_negs_i,plot_i)
-     ENDIF
-
-     IF KEYWORD_SET(noPosPflux) THEN BEGIN
-        no_pos_i=WHERE(pfluxEst LE 0.0)
-        plot_i=cgsetintersection(no_pos_i,plot_i)
-     ENDIF
-
-     ;;Log plots desired?
-     absPstr=""
-     negPstr=""
-     posPstr=""
-     logPstr=""
-     IF KEYWORD_SET(absPflux) THEN absPstr= "Abs"
-     IF KEYWORD_SET(noNegPflux) THEN negPstr = "NoNegs--"
-     IF KEYWORD_SET(noPosPflux) THEN posPstr = "NoPos--"
-     IF KEYWORD_SET(logPfPlot) THEN logPstr="Log "
-     absnegslogPstr=absPstr + negPstr + posPstr + logPstr
-     pfDatName = STRTRIM(absnegslogPstr,2)+"pFlux_"
-
-     IF KEYWORD_SET(medianplot) THEN BEGIN 
-
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + pfDatName+"medhist_data.sav"
-
-        h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                                 pfluxEst(plot_i),$
-                                 MIN1=MINM,MIN2=MINI,$
-                                 MAX1=MAXM,MAX2=MAXI,$
-                                 BINSIZE1=binM,BINSIZE2=binI,$
-                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absPflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
-
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + pfDatName + "medhist.txt"
-
-     ENDIF ELSE BEGIN 
-        IF KEYWORD_SET(logAvgPlot) THEN BEGIN
-           pfluxEst(where(pfluxEst NE 0,/null)) = ALOG10(pfluxEst(where(pfluxEst NE 0,/null)))
-        ENDIF
-
-        h2dPStr.data=hist2d(maximus.mlt(plot_i),$
-                            maximus.ilat(plot_i),$
-                            pfluxEst(plot_i),$
-                            MIN1=MINM,MIN2=MINI,$
-                            MAX1=MAXM,MAX2=MAXI,$
-                            BINSIZE1=binM,BINSIZE2=binI) 
-        h2dPStr.data(where(h2dFluxN NE 0,/null))=h2dPStr.data(where(h2dFluxN NE 0,/null))/h2dFluxN(where(h2dFluxN NE 0,/null)) 
-        IF KEYWORD_SET(logAvgPlot) THEN h2dPStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dPStr.data(where(h2dFluxN NE 0,/null)))
-     ENDELSE
-
-     IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=pfluxEst(plot_i)
-
-     ;;data mods?
-     IF KEYWORD_SET(absPflux) THEN BEGIN 
-        h2dPStr.data = ABS(h2dPStr.data) 
-        IF keepMe THEN pData=ABS(pData) 
-     ENDIF
-
-     IF KEYWORD_SET(logPfPlot) THEN BEGIN 
-        h2dPStr.data(where(h2dPStr.data GT 0,/null))=ALOG10(h2dPStr.data(where(h2dPStr.data GT 0,/NULL))) 
-        IF keepMe THEN pData(where(pData GT 0,/NULL))=ALOG10(pData(where(pData GT 0,/NULL))) 
-     ENDIF
-
-     h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
-
-     ;;Do custom range for Pflux plots, if requested
-     ;; IF KEYWORD_SET(PPlotRange) THEN h2dPStr.lim=TEMPORARY(PPlotRange)$
-     IF KEYWORD_SET(PPlotRange) THEN h2dPStr.lim=PPlotRange $
-     ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
-
-     ;;IF pPlots NE 0 THEN BEGIN 
-     ;;  IF ePlots NE 0 THEN h2dStr=[h2dStr,TEMPORARY(h2dPStr)] $
-     ;;  ELSE h2dStr=[TEMPORARY(h2dPStr)] 
-     ;;ENDIF
-     ;; IF KEYWORD_SET(pPlots) THEN BEGIN & h2dStr=[h2dStr,TEMPORARY(h2dPStr)] 
-     ;; IF KEYWORD_SET(pPlots) THEN BEGIN & 
-     h2dStr=[h2dStr,h2dPStr] 
-     IF keepMe THEN BEGIN 
-        dataNameArr=[dataNameArr,pfDatName] 
-        dataRawPtrArr=[dataRawPtrArr,PTR_NEW(pData)] 
-     ENDIF  
-     ;; ENDIF
-
-;;   undefine,h2dPStr
-
+     GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        PPLOTRANGE=PPlotRange, $
+                        NOPOSPFLUX=noPosPflux,NONEGPFLUX=noNegPflux,ABSPFLUX=absPflux,LOGPFPLOT=logPfPlot, $
+                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                        LOGAVGPLOT=logAvgPlot, $
+                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
   ENDIF
-
 
   ;;########ION FLUX########
   IF KEYWORD_SET(ionPlots) THEN BEGIN
-     h2dIStr={tmplt_h2dStr}
-
-     ;;If not allowing negative fluxes
-     IF iFluxPlotType EQ "Integ" THEN BEGIN
-        plot_i=cgsetintersection(WHERE(FINITE(maximus.integ_ion_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
-        print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-        IF KEYWORD_SET(noNegIflux) THEN BEGIN
-           no_negs_i=WHERE(maximus.integ_ion_flux GE 0.0)
-           print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(plot_i)
-           plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(plot_i)
-        ENDIF ELSE BEGIN
-           IF KEYWORD_SET(noPosIflux) THEN BEGIN
-              no_pos_i=WHERE(maximus.integ_ion_flux LE 0.0)
-              print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(plot_i)
-           ENDIF
-        ENDELSE
-     ionData=maximus.integ_ion_flux(plot_i) 
-     ENDIF ELSE BEGIN
-        IF ifluxPlotType EQ "Max" THEN BEGIN
-           plot_i=cgsetintersection(WHERE(FINITE(maximus.ion_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
-           print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-           IF KEYWORD_SET(noNegIflux) THEN BEGIN
-              no_negs_i=WHERE(maximus.ion_flux GE 0.0)
-              print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(plot_i)
-           ENDIF ELSE BEGIN
-              IF KEYWORD_SET(noPosIflux) THEN BEGIN
-                 no_pos_i=WHERE(maximus.ion_flux LE 0.0)
-                 print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(plot_i)
-              ENDIF
-           ENDELSE
-           ionData=maximus.ion_flux(plot_i)
-        ENDIF ELSE BEGIN
-           IF ifluxPlotType EQ "Max_Up" THEN BEGIN
-              plot_i=cgsetintersection(WHERE(FINITE(maximus.ion_flux_up),NCOMPLEMENT=lost),plot_i) ;;NaN check
-              print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-              IF KEYWORD_SET(noNegIflux) THEN BEGIN
-                 no_negs_i=WHERE(maximus.ion_flux_up GE 0.0)
-                 print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_negs_i,plot_i)        
-                 print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(plot_i)
-              ENDIF ELSE BEGIN
-                 IF KEYWORD_SET(noPosIflux) THEN BEGIN
-                    no_pos_i=WHERE(maximus.ion_flux_up LE 0.0)
-                    print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(plot_i)
-                    plot_i=cgsetintersection(no_pos_i,plot_i)        
-                    print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(plot_i)
-                 ENDIF
-              ENDELSE
-              ionData=maximus.ion_flux_up(plot_i)
-           ENDIF ELSE BEGIN
-              IF ifluxPlotType EQ "Integ_Up" THEN BEGIN
-                 plot_i=cgsetintersection(WHERE(FINITE(maximus.integ_ion_flux_up),NCOMPLEMENT=lost),plot_i) ;;NaN check
-                 print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-                 IF KEYWORD_SET(noNegIflux) THEN BEGIN
-                    no_negs_i=WHERE(maximus.integ_ion_flux_up GE 0.0)
-                    print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(plot_i)
-                    plot_i=cgsetintersection(no_negs_i,plot_i)        
-                    print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(plot_i)
-                 ENDIF ELSE BEGIN
-                    IF KEYWORD_SET(noPosIflux) THEN BEGIN
-                       no_pos_i=WHERE(maximus.integ_ion_flux_up LE 0.0)
-                       print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(plot_i)
-                       plot_i=cgsetintersection(no_pos_i,plot_i)        
-                       print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(plot_i)
-                    ENDIF
-                 ENDELSE
-                 ionData=maximus.integ_ion_flux_up(plot_i)
-              ENDIF ELSE BEGIN
-                 IF ifluxPlotType EQ "Energy" THEN BEGIN
-                    plot_i=cgsetintersection(WHERE(FINITE(maximus.ion_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
-                    print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
-                    IF KEYWORD_SET(noNegIflux) THEN BEGIN
-                       no_negs_i=WHERE(maximus.ion_energy_flux GE 0.0)
-                       print,"N elements in ion data before junking neg ionData: ",N_ELEMENTS(plot_i)
-                       plot_i=cgsetintersection(no_negs_i,plot_i)        
-                       print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(plot_i)
-                    ENDIF ELSE BEGIN
-                       IF KEYWORD_SET(noPosIflux) THEN BEGIN
-                          no_pos_i=WHERE(maximus.ion_energy_flux LE 0.0)
-                          print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(plot_i)
-                          plot_i=cgsetintersection(no_pos_i,plot_i)        
-                          print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(plot_i)
-                       ENDIF
-                    ENDELSE
-                    ionData=maximus.ion_energy_flux(plot_i)
-                 ENDIF
-              ENDELSE
-           ENDELSE
-        ENDELSE
-     ENDELSE
-
-     ;;Log plots desired?
-     absIonStr=""
-     negIonStr=""
-     posIonStr=""
-     logIonStr=""
-     IF KEYWORD_SET(absIflux)THEN BEGIN
-        absIonStr= "Abs--" 
-        print,"N pos elements in ion data: ",N_ELEMENTS(where(ionData GT 0.))
-        print,"N neg elements in ion data: ",N_ELEMENTS(where(ionData LT 0.))
-        ionData = ABS(ionData)
-     ENDIF
-     IF KEYWORD_SET(noNegIflux) THEN BEGIN
-        negIonStr = "NoNegs--"
-        ionData = ionData(where(ionData GT 0.))
-        print,"N elements in ion data after junking neg ionData: ",N_ELEMENTS(ionData)
-     ENDIF
-     IF KEYWORD_SET(noPosIflux) THEN BEGIN
-        posIonStr = "NoPos--"
-        print,"N elements in ion data before junking pos ionData: ",N_ELEMENTS(ionData)
-        ionData = ionData(where(ionData LT 0.))
-        print,"N elements in ion data after junking pos ionData: ",N_ELEMENTS(ionData)
-        ionData = ABS(ionData)
-     ENDIF
-     IF KEYWORD_SET(logIfPlot) THEN logIonStr="Log "
-     absnegslogIonStr=absIonStr + negIonStr + posIonStr + logIonStr
-     ifDatName = STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"
-
-     IF KEYWORD_SET(medianplot) THEN BEGIN 
-
-        IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + ifDatName+"medhist_data.sav"
-
-        h2dIStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                                 ionData,$
-                                 MIN1=MINM,MIN2=MINI,$
-                                 MAX1=MAXM,MAX2=MAXI,$
-                                 BINSIZE1=binM,BINSIZE2=binI,$
-                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
-                                 ABSMED=absIflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
-
-        IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + ifDatName + "medhist.txt"
-
-     ENDIF ELSE BEGIN 
-        ionData=(KEYWORD_SET(logAvgPlot)) ? alog10(ionData) : ionData
-        h2dIStr.data=hist2d(maximus.mlt(plot_i), $
-                            maximus.ilat(plot_i),$
-                            ionData,$
-                            MIN1=MINM,MIN2=MINI,$
-                            MAX1=MAXM,MAX2=MAXI,$
-                            BINSIZE1=binM,BINSIZE2=binI,$
-                            OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-        h2dIStr.data(where(h2dFluxN NE 0,/NULL))=h2dIStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-        IF KEYWORD_SET(logAvgPlot) THEN h2dIStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dIStr.data(where(h2dFluxN NE 0,/null)))        
-     ENDELSE 
-
-     ;;data mods?
-     IF KEYWORD_SET(absIflux)THEN BEGIN 
-        h2dIStr.data = ABS(h2dIStr.data) 
-        IF keepMe THEN ionData=ABS(ionData) 
-     ENDIF
-     IF KEYWORD_SET(logIfPlot) THEN BEGIN 
-        h2dIStr.data(where(h2dIStr.data GT 0,/NULL))=ALOG10(h2dIStr.data(where(h2dIStr.data GT 0,/null))) 
-        IF keepMe THEN ionData(where(ionData GT 0,/null))=ALOG10(ionData(where(ionData GT 0,/null))) 
-     ENDIF
-
-     ;;Do custom range for Iflux plots, if requested
-     IF  KEYWORD_SET(iPlotRange) THEN h2dIStr.lim=iPlotRange $
-     ELSE h2dIStr.lim = [MIN(h2dIStr.data),MAX(h2dIStr.data)]
-
-     h2dIStr.title= absnegslogIonStr + "Ion Flux (ergs/cm!U2!N-s)"
-     ;; IF KEYWORD_SET(ionPlots) THEN BEGIN & 
-     h2dStr=[h2dStr,h2dIStr] 
-     IF keepMe THEN BEGIN 
-        dataNameArr=[dataNameArr,STRTRIM(absnegslogIonStr,2)+"iflux"+ifluxPlotType+"_"] 
-        dataRawPtrArr=[dataRawPtrArr,PTR_NEW(ionData)] 
-     ENDIF 
-     ;; ENDIF
-
+     GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        IFLUXPLOTTYPE=iFluxPlotType,iPLOTRANGE=iPlotRange, $
+                        NOPOSIFLUX=noPosIflux,NONEGIFLUX=noNegIflux,ABSIFLUX=absIflux,LOGIFPLOT=logIfPlot, $
+                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                        LOGAVGPLOT=logAvgPlot
   ENDIF
 
   ;;########CHARACTERISTIC ENERGY########
@@ -998,118 +606,29 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   nOrbs=n_elements(uniqueOrbs_ii)
   
   IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) OR KEYWORD_SET(numOrbLim) THEN BEGIN
-     
-     h2dOrbStr={tmplt_h2dStr}
-
-     h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
-     orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
-
-     FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-        tempOrb=maximus.orbit(plot_i(uniqueOrbs_ii(j))) 
-        temp_ii=WHERE(maximus.orbit(plot_i) EQ tempOrb,/NULL) 
-        h2dOrbTemp=hist_2d(maximus.mlt(plot_i(temp_ii)),$
-                           maximus.ilat(plot_i(temp_ii)),$
-                           BIN1=binM,BIN2=binI,$
-                           MIN1=MINM,MIN2=MINI,$
-                           MAX1=MAXM,MAX2=MAXI) 
-        orbARR[j,*,*]=h2dOrbTemp 
-        h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
-        h2dOrbStr.data += h2dOrbTemp 
-     ENDFOR
-
-     h2dOrbStr.title="Num Contributing Orbits"
-
-     ;;h2dOrbStr.lim=[MIN(h2dOrbStr.data),MAX(h2dOrbStr.data)]
-     IF N_ELEMENTS(orbContribRange) EQ 0 OR N_ELEMENTS(orbContribRange) NE 2 THEN h2dOrbStr.lim=[1,60] ELSE h2dOrbStr.lim=orbContribRange
-
-     ;;Mask all bins that don't have requisite number of orbits passing through
-     IF KEYWORD_SET(numOrbLim) THEN BEGIN 
-        h2dStr(KEYWORD_SET(nPlots)).data(WHERE(h2dOrbStr.data LT numOrbLim)) = 255 ;mask 'em!
-
-        ;;little check to see how many more elements are getting masked
-        ;;exc_orb_i = where(h2dOrbStr.data LT numOrbLim)
-        ;;masked_i = where(h2dStr(1).data EQ 255)
-        ;;print,n_elements(exc_orb_i) - n_elements(cgsetintersection(exc_orb_i,masked_i))
-        ;;8
-
-     ENDIF
-        
-     IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
-        h2dStr=[h2dStr,h2dOrbStr] 
-        IF keepMe THEN dataNameArr=[dataNameArr,"orbsContributing_"] 
-     ENDIF
-
+     GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                      ORBCONTRIBRANGE=orbContribRange, $
+                                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr, $
+                                      DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                      NPLOTS=nPlots,ORBCONTRIBPLOT=orbContribPlot,UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
   ENDIF
 
   ;;########TOTAL Orbits########
   IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
-
-     ;;uniqueOrbs_ii=UNIQ(maximus.orbit(ind_region_magc_geabs10_acestart),SORT(maximus.orbit(ind_region_magc_geabs10_acestart)))
-     uniqueOrbs_ii=UNIQ(maximus.orbit,SORT(maximus.orbit))
-
-     h2dTotOrbStr={tmplt_h2dStr}
-     orbArr=INTARR(N_ELEMENTS(uniqueorbs_ii),N_ELEMENTS(h2dFluxN(*,0)),N_ELEMENTS(h2dFluxN(0,*)))
-     h2dOrbN=INTARR(N_ELEMENTS(h2dStr[0].data(*,0)),N_ELEMENTS(h2dStr[0].data(0,*)))
-
-
-     ;;FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-     ;;   tempOrb=maximus.orbit(ind_region_magc_geabs10_acestart(uniqueOrbs_ii(j))) 
-     ;;   temp_ii=WHERE(maximus.orbit(ind_region_magc_geabs10_acestart) EQ tempOrb) 
-     ;;   h2dOrbTemp=hist_2d(maximus.mlt(ind_region_magc_geabs10_acestart(temp_ii)),$
-     ;;                      maximus.ilat(ind_region_magc_geabs10_acestart(temp_ii)),$
-     ;;                      BIN1=binM,BIN2=binI,$
-     ;;                      MIN1=MINM,MIN2=MINI,$
-     ;;                      MAX1=MAXM,MAX2=MAXI) 
-     ;;   orbARR[j,*,*]=h2dOrbTemp 
-     ;;   h2dOrbTemp(WHERE(h2dOrbTemp GT 0)) = 1 
-     ;;   h2dTotOrbStr.data += h2dOrbTemp 
-     ;;ENDFOR
-
-     FOR j=0, N_ELEMENTS(uniqueorbs_ii)-1 DO BEGIN 
-        tempOrb=maximus.orbit(uniqueOrbs_ii(j)) 
-        temp_ii=WHERE(maximus.orbit EQ tempOrb,/NULL) 
-        h2dOrbTemp=hist_2d(maximus.mlt(temp_ii),$
-                           maximus.ilat(temp_ii),$
-                           BIN1=binM,BIN2=binI,$
-                           MIN1=MINM,MIN2=MINI,$
-                           MAX1=MAXM,MAX2=MAXI) 
-        orbARR[j,*,*]=h2dOrbTemp 
-        h2dOrbTemp(WHERE(h2dOrbTemp GT 0,/NULL)) = 1 
-        h2dTotOrbStr.data += h2dOrbTemp 
-     ENDFOR
-
-     h2dTotOrbStr.title="Total Orbits"
-     IF N_ELEMENTS(orbTotRange) EQ 0 OR N_ELEMENTS(orbTotRange) NE 2 THEN h2dTotOrbStr.lim=[MIN(h2dTotOrbStr.data),MAX(h2dTotOrbStr.data)] $ 
-     ELSE h2dTotOrbStr.lim=orbTotRange
-
-     IF KEYWORD_SET(orbTotPlot) THEN BEGIN & h2dStr=[h2dStr,h2dTotOrbStr] 
-        IF keepMe THEN dataNameArr=[dataNameArr,"orbTot_"] 
-     ENDIF
-     
+     GET_TOTAL_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                              ORBTOTRANGE=orbTotRange, $
+                              H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DTOTORBSTR=h2dTotOrbStr, $
+                              DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                              NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
   ENDIF
 
   ;;########Orbit FREQUENCY########
   IF KEYWORD_SET(orbfreqplot) THEN BEGIN
-
-     h2dFreqOrbStr={tmplt_h2dStr}
-     h2dFreqOrbStr.data=h2dOrbStr.data
-     h2dFreqOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))=h2dOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))/h2dTotOrbStr.data(WHERE(h2dTotOrbStr.data NE 0,/NULL))
-     h2dFreqOrbStr.title="Orbit Frequency"
-     ;;h2dFreqOrbStr.lim=[MIN(h2dFreqOrbStr.data),MAX(h2dFreqOrbStr.data)]
-     IF N_ELEMENTS(orbFreqRange) EQ 0 OR N_ELEMENTS(orbFreqRange) NE 2 THEN h2dFreqOrbStr.lim=[0,0.5] ELSE h2dFreqOrbStr.lim=orbFreqRange
-
-     h2dStr=[h2dStr,h2dFreqOrbStr] 
-     IF keepMe THEN dataNameArr=[dataNameArr,"orbFreq_"] 
-
-     ;;What if I use indices where neither tot orbits nor contributing orbits is zero?
-     orbs_w_events_histo_i=where(h2dorbstr.data NE 0)
-     orbs_histo_i=where(h2dtotorbstr.data NE 0)
-     orbfreq_histo_i=cgsetintersection(orbs_w_events_histo_i,orbs_histo_i)
-     h2dnewdata=h2dOrbStr.data
-     h2dnewdata(orbfreq_histo_i)=h2dOrbStr.data(orbfreq_histo_i)/h2dTotOrbStr.data(orbfreq_histo_i)
-     diff=where(h2dfreqorbstr.data NE h2dnewdata)
-     ;;  print,diff
-     wait, 2
+     GET_ORBIT_FREQUENCY_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                  ORBFREQRANGE=orbFreqRange, $
+                                  H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
+                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                  NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
   ENDIF
      
   ;;########NEvents/orbit########
@@ -1118,8 +637,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
      ;This makes h2dStr(1) the mask histo.
      h2dNEvPerOrbStr={tmplt_h2dStr}
-     h2dNEvPerOrbStr.data=h2dStr(0).data
-     h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
+     h2dNEvPerOrbStr.data=h2dStr[0].data
+     h2dNonzeroNEv_i=WHERE(h2dStr[0].data NE 0,/NULL)
      IF KEYWORD_SET(divNEvByApplicable) THEN BEGIN
         divisor = h2dOrbStr.data(h2dNevPerOrb_i) ;Only divide by number of orbits that occurred during specified IMF conditions
      ENDIF ELSE BEGIN
@@ -1152,8 +671,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ;h2dStr(0) is automatically the n_events histo whenever either nEventPerOrbPlot or nEventPerMinPlot keywords are set.
      ;This makes h2dStr(1) the mask histo.
      h2dNEvPerMinStr={tmplt_h2dStr}
-     h2dNEvPerMinStr.data=h2dStr(0).data
-     h2dNonzeroNEv_i=WHERE(h2dStr(0).data NE 0,/NULL)
+     h2dNEvPerMinStr.data=h2dStr[0].data
+     h2dNonzeroNEv_i=WHERE(h2dStr[0].data NE 0,/NULL)
 
      ;Get the appropriate divisor for IMF conditions
      get_fastloc_inds_IMF_conds,fastLoc_inds,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
@@ -1392,10 +911,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
             fname=plotDir + "h2d_"+dataNameArr[i]+paramStr+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
             OPENW,lun2, fname, /get_lun 
-            FOR j = 0, N_ELEMENTS(h2dBinsMLT) - 1 DO BEGIN 
-               FOR k = 0, N_ELEMENTS(h2dBinsILAT) -1 DO BEGIN 
-                  PRINTF,lun2,h2dBinsILAT[k],$
-                         h2dBinsMLT[j],$
+            FOR j = 0, N_ELEMENTS(outH2DBinsMLT) - 1 DO BEGIN 
+               FOR k = 0, N_ELEMENTS(outH2DBinsILAT) -1 DO BEGIN 
+                  PRINTF,lun2,outH2DBinsILAT[k],$
+                         outH2DBinsMLT[j],$
                          (h2dStr[i].data)[j,k],$
                          FORMAT='(F7.2,1X,F7.2,1X,F7.2)' 
                ENDFOR 

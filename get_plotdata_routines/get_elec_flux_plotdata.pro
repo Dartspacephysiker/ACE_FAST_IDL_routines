@@ -1,9 +1,12 @@
 PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                           EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
+                           EFLUXPLOTTYPE=eFluxPlotType,EPLOTRANGE=ePlotRange, $
+                           NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
                            H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                            DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
-                           MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
-
+                           MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                           LOGAVGPLOT=logAvgPlot, $
+                           OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
+  
      h2dEStr={tmplt_h2dStr}
 
      ;;If not allowing negative fluxes
@@ -76,8 +79,6 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
 
      IF KEYWORD_SET(medianplot) THEN BEGIN 
 
-        medHistDataDir = 'out/medHistData/'
-
         IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
 
         h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
@@ -85,7 +86,7 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
                                  MIN1=MINM,MIN2=MINI,$
                                  MAX1=MAXM,MAX2=MAXI,$
                                  BINSIZE1=binM,BINSIZE2=binI,$
-                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
+                                 OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT,$
                                  ABSMED=abs_eFlux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
         IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + efDatName + "medhist.txt"
@@ -100,9 +101,9 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
                             MIN1=MINM,MIN2=MINI,$
                             MAX1=MAXM,MAX2=MAXI,$
                             BINSIZE1=binM,BINSIZE2=binI,$
-                            OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
-        h2dEStr.data(where(h2dFluxN NE 0,/NULL))=h2dEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
-        IF KEYWORD_SET(logAvgPlot) THEN h2dEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dEStr.data(where(h2dFluxN NE 0,/null)))        
+                            OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
+        h2dEStr.data[where(h2dFluxN NE 0,/NULL)]=h2dEStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)] 
+        IF KEYWORD_SET(logAvgPlot) THEN h2dEStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dEStr.data[where(h2dFluxN NE 0,/null)])
 
      ENDELSE
 
@@ -113,7 +114,7 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
      ENDIF
      IF KEYWORD_SET(logEfPlot) THEN BEGIN 
         h2dEStr.data(where(h2dEStr.data GT 0,/NULL))=ALOG10(h2dEStr.data(where(h2dEStr.data GT 0,/null))) 
-        IF keepMe THEN elecData(where(elecData GT 0,/null))=ALOG10(elecData(where(elecData GT 0,/null))) 
+        IF keepMe THEN elecData[where(elecData GT 0,/null)]=ALOG10(elecData[where(elecData GT 0,/null)]) 
      ENDIF
 
      ;;Do custom range for Eflux plots, if requested
