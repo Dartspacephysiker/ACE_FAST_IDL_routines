@@ -655,15 +655,17 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                 HEMI='BOTH', DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                 HWMAUROVAL=0,HWMKPIND=!NULL, $
                                 MAKE_OUTINDSFILE=make_outIndsFile, $
-                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCDIR=fastLocOutputDir, $
+                                FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
+                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
                                 BURSTDATA_EXCLUDED=burstData_excluded
 
-     MAKE_FASTLOC_HISTO,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
+     ;; MAKE_FASTLOC_HISTO,TIMEHISTO=divisor,FASTLOC_INDS=fastLoc_inds, $
+     MAKE_FASTLOC_HISTO,FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastloc_delta_t, $
+                        FASTLOC_INDS=fastLocInterped_i, OUTTIMEHISTO=divisor, $
                         MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
                         MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                        DELTA_T=delta_T, $
                         FASTLOCFILE=fastLocFile,FASTLOCTIMEFILE=fastLocTimeFile, $
-                        OUTFILEPREFIX=outFilePrefix,OUTFILESUFFIX=outFileSuffix, OUTDIR=outDir, $
+                        OUTFILEPREFIX=outFilePrefix,OUTFILESUFFIX=outFileSuffix, OUTDIR=fastLocOutputDir, $
                         OUTPUT_TEXTFILE=output_textFile
 
      ;output is in seconds, but we'll do minutes

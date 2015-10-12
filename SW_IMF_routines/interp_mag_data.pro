@@ -52,16 +52,16 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ;;***********************************************
   ;;Now, we call upon Craig Markwardt's elegant IDL practices 
-  ;;to handle things from here. For dbTimes[i], 
+  ;;to handle things from here. For dbTimes[db_i[[i]], 
   ;;value_locate returns fastDBAceprop_i[i], which is the 
-  ;;index number of mag_utc_delayed such that dbTimes[i] 
+  ;;index number of mag_utc_delayed such that dbTimes[db_i[[i]] 
   ;;lies between mag_utc_delayed[fastDBAceprop_i[i]] and 
   ;;mag_utc_delayed[fastDBAceprop_i[i+1]]
 
-  fastDBAceprop_i=VALUE_LOCATE((mag_utc+delay),dbTimes)
+  fastDBAceprop_i=VALUE_LOCATE((mag_utc+delay),dbTimes[db_i])
 
-  mag_idiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes)
-  mag_iplusdiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes)
+  mag_idiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
+  mag_iplusdiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
 
   ;;trouble gives where i+1 is closer to chastondb current event
   trouble=where(abs(mag_idiff) GT abs(mag_iplusdiff))
@@ -83,35 +83,35 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   IF bigdiff_ii[0] NE -1 THEN BEGIN 
 
-     interp_worthy_iii=where(abs((mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes(bigdiff_ii)))/60 LT maxdiff/2.0 OR $
-                             abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes(bigdiff_ii))/60 LT maxdiff/2.0, $
+     interp_worthy_iii=where(abs((mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes[db_i[bigdiff_ii]]))/60 LT maxdiff/2.0 OR $
+                             abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes[db_i[bigdiff_ii]])/60 LT maxdiff/2.0, $
                              complement=interp_bad_iii) 
 
      ;;Combine indices of events that passed the first check with those passing worthiness test
      IF interp_worthy_iii[0] EQ -1 THEN BEGIN 
         fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
         fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-        fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+        fastDBInterpTime=dbTimes[db_i[[fastDBSatProppedInterped_ii]]]
      ENDIF ELSE BEGIN 
         fastDBSatProppedInterped_i=[fastDBAceprop_i[fastDBSatProppedInterped_ii],$
-                            fastDBAceprop_i(bigdiff_ii(interp_worthy_iii))] 
+                            fastDBAceprop_i[bigdiff_ii[interp_worthy_iii]]] 
         fastDBInterp_i=[db_i[fastDBSatProppedInterped_ii],$
-                     db_i(bigdiff_ii(interp_worthy_iii))] 
-        fastDBInterpTime=[dbTimes(fastDBSatProppedInterped_ii),$
-                       dbTimes(bigdiff_ii(interp_worthy_iii))] 
+                     db_i[bigdiff_ii[interp_worthy_iii]]] 
+        fastDBInterpTime=[dbTimes[db_i[[fastDBSatProppedInterped_ii]]],$
+                       dbTimes[db_i[bigdiff_ii[interp_worthy_iii]]]]
         ;;SORT 'EM	
         ;;  s_fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(SORT(fastDBSatProppedInterped_i)) 
         ;;  s_fastDBInterp_i=fastDBInterp_i(SORT(fastDBInterp_i)) 
         ;;  s_fastDBInterpTime=fastDBInterpTime(SORT(fastDBInterpTime)) 
         sortme=SORT(fastDBInterp_i) 
-        fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(sortme) 
-        fastDBInterp_i=fastDBInterp_i(sortme) 
-        fastDBInterpTime=fastDBInterpTime(sortme) 
+        fastDBSatProppedInterped_i=fastDBSatProppedInterped_i[sortme]
+        fastDBInterp_i=fastDBInterp_i[sortme]
+        fastDBInterpTime=fastDBInterpTime[sortme]
      ENDELSE 
   ENDIF ELSE BEGIN 
      fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     fastDBInterpTime=dbTimes[fastDBSatProppedInterped_ii]
+     fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
   ENDELSE
 
   ;;********************************************************
@@ -151,9 +151,9 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ;;bigdiff_arr=dindgen(n_elements(bigdiff_ii))
   ;;
-  ;;bigdiff_arr=MIN(TRANSPOSE([[abs((mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes(bigdiff_ii)))], $
-  ;;	[abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes(bigdiff_ii))]]),DIMENSION=1 )
-  ;;bigdiff_byte=abs(mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes(bigdiff_ii)) LT abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes(bigdiff_ii))
+  ;;bigdiff_arr=MIN(TRANSPOSE([[abs((mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes[db_i[bigdiff_ii]]))], $
+  ;;	[abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes[db_i[bigdiff_ii]])]]),DIMENSION=1 )
+  ;;bigdiff_byte=abs(mag_utc[fastDBAceprop_i[bigdiff_ii]+1]+delay-dbTimes[db_i[bigdiff_ii]]) LT abs(mag_utc[fastDBAceprop_i[bigdiff_ii]]+delay-dbTimes[db_i[bigdiff_ii]])
   ;;
   ;;  ;;make the ones corresponding to mag_utc[i] negative
   ;;bigdiff_arr(where(bigdiff_byte EQ 0))=-bigdiff_arr(where(bigdiff_byte EQ 0))
@@ -261,7 +261,7 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     ;; fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+     ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; byMin_ii are the indices (of indices) of events that meet the minimum By requirement
      byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
@@ -285,7 +285,7 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     ;; fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+     ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; byMax_ii are the indices (of indices) of events that meet the Maximum By requirement
      ;; byMax_ii=WHERE(byChast GE -ABS(byMax) OR byChast LE ABS(byMax),NCOMPLEMENT=byMaxLost)
@@ -312,7 +312,7 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     ;; fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+     ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; bzMin_ii are the indices (of indices) of events that meet the minimum Bz requirement
      bzMin_ii=WHERE(bzChast LE -ABS(bzMin) OR bzChast GE ABS(bzMin),NCOMPLEMENT=bzminLost)
@@ -336,7 +336,7 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
-     ;; fastDBInterpTime=dbTimes(fastDBSatProppedInterped_ii) 
+     ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; bzMax_ii are the indices (of indices) of events that meet the Maximum Bz requirement
      ;; bzMax_ii=WHERE(bzChast GE -ABS(bzMax) OR bzChast LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
