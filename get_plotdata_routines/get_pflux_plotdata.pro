@@ -5,24 +5,25 @@ PRO GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot, $
-                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT, $
+                       WRITEHDF5=writeHDF5,WRITEASCII=writeASCII,SQUAREPLOT=squarePlot,SAVERAW=saveRaw
   
   h2dPStr={tmplt_h2dStr}
 
   ;;check for NaNs
-  goodPF_i = WHERE(FINITE(pfluxEst),NCOMPLEMENT=lostNans)
+  goodPF_i = WHERE(FINITE(maximus.pFluxEst),NCOMPLEMENT=lostNans)
   IF goodPF_i[0] NE -1 THEN BEGIN
      print,"Found some NaNs in Poynting flux! Losing another " + strcompress(lostNans,/REMOVE_ALL) + " events..."
      plot_i = cgsetintersection(plot_i,goodPF_i)
   ENDIF
   
   IF KEYWORD_SET(noNegPflux) THEN BEGIN
-     no_negs_i=WHERE(pfluxEst GE 0.0)
+     no_negs_i=WHERE(maximus.pFluxEst GE 0.0)
      plot_i=cgsetintersection(no_negs_i,plot_i)
   ENDIF
 
   IF KEYWORD_SET(noPosPflux) THEN BEGIN
-     no_pos_i=WHERE(pfluxEst LE 0.0)
+     no_pos_i=WHERE(maximus.pFluxEst LE 0.0)
      plot_i=cgsetintersection(no_pos_i,plot_i)
   ENDIF
 
@@ -43,7 +44,7 @@ PRO GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
      IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + pfDatName+"medhist_data.sav"
 
      h2dPstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
-                              pfluxEst(plot_i),$
+                              maximus.pFluxEst(plot_i),$
                               MIN1=MINM,MIN2=MINI,$
                               MAX1=MAXM,MAX2=MAXI,$
                               BINSIZE1=binM,BINSIZE2=binI,$
@@ -54,12 +55,12 @@ PRO GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
 
   ENDIF ELSE BEGIN 
      IF KEYWORD_SET(logAvgPlot) THEN BEGIN
-        pfluxEst[where(pfluxEst NE 0,/null)] = ALOG10(pfluxEst[where(pfluxEst NE 0,/null)])
+        maximus.pFluxEst[where(maximus.pFluxEst NE 0,/null)] = ALOG10(maximus.pFluxEst[where(maximus.pFluxEst NE 0,/null)])
      ENDIF
 
      h2dPStr.data=hist2d(maximus.mlt(plot_i),$
                          maximus.ilat(plot_i),$
-                         pfluxEst(plot_i),$
+                         maximus.pFluxEst(plot_i),$
                          MIN1=MINM,MIN2=MINI,$
                          MAX1=MAXM,MAX2=MAXI,$
                          BINSIZE1=binM,BINSIZE2=binI) 
@@ -67,7 +68,7 @@ PRO GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
      IF KEYWORD_SET(logAvgPlot) THEN h2dPStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dPStr.data(where(h2dFluxN NE 0,/null)))
   ENDELSE
 
-  IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=pfluxEst(plot_i)
+  IF KEYWORD_SET(writeHDF5) or KEYWORD_SET(writeASCII) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN pData=maximus.pFluxEst(plot_i)
 
   ;;data mods?
   IF KEYWORD_SET(absPflux) THEN BEGIN 
@@ -83,8 +84,9 @@ PRO GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
   h2dPStr.title= absnegslogPstr + "Poynting Flux (mW/m!U2!N)"
 
   ;;Do custom range for Pflux plots, if requested
-  IF KEYWORD_SET(PPlotRange) THEN h2dPStr.lim=PPlotRange $
-  ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
+  ;; IF KEYWORD_SET(PPlotRange) THEN h2dPStr.lim=PPlotRange $
+  ;; ELSE h2dPStr.lim = [MIN(h2dPstr.data),MAX(h2dPstr.data)]
+  h2dPStr.lim = PPlotRange
 
   h2dStr=[h2dStr,h2dPStr] 
   IF keepMe THEN BEGIN 

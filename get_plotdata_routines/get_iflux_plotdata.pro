@@ -169,8 +169,9 @@ PRO GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
      ENDIF
 
      ;;Do custom range for Iflux plots, if requested
-     IF  KEYWORD_SET(iPlotRange) THEN h2dIStr.lim=iPlotRange $
-     ELSE h2dIStr.lim = [MIN(h2dIStr.data),MAX(h2dIStr.data)]
+     ;; IF  KEYWORD_SET(iPlotRange) THEN h2dIStr.lim=iPlotRange $
+     ;; ELSE h2dIStr.lim = [MIN(h2dIStr.data),MAX(h2dIStr.data)]
+     h2dIStr.lim=iPlotRange
 
      h2dIStr.title= absnegslogIonStr + "Ion Flux (ergs/cm!U2!N-s)"
 

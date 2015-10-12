@@ -214,6 +214,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                      NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+                                     PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      LOGPLOT=logPlot, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -472,7 +473,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
                              PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
                              ENUMFLPLOTRANGE=ENumFlPlotRange,LOGENUMFLPLOT=logENumFlPlot, $
-                             EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot
+                             EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
+                             NEVENTPERMINRANGE=nEventPerMinRange,LOGNEVENTPERMIN=logNEventPerMin, $
+                             PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence
   
   ;;***********************************************
   ;;Calculate Poynting flux estimate
@@ -481,8 +484,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Since E is recorded in mV/m, units of POYNTEST here are mW/m^2
   ;;No need to worry about screening for FINITE(pfluxEst), since both delta_B and delta_E are
   ;;screened for finiteness in alfven_db_cleaner (which is called in get_chaston_ind.pro)
-  mu_0 = 4.0e-7 * !PI                                            ;perm. of free space, for Poynt. est
-  pfluxEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
+  ;;  mu_0 = 4.0e-7 * !PI                                 ;perm. of free space, for Poynt. est
+  ;;pfluxEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
 
   ;;********************************************
   ;;Now time for data summary
@@ -609,6 +612,38 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
   ;;########NEvents/minute########
+  IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) THEN BEGIN 
+     tHistDenominator = GET_TIMEHIST_DENOMINATOR(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                                ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                                BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                                LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
+                                                HEMI=hemi, $
+                                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                                MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                                                MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                                FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
+                                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
+                                                H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                                                BURSTDATA_EXCLUDED=burstData_excluded, $
+                                                DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme)
+     
+     IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN
+        GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
+                                  LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
+                                  H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+     ENDIF
+
+     IF KEYWORD_SET(probOccurrencePlot) THEN BEGIN
+        GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
+                                     LOGPROBOCCURRENCE=logProbOccurrence, PROBOCCURRENCERANGE=probOccurrenceRange, DO_WIDTH_X=do_width_x, $
+                                     MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                     H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                                     DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+     ENDIF
+  ENDIF
+
+  ;;########Event probability########
   IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
      GET_NEVENTPERMIN_PLOTDATA,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
@@ -624,17 +659,19 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
   ENDIF
 
+
+
   ;; Temporary data thing
   ;;use these n stuff
-  IF KEYWORD_SET(tempSAVE) THEN BEGIN 
-     print,"saving tempdata..." 
-     IF KEYWORD_SET(ePlots) THEN save,elecData,filename="testcode/elecdata.dat" 
-     mlts=maximus.mlt(plot_i) 
-     ilats=maximus.ilat(plot_i) 
-     save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
-     pData=pfluxEst(plot_i) 
-     IF KEYWORD_SET(pplots) THEN save,pData,filename="testcode/pData.dat" 
-  ENDIF
+  ;; IF KEYWORD_SET(tempSAVE) THEN BEGIN 
+  ;;    print,"saving tempdata..." 
+  ;;    IF KEYWORD_SET(ePlots) THEN save,elecData,filename="testcode/elecdata.dat" 
+  ;;    mlts=maximus.mlt(plot_i) 
+  ;;    ilats=maximus.ilat(plot_i) 
+  ;;    save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
+  ;;    pData=pfluxEst(plot_i) 
+  ;;    IF KEYWORD_SET(pplots) THEN save,pData,filename="testcode/pData.dat" 
+  ;; ENDIF
 
   ;;********************************************************
   ;;If something screwy goes on, better take stock of it and alert user
