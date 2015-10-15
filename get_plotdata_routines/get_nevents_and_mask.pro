@@ -3,7 +3,7 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
                          NEVENTSPLOTRANGE=nEventsPlotRange, $
                          H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin, $
                          TMPLT_H2DSTR=tmplt_h2dStr, $
-                         DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme,NPLOTS=nPlots
+                         DATANAME=dataName,DATARAWPTR=dataRawPtr
 
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
@@ -14,17 +14,16 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
                    MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
 
   h2dFluxNTitle="Number of events"
-  IF keepMe THEN BEGIN 
-     dataNameArr="nEvents_" 
-     dataRawPtrArr=PTR_NEW(h2dFluxN) 
-  ENDIF
+  dataName="nEvents_"
+  dataRawPtr=PTR_NEW(h2dFluxN) 
 
-  ;; h2dStr={h2dStr, data: DOUBLE(h2dFluxN), $
+
+  ;; tmplt_h2dStr={tmplt_h2dStr, data: DBLARR(n_elements(h2dFluxN[*,1]),n_elements(h2dFluxN[1,*])), $
   ;;         title : "Number of events", $
-  ;;         lim : (KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? DOUBLE(nEventsPlotRange) : DOUBLE([MIN(h2dFluxN),MAX(h2dFluxN)]) }
-  tmplt_h2dStr={tmplt_h2dStr, data: DBLARR(n_elements(h2dFluxN[*,1]),n_elements(h2dFluxN[1,*])), $
-          title : "Number of events", $
-          lim : DOUBLE((KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? nEventsPlotRange : [MIN(h2dFluxN),MAX(h2dFluxN)]) }
+  ;;         lim : DOUBLE((KEYWORD_SET(nEventsPlotRange) AND N_ELEMENTS(nEventsPlotRange) EQ 2) ? nEventsPlotRange : [MIN(h2dFluxN),MAX(h2dFluxN)]) }
+  tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(DO_lshell) ? binL : binI),$
+                             MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                             MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
 
   h2dStr={tmplt_h2dStr}
   h2dStr.data=h2dFluxN
@@ -37,12 +36,5 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
   h2dMaskStr.data(where(h2dStr.data LT maskMin,/NULL))=255
   h2dMaskStr.data(where(h2dStr.data GE maskMin,/NULL))=0
   h2dMaskStr.title="Histogram mask"
-
-  IF keepMe THEN BEGIN 
-     dataNameArr=[dataNameArr,"histoMask_"] 
-     dataRawPtrArr=[dataRawPtrArr,PTR_NEW(h2dMaskStr.data)] 
-  ENDIF
-
-  IF KEYWORD_SET(nPlots) THEN h2dStr=[h2dStr,h2dMaskStr] ELSE h2dStr = h2dMaskStr
 
 END

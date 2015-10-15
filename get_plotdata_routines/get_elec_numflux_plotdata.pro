@@ -3,14 +3,17 @@ FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
                                    ENUMFLPLOTTYPE=eNumFlPlotType,EPLOTRANGE=ePlotRange, $
                                    NOPOSENUMFL=noPosENumFl,NONEGENUMFL=noNegENumFl,ABSENUMFL=absENumFl,LOGEFPLOT=logEfPlot, $
                                    H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                                   DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                   DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme, $
                                    OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                                    MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                                    LOGAVGPLOT=logAvgPlot
 
                                    
-
-  h2dENumStr={tmplt_h2dStr}
+  IF N_ELEMENTS(tmplt_h2dStr) EQ 0 THEN $
+     tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(DO_lshell) ? binL : binI),$
+                                      MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                                      MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
+  h2dStr={tmplt_h2dStr}
   
   ;;If not allowing negative fluxes
   IF STRLOWCASE(eNumFlPlotType) EQ STRLOWCASE("Total_Eflux_Integ") THEN BEGIN
@@ -98,13 +101,13 @@ FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
   ENDIF
   IF KEYWORD_SET(logENumFlPlot) THEN logEFStr="Log "
   absnegslogEFStr=absEFStr + negEFStr + posEFStr + logEFStr
-  efDatName = STRTRIM(absnegslogEFStr,2)+"eNumFl"+eNumFlPlotType+"_"
+  dataName = STRTRIM(absnegslogEFStr,2)+"eNumFl"+eNumFlPlotType+"_"
 
   IF KEYWORD_SET(medianplot) THEN BEGIN 
 
-     IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
+     IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + dataName+"medhist_data.sav"
 
-     h2dENumStr.data=median_hist(maximus.mlt[plot_i],(KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
+     h2dStr.data=median_hist(maximus.mlt[plot_i],(KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                                  elecNumFData,$
                                  MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
                                  MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
@@ -112,44 +115,41 @@ FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
                                  OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT,$
                                  ABSMED=absENumFl,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
-     IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + efDatName + "medhist.txt"
+     IF KEYWORD_SET(medHistOutTxt) THEN MEDHISTANALYZER,INFILE=medHistDatFile,outFile=medHistDataDir + dataName + "medhist.txt"
 
   ENDIF ELSE BEGIN 
 
      elecNumFData=(KEYWORD_SET(logAvgPlot)) ? alog10(elecNumFData) : elecNumFData
 
-     h2dENumStr.data=hist2d(maximus.mlt[plot_i], $
+     h2dStr.data=hist2d(maximus.mlt[plot_i], $
                             (KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                             elecNumFData,$
                             MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
                             MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
                             BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                             OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
-     h2dENumStr.data[where(h2dFluxN NE 0,/NULL)]=h2dENumStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)]
-     IF KEYWORD_SET(logAvgPlot) THEN h2dENumStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dENumStr.data[where(h2dFluxN NE 0,/null)])
+     h2dStr.data[where(h2dFluxN NE 0,/NULL)]=h2dStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)]
+     IF KEYWORD_SET(logAvgPlot) THEN h2dStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dStr.data[where(h2dFluxN NE 0,/null)])
 
   ENDELSE
 
                                 ;data mods?
   IF KEYWORD_SET(absENumFl)THEN BEGIN 
-     h2dENumStr.data = ABS(h2dENumStr.data) 
+     h2dStr.data = ABS(h2dStr.data) 
      IF keepMe THEN elecNumFData=ABS(elecNumFData) 
   ENDIF
   IF KEYWORD_SET(logENumFlPlot) THEN BEGIN 
-     h2dENumStr.data[where(h2dENumStr.data GT 0,/NULL)]=ALOG10(h2dENumStr.data[where(h2dENumStr.data GT 0,/null)])
+     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)])
      IF keepMe THEN elecNumFData[where(elecNumFData GT 0,/null)]=ALOG10(elecNumFData[where(elecNumFData GT 0,/null)])
   ENDIF
 
   ;;Do custom range for ENumFl plots, if requested
-  IF  KEYWORD_SET(ENumFlPlotRange) THEN h2dENumStr.lim=ENumFlPlotRange $
-  ELSE h2dENumStr.lim = [MIN(h2dENumStr.data),MAX(h2dENumStr.data)]
+  IF  KEYWORD_SET(ENumFlPlotRange) THEN h2dStr.lim=ENumFlPlotRange $
+  ELSE h2dStr.lim = [MIN(h2dStr.data),MAX(h2dStr.data)]
 
-  h2dENumStr.title= absnegslogEFstr + "Electron Number Flux (#/cm!U2!N-s)"
+  h2dStr.title= absnegslogEFstr + "Electron Number Flux (#/cm!U2!N-s)"
 
-  h2dStr=[h2dStr,h2dENumStr] 
-  IF keepMe THEN BEGIN 
-     dataNameArr=[dataNameArr,efDatName] 
-     dataRawPtrArr=[dataRawPtrArr,PTR_NEW(elecNumFData)] 
-  ENDIF 
+  h2dStr=[h2dStr,h2dStr] 
+  dataRawPtr=PTR_NEW(elecNumFData)
 
 END

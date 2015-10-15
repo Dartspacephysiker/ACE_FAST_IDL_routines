@@ -256,6 +256,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                  MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                   BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
@@ -369,6 +370,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                   DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
                                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
                                                   MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                  DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                                   BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                   STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
                                                   HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
@@ -504,51 +506,86 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;First, histo to show where events are
 
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        NEVENTSPLOTRANGE=nEventsPlotRange, $
                        H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
-                       DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme,NPLOTS=nPlots
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr
 
+  IF keepMe THEN BEGIN 
+     dataRawPtrArr=dataRawPtr
+     dataNameArr=[dataName,"histoMask_"] 
+     dataRawPtrArr=[dataRawPtrArr,PTR_NEW(h2dMaskStr.data)] 
+  ENDIF
+  IF KEYWORD_SET(nPlots) THEN h2dStrArr=[h2dStr,h2dMaskStr] ELSE h2dStrArr = h2dMaskStr
+  
   ;;########ELECTRON FLUX########
   IF KEYWORD_SET(eplots) THEN BEGIN
      GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                            DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                            OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                             EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
                             H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                            DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                            DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                             MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                             LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF 
   ENDIF
 
   ;;########ELECTRON NUMBER FLUX########
   IF KEYWORD_SET(eNumFlPlots) THEN BEGIN
      GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                               OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                                ENUMFLPLOTTYPE=eNumFlPlotType,EPLOTRANGE=ePlotRange, $
                                NOPOSENUMFL=noPosENumFl,NONEGENUMFL=noNegENumFl,ABSENUMFL=absENumFl,LOGEFPLOT=logEfPlot, $
                                H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                               DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                               DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                                MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                               LOGAVGPLOT=logAvgPlot, $
-                               OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
+                               LOGAVGPLOT=logAvgPlot
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN 
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF 
+
   ENDIF
 
   ;;########Poynting Flux########
   IF KEYWORD_SET(pplots) THEN BEGIN
      GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                         PPLOTRANGE=PPlotRange, $
                         NOPOSPFLUX=noPosPflux,NONEGPFLUX=noNegPflux,ABSPFLUX=absPflux,LOGPFPLOT=logPfPlot, $
                         H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                         MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                        LOGAVGPLOT=logAvgPlot, $
-                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
+                        LOGAVGPLOT=logAvgPlot
+
+  h2dStrArr=[h2dStrArr,h2dStr] 
+  IF keepMe THEN BEGIN 
+     dataNameArr=[dataNameArr,dataName] 
+     dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+  ENDIF  
+
   ENDIF
 
   ;;########ION FLUX########
   IF KEYWORD_SET(ionPlots) THEN BEGIN
      GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                         IFLUXPLOTTYPE=iFluxPlotType,iPLOTRANGE=iPlotRange, $
                         NOPOSIFLUX=noPosIflux,NONEGIFLUX=noNegIflux,ABSIFLUX=absIflux,LOGIFPLOT=logIfPlot, $
                         H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                         MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                         LOGAVGPLOT=logAvgPlot
   ENDIF
@@ -556,11 +593,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########CHARACTERISTIC ENERGY########
   IF KEYWORD_SET(charEPlots) THEN BEGIN
      GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                         CHARETYPE=charEType,CHAREPLOTRANGE=charEPlotRange, $
                         NOPOSCHARE=noPosCharE,NONEGCHARE=noNegCharE,ABSCHARE=absCharE,LOGCHAREPLOT=logCharEPlot, $
                         H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                         MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange, $
-                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+                        DATANAME=dataName,DATARAWPTR=dataRawPtr
   ENDIF
 
   ;;########################################
@@ -579,84 +618,129 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   
   IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) OR KEYWORD_SET(numOrbLim) THEN BEGIN
      GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                      DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                       ORBCONTRIBRANGE=orbContribRange, $
                                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr, $
-                                      DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
-                                      NPLOTS=nPlots,ORBCONTRIBPLOT=orbContribPlot,UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
+                                      DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                                      UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
+     IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
+        h2dStrArr=[h2dStrArr,h2dOrbStr] 
+        IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
+     ENDIF
+
+     ;;Mask all bins that don't have requisite number of orbits passing through
+     IF KEYWORD_SET(numOrbLim) THEN BEGIN 
+        h2dStr[KEYWORD_SET(nPlots)].data[WHERE(h2dOrbStr.data LT numOrbLim)] = 255 ;mask 'em!
+
+        ;;little check to see how many more elements are getting masked
+        ;;exc_orb_i = where(h2dOrbStr.data LT numOrbLim)
+        ;;masked_i = where(h2dStr(1).data EQ 255)
+        ;;print,n_elements(exc_orb_i) - n_elements(cgsetintersection(exc_orb_i,masked_i))
+        ;;8
+     ENDIF
+     
   ENDIF
 
   ;;########TOTAL Orbits########
   IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
      GET_TOTAL_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                              ORBTOTRANGE=orbTotRange, $
-                              H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DTOTORBSTR=h2dTotOrbStr, $
-                              DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
-                              NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                               ORBTOTRANGE=orbTotRange, $
+                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DTOTORBSTR=h2dTotOrbStr, $
+                               DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                               NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+
+  IF KEYWORD_SET(orbTotPlot) THEN BEGIN 
+     h2dStrArr=[h2dStrArr,h2dTotOrbStr] 
+     IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
+  ENDIF
   ENDIF
 
   ;;########Orbit FREQUENCY########
   IF KEYWORD_SET(orbfreqplot) THEN BEGIN
      GET_ORBIT_FREQUENCY_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                  DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                   ORBFREQRANGE=orbFreqRange, $
                                   H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
-                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                  DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                                   NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
   ENDIF
      
   ;;########NEvents/orbit########
   IF KEYWORD_SET(nEventPerOrbPlot) THEN BEGIN 
      GET_NEVENTS_PER_ORBIT_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                    DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                     ORBFREQRANGE=orbFreqRange,DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                     H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
-                                    DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+                                    DATANAME=dataName,DATARAWPTR=dataRawPtr
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN dataNameArr=[dataNameArr,dataName]
   ENDIF
 
   ;;########NEvents/minute########
   IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) THEN BEGIN 
      tHistDenominator = GET_TIMEHIST_DENOMINATOR(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                                ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                                                BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                                LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
-                                                HEMI=hemi, $
-                                                DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                                MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
-                                                MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                                                FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
-                                                FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
-                                                H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
-                                                BURSTDATA_EXCLUDED=burstData_excluded, $
-                                                DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme)
+                                                 ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+                                                 BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                                 LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
+                                                 HEMI=hemi, $
+                                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                                 MINM=minM,MAXM=maxM,BINM=binM, $
+                                                 MINI=minI,MAXI=maxI,BINI=binI, $
+                                                 DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                                                 FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
+                                                 FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
+                                                 BURSTDATA_EXCLUDED=burstData_excluded, $
+                                                 DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme)
      
      IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN
         GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
+                                  MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                  DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                   LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
-                                  H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
-                                  DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+                                  H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                                  DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme
+
+        h2dStrArr=[h2dStrArr,h2dStr] 
+        IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
+
      ENDIF
 
      IF KEYWORD_SET(probOccurrencePlot) THEN BEGIN
         GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
                                      LOGPROBOCCURRENCE=logProbOccurrence, PROBOCCURRENCERANGE=probOccurrenceRange, DO_WIDTH_X=do_width_x, $
                                      MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                     DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                                     OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
-                                     DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+                                     DATANAME=dataName,DATARAWPTR=dataRawPtr
+
+        h2dStrArr=[h2dStrArr,h2dStr] 
+        IF keepMe THEN BEGIN 
+           dataNameArr=[dataNameArr,efDatName] 
+           dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+        ENDIF 
      ENDIF
   ENDIF
 
   ;;########Event probability########
   IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
      GET_NEVENTPERMIN_PLOTDATA,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                               ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                               BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
-                               HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                               MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                               MINM=minM,MAXM=maxM,BINM=binM, $
                                MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                               FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_Times,FASTLOC_DELTA_T=fastLoc_delta_t, $
-                               FASTLOCFILE=fastLocFile, FASTLOCTIMEFILE=fastLocTimeFile, FASTLOCOUTPUTDIR=fastLocOutputDir, $
-                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
-                               BURSTDATA_EXCLUDED=burstData_excluded, $
-                               DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
+                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                               DATANAME=dataName,DATARAWPTR=dataRawPtr
+
+        h2dStrArr=[h2dStrArr,h2dStr] 
+        IF keepMe THEN BEGIN 
+           dataNameArr=[dataNameArr,dataName] 
+           dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+        ENDIF 
   ENDIF
 
 
