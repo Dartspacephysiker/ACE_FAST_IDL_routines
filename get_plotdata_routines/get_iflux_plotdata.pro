@@ -1,4 +1,5 @@
 PRO GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                        IFLUXPLOTTYPE=iFluxPlotType,iPLOTRANGE=iPlotRange, $
                        NOPOSIFLUX=noPosIflux,NONEGIFLUX=noNegIflux,ABSIFLUX=absIflux,LOGIFPLOT=logIfPlot, $
                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
@@ -135,11 +136,11 @@ PRO GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
 
         IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + ifDatName+"medhist_data.sav"
 
-        h2dIStr.data=median_hist(maximus.mlt[plot_i],maximus.ILAT[plot_i],$
+        h2dIStr.data=median_hist(maximus.mlt[plot_i],(KEYWORD_SET(do_lshell) ? maximus.lshell : maximus.ilat)[plot_i],$
                                  ionData,$
-                                 MIN1=MINM,MIN2=MINI,$
-                                 MAX1=MAXM,MAX2=MAXI,$
-                                 BINSIZE1=binM,BINSIZE2=binI,$
+                                 MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                                 MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                                 BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                                  OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT,$
                                  ABSMED=absIflux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
@@ -148,11 +149,11 @@ PRO GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
      ENDIF ELSE BEGIN 
         ionData=(KEYWORD_SET(logAvgPlot)) ? alog10(ionData) : ionData
         h2dIStr.data=hist2d(maximus.mlt[plot_i], $
-                            maximus.ilat[plot_i],$
+                            (KEYWORD_SET(do_lshell) ? maximus.lshell : maximus.ilat)[plot_i],$
                             ionData,$
-                            MIN1=MINM,MIN2=MINI,$
-                            MAX1=MAXM,MAX2=MAXI,$
-                            BINSIZE1=binM,BINSIZE2=binI,$
+                            MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                            MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                            BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                             OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
         h2dIStr.data(where(h2dFluxN NE 0,/NULL))=h2dIStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)]
         IF KEYWORD_SET(logAvgPlot) THEN h2dIStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dIStr.data[where(h2dFluxN NE 0,/null)])

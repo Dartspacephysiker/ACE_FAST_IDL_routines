@@ -1,4 +1,5 @@
 PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                         DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                          NEVENTSPLOTRANGE=nEventsPlotRange, $
                          H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin, $
                          TMPLT_H2DSTR=tmplt_h2dStr, $
@@ -7,10 +8,10 @@ PRO GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   h2dFluxN=hist_2d(maximus.mlt(plot_i),$
-                   maximus.ilat(plot_i),$
-                   BIN1=binM,BIN2=binI,$
-                   MIN1=MINM,MIN2=MINI,$
-                   MAX1=MAXM,MAX2=MAXI)
+                   (KEYWORD_SET(do_lshell) ? maximus.lshell : maximus.ilat)(plot_i),$
+                   BIN1=binM,BIN2=(KEYWORD_SET(DO_lshell) ? binL : binI),$
+                   MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                   MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
 
   h2dFluxNTitle="Number of events"
   IF keepMe THEN BEGIN 
