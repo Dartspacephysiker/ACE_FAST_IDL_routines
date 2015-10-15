@@ -1,8 +1,10 @@
 PRO GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                        CHARETYPE=charEType,CHAREPLOTRANGE=charEPlotRange, $
                        NOPOSCHARE=noPosCharE,NONEGCHARE=noNegCharE,ABSCHARE=absCharE,LOGCHAREPLOT=logCharEPlot, $
                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
 
      h2dCharEStr={tmplt_h2dStr}
@@ -61,11 +63,11 @@ PRO GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
      IF KEYWORD_SET(medianplot) THEN BEGIN 
         IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + chareDatName+"medhist_data.sav"
 
-        h2dCharEStr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+        h2dCharEStr.data=median_hist(maximus.mlt(plot_i),(KEYWORD_SET(do_lshell) ? maximus.lshell(plot_i) : maximus.ilat(plot_i)),$
                                      charEData,$
-                                     MIN1=MINM,MIN2=MINI,$
-                                     MAX1=MAXM,MAX2=MAXI,$
-                                     BINSIZE1=binM,BINSIZE2=binI,$
+                                     MIN1=MINM,MIN2=(KEYWORD_SET(do_lshell) ? minL : minI),$
+                                     MAX1=MAXM,MAX2=(KEYWORD_SET(do_lshell) ? maxL : maxI),$
+                                     BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                                      OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT,$
                                      ABSMED=absCharE,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
@@ -75,11 +77,11 @@ PRO GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
         charEData=(KEYWORD_SET(logAvgPlot)) ? alog10(charEData) : charEData
 
         h2dCharEStr.data=hist2d(maximus.mlt(plot_i), $
-                                maximus.ilat(plot_i),$
+                                (KEYWORD_SET(do_lshell) ? maximus.lshell(plot_i) : maximus.ilat(plot_i)),$
                                 charEData,$
-                                MIN1=MINM,MIN2=MINI,$
-                                MAX1=MAXM,MAX2=MAXI,$
-                                BINSIZE1=binM,BINSIZE2=binI,$
+                                MIN1=MINM,MIN2=(KEYWORD_SET(do_lshell) ? minL : minI),$
+                                MAX1=MAXM,MAX2=(KEYWORD_SET(do_lshell) ? maxL : maxI),$
+                                BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                                 OBIN1=h2dBinsMLT,OBIN2=h2dBinsILAT) 
         h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))=h2dCharEStr.data(where(h2dFluxN NE 0,/NULL))/h2dFluxN(where(h2dFluxN NE 0,/NULL)) 
         IF KEYWORD_SET(logAvgPlot) THEN h2dCharEStr.data(where(h2dFluxN NE 0,/null)) = 10^(h2dCharEStr.data(where(h2dFluxN NE 0,/null)))        

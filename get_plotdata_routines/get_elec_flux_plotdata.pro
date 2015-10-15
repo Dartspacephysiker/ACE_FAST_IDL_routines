@@ -29,7 +29,7 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
            print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(plot_i)
         ENDIF
      ENDELSE
-     elecData= maximus.integ_elec_energy_flux(plot_i) 
+     elecData= maximus.integ_elec_energy_flux[plot_i] 
   ENDIF ELSE BEGIN
      IF eFluxPlotType EQ "Max" THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.elec_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -47,7 +47,7 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
               print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(plot_i)
            ENDIF
         ENDELSE
-        elecData = maximus.elec_energy_flux(plot_i)
+        elecData = maximus.elec_energy_flux[plot_i]
      ENDIF
   ENDELSE
 
@@ -84,11 +84,11 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
 
      IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
 
-     h2dEstr.data=median_hist(maximus.mlt(plot_i),maximus.ILAT(plot_i),$
+     h2dEstr.data=median_hist(maximus.mlt[plot_i],(KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                               elecData,$
-                              MIN1=MINM,MIN2=MINI,$
-                              MAX1=MAXM,MAX2=MAXI,$
-                              BINSIZE1=binM,BINSIZE2=binI,$
+                              MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                              MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                              BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                               OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT,$
                               ABSMED=abs_eFlux,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
@@ -98,12 +98,12 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
 
      elecData=(KEYWORD_SET(logAvgPlot)) ? alog10(elecData) : elecData
 
-     h2dEStr.data=hist2d(maximus.mlt(plot_i), $
-                         maximus.ilat(plot_i),$
+     h2dEStr.data=hist2d(maximus.mlt[plot_i], $
+                         (KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                          elecData,$
-                         MIN1=MINM,MIN2=MINI,$
-                         MAX1=MAXM,MAX2=MAXI,$
-                         BINSIZE1=binM,BINSIZE2=binI,$
+                         MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                         MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                         BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                          OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
      h2dEStr.data[where(h2dFluxN NE 0,/NULL)]=h2dEStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)] 
      IF KEYWORD_SET(logAvgPlot) THEN h2dEStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dEStr.data[where(h2dFluxN NE 0,/null)])

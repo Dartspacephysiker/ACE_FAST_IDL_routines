@@ -1,7 +1,9 @@
 PRO GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                     DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                      ORBCONTRIBRANGE=orbContribRange, $
                                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr, $
                                      DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                     OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                                      NPLOTS=nPlots,ORBCONTRIBPLOT=orbContribPlot,UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
 
   IF N_ELEMENTS(uniqueOrbs_ii) EQ 0 THEN uniqueOrbs_ii = UNIQ(maximus.orbit[plot_i],SORT(maximus.orbit[plot_i]))
@@ -16,10 +18,10 @@ PRO GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=bin
         tempOrb=maximus.orbit[plot_i[uniqueOrbs_ii[j]]] 
         temp_ii=WHERE(maximus.orbit[plot_i] EQ tempOrb,/NULL) 
         h2dOrbTemp=hist_2d(maximus.mlt[plot_i[temp_ii]],$
-                           maximus.ilat[plot_i[temp_ii]],$
-                           BIN1=binM,BIN2=binI,$
-                           MIN1=MINM,MIN2=MINI,$
-                           MAX1=MAXM,MAX2=MAXI) 
+                           (KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i[temp_ii]],$
+                           BIN1=binM,BIN2=(KEYWORD_SET(do_lshell) ? binL : binI),$
+                           MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                           MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI)) 
         orbARR[j,*,*]=h2dOrbTemp 
         h2dOrbTemp[WHERE(h2dOrbTemp GT 0,/NULL)] = 1 
         h2dOrbStr.data += h2dOrbTemp 

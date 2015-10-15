@@ -1,11 +1,13 @@
 FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                   DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                    ENUMFLPLOTTYPE=eNumFlPlotType,EPLOTRANGE=ePlotRange, $
                                    NOPOSENUMFL=noPosENumFl,NONEGENUMFL=noNegENumFl,ABSENUMFL=absENumFl,LOGEFPLOT=logEfPlot, $
                                    H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                                    DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme, $
+                                   OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                                    MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                                   LOGAVGPLOT=logAvgPlot, $
-                                   OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT
+                                   LOGAVGPLOT=logAvgPlot
+
                                    
 
   h2dENumStr={tmplt_h2dStr}
@@ -102,11 +104,11 @@ FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
 
      IF KEYWORD_SET(medHistOutData) THEN medHistDatFile = medHistDataDir + efDatName+"medhist_data.sav"
 
-     h2dENumStr.data=median_hist(maximus.mlt[plot_i],maximus.ILAT[plot_i],$
+     h2dENumStr.data=median_hist(maximus.mlt[plot_i],(KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                                  elecNumFData,$
-                                 MIN1=MINM,MIN2=MINI,$
-                                 MAX1=MAXM,MAX2=MAXI,$
-                                 BINSIZE1=binM,BINSIZE2=binI,$
+                                 MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                                 MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                                 BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                                  OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT,$
                                  ABSMED=absENumFl,OUTFILE=medHistDatFile,PLOT_I=plot_i) 
 
@@ -117,11 +119,11 @@ FUNCTION GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,
      elecNumFData=(KEYWORD_SET(logAvgPlot)) ? alog10(elecNumFData) : elecNumFData
 
      h2dENumStr.data=hist2d(maximus.mlt[plot_i], $
-                            maximus.ilat[plot_i],$
+                            (KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
                             elecNumFData,$
-                            MIN1=MINM,MIN2=MINI,$
-                            MAX1=MAXM,MAX2=MAXI,$
-                            BINSIZE1=binM,BINSIZE2=binI,$
+                            MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
+                            MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
+                            BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                             OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
      h2dENumStr.data[where(h2dFluxN NE 0,/NULL)]=h2dENumStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)]
      IF KEYWORD_SET(logAvgPlot) THEN h2dENumStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dENumStr.data[where(h2dFluxN NE 0,/null)])
