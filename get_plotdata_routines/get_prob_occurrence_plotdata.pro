@@ -26,15 +26,15 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
      
 
   IF KEYWORD_SET(do_width_x) THEN BEGIN
-     widthData = maximus.width_x 
+     widthData = maximus.width_x[plot_i]
      probDatName = "prob--width_time"
   ENDIF ELSE BEGIN
-     widthData = maximus.width_time
+     widthData = maximus.width_time[plot_i]
      probDatName = "prob--width_x"
   ENDELSE
 
-  h2dStr.data=hist2d(maximus.mlt(plot_i), $
-                      (KEYWORD_SET(do_lshell) ? maximus.lshell(plot_i) : maximus.ilat(plot_i)),$
+  h2dStr.data=hist2d(maximus.mlt[plot_i], $
+                      (KEYWORD_SET(do_lshell) ? maximus.lshell[plot_i] : maximus.ilat[plot_i]),$
                       widthData,$
                       MIN1=MINM,MIN2=(KEYWORD_SET(do_lshell) ? minL : minI),$
                       MAX1=MAXM,MAX2=(KEYWORD_SET(do_lshell) ? maxL : maxI),$

@@ -17,7 +17,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   charsize_grid=2.0
 
   ;Subtract one since last array is the mask
-  nPlots=N_ELEMENTS(h2dStr)-1
+  nPlots=N_ELEMENTS(h2dStrArr)-1
 
   ; Open a graphics window.
   cgDisplay,color="black"
@@ -110,7 +110,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   nYlines=(maxI-minI)/binI + 1
 
   mlts=indgen(nXlines)*binM+minM
-  ilats=indgen(nYlines)*binI+minI
+  ilats=indgen(nYlines)*(KEYWORD_SET(do_lShell) ? binL+minL : binI+minI )
 
   IF mirror THEN BEGIN
      ilats = -1.0 * ilats 
@@ -119,7 +119,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   mlts=mlts*15
 
   ;;binary matrix to tell us where masked values are
-  masked=(h2dStr[nPlots].data GT 250.0)
+  masked=(h2dStrArr[nPlots].data GT 250.0)
   notMasked=WHERE(~masked)
 
   h2descl=MAKE_ARRAY(SIZE(temp.data,/DIMENSIONS),VALUE=0)
@@ -263,7 +263,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
      ENDIF 
      
      latNames=STRING(latNames,format='(I0)')
-     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " ILAT"
+     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + ( KEYWORD_SET(DO_lShell) ? "L-shell" : " ILAT" )
 
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
 ;;                 latdelta=binI*4,$
@@ -302,7 +302,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;cgText, -90, minI-5, 'duskward',Alignment=0.5,Charsize=charSize  
 
   ;;Integral text
-  ;;REMEMBER: h2dStr[nPlots].data is the MASK
+  ;;REMEMBER: h2dStrArr[nPlots].data is the MASK
   IF NOT (noPlotIntegral EQ !NULL) THEN BEGIN 
      IF NOT (noPlotIntegral) THEN BEGIN
         IF logPlotzz THEN BEGIN

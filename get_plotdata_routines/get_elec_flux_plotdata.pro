@@ -71,13 +71,13 @@ PRO GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=min
   IF KEYWORD_SET(noNeg_eFlux) THEN BEGIN
      negEStr = "NoNegs--"
      print,"N elements in elec data before junking neg elecData: ",N_ELEMENTS(elecData)
-     elecData = elecData(where(elecData GT 0.))
+     elecData = elecData[where(elecData GT 0.)]
      print,"N elements in elec data after junking neg elecData: ",N_ELEMENTS(elecData)
   ENDIF
   IF KEYWORD_SET(noPos_eFlux) THEN BEGIN
      posEStr = "NoPos--"
      print,"N elements in elec data before junking pos elecData: ",N_ELEMENTS(elecData)
-     elecData = elecData(where(elecData LT 0.))
+     elecData = elecData[where(elecData LT 0.)]
      print,"N elements in elec data after junking pos elecData: ",N_ELEMENTS(elecData)
      elecData = ABS(elecData)
   ENDIF

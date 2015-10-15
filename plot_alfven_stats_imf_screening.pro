@@ -192,6 +192,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                      CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                                      minMLT=minMLT,maxMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                     DO_LSHELL=do_lShell,MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
                                      HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                      MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                      BYMIN=byMin, BZMIN=bzMin, $
@@ -256,7 +257,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                                  MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                  DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                   BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
@@ -507,7 +508,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        NEVENTSPLOTRANGE=nEventsPlotRange, $
                        H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr
@@ -623,6 +623,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr, $
                                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                                       UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
+
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
         h2dStrArr=[h2dStrArr,h2dOrbStr] 
         IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
@@ -650,10 +651,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                                NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
 
-  IF KEYWORD_SET(orbTotPlot) THEN BEGIN 
-     h2dStrArr=[h2dStrArr,h2dTotOrbStr] 
-     IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
-  ENDIF
+     IF KEYWORD_SET(orbTotPlot) THEN BEGIN 
+        h2dStrArr=[h2dStrArr,h2dTotOrbStr] 
+        IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
+     ENDIF
   ENDIF
 
   ;;########Orbit FREQUENCY########
@@ -664,8 +665,10 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                   H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
                                   DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                                   NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
+     
   ENDIF
      
   ;;########NEvents/orbit########
@@ -678,6 +681,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN dataNameArr=[dataNameArr,dataName]
+
   ENDIF
 
   ;;########NEvents/minute########
@@ -720,7 +724,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
         h2dStrArr=[h2dStrArr,h2dStr] 
         IF keepMe THEN BEGIN 
-           dataNameArr=[dataNameArr,efDatName] 
+           dataNameArr=[dataNameArr,dataName] 
            dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
         ENDIF 
      ENDIF
@@ -743,8 +747,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
         ENDIF 
   ENDIF
 
-
-
   ;; Temporary data thing
   ;;use these n stuff
   ;; IF KEYWORD_SET(tempSAVE) THEN BEGIN 
@@ -760,45 +762,45 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************************
   ;;If something screwy goes on, better take stock of it and alert user
 
-  FOR i = 2, N_ELEMENTS(h2dStr)-1 DO BEGIN 
-     IF n_elements(where(h2dStr[i].data EQ 0,/NULL)) LT $
-        n_elements(where(h2dStr[0].data EQ 0,/NULL)) THEN BEGIN 
-        printf,lun,"h2dStr."+h2dStr[i].title + " has ", strtrim(n_elements(where(h2dStr[i].data EQ 0)),2)," elements that are zero, whereas FluxN has ", strtrim(n_elements(where(h2dStr[0].data EQ 0)),2),"." 
+  FOR i = 2, N_ELEMENTS(h2dStrArr)-1 DO BEGIN 
+     IF n_elements(where(h2dStrArr[i].data EQ 0,/NULL)) LT $
+        n_elements(where(h2dStrArr[0].data EQ 0,/NULL)) THEN BEGIN 
+        printf,lun,"h2dStrArr."+h2dStrArr[i].title + " has ", strtrim(n_elements(where(h2dStrArr[i].data EQ 0)),2)," elements that are zero, whereas FluxN has ", strtrim(n_elements(where(h2dStrArr[0].data EQ 0)),2),"." 
      printf,lun,"Sorry, can't plot anything meaningful." & ENDIF
   ENDFOR
 
   ;;Now that we're done using nplots, let's log it, if requested:
   IF KEYWORD_SET(nPlots) AND KEYWORD_SET(logNEventsPlot) THEN BEGIN
      dataNameArr[0] = 'log_' + dataNameArr[0]
-     h2dStr[0].data(where(h2dStr.data GT 0)) = ALOG10(h2dStr[0].data(where(h2dStr.data GT 0)))
-     h2dStr[0].lim = [(h2dStr[0].lim[0] LT 1) ? 0 : ALOG10(h2dStr[0].lim[0]),ALOG10(h2dStr[0].lim[1])] ;lower bound must be one
-     h2dStr[0].title = 'Log ' + h2dStr[0].title
+     h2dStrArr[0].data(where(h2dStrArr.data GT 0)) = ALOG10(h2dStrArr[0].data(where(h2dStrArr.data GT 0)))
+     h2dStrArr[0].lim = [(h2dStrArr[0].lim[0] LT 1) ? 0 : ALOG10(h2dStrArr[0].lim[0]),ALOG10(h2dStrArr[0].lim[1])] ;lower bound must be one
+     h2dStrArr[0].title = 'Log ' + h2dStrArr[0].title
   ENDIF
   ;;********************************************************
   ;;Handle Plots all at once
 
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
 
-  h2dStr=SHIFT(h2dStr,-1-(nPlots))
+  h2dStrArr=SHIFT(h2dStrArr,-1-(nPlots))
   IF keepMe THEN BEGIN 
      dataNameArr=SHIFT(dataNameArr,-2) 
      dataRawPtrArr=SHIFT(dataRawPtrArr,-2) 
   ENDIF
 
-  IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStr,dataNameArr,maxM,minM,maxI,minI,binM,binI,$
+  IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStrArr,dataNameArr,maxM,minM,maxI,minI,binM,binI,do_lShell,minL,maxL,binL,$
                            rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemi,$
                            filename=defTempDir + 'polarplots_'+paramStr+".dat"
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
      IF N_ELEMENTS(justData) EQ 0 AND KEYWORD_SET(squarePlot) THEN $
-        cgWindow, 'interp_contplotmulti_str', h2dStr,$
+        cgWindow, 'interp_contplotmulti_str', h2dStrArr,$
                   Background='White', $
                   WTitle='Flux plots for '+hemi+'ern Hemisphere, '+clockStr+ $
                   ' IMF, ' + strmid(plotMedOrAvg,1) $
      ELSE IF N_ELEMENTS(justData) EQ 0 THEN $
-        FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
-           cgWindow,'interp_polar2dhist',h2dStr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
+        FOR i = 0, N_ELEMENTS(h2dStrArr) - 2 DO $ 
+           cgWindow,'interp_polar2dhist',h2dStrArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
                 CLOCKSTR=clockStr, _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataNameArr[i]+','+hemi+'ern Hemisphere, '+clockStr+ $
@@ -812,7 +814,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
         ;;Create a PostScript file.
         cgPS_Open, plotDir + plotPrefix + 'fluxplots_'+paramStr+'.ps', /nomatch, xsize=1000, ysize=1000
-        interp_contplotmulti_str,h2dStr 
+        interp_contplotmulti_str,h2dStrArr 
         cgPS_Close 
 
         ;;Create a PNG file with a width of 800 pixels.
@@ -824,7 +826,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
            CD, CURRENT=c & PRINTF,LUN, "Current directory is " + c + "/" + plotDir 
            PRINTF,LUN, "Creating output files..." 
            
-           FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO BEGIN  
+           FOR i = 0, N_ELEMENTS(h2dStrArr) - 2 DO BEGIN  
               
               IF KEYWORD_SET(polarContour) THEN BEGIN
                  ;; The NAME field of the !D system variable contains the name of the
@@ -835,7 +837,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ;; Use DEVICE to set some PostScript device options:
                  DEVICE, FILENAME='myfile.ps', /LANDSCAPE
                  ;; Make a simple plot to the PostScript file:
-                 interp_polar2dcontour,h2dStr[i],dataNameArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
+                 interp_polar2dcontour,h2dStrArr[i],dataNameArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
                                        fname=plotDir + dataNameArr[i]+paramStr+'.png', _extra=e
                  ;; Close the PostScript file:
                  DEVICE, /CLOSE
@@ -845,8 +847,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ;;Create a PostScript file.
                  cgPS_Open, plotDir + dataNameArr[i]+paramStr+'.ps' 
                  ;;interp_polar_plot,[[*dataRawPtrArr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
-                 ;;          h2dStr[0].lim 
-                 interp_polar2dhist,h2dStr[i],defTempDir + 'polarplots_'+paramStr+".dat",CLOCKSTR=clockStr,_extra=e 
+                 ;;          h2dStrArr[0].lim 
+                 interp_polar2dhist,h2dStrArr[i],defTempDir + 'polarplots_'+paramStr+".dat",CLOCKSTR=clockStr,_extra=e 
                  cgPS_Close 
                  ;;Create a PNG file with a width of 800 pixels.
                  cgPS2Raster, plotDir + dataNameArr[i]+paramStr+'.ps', $
@@ -875,14 +877,14 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
    IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
-      FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
+      FOR j=0, N_ELEMENTS(h2dStrArr)-2 DO BEGIN 
          fname=plotDir + dataNameArr[j]+paramStr+'.h5' 
          PRINT,"Writing HDF5 file: " + fname 
          fileID=H5F_CREATE(fname) 
-         datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
-         dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStr[j].data,/DIMENSIONS)) 
+         datatypeID=H5T_IDL_CREATE(h2dStrArr[j].data) 
+         dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStrArr[j].data,/DIMENSIONS)) 
          datasetID = H5D_CREATE(fileID,dataNameArr[j], datatypeID, dataspaceID) 
-         H5D_WRITE,datasetID, h2dStr[j].data 
+         H5D_WRITE,datasetID, h2dStrArr[j].data 
          H5F_CLOSE,fileID 
       ENDFOR 
 
@@ -890,26 +892,26 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       ;;s = H5_PARSE(fname, /READ_DATA)
       ;;HELP, s.mydata._DATA, /STRUCTURE  
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
-         FOR j=0, N_ELEMENTS(h2dStr)-2 DO BEGIN 
+         FOR j=0, N_ELEMENTS(h2dStrArr)-2 DO BEGIN 
             fname=plotDir + dataNameArr[j]+paramStr+'.h5' 
             PRINT,"Writing HDF5 file: " + fname 
             fileID=H5F_CREATE(fname) 
             
             ;;    datatypeID=H5T_IDL_CREATE() 
-            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStr[j].data,/DIMENSIONS)) 
+            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStrArr[j].data,/DIMENSIONS)) 
             datasetID = H5D_CREATE(fileID,dataNameArr[j], datatypeID, dataspaceID) 
-            H5D_WRITE,datasetID, h2dStr[j].data 
+            H5D_WRITE,datasetID, h2dStrArr[j].data 
             
-            datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
-            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStr[j].data,/DIMENSIONS)) 
+            datatypeID=H5T_IDL_CREATE(h2dStrArr[j].data) 
+            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStrArr[j].data,/DIMENSIONS)) 
             datasetID = H5D_CREATE(fileID,dataNameArr[j], datatypeID, dataspaceID) 
-            H5D_WRITE,datasetID, h2dStr[j].data     
+            H5D_WRITE,datasetID, h2dStrArr[j].data     
             
             
-            datatypeID=H5T_IDL_CREATE(h2dStr[j].data) 
-            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStr[j].data,/DIMENSIONS)) 
+            datatypeID=H5T_IDL_CREATE(h2dStrArr[j].data) 
+            dataspaceID=H5S_CREATE_SIMPLE(SIZE(h2dStrArr[j].data,/DIMENSIONS)) 
             datasetID = H5D_CREATE(fileID,dataNameArr[j], datatypeID, dataspaceID) 
-            H5D_WRITE,datasetID, h2dStr[j].data 
+            H5D_WRITE,datasetID, h2dStrArr[j].data 
             H5F_CLOSE,fileID 
          ENDFOR 
       ENDIF 
@@ -933,7 +935,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
       
       ;;NOW DO PROCESSED H2D DATA 
       IF KEYWORD_SET(writeProcessedH2d) THEN BEGIN 
-         FOR i = 0, n_elements(h2dStr)-1 DO BEGIN 
+         FOR i = 0, n_elements(h2dStrArr)-1 DO BEGIN 
             fname=plotDir + "h2d_"+dataNameArr[i]+paramStr+'.ascii' 
             PRINT,"Writing ASCII file: " + fname 
             OPENW,lun2, fname, /get_lun 
@@ -941,7 +943,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                FOR k = 0, N_ELEMENTS(outH2DBinsILAT) -1 DO BEGIN 
                   PRINTF,lun2,outH2DBinsILAT[k],$
                          outH2DBinsMLT[j],$
-                         (h2dStr[i].data)[j,k],$
+                         (h2dStrArr[i].data)[j,k],$
                          FORMAT='(F7.2,1X,F7.2,1X,F7.2)' 
                ENDFOR 
             ENDFOR 
