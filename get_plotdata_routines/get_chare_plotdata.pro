@@ -7,6 +7,9 @@ PRO GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        DATANAMEARR=dataNameArr,DATARAWPTRARR=dataRawPtrArr,KEEPME=keepme
 
+     PRINT,"Fix h2dstr stuff and data array at bottom, and make sure a template gets here!"
+     STOP
+
      h2dCharEStr={tmplt_h2dStr}
 
      ;;If not allowing negative fluxes

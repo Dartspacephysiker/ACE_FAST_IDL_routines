@@ -9,6 +9,9 @@ PRO GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MA
 
      h2dIStr={tmplt_h2dStr}
 
+     PRINT,"Fix h2dstr stuff and data array at bottom!"
+     STOP
+
      ;;If not allowing negative fluxes
      IF iFluxPlotType EQ "Integ" THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.integ_ion_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
