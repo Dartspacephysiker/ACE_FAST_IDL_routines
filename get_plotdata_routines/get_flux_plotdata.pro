@@ -46,16 +46,16 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
         plot_i=cgsetintersection(WHERE(FINITE(maximus.integ_elec_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegFlux) THEN BEGIN
-           no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
-           print,"N elements in elec data before junking neg vals: ",N_ELEMENTS(plot_i)
-           plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in elec data after junking neg vals: ",N_ELEMENTS(plot_i)
+           ;; no_negs_i=WHERE(maximus.integ_elec_energy_flux GE 0.0)
+           ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
+           ;; plot_i=cgsetintersection(no_negs_i,plot_i)
+           ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosFlux) THEN BEGIN
-              no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
-              print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; no_pos_i=WHERE(maximus.integ_elec_energy_flux LT 0.0)
+              ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; plot_i=cgsetintersection(no_pos_i,plot_i)        
+              ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
            ENDIF
         ENDELSE
         inData= maximus.integ_elec_energy_flux[plot_i] 
@@ -64,16 +64,16 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
            plot_i=cgsetintersection(WHERE(FINITE(maximus.elec_energy_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegFlux) THEN BEGIN
-              no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
-              print,"N elements in elec data before junking neg vals: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in elec data after junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; no_negs_i=WHERE(maximus.elec_energy_flux GE 0.0)
+              ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; plot_i=cgsetintersection(no_negs_i,plot_i)        
+              ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosFlux) THEN BEGIN
-                 no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
-                 print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; no_pos_i=WHERE(maximus.elec_energy_flux LT 0.0)
+                 ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
               ENDIF
            ENDELSE
            inData = maximus.elec_energy_flux[plot_i]
@@ -89,16 +89,16 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
         plot_i=cgsetintersection(WHERE(FINITE(maximus.total_eflux_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegFlux) THEN BEGIN
-           no_negs_i=WHERE(maximus.total_eflux_integ GE 0.0)
-           print,"N elements in elec #flux data before junking neg vals: ",N_ELEMENTS(plot_i)
-           plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in elec #flux data after junking neg vals: ",N_ELEMENTS(plot_i)
+           ;; no_negs_i=WHERE(maximus.total_eflux_integ GE 0.0)
+           ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
+           ;; plot_i=cgsetintersection(no_negs_i,plot_i)
+           ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosFlux) THEN BEGIN
-              no_pos_i=WHERE(maximus.total_eflux_integ LT 0.0)
-              print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; no_pos_i=WHERE(maximus.total_eflux_integ LT 0.0)
+              ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; plot_i=cgsetintersection(no_pos_i,plot_i)        
+              ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
            ENDIF
         ENDELSE
         inData= maximus.total_eflux_integ[plot_i] 
@@ -107,16 +107,16 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
            plot_i=cgsetintersection(WHERE(FINITE(maximus.eflux_losscone_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegFlux) THEN BEGIN
-              no_negs_i=WHERE(maximus.eflux_losscone_integ GE 0.0)
-              print,"N elements in elec data before junking neg vals: ",N_ELEMENTS(plot_i)
-              plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in elec data after junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; no_negs_i=WHERE(maximus.eflux_losscone_integ GE 0.0)
+              ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; plot_i=cgsetintersection(no_negs_i,plot_i)        
+              ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosFlux) THEN BEGIN
-                 no_pos_i=WHERE(maximus.eflux_losscone_integ LT 0.0)
-                 print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; no_pos_i=WHERE(maximus.eflux_losscone_integ LT 0.0)
+                 ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
               ENDIF
            ENDELSE
            inData = maximus.eflux_losscone_integ[plot_i]
@@ -125,16 +125,16 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
               plot_i=cgsetintersection(WHERE(FINITE(maximus.esa_current),NCOMPLEMENT=lost),plot_i) ;;NaN check
               print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
               IF KEYWORD_SET(noNegFlux) THEN BEGIN
-                 no_negs_i=WHERE(maximus.esa_current GE 0.0)
-                 print,"N elements in elec #flux data before junking neg vals: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_negs_i,plot_i)
-                 print,"N elements in elec #flux data after junking neg vals: ",N_ELEMENTS(plot_i)
+                 ;; no_negs_i=WHERE(maximus.esa_current GE 0.0)
+                 ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
+                 ;; plot_i=cgsetintersection(no_negs_i,plot_i)
+                 ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
               ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosFlux) THEN BEGIN
-                 no_pos_i=WHERE(maximus.esa_current LT 0.0)
-                 print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
-                 plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; no_pos_i=WHERE(maximus.esa_current LT 0.0)
+                 ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; plot_i=cgsetintersection(no_pos_i,plot_i)        
+                 ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
               ENDIF
            ENDELSE
            ENDIF
@@ -149,19 +149,21 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      h2dStr.title= "Poynting Flux (mW/m!U2!N)"
      dataName = "pFlux_"
 
-     IF KEYWORD_SET(noNegFlux) THEN BEGIN
-        no_negs_i=WHERE(maximus.pFluxEst GE 0.0)
-        plot_i=cgsetintersection(no_negs_i,plot_i)
-     ENDIF
+     inData = maximus.pFluxEst[plot_i]
+
+     ;; IF KEYWORD_SET(noNegFlux) THEN BEGIN
+     ;;    no_negs_i=WHERE(maximus.pFluxEst GE 0.0)
+     ;;    plot_i=cgsetintersection(no_negs_i,plot_i)
+     ;; ENDIF
      
-     IF KEYWORD_SET(noPosFlux) THEN BEGIN
-        no_pos_i=WHERE(maximus.pFluxEst LE 0.0)
-        plot_i=cgsetintersection(no_pos_i,plot_i)
-     ENDIF
-     IF KEYWORD_SET(absFlux) THEN BEGIN 
-        h2dStr.data = ABS(h2dStr.data) 
-        pData=ABS(pData) 
-     ENDIF
+     ;; IF KEYWORD_SET(noPosFlux) THEN BEGIN
+     ;;    no_pos_i=WHERE(maximus.pFluxEst LE 0.0)
+     ;;    plot_i=cgsetintersection(no_pos_i,plot_i)
+     ;; ENDIF
+     ;; IF KEYWORD_SET(absFlux) THEN BEGIN 
+     ;;    h2dStr.data = ABS(h2dStr.data) 
+     ;;    pData=ABS(pData) 
+     ;; ENDIF
 
   ENDIF
 
@@ -274,15 +276,15 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
         print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
         IF KEYWORD_SET(noNegFlux) THEN BEGIN
            no_negs_i=WHERE(maximus.max_chare_losscone GE 0.0)
-           print,"N elements in elec data before junking negs elecData: ",N_ELEMENTS(plot_i)
+           ;; print,"N elements in " + dataName + " data before junking negs elecData: ",N_ELEMENTS(plot_i)
            plot_i=cgsetintersection(no_negs_i,plot_i)
-           print,"N elements in elec data after junking negs elecData: ",N_ELEMENTS(plot_i)
+           ;; print,"N elements in " + dataName + " data after junking negs elecData: ",N_ELEMENTS(plot_i)
         ENDIF ELSE BEGIN
            IF KEYWORD_SET(noPosFlux) THEN BEGIN
               no_pos_i=WHERE(maximus.max_chare_losscone LT 0.0)
-              print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
               plot_i=cgsetintersection(no_pos_i,plot_i)        
-              print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+              ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
            ENDIF
         ENDELSE
         inData=maximus.max_chare_losscone[plot_i] 
@@ -292,15 +294,15 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
            print,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in data..."
            IF KEYWORD_SET(noNegFlux) THEN BEGIN
               no_negs_i=WHERE(maximus.max_chare_total GE 0.0)
-              print,"N elements in elec data before junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; print,"N elements in " + dataName + " data before junking neg vals: ",N_ELEMENTS(plot_i)
               plot_i=cgsetintersection(no_negs_i,plot_i)        
-              print,"N elements in elec data after junking neg vals: ",N_ELEMENTS(plot_i)
+              ;; print,"N elements in " + dataName + " data after junking neg vals: ",N_ELEMENTS(plot_i)
            ENDIF ELSE BEGIN
               IF KEYWORD_SET(noPosFlux) THEN BEGIN
                  no_pos_i=WHERE(maximus.max_chare_total LT 0.0)
-                 print,"N elements in elec data before junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; print,"N elements in " + dataName + " data before junking pos vals: ",N_ELEMENTS(plot_i)
                  plot_i=cgsetintersection(no_pos_i,plot_i)        
-                 print,"N elements in elec data after junking pos vals: ",N_ELEMENTS(plot_i)
+                 ;; print,"N elements in " + dataName + " data after junking pos vals: ",N_ELEMENTS(plot_i)
               ENDIF
            ENDELSE
            inData=maximus.max_chare_total[plot_i]
@@ -365,6 +367,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
                          BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                          OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
      h2dStr.data[where(h2dFluxN NE 0,/NULL)]=h2dStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)] 
+
      IF KEYWORD_SET(logAvgPlot) THEN h2dStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dStr.data[where(h2dFluxN NE 0,/null)])
 
   ENDELSE

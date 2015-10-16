@@ -519,16 +519,18 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
   IF KEYWORD_SET(nPlots) THEN h2dStrArr=[h2dStr,h2dMaskStr] ELSE h2dStrArr = h2dMaskStr
   
+  ;;#####GET ANY FLUX QUANTITIES#########
   ;;########ELECTRON FLUX########
   IF KEYWORD_SET(eplots) THEN BEGIN
-     GET_ELEC_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                            DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                            OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
-                            EFLUXPLOTTYPE=eFluxPlotType,NOPOS_EFLUX=noPos_eFlux,NONEG_EFLUX=noNeg_eFlux,ABS_EFLUX=abs_eFlux,LOGEFPLOT=logEfPlot, $
-                            H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                            DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                            MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                            LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_EFLUX,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       FLUXPLOTTYPE=eFluxPlotType,PLOTRANGE=ePlotRange, $
+                       NOPOSFLUX=noPoseflux,NONEGFLUX=noNegeflux,ABSFLUX=abseflux,LOGFLUXPLOT=logEfPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
 
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN BEGIN
@@ -539,15 +541,15 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########ELECTRON NUMBER FLUX########
   IF KEYWORD_SET(eNumFlPlots) THEN BEGIN
-     GET_ELEC_NUMFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                               OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
-                               ENUMFLPLOTTYPE=eNumFlPlotType,EPLOTRANGE=ePlotRange, $
-                               NOPOSENUMFL=noPosENumFl,NONEGENUMFL=noNegENumFl,ABSENUMFL=absENumFl,LOGEFPLOT=logEfPlot, $
-                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                               DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                               MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                               LOGAVGPLOT=logAvgPlot
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_ENUMFLUX,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       FLUXPLOTTYPE=eNumFlPlotType,PLOTRANGE=ePlotRange, $
+                       NOPOSFLUX=noPosENumFl,NONEGFLUX=noNegENumFl,ABSFLUX=absENumFl,LOGFLUXPLOT=logEfPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
 
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN BEGIN 
@@ -559,48 +561,64 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########Poynting Flux########
   IF KEYWORD_SET(pplots) THEN BEGIN
-     GET_PFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
-                        PPLOTRANGE=PPlotRange, $
-                        NOPOSPFLUX=noPosPflux,NONEGPFLUX=noNegPflux,ABSPFLUX=absPflux,LOGPFPLOT=logPfPlot, $
-                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                        LOGAVGPLOT=logAvgPlot
-
-  h2dStrArr=[h2dStrArr,h2dStr] 
-  IF keepMe THEN BEGIN 
-     dataNameArr=[dataNameArr,dataName] 
-     dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
-  ENDIF  
-
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_PFLUX,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       PLOTRANGE=PPlotRange, $
+                       NOPOSFLUX=noPosPflux,NONEGFLUX=noNegPflux,ABSFLUX=absPflux,LOGFLUXPLOT=logPfPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
+     
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN 
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF  
+     
   ENDIF
 
   ;;########ION FLUX########
   IF KEYWORD_SET(ionPlots) THEN BEGIN
-     GET_IFLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
-                        IFLUXPLOTTYPE=iFluxPlotType,iPLOTRANGE=iPlotRange, $
-                        NOPOSIFLUX=noPosIflux,NONEGIFLUX=noNegIflux,ABSIFLUX=absIflux,LOGIFPLOT=logIfPlot, $
-                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
-                        LOGAVGPLOT=logAvgPlot
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_IFLUX,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       FLUXPLOTTYPE=iFluxPlotType,PLOTRANGE=iPlotRange, $
+                       NOPOSFLUX=noPosIflux,NONEGFLUX=noNegIflux,ABSFLUX=absIflux,LOGFLUXPLOT=logIfPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN 
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF  
+     
   ENDIF
 
   ;;########CHARACTERISTIC ENERGY########
   IF KEYWORD_SET(charEPlots) THEN BEGIN
-     GET_CHARE_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
-                        CHARETYPE=charEType,CHAREPLOTRANGE=charEPlotRange, $
-                        NOPOSCHARE=noPosCharE,NONEGCHARE=noNegCharE,ABSCHARE=absCharE,LOGCHAREPLOT=logCharEPlot, $
-                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,LOGAVGPLOT=logAvgPlot,EPLOTRANGE=ePlotRange, $
-                        DATANAME=dataName,DATARAWPTR=dataRawPtr
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_CHAREE,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       FLUXPLOTTYPE=charEType,PLOTRANGE=charEPlotRange, $
+                       NOPOSFLUX=noPosCharE,NONEGFLUX=noNegCharE,ABSFLUX=absCharE,LOGFLUXPLOT=logCharEPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN 
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF  
+     
   ENDIF
+
 
   ;;########################################
   ;;
