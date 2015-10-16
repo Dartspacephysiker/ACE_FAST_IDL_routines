@@ -270,9 +270,9 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      byChast=byChast[byMin_ii]
      bxChast=bxChast[byMin_ii]
      
-     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(byMin_ii)
-     fastDBInterp_i=fastDBInterp_i(byMin_ii)
-     fastDBInterpTime=fastDBInterpTime(byMin_ii)
+     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i[byMin_ii]
+     fastDBInterp_i=fastDBInterp_i[byMin_ii]
+     fastDBInterpTime=fastDBInterpTime[byMin_ii]
 
      printf,lun,""
      printf,lun,"ByMin magnitude requirement: " + strcompress(byMin,/REMOVE_ALL) + " nT"
@@ -291,13 +291,13 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;; byMax_ii=WHERE(byChast GE -ABS(byMax) OR byChast LE ABS(byMax),NCOMPLEMENT=byMaxLost)
      byMax_ii=WHERE(ABS(byChast) LE ABS(byMax),NCOMPLEMENT=byMaxLost)
      
-     bzChast=bzChast(byMax_ii)
-     byChast=byChast(byMax_ii)
-     bxChast=bxChast(byMax_ii)
+     bzChast=bzChast[byMax_ii]
+     byChast=byChast[byMax_ii]
+     bxChast=bxChast[byMax_ii]
      
-     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(byMax_ii)
-     fastDBInterp_i=fastDBInterp_i(byMax_ii)
-     fastDBInterpTime=fastDBInterpTime(byMax_ii)
+     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i[byMax_ii]
+     fastDBInterp_i=fastDBInterp_i[byMax_ii]
+     fastDBInterpTime=fastDBInterpTime[byMax_ii]
 
      printf,lun,""
      printf,lun,"ByMax magnitude requirement: " + strcompress(byMax,/REMOVE_ALL) + " nT"
@@ -317,13 +317,13 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;; bzMin_ii are the indices (of indices) of events that meet the minimum Bz requirement
      bzMin_ii=WHERE(bzChast LE -ABS(bzMin) OR bzChast GE ABS(bzMin),NCOMPLEMENT=bzminLost)
      
-     bzChast=bzChast(bzMin_ii)
-     byChast=byChast(bzMin_ii)
-     bxChast=bxChast(bzMin_ii)
+     bzChast=bzChast[bzMin_ii]
+     byChast=byChast[bzMin_ii]
+     bxChast=bxChast[bzMin_ii]
      
-     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(bzMin_ii)
-     fastDBInterp_i=fastDBInterp_i(bzMin_ii)
-     fastDBInterpTime=fastDBInterpTime(bzMin_ii)
+     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i[bzMin_ii]
+     fastDBInterp_i=fastDBInterp_i[bzMin_ii]
+     fastDBInterpTime=fastDBInterpTime[bzMin_ii]
 
      printf,lun,""
      printf,lun,"BzMin magnitude requirement: " + strcompress(bzMin,/REMOVE_ALL) + " nT"
@@ -342,13 +342,13 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
      ;; bzMax_ii=WHERE(bzChast GE -ABS(bzMax) OR bzChast LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
      bzMax_ii=WHERE(ABS(bzChast) LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
      
-     bzChast=bzChast(bzMax_ii)
-     byChast=byChast(bzMax_ii)
-     bxChast=bxChast(bzMax_ii)
+     bzChast=bzChast[bzMax_ii]
+     byChast=byChast[bzMax_ii]
+     bxChast=bxChast[bzMax_ii]
      
-     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i(bzMax_ii)
-     fastDBInterp_i=fastDBInterp_i(bzMax_ii)
-     fastDBInterpTime=fastDBInterpTime(bzMax_ii)
+     fastDBSatProppedInterped_i=fastDBSatProppedInterped_i[bzMax_ii]
+     fastDBInterp_i=fastDBInterp_i[bzMax_ii]
+     fastDBInterpTime=fastDBInterpTime[bzMax_ii]
 
      printf,lun,""
      printf,lun,"BzMax magnitude requirement: " + strcompress(bzMax,/REMOVE_ALL) + " nT"

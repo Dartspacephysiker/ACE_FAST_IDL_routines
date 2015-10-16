@@ -41,7 +41,22 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
                       BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                       OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
   
-  h2dStr.data = h2dStr.data/tHistDenominator
+  ;;make sure this makes any sense
+  this = WHERE( h2dstr.data EQ 0 )
+  that = WHERE( thistdenominator EQ 0 )
+  nBad = 0
+  FOR i=0,N_ELEMENTS(that)-1 DO BEGIN
+     test = WHERE( that[i] EQ this )
+     IF test[0] EQ -1 THEN nBad++        
+
+  ENDFOR
+  IF nBad GT 0 THEN BEGIN
+     PRINT,STRCOMPRESS(nBad,/REMOVE_ALL) + " instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!"
+     PRINT,"Absurdity"
+     STOP
+  ENDIF
+
+  h2dStr.data[WHERE(h2dstr.data GT 0)] = h2dStr.data[WHERE(h2dstr.data GT 0)]/tHistDenominator[WHERE(h2dstr.data GT 0)]
 
   IF KEYWORD_SET(logProbOccurrence) THEN BEGIN 
      h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 

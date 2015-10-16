@@ -110,7 +110,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   nYlines=(maxI-minI)/binI + 1
 
   mlts=indgen(nXlines)*binM+minM
-  ilats=indgen(nYlines)*(KEYWORD_SET(do_lShell) ? binL+minL : binI+minI )
+  ilats=indgen(nYlines)*(KEYWORD_SET(do_lShell) ? binL : binI ) + (KEYWORD_SET(do_lShell) ? minL : minI )
 
   IF mirror THEN BEGIN
      ilats = -1.0 * ilats 
