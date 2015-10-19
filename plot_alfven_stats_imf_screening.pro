@@ -266,7 +266,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                   HOYDIA=hoyDia,LUN=lun
   
   ;;Shouldn't be leftover unused params from batch call
-  
   IF ISA(e) THEN BEGIN
      IF $
         NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $
@@ -408,69 +407,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      nPlots=1
   ENDIF
 
-  ;;######ELECTRON FLUXES, ENERGY AND NUMBER 
-
-  ;;#########e- energy flux
-  ;;Eflux max abs. value in interval, or integrated flux?
-  ;;NOTE: max value has negative values, which can mess with
-  ;;color bars
-  IF KEYWORD_SET(logEfPlot) AND NOT KEYWORD_SET(abs_eFlux) AND NOT KEYWORD_SET(noNeg_eFlux) AND NOT KEYWORD_SET(noPos_eFlux) THEN BEGIN 
-     print,"Warning!: You're trying to do log Eflux plots but you don't have 'abs_eFlux', 'noNeg_eFlux', or 'noPos_eFlux' set!"
-     print,"Can't make log plots without using absolute value or only positive values..."
-     print,"Default: junking all negative Eflux values"
-     WAIT, 1
-     noNeg_eFlux=1
-  ENDIF
-  IF KEYWORD_SET(noPos_eFlux) AND KEYWORD_SET (logEfPlot) THEN abs_eFlux = 1
-
-  ;;#########e- number flux
-  ;; Safety for electron number flux plots 
-  IF KEYWORD_SET(logENumFlPlot) AND NOT KEYWORD_SET(absENumFl) AND NOT KEYWORD_SET(noNegENumFl) AND NOT KEYWORD_SET(noPosENumFl) THEN BEGIN 
-     print,"Warning!: You're trying to do log e- number flux plots but you don't have 'absENumFl', 'noNegENumFl', or 'noPosENumFl' set!"
-     print,"Can't make log plots without using absolute value or only positive values..."
-     print,"Default: junking all negative ENumFl values"
-     WAIT, 1
-     noNegENumFl=1
-  ENDIF
-  IF KEYWORD_SET(noPosENumFl) AND KEYWORD_SET (logENumFlPlot) THEN absENumFl = 1
-
-  ;;######Poynting flux
-  IF KEYWORD_SET(logPfPlot) AND NOT KEYWORD_SET(absPflux) AND NOT KEYWORD_SET(noNegPflux) AND NOT KEYWORD_SET(noPosPflux) THEN BEGIN 
-     print,"Warning!: You're trying to do log Pflux plots but you don't have 'absPflux', 'noNegPflux', or 'noPosPflux' set!"
-     print,"Can't make log plots without using absolute value or only positive values..."
-     print,"Default: junking all negative Pflux values"
-     WAIT, 1
-;;     abs_eFlux=1
-     noPosPflux=1
-  ENDIF
-
-  IF KEYWORD_SET(noPosPflux) AND KEYWORD_SET (logPfPlot) THEN absPflux = 1
-
-  ;;######Ion flux (up)
-  ;;For linear or log ion flux plotrange
-  IF N_ELEMENTS(iPlotRange) EQ 0 THEN iPlotRange=(KEYWORD_SET(logIfPlot)) ? [6,9.5] : [1e6,1.5e9]
-  
-  IF KEYWORD_SET(logIfPlot) AND NOT KEYWORD_SET(absIflux) AND NOT KEYWORD_SET(noNegIflux) AND NOT KEYWORD_SET(noPosIflux) THEN BEGIN 
-     print,"Warning!: You're trying to do log(ionFlux) plots but you don't have 'absIflux', 'noNegIflux', or 'noPosIflux' set!"
-     print,"Can't make log plots without using absolute value or only positive values..."
-     print,"Default: junking all negative Iflux values"
-     WAIT, 1
-;;     absIflux=1
-     noNegIflux=1
-  ENDIF
-
-  ;;######e- characteristic energy stuff
-  IF KEYWORD_SET(logCharEPlot) AND NOT KEYWORD_SET(absCharE) AND NOT KEYWORD_SET(noNegCharE) AND NOT KEYWORD_SET(noPosCharE) THEN BEGIN 
-     print,"Warning!: You're trying to do log(charE) plots but you don't have 'absCharE', 'noNegCharE', or 'noPosCharE' set!"
-     print,"Can't make log plots without using absolute value or only positive values..."
-     print,"Default: junking all negative CharE values"
-     WAIT, 1
-;;     absCharE=1
-     noNegCharE=1
-  ENDIF
-
-  IF KEYWORD_SET(noPosCharE) AND KEYWORD_SET (logCharEPlot) THEN absCharE = 1
-
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot lims
   SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
@@ -480,25 +416,26 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                              NEVENTPERMINRANGE=nEventPerMinRange,LOGNEVENTPERMIN=logNEventPerMin, $
                              PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence
   
-  ;;***********************************************
-  ;;Calculate Poynting flux estimate
-  
-  ;;1.0e-9 to take stock of delta_b being recorded in nT
-  ;;Since E is recorded in mV/m, units of POYNTEST here are mW/m^2
-  ;;No need to worry about screening for FINITE(pfluxEst), since both delta_B and delta_E are
-  ;;screened for finiteness in alfven_db_cleaner (which is called in get_chaston_ind.pro)
-  ;;  mu_0 = 4.0e-7 * !PI                                 ;perm. of free space, for Poynt. est
-  ;;pfluxEst=maximus.DELTA_B * maximus.DELTA_E * 1.0e-9 / mu_0 
-
   ;;********************************************
   ;;Now time for data summary
 
-  printf,lun,FORMAT='("Events per bin req            : >=",T35,I8)',maskMin
-  printf,lun,FORMAT='("Number of orbits used         :",T35,I8)',N_ELEMENTS(uniqueOrbs_ii)
-  printf,lun,FORMAT='("Total N events                :",T35,I8)',N_ELEMENTS(plot_i)
+  PRINT_SUMMARY_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
+   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+   DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+   BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+   PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
+   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+   HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
+   HOYDIA=hoyDia,LUN=lun
+
+  printf,lun,FORMAT='("Events per bin req",T30,": >=",T35,I8)',maskMin
+  printf,lun,FORMAT='("Number of orbits used",T30,":",T35,I8)',N_ELEMENTS(uniqueOrbs_ii)
+  printf,lun,FORMAT='("Total N events",T30,":",T35,I8)',N_ELEMENTS(plot_i)
 ;; printf,lun,FORMAT='("Percentage of Chaston DB used: ",T35,I0)' + $
 ;;        strtrim((N_ELEMENTS(plot_i))/134925.0*100.0,2) + "%"
-  printf,lun,FORMAT='("Percentage of DB used         :",T35,G8.4,"%")',(FLOAT(N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0)
+  printf,lun,FORMAT='("Percentage of DB used",T30,":",T35,G8.4,"%")',(FLOAT(N_ELEMENTS(plot_i))/FLOAT(n_elements(maximus.orbit))*100.0)
 
   ;;********************************************************
   ;;HISTOS
