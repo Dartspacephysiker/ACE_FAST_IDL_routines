@@ -15,16 +15,10 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
                                       MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
                                       MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
   h2dStr={tmplt_h2dStr}
-  
-  logProbStr = ''
-  IF KEYWORD_SET(logProbOccurrence) THEN logProbStr = 'Log '
-  
-  h2dStr.lim = probOccurrenceRange
   h2dStr.title= logProbStr + "Probability of occurrence"
-
-  ;; IF KEYWORD_SET(do_lshell) THEN BEGIN
-     
-
+  h2dStr.lim = probOccurrenceRange
+  dataName = "probOccurrence"
+  
   IF KEYWORD_SET(do_width_x) THEN BEGIN
      widthData = maximus.width_x[plot_i]
      probDatName = "prob--width_time"
@@ -59,11 +53,12 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
   h2dStr.data[WHERE(h2dstr.data GT 0)] = h2dStr.data[WHERE(h2dstr.data GT 0)]/tHistDenominator[WHERE(h2dstr.data GT 0)]
 
   IF KEYWORD_SET(logProbOccurrence) THEN BEGIN 
+     h2dStr.is_logged = 1
      h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 
      widthData[where(widthData GT 0,/null)]=ALOG10(widthData[where(widthData GT 0,/null)]) 
+     h2dStr.title =  'Log ' + h2dStr.title
   ENDIF
 
-  dataName = "probOccurrence"
   dataRawPtr = PTR_NEW(widthData)
   
 END

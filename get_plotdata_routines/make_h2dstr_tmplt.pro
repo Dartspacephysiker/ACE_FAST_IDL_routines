@@ -22,7 +22,8 @@ FUNCTION MAKE_H2DSTR_TMPLT,MIN1 = min1in, MIN2 = min2in, $
 
     h2dStr_tmplt={tmplt_h2dStr, data: DBLARR(im1bins,im2bins), $
                   title : "Template for 2D hist structure", $
-                  lim : DBLARR(2) }
+                  lim : DBLARR(2), $
+                  is_logged : 0}
 
     RETURN,h2dStr_tmplt
 

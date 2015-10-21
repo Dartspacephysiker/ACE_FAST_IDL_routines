@@ -62,12 +62,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   nLevels=12
 
   ;;Is this a log plot? If so, do integral of exponentiated value
-  logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
-  ;; FOR charEplot, uncomment me: logPlotzz = 1
+  ;; logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
+  logPlotzz = h2dStr.is_logged
 
   IF N_ELEMENTS(plotTitle) EQ 0 THEN BEGIN
      plotTitle = temp.title
-     IF logPlotzz THEN plotTitle = STRMID(plotTitle, STRPOS(plotTitle,"Log ")+4)
   ENDIF
 
   ;;Select color table

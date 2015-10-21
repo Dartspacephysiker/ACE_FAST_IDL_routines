@@ -14,6 +14,10 @@ PRO GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
                                       MIN1=MINM,MIN2=(KEYWORD_SET(do_lShell) ? MINL : MINI),$
                                       MAX1=MAXM,MAX2=(KEYWORD_SET(do_lShell) ? MAXL : MAXI))
   h2dStr={tmplt_h2dStr}
+  h2dStr.title = 'N Events per minute'
+  dataName = "nEventPerMin"
+  h2dStr.lim=nEventPerMinRange
+
   h2dStr.data=h2dFluxN
   h2dNonzeroNEv_i=WHERE(h2dFluxN NE 0,/NULL)
   
@@ -29,17 +33,12 @@ PRO GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
   ;; tHistDenominator = tHistDenominator(h2dNonzeroNEv_i)/60.0 ;Only divide by number of minutes that FAST spent in bin for given IMF conditions
   ;; h2dStr.data(h2dNonzeroNEv_i)=h2dStr.data(h2dNonzeroNEv_i)/tHistDenominator
   
-  logNEvStr=""
-  IF KEYWORD_SET(logNEventPerMin) THEN logNEvStr="Log "
-  h2dStr.title= logNEvStr + 'N Events per minute'
-  
-  h2dStr.lim=nEventPerMinRange
-  
-  IF KEYWORD_SET(logNEventPerMin) THEN BEGIN 
+  IF KEYWORD_SET(logNEventPerMin) THEN BEGIN
+     h2dStr.is_logged = 1
      h2dStr.data(where(h2dStr.data GT 0,/NULL))=ALOG10(h2dStr.data(where(h2dStr.data GT 0,/null))) 
+     h2dStr.title = "Log " + h2dStr.title
   ENDIF
-  
-  dataName = logNEvStr + "nEventPerMin"
+
   dataRawPtr = PTR_NEW(h2dStr.data)
 
 END

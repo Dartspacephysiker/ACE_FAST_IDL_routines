@@ -176,7 +176,10 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      PRINTF,lun,"N elements in " + dataName + " after junking pos vals: ",N_ELEMENTS(inData)
      inData = ABS(inData)
   ENDIF
-  IF KEYWORD_SET(logFluxPlot) THEN logStr="Log "
+  IF KEYWORD_SET(logFluxPlot) THEN BEGIN
+     logStr="Log "
+     h2dStr.is_logged = 1
+  ENDIF
 
   absnegslogStr=absStr + negStr + posStr + logStr
   dataName = STRTRIM(absnegslogStr,2)+dataName+'_'+fluxPlotType+'_'

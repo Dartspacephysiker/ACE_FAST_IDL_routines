@@ -254,6 +254,53 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   defMedHistDataDir = 'out/medHistData/'
   defTempDir='/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
   
+
+  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                              ; do num events plots?
+  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                             ;electron energy flux plots?
+  IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = defEFluxPlotType ;options are "Integ" and "Max"
+  IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = defIFluxPlotType ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
+  IF N_ELEMENTS(eNumFlPlots) EQ 0 THEN eNumFlPlots = 0                    ;electron number flux plots?
+  IF N_ELEMENTS(eNumFlPlotType) EQ 0 THEN eNumFlPlotType = defENumFlPlotType ;options are "Total_Eflux_Integ","Eflux_Losscone_Integ", "ESA_Number_flux" 
+  IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                             ;Poynting flux [estimate] plots?
+  IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                         ;ion Plots?
+  IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0                     ;char E plots?
+  IF N_ELEMENTS(charEType) EQ 0 THEN charEType = defCharEPlotType         ;options are "lossCone" and "Total"
+  IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0             ;Contributing orbits plot?
+  IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0                     ;"Total orbits considered" plot?
+  IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0                   ;Contributing/total orbits plot?
+  IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0         ;N Events/orbit plot?
+  IF N_ELEMENTS(nEventPerMinPlot) EQ 0 THEN nEventPerMinPlot =  0         ;N Events/min plot?
+  
+  IF (KEYWORD_SET(nEventPerOrbPlot) OR KEYWORD_SET(nEventPerMinPlot) ) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
+     print,"Can't do nEventPerOrbPlot without nPlots!!"
+     print,"Enabling nPlots..."
+     nPlots=1
+  ENDIF
+
+  IF N_ELEMENTS(plotDir) EQ 0 THEN plotDir = defPlotDir ;;Directory stuff
+  IF N_ELEMENTS(rawDir) EQ 0 THEN rawDir=defRawDir
+  IF N_ELEMENTS(dataDir) EQ 0 THEN dataDir = defDataDir
+
+  IF N_ELEMENTS(del_ps) EQ 0 THEN del_ps = 1            ;;not-directory stuff
+
+  IF KEYWORD_SET(showPlotsNoSave) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN    ;;Write output file with data params?
+     print, "Is it possible to have outputPlotSummary==1 while showPlotsNoSave==0? You used to say no..."
+     outputPlotSummary=defOutSummary   ;;Change to zero if not wanted
+  ENDIF 
+
+  ;;Any of multifarious reasons for needing output?
+  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
+     keepMe = 1
+  ENDIF ELSE keepMe = 0
+
+  IF KEYWORD_SET(medHistOutTxt) AND NOT KEYWORD_SET(medHistOutData) THEN BEGIN
+     PRINT, "medHistOutTxt is enabled, but medHistOutData is not!"
+     print, "Enabling medHistOutData, since corresponding output is necessary for medHistOutTxt"
+     WAIT, 0.5
+     IF ~KEYWORD_SET(medHistDataDir) THEN medHistDataDir = defMedHistDataDir 
+     medHistOutData = 1
+  ENDIF
+
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
@@ -265,7 +312,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                   HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
                                   HOYDIA=hoyDia,LUN=lun
   
-  ;;Shouldn't be leftover unused params from batch call
+  ;;Shouldn't be leftover, unused params from batch call
   IF ISA(e) THEN BEGIN
      IF $
         NOT tag_exist(e,"wholecap") AND NOT tag_exist(e,"noplotintegral") $
@@ -303,36 +350,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDELSE
   ENDIF
 
-  ;;Want to make plots in plotDir?
-  IF N_ELEMENTS(plotDir) EQ 0 THEN plotDir = defPlotDir
-  ;;plotPrefix='NESSF2014_reproduction_Jan2015'
-
-  IF N_ELEMENTS(rawDir) EQ 0 THEN rawDir=defRawDir
- 
-  ;;Write output file with data params? Only possible if showPlotsNoSave=0...
-  IF KEYWORD_SET(showPlotsNoSave) AND KEYWORD_SET(outputPlotSummary) THEN BEGIN
-     print, "Is it possible to have outputPlotSummary==1 while showPlotsNoSave==0? You used to say no..."
-     outputPlotSummary=defOutSummary   ;;Change to zero if not wanted
-  ENDIF 
-
-  ;;Write plot data output for Bin?
-  IF N_ELEMENTS(dataDir) EQ 0 THEN dataDir = defDataDir
-
-  ;;Any of multifarious reasons for needing output?
-  IF KEYWORD_SET(writeASCII) OR KEYWORD_SET(writeHDF5) OR NOT KEYWORD_SET(squarePlot) OR KEYWORD_SET(saveRaw) THEN BEGIN
-     keepMe = 1
-  ENDIF ELSE keepMe = 0
-
-  IF KEYWORD_SET(medHistOutTxt) AND NOT KEYWORD_SET(medHistOutData) THEN BEGIN
-     PRINT, "medHistOutTxt is enabled, but medHistOutData is not!"
-     print, "Enabling medHistOutData, since corresponding output is necessary for medHistOutTxt"
-     WAIT, 0.5
-     IF ~KEYWORD_SET(medHistDataDir) THEN medHistDataDir = defMedHistDataDir 
-     medHistOutData = 1
-  ENDIF
-
-  IF N_ELEMENTS(DEL_PS) EQ 0 THEN del_ps = 1
-
   ;;********************************************
   ;;A few other strings to tack on
   ;;tap DBs, and setup output
@@ -365,6 +382,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
+  ;;********************************************************
   ;;Now clean and tap the databases and interpolate satellite data
   plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
                                                   DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
@@ -384,28 +402,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;********************************************
   ;;Variables for histos
   ;;Bin sizes for 2d histos
-
-  IF N_ELEMENTS(nPlots) EQ 0 THEN nPlots = 0                              ; do num events plots?
-  IF N_ELEMENTS(ePlots) EQ 0 THEN ePlots =  0                             ;electron energy flux plots?
-  IF N_ELEMENTS(eFluxPlotType) EQ 0 THEN eFluxPlotType = defEFluxPlotType ;options are "Integ" and "Max"
-  IF N_ELEMENTS(iFluxPlotType) EQ 0 THEN iFluxPlotType = defIFluxPlotType ;options are "Integ", "Max", "Integ_Up", "Max_Up", and "Energy"
-  IF N_ELEMENTS(eNumFlPlots) EQ 0 THEN eNumFlPlots = 0                    ;electron number flux plots?
-  IF N_ELEMENTS(eNumFlPlotType) EQ 0 THEN eNumFlPlotType = defENumFlPlotType ;options are "Total_Eflux_Integ","Eflux_Losscone_Integ", "ESA_Number_flux" 
-  IF N_ELEMENTS(pPlots) EQ 0 THEN pPlots =  0                             ;Poynting flux [estimate] plots?
-  IF N_ELEMENTS(ionPlots) EQ 0 THEN ionPlots =  0                         ;ion Plots?
-  IF N_ELEMENTS(charEPlots) EQ 0 THEN charEPlots =  0                     ;char E plots?
-  IF N_ELEMENTS(charEType) EQ 0 THEN charEType = defCharEPlotType         ;options are "lossCone" and "Total"
-  IF N_ELEMENTS(orbContribPlot) EQ 0 THEN orbContribPlot =  0             ;Contributing orbits plot?
-  IF N_ELEMENTS(orbTotPlot) EQ 0 THEN orbTotPlot =  0                     ;"Total orbits considered" plot?
-  IF N_ELEMENTS(orbFreqPlot) EQ 0 THEN orbFreqPlot =  0                   ;Contributing/total orbits plot?
-  IF N_ELEMENTS(nEventPerOrbPlot) EQ 0 THEN nEventPerOrbPlot =  0         ;N Events/orbit plot?
-  IF N_ELEMENTS(nEventPerMinPlot) EQ 0 THEN nEventPerMinPlot =  0         ;N Events/min plot?
-  
-  IF (KEYWORD_SET(nEventPerOrbPlot) OR KEYWORD_SET(nEventPerMinPlot) ) AND NOT KEYWORD_SET(nPlots) THEN BEGIN
-     print,"Can't do nEventPerOrbPlot without nPlots!!"
-     print,"Enabling nPlots..."
-     nPlots=1
-  ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot lims
@@ -443,7 +439,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
-
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                        NEVENTSPLOTRANGE=nEventsPlotRange, $
@@ -457,7 +452,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
   IF KEYWORD_SET(nPlots) THEN h2dStrArr=[h2dStr,h2dMaskStr] ELSE h2dStrArr = h2dMaskStr
   
-  ;;#####GET ANY FLUX QUANTITIES#########
+  ;;#####FLUX QUANTITIES#########
   ;;########ELECTRON FLUX########
   IF KEYWORD_SET(eplots) THEN BEGIN
      GET_FLUX_PLOTDATA,maximus,plot_i,/GET_EFLUX,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
@@ -558,8 +553,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ENDIF
 
 
-  ;;########################################
-  ;;
   ;;########Orbits########
   ;;Now do orbit data to show how many orbits contributed to each thingy.
   ;;A little extra tomfoolery is in order to get this right
@@ -576,9 +569,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                       ORBCONTRIBRANGE=orbContribRange, $
-                                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr, $
-                                      DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                                      UNIQUEORBS_II=uniqueOrbs_ii,NORBS=nOrbs
+                                      H2DSTR=h2dOrbStr,TMPLT_H2DSTR=tmplt_h2dStr, $ ;H2DFLUXN=h2dFluxN, $
+                                      DATANAME=dataName
 
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
         h2dStrArr=[h2dStrArr,h2dOrbStr] 
@@ -587,7 +579,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      ;;Mask all bins that don't have requisite number of orbits passing through
      IF KEYWORD_SET(numOrbLim) THEN BEGIN 
-        h2dStr[KEYWORD_SET(nPlots)].data[WHERE(h2dOrbStr.data LT numOrbLim)] = 255 ;mask 'em!
+        h2dStrArr[KEYWORD_SET(nPlots)].data[WHERE(h2dOrbStr.data LT numOrbLim)] = 255 ;mask 'em!
 
         ;;little check to see how many more elements are getting masked
         ;;exc_orb_i = where(h2dOrbStr.data LT numOrbLim)
@@ -603,9 +595,9 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      GET_TOTAL_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                                DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                ORBTOTRANGE=orbTotRange, $
-                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DTOTORBSTR=h2dTotOrbStr, $
+                               H2DSTR=h2dTotOrbStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                                DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                               NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+                               NPLOTS=nPlots,UNIQUEORBS_II=uniqueOrbs_ii
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN 
         h2dStrArr=[h2dStrArr,h2dTotOrbStr] 
@@ -637,15 +629,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN dataNameArr=[dataNameArr,dataName]
-
   ENDIF
 
-  ;;########NEvents/minute########
   IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) THEN BEGIN 
      tHistDenominator = GET_TIMEHIST_DENOMINATOR(CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                                  BYMIN=byMin, BYMAX=byMax, BZMIN=bzMin, BZMAX=bzMax, SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                                 LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
                                                  HEMI=hemi, $
                                                  DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                                  MINM=minM,MAXM=maxM,BINM=binM, $
@@ -656,6 +645,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                                  BURSTDATA_EXCLUDED=burstData_excluded, $
                                                  DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme)
      
+     ;;########NEvents/minute########
      IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN
         GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
                                   MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
@@ -665,10 +655,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                                   DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme
 
         h2dStrArr=[h2dStrArr,h2dStr] 
-        IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
-
+        IF keepMe THEN BEGIN 
+           dataNameArr=[dataNameArr,dataName] 
+           dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+        ENDIF 
      ENDIF
 
+     ;;########Event probability########
      IF KEYWORD_SET(probOccurrencePlot) THEN BEGIN
         GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
                                      LOGPROBOCCURRENCE=logProbOccurrence, PROBOCCURRENCERANGE=probOccurrenceRange, DO_WIDTH_X=do_width_x, $
@@ -686,38 +679,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      ENDIF
   ENDIF
 
-  ;;########Event probability########
-  IF KEYWORD_SET(nEventPerMinPlot) THEN BEGIN 
-     GET_NEVENTPERMIN_PLOTDATA,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                               LOGNEVENTPERMIN=logNEventPerMin,NEVENTPERMINRANGE=nEventPerMinRange, $
-                               MINM=minM,MAXM=maxM,BINM=binM, $
-                               MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                               H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                               DATANAME=dataName,DATARAWPTR=dataRawPtr
-
-        h2dStrArr=[h2dStrArr,h2dStr] 
-        IF keepMe THEN BEGIN 
-           dataNameArr=[dataNameArr,dataName] 
-           dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
-        ENDIF 
-  ENDIF
-
-  ;; Temporary data thing
-  ;;use these n stuff
-  ;; IF KEYWORD_SET(tempSAVE) THEN BEGIN 
-  ;;    print,"saving tempdata..." 
-  ;;    IF KEYWORD_SET(ePlots) THEN save,elecData,filename="testcode/elecdata.dat" 
-  ;;    mlts=maximus.mlt(plot_i) 
-  ;;    ilats=maximus.ilat(plot_i) 
-  ;;    save,mlts,ilats,filename="testcode/mlts_ilats.dat" 
-  ;;    pData=pfluxEst(plot_i) 
-  ;;    IF KEYWORD_SET(pplots) THEN save,pData,filename="testcode/pData.dat" 
-  ;; ENDIF
-
   ;;********************************************************
   ;;If something screwy goes on, better take stock of it and alert user
-
   FOR i = 2, N_ELEMENTS(h2dStrArr)-1 DO BEGIN 
      IF n_elements(where(h2dStrArr[i].data EQ 0,/NULL)) LT $
         n_elements(where(h2dStrArr[0].data EQ 0,/NULL)) THEN BEGIN 
@@ -736,7 +699,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;Handle Plots all at once
 
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
-
   h2dStrArr=SHIFT(h2dStrArr,-1-(nPlots))
   IF keepMe THEN BEGIN 
      dataNameArr=SHIFT(dataNameArr,-2) 
@@ -830,7 +792,6 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
    ;;********************************************************
    ;;Thanks, IDL Coyote--time to write out lots of data
-
    IF KEYWORD_SET(writeHDF5) THEN BEGIN 
       ;;write out raw data here
       FOR j=0, N_ELEMENTS(h2dStrArr)-2 DO BEGIN 
