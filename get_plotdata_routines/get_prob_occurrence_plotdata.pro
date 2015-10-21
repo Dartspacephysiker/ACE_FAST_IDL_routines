@@ -10,6 +10,8 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
 
   COMPILE_OPT idl2
   
+  @orbplot_tplot_defaults.pro
+
   IF N_ELEMENTS(tmplt_h2dStr) EQ 0 THEN $
      tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(DO_lshell) ? binL : binI),$
                                       MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
@@ -17,6 +19,7 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
   h2dStr={tmplt_h2dStr}
   h2dStr.title= "Probability of occurrence"
   h2dStr.lim = probOccurrenceRange
+  h2dStr.labelFormat = probOccurrenceCBLabelFormat
   dataName = "probOccurrence"
   
   IF KEYWORD_SET(do_width_x) THEN BEGIN
@@ -58,6 +61,7 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
      widthData[where(widthData GT 0,/null)]=ALOG10(widthData[WHERE(widthData GT 0,/null)]) 
      h2dStr.title =  'Log ' + h2dStr.title
      h2dStr.lim = ALOG10(h2dStr.lim)
+     h2dStr.logLabels = 1
   ENDIF
 
   dataRawPtr = PTR_NEW(widthData)

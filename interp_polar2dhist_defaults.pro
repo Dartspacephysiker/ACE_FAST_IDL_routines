@@ -1,7 +1,7 @@
 ;2015/10/21
 ;Maybe this makes life a little easier
 
-  wholecap = 0
+  wholecap = 1
 
   charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.0 : 0.7 )
   charsize_grid=2.0

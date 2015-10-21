@@ -16,7 +16,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
   
   COMPILE_OPT idl2
 
-  @fluxplot_defaults.PRO
+  @fluxplot_defaults.pro
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
@@ -211,7 +211,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
   ENDIF
 
   absnegslogStr=absStr + negStr + posStr + logStr
-  dataName = STRTRIM(absnegslogStr,2)+dataName+'_'+fluxPlotType+'_'
+  dataName = STRTRIM(absnegslogStr,2)+dataName+'_'+(KEYWORD_SET(fluxPlotType) ? fluxPlotType + '_' : '')
   h2dStr.title= absnegslogStr + h2dStr.title
 
   IF KEYWORD_SET(medianplot) THEN BEGIN 
@@ -230,11 +230,9 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
 
   ENDIF ELSE BEGIN 
 
-     inData=(KEYWORD_SET(logAvgPlot)) ? alog10(inData) : inData
-
      h2dStr.data=hist2d(maximus.mlt[plot_i], $
                          (KEYWORD_SET(DO_LSHELL) ? maximus.lshell : maximus.ilat)[plot_i],$
-                         inData,$
+                         (KEYWORD_SET(logAvgPlot) ? ALOG10(inData) : inData),$
                          MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
                          MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
                          BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
@@ -245,19 +243,14 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
 
   ENDELSE
 
-  ;;data mods?
-  IF KEYWORD_SET(absFlux)THEN BEGIN 
-     h2dStr.data = ABS(h2dStr.data) 
-     inData=ABS(inData) 
-  ENDIF
   ;;Do custom range for flux plot, if requested
   IF  KEYWORD_SET(plotRange) THEN h2dStr.lim=plotRange $
   ELSE h2dStr.lim = [MIN(h2dStr.data),MAX(h2dStr.data)]
   
   IF KEYWORD_SET(logFluxPlot) THEN BEGIN 
-     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 
-     inData[where(inData GT 0,/null)]=ALOG10(inData[where(inData GT 0,/null)]) 
-     h2dStr.lim = ALOG10[h2dStr.lim]
+     h2dStr.data[where(h2dStr.data NE 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data NE 0,/null)]) 
+     inData[where(inData NE 0,/null)]=ALOG10(inData[where(inData NE 0,/null)]) 
+     h2dStr.lim = ALOG10(h2dStr.lim)
      h2dStr.is_logged = 1
   ENDIF
 

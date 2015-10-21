@@ -66,10 +66,10 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   ;;Select color table
   IF temp.is_fluxData AND ~temp.is_logged THEN BEGIN
      ;;This is the one for doing sweet flux plots that include negative values 
-     cgLoadCT, ctIndex_allPosData, BREWER=ctBrewer_allPosData, REVERSE=ctReverse_allPosData, NCOLORS=nLevels
+     cgLoadCT, ctIndex, BREWER=ctBrewer, REVERSE=ctReverse, NCOLORS=nLevels
   ENDIF ELSE BEGIN
      ;;This one is the one we use for nEvent- and orbit-type plots (plots w/ all positive values)
-     cgLoadCT, ctIndex, BREWER=ctBrewer, REVERSE=ctReverse, NCOLORS=nLevels
+     cgLoadCT, ctIndex_allPosData, BREWER=ctBrewer_allPosData, REVERSE=ctReverse_allPosData, NCOLORS=nLevels
   ENDELSE
 
   ; Set up the contour levels.
@@ -121,8 +121,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   ;sempMLTS=REBIN(tempMLTS,4) & sempILATS=REBIN(tempILATS,4)
 
   ;integrals for each hemi
-  dawnIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
-  duskIntegral=(orbPlotzz) ? 0L : DOUBLE(0.0)
+  dawnIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
+  duskIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
   
   mltFactor=binM*15/2.0
 

@@ -1,12 +1,12 @@
-fluxPlotColorBarLabelFormat = '(E0.3)'
+fluxPlotColorBarLabelFormat = '(D0.1)'
 fluxPlotChareCBLabelFormat = '(I0)'
 fluxPlotChariCBLabelFormat = '(I0)'
 
-logeFluxLabels = 1
-logPFluxLabels = 1
-logiFluxLabels = 1
-logChareLabels = 1
-logChariLabels = 1
+logeFluxLabels = 0
+logPFluxLabels = 0
+logiFluxLabels = 0
+logChareLabels = 0
+logChariLabels = 0
 
 eFlux_doPlotIntegral = 0
 PFlux_DoPlotIntegral = 0

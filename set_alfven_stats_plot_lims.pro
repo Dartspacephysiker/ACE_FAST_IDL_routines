@@ -23,7 +23,7 @@ PRO SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange, $
   defEPlotRange             = [0.01,100]
   ;; defELogPlotRange          = [-2,2]
 
-  defPPlotRange             = [0.1,2.5]
+  defPPlotRange             = [1e-4,1e0]
   ;; defPLogPlotRange          = [-1.5288,0.39794]
 
   ;;  defCharEPlotRange         = [1,4000]
@@ -37,7 +37,7 @@ PRO SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange, $
 
   defNEventPerOrbRange      = [0.01,7]
 
-  defProbOccurrenceRange    = [0,0.5]
+  defProbOccurrenceRange    = [0.01,0.5]
   ;; defLogProbOccurrenceRange = [10e-4,10e0]
 
   IF N_ELEMENTS(ENumFlPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- number flux plotrange
@@ -53,7 +53,7 @@ PRO SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange, $
   ;;For linear or log PFlux plotrange
   IF N_ELEMENTS(PPlotRange) EQ 0 THEN BEGIN
      ;; IF N_ELEMENTS(logPfPlot) EQ 0 THEN PPlotRange=defPLogPlotRange ELSE PPlotRange= defPPlotRange
-     PPlotRange=defPLogPlotRange
+     PPlotRange=defPPlotRange
   ENDIF
 
   IF N_ELEMENTS(charEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
