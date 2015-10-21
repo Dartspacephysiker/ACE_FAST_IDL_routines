@@ -1,3 +1,6 @@
+;;2015/10/21 Changed a ton of stuff. Look out. (Specifically, added a new defaults file for plot labels, removed dependence on string
+;;checking to see if plot has logged data, and stuff así
+
 ;;03/07/2015
 ;; Added mirror keyword so that data in the Southern hemisphere have the same orientation as that of
 ;;data in the Northern hemisphere
@@ -5,8 +8,10 @@
 ;; put together, but I can't be sure
 
 PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
-                       PLOTTITLE=plotTitle, LABELFORMAT=labelFormat, MIRROR=mirror, CLOCKSTR=clockStr, $
+                       PLOTTITLE=plotTitle, MIRROR=mirror, CLOCKSTR=clockStr, $
                        _EXTRA=e
+
+  @interp_polar2dhist_defaults.pro
 
   restore,ancillaryData
 
@@ -53,7 +58,6 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
      IF midnight NE !NULL THEN centerLon = 0 ELSE centerLon = 180
   ENDELSE
 
-
   cgMap_Set, centerLat, centerLon,/STEREOGRAPHIC, /HORIZON, $
              /ISOTROPIC, /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
                 ;;Limit=[minI-5,maxM*15-360,maxI+5,minM*15],
@@ -61,52 +65,24 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ; Load the colors for the plot.
   nLevels=12
 
-  ;;Is this a log plot? If so, do integral of exponentiated value
-  ;; logPlotzz=STRMATCH(temp.title, '*log*',/FOLD_CASE)
-  logPlotzz = h2dStr.is_logged
-
   IF N_ELEMENTS(plotTitle) EQ 0 THEN BEGIN
      plotTitle = temp.title
   ENDIF
 
   ;;Select color table
-  orbPlotzz=STRMATCH(temp.title, '*Orbit*',/FOLD_CASE)
-  nEvPlotzz=STRMATCH(temp.title, '*Number*',/FOLD_CASE)
-  nEvPerOrbPlotzz=STRMATCH(temp.title, '*Events per*',/FOLD_CASE)
-  orbFreqPlotzz=STRMATCH(temp.title, '*Orbit Frequency*',/FOLD_CASE)
-  charEPlotzz=STRMATCH(temp.title, '*characteristic energy*',/FOLD_CASE)
-  ePlotzz=STRMATCH(temp.title, '*electron*',/FOLD_CASE)
-  ;; iPlotzz=STRMATCH(temp.title, '*ion*',/FOLD_CASE)
-  pPlotzz=STRMATCH(temp.title, '*poynting*',/FOLD_CASE)
-  ;; IF ePlotzz GT 0 OR pPlotzz GT 0 OR iPlotzz GT 0 OR orbPlotzz GT 0 THEN BEGIN
-  ;;    ;;This is the one for doing sweet electron flux plots
-  ;;    cgLoadCT, 16,/BREWER, NCOLORS=nLevels
-  ;; ENDIF ELSE BEGIN
-  ;;    ;;This one is the one we use for some orbit plots
-  ;;    cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
-  ;; ENDELSE
-  ;; logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR iPlotzz)
-  logLabels = (pPlotzz OR nEvPerOrbPlotzz OR orbFreqPlotzz OR charEPlotzz OR ePlotzz OR nEvPlotzz )
-
-  negs=WHERE(temp.data LT 0.0)
-  IF negs[0] EQ -1 OR (logPlotzz) THEN BEGIN
-     ;;This is the one for doing "all positive" plots
-     cgLoadCT, 16,/BREWER, NCOLORS=nLevels
+  IF temp.is_fluxData AND ~temp.is_logged THEN BEGIN
+     ;;This is the one for doing sweet flux plots that include negative values 
+     cgLoadCT, ctIndex_allPosData, BREWER=ctBrewer_allPosData, REVERSE=ctReverse_allPosData, NCOLORS=nLevels
   ENDIF ELSE BEGIN
-     ;;This one is for data that includes negs
-     cgLoadCT, 22,/BREWER, /REVERSE, NCOLORS=nLevels
+     ;;This one is the one we use for nEvent- and orbit-type plots (plots w/ all positive values)
+     cgLoadCT, ctIndex, BREWER=ctBrewer, REVERSE=ctReverse, NCOLORS=nLevels
   ENDELSE
 
   ; Set up the contour levels.
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
   
-  ;; minM=FLOOR(minM*4.0)/4.0 ;to 1/4 precision
-  ;; maxM=FLOOR(maxM*4.0)/4.0 
-  ;; minI=FLOOR(minI*4.0)/4.0 
-  ;; maxI=FLOOR(maxI*4.0)/4.0 
-
   nXlines=(maxM-minM)/binM + 1
-  nYlines=(maxI-minI)/binI + 1
+  nYlines=(maxI-minI)/(KEYWORD_SET(do_lShell) ? binL : binI ) + 1
 
   mlts=indgen(nXlines)*binM+minM
   ilats=indgen(nYlines)*(KEYWORD_SET(do_lShell) ? binL : binI ) + (KEYWORD_SET(do_lShell) ? minL : minI )
@@ -161,7 +137,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
         ;tempMLTS=[mlts[i],mlts[i+1]] 
         ;tempILATS=ilats[j:j+1] 
 
-        tempILATS=[ilats[j],ilats[j]+binI/2.0,ilats[j+1]] 
+        tempILATS=[ilats[j],ilats[j]+(KEYWORD_SET(do_lShell) ? binL : binI )/2.0,ilats[j+1]] 
         tempMLTS=[mlts[i],mlts[i],mlts[i]] 
 
         ;print,tempILATS & print,tempMLTS
@@ -176,8 +152,8 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;        IF mirror THEN tempMLTS = ((180 - tempMLTS) + 360) MOD 360
 
         ;;Integrals
-        IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(logPlotzz) ? 10.^temp.data[i,j] : temp.data[i,j] $
-        ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(logPlotzz) ? 10.^temp.data[i,j] : temp.data[i,j]
+        IF ~masked[i,j] AND tempMLTS[0] GE 180 AND tempMLTS[5] GE 180 THEN duskIntegral+=(temp.is_logged) ? 10.^temp.data[i,j] : temp.data[i,j] $
+        ELSE IF ~masked[i,j] AND tempMLTS[0] LE 180 AND tempMLTS[5] LE 180 THEN dawnIntegral+=(temp.is_logged) ? 10.^temp.data[i,j] : temp.data[i,j]
         ;; print,"masked["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(masked[i,j],/REMOVE_ALL)
         ;; print,"temp.data["+strcompress(i,/REMOVE_ALL)+","+strcompress(j,/REMOVE_ALL)+"] is " + strcompress(temp.data[i,j],/REMOVE_ALL)
         ;; print,"dawnint is " + strcompress(dawnIntegral) + " and duskint is " + strcompress(duskIntegral)
@@ -197,7 +173,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 
   ;; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 1 : 1,$
-              color='black',londelta=binM*15,latdelta=binI
+              color='black',londelta=binM*15,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   lonLabel=(minI GT 0 ? minI : maxI)
@@ -206,7 +182,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;   IF N_ELEMENTS(wholeCap) NE 0 THEN BEGIN
 ;;      lonNames=[STRTRIM(INDGEN(12),2)*2]
 
-;;      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*4,$
+;;      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
 ;;                  /NO_GRID,$
 ;;                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
 ;;                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
@@ -214,9 +190,9 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;                  LONNAMES=lonNames, $
 ;;                  CHARSIZE=charSize
 ;;   ENDIF ELSE BEGIN
-;;      lonNames=[string(minM,format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format='(I0)')]
-;;      ;; lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
-;;      ;; latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
+;;      lonNames=[string(minM,format=lonLabelFormat)+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format=lonLabelFormat)]
+;;      ;; lats=INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0)+1)*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+minI
+;;      ;; latNames=[minI, INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0))*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+(minI+1*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0)]
 ;;      lats=[60,70,80]
 ;;      latNames=[60,70,80]
 
@@ -226,11 +202,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 ;;         latNames = -1.0 * latNames
 ;;      ENDIF 
      
-;;      latNames=STRING(latNames,format='(I0)')
+;;      latNames=STRING(latNames,format=latLabelFormat)
 ;;      latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " ILAT"
 
 ;;      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
-;; ;;                 latdelta=binI*4,$
+;; ;;                 latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
 ;;                  LATS=lats, $
 ;;                  LATNAMES=latNames, $
 ;;                  LATLABEL=(mean([minM,maxM]))*15+15, $
@@ -246,10 +222,10 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   IF N_ELEMENTS(wholeCap) GT 0 THEN BEGIN
      factor=6.0
      mltSites=(INDGEN((maxM-minM)/factor)*factor+minM)
-     lonNames=[string(minM,format='(I0)')+" MLT",STRING(mltSites[1:-1],format='(I0)')]
-     ;; lonNames=[string(mltSites[0],format='(I0)')+" MLT",STRING((INDGEN((maxM-minM)/3.0)*3.0+(minM+1*3.0)),format='(I0)')]
-     ;; lats=INDGEN((maxI-minI)/(binI*2.0)+1)*binI*2.0+minI
-     ;; latNames=[minI, INDGEN((maxI-minI)/(binI*2.0))*binI*2.0+(minI+1*binI*2.0)]
+     lonNames=[string(minM,format=lonLabelFormat)+" MLT",STRING(mltSites[1:-1],format=lonLabelFormat)]
+     ;; lonNames=[string(mltSites[0],format=lonLabelFormat)+" MLT",STRING((INDGEN((maxM-minM)/3.0)*3.0+(minM+1*3.0)),format=lonLabelFormat)]
+     ;; lats=INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0)+1)*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+minI
+     ;; latNames=[minI, INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0))*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+(minI+1*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0)]
      lats=[60,70,80]
      latNames=[60,70,80]
      lats=[50,60,70,80]
@@ -261,11 +237,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
         latNames = -1.0 * latNames
      ENDIF 
      
-     latNames=STRING(latNames,format='(I0)')
+     latNames=STRING(latNames,format=latLabelFormat)
      latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + ( KEYWORD_SET(DO_lShell) ? "L-shell" : " ILAT" )
 
      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
-;;                 latdelta=binI*4,$
+;;                 latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
                  LATS=lats, $
                  LATNAMES=latNames, $
                  ;; LATLABEL=(mean([minM,maxM]))*15+15, $
@@ -279,7 +255,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ENDIF ELSE BEGIN
      lonNames=[STRTRIM(INDGEN(12),2)*2]
 
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=binI*4,$
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
                  /NO_GRID,$
                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
@@ -304,7 +280,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
   ;;REMEMBER: h2dStrArr[nPlots].data is the MASK
   IF NOT (noPlotIntegral EQ !NULL) THEN BEGIN 
      IF NOT (noPlotIntegral) THEN BEGIN
-        IF logPlotzz THEN BEGIN
+        IF temp.is_logged THEN BEGIN
            integ=ALOG10(TOTAL(10.0^(temp.data(WHERE(~masked)))))
            absInteg=integ
            dawnIntegral=ALOG10(dawnIntegral)
@@ -331,25 +307,25 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
            cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
         ENDELSE
         
-        IF NOT (logPlotzz) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize
-        cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
-        cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
-        cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format='(D0.3)'),/NORMAL,CHARSIZE=charSize 
+        IF NOT (temp.is_logged) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize
+        cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+        cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+        cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
      ENDIF
   ENDIF 
 
   ;; colorbar label stuff
-  ;; IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(D0.1)'
-  IF NOT KEYWORD_SET(labelFormat) THEN labelFormat='(E0.4)'
-  ;;  labelFormat='(I0)'
+  ;; IF NOT KEYWORD_SET(cbLabelFormat) THEN cbLabelFormat='(D0.1)'
+  IF NOT KEYWORD_SET(temp.labelFormat) THEN temp.labelFormat='(E0.4)'
+  ;;  cbLabelFormat=latLabelFormat
 
-  lowerLab=(logPlotzz AND logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
-  ;; midLab=(logPlotzz AND logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+  lowerLab=(temp.is_logged AND temp.logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
+  ;; midLab=(temp.is_logged AND temp.logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
   midLab=''
-  UpperLab=(logPlotzz AND logLabels) ? 10.^temp.lim[1] : temp.lim[1]
+  UpperLab=(temp.is_logged AND temp.logLabels) ? 10.^temp.lim[1] : temp.lim[1]
 
-  ;; IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(D0.2)'
-  ;; IF logPlotzz OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN labelFormat='(E0.4)'
+  ;; IF temp.is_logged OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN cbLabelFormat='(D0.2)'
+  ;; IF temp.is_logged OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN cbLabelFormat='(E0.4)'
   IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
      ;; cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
      ;; Add a colorbar.
@@ -360,10 +336,10 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  Title=plotTitle, $
                  /Discrete, $
                  Position=[0.25, 0.89, 0.75, 0.91], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
-                 ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
-                 ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
-                            String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
-                            String(upperLab, Format=labelFormat)]
+                 ;; ticknames=[String(temp.lim[0], Format=temp.labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=temp.labelFormat)]
+                 ticknames=[String(lowerLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
+                            String(midLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                            String(upperLab, Format=temp.labelFormat)]
   ENDIF ELSE BEGIN
      cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Divisions=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), $
 ;;                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
@@ -375,12 +351,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
                  Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, $
                  TLocation="RIGHT", TCharSize=charsize_grid,$
                  CharSize=charsize_grid,$
-                 ;; ticknames=[String(temp.lim[0], Format=labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=labelFormat)]
-                 ticknames=[String(lowerLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
-                            ;; String(midLab, Format=labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
+                 ;; ticknames=[String(temp.lim[0], Format=temp.labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=temp.labelFormat)]
+                 ticknames=[String(lowerLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
+                            ;; String(midLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
                             " ",REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$   ;kluge for now
-                            String(UpperLab, Format=labelFormat)] 
-                            ;; String(UpperLab, Format='(I0)')] ;for chareplot, uncomment me
+                            String(UpperLab, Format=temp.labelFormat)] 
   ENDELSE
 
 END

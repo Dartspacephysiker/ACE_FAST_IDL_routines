@@ -1,15 +1,12 @@
-PRO SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
-                               PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
+PRO SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
                                ENUMFLPLOTRANGE=ENumFlPlotRange,LOGENUMFLPLOT=logENumFlPlot, $
-                               EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
+                               PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
+                               CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
+                               CHARIEPLOTRANGE=chariEPlotRange, $
                                NEVENTPERMINRANGE=nEventPerMinRange,LOGNEVENTPERMIN=logNEventPerMin, $
                                PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence
 
   COMPILE_OPT idl2
-
-  ;;  defCharEPlotRange         = [1,4000]
-  ;;  defCharELogPlotRange      = [0,3.60206]
-  ;;  defCharELogPlotRange      = [0,3.69897]
 
   defENumFlPlotRange        = [1e5,1e9]
   defENumFlLogPlotRange     = [1,9]
@@ -20,18 +17,17 @@ PRO SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCha
   defPPlotRange             = [0.1,2.5]
   defPLogPlotRange          = [-1.5288,0.39794]
 
+  ;;  defCharEPlotRange         = [1,4000]
+  ;;  defCharELogPlotRange      = [0,3.60206]
+  ;;  defCharELogPlotRange      = [0,3.69897]
+
+  defChariEPlotRange        = [1e-2,1e1]
+
   defNEventPerMinRange      = [0,25]
   defLogNEventPerMinRange   = [1,ALOG10(25.0)]
 
   defProbOccurrenceRange    = [0,1]
   defLogProbOccurrenceRange = [10e-4,1]
-
-  IF N_ELEMENTS(CharEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
-;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange = defCharEPlotRange ELSE CharEPlotRange= defCharELogPlotRange
-     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN CharEPlotRange=charERange ELSE CharEPlotRange=ALOG10(charERange)
-  ENDIF ELSE BEGIN
-     IF N_ELEMENTS(logCharEPlot) GT 0 THEN CharEPlotRange=ALOG10(charEPlotRange)
-  ENDELSE
 
   IF N_ELEMENTS(ENumFlPlotRange) EQ 0 THEN BEGIN   ;;For linear or log e- number flux plotrange
      IF N_ELEMENTS(logENumFlPlot) EQ 0 THEN ENumFlPlotRange= defENumFlPlotRange ELSE ENumFlPlotRange= defENumFlLogPlotRange
@@ -45,6 +41,20 @@ PRO SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCha
   IF N_ELEMENTS(PPlotRange) EQ 0 THEN BEGIN
      IF N_ELEMENTS(logPfPlot) EQ 0 THEN PPlotRange=defPLogPlotRange ELSE PPlotRange= defPPlotRange
   ENDIF
+
+  IF N_ELEMENTS(charEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
+;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN charEPlotRange = defCharEPlotRange ELSE charEPlotRange= defCharELogPlotRange
+     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN charEPlotRange=charERange ELSE charEPlotRange=ALOG10(charERange)
+  ENDIF ELSE BEGIN
+     IF N_ELEMENTS(logCharEPlot) GT 0 THEN charEPlotRange=ALOG10(charEPlotRange)
+  ENDELSE
+
+  IF N_ELEMENTS(chariEPlotRange) EQ 0 THEN BEGIN   ;;For linear or log charE plotrange
+;;     IF N_ELEMENTS(logCharEPlot) EQ 0 THEN charEPlotRange = defCharEPlotRange ELSE charEPlotRange= defCharELogPlotRange
+     IF N_ELEMENTS(logChariEPlot) EQ 0 THEN chariEPlotRange=defChariEPlotRange ELSE charEPlotRange=ALOG10(defChariEPlotRange)
+  ENDIF ELSE BEGIN
+     IF N_ELEMENTS(logCharEPlot) GT 0 THEN chariEPlotRange=ALOG10(chariEPlotRange)
+  ENDELSE
 
   IF N_ELEMENTS(nEventPerMinRange) EQ 0 OR N_ELEMENTS(nEventPerMinRange) NE 2 THEN BEGIN
      IF N_ELEMENTS(logNEventPerMin) EQ 0 THEN nEventPerMinRange = defNEventPerMinRange ELSE nEventPerMinRange = defLogNEventPerMinRange

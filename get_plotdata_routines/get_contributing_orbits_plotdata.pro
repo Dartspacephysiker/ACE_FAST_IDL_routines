@@ -5,6 +5,8 @@ PRO GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=bin
                                      DATANAME=dataName
 
 
+  @orbplot_defaults.PRO
+
   uniqueOrbs_ii = UNIQ(maximus.orbit[plot_i],SORT(maximus.orbit[plot_i]))
   nOrbs = N_ELEMENTS(uniqueOrbs_ii)
 

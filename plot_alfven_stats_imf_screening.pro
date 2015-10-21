@@ -405,10 +405,11 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot lims
-  SET_ALFVEN_STATS_PLOT_LIMS,CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
-                             PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
+  SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
                              ENUMFLPLOTRANGE=ENumFlPlotRange,LOGENUMFLPLOT=logENumFlPlot, $
-                             EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
+                             PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
+                             CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
+                             CHARIEPLOTRANGE=chariEPlotRange, $
                              NEVENTPERMINRANGE=nEventPerMinRange,LOGNEVENTPERMIN=logNEventPerMin, $
                              PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence
   
@@ -532,13 +533,33 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      
   ENDIF
 
-  ;;########CHARACTERISTIC ENERGY########
-  IF KEYWORD_SET(charEPlots) THEN BEGIN
+  ;;########CHARACTERISTIC ELECTRON ENERGY########
+  IF KEYWORD_SET(chareEPlots) THEN BEGIN
      GET_FLUX_PLOTDATA,maximus,plot_i,/GET_CHAREE,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                        DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        FLUXPLOTTYPE=charEType,PLOTRANGE=charEPlotRange, $
                        NOPOSFLUX=noPosCharE,NONEGFLUX=noNegCharE,ABSFLUX=absCharE,LOGFLUXPLOT=logCharEPlot, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
+                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
+                       LOGAVGPLOT=logAvgPlot
+
+     h2dStrArr=[h2dStrArr,h2dStr] 
+     IF keepMe THEN BEGIN 
+        dataNameArr=[dataNameArr,dataName] 
+        dataRawPtrArr=[dataRawPtrArr,dataRawPtr] 
+     ENDIF  
+     
+  ENDIF
+
+  ;;########CHARACTERISTIC ION ENERGY########
+  IF KEYWORD_SET(chariEPlots) THEN BEGIN
+     GET_FLUX_PLOTDATA,maximus,plot_i,/GET_CHARIE,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
+                       PLOTRANGE=chariEPlotRange, $
+                       NOPOSFLUX=noPosChariE,NONEGFLUX=noNegChariE,ABSFLUX=absChariE,LOGFLUXPLOT=logChariEPlot, $
                        H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $

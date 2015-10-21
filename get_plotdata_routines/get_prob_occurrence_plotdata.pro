@@ -15,7 +15,7 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
                                       MIN1=MINM,MIN2=(KEYWORD_SET(DO_LSHELL) ? MINL : MINI),$
                                       MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI))
   h2dStr={tmplt_h2dStr}
-  h2dStr.title= logProbStr + "Probability of occurrence"
+  h2dStr.title= "Probability of occurrence"
   h2dStr.lim = probOccurrenceRange
   dataName = "probOccurrence"
   
