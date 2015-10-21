@@ -7,19 +7,13 @@
 ;; Right now I think I need to do something with reversing tempMLTS or changing the way tempMLTS is
 ;; put together, but I can't be sure
 
-PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
-                       PLOTTITLE=plotTitle, MIRROR=mirror, CLOCKSTR=clockStr, $
+PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
+                       PLOTTITLE=plotTitle, MIRROR=mirror, $
                        _EXTRA=e
 
   @interp_polar2dhist_defaults.pro
 
   restore,ancillaryData
-
-  ;want me to output integral of plot?
-  ;;noPlotIntegral=1
-
-  charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.0 : 0.7 )
-  charsize_grid=2.0
 
   ;Subtract one since last array is the mask
   nPlots=N_ELEMENTS(h2dStrArr)-1
@@ -278,50 +272,48 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,NOPLOTINTEGRAL=noPlotIntegral,WHOLECAP
 
   ;;Integral text
   ;;REMEMBER: h2dStrArr[nPlots].data is the MASK
-  IF NOT (noPlotIntegral EQ !NULL) THEN BEGIN 
-     IF NOT (noPlotIntegral) THEN BEGIN
-        IF temp.is_logged THEN BEGIN
-           integ=ALOG10(TOTAL(10.0^(temp.data(WHERE(~masked)))))
-           absInteg=integ
-           dawnIntegral=ALOG10(dawnIntegral)
-           duskIntegral=ALOG10(duskIntegral)
-        ENDIF ELSE BEGIN
-           integ=TOTAL(temp.data(WHERE(~masked)))
-           absInteg=TOTAL(ABS(temp.data(WHERE(~masked))))
-        ENDELSE
+  IF temp.do_plotIntegral THEN BEGIN
+     IF temp.is_logged THEN BEGIN
+        integ=ALOG10(TOTAL(10.0^(temp.data[WHERE(~masked)])))
+        absInteg=integ
+        dawnIntegral=ALOG10(dawnIntegral)
+        duskIntegral=ALOG10(duskIntegral)
+     ENDIF ELSE BEGIN
+        integ=TOTAL(temp.data[WHERE(~masked)])
+        absInteg=TOTAL(ABS(temp.data[WHERE(~masked)]))
+     ENDELSE
+     
+     
+     IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
+        lTexPos1=0.11
+        lTexPos2=0.68
+        bTexPos1=0.78
+        bTexPos2=0.74
         
+        IF N_ELEMENTS(clockStr) NE 0 THEN cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
+     ENDIF ELSE BEGIN
+        lTexPos1=0.09
+        lTexPos2=0.63
+        bTexPos1=0.88
+        bTexPos2=0.84
         
-        IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
-           lTexPos1=0.11
-           lTexPos2=0.68
-           bTexPos1=0.78
-           bTexPos2=0.74
-           
-           cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-        ENDIF ELSE BEGIN
-           lTexPos1=0.09
-           lTexPos2=0.63
-           bTexPos1=0.88
-           bTexPos2=0.84
-           
-           cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-        ENDELSE
-        
-        IF NOT (temp.is_logged) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize
-        cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
-        cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
-        cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
-     ENDIF
-  ENDIF 
+        IF N_ELEMENTS(clockStr) NE 0 THEN cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
+     ENDELSE
+     
+     IF NOT (temp.is_logged) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize
+     cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+     cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+     cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+  ENDIF
 
-  ;; colorbar label stuff
-  ;; IF NOT KEYWORD_SET(cbLabelFormat) THEN cbLabelFormat='(D0.1)'
-  IF NOT KEYWORD_SET(temp.labelFormat) THEN temp.labelFormat='(E0.4)'
-  ;;  cbLabelFormat=latLabelFormat
-
+  ;;set up colorbal labels
+  IF NOT KEYWORD_SET(temp.labelFormat) THEN temp.labelFormat=defLabelFormat
   lowerLab=(temp.is_logged AND temp.logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
-  ;; midLab=(temp.is_logged AND temp.logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
-  midLab=''
+  IF temp.DO_midCBLabel THEN BEGIN
+     midLab=(temp.is_logged AND temp.logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
+     ENDIF ELSE BEGIN
+        midLab=''
+     ENDELSE
   UpperLab=(temp.is_logged AND temp.logLabels) ? 10.^temp.lim[1] : temp.lim[1]
 
   ;; IF temp.is_logged OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN cbLabelFormat='(D0.2)'

@@ -5,7 +5,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
                       OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                       FLUXPLOTTYPE=fluxPlotType,PLOTRANGE=plotRange, $
                       NOPOSFLUX=noPosFlux,NONEGFLUX=noNegFlux,ABSFLUX=absFlux,LOGFLUXPLOT=logFluxPlot, $
-                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                      H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                       DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                       MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                       LOGAVGPLOT=logAvgPlot, $
@@ -56,6 +56,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "eFlux"
      h2dStr.labelFormat = fluxPlotColorBarLabelFormat
      h2dStr.logLabels = logeFluxLabels
+     h2dStr.do_plotIntegral = eFlux_doPlotIntegral
 
      ;;If not allowing negative fluxes
      IF fluxPlotType EQ "Integ" THEN BEGIN
@@ -76,6 +77,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "eNumFl"
      h2dStr.labelFormat = fluxPlotColorBarLabelFormat
      h2dStr.logLabels = logeFluxLabels
+     h2dStr.do_plotIntegral = eFlux_doPlotIntegral
 
      IF STRLOWCASE(fluxPlotType) EQ STRLOWCASE("Total_Eflux_Integ") THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.total_eflux_integ),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -103,6 +105,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "pFlux_"
      h2dStr.labelFormat = fluxPlotColorBarLabelFormat
      h2dStr.logLabels = logPFluxLabels
+     h2dStr.do_plotIntegral = PFlux_doPlotIntegral
 
      inData = maximus.pFluxEst[plot_i]
 
@@ -113,6 +116,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "iflux" 
      h2dStr.labelFormat = fluxPlotColorBarLabelFormat
      h2dStr.logLabels = logiFluxLabels
+     h2dStr.do_plotIntegral = iFlux_doPlotIntegral
 
      IF fluxPlotType EQ "Integ" THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.integ_ion_flux),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -150,6 +154,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "charEE"
      h2dStr.labelFormat = fluxPlotChareCBLabelFormat
      h2dStr.logLabels = logChareLabels
+     h2dStr.do_plotIntegral = Charee_doPlotIntegral
 
      IF fluxPlotType EQ "lossCone" THEN BEGIN
         plot_i=cgsetintersection(WHERE(FINITE(maximus.max_chare_losscone),NCOMPLEMENT=lost),plot_i) ;;NaN check
@@ -169,6 +174,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      dataName = "charIE"
      h2dStr.labelFormat = fluxPlotChariCBLabelFormat
      h2dStr.logLabels = logChariLabels
+     h2dStr.do_plotIntegral = Charie_doPlotIntegral
 
      plot_i=cgsetintersection(WHERE(FINITE(maximus.char_ion_energy),NCOMPLEMENT=lost),plot_i) ;;NaN check
      PRINTF,lun,"Lost " + strcompress(lost,/remove_all) + " events to NaNs in " + dataName + " data..."
@@ -202,7 +208,6 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
   ENDIF
   IF KEYWORD_SET(logFluxPlot) THEN BEGIN
      logStr="Log "
-     h2dStr.is_logged = 1
   ENDIF
 
   absnegslogStr=absStr + negStr + posStr + logStr
@@ -234,7 +239,7 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
                          MAX1=MAXM,MAX2=(KEYWORD_SET(DO_LSHELL) ? MAXL : MAXI),$
                          BINSIZE1=binM,BINSIZE2=(KEYWORD_SET(do_lshell) ? binL : binI),$
                          OBIN1=outH2DBinsMLT,OBIN2=outH2DBinsILAT) 
-     h2dStr.data[where(h2dFluxN NE 0,/NULL)]=h2dStr.data[where(h2dFluxN NE 0,/NULL)]/h2dFluxN[where(h2dFluxN NE 0,/NULL)] 
+     h2dStr.data[h2d_nonzero_nEv_i]=h2dStr.data[h2d_nonzero_nEv_i]/h2dFluxN[h2d_nonzero_nEv_i] 
 
      IF KEYWORD_SET(logAvgPlot) THEN h2dStr.data[where(h2dFluxN NE 0,/null)] = 10^(h2dStr.data[where(h2dFluxN NE 0,/null)])
 
@@ -245,16 +250,17 @@ PRO GET_FLUX_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAX
      h2dStr.data = ABS(h2dStr.data) 
      inData=ABS(inData) 
   ENDIF
-  IF KEYWORD_SET(logFluxPlot) THEN BEGIN 
-     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 
-     inData[where(inData GT 0,/null)]=ALOG10(inData[where(inData GT 0,/null)]) 
-  ENDIF
-
   ;;Do custom range for flux plot, if requested
   IF  KEYWORD_SET(plotRange) THEN h2dStr.lim=plotRange $
   ELSE h2dStr.lim = [MIN(h2dStr.data),MAX(h2dStr.data)]
-  ;; h2dStr.lim = plotRange
   
+  IF KEYWORD_SET(logFluxPlot) THEN BEGIN 
+     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 
+     inData[where(inData GT 0,/null)]=ALOG10(inData[where(inData GT 0,/null)]) 
+     h2dStr.lim = ALOG10[h2dStr.lim]
+     h2dStr.is_logged = 1
+  ENDIF
+
   dataRawPtr = PTR_NEW(inData)
 
 END

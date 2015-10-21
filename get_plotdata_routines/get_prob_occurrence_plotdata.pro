@@ -54,9 +54,10 @@ PRO GET_PROB_OCCURRENCE_PLOTDATA,maximus,plot_i,tHistDenominator, $
 
   IF KEYWORD_SET(logProbOccurrence) THEN BEGIN 
      h2dStr.is_logged = 1
-     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[where(h2dStr.data GT 0,/null)]) 
-     widthData[where(widthData GT 0,/null)]=ALOG10(widthData[where(widthData GT 0,/null)]) 
+     h2dStr.data[where(h2dStr.data GT 0,/NULL)]=ALOG10(h2dStr.data[WHERE(h2dStr.data GT 0,/null)]) 
+     widthData[where(widthData GT 0,/null)]=ALOG10(widthData[WHERE(widthData GT 0,/null)]) 
      h2dStr.title =  'Log ' + h2dStr.title
+     h2dStr.lim = ALOG10(h2dStr.lim)
   ENDIF
 
   dataRawPtr = PTR_NEW(widthData)

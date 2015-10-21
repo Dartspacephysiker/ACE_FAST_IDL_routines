@@ -405,13 +405,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot lims
-  SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange,LOGEFPLOT=logEfPlot, $
-                             ENUMFLPLOTRANGE=ENumFlPlotRange,LOGENUMFLPLOT=logENumFlPlot, $
-                             PPLOTRANGE=PPlotRange,LOGPFPLOT=logPfPlot, $
-                             CHAREPLOTRANGE=charePlotRange,LOGCHAREPLOT=logCharEPlot,CHARERANGE=charERange, $
+  SET_ALFVEN_STATS_PLOT_LIMS,EPLOTRANGE=EPlotRange, $
+                             ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                             PPLOTRANGE=PPlotRange, $
+                             CHAREPLOTRANGE=charePlotRange,CHARERANGE=charERange, $
                              CHARIEPLOTRANGE=chariEPlotRange, $
-                             NEVENTPERMINRANGE=nEventPerMinRange,LOGNEVENTPERMIN=logNEventPerMin, $
-                             PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence
+                             NEVENTPERMINRANGE=nEventPerMinRange, $
+                             PROBOCCURRENCERANGE=probOccurrenceRange
   
   ;;********************************************
   ;;Now time for data summary
@@ -441,10 +441,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;########Flux_N and Mask########
   ;;First, histo to show where events are
   GET_NEVENTS_AND_MASK,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                       DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                       NEVENTSPLOTRANGE=nEventsPlotRange, $
-                       H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr,H2DFLUXN=h2dFluxN,MASKMIN=maskMin,TMPLT_H2DSTR=tmplt_h2dStr, $
-                       DATANAME=dataName,DATARAWPTR=dataRawPtr
+                         DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                         NEVENTSPLOTRANGE=nEventsPlotRange, $
+                         TMPLT_H2DSTR=tmplt_h2dStr, $
+                         H2DSTR=h2dStr,H2DMASKSTR=h2dMaskStr, $
+                         H2DFLUXN=h2dFluxN,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, $
+                         MASKMIN=maskMin, $
+                         DATANAME=dataName,DATARAWPTR=dataRawPtr
 
   IF keepMe THEN BEGIN 
      dataRawPtrArr=dataRawPtr
@@ -461,7 +464,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        FLUXPLOTTYPE=eFluxPlotType,PLOTRANGE=ePlotRange, $
                        NOPOSFLUX=noPoseflux,NONEGFLUX=noNegeflux,ABSFLUX=abseflux,LOGFLUXPLOT=logEfPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -480,7 +483,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        FLUXPLOTTYPE=eNumFlPlotType,PLOTRANGE=ePlotRange, $
                        NOPOSFLUX=noPosENumFl,NONEGFLUX=noNegENumFl,ABSFLUX=absENumFl,LOGFLUXPLOT=logEfPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -500,7 +503,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        PLOTRANGE=PPlotRange, $
                        NOPOSFLUX=noPosPflux,NONEGFLUX=noNegPflux,ABSFLUX=absPflux,LOGFLUXPLOT=logPfPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -520,7 +523,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        FLUXPLOTTYPE=iFluxPlotType,PLOTRANGE=iPlotRange, $
                        NOPOSFLUX=noPosIflux,NONEGFLUX=noNegIflux,ABSFLUX=absIflux,LOGFLUXPLOT=logIfPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -540,7 +543,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        FLUXPLOTTYPE=charEType,PLOTRANGE=charEPlotRange, $
                        NOPOSFLUX=noPosCharE,NONEGFLUX=noNegCharE,ABSFLUX=absCharE,LOGFLUXPLOT=logCharEPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -560,7 +563,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                        OUTH2DBINSMLT=outH2DBinsMLT,OUTH2DBINSILAT=outH2DBinsILAT,OUTH2DBINSLSHELL=outH2DBinsLShell, $
                        PLOTRANGE=chariEPlotRange, $
                        NOPOSFLUX=noPosChariE,NONEGFLUX=noNegChariE,ABSFLUX=absChariE,LOGFLUXPLOT=logChariEPlot, $
-                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
+                       H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, H2DFLUXN=h2dFluxN, $
                        DATANAME=dataName,DATARAWPTR=dataRawPtr, $
                        MEDIANPLOT=medianplot,MEDHISTOUTDATA=medHistOutData,MEDHISTOUTTXT=medHistOutTxt,MEDHISTDATADIR=medHistDataDir, $
                        LOGAVGPLOT=logAvgPlot
@@ -583,27 +586,30 @@ PRO plot_alfven_stats_imf_screening, maximus, $
   ;;the 3D array are of the format [UniqueOrbs_ii index,MLT,ILAT]
 
   ;;The following two lines shouldn't be necessary; the data are being corrupted somewhere when I run this with clockstr="dawnward"
-  uniqueOrbs_ii=UNIQ(maximus.orbit(plot_i),SORT(maximus.orbit(plot_i)))
-  nOrbs=n_elements(uniqueOrbs_ii)
+  uniqueOrbs_ii=UNIQ(maximus.orbit[plot_i],SORT(maximus.orbit[plot_i]))
+  uniqueOrbs_i=plot_i[uniqueOrbs_ii]
+  nOrbs=N_ELEMENTS(uniqueOrbs_i)
   
   IF KEYWORD_SET(orbContribPlot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) OR KEYWORD_SET(numOrbLim) THEN BEGIN
+
      GET_CONTRIBUTING_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                                      DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                                      DO_LSHELL=do_lShell, MINL=minL,MAXL=maxL,BINL=binL, $
                                       ORBCONTRIBRANGE=orbContribRange, $
-                                      H2DSTR=h2dOrbStr,TMPLT_H2DSTR=tmplt_h2dStr, $ ;H2DFLUXN=h2dFluxN, $
+                                      UNIQUEORBS_I=uniqueOrbs_i,H2D_NONZERO_CONTRIBORBS_I=h2d_nonzero_contribOrbs_i, $
+                                      H2DSTR=h2dContribOrbStr,TMPLT_H2DSTR=tmplt_h2dStr, $ ;H2DFLUXN=h2dFluxN, $
                                       DATANAME=dataName
 
      IF KEYWORD_SET(orbContribPlot) THEN BEGIN 
-        h2dStrArr=[h2dStrArr,h2dOrbStr] 
+        h2dStrArr=[h2dStrArr,h2dContribOrbStr] 
         IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
      ENDIF
 
      ;;Mask all bins that don't have requisite number of orbits passing through
      IF KEYWORD_SET(numOrbLim) THEN BEGIN 
-        h2dStrArr[KEYWORD_SET(nPlots)].data[WHERE(h2dOrbStr.data LT numOrbLim)] = 255 ;mask 'em!
+        h2dStrArr[KEYWORD_SET(nPlots)].data[WHERE(h2dContribOrbStr.data LT numOrbLim)] = 255 ;mask 'em!
 
         ;;little check to see how many more elements are getting masked
-        ;;exc_orb_i = where(h2dOrbStr.data LT numOrbLim)
+        ;;exc_orb_i = where(h2dContribOrbStr.data LT numOrbLim)
         ;;masked_i = where(h2dStr(1).data EQ 255)
         ;;print,n_elements(exc_orb_i) - n_elements(cgsetintersection(exc_orb_i,masked_i))
         ;;8
@@ -613,12 +619,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########TOTAL Orbits########
   IF KEYWORD_SET(orbtotplot) OR KEYWORD_SET(orbfreqplot) OR KEYWORD_SET(neventperorbplot) THEN BEGIN
-     GET_TOTAL_ORBITS_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                               DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                               ORBTOTRANGE=orbTotRange, $
-                               H2DSTR=h2dTotOrbStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN, $
-                               DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                               NPLOTS=nPlots,UNIQUEORBS_II=uniqueOrbs_ii
+     GET_TOTAL_ORBITS_PLOTDATA,maximus,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                              DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
+                              ORBTOTRANGE=orbTotRange, $
+                              H2DSTR=h2dTotOrbStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                              DATANAME=dataName,DATARAWPTR=dataRawPtr,KEEPME=keepme, $
+                              UNIQUEORBS_I=uniqueOrbs_i,H2D_NONZERO_ALLORB_I=h2d_nonZero_allOrb_i, $
+                              LUN=lun
 
      IF KEYWORD_SET(orbTotPlot) THEN BEGIN 
         h2dStrArr=[h2dStrArr,h2dTotOrbStr] 
@@ -628,12 +635,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;########Orbit FREQUENCY########
   IF KEYWORD_SET(orbfreqplot) THEN BEGIN
-     GET_ORBIT_FREQUENCY_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
-                                  DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
-                                  ORBFREQRANGE=orbFreqRange, $
-                                  H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
-                                  DATANAME=dataName,DATARAWPTR=dataRawPtr, $
-                                  NPLOTS=nPlots,ORBTOTPLOT=orbTotPlot,UNIQUEORBS_II=uniqueOrbs_ii
+     GET_ORBIT_FREQUENCY_PLOTDATA,maximus,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
+                                 ORBFREQRANGE=orbFreqRange, $
+                                 H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr, $
+                                 H2DCONTRIBORBSTR=h2dContribOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
+                                 H2D_NONZERO_ALLORB_I=h2d_nonZero_allOrb_i,H2D_NONZERO_CONTRIBORBS_I=h2d_nonzero_contribOrbs_i, $
+                                 DATANAME=dataName
 
      h2dStrArr=[h2dStrArr,h2dStr] 
      IF keepMe THEN dataNameArr=[dataNameArr,dataName] 
@@ -645,7 +652,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      GET_NEVENTS_PER_ORBIT_PLOTDATA,maximus,plot_i,MINM=minM,MAXM=maxM,BINM=binM,MINI=minI,MAXI=maxI,BINI=binI, $
                                     DO_LSHELL=do_lshell, MINL=minL,MAXL=maxL,BINL=binL, $
                                     ORBFREQRANGE=orbFreqRange,DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                                    H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2DORBSTR=h2dOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
+                                    H2DSTR=h2dStr,TMPLT_H2DSTR=tmplt_h2dStr,H2DFLUXN=h2dFluxN,H2D_NONZERO_NEV_I=h2d_nonzero_nEv_i, $
+                                    H2DCONTRIBORBSTR=h2dContribOrbStr,H2DTOTORBSTR=h2dTotOrbStr, $
                                     DATANAME=dataName,DATARAWPTR=dataRawPtr
 
      h2dStrArr=[h2dStrArr,h2dStr] 
@@ -726,9 +734,12 @@ PRO plot_alfven_stats_imf_screening, maximus, $
      dataRawPtrArr=SHIFT(dataRawPtrArr,-2) 
   ENDIF
 
-  IF N_ELEMENTS(squarePlot) EQ 0 THEN save,h2dStrArr,dataNameArr,maxM,minM,maxI,minI,binM,binI,do_lShell,minL,maxL,binL,$
-                           rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemi,$
-                           filename=defTempDir + 'polarplots_'+paramStr+".dat"
+  IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
+     tempFile = defTempDir + 'polarplots_'+paramStr+".dat"
+     save,h2dStrArr,dataNameArr,maxM,minM,maxI,minI,binM,binI,do_lShell,minL,maxL,binL,$
+          rawDir,clockStr,plotMedOrAvg,stableIMF,hoyDia,hemi,$
+          filename=tempFile
+  ENDIF
 
   ;;if not saving plots and plots not turned off, do some stuff  ;; otherwise, make output
   IF KEYWORD_SET(showPlotsNoSave) THEN BEGIN 
@@ -739,8 +750,8 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                   ' IMF, ' + strmid(plotMedOrAvg,1) $
      ELSE IF N_ELEMENTS(justData) EQ 0 THEN $
         FOR i = 0, N_ELEMENTS(h2dStrArr) - 2 DO $ 
-           cgWindow,'interp_polar2dhist',h2dStrArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
-                CLOCKSTR=clockStr, _extra=e,$
+           cgWindow,'interp_polar2dhist',h2dStrArr[i],tempFile, $
+                _extra=e,$
                 Background="White",wxsize=800,wysize=600, $
                 WTitle='Polar plot_'+dataNameArr[i]+','+hemi+'ern Hemisphere, '+clockStr+ $
                 ' IMF, ' + strmid(plotMedOrAvg,1) $
@@ -776,7 +787,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                  ;; Use DEVICE to set some PostScript device options:
                  DEVICE, FILENAME='myfile.ps', /LANDSCAPE
                  ;; Make a simple plot to the PostScript file:
-                 interp_polar2dcontour,h2dStrArr[i],dataNameArr[i],defTempDir + 'polarplots_'+paramStr+".dat", $
+                 interp_polar2dcontour,h2dStrArr[i],dataNameArr[i],tempFile, $
                                        fname=plotDir + dataNameArr[i]+paramStr+'.png', _extra=e
                  ;; Close the PostScript file:
                  DEVICE, /CLOSE
@@ -785,9 +796,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
               ENDIF ELSE BEGIN
                  ;;Create a PostScript file.
                  cgPS_Open, plotDir + dataNameArr[i]+paramStr+'.ps' 
-                 ;;interp_polar_plot,[[*dataRawPtrArr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
-                 ;;          h2dStrArr[0].lim 
-                 interp_polar2dhist,h2dStrArr[i],defTempDir + 'polarplots_'+paramStr+".dat",CLOCKSTR=clockStr,_extra=e 
+                 interp_polar2dhist,h2dStrArr[i],tempFile,_extra=e 
                  cgPS_Close 
                  ;;Create a PNG file with a width of 800 pixels.
                  cgPS2Raster, plotDir + dataNameArr[i]+paramStr+'.ps', $

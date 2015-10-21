@@ -37,6 +37,7 @@ PRO GET_NEVENTPERMIN_PLOTDATA,THISTDENOMINATOR=tHistDenominator, $
      h2dStr.is_logged = 1
      h2dStr.data(where(h2dStr.data GT 0,/NULL))=ALOG10(h2dStr.data(where(h2dStr.data GT 0,/null))) 
      h2dStr.title = "Log " + h2dStr.title
+     h2dStr.lim = ALOG10(h2dStr.lim)
   ENDIF
 
   dataRawPtr = PTR_NEW(h2dStr.data)
