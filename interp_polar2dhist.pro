@@ -9,7 +9,7 @@
 
 PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
                        PLOTTITLE=plotTitle, MIRROR=mirror, $
-                       _EXTRA=e
+                       DEBUG=debug,_EXTRA=e
 
   @interp_polar2dhist_defaults.pro
 
@@ -56,9 +56,6 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
              /ISOTROPIC, /NOERASE, /NOBORDER, POSITION=position,LIMIT=lim
                 ;;Limit=[minI-5,maxM*15-360,maxI+5,minM*15],
                 
-  ; Load the colors for the plot.
-  nLevels=12
-
   IF N_ELEMENTS(plotTitle) EQ 0 THEN BEGIN
      plotTitle = temp.title
   ENDIF
@@ -104,28 +101,17 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   IF OOB_LOW_i[0] NE -1 THEN is_OOBLow = 1
   
   h2descl(notMasked)= bytscl( temp.data(notMasked),top=nLevels-1-is_OOBHigh-is_OOBLow,MAX=temp.lim[1],MIN=temp.lim[0] ) + is_OOBLow
-;;  h2descl(where(temp.data(notMasked) GT temp.lim[1])) = BYTE(nLevels-1)
-;;  h2descl(where(temp.data(notMasked) LT temp.lim[0])) = 0B
   IF OOB_HIGH_i[0] NE -1 THEN h2descl(OOB_HIGH_i) = BYTE(nLevels-1)
   IF OOB_LOW_i[0] NE -1 THEN h2descl(OOB_LOW_i) = 0B
 
 
-  ;11 is "blue-red" color table
-  ;cgLoadCT, 11, NColors=100,CLIP=[140,240]
-  
-  ; Contour the data.
-  ;   cgContour, h2descl, mlts*15, ilats, Levels=levels, /Overplot, /Cell_Fill, $
-  ;      C_Colors=Indgen(nlevels)+1B
-
-  ;i = 1 & j = 1 &  tempMLTS=[mlts[i],mlts[i+1]] & tempILATS=ilats[j:j+1] 
-  ;sempMLTS=REBIN(tempMLTS,4) & sempILATS=REBIN(tempILATS,4)
-
-  ;integrals for each hemi
-  dawnIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
-  duskIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
-  
   mltFactor=binM*15/2.0
 
+  ;Initialize integrals for each hemi
+  dawnIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
+  duskIntegral=(temp.do_plotIntegral) ? 0L : DOUBLE(0.0)
+
+  ;;Loop over all MLTs and latitudes
   FOR j=0, N_ELEMENTS(ilats)-2 DO BEGIN 
      FOR i=0, N_ELEMENTS(mlts)-2 DO BEGIN 
         ;tempMLTS=[mlts[i],mlts[i+1]] 
@@ -134,9 +120,11 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
         tempILATS=[ilats[j],ilats[j]+(KEYWORD_SET(do_lShell) ? binL : binI )/2.0,ilats[j+1]] 
         tempMLTS=[mlts[i],mlts[i],mlts[i]] 
 
-        ;print,tempILATS & print,tempMLTS
-        ;tempMLTS=REBIN(tempMLTS,4)  
-        ;tempILATS=REBIN(tempILATS,4) 
+        IF KEYWORD_SET(debug) THEN BEGIN
+           print,tempILATS & print,tempMLTS
+           tempMLTS=REBIN(tempMLTS,4)  
+           tempILATS=REBIN(tempILATS,4) 
+        ENDIF
 
         ;  tempMLTS=[tempMLTS,REVERSE(tempMLTS)] 
         ;  tempILATS=[tempILATS,tempILATS]
@@ -153,77 +141,44 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
         ;; print,"dawnint is " + strcompress(dawnIntegral) + " and duskint is " + strcompress(duskIntegral)
         ;; print,""
         ;  cgColorFill,[mlts[i],mlts[i+1],mlts[i+1],mlts[i]],[ilats[j:j+1],ilats[j:j+1]],color=h2descl(i,j) 
-        cgColorFill,tempMLTS,tempILATS,color=(masked[i,j]) ? "gray" : h2descl[i,j]
+        cgColorFill,tempMLTS,tempILATS,color=(masked[i,j]) ? maskColor : h2descl[i,j]
 
      ENDFOR 
   ENDFOR
 
+  ;;******************************
+  ;;Grid stuffs
+  ;;******************************
+
   ;;add grid to 10-deg latitude lines
-  nBoldLats = ROUND((maxM-minM)/10.) + 1
-  firstBoldLat =  minM - ( minM MOD 10 ) 
-  boldLats = INDGEN(nBoldLats) * 10 + firstBoldLat
   cgMap_Grid, Clip_Text=1, /NoClip, thick=(!D.Name EQ 'PS') ? 7 : 6,$
-              color='black',LATDELTA=10,LONDELTA=90, linestyle=0
+              LINESTYLE=defBoldGridLineStyle,COLOR=defGridColor, $
+              LATDELTA=(KEYWORD_SET(do_lShell) ? defBoldLshellDelta : defBoldLatDelta),LONDELTA=defBoldLonDelta
 
   ;; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 1 : 1,$
               color='black',londelta=binM*15,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
-  lonLabel=(minI GT 0 ? minI : maxI)
-  IF mirror THEN lonLabel = -1.0 * lonLabel ;mirror dat
+  IF KEYWORD_SET(do_lShell) THEN BEGIN
+     lonLabel=(minL GT 0 ? minL : maxL)
+  ENDIF ELSE BEGIN
+     lonLabel=(minI GT 0 ? minI : maxI)
+     IF mirror THEN lonLabel = -1.0 * lonLabel ;mirror dat
+  ENDELSE 
 
-;;   IF N_ELEMENTS(wholeCap) NE 0 THEN BEGIN
-;;      lonNames=[STRTRIM(INDGEN(12),2)*2]
-
-;;      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
-;;                  /NO_GRID,$
-;;                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
-;;                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
-;;                  LONS=(1*INDGEN(12)*30),$
-;;                  LONNAMES=lonNames, $
-;;                  CHARSIZE=charSize
-;;   ENDIF ELSE BEGIN
-;;      lonNames=[string(minM,format=lonLabelFormat)+" MLT",STRING((INDGEN((maxM-minM)/2.0)*2.0+(minM+1*2.0)),format=lonLabelFormat)]
-;;      ;; lats=INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0)+1)*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+minI
-;;      ;; latNames=[minI, INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0))*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+(minI+1*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0)]
-;;      lats=[60,70,80]
-;;      latNames=[60,70,80]
-
-;;      IF mirror THEN BEGIN
-;;         ;;    ;;IF N_ELEMENTS(wholeCap) NE 0 THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
-;;         lats = -1.0 * lats
-;;         latNames = -1.0 * latNames
-;;      ENDIF 
-     
-;;      latNames=STRING(latNames,format=latLabelFormat)
-;;      latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + " ILAT"
-
-;;      cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
-;; ;;                 latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
-;;                  LATS=lats, $
-;;                  LATNAMES=latNames, $
-;;                  LATLABEL=(mean([minM,maxM]))*15+15, $
-;;                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
-;;                  LONS=(INDGEN((maxM-minM)/2.0+1)*2.0+minM)*15, $
-;; ;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
-;;                  LONNAMES=lonNames, $
-;;                  LONLABEL=lonLabel, $
-;;                  CHARSIZE=charSize
-;;   ENDELSE
-     
-  ;; IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
   IF N_ELEMENTS(wholeCap) GT 0 THEN BEGIN
      factor=6.0
      mltSites=(INDGEN((maxM-minM)/factor)*factor+minM)
      lonNames=[string(minM,format=lonLabelFormat)+" MLT",STRING(mltSites[1:-1],format=lonLabelFormat)]
-     ;; lonNames=[string(mltSites[0],format=lonLabelFormat)+" MLT",STRING((INDGEN((maxM-minM)/3.0)*3.0+(minM+1*3.0)),format=lonLabelFormat)]
-     ;; lats=INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0)+1)*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+minI
-     ;; latNames=[minI, INDGEN((maxI-minI)/((KEYWORD_SET(do_lShell) ? binL : binI )*2.0))*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0+(minI+1*(KEYWORD_SET(do_lShell) ? binL : binI )*2.0)]
-     lats=[60,70,80]
-     latNames=[60,70,80]
-     lats=[50,60,70,80]
-     latNames=[50,60,70,80]
+
+     IF KEYWORD_SET(do_lShell) THEN BEGIN
+        lats      = defGridLshells
+        latNames  = defGridLshells
+     ENDIF ELSE BEGIN
+        lats      = defGridLats
+        latNames  = defGridLats
+     ENDELSE
 
      IF mirror THEN BEGIN
         ;;    ;;IF N_ELEMENTS(wholeCap) NE 0 THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
@@ -234,7 +189,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
      latNames=STRING(latNames,format=latLabelFormat)
      latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + ( KEYWORD_SET(DO_lShell) ? "L-shell" : " ILAT" )
 
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color='black', $
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color=defGridColor, $
 ;;                 latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
                  LATS=lats, $
                  LATNAMES=latNames, $
@@ -245,33 +200,36 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
 ;;                 LONNAMES=[strtrim(minM,2)+" MLT",STRTRIM(INDGEN((maxM-minM)/1.0)+(minM+1),2)]
                  LONNAMES=lonNames, $
                  LONLABEL=lonLabel, $
-                 CHARSIZE=charSize_grid
+                 CHARSIZE=defCharSize_grid
   ENDIF ELSE BEGIN
      lonNames=[STRTRIM(INDGEN(12),2)*2]
 
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color='black',latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color=defGridColor,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI*4 ),$
                  /NO_GRID,$
                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
                  LONS=(1*INDGEN(12)*30),$
                  LONNAMES=lonNames, $
-                 CHARSIZE=charSize_grid
+                 CHARSIZE=defCharSize_grid
   ENDELSE
 
-  ;charSize = cgDefCharSize()*0.75
-  ;cgText, 0, minI-1, '0', Alignment=0.5, Orientation=0, Charsize=charSize      
-  ;cgText, 180, minI, '12', Alignment=0.5, Orientation=0.00, Charsize=charSize   
-  ;cgText, 90, minI-1, '6 MLT',Alignment=0.5,Charsize=charSize
-  ;cgText, -90, minI-1, '18',Alignment=0.5,Charsize=charSize
+  ;defCharSize = cgDefCharSize()*0.75
+  ;cgText, 0, minI-1, '0', Alignment=0.5, Orientation=0, Charsize=defCharSize      
+  ;cgText, 180, minI, '12', Alignment=0.5, Orientation=0.00, Charsize=defCharSize   
+  ;cgText, 90, minI-1, '6 MLT',Alignment=0.5,Charsize=defCharSize
+  ;cgText, -90, minI-1, '18',Alignment=0.5,Charsize=defCharSize
   
-  charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.3 : 0.7 )
-  ;cgText, 0, minI-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=charSize      
-  ;cgText, 180, minI-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=charSize   
-  ;cgText, 90, minI-5, 'dawnward',Alignment=0.5,Charsize=charSize
-  ;cgText, -90, minI-5, 'duskward',Alignment=0.5,Charsize=charSize  
+  ;cgText, 0, minI-5, 'midnight', Alignment=0.5, Orientation=0, Charsize=defCharSize      
+  ;cgText, 180, minI-5, 'noon', Alignment=0.5, Orientation=0.00, Charsize=defCharSize   
+  ;cgText, 90, minI-5, 'dawnward',Alignment=0.5,Charsize=defCharSize
+  ;cgText, -90, minI-5, 'duskward',Alignment=0.5,Charsize=defCharSize  
 
   ;;Integral text
   ;;REMEMBER: h2dStrArr[nPlots].data is the MASK
+
+  ;;******************************
+  ;;Integral stuffs
+  ;;******************************
   IF temp.do_plotIntegral THEN BEGIN
      IF temp.is_logged THEN BEGIN
         integ=ALOG10(TOTAL(10.0^(temp.data[WHERE(~masked)])))
@@ -281,73 +239,68 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
      ENDIF ELSE BEGIN
         integ=TOTAL(temp.data[WHERE(~masked)])
         absInteg=TOTAL(ABS(temp.data[WHERE(~masked)]))
-     ENDELSE
-     
-     
-     IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
-        lTexPos1=0.11
-        lTexPos2=0.68
-        bTexPos1=0.78
-        bTexPos2=0.74
+     ENDELSE     
         
-        IF N_ELEMENTS(clockStr) NE 0 THEN cgText,lTexPos1,bTexPos1-0.7,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-     ENDIF ELSE BEGIN
-        lTexPos1=0.09
-        lTexPos2=0.63
-        bTexPos1=0.88
-        bTexPos2=0.84
-        
-        IF N_ELEMENTS(clockStr) NE 0 THEN cgText,lTexPos1,bTexPos1-0.8,"IMF " + clockStr,/NORMAL,CHARSIZE=charSize 
-     ENDELSE
+     IF N_ELEMENTS(clockStr) NE 0 THEN cgText,lTexPos1,bTexPos1+clockStrOffset,"IMF " + clockStr,/NORMAL,CHARSIZE=defCharSize 
      
-     IF NOT (temp.is_logged) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize
-     cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
-     cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
-     cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=charSize 
+     IF NOT (temp.is_logged) THEN cgText,lTexPos1,bTexPos2,'|Integral|: ' + string(absInteg,Format=integralLabelFormat),/NORMAL,CHARSIZE=defCharSize
+     cgText,lTexPos1,bTexPos1,'Integral: ' + string(integ,Format=integralLabelFormat),/NORMAL,CHARSIZE=defCharSize 
+     cgText,lTexPos2,bTexPos1,'Dawnward: ' + string(dawnIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=defCharSize 
+     cgText,lTexPos2,bTexPos2,'Duskward: ' + string(duskIntegral,Format=integralLabelFormat),/NORMAL,CHARSIZE=defCharSize 
   ENDIF
+
+
+  ;;******************************
+  ;;Colorbar stuffs
+  ;;******************************
 
   ;;set up colorbal labels
   IF NOT KEYWORD_SET(temp.labelFormat) THEN temp.labelFormat=defLabelFormat
   lowerLab=(temp.is_logged AND temp.logLabels) ? 10.^(temp.lim[0]) : temp.lim[0]
-  IF temp.DO_midCBLabel THEN BEGIN
+  IF temp.do_midCBLabel THEN BEGIN
      midLab=(temp.is_logged AND temp.logLabels) ? 10.^((temp.lim[0]+temp.lim[1])/2) : ((temp.lim[0]+temp.lim[1])/2)
      ENDIF ELSE BEGIN
         midLab=''
      ENDELSE
   UpperLab=(temp.is_logged AND temp.logLabels) ? 10.^temp.lim[1] : temp.lim[1]
 
-  ;; IF temp.is_logged OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN cbLabelFormat='(D0.2)'
-  ;; IF temp.is_logged OR orbFreqPlotzz OR ((temp.lim[0] NE 0) AND (ALOG10(ABS(temp.lim[0])) LT -1)) THEN cbLabelFormat='(E0.4)'
-  IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
-     ;; cgText,0.41,0.763,'ILAT',/NORMAL, charsize=charSize         
-     ;; Add a colorbar.
-     cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), Divisions=nlevels-is_OOBHigh-is_OOBLow, $
-                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
-                 OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
-                 Range=temp.lim, $
-                 Title=plotTitle, $
-                 /Discrete, $
-                 Position=[0.25, 0.89, 0.75, 0.91], TEXTTHICK=1.5, TLocation="TOP", TCharSize=cgDefCharsize()*1.0,$
-                 ;; ticknames=[String(temp.lim[0], Format=temp.labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=temp.labelFormat)]
-                 ticknames=[String(lowerLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
-                            String(midLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
-                            String(upperLab, Format=temp.labelFormat)]
-  ENDIF ELSE BEGIN
-     cgColorbar, NColors=nlevels-is_OOBHigh-is_OOBLow, Divisions=nlevels-is_OOBHigh-is_OOBLow, Bottom=BYTE(is_OOBLow), $
-;;                 OOB_Low=(temp.lim[0] EQ 0) ? !NULL : 0B, OOB_High=(temp.lim[1] EQ MAX(temp.data)) ? !NULL : BYTE(nLevels-1), $ 
-                 OOB_Low=(temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B, $
-                 OOB_High=(temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1), $ 
-                 /Discrete, $
-                 Range=temp.lim, $
-                 Title=plotTitle, $ ; 
-                 Position=[0.86, 0.10, 0.89, 0.90], TEXTTHICK=1.5, /VERTICAL, $
-                 TLocation="RIGHT", TCharSize=charsize_grid,$
-                 CharSize=charsize_grid,$
-                 ;; ticknames=[String(temp.lim[0], Format=temp.labelFormat),REPLICATE(" ",nLevels-3),String(temp.lim[1], Format=temp.labelFormat)]
-                 ticknames=[String(lowerLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBLow),$
-                            ;; String(midLab, Format=temp.labelFormat),REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$
-                            " ",REPLICATE(" ",(nLevels-1)/2-is_OOBHigh),$   ;kluge for now
-                            String(UpperLab, Format=temp.labelFormat)] 
-  ENDELSE
+  cbSpacingStr_low  = (nLevels-1)/2-is_OOBLow
+  cbSpacingStr_high = (nLevels-1)/2-is_OOBHigh
+
+  cbOOBLowVal       = (temp.lim[0] LE MIN(temp.data(notMasked))) ? !NULL : 0B
+  cbOOBHighVal      = (temp.lim[1] GE MAX(temp.data(notMasked))) ? !NULL : BYTE(nLevels-1)
+  cbRange           = temp.lim
+  cbTitle           = plotTitle
+  nCBColors         = nlevels-is_OOBHigh-is_OOBLow
+  cbBottom          = BYTE(is_OOBLow)
+  cbTickNames       = [String(lowerLab, Format=temp.labelFormat), $
+                       REPLICATE(" ",cbSpacingStr_Low),$
+                       (temp.DO_midCBLabel ? String(midLab, Format=temp.labelFormat) : " "), $
+                       REPLICATE(" ",cbSpacingStr_High),$
+                       String(upperLab, Format=temp.labelFormat)]
+
+  ;; IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
+  ;;    ;; Add a colorbar.
+  ;;    cgColorbar, NColors=nCBColors, Bottom=cbBottom, Divisions=nCBColors, $
+  ;;                OOB_Low=cbOOBLowVal, $
+  ;;                OOB_High=cbOOBHighVal, $ 
+  ;;                Range=cbRange, $
+  ;;                Title=cbTitle, $
+  ;;                /Discrete, $
+  ;;                Position=cbPosition, TEXTTHICK=cbTextThick, VERTICAL=cbVertical, $
+  ;;                TLocation=cbTLocation, TCharSize=cbTCharSize,$
+  ;;                ticknames=cbTickNames
+  ;; ENDIF ELSE BEGIN
+  cgColorbar, NCOLORS=nCBColors, DIVISIONS=nCBColors, BOTTOM=cbBottom, $
+              OOB_Low=cbOOBLowVal, $
+              OOB_High=cbOOBHighVal, $ 
+              /Discrete, $
+              RANGE=cbRange, $
+              TITLE=cbTitle, $  ; 
+              POSITION=cbPosition, TEXTTHICK=cbTextThick, VERTICAL=cbVertical, $
+              TLOCATION=cbTLocation, TCHARSIZE=cbTCharSize,$
+              CHARSIZE=cbTCharSize,$
+              TICKNAMES=cbTickNames
+  ;; ENDELSE
 
 END

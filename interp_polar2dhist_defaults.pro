@@ -3,16 +3,34 @@
 
   wholecap = 1
 
-  charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.0 : 0.7 )
-  charsize_grid=2.0
+  charSize                    = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.0 : 0.7 )
+  charSize = cgDefCharSize()*((N_ELEMENTS(wholeCap) EQ 0) ? 1.3 : 0.7 )
 
-  ;;color tables
-  ctIndex_allPosData       = 39 ;This, I believe, is the color table that Chris Chaston likes
-  ctBrewer_allPosData      = 0
-  ctReverse_allPosData     = 0
-  ;; ctIndex_allPosData       = 16         ;This is the one I usually use
-  ;; ctBrewer_allPosData      = 1
+  ;;******************************
+  ;;Color tables
+  ;;******************************
 
+  ;;Number of colors in the colorbar
+  nLevels=12
+
+  ;;color table options when all values are positive or logged
+  chrisPosScheme              = 1
+
+  IF chrisPosScheme THEN BEGIN
+     ctIndex_allPosData       = 39 ;This, I believe, is the color table that Chris Chaston likes
+     ctBrewer_allPosData      = 0
+     ctReverse_allPosData     = 0
+     maskColor                = "black"
+     defGridColor             = "white"
+  ENDIF ELSE BEGIN
+     ctIndex_allPosData       = 16 ;This is the one I usually use
+     ctBrewer_allPosData      = 1
+     ctReverse_allPosData     = 0
+     maskColor                = "gray"
+     defGridColor             = 'black'
+  ENDELSE
+
+  ;;color table options when values are positive or negative
   ctIndex                  = 22
   ctBrewer                 = 1
   ctReverse                = 0
@@ -21,3 +39,49 @@
   latLabelFormat           = '(I0)'
   lonLabelFormat           = '(I0)'
   integralLabelFormat      = '(D0.3)'
+
+  ;;********************
+  ;;GRID DEFAULTS
+  ;;********************
+  defcharSize_grid               = 2.0
+
+  ;;lat/lon/lshell grid defaults
+  defGridLats                 = [50,60,70,80]
+  defGridLshells              = [2,4,6,8,10]
+
+  ;;the bold part
+  ;; defBoldGridColor            = 'black'
+  defBoldGridLinestyle        = 0
+  defBoldLonDelta             = 90
+  defBoldLshellDelta          = 1
+  defBoldLatDelta             = 10
+
+  ;;**********************************
+  ;;Wholecap vs. not-wholecap defaults
+  ;;**********************************
+  IF N_ELEMENTS(wholeCap) EQ 0 THEN BEGIN
+     cbPosition       = [0.25, 0.89, 0.75, 0.91]
+     cbTLocation      = "TOP"
+     cbVertical       = 0
+     cbTCharsize      = cgDefCharsize()*1.0
+     cbTextThick      = 1.5
+
+     lTexPos1         = 0.11
+     lTexPos2         = 0.68
+     bTexPos1         = 0.78
+     bTexPos2         = 0.74
+     clockStrOffset   = -0.7
+  ENDIF ELSE BEGIN
+     cbPosition       = [0.86, 0.10, 0.89, 0.90]
+     cbTLocation      = "RIGHT"
+     cbVertical       = 0
+     cbTCharsize      = defCharsize_grid
+     cbTextThick      = 1.5
+
+     lTexPos1         = 0.09
+     lTexPos2         = 0.63
+     bTexPos1         = 0.88
+     bTexPos2         = 0.84
+     clockStrOffset   = -0.8
+  ENDELSE
+

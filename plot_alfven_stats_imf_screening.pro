@@ -331,6 +331,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                         SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                         HEMI=hemi, $
                         CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                        DO_IMF_CONDS=1, $
                         BYMIN=byMin, BZMIN=bzMin, $
                         BYMAX=byMax, BZMAX=bzMax, $
                         DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
