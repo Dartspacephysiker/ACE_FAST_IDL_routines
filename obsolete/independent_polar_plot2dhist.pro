@@ -48,13 +48,13 @@ PRO independent_polar_plot2dhist,temp_or_rawfile,histStructure,OUTPSFNAME=outPSF
   IF KEYWORD_SET(outPSFName) THEN BEGIN
      cgPS_Open, outPSFName 
   
-     interp_polar2dhist,histoStr,temp_or_rawfile,CLOCKSTR=clockStr,_extra=e 
+     ploth2d_stereographic,histoStr,temp_or_rawfile,CLOCKSTR=clockStr,_extra=e 
   
   
      cgPS_Close 
      cgPS2Raster, outPSFName, /PNG, Width=800, DELETE_PS =DEL_PS
   ENDIF ELSE BEGIN
-     cgWindow,'interp_polar2dhist',histoStr,temp_or_rawfile,CLOCKSTR=clockStr,_extra=e
+     cgWindow,'ploth2d_stereographic',histoStr,temp_or_rawfile,CLOCKSTR=clockStr,_extra=e
   ENDELSE
 
 END

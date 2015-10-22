@@ -515,7 +515,7 @@ IF (~savePlots) THEN BEGIN & $
 ;             WTitle='Polar plot_'+dataName[0]+','+hemStr+'ern Hemisphere, '+clockStr+ $
 ;             ' IMF, ' + strmid(plotSuff,1) $
     FOR i = 0, N_ELEMENTS(h2dStr) - 2 DO $ 
-      cgWindow,'interp_polar2dhist',h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat",$
+      cgWindow,'ploth2d_stereographic',h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat",$
                Background="White",wxsize=800,wysize=600, $
                WTitle='Polar plot_'+dataName[i]+','+hemStr+'ern Hemisphere, '+clockStr+ $
                ' IMF, ' + strmid(plotSuff,1) $
@@ -540,7 +540,7 @@ ENDIF ELSE BEGIN & $
       cgPS_Open, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps' & $
       ;interp_polar_plot,[[*dataRawPtr[0]],[maximus.mlt(plot_i)],[maximus.ilat(plot_i)]],$
       ;          h2dStr[0].lim & $
-     interp_polar2dhist,h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat" & $
+     ploth2d_stereographic,h2dStr[i],dataName[i],'temp/polarplots_'+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+".dat" & $
      cgPS_Close & $
      ;Create a PNG file with a width of 800 pixels.
      cgPS2Raster, plotDir + 'plot_'+dataName[i]+hemStr+'_'+clockStr+plotsuff+"_"+strtrim(stableIMF,2)+"stable"+satellite+"_"+hoyDia+'.ps', /PNG, Width=1000 & $
