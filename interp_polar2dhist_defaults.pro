@@ -22,12 +22,14 @@
      ctReverse_allPosData     = 0
      maskColor                = "black"
      defGridColor             = "white"
+     defGridTextColor         = "dark gray"
   ENDIF ELSE BEGIN
      ctIndex_allPosData       = 16 ;This is the one I usually use
      ctBrewer_allPosData      = 1
      ctReverse_allPosData     = 0
      maskColor                = "gray"
      defGridColor             = 'black'
+     defGridTextColor         = "black"
   ENDELSE
 
   ;;color table options when values are positive or negative
@@ -43,17 +45,23 @@
   ;;********************
   ;;GRID DEFAULTS
   ;;********************
+  defGridLineThick               = 1.7
+  defGridLineThick_PS            = 1.7
+
+  defGridBoldLineThick           = 6
+  defGridBoldLineThick_PS        = 7
+
   defcharSize_grid               = 2.0
 
   ;;lat/lon/lshell grid defaults
   defGridLats                 = [50,60,70,80]
-  defGridLshells              = [2,4,6,8,10]
+  defGridLshells              = [2,6,10,14,16,20]
 
   ;;the bold part
   ;; defBoldGridColor            = 'black'
   defBoldGridLinestyle        = 0
   defBoldLonDelta             = 90
-  defBoldLshellDelta          = 1
+  defBoldLshellDelta          = 10
   defBoldLatDelta             = 10
 
   ;;**********************************
@@ -73,8 +81,8 @@
      clockStrOffset   = -0.7
   ENDIF ELSE BEGIN
      cbPosition       = [0.86, 0.10, 0.89, 0.90]
-     cbTLocation      = "RIGHT"
-     cbVertical       = 0
+     cbTLocation      = "RIGHT"                     ;;"RIGHT" only works if cbVertical == 1
+     cbVertical       = 1
      cbTCharsize      = defCharsize_grid
      cbTextThick      = 1.5
 

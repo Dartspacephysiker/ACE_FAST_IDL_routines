@@ -73,10 +73,20 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   ;   levels = cgScaleVector(Indgen(nlevels), 0,255)      
   
   nXlines=(maxM-minM)/binM + 1
-  nYlines=(maxI-minI)/(KEYWORD_SET(do_lShell) ? binL : binI ) + 1
-
   mlts=indgen(nXlines)*binM+minM
-  ilats=indgen(nYlines)*(KEYWORD_SET(do_lShell) ? binL : binI ) + (KEYWORD_SET(do_lShell) ? minL : minI )
+
+  IF KEYWORD_SET(do_lShell) THEN BEGIN
+     nYlines =(maxL-minL)/binL + 1
+     lShells = INDGEN(nYlines)*binL + minL
+     ;; ilats   = LSHELL_TO_ILAT(INDGEN(nYlines)*binL + minL)
+     ilats   = LSHELL_TO_ILAT_PARABOLA_FIT(lShells,MINL=minL,MAXL=maxL,MINI=minI,MAXI=maxI)
+     ;; ilats   = ROUND(ilats)
+     ilats   = DOUBLE(ROUND(ilats*4))/4
+  ENDIF ELSE BEGIN
+     nYlines=(maxI-minI)/binI + 1
+     ilats=indgen(nYlines)*binI + minI
+  ENDELSE
+
 
   IF mirror THEN BEGIN
      ilats = -1.0 * ilats 
@@ -103,7 +113,6 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   h2descl(notMasked)= bytscl( temp.data(notMasked),top=nLevels-1-is_OOBHigh-is_OOBLow,MAX=temp.lim[1],MIN=temp.lim[0] ) + is_OOBLow
   IF OOB_HIGH_i[0] NE -1 THEN h2descl(OOB_HIGH_i) = BYTE(nLevels-1)
   IF OOB_LOW_i[0] NE -1 THEN h2descl(OOB_LOW_i) = 0B
-
 
   mltFactor=binM*15/2.0
 
@@ -150,18 +159,34 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   ;;Grid stuffs
   ;;******************************
 
+  IF KEYWORD_SET(do_lShell) THEN BEGIN
+     ;; lats      = LSHELL_TO_ILAT_PARABOLA_FIT(defGridLshells,MINL=minL,MAXL=maxL,MINI=minI,MAXI=maxI)
+     ;; latNames  = defGridLshells
+     lats      = LSHELL_TO_ILAT_PARABOLA_FIT(lShells[0:-1:3],MINL=minL,MAXL=maxL,MINI=minI,MAXI=maxI)
+     latNames  = lShells[0:-1:3]
+  ENDIF ELSE BEGIN
+     lats      = defGridLats
+     latNames  = defGridLats
+  ENDELSE
+
   ;;add grid to 10-deg latitude lines
-  cgMap_Grid, Clip_Text=1, /NoClip, thick=(!D.Name EQ 'PS') ? 7 : 6,$
+  cgMap_Grid, Clip_Text=1, /NoClip, thick=(!D.Name EQ 'PS') ? defGridBoldLineThick_PS : defGridBoldLineThick,$
               LINESTYLE=defBoldGridLineStyle,COLOR=defGridColor, $
-              LATDELTA=(KEYWORD_SET(do_lShell) ? defBoldLshellDelta : defBoldLatDelta),LONDELTA=defBoldLonDelta
+              LATDELTA=(KEYWORD_SET(do_lShell) ? !NULL : defBoldLatDelta),LONDELTA=defBoldLonDelta, $
+              LATS=(KEYWORD_SET(do_lShell) ? lats : !NULL)
+              
 
   ;; Add map grid. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
-  cgMap_Grid, Clip_Text=1, /NoClip, linestyle=0, thick=(!D.Name EQ 'PS') ? 1 : 1,$
-              color='black',londelta=binM*15,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )
+  cgMap_Grid, CLIP_TEXT=1, /NOCLIP, LINESTYLE=0, THICK=(!D.Name EQ 'PS') ? defGridLineThick_PS : defGridLineThick_PS,$
+              COLOR=defGridColor,LONDELTA=binM*15, $
+              LATDELTA=(KEYWORD_SET(do_lShell) ? !NULL : binI ), $  ;latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )
+              LATS=(KEYWORD_SET(do_lShell) ? ilats : !NULL)
 
   ; Now text. Set the Clip_Text keyword to enable the NO_CLIP graphics keyword. 
   IF KEYWORD_SET(do_lShell) THEN BEGIN
-     lonLabel=(minL GT 0 ? minL : maxL)
+     ;; lonLabel=(minL GT 0 ? minL : maxL)
+     lonLabel=(minI GT 0 ? minI : maxI)
+     IF mirror THEN lonLabel = -1.0 * lonLabel ;mirror dat
   ENDIF ELSE BEGIN
      lonLabel=(minI GT 0 ? minI : maxI)
      IF mirror THEN lonLabel = -1.0 * lonLabel ;mirror dat
@@ -172,14 +197,6 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
      mltSites=(INDGEN((maxM-minM)/factor)*factor+minM)
      lonNames=[string(minM,format=lonLabelFormat)+" MLT",STRING(mltSites[1:-1],format=lonLabelFormat)]
 
-     IF KEYWORD_SET(do_lShell) THEN BEGIN
-        lats      = defGridLshells
-        latNames  = defGridLshells
-     ENDIF ELSE BEGIN
-        lats      = defGridLats
-        latNames  = defGridLats
-     ENDELSE
-
      IF mirror THEN BEGIN
         ;;    ;;IF N_ELEMENTS(wholeCap) NE 0 THEN lonNames = [lonNames[0],REVERSE(lonNames[1:*])]
         lats = -1.0 * lats
@@ -187,9 +204,9 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
      ENDIF 
      
      latNames=STRING(latNames,format=latLabelFormat)
-     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + ( KEYWORD_SET(DO_lShell) ? "L-shell" : " ILAT" )
+     latNames[mirror ? -1 : 0] = latNames[mirror ? -1 : 0] + ( KEYWORD_SET(DO_lShell) ? " L-shell" : " ILAT" )
 
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color=defGridColor, $
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL, /NO_GRID, linestyle=0, thick=3, color=defGridTextColor, $
 ;;                 latdelta=(KEYWORD_SET(do_lShell) ? binL : binI )*4,$
                  LATS=lats, $
                  LATNAMES=latNames, $
@@ -204,7 +221,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
   ENDIF ELSE BEGIN
      lonNames=[STRTRIM(INDGEN(12),2)*2]
 
-     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color=defGridColor,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI*4 ),$
+     cgMap_Grid, Clip_Text=1, /NoClip, /LABEL,linestyle=0, thick=3,color=defGridTextColor,latdelta=(KEYWORD_SET(do_lShell) ? binL : binI*4 ),$
                  /NO_GRID,$
                  LATLABEL=minM*15-5,LONLABEL=lonLabel,$ ;lonlabel=(minI GT 0) ? ((mirror) ? -maxI : minI) : ((mirror) ? -minI : maxI),$ 
                  ;;latlabel=((maxM-minM)/2.0+minM)*15-binM*7.5,
@@ -296,7 +313,7 @@ PRO INTERP_POLAR2DHIST,temp,ancillaryData,WHOLECAP=wholeCap,MIDNIGHT=midnight, $
               OOB_High=cbOOBHighVal, $ 
               /Discrete, $
               RANGE=cbRange, $
-              TITLE=cbTitle, $  ; 
+              TITLE=cbTitle, $
               POSITION=cbPosition, TEXTTHICK=cbTextThick, VERTICAL=cbVertical, $
               TLOCATION=cbTLocation, TCHARSIZE=cbTCharSize,$
               CHARSIZE=cbTCharSize,$
