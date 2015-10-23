@@ -188,50 +188,50 @@
 ;                                    the result.
 ;-
 
-PRO plot_alfven_stats_imf_screening, maximus, $
-                                     CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                                     MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
-                                     HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
-                                     BYMIN=byMin, BZMIN=bzMin, $
-                                     BYMAX=byMax, BZMAX=bzMax, $
-                                     SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                     HEMI=hemi, $
-                                     DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                     NPLOTS=nPlots, $
-                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-                                     ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-                                     ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-                                     NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
-                                     PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-                                     NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-                                     IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
-                                     NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
-                                     CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
-                                     NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
-                                     CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
-                                     NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
-                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                                     DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
-                                     PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
-                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
-                                     ALL_LOGPLOTS=all_logPlots, $
-                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                     DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
-                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
-                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                     JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                                     PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
-                                     MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                     OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
-                                     _EXTRA = e
-
+PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
+                                    CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
+                                    MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                    DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                    HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+                                    MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+                                    BYMIN=byMin, BZMIN=bzMin, $
+                                    BYMAX=byMax, BZMAX=bzMax, $
+                                    SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                    HEMI=hemi, $
+                                    DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                    NPLOTS=nPlots, $
+                                    EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                    ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
+                                    ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
+                                    NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                                    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
+                                    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
+                                    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+                                    NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+                                    CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+                                    NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
+                                    CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
+                                    NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+                                    ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
+                                    ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                                    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                    DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                                    NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                                    PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+                                    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
+                                    ALL_LOGPLOTS=all_logPlots, $
+                                    SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                    NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+                                    WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+                                    SAVERAW=saveRaw, RAWDIR=rawDir, $
+                                    JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                                    PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
+                                    MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                    OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
+                                    _EXTRA = e
+  
 ;;  COMPILE_OPT idl2
 
   !EXCEPT=0                                                      ;Do report errors, please
@@ -263,13 +263,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                              MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                              OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
                              KEEPME=keepMe, $
-                             PARAMSTRING=paramStr,PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
+                             PARAMSTRING=paramString,PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
                              HOYDIA=hoyDia,LUN=lun,_EXTRA=e
   
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax,BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
-                                  PARAMSTRING=paramStr, $
+                                  PARAMSTRING=paramString, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   DELAY=delay,STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
                                   LUN=lun
@@ -277,7 +277,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir + 'outputSummary_'+paramStr+'.txt',/GET_LUN $
+     OPENW,lun,plotDir + 'outputSummary_'+paramString+'.txt',/GET_LUN $
   ELSE lun=-1                   ;-1 is lun for STDOUT
   
   ;;********************************************************
@@ -315,7 +315,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                              BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
-                             PARAMSTRING=paramStr, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
+                             PARAMSTRING=paramString, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
                              SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                              HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
                              HOYDIA=hoyDia,MASKMIN=maskMin,LUN=lun
@@ -376,7 +376,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                          MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI,BINM=binM,BINI=binI, $
                          DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
                          MINL=minL,MAXL=maxL,BINL=binL,$
-                         RAWDIR=rawDir,PARAMSTR=paramStr,$
+                         RAWDIR=rawDir,PARAMSTR=paramString,$
                          CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg,STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi,TEMPFILE=tempFile
   ENDIF
 
@@ -385,7 +385,7 @@ PRO plot_alfven_stats_imf_screening, maximus, $
                          SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
                          JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                          PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
-                         PARAMSTR=paramStr, DEL_PS=del_PS, $
+                         PARAMSTR=paramString, DEL_PS=del_PS, $
                          HEMI=hemi, $
                          CLOCKSTR=clockStr, _EXTRA = e
 
@@ -396,13 +396,13 @@ PRO plot_alfven_stats_imf_screening, maximus, $
 
   ;;Save raw data, if desired
   IF KEYWORD_SET(saveRaw) THEN BEGIN
-     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramStr+".dat"
+     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramString+".dat"
 
   ENDIF
 
   WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
                           WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
                           H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
-                          PARAMSTR=paramStr,PLOTDIR=plotDir
+                          PARAMSTR=paramString,PLOTDIR=plotDir
 
 END
