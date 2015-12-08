@@ -17,12 +17,14 @@ PRO PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat,NAM
   plot=plot(geomagEpochSeconds/3600.,geomagEpochDat, $
             NAME=name, $
             AXIS_STYLE=axis_style, $
+            TITLE=plotTitle, $
             XTITLE=xTitle, $
             YTITLE=yTitle, $
             XRANGE=KEYWORD_SET(xRange) ? xRange : [MIN(geomagEpochSeconds),MAX(geomagEpochSeconds)], $
             YRANGE=KEYWORD_SET(yRange) ? yRange : [MIN(geomagEpochDat),MAX(geomagEpochDat)], $
             YLOG=KEYWORD_SET(logYPlot) ? 1 : 0, $
             YMINOR=yMinorTicks, $
+            FONT_SIZE=title_font_size, $
             XTICKFONT_SIZE=max_xtickfont_size, $
             XTICKFONT_STYLE=max_xtickfont_style, $
             YTICKFONT_SIZE=max_ytickfont_size, $
@@ -32,7 +34,7 @@ PRO PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat,NAM
             MARGIN=margin, $
             LAYOUT=layout, $
             CLIP=clip, $
-            TRANSPARENCY=KEYWORD_SET(lineTransp) ? lineTransp : defLineTransp, $
+            TRANSPARENCY=N_ELEMENTS(lineTransp) GT 0 ? lineTransp : defLineTransp, $
             THICK=KEYWORD_SET(lineThick) ? lineThick : defLineThick) 
 
   IF KEYWORD_SET(add_plot_to_plot_array) THEN BEGIN
