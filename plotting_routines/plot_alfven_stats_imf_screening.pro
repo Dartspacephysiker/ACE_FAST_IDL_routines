@@ -227,9 +227,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
                                     JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                                    PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
-                                    MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                    OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
+                                    PLOTDIR=plotDir, $
+                                    PLOTPREFIX=plotPrefix, $
+                                    PLOTSUFFIX=plotSuffix, $
+                                    MEDHISTOUTDATA=medHistOutData, $
+                                    MEDHISTOUTTXT=medHistOutTxt, $
+                                    OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                                    DEL_PS=del_PS, $
+                                    NO_COLORBAR=no_colorbar, $
+                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                                    CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     _EXTRA = e
   
 ;;  COMPILE_OPT idl2
@@ -325,11 +332,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;********************************************************
   ;;HISTOS
 
+  tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(do_lShell) ? binL : binI),$
+                                   MIN1=minM,MIN2=(KEYWORD_SET(DO_LSHELL) ? minL : minI),$
+                                   MAX1=maxM,MAX2=(KEYWORD_SET(DO_LSHELL) ? maxL : maxI), $
+                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                                   CB_FORCE_OOBLOW=cb_force_oobLow)
+
   GET_ALFVENDB_2DHISTOS,maximus,plot_i, H2DSTRARR=h2dStrArr, $
                         KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
-                        MINMLT=minM,MAXMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                        MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                        MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                         DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                        ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
+                        ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
+                        CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                         MASKMIN=maskMin, $
                         SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                         HEMI=hemi, $
@@ -337,7 +352,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         DO_IMF_CONDS=1, $
                         BYMIN=byMin, BZMIN=bzMin, $
                         BYMAX=byMax, BZMAX=bzMax, $
-                        DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                        DELAY=delay, STABLEIMF=stableIMF, $
+                        SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                         NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                         EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                         ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
@@ -359,7 +375,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
                         MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                         LOGAVGPLOT=logAvgPlot, $
-                        ALL_LOGPLOTS=all_logPlots
+                        ALL_LOGPLOTS=all_logPlots,$
+                        TMPLT_H2DSTR=tmplt_h2dStr, $
+                        LUN=lun
+
 
   ;;********************************************************
   ;;Handle Plots all at once
@@ -387,7 +406,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                          PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
                          PARAMSTR=paramString, DEL_PS=del_PS, $
                          HEMI=hemi, $
-                         CLOCKSTR=clockStr, _EXTRA = e
+                         CLOCKSTR=clockStr, $
+                         NO_COLORBAR=no_colorbar, $
+                         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                         CB_FORCE_OOBLOW=cb_force_oobLow, $
+                         _EXTRA = e
 
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
      CLOSE,lun 
