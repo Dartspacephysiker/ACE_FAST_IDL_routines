@@ -186,20 +186,41 @@
 ;                                    was running in burst mode.
 ;                       Jan 2015  :  Finally turned interp_plots_str into a procedure! Here you have
 ;                                    the result.
+;                       Dec 2015   : ... And now added stormtime keywords as well as RESTRICT_WITH_THESE_I keyword
 ;-
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
-                                    CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                                    MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                                    DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
-                                    HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                    MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
-                                    BYMIN=byMin, BZMIN=bzMin, $
-                                    BYMAX=byMax, BZMAX=bzMax, $
-                                    SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                    CLOCKSTR=clockStr, $
+                                    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                    ANGLELIM1=angleLim1, $
+                                    ANGLELIM2=angleLim2, $
+                                    ORBRANGE=orbRange, $
+                                    ALTITUDERANGE=altitudeRange, $
+                                    CHARERANGE=charERange, $
+                                    POYNTRANGE=poyntRange, $
+                                    NUMORBLIM=numOrbLim, $
+                                    MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT, $
+                                    MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                    DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
+                                    MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                    HWMAUROVAL=HwMAurOval, $
+                                    HWMKPIND=HwMKpInd, $
+                                    MIN_NEVENTS=min_nEvents, $
+                                    MASKMIN=maskMin, $
+                                    BYMIN=byMin, $
+                                    BZMIN=bzMin, $
+                                    BYMAX=byMax, $
+                                    BZMAX=bzMax, $
+                                    SATELLITE=satellite, $
+                                    OMNI_COORDS=omni_Coords, $
                                     HEMI=hemi, $
-                                    DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                    DELAY=delay, $
+                                    STABLEIMF=stableIMF, $
+                                    SMOOTHWINDOW=smoothWindow, $
+                                    INCLUDENOCONSECDATA=includeNoConsecData, $
+                                    NONSTORM=nonStorm, $
+                                    RECOVERYPHASE=recoveryPhase, $
+                                    MAINPHASE=mainPhase, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                                     ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
@@ -242,6 +263,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 ;;  COMPILE_OPT idl2
 
   !EXCEPT=0                                                      ;Do report errors, please
+
+  SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+
   SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                              MINMLT=minM,MAXMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
@@ -289,14 +313,62 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   
   ;;********************************************************
   ;;Now clean and tap the databases and interpolate satellite data
+  IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+     GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+        NONSTORM_I=ns_i, $
+        MAINPHASE_I=mp_i, $
+        RECOVERYPHASE_I=rp_i, $
+        STORM_DST_I=s_dst_i, $
+        NONSTORM_DST_I=ns_dst_i, $
+        MAINPHASE_DST_I=mp_dst_i, $
+        RECOVERYPHASE_DST_I=rp_dst_i, $
+        N_STORM=n_s, $
+        N_NONSTORM=n_ns, $
+        N_MAINPHASE=n_mp, $
+        N_RECOVERYPHASE=n_rp
+     
+     CASE 1 OF
+        KEYWORD_SET(nonStorm): BEGIN
+           PRINTF,lun,'Restricting with non-storm indices ...'
+           restrict_with_these_i = ns_i
+           paramStr += '--non-storm'
+        END
+        KEYWORD_SET(mainPhase): BEGIN
+           PRINTF,lun,'Restricting with main-phase indices ...'
+           restrict_with_these_i = mp_i
+           paramStr += '--mainPhase'
+         END
+        KEYWORD_SET(recoveryPhase): BEGIN
+           PRINTF,lun,'Restricting with recovery-phase indices ...'
+           restrict_with_these_i = rp_i
+           paramStr += '--recoveryPhase'
+         END
+     ENDCASE
+  ENDIF
+
   plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
-                                                  DBTIMES=cdbTime,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
-                                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
-                                                  MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                  DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                  BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                  STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
-                                                  HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData)
+                                                  DBTIMES=cdbTime,dbfile=dbfile, $
+                                                  DO_CHASTDB=do_chastdb, $
+                                                  HEMI=hemi, $
+                                                  ORBRANGE=orbRange, $
+                                                  ALTITUDERANGE=altitudeRange, $
+                                                  CHARERANGE=charERange,POYNTRANGE=poyntRange, $
+                                                  MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                                                  MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                  DO_LSHELL=do_lshell, $
+                                                  MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                  BYMIN=byMin,BZMIN=bzMin, $
+                                                  BYMAX=byMax,BZMAX=bzMax, $
+                                                  CLOCKSTR=clockStr, $
+                                                  RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                                  BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                  STABLEIMF=stableIMF, $
+                                                  OMNI_COORDS=omni_Coords, $
+                                                  ANGLELIM1=angleLim1, $
+                                                  ANGLELIM2=angleLim2, $
+                                                  HWMAUROVAL=HwMAurOval, $
+                                                  HWMKPIND=HwMKpInd, $
+                                                  NO_BURSTDATA=no_burstData)
     
   ;;********************************************
   ;;Variables for histos
