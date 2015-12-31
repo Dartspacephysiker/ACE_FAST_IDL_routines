@@ -1,9 +1,9 @@
 ;2015/12/31 Time to check it out
-PRO JOURNAL__20151231__N_EVENTS__NONSTORM__DAWN_AND_DUSK
+PRO JOURNAL__20151231__N_EVENTS__NONSTORM__DAWN_AND_DUSK__LOW_CHARE
 
   clockStr                       = 'duskward'
   hemi                           = 'NORTH'
-  ;; charERange                     = [0,300]
+  charERange                     = [0,300]
 
   byMin                          = 5
 
@@ -22,8 +22,8 @@ PRO JOURNAL__20151231__N_EVENTS__NONSTORM__DAWN_AND_DUSK
 
   minILAT                        = 54
 
-  ;; plotSuff                       = STRING(FORMAT='("--chare_",I0,"-",I0,"--")', $
-  ;;                                         charERange[0],charERange[1])
+  plotSuff                       = STRING(FORMAT='("--chare_",I0,"-",I0,"--")', $
+                                          charERange[0],charERange[1])
 
   PLOT_ALFVEN_STATS_IMF_SCREENING,CLOCKSTR=clockstr, $
                                   PLOTSUFFIX=plotSuff, $
