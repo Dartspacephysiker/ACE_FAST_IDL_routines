@@ -199,10 +199,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CHARERANGE=charERange, $
                                     POYNTRANGE=poyntRange, $
                                     NUMORBLIM=numOrbLim, $
-                                    MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT, $
-                                    MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                    MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                                    MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
-                                    MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                    MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                     HWMAUROVAL=HwMAurOval, $
                                     HWMKPIND=HwMKpInd, $
                                     MIN_NEVENTS=min_nEvents, $
@@ -214,6 +214,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
                                     HEMI=hemi, $
+                                    NORTH=north, $
+                                    SOUTH=south, $
+                                    BOTH_HEMIS=both_hemis, $
                                     DELAY=delay, $
                                     STABLEIMF=stableIMF, $
                                     SMOOTHWINDOW=smoothWindow, $
@@ -255,9 +258,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MEDHISTOUTTXT=medHistOutTxt, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
+                                    OUT_TEMPFILE=out_tempFile, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
+                                    FANCY_PLOTNAMES=fancy_plotNames, $
                                     _EXTRA = e
   
 ;;  COMPILE_OPT idl2
@@ -273,6 +278,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                              MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                              HEMI=hemi, $
+                             NORTH=north, $
+                             SOUTH=south, $
+                             BOTH_HEMIS=both_hemis, $
                              NPLOTS=nPlots, $
                              EPLOTS=ePlots, $
                              EFLUXPLOTTYPE=eFluxPlotType, $
@@ -305,6 +313,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MEDHISTOUTDATA=medHistOutData, $
                              MEDHISTOUTTXT=medHistOutTxt, $
                              OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                             OUT_TEMPFILE=out_tempFile, $
+                             PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
                              DEL_PS=del_PS, $
                              KEEPME=keepMe, $
                              PARAMSTRING=paramString, $
@@ -347,22 +357,31 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         N_STORM=n_s, $
         N_NONSTORM=n_ns, $
         N_MAINPHASE=n_mp, $
-        N_RECOVERYPHASE=n_rp
+        N_RECOVERYPHASE=n_rp, $
+        NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+        NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+
      
      CASE 1 OF
         KEYWORD_SET(nonStorm): BEGIN
            PRINTF,lun,'Restricting with non-storm indices ...'
            restrict_with_these_i = ns_i
+           t1_arr                = ns_t1
+           t2_arr                = ns_t2
            paramString += '--non-storm'
         END
         KEYWORD_SET(mainPhase): BEGIN
            PRINTF,lun,'Restricting with main-phase indices ...'
            restrict_with_these_i = mp_i
+           t1_arr                = mp_t1
+           t2_arr                = mp_t2
            paramString += '--mainPhase'
          END
         KEYWORD_SET(recoveryPhase): BEGIN
            PRINTF,lun,'Restricting with recovery-phase indices ...'
            restrict_with_these_i = rp_i
+           t1_arr                = rp_t1
+           t2_arr                = rp_t2
            paramString += '--recoveryPhase'
          END
      ENDCASE
@@ -372,6 +391,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                   DBTIMES=cdbTime,dbfile=dbfile, $
                                                   DO_CHASTDB=do_chastdb, $
                                                   HEMI=hemi, $
+                                                  ;; NORTH=north, $
+                                                  ;; SOUTH=south, $
+                                                  ;; BOTH_HEMIS=both_hemis, $
                                                   ORBRANGE=orbRange, $
                                                   ALTITUDERANGE=altitudeRange, $
                                                   CHARERANGE=charERange,POYNTRANGE=poyntRange, $
@@ -444,6 +466,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         HEMI=hemi, $
                         CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                         DO_IMF_CONDS=1, $
+                        DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
+                        T1_ARR=t1_arr, $
+                        T2_ARR=t2_arr, $
                         BYMIN=byMin, BZMIN=bzMin, $
                         BYMAX=byMax, BZMAX=bzMax, $
                         DELAY=delay, STABLEIMF=stableIMF, $
@@ -471,6 +496,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         LOGAVGPLOT=logAvgPlot, $
                         ALL_LOGPLOTS=all_logPlots,$
                         TMPLT_H2DSTR=tmplt_h2dStr, $
+                        FANCY_PLOTNAMES=fancy_plotNames, $
                         LUN=lun
 
 
@@ -516,6 +542,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      SAVE, /ALL, filename=rawDir+'fluxplots_'+paramString+".dat"
 
   ENDIF
+
+  out_tempFile=tempFile
 
   WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
                           WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
