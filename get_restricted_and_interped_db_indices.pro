@@ -1,6 +1,10 @@
 ;2015/12/31 Added RESTRICT_WITH_THESE_I keyword so that I can do non-storm 
+;2016/01/07 Added DO_DESPUNDB keyword
 FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun, $
-   DBTIMES=dbTimes,dbfile=dbfile,DO_CHASTDB=do_chastdb, HEMI=hemi, $
+   DBTIMES=dbTimes,dbfile=dbfile, $
+   DO_CHASTDB=do_chastdb, $
+   DO_DESPUNDB=do_despunDB, $
+   HEMI=hemi, $
    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -18,6 +22,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      final_i = get_chaston_ind(dbStruct,satellite,lun, $
                                DBTIMES=dbTimes,dbfile=dbfile, $
                                CHASTDB=do_chastdb, HEMI=hemi, $
+                               DESPUNDB=do_despunDB, $
                                ORBRANGE=orbRange, $
                                ALTITUDERANGE=altitudeRange, $
                                CHARERANGE=charERange, $

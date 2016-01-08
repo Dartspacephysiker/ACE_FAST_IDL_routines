@@ -23,7 +23,12 @@ PRO PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat,NAM
             XRANGE=KEYWORD_SET(xRange) ? xRange : [MIN(geomagEpochSeconds),MAX(geomagEpochSeconds)], $
             YRANGE=KEYWORD_SET(yRange) ? yRange : [MIN(geomagEpochDat),MAX(geomagEpochDat)], $
             YLOG=KEYWORD_SET(logYPlot) ? 1 : 0, $
-            YMINOR=yMinorTicks, $
+            ;; YMINOR=yMinorTicks, $
+            ;; YTICKNAME=['-100','-75','-50','-25','0','25'], $
+            ;; YTICKVALUES=[-100,-75,-50,-25,0,25], $
+            YMINOR=4, $
+            YTICKNAME=['-100','-50','0'], $
+            YTICKVALUES=[-100,-50,0], $
             FONT_SIZE=title_font_size, $
             XTICKFONT_SIZE=max_xtickfont_size, $
             XTICKFONT_STYLE=max_xtickfont_style, $

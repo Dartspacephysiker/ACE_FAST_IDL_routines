@@ -62,7 +62,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+                                    DO_CHASTDB=do_chastDB, $
+                                    DO_DESPUNDB=do_despunDB, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -152,7 +154,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                      ALL_LOGPLOTS=all_logPlots, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
                                      WHOLECAP=wholeCap, $
-                                     DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                     DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+                                     DO_CHASTDB=do_chastDB, $
+                                     DO_DESPUNDB=do_despunDB, $
                                      NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $

@@ -187,6 +187,7 @@
 ;                       Jan 2015  :  Finally turned interp_plots_str into a procedure! Here you have
 ;                                    the result.
 ;                       Dec 2015   : ... And now added stormtime keywords as well as RESTRICT_WITH_THESE_I keyword
+;                       Jan 2016   : Added DO_DESPUNDB keyword for our new despun database with TEAMS data!
 ;-
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
@@ -225,7 +226,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
                                     NPLOTS=nPlots, $
-                                    EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                    EPLOTS=ePlots, $
+                                    EPLOTRANGE=ePlotRange, $                                       
+                                    EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                                     ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
                                     ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
                                     NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
@@ -246,7 +249,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+                                    DO_CHASTDB=do_chastDB, $
+                                    DO_DESPUNDB=do_despunDB, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -390,6 +395,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
                                                   DBTIMES=cdbTime,dbfile=dbfile, $
                                                   DO_CHASTDB=do_chastdb, $
+                                                  DO_DESPUNDB=do_despunDB, $
                                                   HEMI=hemi, $
                                                   ;; NORTH=north, $
                                                   ;; SOUTH=south, $
