@@ -1,10 +1,13 @@
 ;2016/01/07--Got this newfangled despun DB, and I can't help myself
-PRO JOURNAL__20160107__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__PROBOCCURRENCE__DAWNDUSKALL__DESPUN_DB
+PRO JOURNAL__20160107__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__DAWNDUSKALL__DESPUN_DB
 
   hemi                           = 'NORTH'
   ;; charERange                     = [0,300]
 
   byMin                          = 5
+
+  charERange                     = [4,300]
+  ;; charERange                     = [300,4000]
 
   ;;NEVENTS
   nEventsPlotRange               = [8e0,8e3]
@@ -20,8 +23,12 @@ PRO JOURNAL__20160107__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__P
   iPlotRange                     = [10^(7.5),10^(11.5)]
   logIFPlot                      = 1
   
+  ;;49--pFluxEst
+  pPlotRange                     = [2e-1,2e1]
+  logPFPlot                      = 1
+
   ;PROBOCCURRENCE
-  probOccurrenceRange            = [1e-4,1e0]
+  probOccurrenceRange            = [1e-4,1e-1]
 
   binMLT                         = 1.5
   minILAT                        = 54
@@ -30,29 +37,32 @@ PRO JOURNAL__20160107__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__P
 
   PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL, $
                                   /NONSTORM, $
+                                  CHARERANGE=charERange, $
                                   PLOTSUFFIX=plotSuff, $
                                   HEMI=hemi, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
                                   /MIDNIGHT, $
                                   DO_DESPUNDB=do_despun, $
-                                  CHARERANGE=charERange, $
                                   BYMIN=byMin, $
                                   /MEDIANPLOT, $
                                   /NPLOTS, $
-                                  /LOGPROBOCCURRENCE, $
-                                  /PROBOCCURRENCEPLOT, $
-                                  PROBOCCURRENCERANGE=probOccurrenceRange, $
                                   /ENUMFLPLOTS, $
                                   /IONPLOTS, $
-                                  NEVENTSPLOTRANGE=nEventsPlotRange, $
+                                  /PPLOTS, $
+                                  /PROBOCCURRENCEPLOT, $
+                                  /LOGPROBOCCURRENCE, $
                                   /LOGNEVENTSPLOT, $
-                                  ENUMFLPLOTTYPE=eNumFlPlotType, $
-                                  ENUMFLPLOTRANGE=eNumFlRange, $
-                                  LOGENUMFLPLOT=logENumFlPlot, $
-                                  IFLUXPLOTTYPE=iFluxPlotType, $
-                                  IPLOTRANGE=iPlotRange, $
                                   LOGIFPLOT=logIFPlot, $
+                                  LOGPFPLOT=logPFPlot, $
+                                  LOGENUMFLPLOT=logENumFlPlot, $
+                                  PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                  NEVENTSPLOTRANGE=nEventsPlotRange, $
+                                  ENUMFLPLOTRANGE=eNumFlRange, $
+                                  IPLOTRANGE=iPlotRange, $
+                                  PPLOTRANGE=pPlotRange, $
+                                  ENUMFLPLOTTYPE=eNumFlPlotType, $
+                                  IFLUXPLOTTYPE=iFluxPlotType, $
                                   /CB_FORCE_OOBHIGH, $
                                   /CB_FORCE_OOBLOW, $
                                   /COMBINE_PLOTS, $
