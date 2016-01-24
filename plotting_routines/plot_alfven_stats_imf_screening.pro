@@ -263,6 +263,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MEDHISTOUTTXT=medHistOutTxt, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
+                                    EPS_OUTPUT=eps_output, $
                                     OUT_TEMPFILE=out_tempFile, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
@@ -536,6 +537,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                          NO_COLORBAR=no_colorbar, $
                          CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                          CB_FORCE_OOBLOW=cb_force_oobLow, $
+                         EPS_OUTPUT=eps_output, $
                          _EXTRA = e
 
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
