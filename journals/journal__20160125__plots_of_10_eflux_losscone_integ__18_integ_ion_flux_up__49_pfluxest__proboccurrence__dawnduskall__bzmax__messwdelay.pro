@@ -1,13 +1,13 @@
 ;2016/01/23--Testing out this bzMin thing
 PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__DAWNDUSKALL__BZMAX__MESSWDELAY
 
-  ;; hemi                           = 'NORTH'
-  hemi                           = 'SOUTH'
+  hemi                           = 'NORTH'
+  ;; hemi                           = 'SOUTH'
 
   byMin                          = 5
   ;; bzMax                          = 0
   ;; smoothWindow                   = 5
-  delay                          = 720
+  ;; delay                          = 720
 
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -42,7 +42,7 @@ PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   do_despun                      = 1
 
   PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL, $
-                                  /NONSTORM, $
+                                  ;; /NONSTORM, $
                                   CHARERANGE=charERange, $
                                   PLOTSUFFIX=plotSuff, $
                                   HEMI=hemi, $
