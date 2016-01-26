@@ -9,12 +9,19 @@
 ;
 ;Of course they are not interchangeable, so make sure to 
 ;use the right ones.
+;
+;2016/01/23 Added ABS_BZM{IN,MAX} keywords
 
-FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
+FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
                          DBTIMES=dbTimes, FASTDBINTERP_I=fastDBInterp_i,FASTDBSATPROPPEDINTERPED_I=fastDBSatProppedInterped_i, $
                          MAG_UTC=mag_utc, PHICLOCK=phiclock, SMOOTHWINDOW=smoothWindow, $
                          DATADIR=datadir, $
-                         BYMIN=byMin, BZMIN=bzMin,BYMAX=byMax, BZMAX=bzMax, $
+                         BYMIN=byMin, $
+                         BZMIN=bzMin, $
+                         BYMAX=byMax, $
+                         BZMAX=bzMax, $
+                         DO_ABS_BZMIN=abs_bzMin, $
+                         DO_ABS_BZMAX=abs_bzMax, $
                          OMNI_COORDS=omni_Coords ;, $
 
   COMPILE_OPT idl2
@@ -257,7 +264,8 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ;*********************************************************
   ;Any requirement for by magnitude?
-  IF KEYWORD_SET(byMin) THEN BEGIN 
+  ;; IF KEYWORD_SET(byMin) THEN BEGIN 
+  IF N_ELEMENTS(byMin) GT 0 THEN BEGIN 
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
@@ -281,7 +289,8 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ENDIF
 
-  IF KEYWORD_SET(byMax) THEN BEGIN 
+  ;; IF KEYWORD_SET(byMax) THEN BEGIN 
+  IF N_ELEMENTS(byMax) GT 0 THEN BEGIN 
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
@@ -308,15 +317,20 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ;*********************************************************
   ;Any requirement for bz magnitude?
-  IF KEYWORD_SET(bzMin) THEN BEGIN 
+  ;; IF KEYWORD_SET(bzMin) THEN BEGIN 
+  IF N_ELEMENTS(bzMin) THEN BEGIN 
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; bzMin_ii are the indices (of indices) of events that meet the minimum Bz requirement
-     bzMin_ii=WHERE(bzChast LE -ABS(bzMin) OR bzChast GE ABS(bzMin),NCOMPLEMENT=bzminLost)
-     
+     IF KEYWORD_SET(abs_bzMin) THEN BEGIN
+        bzMin_ii=WHERE(bzChast LE -ABS(bzMin) OR bzChast GE ABS(bzMin),NCOMPLEMENT=bzminLost)
+     ENDIF ELSE BEGIN
+        bzMin_ii=WHERE(bzChast GE bzMin,NCOMPLEMENT=bzminLost)
+     ENDELSE
+
      bzChast=bzChast[bzMin_ii]
      byChast=byChast[bzMin_ii]
      bxChast=bxChast[bzMin_ii]
@@ -332,7 +346,8 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
 
   ENDIF
 
-  IF KEYWORD_SET(bzMax) THEN BEGIN 
+  ;; IF KEYWORD_SET(bzMax) THEN BEGIN 
+  IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
      ;;As they are after interpolation
      ;; fastDBSatProppedInterped_i=fastDBAceprop_i[fastDBSatProppedInterped_ii] 
      ;; fastDBInterp_i=db_i[fastDBSatProppedInterped_ii] 
@@ -340,7 +355,11 @@ FUNCTION interp_mag_data,db_i, satellite, delay, lun, $
     
      ;; bzMax_ii are the indices (of indices) of events that meet the Maximum Bz requirement
      ;; bzMax_ii=WHERE(bzChast GE -ABS(bzMax) OR bzChast LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
-     bzMax_ii=WHERE(ABS(bzChast) LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
+     IF KEYWORD_SET(abs_bzMax) THEN BEGIN
+        bzMax_ii=WHERE(ABS(bzChast) LE ABS(bzMax),NCOMPLEMENT=bzMaxLost)
+     ENDIF ELSE BEGIN
+        bzMax_ii=WHERE(bzChast LE bzMax,NCOMPLEMENT=bzMaxLost)
+     ENDELSE
      
      bzChast=bzChast[bzMax_ii]
      byChast=byChast[bzMax_ii]

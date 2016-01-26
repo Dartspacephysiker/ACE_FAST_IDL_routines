@@ -26,6 +26,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                     BZMIN=bzMin, $
                                     BYMAX=byMax, $
                                     BZMAX=bzMax, $
+                                    DO_ABS_BZMIN=abs_bzMin, $
+                                    DO_ABS_BZMAX=abs_bzMax, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
                                     HEMI=hemi, $
@@ -121,9 +123,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                      SOUTH=south, $
                                      HEMI=hemi, $
                                      HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                     MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+                                     MIN_NEVENTS=min_nEvents, $
+                                     MASKMIN=maskMin, $
+                                     BYMIN=byMin, $
+                                     BZMIN=bzMin, $
+                                     BYMAX=byMax, $
+                                     BZMAX=bzMax, $
+                                     DO_ABS_BZMIN=abs_bzMin, $
+                                     DO_ABS_BZMAX=abs_bzMax, $
                                      DELAY=delay, $
-                                     STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, $
+                                     STABLEIMF=stableIMF, $
+                                     SMOOTHWINDOW=smoothWindow, $
                                      INCLUDENOCONSECDATA=includeNoConsecData, $
                                      NONSTORM=nonStorm, $
                                      RECOVERYPHASE=recoveryPhase, $

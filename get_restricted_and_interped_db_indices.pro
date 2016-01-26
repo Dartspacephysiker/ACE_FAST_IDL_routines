@@ -8,7 +8,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-   BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax,CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+   SMOOTHWINDOW=smoothWindow, $
+   BYMIN=byMin, $
+   BZMIN=bzMin, $
+   BYMAX=byMax, $
+   BZMAX=bzMax, $
+   DO_ABS_BZMIN=abs_bzMin, $
+   DO_ABS_BZMAX=abs_bzMax, $
+   CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
    STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
    HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
@@ -48,8 +55,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                              FASTDBINTERP_I=FASTDBInterp_i, $
                              FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i, $
                              MAG_UTC=mag_utc,PHICLOCK=phiClock, $
-                             DATADIR=dataDir,SMOOTHWINDOW=smoothWindow, $
-                             BYMIN=byMin,BZMIN=bzMin,BYMAX=byMax,BZMAX=bzMax, $
+                             DATADIR=dataDir, $
+                             SMOOTHWINDOW=smoothWindow, $
+                             BYMIN=byMin, $
+                             BZMIN=bzMin, $
+                             BYMAX=byMax, $
+                             BZMAX=bzMax, $
+                             DO_ABS_BZMIN=abs_bzMin, $
+                             DO_ABS_BZMAX=abs_bzMax, $
                              OMNI_COORDS=omni_Coords)
   
   phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2, $

@@ -212,6 +212,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BZMIN=bzMin, $
                                     BYMAX=byMax, $
                                     BZMAX=bzMax, $
+                                    DO_ABS_BZMIN=abs_bzMin, $
+                                    DO_ABS_BZMAX=abs_bzMax, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
                                     HEMI=hemi, $
@@ -334,7 +336,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   ORBRANGE=orbRange, $
                                   ALTITUDERANGE=altitudeRange, $
                                   CHARERANGE=charERange, $
-                                  BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, $
+                                  BYMIN=byMin, $
+                                  BZMIN=bzMin, $
+                                  BYMAX=byMax, $
+                                  BZMAX=bzMax, $
+                                  DO_ABS_BZMIN=abs_bzMin, $
+                                  DO_ABS_BZMAX=abs_bzMax, $
                                   BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   PARAMSTRING=paramString, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
@@ -408,8 +415,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                   MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                                   DO_LSHELL=do_lshell, $
                                                   MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                  SMOOTHWINDOW=smoothWindow, $
                                                   BYMIN=byMin,BZMIN=bzMin, $
                                                   BYMAX=byMax,BZMAX=bzMax, $
+                                                  DO_ABS_BZMIN=abs_bzMin, $
+                                                  DO_ABS_BZMAX=abs_bzMax, $
                                                   CLOCKSTR=clockStr, $
                                                   RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                                                   BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
@@ -444,7 +454,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                             BYMIN=byMin, BZMIN=bzMin, BYMAX=byMax, BZMAX=bzMax, BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                             BYMIN=byMin, $
+                             BZMIN=bzMin, $
+                             BYMAX=byMax, $
+                             BZMAX=bzMax, $
+                             DO_ABS_BZMIN=abs_bzMin, $
+                             DO_ABS_BZMAX=abs_bzMax, $
+                             BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                              PARAMSTRING=paramString, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
                              SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                              HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -478,6 +494,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         T2_ARR=t2_arr, $
                         BYMIN=byMin, BZMIN=bzMin, $
                         BYMAX=byMax, BZMAX=bzMax, $
+                        DO_ABS_BZMIN=abs_bzMin, $
+                        DO_ABS_BZMAX=abs_bzMax, $
                         DELAY=delay, STABLEIMF=stableIMF, $
                         SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                         NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
