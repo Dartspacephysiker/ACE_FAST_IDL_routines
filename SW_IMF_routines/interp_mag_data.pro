@@ -225,7 +225,7 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
         nBadSmooth -= halfWind*2
 
         ;; find out if any of our events correspond to unsmoothable data
-        MATCH, magUTCTEMP(badSmooth_k), mag_utc[fastDBSatProppedInterped_i], magUTCTEMP_bad_i, mag_utcfastDBAceprop_bad_i,COUNT=nMatches,EPSILON=1.0
+        MATCH, magUTCTEMP[badSmooth_k], mag_utc[fastDBSatProppedInterped_i], magUTCTEMP_bad_i, mag_utcfastDBAceprop_bad_i,COUNT=nMatches,EPSILON=1.0
 
         ;; magUTCTEMP_bad_i and mag_utcfastDBAceprop_bad_i are ordered such that 
         ;; (magUTCTEMP(badSmooth_k))(magUTCTEMP_bad_i) equals (mag_utc[fastDBSatProppedInterped_i])(mag_utcfastDBAceprop_bad_i)
@@ -236,7 +236,7 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
 
         PRINT,"Some elements of IMF data can't be smoothed, and you haven't written code to handle this situation!"
         PRINT,"Better pay a visit to interp_mag_data.pro..."
-        wait,1.0
+        STOP
      ENDIF ELSE BEGIN
         badSmooth_k = -1
         nBadSmooth = 0

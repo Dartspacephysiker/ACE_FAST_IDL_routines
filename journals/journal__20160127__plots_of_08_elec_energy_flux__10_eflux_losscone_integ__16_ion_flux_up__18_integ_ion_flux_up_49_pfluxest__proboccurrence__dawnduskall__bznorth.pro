@@ -10,7 +10,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
   ;; maxILAT                        = 85
   ;; binILAT                        = 2.5
   ;; nEventsPlotRange               = [5e1,5e3]        ; North   ;for chare 4-300eV
-  ;; ;; nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
+  ;; nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
 
   hemi                           = 'SOUTH'
   maxILAT                        = -55
@@ -25,7 +25,15 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
   do_abs_bymin                   = 1
   bzMin                          = 0
   ;; smoothWindow                   = 5
+  ;; delay                          = 420
+  ;; delay                          = 480
+  ;; delay                          = 540
+  ;; delay                          = 600
+  delay                          = 660
   ;; delay                          = 720
+  ;; delay                          = 780
+  ;; delay                          = 840
+  ;; delay                          = 900
 
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -33,12 +41,12 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
    ;;10-EFLUX_LOSSCONE_INTEG
    eNumFlPlotType                 = 'eflux_Losscone_Integ'
    ;; eNumFlRange                    = [10^(0.5),10^(5.5)]
-   eNumFlRange                    = [2e1,2e3]
+   eNumFlRange                    = [1e2,1e4]
    logENumFlPlot                  = 1
 
   ;;08--ELEC_ENERGY_FLUX
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [2e-1,2e1]
+  ePlotRange                     = [1e-1,1e1]
   logEFPlot                      = 1
 
   ;;16--ION_FLUX_UP
@@ -101,7 +109,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
   ;;prob occurrence last because it takes so long
   ;; 18-INTEG_UPWARD_ION_FLUX
   iFluxPlotType                  = 'Integ_Up'
-  iPlotRange                     = [10^(7.8),10^(12.3)]
+  iPlotRange                     = [10^(8.0),10^(12.0)]
   logIFPlot                      = 1
   
   PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL, $
