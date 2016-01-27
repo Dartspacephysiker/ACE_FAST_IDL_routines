@@ -14,7 +14,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                     CHARERANGE=charERange, $
                                     POYNTRANGE=poyntRange, $
                                     NUMORBLIM=numOrbLim, $
-                                    MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT, $
+                                    MINMLT=minMLT,MAXMLT=maxMLT, $
+                                    BINMLT=binMLT, $
+                                    SHIFTMLT=shiftMLT, $
                                     MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                     MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
@@ -26,6 +28,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                     BZMIN=bzMin, $
                                     BYMAX=byMax, $
                                     BZMAX=bzMax, $
+                                    DO_ABS_BYMIN=abs_byMin, $
+                                    DO_ABS_BYMAX=abs_byMax, $
                                     DO_ABS_BZMIN=abs_bzMin, $
                                     DO_ABS_BZMAX=abs_bzMax, $
                                     SATELLITE=satellite, $
@@ -42,7 +46,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
                                     NPLOTS=nPlots, $
-                                    EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                    EPLOTS=ePlots, $
+                                    EPLOTRANGE=ePlotRange, $                                       
+                                    EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                                     ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
                                     ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
                                     NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
@@ -115,7 +121,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                      ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
                                      CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                                      NUMORBLIM=numOrbLim, $
-                                     MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                     MINMLT=minMLT,MAXMLT=maxMLT, $
+                                     BINMLT=binMLT, $
+                                     SHIFTMLT=shiftMLT, $
+                                     MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                      MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
                                      BOTH_HEMIS=both_hemis, $
@@ -129,6 +138,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                      BZMIN=bzMin, $
                                      BYMAX=byMax, $
                                      BZMAX=bzMax, $
+                                     DO_ABS_BYMIN=abs_byMin, $
+                                     DO_ABS_BYMAX=abs_byMax, $
                                      DO_ABS_BZMIN=abs_bzMin, $
                                      DO_ABS_BZMAX=abs_bzMax, $
                                      DELAY=delay, $
@@ -139,7 +150,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL,maximus, $
                                      RECOVERYPHASE=recoveryPhase, $
                                      MAINPHASE=mainPhase, $
                                      NPLOTS=nPlots, $
-                                     EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                     EPLOTS=ePlots, $
+                                     EPLOTRANGE=ePlotRange, $                                       
+                                     EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                                      ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
                                      ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, $
                                      LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $

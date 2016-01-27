@@ -200,8 +200,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CHARERANGE=charERange, $
                                     POYNTRANGE=poyntRange, $
                                     NUMORBLIM=numOrbLim, $
-                                    MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
-                                    MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                    MINMLT=minM,MAXMLT=maxM, $
+                                    BINMLT=binM, $
+                                    SHIFTMLT=shiftM, $
+                                    MINILAT=minI,MAXILAT=maxI, $
+                                    BINILAT=binI, $
                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                     HWMAUROVAL=HwMAurOval, $
@@ -212,6 +215,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BZMIN=bzMin, $
                                     BYMAX=byMax, $
                                     BZMAX=bzMax, $
+                                    DO_ABS_BYMIN=abs_byMin, $
+                                    DO_ABS_BYMAX=abs_byMax, $
                                     DO_ABS_BZMIN=abs_bzMin, $
                                     DO_ABS_BZMAX=abs_bzMax, $
                                     SATELLITE=satellite, $
@@ -280,7 +285,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
 
   SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
-                             MINMLT=minM,MAXMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                             MINMLT=minM,MAXMLT=maxM, $
+                             BINMLT=binM, $
+                             SHIFTMLT=shiftM, $
+                             MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
@@ -340,6 +348,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   BZMIN=bzMin, $
                                   BYMAX=byMax, $
                                   BZMAX=bzMax, $
+                                  DO_ABS_BYMIN=abs_byMin, $
+                                  DO_ABS_BYMAX=abs_byMax, $
                                   DO_ABS_BZMIN=abs_bzMin, $
                                   DO_ABS_BZMAX=abs_bzMax, $
                                   BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
@@ -411,13 +421,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                   ORBRANGE=orbRange, $
                                                   ALTITUDERANGE=altitudeRange, $
                                                   CHARERANGE=charERange,POYNTRANGE=poyntRange, $
-                                                  MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                                                  MINMLT=minM,MAXMLT=maxM, $
+                                                  BINM=binM, $
+                                                  SHIFTM=shiftM, $
                                                   MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                                   DO_LSHELL=do_lshell, $
                                                   MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                                   SMOOTHWINDOW=smoothWindow, $
                                                   BYMIN=byMin,BZMIN=bzMin, $
                                                   BYMAX=byMax,BZMAX=bzMax, $
+                                                  DO_ABS_BYMIN=abs_byMin, $
+                                                  DO_ABS_BYMAX=abs_byMax, $
                                                   DO_ABS_BZMIN=abs_bzMin, $
                                                   DO_ABS_BZMAX=abs_bzMax, $
                                                   CLOCKSTR=clockStr, $
@@ -450,7 +464,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   PRINT_ALFVENDB_PLOTSUMMARY,maximus,plot_i,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                              ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
-                             minMLT=minM,maxMLT=maxM,BINMLT=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                             minMLT=minM,maxMLT=maxM, $
+                             BINMLT=binM, $
+                             SHIFTMLT=shiftM, $
+                             MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
@@ -458,6 +475,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              BZMIN=bzMin, $
                              BYMAX=byMax, $
                              BZMAX=bzMax, $
+                             DO_ABS_BYMIN=abs_byMin, $
+                             DO_ABS_BYMAX=abs_byMax, $
                              DO_ABS_BZMIN=abs_bzMin, $
                              DO_ABS_BZMAX=abs_bzMax, $
                              BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
@@ -474,12 +493,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(do_lShell) ? binL : binI),$
                                    MIN1=minM,MIN2=(KEYWORD_SET(DO_LSHELL) ? minL : minI),$
                                    MAX1=maxM,MAX2=(KEYWORD_SET(DO_LSHELL) ? maxL : maxI), $
+                                   SHIFT1=shiftM,SHIFT2=shiftI, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
   GET_ALFVENDB_2DHISTOS,maximus,plot_i, H2DSTRARR=h2dStrArr, $
                         KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
-                        MINMLT=minM,MAXMLT=maxM,BINMLT=binM, $
+                        MINMLT=minM,MAXMLT=maxM, $
+                        BINMLT=binM, $
+                        SHIFTMLT=shiftM, $
                         MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                         DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                         ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
@@ -494,6 +516,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         T2_ARR=t2_arr, $
                         BYMIN=byMin, BZMIN=bzMin, $
                         BYMAX=byMax, BZMAX=bzMax, $
+                        DO_ABS_BYMIN=abs_byMin, $
+                        DO_ABS_BYMAX=abs_byMax, $
                         DO_ABS_BZMIN=abs_bzMin, $
                         DO_ABS_BZMAX=abs_bzMax, $
                         DELAY=delay, STABLEIMF=stableIMF, $

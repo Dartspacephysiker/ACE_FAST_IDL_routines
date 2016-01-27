@@ -1,8 +1,12 @@
 ;2016/01/23--Testing out this bzMin thing
 PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__DAWNDUSKALL__BZMAX__MESSWDELAY
 
-  hemi                           = 'NORTH'
-  ;; hemi                           = 'SOUTH'
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 54
+
+  hemi                           = 'SOUTH'
+  maxILAT                        = -54
+
 
   byMin                          = 5
   ;; bzMax                          = 0
@@ -37,7 +41,6 @@ PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   probOccurrenceRange            = [1e-4,1e0]
 
   binMLT                         = 1.5
-  minILAT                        = 54
 
   do_despun                      = 1
 
@@ -48,6 +51,7 @@ PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
                                   HEMI=hemi, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
+                                  MAXILAT=maxILAT, $
                                   /MIDNIGHT, $
                                   DELAY=delay, $
                                   DO_DESPUNDB=do_despun, $

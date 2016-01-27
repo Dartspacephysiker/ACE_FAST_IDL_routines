@@ -20,6 +20,8 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
                          BZMIN=bzMin, $
                          BYMAX=byMax, $
                          BZMAX=bzMax, $
+                         DO_ABS_BYMIN=abs_byMin, $
+                         DO_ABS_BYMAX=abs_byMax, $
                          DO_ABS_BZMIN=abs_bzMin, $
                          DO_ABS_BZMAX=abs_bzMax, $
                          OMNI_COORDS=omni_Coords ;, $
@@ -272,7 +274,13 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
      ;; fastDBInterpTime=dbTimes[db_i[fastDBSatProppedInterped_ii]]
     
      ;; byMin_ii are the indices (of indices) of events that meet the minimum By requirement
-     byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
+     IF KEYWORD_SET(abs_byMin) THEN BEGIN
+        byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
+     ENDIF ELSE BEGIN
+        byMin_ii=WHERE(byChast GE byMin,NCOMPLEMENT=byminLost)
+     ENDELSE
+
+     ;; byMin_ii=WHERE(byChast LE -ABS(byMin) OR byChast GE ABS(byMin),NCOMPLEMENT=byminLost)
      
      bzChast=bzChast[byMin_ii]
      byChast=byChast[byMin_ii]
@@ -298,7 +306,14 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
     
      ;; byMax_ii are the indices (of indices) of events that meet the Maximum By requirement
      ;; byMax_ii=WHERE(byChast GE -ABS(byMax) OR byChast LE ABS(byMax),NCOMPLEMENT=byMaxLost)
-     byMax_ii=WHERE(ABS(byChast) LE ABS(byMax),NCOMPLEMENT=byMaxLost)
+     IF KEYWORD_SET(abs_byMax) THEN BEGIN
+        byMax_ii=WHERE(ABS(byChast) LE ABS(byMax),NCOMPLEMENT=byMaxLost)
+     ENDIF ELSE BEGIN
+        byMax_ii=WHERE(byChast LE byMax,NCOMPLEMENT=byMaxLost)
+     ENDELSE
+     
+
+     ;; byMax_ii=WHERE(ABS(byChast) LE ABS(byMax),NCOMPLEMENT=byMaxLost)
      
      bzChast=bzChast[byMax_ii]
      byChast=byChast[byMax_ii]

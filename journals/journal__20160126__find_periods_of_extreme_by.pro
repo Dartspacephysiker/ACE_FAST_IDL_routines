@@ -4,5 +4,9 @@ PRO JOURNAL__20160126__FIND_PERIODS_OF_EXTREME_BY
 
   LOAD_OMNI_DB,sw_data
 
+  sw_data.by_gsm
+
+
+
 
 END

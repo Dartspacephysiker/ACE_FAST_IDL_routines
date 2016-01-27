@@ -6,13 +6,18 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    DO_DESPUNDB=do_despunDB, $
    HEMI=hemi, $
    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
-   MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+   MINMLT=minM,MAXMLT=maxM, $
+   BINM=binM, $
+   SHIFTM=shiftM, $
+   MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
    SMOOTHWINDOW=smoothWindow, $
    BYMIN=byMin, $
    BZMIN=bzMin, $
    BYMAX=byMax, $
    BZMAX=bzMax, $
+   DO_ABS_BYMIN=abs_byMin, $
+   DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
    CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
@@ -61,6 +66,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                              BZMIN=bzMin, $
                              BYMAX=byMax, $
                              BZMAX=bzMax, $
+                             DO_ABS_BYMIN=abs_byMin, $
+                             DO_ABS_BYMAX=abs_byMax, $
                              DO_ABS_BZMIN=abs_bzMin, $
                              DO_ABS_BZMAX=abs_bzMax, $
                              OMNI_COORDS=omni_Coords)
