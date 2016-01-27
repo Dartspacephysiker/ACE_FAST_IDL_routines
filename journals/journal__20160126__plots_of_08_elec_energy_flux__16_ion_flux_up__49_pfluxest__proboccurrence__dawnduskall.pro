@@ -8,15 +8,15 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   ;; hemi                           = 'NORTH'
   ;; minILAT                        = 54
   ;; ;; nEventsPlotRange               = [5e1,5e3]        ; North   ;for chare 3-400eV
-  ;; nEventsPlotRange               = [5e1,5e3]        ; North   ;for chare 3-400eV
+  ;; nEventsPlotRange               = [3e1,3e3]        ; North   ;for chare 3-400eV
 
   hemi                           = 'SOUTH'
   maxILAT                        = -54
   nEventsPlotRange               = [1e1,1e3]   ; South
 
-  byMin                          = 5
+  byMin                          = 3
   do_abs_bymin                   = 1
-  ;; bzMax                          = 1
+  bzMax                          = 0
   ;; smoothWindow                   = 5
   ;; delay                          = 720
 
@@ -26,16 +26,11 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   ;;NEVENTS
 
    ;;10-EFLUX_LOSSCONE_INTEG
-   ;; eNumFlPlotType                 = 'eflux_Losscone_Integ'
-   ;; ;; eNumFlRange                    = [10^(0.5),10^(5.5)]
-   ;; eNumFlRange                    = [2e1,2e3]
-   ;; logENumFlPlot                  = 1
+   eNumFlPlotType                 = 'eflux_Losscone_Integ'
+   ;; eNumFlRange                    = [10^(0.5),10^(5.5)]
+   eNumFlRange                    = [2e1,2e3]
+   logENumFlPlot                  = 1
 
-  ;;18-INTEG_UPWARD_ION_FLUX
-  ;; iFluxPlotType                  = 'Integ_Up'
-  ;; iPlotRange                     = [10^(7.5),10^(11.5)]
-  ;; logIFPlot                      = 1
-  
   ;;08--ELEC_ENERGY_FLUX
   eFluxPlotType                  = 'Max'
   ePlotRange                     = [2e-1,2e1]
@@ -52,7 +47,7 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   ;PROBOCCURRENCE
   ;; probOccurrenceRange            = [1e-3,1e-1]   ;;Seemed to work well when byMin=3, hemi='SOUTH', and anglelims=[45,135]
-  probOccurrenceRange            = [3e-3,3e-1]
+  probOccurrenceRange            = [1e-2,1e0]
 
   binMLT                         = 1.0
   shiftMLT                       = 0.5
@@ -78,7 +73,7 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                   ;; /MEDIANPLOT, $
                                   /LOGAVGPLOT, $
                                   /NPLOTS, $
-                                  ;; /ENUMFLPLOTS, $
+                                  /ENUMFLPLOTS, $
                                   /EPLOTS, $
                                   /IONPLOTS, $
                                   /PPLOTS, $
@@ -101,6 +96,12 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                   /COMBINED_TO_BUFFER
 
   ;;prob occurrence last because it takes so long
+  ;; 18-INTEG_UPWARD_ION_FLUX
+  iFluxPlotType                  = 'Integ_Up'
+  iPlotRange                     = [10^(7.5),10^(11.5)]
+  logIFPlot                      = 1
+  
+
   PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL, $
                                   NONSTORM=nonstorm, $
                                   CHARERANGE=charERange, $
@@ -121,6 +122,10 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                   /PROBOCCURRENCEPLOT, $
                                   /LOGPROBOCCURRENCE, $
                                   PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                  /IONPLOTS, $
+                                  IFLUXPLOTTYPE=iFluxPlotType, $
+                                  IPLOTRANGE=iPlotRange, $
+                                  /LOGIFPLOT, $
                                   /CB_FORCE_OOBHIGH, $
                                   /CB_FORCE_OOBLOW, $
                                   /COMBINE_PLOTS, $
