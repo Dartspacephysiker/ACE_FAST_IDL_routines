@@ -561,7 +561,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
   SAVE_ALFVENDB_TEMPDATA,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
-                         MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI,BINM=binM,BINI=binI, $
+                         MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
+                         BINM=binM, $
+                         SHIFTM=shiftM, $
+                         BINI=binI, $
                          DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
                          MINL=minL,MAXL=maxL,BINL=binL,$
                          RAWDIR=rawDir,PARAMSTR=paramString,$
