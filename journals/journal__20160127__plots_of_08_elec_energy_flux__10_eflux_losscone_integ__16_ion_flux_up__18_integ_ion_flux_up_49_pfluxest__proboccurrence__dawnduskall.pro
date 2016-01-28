@@ -25,15 +25,18 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
   do_abs_bymin                   = 1
   bzMax                          = 0
   ;; smoothWindow                   = 5
+  ;; delay                          = 300
+  ;; delay                          = 360
   ;; delay                          = 420
   ;; delay                          = 480
   ;; delay                          = 540
   ;; delay                          = 600
-  delay                          = 660
+  ;; delay                          = 660
   ;; delay                          = 720
   ;; delay                          = 780
   ;; delay                          = 840
   ;; delay                          = 900
+  delay                          = 1080
 
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -130,9 +133,9 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      BZMAX=bzMax, $
      SMOOTHWINDOW=smoothWindow, $
      /LOGAVGPLOT, $
-     ;; /PROBOCCURRENCEPLOT, $
-     ;; /LOGPROBOCCURRENCE, $
-     ;; PROBOCCURRENCERANGE=probOccurrenceRange, $
+     /PROBOCCURRENCEPLOT, $
+     /LOGPROBOCCURRENCE, $
+     PROBOCCURRENCERANGE=probOccurrenceRange, $
      /IONPLOTS, $
      IFLUXPLOTTYPE=iFluxPlotType, $
      IPLOTRANGE=iPlotRange, $
@@ -140,6 +143,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      ;; /CB_FORCE_OOBHIGH, $
      /CB_FORCE_OOBLOW, $
      /COMBINE_PLOTS, $
+     N_TO_COMBINE=2, $
      /SAVE_COMBINED_WINDOW, $
      /COMBINED_TO_BUFFER
   
