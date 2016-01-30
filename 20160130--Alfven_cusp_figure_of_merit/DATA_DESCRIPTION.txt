@@ -1,0 +1,50 @@
+2016/01/30
+These data were all produced by the procedure JOURNAL__20160128__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS. We are now using them to determine a figure of merit—a way to say what the best delay actually is, based on maximizing this figure of merit for probability of occurrence.
+
+*CONTENTS OF EACH FILE (example from polarplots_Jan_28_16--NORTH--logAvg--duskward--0stable--OMNI_GSM_7mindelay_byMin_3.0.dat)*
+BINI            FLOAT     =       2.50000
+BINL            FLOAT     =       1.00000
+BINM            FLOAT     =       1.00000
+CLOCKSTR        STRING    = 'duskward'
+DATADIR         STRING    = '/SPENCEdata/Research/Cusp/database/'
+DATANAMEARR     STRING    = Array[7]
+H2DSTRARR       STRUCT    = -> TMPLT_H2DSTR Array[7]
+HEMI            STRING    = 'NORTH'
+HOYDIA          STRING    = 'Jan_28_16'
+MAXI            FLOAT     =       85.0000
+MAXL            LONG      =           16
+MAXM            FLOAT     =       24.0000
+MINI            FLOAT     =       55.0000
+MINL            FLOAT     =       2.50000
+MINM            FLOAT     =       0.00000
+PARAMSTR        STRING    = 'Jan_28_16----NORTH--logAvg--duskward--0stable--OMNI_GSM_7mindelay_byMin_3.0_'
+PLOTMEDORAVG    STRING    = 'logAvg'
+RAWDIR          STRING    = 'rawsaves/'
+SHIFTM          FLOAT     =      0.500000
+STABLEIMF       INT       =        0
+
+H2DSTRARR contains the following data products:
+*Max L.C. e!U-!N Flux (mW/m!U2!N), at ionos.
+*Integ. L.C. e!U-!N Flux (mW/m), at ionos.
+*Max Poynting Flux (mW/m!U2!N), at ionos.
+*Log Max Upward Ion Flux (#/cm!U2!N-s), at ionos.
+*Log Probability of occurrence
+*Log Number of events
+*Histogram mask
+
+Each H2DStr has the following members:
+   DATA            DOUBLE    Array[25, 13]
+   TITLE           STRING    'Max L.C. e!U-!N Flux (mW/m!U2!N), at ionos.'
+   LIM             DOUBLE    Array[2]
+   SHIFT1          FLOAT          0.500000
+   SHIFT2          INT              0
+   IS_LOGGED       INT              1
+   IS_FLUXDATA     INT              1
+   LABELFORMAT     STRING    '(D0.1)'
+   DO_MIDCBLABEL   INT              1
+   LOGLABELS       INT              1
+   DO_PLOTINTEGRAL INT              0
+   FORCE_OOBHIGH   INT              1
+   FORCE_OOBLOW    INT              1
+
+K?

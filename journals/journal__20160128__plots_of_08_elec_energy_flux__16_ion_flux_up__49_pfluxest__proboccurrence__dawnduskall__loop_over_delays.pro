@@ -23,7 +23,8 @@ PRO JOURNAL__20160128__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   do_abs_bymin                   = 1
   bzMax                          = 0
   ;; smoothWindow                   = 5
-  delayArr=[300,360,420,480,540,600,660,720,780,840,900,960,1020,1080,1140,1200,1260,1320]
+  ;; delayArr=[300,360,420,480,540,600,660,720,780,840,900,960,1020,1080,1140,1200,1260,1320]
+  delayArr=[1380,1440,1500,1560,1620,1680,1740,1800]
 
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -55,9 +56,9 @@ PRO JOURNAL__20160128__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   do_despun                      = 1
 
   FOR i = 0, N_ELEMENTS(delayArr)-1 DO BEGIN
-     PRINT,'******************************************'
-     PRINT,FORMAT='("*************DELAY=",I3,"s*******************")',delayArr[i]
-     PRINT,'******************************************'
+     PRINT,'*******************************************'
+     PRINT,FORMAT='("*************DELAY=",I04,"s*******************")',delayArr[i]
+     PRINT,'*******************************************'
      PRINT,''
      PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSKALL, $
         NONSTORM=nonstorm, $
