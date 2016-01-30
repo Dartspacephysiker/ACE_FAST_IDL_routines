@@ -11,6 +11,8 @@
 ;; 6 *Histogram mask
 PRO JOURNAL__20160130__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING
 
+  printemall              = 0
+
   h2dFileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/20160130--Alfven_cusp_figure_of_merit/data/'
 
   hoyDia                  = 'Jan_28_16'
@@ -25,7 +27,8 @@ PRO JOURNAL__20160130__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING
   shiftM                  = 0.5
 
   h2d_i                   = 4            ; The one for probability of occurrence
-  n_maxima                = 2            ; How many maxima are we getting?
+  n_maxima                = 4            ; How many maxima are we getting?
+  nFOM_to_print           = 15
 
   ;;Boundaries for figure of merit
   dusk_minM               = 12.5
@@ -69,17 +72,31 @@ PRO JOURNAL__20160130__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING
 
   ;;Now, let's get a specified number of maxima: loop through files, let us know if any don't exist
 
-  PRINT,"Starting the action for a dawn/dusk figure of merit for: " + h2dStr[h2d_i].title
+  h2dFile           = STRING(FORMAT='("polarplots_"' + $
+                             ',A0,"--"' + $
+                             ',A0,"--logAvg--"' + $
+                             ',A0,"--0stable--OMNI_GSM_"' + $
+                             ',I0,"mindelay_byMin_",F3.1,".dat")', $
+                             hoyDia,hemi,clockStrArr[0],delayArr[0],byMin)
+
+  RESTORE,h2dFileDir+h2dFile
+  PRINT,"Starting the action for a dawn/dusk figure of merit for: " + h2dStrArr[h2d_i].title
   PRINT,''
-  PRINT,FORMAT='("Delay (m)",T20,"IMF",T30,"Dawn Fig. of Merit","Dusk Fig. of Merit")' ;header
-  fmtString               = '(I-4,T20,A9,T30,F0.2,T50,F0.2)'
+  IF KEYWORD_SET(printemall) THEN BEGIN
+     PRINT,FORMAT='("Delay (m)",T20,"IMF",T30,"Comb. FOM",T45,"Dawn FOM",T60,"Dusk FOM")' ;header
+     fmtString               = '(I-4,T20,A9,T30,F0.2,T45,F0.2,T60,F0.2)'
+  ENDIF
 
   nDelay                  = N_ELEMENTS(delayArr)
   nClock                  = N_ELEMENTS(clockStrArr)
-  h2dFileArr              = !NULL
-  fomArr                  = !NULL
-  FOR i=0,nDelay-1 DO BEGIN
-     FOR k=0,nClock-1 DO BEGIN
+  FOR k=0,nClock-1 DO BEGIN
+     h2dFileArr           = !NULL
+     combfomArr           = !NULL
+     dawnfomArr           = !NULL
+     duskfomArr           = !NULL
+
+     PRINT,'****'+STRUPCASE(clockStrArr[k])+'****'
+     FOR i=0,nDelay-1 DO BEGIN
         h2dFile           = STRING(FORMAT='("polarplots_"' + $
                                    ',A0,"--"' + $
                                    ',A0,"--logAvg--"' + $
@@ -90,24 +107,33 @@ PRO JOURNAL__20160130__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING
         IF FILE_TEST(h2dFileDir+h2dFile) THEN BEGIN    ;Got 'im!
 
 
-           restore,h2dFileDir+h2dFileArr[i]
+           restore,h2dFileDir+h2dFile
            
+           ;handle the masked cells
+           masked_i       = WHERE(h2dStrArr[-1].data GT 250)
+           h2dStrArr[h2d_i].data[masked_i] = -10
+
            dawn_data      = h2dStrArr[h2d_i].data[dawn_i]
-           dawn_maxima    = GET_N_MAXIMA_IN_ARRAY(dawn_data,N=n_maxima,OUT_I=dawnMaxima_ii)
+           dawn_maxima    = 10.0^(GET_N_MAXIMA_IN_ARRAY(dawn_data,N=n_maxima,OUT_I=dawnMaxima_ii))
            dawn_max_ilats = centersILAT[dawn_i[dawnMaxima_ii]]
            dawn_max_mlts  = centersMLT[dawn_i[dawnMaxima_ii]]
 
            dusk_data      = h2dStrArr[h2d_i].data[dusk_i]
-           dusk_maxima    = GET_N_MAXIMA_IN_ARRAY(dusk_data,N=n_maxima,OUT_I=duskMaxima_ii)
+           dusk_maxima    = 10.0^(GET_N_MAXIMA_IN_ARRAY(dusk_data,N=n_maxima,OUT_I=duskMaxima_ii))
            dusk_max_ilats = centersILAT[dusk_i[duskMaxima_ii]]
            dusk_max_mlts  = centersMLT[dusk_i[duskMaxima_ii]]
            
            dawn_fom       = MEAN(dawn_maxima)
            dusk_fom       = MEAN(dusk_maxima)
+           comb_fom       = dawn_fom+dusk_fom
 
-           PRINT,FORMAT=fmtString,delayArr[i/nClock]/60,clockStrArr[k],fom
+           IF KEYWORD_SET(printemall) THEN BEGIN
+              PRINT,FORMAT=fmtString,delayArr[i],clockStrArr[k],comb_fom,dawn_fom,dusk_fom
+           ENDIF
            
-           fomArr         = [fomArr,[dawn_fom,dusk_fom]]
+           combfomArr     = [combfomArr,comb_fom]
+           dawnfomArr     = [dawnfomArr,dawn_fom]
+           duskfomArr     = [duskfomArr,dusk_fom]
            h2dFileArr     = [h2dFileArr,h2dFile]
 
         ENDIF ELSE BEGIN
@@ -117,9 +143,65 @@ PRO JOURNAL__20160130__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING
         ENDELSE
 
      ENDFOR
+
+     ;;Now lets see which figures of merit are most awesome
+     combFOM_awesome         = GET_N_MAXIMA_IN_ARRAY(combfomArr,N=nFOM_to_print,OUT_I=combFOM_i)
+     dawnFOM_awesome         = dawnfomArr[combFOM_i]
+     duskFOM_awesome         = duskfomArr[combFOM_i]
+     delay_awesome           = delayArr[combFOM_i]
+
+     PRINT,"************THE RESULTS************"
+     PRINT,""
+     PRINT,FORMAT='("Rank",T10,"Delay (m)",T20,"Comb. FOM",T35,"Dawn FOM",T50,"Dusk FOM")' ;header
+     fomFmtString            = '(I-2,T10,I-4,T20,F0.2,T35,F0.2,T50,F0.2)'
+     
+     ;; FOR j=0,1 DO BEGIN
+     PRINT,'******'+STRUPCASE(clockStrArr[k])+'******'
+     FOR i=0,nFOM_to_print-1 DO BEGIN
+        PRINT,FORMAT=fomFmtString,i,delay_awesome[i],combFOM_awesome[i],dawnFOM_awesome[i],duskFOM_awesome[i]
+     ENDFOR
+     PRINT,''
+     PRINT,''
+     ;; ENDFOR
+     
   ENDFOR
   nFiles                  = N_ELEMENTS(h2dFileArr)
 
-  STOP
+  ;;Now lets see which figures of merit are most awesome
+  ;; combFOM_awesome         = GET_N_MAXIMA_IN_ARRAY(combfomArr,N=nFOM_to_print,OUT_I=combFOM_i)
+  ;; dawnFOM_awesome         = dawnfomArr[combFOM_i]
+  ;; duskFOM_awesome         = duskfomArr[combFOM_i]
+
+  ;; dawndusk                = ['DAWN','DUSK']
+  ;; PRINT,"************THE RESULTS************"
+  ;; PRINT,""
+  ;; PRINT,FORMAT='("Rank",T5,"Delay (m)",T20,"Comb. FOM",T35,"Dawn FOM",T50,"Dusk FOM")' ;header
+  ;; fomFmtString            = '(I-2,T5,I-4,T20,F0.2,T35,F0.2,T50,F0.2)'
+
+  ;;  ;; FOR j=0,1 DO BEGIN
+  ;;  ;;    str                  = dawndusk[j]
+  ;;  ;;    IF i EQ 0 THEN BEGIN
+  ;;  ;;       fom_awesome = dawnFOM_awesome 
+  ;;  ;;    ENDIF ELSE BEGIN
+  ;;  ;;       fom_awesome = duskFOM_awesome
+  ;;  ;;    ENDELSE
+  ;;
+  ;;  ;;    PRINT,'******'+STRUPCASE(str)+'******'
+  ;;  ;;    FOR i=0,nFOM_to_print-1 DO BEGIN
+  ;;  ;;       PRINT,FORMAT=fmtString,i,delayArr[i]/60,fom
+  ;;  ;;    ENDFOR
+  ;;  ;;    PRINT,''
+  ;;  ;; ENDFOR
+  ;;
+  ;; FOR j=0,1 DO BEGIN
+  ;;    PRINT,'******'+STRUPCASE(str)+'******'
+  ;;    FOR i=0,nFOM_to_print-1 DO BEGIN
+  ;;       PRINT,FORMAT=fomFmtString,i,delayArr[i]/60,combFOM_awesome[i],dawnFOM_awesome[i],duskFOM_awesome[i]
+  ;;    ENDFOR
+  ;;    PRINT,''
+  ;; ENDFOR
+
+
+  ;; STOP
 
 END
