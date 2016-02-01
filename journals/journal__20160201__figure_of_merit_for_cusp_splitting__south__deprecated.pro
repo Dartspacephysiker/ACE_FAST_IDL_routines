@@ -11,78 +11,13 @@
 ;; 6 *Histogram mask
 PRO JOURNAL__20160201__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__SOUTH,LUN=lun
 
-  IF N_ELEMENTS(lun) EQ 0 THEN lun         = -1 ;stdout
-
-  printemall                               = 0
-
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160130--Alfven_cusp_figure_of_merit/data/'
-
-  
+  hemi                                     = 'SOUTH' ;need this for defaults
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
-  outFile                                  = h2dFileDir+'processed/'+hoyDia+'--Cusp_splitting--SOUTH_figures_of_merit--delays_0-30min.sav'
-  fileDay                                  = 'Feb_1_16'
 
-  minI                                     = -85.0000
-  maxI                                     = -55.0000
-  binI                                     = 2.5
+  @journal__20160201__figure_of_merit_defaults
 
-  minM                                     = 0.00000
-  maxM                                     = 24.0000
-  binM                                     = 1.0
-  shiftM                                   = 0.5
-
-  h2d_i                                    = 4            ; The one for probability of occurrence
-  n_maxima                                 = 3            ; How many maxima are we getting?
-  threshold_max                            = ALOG10(1.1)  ; Value shouldn't be more than 10% above 100% occurrence
-  nFOM_to_print                            = 25
-
-  ;;Boundaries for figure of merit
-  dusk_minM                                = 12.5
-  dusk_maxM                                = 15.5
-  dusk_minI                                = -75
-  dusk_maxI                                = -60
-  ;; dusk_minI                                = 60
-  ;; dusk_maxI                                = 75
-
-  dawn_minM                                = 8.5
-  dawn_maxM                                = 11.5
-  dawn_minI                                = -75
-  dawn_maxI                                = -60
-  ;; dawn_minI                                = 60
-  ;; dawn_maxI                                = 75
-
-  ;;Get the ILAT and MLT bin centers
-  GET_H2D_BIN_CENTERS_OR_EDGES,centers, $
-                               CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                               BINSIZE1=binM, BINSIZE2=binI, $
-                               MAX1=maxM, MAX2=maxI, $
-                               MIN1=minM, MIN2=minI, $
-                               SHIFT1=shiftM, SHIFT2=shiftI
-
-  ;;Determine where to get the figure of merit stuff
-  dawn_MLT_i                               = WHERE(centersMLT GE dawn_minM AND centersMLT LE dawn_maxM)
-  dawn_ILAT_i                              = WHERE(centersILAT GE dawn_minI AND centersILAT LE dawn_maxI)
-  dawn_i                                   = cgsetintersection(dawn_MLT_i,dawn_ILAT_i)
-
-  dusk_MLT_i                               = WHERE(centersMLT GE dusk_minM AND centersMLT LE dusk_maxM)
-  dusk_ILAT_i                              = WHERE(centersILAT GE dusk_minI AND centersILAT LE dusk_maxI)
-  dusk_i                                   = cgsetintersection(dusk_MLT_i,dusk_ILAT_i)
-
-  ;;parameters for files to be looped over
-  hemi                                     = 'SOUTH'
-  clockStrArr                              = ['dawnward','all_IMF','duskward']
-  byMin                                    = 3.0
-
-  delayArr                                 = [   0,  60, 120, 180, 240, $
-                                               300, 360, 420, 480, 540, $
-                                               600, 660, 720, 780, 840, $
-                                               900, 960,1020,1080,1140, $
-                                              1200,1260,1320,1380,1440, $
-                                              1500,1560,1620,1680,1740, $
-                                              1800]/60
 
   ;;Now, let's get a specified number of maxima: loop through files, let us know if any don't exist
-
   h2dFNameFmt                              = '("raw/polarplots_"' + $
      ',A0,"--"' + $
      ',A0,"--logAvg--"' + $
@@ -98,15 +33,7 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__SOUTH,LUN=lun
      PRINTF,lun,FORMAT='("Delay (m)",T20,"IMF",T30,"Comb. FOM",T45,"Dawn FOM",T60,"Dusk FOM")' ;header
      fmtString                             = '(I-4,T20,A9,T30,F0.2,T45,F0.2,T60,F0.2)'
   ENDIF
-  bogusFmt                                 = '(I0,T10,F0.3,T25,F0.3,T40,F0.3)' ;for bogus vals
 
-  IMFPredomList                            = LIST(!NULL)
-  combFOMList                              = LIST(!NULL)
-  dawnFOMList                              = LIST(!NULL)
-  duskFOMList                              = LIST(!NULL)
-  delayList                                = LIST(!NULL)
-  nDelay                                   = N_ELEMENTS(delayArr)
-  nClock                                   = N_ELEMENTS(clockStrArr)
   FOR k=0,nClock-1 DO BEGIN
      h2dFileArr                            = !NULL
      combfomArr                            = !NULL
@@ -240,7 +167,7 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__SOUTH,LUN=lun
 
   ;;Now combine stuff from each IMF predominance
   ;; FOR i=0,nDelay-1 DO BEGIN
-  combDawnDusk                          = combFOMList[0]+combFOMList[2]
+  combDawnDusk                          = combFOMList[0]+combFOMList[1]+combFOMList[2]
   ;; ENDFOR
   
   combDawnDusk_awesome                  = GET_N_MAXIMA_IN_ARRAY(combDawnDusk,N=nFOM_to_print,OUT_I=combDawnDusk_i)
@@ -252,7 +179,9 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__SOUTH,LUN=lun
   fomUltimateFmtString                  = '(I-2,T10,I-4,T20,F0.3,"        |",T40,F0.3,T55,F0.3,"      |",T70,F0.3,T85,F0.3)'
   
   FOR i=0,nFOM_to_print-1 DO BEGIN
-     PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,i],duskFOMList[0,i],dawnFOMList[2,i],duskFOMList[2,i]
+     list_i                             = combDawnDusk_i[i]
+     ;; PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,i],duskFOMList[0,i],dawnFOMList[2,i],duskFOMList[2,i]
+     PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,list_i],duskFOMList[0,list_i],dawnFOMList[2,list_i],duskFOMList[2,list_i]
   ENDFOR
   
   PRINTF,lun,'Saving lists to ' + outFile

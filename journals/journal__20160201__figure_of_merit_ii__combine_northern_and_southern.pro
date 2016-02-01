@@ -1,6 +1,6 @@
 ;;2016/02/01
 ;;Now let's see wha' happen if we combine stuff from both hemispheres
-PRO JOURNAL__20160201__FIGURE_OF_MERIT__COMBINE_NORTHERN_AND_SOUTHERN,LUN=lun
+PRO JOURNAL__20160201__FIGURE_OF_MERIT_II__COMBINE_NORTHERN_AND_SOUTHERN
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun         = -1 ;stdout
 
@@ -11,8 +11,8 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT__COMBINE_NORTHERN_AND_SOUTHERN,LUN=lun
 
   ;;input files
   fileDia                                  = '20160201'
-  inFile_north                             = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit--delays_0-30min.sav'
-  inFile_south                             = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit--delays_0-30min.sav'
+  inFile_north                             = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_II--delays_0-30min.sav'
+  inFile_south                             = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_II--delays_0-30min.sav'
 
   nFOM_to_print                            = 25
 
@@ -72,6 +72,7 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT__COMBINE_NORTHERN_AND_SOUTHERN,LUN=lun
                                                     DIMENSIONS=[1200,800])
   FOR i=0,nPlots-1 DO BEGIN
      plotArr[i]                            = PLOT(delayList[0],datArr[*,i], $
+                                                  TITLE=(i GT 0) ? !NULL : 'Figure of Merit II', $
                                                   NAME=plotNames[i], $
                                                   OVERPLOT=(i GT 0), $
                                                   COLOR=plotColor[i], $

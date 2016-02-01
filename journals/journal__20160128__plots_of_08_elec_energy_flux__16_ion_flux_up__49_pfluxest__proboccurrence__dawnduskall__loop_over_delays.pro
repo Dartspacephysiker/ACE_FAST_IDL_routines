@@ -3,12 +3,12 @@ PRO JOURNAL__20160128__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   nonstorm                       = 0
 
-  hemi                           = 'NORTH'
-  minILAT                        = 55
-  maxILAT                        = 85
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -55
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 55
+  ;; maxILAT                        = 85
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -55
   binILAT                        = 2.5
   nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
   nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
@@ -34,7 +34,7 @@ PRO JOURNAL__20160128__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   ;;           1200,1260,1320,1380,1440, $
   ;;           1500,1560,1620,1680,1740, $
   ;;           1800]
-  delayArr=[0,60,120,180,240]
+  delayArr=[540,600,660,720,780,840,900,960]
 
 
   ;; charERange                     = [4,300]
