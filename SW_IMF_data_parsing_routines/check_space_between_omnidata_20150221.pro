@@ -18,6 +18,7 @@ PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
 
   ;;where to save data
   culledDataStr="/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata.dat"
+  culledDataStructStr='/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata_struct.dat'
   ;;culledDataStr=dataDir + "/processed/culled_OMNI_magdata.dat"
 
   ;;time between observations thing
@@ -112,9 +113,28 @@ PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
   ;;cgHistoplot,180/!PI*thetaCone,title="Distr. of IMF cone angles, 1998-2000",xtitle="IMF cone angle, degrees",output="IMFconeangle_histo.png"
 
   help,culledDataStr,Bx,By_GSE,By_GSM,Bz_GSE,Bz_GSM,phiClock_GSE,phiClock_GSM,thetaCone_GSE,thetaCone_GSM, $
-       cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc
+       cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc,goodmag_goodtimes_i
 
+  PRINT,'Saving culled OMNI data to ' + culledDataStr
   save,filename=culledDataStr,Bx,By_GSE,By_GSM,Bz_GSE,Bz_GSM,phiClock_GSE,phiClock_GSM,thetaCone_GSE,thetaCone_GSM, $
-       cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc
+       cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc,goodmag_goodtimes_i
+
+  sw_data_culled                 = {BX:Bx, $
+                                    BY_GSE:By_GSE, $
+                                    BZ_GSE:Bz_GSE, $
+                                    BZ_GSM:Bz_GSM, $
+                                    PHICLOCK_GSE:phiClock_GSE, $
+                                    PHICLOCK_GSM:phiClock_GSM, $
+                                    THETACONE_GSE:thetaCone_GSE, $
+                                    THETACONE_GSM:thetaCone_GSM, $
+                                    CONE_OVERCLOCK_GSE:cone_overClock_GSE, $
+                                    CONE_OVERCLOCK_GSM:cone_overClock_GSM, $
+                                    BXY_OVER_BZ_GSE:bxy_over_bz_GSE, $
+                                    BXY_OVER_BZ_GSM:Bxy_over_Bz_GSM, $
+                                    MAG_UTC:mag_utc, $
+                                    GOODMAG_GOODTIMES_I:goodmag_goodtimes_i}
+
+  PRINT,'Saving culled OMNI data struct to ' + culledDataStructStr
+  save,sw_data_culled,FILENAME=culledDataStructStr
 
 END
