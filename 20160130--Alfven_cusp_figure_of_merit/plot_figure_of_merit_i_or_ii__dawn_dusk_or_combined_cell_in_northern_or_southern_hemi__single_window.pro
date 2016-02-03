@@ -97,7 +97,7 @@ PRO PLOT_FIGURE_OF_MERIT_I_OR_II__DAWN_DUSK_OR_COMBINED_CELL_IN_NORTHERN_OR_SOUT
   IF fom_type EQ 2 AND STRUPCASE(cell_to_plot) EQ 'COMBINED' THEN BEGIN
      yRange                                = [-0.5,1.0]
   ENDIF ELSE BEGIN
-     yRange                                = [0,1.0]
+     yRange                                = [0,1.5]
   ENDELSE
   ;;i indexes IMF direction
   ;;j indexes hemisphere

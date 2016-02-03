@@ -16,7 +16,7 @@
   shiftM                                   = 0.5
 
   h2d_i                                    = 4            ; The one for probability of occurrence
-  n_maxima                                 = 4            ; How many maxima are we getting?
+  n_maxima                                 = 3            ; How many maxima are we getting?
   n_center_maxima                          = 2
   threshold_max                            = ALOG10(1.2)  ; Value shouldn't be more than 10% above 100% occurrence
   nFOM_to_print                            = 25

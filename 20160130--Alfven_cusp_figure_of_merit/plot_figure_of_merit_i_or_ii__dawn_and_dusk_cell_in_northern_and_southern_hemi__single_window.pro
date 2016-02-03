@@ -110,7 +110,7 @@ PRO PLOT_FIGURE_OF_MERIT_I_OR_II__DAWN_AND_DUSK_CELL_IN_NORTHERN_AND_SOUTHERN_HE
                                                      XSHOWTEXT=xShowLabel, $
                                                      ;; AXIS_STYLE=(i EQ nWindows-1) ? 1 : !NULL, $
                                                      XTITLE=(i EQ nWindows-1) ? 'Delay between magnetopause and cusp observation (min)' : !NULL, $
-                                                     YRANGE=[0,0.8], $
+                                                     YRANGE=[0,1.0], $
                                                      YTITLE=IMFCortStr[i] + " FOM", $
                                                      NAME=plotHemiStr[j], $
                                                      OVERPLOT=(j GT 0), $

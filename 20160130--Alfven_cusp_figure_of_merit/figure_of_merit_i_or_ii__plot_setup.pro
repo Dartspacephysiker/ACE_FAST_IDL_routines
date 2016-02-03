@@ -46,7 +46,7 @@ FUNCTION FIGURE_OF_MERIT_I_OR_II__PLOT_SETUP, $
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   ;;input files
-  fileDia                                  = '20160201'
+  fileDia                                  = '20160202'
 
   IF KEYWORD_SET(use_old_south) THEN BEGIN
      PRINTF,lun,"Using BAD Southern data!"
