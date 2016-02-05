@@ -1,354 +1,120 @@
 Log Probability of occurrence
-Max, min:               -0.35          -3.47
-Log Probability of occurrence
-Max, min:               -0.55          -3.65
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-184      9.50      -66.25    1.109          16
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.31
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-184      9.50      -66.25    0.094          1
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.52
-Log Probability of occurrence
-Max, min:               -0.49          -3.42
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-184      9.50      -66.25    1.109          16
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.78
-Log Probability of occurrence
-Max, min:               -0.28          -3.62
-Log Probability of occurrence
-Max, min:               -0.35          -3.51
-Log Probability of occurrence
-Max, min:               -0.31          -3.45
-Log Probability of occurrence
-Max, min:               -0.40          -3.56
-Log Probability of occurrence
-Max, min:               -0.35          -3.65
-Log Probability of occurrence
-Max, min:               -0.16          -3.43
-Log Probability of occurrence
-Max, min:               -0.48          -3.31
-Log Probability of occurrence
-Max, min:               -0.35          -3.57
-Log Probability of occurrence
-Max, min:               -0.30          -3.30
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.34
-Log Probability of occurrence
-Max, min:               -0.48          -3.44
-Log Probability of occurrence
-Max, min:               -0.19          -3.21
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.75
-Log Probability of occurrence
-Max, min:               -0.46          -3.34
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.688          6
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.10          -3.22
-2 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.602          8
-Setting this width_time to zero ...
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.54
-Log Probability of occurrence
-Max, min:               -0.47          -3.74
-2 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-50       0.50      -78.75    0.328          3
-Setting this width_time to zero ...
-230      5.50      -61.25    2.703          19
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.55          -3.26
-2 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.125          2
-Setting this width_time to zero ...
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
+Max, min:               -1.25          -4.39
 Log Probability of occurrence
-Max, min:                0.00          -3.74
+Max, min:               -1.15          -4.28
 Log Probability of occurrence
-Max, min:               -0.46          -3.33
-2 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-205      5.50      -63.75    20.281         126
-Setting this width_time to zero ...
-230      5.50      -61.25    2.703          19
-Setting this width_time to zero ...
-
+Max, min:               -1.18          -4.02
 Log Probability of occurrence
-Max, min:                0.00          -3.27
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
+Max, min:               -1.26          -4.40
 Log Probability of occurrence
-Max, min:                0.00          -3.69
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
+Max, min:               -1.15          -4.28
 Log Probability of occurrence
-Max, min:                0.00          -3.69
+Max, min:               -1.16          -4.16
 Log Probability of occurrence
-Max, min:               -0.35          -3.41
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-205      5.50      -63.75    5.289          30
-Setting this width_time to zero ...
-
+Max, min:               -1.27          -4.40
 Log Probability of occurrence
-Max, min:                0.00          -3.54
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-268      18.50     -58.75    0.195          1
-Setting this width_time to zero ...
-
+Max, min:               -1.14          -4.56
 Log Probability of occurrence
-Max, min:                0.00          -3.75
+Max, min:               -1.15          -4.19
 Log Probability of occurrence
-Max, min:               -0.29          -3.47
+Max, min:               -1.27          -4.23
 Log Probability of occurrence
-Max, min:               -0.05          -3.30
+Max, min:               -1.15          -4.57
 Log Probability of occurrence
-Max, min:               -0.13          -3.63
+Max, min:               -1.15          -4.21
 Log Probability of occurrence
-Max, min:               -0.37          -3.50
+Max, min:               -1.26          -4.22
 Log Probability of occurrence
-Max, min:               -0.29          -3.23
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-246      21.50     -61.25    3.281          22
-Setting this width_time to zero ...
-
+Max, min:               -1.15          -4.57
 Log Probability of occurrence
-Max, min:                0.00          -3.59
+Max, min:               -1.16          -4.05
 Log Probability of occurrence
-Max, min:               -0.43          -3.62
+Max, min:               -1.20          -4.20
 Log Probability of occurrence
-Max, min:               -0.21          -3.26
+Max, min:               -1.14          -4.40
 Log Probability of occurrence
-Max, min:                0.12          -3.71
+Max, min:               -1.19          -4.15
 Log Probability of occurrence
-Max, min:               -0.47          -3.59
+Max, min:               -1.20          -4.19
 Log Probability of occurrence
-Max, min:               -0.21          -4.04
+Max, min:               -1.14          -4.40
 Log Probability of occurrence
-Max, min:                0.12          -3.48
+Max, min:               -1.17          -4.06
 Log Probability of occurrence
-Max, min:               -0.43          -3.43
+Max, min:               -1.22          -4.19
 Log Probability of occurrence
-Max, min:               -0.21          -3.83
+Max, min:               -1.17          -4.40
 Log Probability of occurrence
-Max, min:                0.12          -3.72
+Max, min:               -1.17          -4.10
 Log Probability of occurrence
-Max, min:               -0.36          -3.48
+Max, min:               -1.22          -4.20
 Log Probability of occurrence
-Max, min:               -0.21          -3.63
+Max, min:               -1.16          -4.39
 Log Probability of occurrence
-Max, min:                0.12          -3.42
+Max, min:               -1.18          -4.10
 Log Probability of occurrence
-Max, min:               -0.45          -3.46
+Max, min:               -1.21          -4.21
 Log Probability of occurrence
-Max, min:               -0.21          -4.06
+Max, min:               -1.16          -4.39
 Log Probability of occurrence
-Max, min:                0.12          -3.39
+Max, min:               -1.17          -4.10
 Log Probability of occurrence
-Max, min:               -0.45          -3.51
+Max, min:               -1.21          -4.21
 Log Probability of occurrence
-Max, min:               -0.21          -4.00
+Max, min:               -1.18          -4.39
 Log Probability of occurrence
-Max, min:                1.39          -3.69
+Max, min:               -1.18          -4.07
 Log Probability of occurrence
-Max, min:               -0.31          -3.44
+Max, min:               -1.20          -4.21
 Log Probability of occurrence
-Max, min:               -0.21          -3.53
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-205      5.50      -63.75    1.484          25
-Setting this width_time to zero ...
-
+Max, min:               -1.18          -4.40
 Log Probability of occurrence
-Max, min:                0.06          -3.47
+Max, min:               -1.19          -4.08
 Log Probability of occurrence
-Max, min:               -0.43          -3.72
+Max, min:               -1.16          -4.20
 Log Probability of occurrence
-Max, min:               -0.21          -4.00
+Max, min:               -1.16          -4.40
 Log Probability of occurrence
-Max, min:                0.06          -3.42
+Max, min:               -1.20          -4.09
 Log Probability of occurrence
-Max, min:               -0.44          -3.77
+Max, min:               -1.12          -4.20
 Log Probability of occurrence
-Max, min:               -0.21          -4.01
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-188      13.50     -66.25    4.972          27
-Setting this width_time to zero ...
-
+Max, min:               -1.14          -4.56
 Log Probability of occurrence
-Max, min:                0.06          -3.54
+Max, min:               -1.19          -4.12
 Log Probability of occurrence
-Max, min:               -0.47          -3.65
+Max, min:               -0.98          -4.23
 Log Probability of occurrence
-Max, min:               -0.21          -3.52
+Max, min:               -1.10          -4.56
 Log Probability of occurrence
-Max, min:                0.06          -3.64
+Max, min:               -1.03          -4.02
 Log Probability of occurrence
-Max, min:               -0.40          -3.59
+Max, min:               -0.89          -4.23
 Log Probability of occurrence
-Max, min:               -0.21          -3.55
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.602          8
-Setting this width_time to zero ...
-
+Max, min:               -1.11          -4.43
 Log Probability of occurrence
-Max, min:                0.79          -3.52
+Max, min:               -1.04          -4.16
 Log Probability of occurrence
-Max, min:               -0.39          -3.46
+Max, min:               -1.01          -4.24
 Log Probability of occurrence
-Max, min:               -0.21          -3.58
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.055          1
-Setting this width_time to zero ...
-
+Max, min:               -1.10          -4.12
 Log Probability of occurrence
-Max, min:                1.39          -3.44
+Max, min:               -1.07          -4.08
 Log Probability of occurrence
-Max, min:               -0.31          -3.61
+Max, min:               -0.99          -4.41
 Log Probability of occurrence
-Max, min:               -0.21          -3.59
+Max, min:               -1.06          -4.79
 Log Probability of occurrence
-Max, min:                1.39          -3.46
+Max, min:               -1.02          -4.19
 Log Probability of occurrence
-Max, min:               -0.39          -3.51
+Max, min:               -1.32          -4.55
 Log Probability of occurrence
-Max, min:               -0.27          -3.61
+Max, min:               -0.57          -4.11
 Log Probability of occurrence
-Max, min:                1.39          -3.62
+Max, min:               -0.98          -3.97
 Log Probability of occurrence
-Max, min:               -0.37          -3.62
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-230      5.50      -61.25    2.703          19
-Setting this width_time to zero ...
-
+Max, min:               -1.62          -4.80
 Log Probability of occurrence
-Max, min:                0.00          -3.59
+Max, min:               -1.04          -4.13
 Log Probability of occurrence
-Max, min:                1.39          -3.54
-Log Probability of occurrence
-Max, min:               -0.17          -3.63
-2 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-205      5.50      -63.75    20.281         126
-Setting this width_time to zero ...
-230      5.50      -61.25    2.703          19
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.52
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.250          3
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                1.39          -3.69
-Log Probability of occurrence
-Max, min:               -0.48          -3.57
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-205      5.50      -63.75    8.891          52
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.53
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-229      4.50      -61.25    0.055          1
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.74
-Log Probability of occurrence
-Max, min:               -0.49          -3.62
-Log Probability of occurrence
-Max, min:               -0.37          -3.35
-Log Probability of occurrence
-Max, min:               -0.23          -3.72
-Log Probability of occurrence
-Max, min:               -0.44          -3.27
-Log Probability of occurrence
-Max, min:               -0.34          -3.99
-Log Probability of occurrence
-Max, min:               -0.35          -3.47
-Log Probability of occurrence
-Max, min:               -0.55          -3.65
-1 instances in the widthData histo where there are supposedly events, but the ephemeris data reports fast was never there!
-Absurdity
-Index    MLT       ILAT      Width_tval     N contr. events
-184      9.50      -66.25    1.109          16
-Setting this width_time to zero ...
-
-Log Probability of occurrence
-Max, min:                0.00          -3.31
+Max, min:               -1.09          -4.18
