@@ -1,5 +1,6 @@
 ;2015/12/31 Added RESTRICT_WITH_THESE_I keyword so that I can do non-storm 
 ;2016/01/07 Added DO_DESPUNDB keyword
+;2016/02/10 Added DO_NOT_CONSIDER_IMF keyword
 FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun, $
    DBTIMES=dbTimes,dbfile=dbfile, $
    DO_CHASTDB=do_chastdb, $
@@ -20,8 +21,11 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
-   CLOCKSTR=clockStr,BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-   STABLEIMF=stableIMF,OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
+   CLOCKSTR=clockStr, $
+   DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+   BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+   STABLEIMF=stableIMF, $
+   OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
    HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i
@@ -55,31 +59,36 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
   ENDIF
 
   ;;Now handle the rest
-  phiChast = interp_mag_data(final_i,satellite,delay,lun, $
-                             DBTIMES=dbTimes, $
-                             FASTDBINTERP_I=FASTDBInterp_i, $
-                             FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i, $
-                             MAG_UTC=mag_utc,PHICLOCK=phiClock, $
-                             DATADIR=dataDir, $
-                             SMOOTHWINDOW=smoothWindow, $
-                             BYMIN=byMin, $
-                             BZMIN=bzMin, $
-                             BYMAX=byMax, $
-                             BZMAX=bzMax, $
-                             DO_ABS_BYMIN=abs_byMin, $
-                             DO_ABS_BYMAX=abs_byMax, $
-                             DO_ABS_BZMIN=abs_bzMin, $
-                             DO_ABS_BZMAX=abs_bzMax, $
+  IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
+     PRINTF,lun,"Not considering IMF anything!"
+     restricted_and_interped_i              = final_i
+  ENDIF ELSE BEGIN
+     phiChast = interp_mag_data(final_i,satellite,delay,lun, $
+                                DBTIMES=dbTimes, $
+                                FASTDBINTERP_I=FASTDBInterp_i, $
+                                FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i, $
+                                MAG_UTC=mag_utc,PHICLOCK=phiClock, $
+                                DATADIR=dataDir, $
+                                SMOOTHWINDOW=smoothWindow, $
+                                BYMIN=byMin, $
+                                BZMIN=bzMin, $
+                                BYMAX=byMax, $
+                                BZMAX=bzMax, $
+                                DO_ABS_BYMIN=abs_byMin, $
+                                DO_ABS_BYMAX=abs_byMax, $
+                                DO_ABS_BZMIN=abs_bzMin, $
+                                DO_ABS_BZMAX=abs_bzMax, $
                              OMNI_COORDS=omni_Coords)
-  
-  phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2, $
-                                  phiChast,cdbSatProppedInterped_i,stableIMF, $
-                                  mag_utc,phiClock,$
-                                  LUN=lun, $
-                                  BX_OVER_BYBZ=Bx_over_ByBz_Lim)
-  
-  restricted_and_interped_i=FASTDBInterp_i[phiImf_ii]
+     
+     phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2, $
+                                     phiChast,cdbSatProppedInterped_i,stableIMF, $
+                                     mag_utc,phiClock,$
+                                     LUN=lun, $
+                                     BX_OVER_BYBZ=Bx_over_ByBz_Lim)
+     
+     restricted_and_interped_i=FASTDBInterp_i[phiImf_ii]
+  ENDELSE
 
   RETURN,restricted_and_interped_i
-
+     
 END

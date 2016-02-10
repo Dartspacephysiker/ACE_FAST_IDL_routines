@@ -188,6 +188,7 @@
 ;                                    the result.
 ;                       Dec 2015   : ... And now added stormtime keywords as well as RESTRICT_WITH_THESE_I keyword
 ;                       Jan 2016   : Added DO_DESPUNDB keyword for our new despun database with TEAMS data!
+;                     2016/02/10   : Added DO_NOT_CONSIDER_IMF keyword
 ;-
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
@@ -229,6 +230,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     STABLEIMF=stableIMF, $
                                     SMOOTHWINDOW=smoothWindow, $
                                     INCLUDENOCONSECDATA=includeNoConsecData, $
+                                    DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                     NONSTORM=nonStorm, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
@@ -353,6 +355,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   DO_ABS_BZMIN=abs_bzMin, $
                                   DO_ABS_BZMAX=abs_bzMax, $
                                   BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                                  DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                   PARAMSTRING=paramString, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   DELAY=delay,STABLEIMF=stableIMF, $
@@ -438,6 +441,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                   RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                                                   BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                   STABLEIMF=stableIMF, $
+                                                  DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                                   OMNI_COORDS=omni_Coords, $
                                                   ANGLELIM1=angleLim1, $
                                                   ANGLELIM2=angleLim2, $
@@ -510,7 +514,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                         HEMI=hemi, $
                         CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                        DO_IMF_CONDS=1, $
+                        DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
                         DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
                         T1_ARR=t1_arr, $
                         T2_ARR=t2_arr, $
