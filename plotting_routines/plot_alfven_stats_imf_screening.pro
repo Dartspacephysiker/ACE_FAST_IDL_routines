@@ -284,7 +284,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   !EXCEPT=0                                                      ;Do report errors, please
 
-  SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+  IF KEYWORD_SET(do_not_consider_IMF) THEN  BEGIN
+     SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY
+  ENDIF ELSE BEGIN
+     SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+  ENDELSE
 
   SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
                              MINMLT=minM,MAXMLT=maxM, $
