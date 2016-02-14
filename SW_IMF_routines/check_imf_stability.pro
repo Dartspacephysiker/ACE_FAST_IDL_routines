@@ -14,7 +14,7 @@
 ;ensure that the angle doesn't deviate too sharply
 ;from its initial 'approved' value
 
-FUNCTION check_imf_stability,clockStr,angleLim1,angleLim2,phiDB, $
+FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
                              fastDBSatProppedInterped_i, stableIMF, mag_utc, phiclock, $
                              BX_OVER_BYBZ=bx_over_bybz,INCLUDENOCONSECDATA=includenoconsecdata, $
                              LUN=lun
