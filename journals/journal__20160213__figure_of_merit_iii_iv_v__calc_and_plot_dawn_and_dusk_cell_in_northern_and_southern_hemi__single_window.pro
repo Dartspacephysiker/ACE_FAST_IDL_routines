@@ -11,7 +11,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
 
   plotYRange             = [0.00,0.05]
 
-  FOR i=1,N_ELEMENTS(fom_type)-1 DO BEGIN
+  FOR i=0,N_ELEMENTS(fom_type)-1 DO BEGIN
      FOR j=0,N_ELEMENTS(hemiStrings)-1 DO BEGIN
         JOURNAL__20160213__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH, $
            HEMI=hemiStrings[j], $
@@ -24,6 +24,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
         INCLUDE_ALLIMF=include_allIMF, $
         FOM_TYPE=fom_type[i], $
         COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
+        /SCALE_PLOTS_TO_1, $
         PLOTYRANGE=plotYRange, $
         /SAVEPLOTS, $
         LUN=lun

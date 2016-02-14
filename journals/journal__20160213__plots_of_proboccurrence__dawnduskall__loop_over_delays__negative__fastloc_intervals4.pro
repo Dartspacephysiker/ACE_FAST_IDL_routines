@@ -29,7 +29,8 @@ PRO JOURNAL__20160213__PLOTS_OF_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__N
   do_abs_bymin                   = 1
   bzMax                          = 0
   ;; smoothWindow                   = 5
-  delayArr                       = [-240,-180,-120,-60]
+  ;; delayArr                       = [-240,-180,-120,-60]
+  delayArr                       = [-480,-420,-360,-300]
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
 

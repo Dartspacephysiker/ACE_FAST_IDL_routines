@@ -13,8 +13,9 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
    PLOTSPERWINDOW=plotsPerWindow, $
    PLOTTITLE=plotTitle, $
    PLOTHEMISTR=plotHemiStr, $
-   PLOTCOLOR=plotColor, $
    PLOTYRANGE=plotYRange, $
+   PLOTCOLOR=plotColor, $
+   SCALE_PLOTS_TO_1=scale_plots_to_1, $
    CELLSTR=cellStr, $
    IMFCORTSTR=IMFCortStr, $
    DATARR=datArr, $
@@ -118,8 +119,12 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
      plotTitle                             = cellStr + ' for ' + IMFCortStr + ' IMF'
   ENDELSE
   
+  IF KEYWORD_SET(scale_plots_to_1) THEN BEGIN
+     plotYRange                            = [-1.D,1.D]
+  ENDIF
+
   IF ~KEYWORD_SET(plotYRange) THEN BEGIN
-     plotYRange                            = [MAX(datArr),MIN(datArr)]
+     plotYRange                            = [MIN((datArr[0])[0]),MAX((datArr[0])[0])]
   ENDIF
 
   CASE STRUPCASE(hemi) OF

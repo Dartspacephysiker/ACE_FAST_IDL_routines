@@ -53,6 +53,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL_IN_NORTHERN_AND_SOUTHERN_H
    FOM_TYPE=fom_type, $
    COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
    PLOTYRANGE=plotYRange, $
+   SCALE_PLOTS_TO_1=scale_plots_to_1, $
    SAVEPLOTS=savePlots, $
    SPNAME=spName, $
    LUN=lun
@@ -86,6 +87,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL_IN_NORTHERN_AND_SOUTHERN_H
                                                    PLOTHEMISTR=plotHemiStr, $
                                                    PLOTYRANGE=plotYRange, $
                                                    PLOTCOLOR=plotColor, $
+                                                   SCALE_PLOTS_TO_1=scale_plots_to_1, $
                                                    CELLSTR=cellStr, $
                                                    IMFCORTSTR=IMFCortStr, $
                                                    DATARR=datArr, $
@@ -99,6 +101,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL_IN_NORTHERN_AND_SOUTHERN_H
      
      ;;i indexes IMF direction
      ;;j indexes hemisphere
+     xRange                                   = [MIN((delayList[0])[0]),MAX((delayList[0])[0])]
      FOR i=0,nWindows-1 DO BEGIN
         
         plotLayout                            = [2,nWindows,i*2+k+1]
@@ -109,11 +112,31 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL_IN_NORTHERN_AND_SOUTHERN_H
                   IMFCortStr[i],plotHemiStr[j],maxDat,minDat
 
            xShowLabel                         = (i EQ nWindows-1)
-           plotArr[k,i,j]                     = PLOT((delayList[j])[i],(datArr[j])[i], $
+
+           IF KEYWORD_SET(scale_plots_to_1) THEN BEGIN
+              ;; minData                            = MIN((datArr[j])[i],MAX=maxData)
+              ;; dataRange                          = maxData-minData
+              ;; dataMid                            = (maxData+minData)/2.D
+              ;; dataMid                            = MEAN((datArr[j])[i])
+              ;; data                               = ((datArr[j])[i]-dataMid)/dataRange*2.D
+              
+              dataMid                            = MEAN((datArr[j])[i])
+              data                               = (datArr[j])[i]-dataMid
+              minData                            = MIN((datArr[j])[i],MAX=maxData)
+              dataRange                          = maxData-minData
+              dataMid                            = (maxData+minData)/2.D
+              data                               = ((datArr[j])[i]-dataMid)/dataRange*2.D
+              
+           ENDIF ELSE BEGIN
+              data                               = (datArr[j])[i]
+           ENDELSE
+           
+           plotArr[k,i,j]                     = PLOT((delayList[j])[i],data, $
                                                      TITLE=(i GT 0) ? !NULL : 'Figure of merit ' + FOMTypeStr + ': ' + cellStr, $ ; plotTitle[0], $
                                                      XSHOWTEXT=xShowLabel, $
                                                      ;; AXIS_STYLE=(i EQ nWindows-1) ? 1 : !NULL, $
                                                      XTITLE=(i EQ nWindows-1) ? 'Delay between magnetopause and cusp observation (min)' : !NULL, $
+                                                     XRANGE=xRange, $
                                                      YRANGE=plotYRange, $
                                                      YTITLE=IMFCortStr[i] + " FOM", $
                                                      NAME=plotHemiStr[j], $
