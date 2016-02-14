@@ -1,8 +1,8 @@
-;;2016/02/02
+;;2016/02/13
 ;;Fancify
-FUNCTION FIGURE_OF_MERIT_I_OR_II__PLOT_SETUP, $
+;;This one accommodates the other FOMs--Average, log average, and median
+FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
    HEMI=hemi, $
-   USE_OLD_SOUTH_DATA=use_old_south, $
    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
    INCLUDE_ALLIMF=include_allIMF, $
    FOM_TYPE=fom_type, $
@@ -14,24 +14,15 @@ FUNCTION FIGURE_OF_MERIT_I_OR_II__PLOT_SETUP, $
    PLOTTITLE=plotTitle, $
    PLOTHEMISTR=plotHemiStr, $
    PLOTCOLOR=plotColor, $
+   PLOTYRANGE=plotYRange, $
    CELLSTR=cellStr, $
    IMFCORTSTR=IMFCortStr, $
    DATARR=datArr, $
    DELAYLIST=delayList, $
    LUN=lun
-   ;; COMBFOMLIST_NORTH=combFOMList_North, $
-   ;; DAWNFOMLIST_NORTH=dawnFOMList_North, $
-   ;; DUSKFOMLIST_NORTH=duskFOMList_North, $
-   ;; DELAYLIST_NORTH=delayList_North, $ 
-   ;; COMBFOMLIST_SOUTH=combFOMList_South, $
-   ;; DAWNFOMLIST_SOUTH=dawnFOMList_South, $
-   ;; DUSKFOMLIST_SOUTH=duskFOMList_South, $
-   ;; DELAYLIST_SOUTH=delayList_South, $
-   
-  ;; COMMON hemi,fom_type,cell_to_plot,nFOM_to_print
 
   defCell_to_plot                          = 'BOTH'
-  defFOM_type                              = 2
+  defFOM_type                              = 3
   defHemi                                  = 'NORTH'
 
 
@@ -41,40 +32,36 @@ FUNCTION FIGURE_OF_MERIT_I_OR_II__PLOT_SETUP, $
   IF ~KEYWORD_SET(fom_type)     THEN fom_type     = defFOM_type
   IF ~KEYWORD_SET(hemi)         THEN hemi         = defHemi
 
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160130--Alfven_cusp_figure_of_merit/data/'
+  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   ;;input files
-  fileDia                                  = '20160202'
-
-  IF KEYWORD_SET(use_old_south) THEN BEGIN
-     PRINTF,lun,"Using BAD Southern data!"
-  ENDIF
+  fileDia                                  = '20160214'
 
   CASE fom_type OF
-     1: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit--delays_0-30min.sav'
-        IF KEYWORD_SET(use_old_south) THEN BEGIN
-           inFile_south                    = h2dFileDir+'processed/south_fom_before_setting_bad_probOccurrence_to_zero/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit--delays_0-30min.sav'
-        ENDIF ELSE BEGIN
-           inFile_south                    = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit--delays_0-30min.sav'
-        ENDELSE
-        PRINT,'Using FOM_type = 1'
-        fomTypeStr                         = '(Type I)'
+     3: BEGIN
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_III--delays_0-30min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_III--delays_0-30min.sav'
+
+        PRINT,'Using FOM_type = 3'
+        fomTypeStr                         = '(Type III)'
      END
-     2: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_II--delays_0-30min.sav'
-        IF KEYWORD_SET(use_old_south) THEN BEGIN
-           inFile_south                       = h2dFileDir+'processed/south_fom_before_setting_bad_probOccurrence_to_zero/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_II--delays_0-30min.sav'
-        ENDIF ELSE BEGIN
-           inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_II--delays_0-30min.sav'
-        ENDELSE
-        PRINT,'Using FOM_type = 2'
-        fomTypeStr                         = '(Type II)'
+     4: BEGIN
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_IV--delays_0-30min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_IV--delays_0-30min.sav'
+
+        PRINT,'Using FOM_type = 4'
+        fomTypeStr                         = '(Type IV)'
+     END
+     5: BEGIN
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_V--delays_0-30min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_V--delays_0-30min.sav'
+        PRINT,'Using FOM_type = 5'
+        fomTypeStr                         = '(Type V)'
      END
      ELSE: BEGIN
-        PRINT,"FOM_type must be either 1 or 2!!"
+        PRINT,"FOM_type must be either 3, 4, or 5!!"
         RETURN,-1
      END
   ENDCASE
@@ -131,6 +118,10 @@ FUNCTION FIGURE_OF_MERIT_I_OR_II__PLOT_SETUP, $
      plotTitle                             = cellStr + ' for ' + IMFCortStr + ' IMF'
   ENDELSE
   
+  IF ~KEYWORD_SET(plotYRange) THEN BEGIN
+     plotYRange                            = [MAX(datArr),MIN(datArr)]
+  ENDIF
+
   CASE STRUPCASE(hemi) OF
      'COMBINED': BEGIN
         IF KEYWORD_SET(only_show_combined_hemi) THEN BEGIN

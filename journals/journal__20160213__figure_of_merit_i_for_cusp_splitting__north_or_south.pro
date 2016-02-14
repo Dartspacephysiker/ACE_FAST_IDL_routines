@@ -1,15 +1,13 @@
-;2016/02/01
-;Let's take a look at this figure of merit stuff for EITHER hemi. Deprecate those other guys.
+;2016/02/13
+;Let's take a look at this figure of merit stuff for EITHER hemi.
 
 ;Each file contains the following data products:
-;; 0 *Max L.C. e!U-!N Flux (mW/m!U2!N), at ionos.
-;; 1 *Integ. L.C. e!U-!N Flux (mW/m), at ionos.
-;; 2 *Max Poynting Flux (mW/m!U2!N), at ionos.
-;; 3 *Log Max Upward Ion Flux (#/cm!U2!N-s), at ionos.
-;; 4 *Log Probability of occurrence
-;; 5 *Log Number of events
-;; 6 *Histogram mask
-PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH,HEMI=hemi,LUN=lun
+;; 0 *Log Probability of occurrence
+PRO JOURNAL__20160213__FIGURE_OF_MERIT_I_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH,HEMI=hemi,LUN=lun
+
+  FOMString                                = 'I'
+
+  printemall                               = 1
 
   IF NOT KEYWORD_SET(hemi) THEN $
   hemi                                     = 'NORTH' ;need this for defaults
@@ -17,7 +15,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH,HEMI=h
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
-  @journal__20160213__figure_of_merit_iii_defaults
+  @journal__20160213__figure_of_merit_defaults
 
 
   ;;Now, let's get a specified number of maxima: loop through files, let us know if any don't exist
@@ -34,7 +32,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH,HEMI=h
   PRINTF,lun,''
   IF KEYWORD_SET(printemall) THEN BEGIN
      PRINTF,lun,FORMAT='("Delay (m)",T20,"IMF",T30,"Comb. FOM",T45,"Dawn FOM",T60,"Dusk FOM")' ;header
-     fmtString                             = '(I-4,T20,A9,T30,F0.2,T45,F0.2,T60,F0.2)'
+     fmtString                             = '(I-4,T20,A9,T30,G0.4,T45,G0.4,T60,G0.4)'
   ENDIF
 
   FOR k=0,nClock-1 DO BEGIN

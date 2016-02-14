@@ -1,15 +1,16 @@
 ;2016/02/13
-;Let's take a look at this figure of merit stuff for EITHER hemi
+;These figures of merit involve a log average of the entire zone
 
 ;Each file contains the following data products:
-;; 0 *Max L.C. e!U-!N Flux (mW/m!U2!N), at ionos.
-;; 1 *Integ. L.C. e!U-!N Flux (mW/m), at ionos.
-;; 2 *Max Poynting Flux (mW/m!U2!N), at ionos.
-;; 3 *Log Max Upward Ion Flux (#/cm!U2!N-s), at ionos.
-;; 4 *Log Probability of occurrence
-;; 5 *Log Number of events
-;; 6 *Histogram mask
-PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMIII,HEMI=hemi,LUN=lun
+;; 0 *Log Probability of occurrence
+PRO JOURNAL__20160213__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH, $
+   HEMI=hemi, $
+   FOMSTRING=FOMString, $
+   LUN=lun
+
+  IF ~KEYWORD_SET(FOMString) THEN BEGIN
+     FOMString                             = 'III'
+  ENDIF
 
   printemall                               = 1
 
@@ -19,7 +20,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMII
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
-  @journal__20160213__figure_of_merit_iii_defaults
+  @journal__20160213__figure_of_merit_defaults
 
 
   ;;Now, let's get a specified number of maxima: loop through files, let us know if any don't exist
@@ -48,18 +49,6 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMII
 
      PRINTF,lun,'****'+STRUPCASE(clockStrArr[k])+'****'
      FOR i=0,nDelay-1 DO BEGIN
-        dawnExceed_ii                      = !NULL
-        dawnExceedVals                     = !NULL
-        dawnExceedN                        = !NULL
-
-        duskExceed_ii                      = !NULL
-        duskExceedVals                     = !NULL
-        duskExceedN                        = !NULL
-
-        centerExceed_ii                    = !NULL
-        centerExceedVals                   = !NULL
-        centerExceedN                      = !NULL
-
         h2dFile                            = STRING(FORMAT=h2dFNameFmt, $
                                                     fileDay,hemi,clockStrArr[k],delayArr[i],byMin)
         
@@ -68,77 +57,93 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMII
            restore,h2dFileDir+h2dFile
            
            ;handle the masked cells
-           masked_i                        = WHERE(h2dStrArr[-1].data GT 250)
+           masked_i                        = WHERE(h2dStrArr[-1].data GT 250,COMPLEMENT=notMasked_i,NCOMPLEMENT=nNotMasked)
            h2dStrArr[h2d_i].data[masked_i] = -10
 
+
+           dawn_i                          = CGSETINTERSECTION(dawn_i,notMasked_i)
+           dusk_i                          = CGSETINTERSECTION(dusk_i,notMasked_i)
+           center_i                        = CGSETINTERSECTION(center_i,notMasked_i)
+
+           IF dawn_i[0] EQ -1 THEN BEGIN
+              PRINT,'No good dawn bins!'
+              STOP
+           ENDIF
+           IF dusk_i[0] EQ -1 THEN BEGIN
+              PRINT,'No good dusk bins!'
+              STOP
+           ENDIF
+           IF center_i[0] EQ -1 THEN BEGIN
+              PRINT,'No good center bins!'
+              STOP
+           ENDIF
+
            dawn_data                       = h2dStrArr[h2d_i].data[dawn_i]
-           dawn_maxima                     = 10.0^(GET_N_MAXIMA_IN_ARRAY(dawn_data,N=n_maxima,OUT_I=dawnMaxima_ii, $
-                                                                         THRESHOLD=threshold_max, $
-                                                                         OUT_EXCEEDED_THRESHOLD_VALS=dawnExceedVals, $
-                                                                         OUT_EXCEEDED_THRESHOLD_I=dawnExceed_ii, $
-                                                                         OUT_EXCEEDED_THRESHOLD_N=dawnExceedN))
-           dawn_max_ilats                  = centersILAT[dawn_i[dawnMaxima_ii]]
-           dawn_max_mlts                   = centersMLT[dawn_i[dawnMaxima_ii]]
-
            dusk_data                       = h2dStrArr[h2d_i].data[dusk_i]
-           dusk_maxima                     = 10.0^(GET_N_MAXIMA_IN_ARRAY(dusk_data,N=n_maxima,OUT_I=duskMaxima_ii, $
-                                                                         THRESHOLD=threshold_max, $
-                                                                         OUT_EXCEEDED_THRESHOLD_VALS=duskExceedVals, $
-                                                                         OUT_EXCEEDED_THRESHOLD_I=duskExceed_ii, $
-                                                                         OUT_EXCEEDED_THRESHOLD_N=duskExceedN))
-           dusk_max_ilats                  = centersILAT[dusk_i[duskMaxima_ii]]
-           dusk_max_mlts                   = centersMLT[dusk_i[duskMaxima_ii]]
-           
            center_data                     = h2dStrArr[h2d_i].data[center_i]
-           center_maxima                   = 10.0^(GET_N_MAXIMA_IN_ARRAY(center_data,N=n_center_maxima,OUT_I=centerMaxima_ii, $
-                                                                         THRESHOLD=threshold_max, $
-                                                                         OUT_EXCEEDED_THRESHOLD_VALS=centerExceedVals, $
-                                                                         OUT_EXCEEDED_THRESHOLD_I=centerExceed_ii, $
-                                                                         OUT_EXCEEDED_THRESHOLD_N=centerExceedN))
-           center_max_ilats                = centersILAT[center_i[centerMaxima_ii]]
-           center_max_mlts                 = centersMLT[center_i[centerMaxima_ii]]
            
-           ;;Show any bogus vals
-           dawn_bogus_ilats                = centersILAT[dawn_i[dawnExceed_ii]]
-           dawn_bogus_mlts                 = centersMLT[dawn_i[dawnExceed_ii]]
+           ;;Screen out the bad stuff
 
-           dusk_bogus_ilats                = centersILAT[dusk_i[duskExceed_ii]]
-           dusk_bogus_mlts                 = centersMLT[dusk_i[duskExceed_ii]]
+           CASE FOMString OF
+              'III' : BEGIN ;Straight averaging
+                 IF h2dStrArr[h2d_i].is_logged THEN BEGIN
+                    PRINT,'Data were logged! Unlogging for straight average...'
+                    dawn_data                 = 10.0D^(dawn_data)
+                    dusk_data                 = 10.0D^(dusk_data)
+                    center_data               = 10.0D^(center_data)
+                 ENDIF
 
-           center_bogus_ilats                = centersILAT[center_i[centerExceed_ii]]
-           center_bogus_mlts                 = centersMLT[center_i[centerExceed_ii]]
+                 ;;calculate figures of merit
+                 dawn_fom                     = MEAN(dawn_data)
+                 dusk_fom                     = MEAN(dusk_data)
+                 center_fom                   = -2.D*MEAN(center_data)
+                 comb_fom                     = dawn_fom+dusk_fom+center_fom
+              END
+              'IV'  : BEGIN ;Log averaging
+                 IF ~h2dStrArr[h2d_i].is_logged THEN BEGIN
+                    PRINT,'Data were not logged! Logging for log average...'
+                    dawn_data                 = ALOG10(dawn_data)
+                    dusk_data                 = ALOG10(dusk_data)
+                    center_data               = ALOG10(center_data)
+                 ENDIF
+                 dawn_fom                     = 10.0D^MEAN(dawn_data)
+                 dusk_fom                     = 10.0D^MEAN(dusk_data)
+                 center_fom                   = -2.D*10.0D^(MEAN(center_data))
+                 comb_fom                     = dawn_fom+dusk_fom+center_fom
 
-           IF dawnExceedN GT 0 OR duskExceedN GT 0 OR centerExceedN GT 0 THEN BEGIN
-              PRINTF,lun,FORMAT='("Delay",T10,"Bogus val",T25,"Bogus ILAT",T40,"Bogus MLT")'
+              END
+              'V'  : BEGIN ;Median
+                 IF h2dStrArr[h2d_i].is_logged THEN BEGIN
+                    PRINT,'Data were logged! Unlogging for straight average...'
+                    dawn_data                 = 10.0D^(dawn_data)
+                    dusk_data                 = 10.0D^(dusk_data)
+                    center_data               = 10.0D^(center_data)
+                 ENDIF
+                 IF N_ELEMENTS(dawn_data) GT 1 THEN BEGIN
+                    dawn_fom                  = MEDIAN(dawn_data)
+                 ENDIF ELSE BEGIN
+                    dawn_fom                  = dawn_data
+                 ENDELSE
+                 IF N_ELEMENTS(dusk_data) GT 1 THEN BEGIN
+                    dusk_fom                  = MEDIAN(dusk_data)
+                 ENDIF ELSE BEGIN
+                    dusk_fom                  = dusk_data
+                 ENDELSE
+                 IF N_ELEMENTS(center_data) GT 1 THEN BEGIN
+                    center_fom                  = -2.D*MEDIAN(center_data)
+                 ENDIF ELSE BEGIN
+                    center_fom                  = -2.D*center_data
+                 ENDELSE
+                 comb_fom                     = center_fom+dusk_fom+center_fom
 
-           IF dawnExceedN GT 0 THEN BEGIN
-              PRINTF,lun,"Bogus dawnward vals"
-              FOR l=0,dawnExceedN-1 DO BEGIN
-                 PRINTF,lun,FORMAT=bogusFmt,delayArr[i],10.0^dawnExceedVals[l],dawn_bogus_ilats[l],dawn_bogus_mlts[l]
-              ENDFOR
-           END
-           
-           IF duskExceedN GT 0 THEN BEGIN
-              PRINTF,lun,"Bogus duskward vals"
-              FOR l=0,duskExceedN-1 DO BEGIN
-                 PRINTF,lun,FORMAT=bogusFmt,delayArr[i],10.0^duskExceedVals[l],dusk_bogus_ilats[l],dusk_bogus_mlts[l]
-              ENDFOR
-           END
-
-           IF centerExceedN GT 0 THEN BEGIN
-              PRINTF,lun,"Bogus center vals"
-              FOR l=0,centerExceedN-1 DO BEGIN
-                 PRINTF,lun,FORMAT=bogusFmt,delayArr[i],10.0^centerExceedVals[l],center_bogus_ilats[l],center_bogus_mlts[l]
-              ENDFOR
-           END
-
-        ENDIF           
-
-           ;;calculate figures of merit
-           dawn_fom                        = MEAN(dawn_maxima)
-           dusk_fom                        = MEAN(dusk_maxima)
-           center_fom                      = -2.*MEAN(center_maxima)
-           comb_fom                        = dawn_fom+dusk_fom+center_fom
+              END
+              ELSE : BEGIN
+                 PRINT,'Neither III (straight avg) nor IV (log avg) nor V (median) was provided for FOMString!'
+                 PRINT,'What to do?'
+                 PRINT,'OUT'
+                 RETURN
+              END
+           ENDCASE
 
            ;;want to see?
            IF KEYWORD_SET(printemall) THEN BEGIN
@@ -166,7 +171,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMII
      centerFOM_awesome                     = centerfomArr[combFOM_i]
      delay_awesome                         = delayArr[combFOM_i]
 
-     PRINTF,lun,"************THE RESULTS************"
+     PRINTF,lun,"************THE RESULTS FOR FOM=" + FOMString + "************"
      PRINTF,lun,""
      PRINTF,lun,FORMAT='("Rank",T10,"Delay (m)",T20,"Comb. FOM",T35,"Dawn FOM",T50,"Dusk FOM",T65,"Center FOM")' ;header
      fomFmtString                          = '(I-2,T10,I-4,T20,G0.4,T35,G0.4,T50,G0.4,T65,G0.4)'
@@ -179,10 +184,6 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__FOMII
      PRINTF,lun,''
      
      IMFPredomList.add,clockStrArr[k]
-     ;; combFOMList.add,combFOM_awesome
-     ;; dawnFOMList.add,dawnFOM_awesome
-     ;; duskFOMList.add,duskFOM_awesome
-     ;; delayList.add,delay_awesome
 
      combFOMList.add,combfomArr
      dawnFOMList.add,dawnfomArr

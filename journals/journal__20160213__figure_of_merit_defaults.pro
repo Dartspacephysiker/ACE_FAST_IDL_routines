@@ -5,7 +5,7 @@
   printemall                               = 0
 
   h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
-  outFile                                  = h2dFileDir+'processed/'+hoyDia+'--Cusp_splitting--'+STRUPCASE(hemi)+'_figures_of_merit_III--delays_0-30min.sav'
+  outFile                                  = h2dFileDir+'processed/'+hoyDia+'--Cusp_splitting--'+STRUPCASE(hemi)+'_figures_of_merit_' + FOMString + '--delays_0-30min.sav'
 
   ;;same for everyone
   binI                                     = 2.5
@@ -16,7 +16,7 @@
   shiftM                                   = 0.5
 
   h2d_i                                    = 0            ; The one for probability of occurrence
-  n_maxima                                 = 2            ; How many maxima are we getting?
+  n_maxima                                 = 4            ; How many maxima are we getting?
   n_center_maxima                          = 1
   threshold_max                            = ALOG10(1.2)  ; Value shouldn't be more than 10% above 100% occurrence
   nFOM_to_print                            = 25
