@@ -1,18 +1,18 @@
 ;2016/02/15 
 PRO JOURNAL__20160215__DATA_FOR_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__FASTLOC_INTERVALS4
 
-  justData                       = 1
-  nonstorm                       = 1
+  justData                       = 0
+  nonstorm                       = 0
 
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 67
-  ;; maxILAT                        = 75
-  ;; binILAT                        = 4
+  hemi                           = 'NORTH'
+  minILAT                        = 56
+  maxILAT                        = 80
+  binILAT                        = 3
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -75
-  maxILAT                        = -67
-  binILAT                        = 4
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -80
+  ;; maxILAT                        = -56
+  ;; binILAT                        = 3
 
   nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
   nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
@@ -23,10 +23,10 @@ PRO JOURNAL__20160215__DATA_FOR_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__F
   ;; binILAT                        = 2.5
   ;; nEventsPlotRange               = [2e1,2e3]   ; South
 
-  minMLT                         = 8.5
-  maxMLT                         = 15.5
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  ;; minMLT                         = 8.5
+  ;; maxMLT                         = 15.5
+  binMLT                         = .50
+  shiftMLT                       = 0.25
 
   byMin                          = 3
   do_abs_bymin                   = 1

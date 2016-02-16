@@ -18,7 +18,7 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
   subtract_center        = 0
   ;; detrend_window         = 8 ;minutes
 
-  auto_adjust_yRange     = 1
+  auto_adjust_yRange     = 0
 
   FOR i=0,N_ELEMENTS(fom_type)-1 DO BEGIN
      FOR j=0,N_ELEMENTS(hemiStrings)-1 DO BEGIN
