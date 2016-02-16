@@ -25,43 +25,43 @@ FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
 
 
   ;;Set up to check correct region: negAngle<phi<posAngle
-  IF clockStr EQ 'duskward' THEN BEGIN 
+  IF STRUPCASE(clockStr) EQ STRUPCASE('duskward') THEN BEGIN 
      ;;   ctrAngle=90 
      negAngle=angleLim1 
      posAngle=angleLim2 
   ENDIF ELSE BEGIN
-     IF clockStr EQ 'dawnward' THEN BEGIN  
+     IF STRUPCASE(clockStr) EQ STRUPCASE('dawnward') THEN BEGIN  
         ;;   ctrAngle=-90 
         negAngle=-angleLim2 
         posAngle=-angleLim1 
      ENDIF ELSE BEGIN
-        IF clockStr EQ 'bzNorth' THEN BEGIN 
+        IF STRUPCASE(clockStr) EQ STRUPCASE('bzNorth') THEN BEGIN 
            ;;   ctrAngle=0 
            negAngle=-angleLim1 
            posAngle=angleLim1 
         ENDIF ELSE BEGIN
-           IF clockStr EQ 'bzSouth' THEN BEGIN  
+           IF STRUPCASE(clockStr) EQ STRUPCASE('bzSouth') THEN BEGIN  
               ;;   ctrAngle=180 
               negAngle=angleLim2 
               posAngle=-angleLim2 
            ENDIF ELSE BEGIN
-              IF clockStr EQ 'all_IMF' THEN BEGIN 
+              IF STRUPCASE(clockStr) EQ STRUPCASE('all_IMF') THEN BEGIN 
                  negAngle=-angleLim1 
                  posAngle=angleLim2 
               ENDIF ELSE BEGIN
-                 IF clockStr EQ 'dawn-north' THEN BEGIN
+                 IF STRUPCASE(clockStr) EQ STRUPCASE('dawn-north') THEN BEGIN
                     negAngle=-90.0
                     posAngle=-angleLim1
                  ENDIF ELSE BEGIN
-                    IF clockStr EQ 'dawn-south' THEN BEGIN
+                    IF STRUPCASE(clockStr) EQ STRUPCASE('dawn-south') THEN BEGIN
                        negAngle=-angleLim2
                        posAngle=-90.0
                     ENDIF ELSE BEGIN
-                       IF clockStr EQ 'dusk-north' THEN BEGIN
+                       IF STRUPCASE(clockStr) EQ STRUPCASE('dusk-north') THEN BEGIN
                           negAngle=angleLim1
                           posAngle=90.0
                        ENDIF ELSE BEGIN
-                          IF clockStr EQ 'dusk-south' THEN BEGIN
+                          IF STRUPCASE(clockStr) EQ STRUPCASE('dusk-south') THEN BEGIN
                              negAngle=90.0
                              posAngle=angleLim2
                           ENDIF ELSE printf,lun, "Only nine options, brother." & plot_i=-1
@@ -81,11 +81,11 @@ FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
   IF clockStr NE 'bzSouth' AND clockStr NE 'all_IMF' THEN BEGIN
      phiImf_ii=where(phiDB GE negAngle AND phiDB LE posAngle)
   ENDIF ELSE BEGIN
-     IF clockStr EQ 'bzSouth' THEN BEGIN
+     IF STRUPCASE(clockStr) EQ STRUPCASE('bzSouth') THEN BEGIN
         phiImf_ii=cgSetUnion(where(phiDB GE negAngle, /NULL),$
         where(phiDB LE posAngle, /NULL)) 
      ENDIF ELSE BEGIN
-        IF clockStr EQ 'all_IMF' THEN phiImf_ii=where(phiDB EQ phiDB, /NULL)
+        IF STRUPCASE(clockStr) EQ STRUPCASE('all_IMF') THEN phiImf_ii=where(phiDB EQ phiDB, /NULL)
      ENDELSE
   ENDELSE
   

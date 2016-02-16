@@ -50,10 +50,14 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_DUSK_OR_COMBINED_CELL_IN_NORTHERN_OR_SOU
    HEMI=hemi, $
    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
    INCLUDE_ALLIMF=include_allIMF, $
+   FILEDAY=fileDia, $
    FOM_TYPE=fom_type, $
    COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
    CELL_TO_PLOT=cell_to_plot, $
+   DETREND_WINDOW=detrend_window, $
+   H2DFILEDIR=h2dFileDir, $
    PLOTYRANGE=plotYRange, $
+   AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
    SCALE_PLOTS_TO_1=scale_plots_to_1, $
    SAVEPLOTS=savePlots, $
    SPNAME=spName, $
@@ -62,15 +66,18 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_DUSK_OR_COMBINED_CELL_IN_NORTHERN_OR_SOU
   retVal = FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP(HEMI=hemi, $
                                                 ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
                                                 INCLUDE_ALLIMF=include_allIMF, $
+                                                FILEDAY=fileDia, $
                                                 FOM_TYPE=fom_type, $
                                                 FOMTYPESTR=fomTypeStr, $
                                                 COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
                                                 CELL_TO_PLOT=cell_to_plot, $
+                                                H2DFILEDIR=h2dFileDir, $
                                                 NWINDOWS=nWindows, $
                                                 PLOTSPERWINDOW=plotsPerWindow, $
                                                 PLOTTITLE=plotTitle, $
                                                 PLOTHEMISTR=plotHemiStr, $
                                                 PLOTYRANGE=plotYRange, $
+                                                AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
                                                 PLOTCOLOR=plotColor, $
                                                 SCALE_PLOTS_TO_1=scale_plots_to_1, $
                                                 CELLSTR=cellStr, $
@@ -102,7 +109,41 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_DUSK_OR_COMBINED_CELL_IN_NORTHERN_OR_SOU
      
      plotLayout                            = [1,nWindows,i+1]
 
+     IF KEYWORD_SET(auto_adjust_yRange) THEN BEGIN
+        yMin                               = !NULL
+        yMax                               = !NULL
+        FOR j=0,plotsPerWindow-1 DO BEGIN
+           tempMin                         = MIN((datArr[j])[i])
+           IF N_ELEMENTS(yMin) EQ 0 THEN BEGIN
+              yMin                         = tempMin
+           ENDIF ELSE BEGIN
+              yMin                         = yMin < tempMin
+           ENDELSE
+           
+           tempMax                         = MAX((datArr[j])[i])
+           IF N_ELEMENTS(yMax) EQ 0 THEN BEGIN
+              yMax                         = tempMax
+           ENDIF ELSE BEGIN
+              yMax                         = yMax > tempMax
+           ENDELSE
+        ENDFOR
+        plotYRange                         = [yMin,yMax]
+     ENDIF
+
      FOR j=0,plotsPerWindow-1 DO BEGIN
+        IF KEYWORD_SET(detrend_window) THEN BEGIN
+           delays                          = (delayList[j])[i]
+           delays_trimmed                  = !NULL
+           data_trend                      = RUNNING_AVERAGE(delays,(datArr[j])[i],detrend_window, $
+                                                             BIN_CENTERS=delays_trimmed, $
+                                                             /DROP_EDGES)
+           delays                          = delays_trimmed
+           data_detrended                  = (datArr[j])[i] - data_trend
+        ENDIF ELSE BEGIN
+           delays                          = (delayList[j])[i]
+           data_detrended                  = (datArr[j])[i]
+        ENDELSE
+        
 
         IF KEYWORD_SET(scale_plots_to_1) THEN BEGIN
            ;; minData                            = MIN((datArr[j])[i],MAX=maxData)
@@ -111,19 +152,29 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_DUSK_OR_COMBINED_CELL_IN_NORTHERN_OR_SOU
            ;; dataMid                            = MEAN((datArr[j])[i])
            ;; data                               = ((datArr[j])[i]-dataMid)/dataRange*2.D
 
-           dataMid                            = MEAN((datArr[j])[i])
-           data                               = (datArr[j])[i]-dataMid
-           minData                            = MIN((datArr[j])[i],MAX=maxData)
-           dataRange                          = maxData-minData
-           dataMid                            = (maxData+minData)/2.D
-           data                               = ((datArr[j])[i]-dataMid)/dataRange*2.D
+           IF ~KEYWORD_SET(detrend_window) THEN BEGIN
+              dataMid                            = MEAN((datArr[j])[i])
+              data                               = (datArr[j])[i]-dataMid
+              minData                            = MIN((datArr[j])[i],MAX=maxData)
+              dataRange                          = maxData-minData
+              dataMid                            = (maxData+minData)/2.D
+              data                               = ((datArr[j])[i]-dataMid)/dataRange*2.D
+           ENDIF ELSE BEGIN
+              ;; dataMid                            = MEAN(data_detrended)
+              ;; data                               = data_detrended-dataMid
+              minData                            = MIN(data_detrended,MAX=maxData)
+              dataRange                          = maxData-minData
+              dataMid                            = (maxData+minData)/2.D
+              data                               = (data_detrended-dataMid)/dataRange*2.D
+           ENDELSE
+
 
         ENDIF ELSE BEGIN
            data                               = (datArr[j])[i]
         ENDELSE
 
         xShowLabel                         = (i EQ nWindows-1)
-        plotArr[i,j]                       = PLOT((delayList[j])[i],data, $
+        plotArr[i,j]                       = PLOT(delays,data, $
                                                   TITLE=(i GT 0) ? !NULL : 'Figure of merit ' + FOMTypeStr + ': ' + cellStr, $; plotTitle[0], $
                                                   XSHOWTEXT=xShowLabel, $
                                                   ;; AXIS_STYLE=(i EQ nWindows-1) ? 1 : !NULL, $

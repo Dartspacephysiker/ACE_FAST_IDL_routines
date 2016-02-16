@@ -3,17 +3,21 @@
 ;;This one accommodates the other FOMs--Average, log average, and median
 FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
    HEMI=hemi, $
+   ;; DETREND_WINDOW=detrend_window, $
    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
    INCLUDE_ALLIMF=include_allIMF, $
+   FILEDAY=fileDia, $
    FOM_TYPE=fom_type, $
    FOMTYPESTR=fomTypeStr, $
    COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
    CELL_TO_PLOT=cell_to_plot, $
+   H2DFILEDIR=h2dFileDir, $
    NWINDOWS=nWindows, $
    PLOTSPERWINDOW=plotsPerWindow, $
    PLOTTITLE=plotTitle, $
    PLOTHEMISTR=plotHemiStr, $
    PLOTYRANGE=plotYRange, $
+   AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
    PLOTCOLOR=plotColor, $
    SCALE_PLOTS_TO_1=scale_plots_to_1, $
    CELLSTR=cellStr, $
@@ -27,18 +31,20 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
   defHemi                                  = 'NORTH'
 
 
-  IF N_ELEMENTS(lun) EQ 0       THEN lun          = -1 ;stdout
+  IF N_ELEMENTS(lun) EQ 0       THEN lun   = -1 ;stdout
 
   IF ~KEYWORD_SET(cell_to_plot) THEN cell_to_plot = defCell_to_plot
   IF ~KEYWORD_SET(fom_type)     THEN fom_type     = defFOM_type
   IF ~KEYWORD_SET(hemi)         THEN hemi         = defHemi
 
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
+  IF ~KEYWORD_SET(h2dFileDir) THEN BEGIN
+     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160215--Alfven_cusp_figure_of_merit/data/'
+  ENDIF
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   ;;input files
-  fileDia                                  = '20160214'
+  IF ~KEYWORD_SET(fileDia) THEN fileDia    = '20160215'
 
   CASE fom_type OF
      3: BEGIN
@@ -96,7 +102,7 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
         cellStr                            = 'Dusk cell'
      END
      ELSE: BEGIN
-        PRINT,"Must select one of 'BOTH', 'DAWN', or 'DUSK' for cell_to_plot!"
+        PRINT,"Must select one of 'COMBINED', 'DAWN', or 'DUSK' for cell_to_plot!"
         RETURN, -1
      END
   ENDCASE
@@ -121,6 +127,10 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
   
   IF KEYWORD_SET(scale_plots_to_1) THEN BEGIN
      plotYRange                            = [-1.D,1.D]
+     IF KEYWORD_SET(auto_adjust_yRange) THEN BEGIN
+        PRINT,"Can't have plots scaled to 1 and y Range auto-adjusted!"
+        STOP
+     ENDIF
   ENDIF
 
   IF ~KEYWORD_SET(plotYRange) THEN BEGIN
