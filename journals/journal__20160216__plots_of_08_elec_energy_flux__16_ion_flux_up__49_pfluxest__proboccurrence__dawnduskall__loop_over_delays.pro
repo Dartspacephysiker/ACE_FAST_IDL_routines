@@ -3,17 +3,17 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   nonstorm                       = 0
 
-  hemi                           = 'NORTH'
-  minILAT                        = 56
-  maxILAT                        = 83
-  binILAT                        = 3.0
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -83
-  ;; maxILAT                        = -56
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 56
+  ;; maxILAT                        = 83
   ;; binILAT                        = 3.0
 
-  nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
+  hemi                           = 'SOUTH'
+  minILAT                        = -83
+  maxILAT                        = -56
+  binILAT                        = 3.0
+
+  ;; nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
   nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
 
   binMLT                         = 0.5
@@ -42,7 +42,7 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
    ;;10-EFLUX_LOSSCONE_INTEG
    eNumFlPlotType                 = 'eflux_Losscone_Integ'
    ;; eNumFlRange                    = [10^(0.5),10^(5.5)]
-   eNumFlRange                    = [1e2,1e4]
+   eNumFlRange                    = [5e1,5e3]
    logENumFlPlot                  = 1
 
   ;;08--ELEC_ENERGY_FLUX
@@ -52,7 +52,7 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   ;;16--ION_FLUX_UP
   iFluxPlotType                  = 'Max_Up'
-  iPlotRange                     = [10^(7.0),10^(9.0)]
+  iPlotRange                     = [10^(6.5),10^(9.5)]
   logIFPlot                      = 1
   
   ;;49--pFluxEst
@@ -61,14 +61,14 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   ;PROBOCCURRENCE
   ;; probOccurrenceRange            = [1e-3,1e-1]   ;;Seemed to work well when byMin=3, hemi='SOUTH', and anglelims=[45,135]
-  probOccurrenceRange            = [1e-2,1e0]
+  probOccurrenceRange            = [1e-3,1e-1]
 
   do_despun                      = 1
 
   FOR i = 0, N_ELEMENTS(delayArr)-1 DO BEGIN
-     PRINT,'*******************************************'
-     PRINT,FORMAT='("*************DELAY=",I04,"s*******************")',delayArr[i]
-     PRINT,'*******************************************'
+     PRINT,'********************************************'
+     PRINT,FORMAT='("*************DELAY=",I05,"s*******************")',delayArr[i]
+     PRINT,'********************************************'
      PRINT,''
      PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK, $
         NONSTORM=nonstorm, $
