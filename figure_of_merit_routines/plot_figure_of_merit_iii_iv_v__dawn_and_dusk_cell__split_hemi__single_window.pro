@@ -49,7 +49,7 @@
 PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW, $
    HEMI=hemi, $
    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
-   INCLUDE_ALLIMF=include_allIMF, $
+   ;; INCLUDE_ALLIMF=include_allIMF, $
    FILEDAY=fileDia, $
    FOM_TYPE=fom_type, $
    H2DFILEDIR=h2dFileDir, $
@@ -67,12 +67,11 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
   winArr[0]                                = WINDOW(WINDOW_TITLE='Figure of merit, combined dawn and dusk', $
                                                     DIMENSIONS=[1200,800])
   legendArr                                = MAKE_ARRAY(1,/OBJ)
-  plotArr                                  = MAKE_ARRAY(2,3,2,/OBJ)
+  plotArr                                  = MAKE_ARRAY(2,2,2,/OBJ)
 
-  topMargin                                = [0.09,0.01,0.03,0.14]
-  middleMargin                             = [0.09,0.075,0.03,0.075]
-  bottomMargin                             = [0.09,0.14,0.03,0.01]
-  margins                                  = [[topMargin],[middleMargin],[bottomMargin]]
+  topMargin                                = [0.12,0.01,0.03,0.12]
+  bottomMargin                             = [0.12,0.14,0.03,0.01]
+  margins                                  = [[topMargin],[bottomMargin]]
 
   cellArr=['DAWN','DUSK']
 
@@ -81,9 +80,9 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
   ;;cell_k indexes cell
   FOR cell_k=0,1 DO BEGIN
 
-     retVal = FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP(HEMI=hemi, $
+     retVal = FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP(HEMI=hemi, $
                                                    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
-                                                   INCLUDE_ALLIMF=include_allIMF, $
+                                                   ;; INCLUDE_ALLIMF=include_allIMF, $
                                                    ;; DETREND_WINDOW=detrend_window, $
                                                    FILEDAY=fileDia, $
                                                    FOM_TYPE=fom_type, $
@@ -134,7 +133,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
            plotYRange                         = [yMin,yMax]
         ENDIF
 
-        plotLayout                            = [2,nWindows,IMF_i*2+cell_k+1]
+        ;; plotLayout                            = [2,nWindows,IMF_i*2+cell_k+1]
         plotLayout                            = [2,nWindows,hemi_j*2+cell_k+1]
         FOR IMF_i=0,plotsPerPanel-1 DO BEGIN
            delays                             = (delayList[hemi_j])[IMF_i]
@@ -193,18 +192,19 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
                                                         XTITLE=(hemi_j EQ nWindows-1) ? 'Delay between magnetopause and cusp observation (min)' : !NULL, $
                                                         XRANGE=xRange, $
                                                         YRANGE=plotYRange, $
-                                                        YTITLE=plotHemiStr[hemi_j] + " FOM", $
+                                                        YTITLE=(cell_k GT 0 ? !NULL : plotHemiStr[hemi_j] + " FOM"), $
                                                         NAME=IMFCortStr[IMF_i], $
                                                         OVERPLOT=(IMF_i GT 0 ), $
-                                                        COLOR=plot_color[IMF_i], $
+                                                        COLOR=plotColor[IMF_i], $
                                                         ;; TITLE=(IMF_i GT 0) ? !NULL : 'Figure of merit ' + FOMTypeStr + ': ' + cellStr, $ ; plotTitle[0], $
                                                         ;; XTITLE=(IMF_i EQ nWindows-1) ? 'Delay between magnetopause and cusp observation (min)' : !NULL, $
                                                         ;; YTITLE=IMFCortStr[IMF_i] + " FOM", $
                                                         ;; YTITLE=IMFCortStr[IMF_i] + " FOM", $
                                                         ;; NAME=plotHemiStr[hemi_j], $
                                                         ;; OVERPLOT=(hemi_j GT 0 ), $
-                                                        ;; COLOR=plot_color[hemi_j], $
-                                                        MARGIN=margins[*,IMF_i], $
+                                                        ;; COLOR=plotColor[hemi_j], $
+                                                        ;; MARGIN=margins[*,IMF_i], $
+                                                        MARGIN=margins[*,hemi_j], $
                                                         LAYOUT=plotLayout, $
                                                         THICK=3.0, $
                                                         TRANSPARENCY=50, $
@@ -222,7 +222,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
      ENDFOR
      
      IF cell_k EQ 0 THEN BEGIN
-        legendArr[0]                       = LEGEND(TARGET=plotArr[cell_k,0,*], $
+        legendArr[0]                       = LEGEND(TARGET=plotArr[cell_k,*,0], $
                                                     /NORMAL, $
                                                     POSITION=[0.9,0.6], $
                                                     FONT_SIZE=16, $

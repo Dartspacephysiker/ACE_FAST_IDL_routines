@@ -225,7 +225,7 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
 
   ;;Now combine stuff from each IMF predominance
   ;; FOR i=0,nDelay-1 DO BEGIN
-  combDawnDusk                          = combFOMList[0]+combFOMList[1]+combFOMList[2]
+  combDawnDusk                          = combFOMList[0]+combFOMList[1]
   ;; ENDFOR
   
   combDawnDusk_awesome                  = GET_N_MAXIMA_IN_ARRAY(combDawnDusk,N=nFOM_to_print,OUT_I=combDawnDusk_i)
@@ -239,7 +239,7 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
   FOR i=0,nFOM_to_print-1 DO BEGIN
      list_i                             = combDawnDusk_i[i]
      ;; PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,i],duskFOMList[0,i],dawnFOMList[2,i],duskFOMList[2,i]
-     PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,list_i],duskFOMList[0,list_i],dawnFOMList[2,list_i],duskFOMList[2,list_i]
+     PRINTF,lun,FORMAT=fomUltimateFmtString,i+1,delayDawnDusk_awesome[i],combDawnDusk_awesome[i],dawnFOMList[0,list_i],duskFOMList[0,list_i],dawnFOMList[1,list_i],duskFOMList[1,list_i]
   ENDFOR
   
   PRINTF,lun,'Saving lists to ' + outFile

@@ -5,7 +5,7 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP, $
    HEMI=hemi, $
    ;; DETREND_WINDOW=detrend_window, $
    ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
-   INCLUDE_ALLIMF=include_allIMF, $
+   ;; INCLUDE_ALLIMF=include_allIMF, $
    FILEDAY=fileDia, $
    FOM_TYPE=fom_type, $
    FOMTYPESTR=fomTypeStr, $
@@ -38,32 +38,32 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP, $
   IF ~KEYWORD_SET(hemi)         THEN hemi         = defHemi
 
   IF ~KEYWORD_SET(h2dFileDir) THEN BEGIN
-     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160215--Alfven_cusp_figure_of_merit/data/'
+     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160216--Alfven_cusp_figure_of_merit/data/'
   ENDIF
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   ;;input files
-  IF ~KEYWORD_SET(fileDia) THEN fileDia    = '20160215'
+  IF ~KEYWORD_SET(fileDia) THEN fileDia    = '20160216'
 
   CASE fom_type OF
      3: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_III--delays_0-30min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_III--delays_0-30min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_III--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_III--delays_-25_25min.sav'
 
         PRINT,'Using FOM_type = 3'
         fomTypeStr                         = '(Type III)'
      END
      4: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_IV--delays_0-30min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_IV--delays_0-30min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_IV--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_IV--delays_-25_25min.sav'
 
         PRINT,'Using FOM_type = 4'
         fomTypeStr                         = '(Type IV)'
      END
      5: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_V--delays_0-30min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_V--delays_0-30min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_V--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_V--delays_-25_25min.sav'
         PRINT,'Using FOM_type = 5'
         fomTypeStr                         = '(Type V)'
      END
@@ -110,25 +110,25 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP, $
   
   IF KEYWORD_SET(combine_foms_for_each_IMF) THEN BEGIN
      PRINTF,lun,'Combining FOMs for each IMF'
-     IF KEYWORD_SET(include_allIMF) THEN BEGIN
-        PRINTF,lun,'Including all_IMF in combined FOM ...'
-        datArr                       = [[datArr[0,0]+datArr[0,1]+datArr[0,2]],[datArr[1,0]+datArr[1,1]+datArr[1,2]]]
-     ENDIF ELSE BEGIN
-        datArr                       = [[datArr[0,0]+datArr[0,2]],[datArr[1,0]+datArr[1,2]]]
-     ENDELSE
+     ;; IF KEYWORD_SET(include_allIMF) THEN BEGIN
+     ;;    PRINTF,lun,'Including all_IMF in combined FOM ...'
+     ;;    datArr                       = [[datArr[0,0]+datArr[0,1]+datArr[0,2]],[datArr[1,0]+datArr[1,1]+datArr[1,2]]]
+     ;; ENDIF ELSE BEGIN
+        datArr                       = [[datArr[0,0]+datArr[0,1]],[datArr[1,0]+datArr[1,1]]]
+     ;; ENDELSE
      nWindows                              = 1      ;Only one window
      plotTitle                             = cellStr + ' for combined IMF orientations'
      IMFCortStr                            = 'combined'
   ENDIF ELSE BEGIN                         
-     IF KEYWORD_SET(suppress_all_IMF_plots) THEN BEGIN
+     ;; IF KEYWORD_SET(suppress_all_IMF_plots) THEN BEGIN
         nWindows                           = 2 ;One window for dawn, all, and dusk IMF
         IMFCortStr                         = ['Dawnward','Duskward']
         plotTitle                          = cellStr + ' for ' + IMFCortStr + ' IMF'
-     ENDIF ELSE BEGIN
-        nWindows                           = 3 ;One window for dawn, all, and dusk IMF
-        IMFCortStr                         = ['Dawnward','All','Duskward']
-        plotTitle                          = cellStr + ' for ' + IMFCortStr + ' IMF'
-     ENDELSE
+     ;; ENDIF ELSE BEGIN
+     ;;    nWindows                           = 3 ;One window for dawn, all, and dusk IMF
+     ;;    IMFCortStr                         = ['Dawnward','Duskward']
+     ;;    plotTitle                          = cellStr + ' for ' + IMFCortStr + ' IMF'
+     ;; ENDELSE
   ENDELSE
   
   IF KEYWORD_SET(scale_plots_to_1) THEN BEGIN

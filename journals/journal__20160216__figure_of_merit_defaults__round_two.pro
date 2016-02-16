@@ -12,22 +12,24 @@
 
   minM                                     = 0.00000
   maxM                                     = 24.0000
-  binM                                     = 1.0
-  shiftM                                   = 0.5
+  binM                                     = 0.5
+  shiftM                                   = 0.25
 
-  h2d_i                                    = 0            ; The one for probability of occurrence
-  n_maxima                                 = 2            ; How many maxima are we getting?
+  h2d_i                                    = 4            ; The one for probability of occurrence
+  n_maxima                                 = 8            ; How many maxima are we getting?
   n_center_maxima                          = 1
   threshold_max                            = ALOG10(1.2)  ; Value shouldn't be more than 10% above 100% occurrence
   nFOM_to_print                            = 25
 
   ;;Boundaries for figure of merit
-  dusk_minM                                = 12.5
-  dusk_maxM                                = 14.5
-  dawn_minM                                = 9.5
-  dawn_maxM                                = 11.5
-  center_minM                              = 11.5
-  center_maxM                              = 12.5
+  ;;first entry is for dawnward IMF
+  ;;second is for duskward IMF
+  dusk_minM                                = 12.25
+  dusk_maxM                                = 14.75
+  dawn_minM                                = 9.25
+  dawn_maxM                                = 11.75
+  center_minM                              = 11.75
+  center_maxM                              = 12.25
 
   IF STRUPCASE(hemi) EQ 'SOUTH' THEN BEGIN
 
@@ -37,14 +39,14 @@
      maxI                                     = -56.0000
      
      ;; ;;ILAT Boundaries for figure of merit
-     dusk_minI                                = -83
-     dusk_maxI                                = -56
+     dusk_minI                                = -74
+     dusk_maxI                                = -65
      
-     dawn_minI                                = -83
-     dawn_maxI                                = -56
+     dawn_minI                                = -74
+     dawn_maxI                                = -65
 
-     center_minI                              = -83
-     center_maxI                              = -56
+     center_minI                              = -74
+     center_maxI                              = -65
      
   ENDIF ELSE BEGIN
      IF STRUPCASE(hemi) EQ 'NORTH' THEN BEGIN
@@ -54,14 +56,14 @@
         maxI                                  = 83.0000
         
         ;;ILAT Boundaries for figure of merit
-        dusk_minI                             = 56
-        dusk_maxI                             = 83
+        dusk_minI                             = 65
+        dusk_maxI                             = 74
         
-        dawn_minI                             = 56
-        dawn_maxI                             = 83
+        dawn_minI                             = 65
+        dawn_maxI                             = 74
         
-        center_minI                           = 56
-        center_maxI                           = 83
+        center_minI                           = 65
+        center_maxI                           = 74
      ENDIF
   ENDELSE
 
