@@ -2,7 +2,7 @@
 PRO JOURNAL__20160215__DATA_FOR_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__FASTLOC_INTERVALS4
 
   justData                       = 1
-  nonstorm                       = 0
+  nonstorm                       = 1
 
   hemi                           = 'NORTH'
   minILAT                        = 67

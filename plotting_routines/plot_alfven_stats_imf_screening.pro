@@ -377,6 +377,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;Now clean and tap the databases and interpolate satellite data
   IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
      GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+        DSTCUTOFF=dstCutoff, $
         NONSTORM_I=ns_i, $
         MAINPHASE_I=mp_i, $
         RECOVERYPHASE_I=rp_i, $
@@ -398,21 +399,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            restrict_with_these_i = ns_i
            t1_arr                = ns_t1
            t2_arr                = ns_t2
-           paramString += '--non-storm'
+           stormString           = 'non-storm'
+           paramString          += '--' + stormString
         END
         KEYWORD_SET(mainPhase): BEGIN
            PRINTF,lun,'Restricting with main-phase indices ...'
            restrict_with_these_i = mp_i
            t1_arr                = mp_t1
            t2_arr                = mp_t2
-           paramString += '--mainPhase'
+           stormString           = 'mainPhase'
+           paramString          += '--' + stormString
          END
         KEYWORD_SET(recoveryPhase): BEGIN
            PRINTF,lun,'Restricting with recovery-phase indices ...'
            restrict_with_these_i = rp_i
            t1_arr                = rp_t1
            t2_arr                = rp_t2
-           paramString += '--recoveryPhase'
+           stormString           = 'recoveryPhase'
+           paramString          += '--' + stormString
          END
      ENDCASE
   ENDIF
@@ -520,6 +524,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                         DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
                         DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
+                        STORMSTRING=stormString, $
+                        DSTCUTOFF=dstCutoff, $
                         T1_ARR=t1_arr, $
                         T2_ARR=t2_arr, $
                         BYMIN=byMin, BZMIN=bzMin, $
