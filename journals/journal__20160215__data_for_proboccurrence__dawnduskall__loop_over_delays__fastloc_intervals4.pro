@@ -4,15 +4,15 @@ PRO JOURNAL__20160215__DATA_FOR_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__F
   justData                       = 1
   nonstorm                       = 1
 
-  hemi                           = 'NORTH'
-  minILAT                        = 67
-  maxILAT                        = 75
-  binILAT                        = 4
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -75
-  ;; maxILAT                        = -67
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 67
+  ;; maxILAT                        = 75
   ;; binILAT                        = 4
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -75
+  maxILAT                        = -67
+  binILAT                        = 4
 
   nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
   nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
