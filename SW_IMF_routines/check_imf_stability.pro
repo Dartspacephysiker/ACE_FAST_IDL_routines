@@ -152,7 +152,7 @@ FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
         ;;Now we've got to decide what to do with those lousy events 
         ;;corresponding to unstable periods
         ;;Kick 'em out of the house!
-        IF N_ELEMENTS(stableTemp(WHERE(stableTemp GT -1))) EQ stableIMF THEN $ 
+        IF N_ELEMENTS(stableTemp[WHERE(stableTemp GT -1)]) EQ stableIMF THEN $ 
            stableIMF_ii=[stableIMF_ii,temp_ii] 
      ENDFOR 
      
