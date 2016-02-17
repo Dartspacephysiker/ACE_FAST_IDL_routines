@@ -16,7 +16,7 @@
   shiftM                                   = 0.25
 
   h2d_i                                    = 4            ; The one for probability of occurrence
-  n_maxima                                 = 8            ; How many maxima are we getting?
+  n_maxima                                 = 10           ; How many maxima are we getting?
   n_center_maxima                          = 1
   threshold_max                            = ALOG10(1.2)  ; Value shouldn't be more than 10% above 100% occurrence
   nFOM_to_print                            = 25
@@ -24,10 +24,46 @@
   ;;Boundaries for figure of merit
   ;;first entry is for dawnward IMF
   ;;second is for duskward IMF
-  dusk_minM                                = 12.25
-  dusk_maxM                                = 14.75
-  dawn_minM                                = 9.25
-  dawn_maxM                                = 11.75
+  ;; dawn_minM                                = 9.25
+  ;; dawn_maxM                                = 11.75
+  ;; dusk_minM                                = 12.25
+  ;; dusk_maxM                                = 14.75
+  ;; center_minM                              = 11.75
+  ;; center_maxM                              = 12.25
+
+  ;;boundaries for each cusp
+  particle_dawn_minM                       = 10.00
+  particle_dawn_maxM                       = 11.75
+  particle_dusk_minM                       = 12.25
+  particle_dusk_maxM                       = 14.00
+  
+  alfven_dawn_minM                         =  9.50
+  alfven_dawn_maxM                         = 11.75
+  alfven_dusk_minM                         = 12.25
+  alfven_dusk_maxM                         = 14.50
+
+  ;;Alfven cusps
+  Northern_dawnIMF_duskCell_minM           = alfven_dusk_minM
+  Northern_dawnIMF_duskCell_maxM           = alfven_dusk_maxM
+  Northern_duskIMF_dawnCell_minM           = alfven_dawn_minM
+  Northern_duskIMF_dawnCell_maxM           = alfven_dawn_maxM
+
+  Southern_dawnIMF_dawnCell_minM           = alfven_dawn_minM
+  Southern_dawnIMF_dawnCell_maxM           = alfven_dawn_maxM
+  Southern_duskIMF_duskCell_minM           = alfven_dusk_minM
+  Southern_duskIMF_duskCell_maxM           = alfven_dusk_maxM
+
+  ;;particle cusps
+  Northern_dawnIMF_dawnCell_minM           = particle_dawn_minM
+  Northern_dawnIMF_dawnCell_maxM           = particle_dawn_maxM
+  Northern_duskIMF_duskCell_minM           = particle_dusk_minM
+  Northern_duskIMF_duskCell_maxM           = particle_dusk_maxM
+
+  Southern_dawnIMF_duskCell_minM           = particle_dusk_minM
+  Southern_dawnIMF_duskCell_maxM           = particle_dusk_maxM
+  Southern_duskIMF_dawnCell_minM           = particle_dawn_minM
+  Southern_duskIMF_dawnCell_maxM           = particle_dawn_maxM
+
   center_minM                              = 11.75
   center_maxM                              = 12.25
 
@@ -37,15 +73,25 @@
 
      minI                                     = -83.0000
      maxI                                     = -56.0000
-     
+
      ;; ;;ILAT Boundaries for figure of merit
-     dusk_minI                                = -74
+     dawnIMF_dawnCell_minM                    = Southern_dawnIMF_dawnCell_minM
+     dawnIMF_dawnCell_maxM                    = Southern_dawnIMF_dawnCell_maxM
+     duskIMF_duskCell_minM                    = Southern_duskIMF_duskCell_minM
+     duskIMF_duskCell_maxM                    = Southern_duskIMF_duskCell_maxM
+
+     dawnIMF_duskCell_minM                    = Southern_dawnIMF_duskCell_minM
+     dawnIMF_duskCell_maxM                    = Southern_dawnIMF_duskCell_maxM
+     duskIMF_dawnCell_minM                    = Southern_duskIMF_dawnCell_minM
+     duskIMF_dawnCell_maxM                    = Southern_duskIMF_dawnCell_maxM
+
+     dusk_minI                                = -78
      dusk_maxI                                = -65
      
-     dawn_minI                                = -74
+     dawn_minI                                = -78
      dawn_maxI                                = -65
 
-     center_minI                              = -74
+     center_minI                              = -78
      center_maxI                              = -65
      
   ENDIF ELSE BEGIN
@@ -55,17 +101,33 @@
         minI                                  = 56.0000
         maxI                                  = 83.0000
         
-        ;;ILAT Boundaries for figure of merit
+        ;; ;;ILAT Boundaries for figure of merit
+        dawnIMF_dawnCell_minM                 = Northern_dawnIMF_dawnCell_minM
+        dawnIMF_dawnCell_maxM                 = Northern_dawnIMF_dawnCell_maxM
+        duskIMF_duskCell_minM                 = Northern_duskIMF_duskCell_minM
+        duskIMF_duskCell_maxM                 = Northern_duskIMF_duskCell_maxM
+        
+        dawnIMF_duskCell_minM                 = Northern_dawnIMF_duskCell_minM
+        dawnIMF_duskCell_maxM                 = Northern_dawnIMF_duskCell_maxM
+        duskIMF_dawnCell_minM                 = Northern_duskIMF_dawnCell_minM
+        duskIMF_dawnCell_maxM                 = Northern_duskIMF_dawnCell_maxM
+        
         dusk_minI                             = 65
-        dusk_maxI                             = 74
+        dusk_maxI                             = 78
         
         dawn_minI                             = 65
-        dawn_maxI                             = 74
+        dawn_maxI                             = 78
         
         center_minI                           = 65
-        center_maxI                           = 74
+        center_maxI                           = 78
      ENDIF
   ENDELSE
+
+  ;;indices, assuming clockStr order is dawn then dusk
+  dawn_minM                                   = [dawnIMF_dawnCell_minM,duskIMF_dawnCell_minM]
+  dawn_maxM                                   = [dawnIMF_dawnCell_maxM,duskIMF_dawnCell_maxM]
+  dusk_minM                                   = [dawnIMF_duskCell_minM,duskIMF_duskCell_minM]
+  dusk_maxM                                   = [dawnIMF_duskCell_maxM,duskIMF_duskCell_maxM]
 
   ;;Get the ILAT and MLT bin centers
   GET_H2D_BIN_CENTERS_OR_EDGES,centers, $
@@ -74,19 +136,6 @@
                                MAX1=maxM, MAX2=maxI, $
                                MIN1=minM, MIN2=minI, $
                                SHIFT1=shiftM, SHIFT2=shiftI
-
-  ;;Determine where to get the figure of merit stuff
-  dawn_MLT_i                               = WHERE(centersMLT GE dawn_minM AND centersMLT LE dawn_maxM)
-  dawn_ILAT_i                              = WHERE(centersILAT GE dawn_minI AND centersILAT LE dawn_maxI)
-  dawn_i                                   = cgsetintersection(dawn_MLT_i,dawn_ILAT_i)
-
-  dusk_MLT_i                               = WHERE(centersMLT GE dusk_minM AND centersMLT LE dusk_maxM)
-  dusk_ILAT_i                              = WHERE(centersILAT GE dusk_minI AND centersILAT LE dusk_maxI)
-  dusk_i                                   = cgsetintersection(dusk_MLT_i,dusk_ILAT_i)
-
-  center_MLT_i                             = WHERE(centersMLT GE center_minM AND centersMLT LE center_maxM)
-  center_ILAT_i                            = WHERE(centersILAT GE center_minI AND centersILAT LE center_maxI)
-  center_i                                 = cgsetintersection(center_MLT_i,center_ILAT_i)
 
   ;;parameters for files to be looped over
 

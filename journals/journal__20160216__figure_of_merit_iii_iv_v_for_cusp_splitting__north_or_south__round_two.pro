@@ -52,11 +52,23 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
      duskfomArr                            = !NULL
      centerfomArr                          = !NULL
 
+     ;;Determine where to get the figure of merit stuff
+     dawn_MLT_i                            = WHERE(centersMLT GE dawn_minM[k] AND centersMLT LE dawn_maxM[k])
+     dawn_ILAT_i                           = WHERE(centersILAT GE dawn_minI AND centersILAT LE dawn_maxI)
+     dawn_i                                = cgsetintersection(dawn_MLT_i,dawn_ILAT_i)
+                                           
+     dusk_MLT_i                            = WHERE(centersMLT GE dusk_minM[k] AND centersMLT LE dusk_maxM[k])
+     dusk_ILAT_i                           = WHERE(centersILAT GE dusk_minI AND centersILAT LE dusk_maxI)
+     dusk_i                                = cgsetintersection(dusk_MLT_i,dusk_ILAT_i)
+                                           
+     center_MLT_i                          = WHERE(centersMLT GE center_minM AND centersMLT LE center_maxM)
+     center_ILAT_i                         = WHERE(centersILAT GE center_minI AND centersILAT LE center_maxI)
+     center_i                              = cgsetintersection(center_MLT_i,center_ILAT_i)
+     
      PRINTF,lun,'****'+STRUPCASE(clockStrArr[k])+'****'
      FOR i=0,nDelay-1 DO BEGIN
         h2dFile                            = STRING(FORMAT=h2dFNameFmt, $
                                                     fileDay,hemi,clockStrArr[k],delayArr[i],byMin)
-        
         IF FILE_TEST(h2dFileDir+h2dFile) THEN BEGIN    ;Got 'im!
 
            restore,h2dFileDir+h2dFile
@@ -104,7 +116,11 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
                  center_fom                   = -2.D*MEAN(center_data)
 
                  IF KEYWORD_SET(subtract_center) THEN BEGIN
-                    PRINT,'Subtracting center for combined FOM...'
+                    PRINT,'Subtracting center for each FOM...'
+                    ;; dawn_fom                  = dawn_fom+center_fom/2.
+                    ;; dusk_fom                  = dusk_fom+center_fom/2.
+                    dawn_fom                  = dawn_fom+center_fom
+                    dusk_fom                  = dusk_fom+center_fom
                     comb_fom                  = dawn_fom+dusk_fom+center_fom
                  ENDIF ELSE BEGIN
                     comb_fom                  = dawn_fom+dusk_fom
@@ -121,7 +137,11 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
                  dusk_fom                     = 10.0D^MEAN(dusk_data)
                  center_fom                   = -2.D*10.0D^(MEAN(center_data))
                  IF KEYWORD_SET(subtract_center) THEN BEGIN
-                    PRINT,'Subtracting center for combined FOM...'
+                    PRINT,'Subtracting center for each FOM...'
+                    ;; dawn_fom                  = dawn_fom+center_fom/2.
+                    ;; dusk_fom                  = dusk_fom+center_fom/2.
+                    dawn_fom                  = dawn_fom+center_fom
+                    dusk_fom                  = dusk_fom+center_fom
                     comb_fom                  = dawn_fom+dusk_fom+center_fom
                  ENDIF ELSE BEGIN
                     comb_fom                  = dawn_fom+dusk_fom
@@ -152,7 +172,11 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
                  ENDELSE
 
                  IF KEYWORD_SET(subtract_center) THEN BEGIN
-                    PRINT,'Subtracting center for combined FOM...'
+                    PRINT,'Subtracting center for each FOM...'
+                    ;; dawn_fom                  = dawn_fom+center_fom/2.
+                    ;; dusk_fom                  = dusk_fom+center_fom/2.
+                    dawn_fom                  = dawn_fom+center_fom
+                    dusk_fom                  = dusk_fom+center_fom
                     comb_fom                  = dawn_fom+dusk_fom+center_fom
                  ENDIF ELSE BEGIN
                     comb_fom                  = dawn_fom+dusk_fom

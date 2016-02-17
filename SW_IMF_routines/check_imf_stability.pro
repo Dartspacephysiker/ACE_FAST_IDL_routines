@@ -112,7 +112,7 @@ FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
         tempArr[temp_ii]=j 
         tempArr=[INTARR(j),tempArr] 
         imfDurArr[WHERE(tempArr GT imfDurArr)]=j 
-        printf,lun,"There are " +strtrim(thisCount-oldCount,2)+ " events" + $
+        printf,lun,"There are " +strtrim(thisCount-oldCount,2)+ " instances" + $
                " prior to which we have " +strtrim(j,2)+ " minutes of consecutive" + $
                " mag data."    
         ;;      sumCount += thisCount-oldCount 

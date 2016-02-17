@@ -9,16 +9,16 @@ PRO JOURNAL__20160216__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
 
   cell_to_plot           = ['DAWN','DUSK']
 
-  plotYRange             = [0.00,0.05]
+  plotYRange             = [0.00,0.1]
   
   h2dFileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/20160216--Alfven_cusp_figure_of_merit/data/'
   fileDia                = '20160216'
 
   ;; scale_plots_to_1       = 1
-  subtract_center        = 0
+  subtract_center        = 1
   ;; detrend_window         = 8 ;minutes
 
-  auto_adjust_yRange     = 1
+  auto_adjust_yRange     = 0
 
   FOR i=0,N_ELEMENTS(fom_type)-1 DO BEGIN
      FOR j=0,N_ELEMENTS(hemiStrings)-1 DO BEGIN
