@@ -1,11 +1,15 @@
 ;2016/02/16
 PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
    DUSKREPLACESTR=duskReplaceStr, $
+   DAWNSTR=dawnStr, $
    PROMPT_FOR_QUANTS_TO_PLOT_FOR_EACH_FILE=reprompt, $
+   MIDNIGHT=midnight, $
    PLOTDIR=plotDir, $
    LUN=lun
   
   IF ~KEYWORD_SET(lun) THEN lun     = -1
+
+  IF N_ELEMENTS(midnight) EQ 0 THEN midnight = 1
 
   IF ~KEYWORD_SET(dawnFiles) THEN BEGIN
      dawnFiles                      = DIALOG_PICKFILE(/READ, $
@@ -25,7 +29,7 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
      READ,response,PROMPT='OK to replace "dawnward" with "duskward" in list of dawn files? (y/n)'
      CASE STRUPCASE(STRMID(response,0,1)) OF
         'Y': BEGIN
-           dawnStr                  = 'dawnward'
+           IF N_ELEMENTS(dawnStr) EQ 0 THEN dawnStr = 'dawnward'
            duskReplaceStr           = 'duskward'
         END
         'N': BEGIN
@@ -51,7 +55,7 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
   duskFiles = dawnFiles.REPLACE(dawnStr,duskReplaceStr,/FOLD_CASE)
 
   ;;Set plot dir if need be
-  IF ~KEYWORD_SET(plotDir) THEN set_plot_dir,plotDir
+  IF ~KEYWORD_SET(plotDir) THEN set_plot_dir,plotDir,/FOR_SW_IMF,/ADD_TODAY
 
 
   ;;Loop over files, plot and combine dawn/dusk pairs
@@ -62,11 +66,13 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
      plot_2dhisto_file,dawnFiles[i], $
                        PLOTDIR=plotDir, $
                        QUANTS_TO_PLOT=quants_to_plot, $
+                       MIDNIGHT=midnight, $
                        OUT_PLOTNAMES=plotNames, $
                        LUN=lun
 
      plot_2dhisto_file,duskFiles[i], $
                        PLOTDIR=plotDir, $
+                       MIDNIGHT=midnight, $
                        QUANTS_TO_PLOT=quants_to_plot, $
                        LUN=lun
 

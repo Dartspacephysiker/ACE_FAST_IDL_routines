@@ -112,7 +112,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   ;; suff            = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   ;; clockStrings    = [""+suff,"mainphase"+suff,"recoveryphase"+suff]
-  ;; niceStrings     = ["Non-storm","Main phase","Recovery phase"]
+  titles             = ['Dawnward','Duskward']
   clockStrings       = ['dawnward','duskward']
 
   FOR i=0,1 DO BEGIN
@@ -203,7 +203,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
 
-     COMBINE_ALFVEN_STATS_PLOTS,niceStrings, $
+     COMBINE_ALFVEN_STATS_PLOTS,titles, $
                                 N_TO_COMBINE=n_to_combine, $
                                 TEMPFILES=outTempFiles, $
                                 OUT_IMGS_ARR=out_imgs_arr, $
