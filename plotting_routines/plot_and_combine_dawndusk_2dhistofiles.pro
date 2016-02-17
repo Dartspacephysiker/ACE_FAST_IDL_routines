@@ -5,6 +5,8 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
    PROMPT_FOR_QUANTS_TO_PLOT_FOR_EACH_FILE=reprompt, $
    MIDNIGHT=midnight, $
    PLOTDIR=plotDir, $
+   CB_FORCE_OOBLOW=cb_force_ooblow, $
+   CB_FORCE_OOBHIGH=cb_force_oobhigh, $
    LUN=lun
   
   IF ~KEYWORD_SET(lun) THEN lun     = -1
@@ -13,10 +15,10 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
 
   IF ~KEYWORD_SET(dawnFiles) THEN BEGIN
      dawnFiles                      = DIALOG_PICKFILE(/READ, $
-                             /MULTIPLE_FILES, $
-                             PATH='./', $
-                             TITLE='Select dawnward H2D data file(s) to plot', $
-                             FILTER='*.dat')
+                                                      /MULTIPLE_FILES, $
+                                                      PATH='./', $
+                                                      TITLE='Select dawnward H2D data file(s) to plot', $
+                                                      FILTER='*.dat')
      IF dawnFiles[0] EQ '' THEN BEGIN
         PRINTF,lun,'No dawnFiles selected! Exiting ...'
         RETURN
@@ -67,12 +69,16 @@ PRO PLOT_AND_COMBINE_DAWNDUSK_2DHISTOFILES,dawnFiles,$
                        PLOTDIR=plotDir, $
                        QUANTS_TO_PLOT=quants_to_plot, $
                        MIDNIGHT=midnight, $
+                       CB_FORCE_OOBLOW=cb_force_ooblow, $
+                       CB_FORCE_OOBHIGH=cb_force_oobhigh, $
                        OUT_PLOTNAMES=plotNames, $
                        LUN=lun
 
      plot_2dhisto_file,duskFiles[i], $
                        PLOTDIR=plotDir, $
                        MIDNIGHT=midnight, $
+                       CB_FORCE_OOBLOW=cb_force_ooblow, $
+                       CB_FORCE_OOBHIGH=cb_force_oobhigh, $
                        QUANTS_TO_PLOT=quants_to_plot, $
                        LUN=lun
 
