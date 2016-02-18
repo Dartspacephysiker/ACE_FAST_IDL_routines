@@ -19,7 +19,7 @@ PRO JOURNAL__20160217__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   binMLT                         = 0.5
   shiftMLT                       = 0.25
 
-  stableIMF                      = 10
+  stableIMF                      = 20
   byMin                          = 3
   do_abs_bymin                   = 1
   bzMax                          = 0
@@ -37,6 +37,16 @@ PRO JOURNAL__20160217__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                      1200,  1260,  1320,  1380,  1440, $
                                      1500]
 
+  ;; ;;Same array, reverse order
+  ;; delayArr                       = [ 1500,   1440,   1380,   1320,   1260,   1200, $
+  ;;                                    1140,   1080,   1020,    960,    900,    840, $
+  ;;                                     780,    720,    660,    600,    540,    480, $
+  ;;                                     420,    360,    300,    240,    180,    120, $
+  ;;                                      60,      0,    -60,   -120,   -180,   -240, $
+  ;;                                    -300,   -360,   -420,   -480,   -540,   -600, $
+  ;;                                    -660,   -720,   -780,   -840,   -900,   -960, $
+  ;;                                   -1020,  -1080,  -1140,  -1200,  -1260,  -1320, $
+  ;;                                   -1380,  -1440,  -1500]
   
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]

@@ -3,7 +3,7 @@
 
 ;; Each file contains the following data products:
 ;; 0 *Log Probability of occurrence
-PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__5MINSTABLE, $
+PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOUTH__IMFSTABILITY, $
    HEMI=hemi, $
    FOMSTRING=FOMString, $
    SUBTRACT_CENTER=subtract_center, $
@@ -28,7 +28,7 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
-  @journal__20160218__figure_of_merit_defaults__5minstable
+  @journal__20160218__figure_of_merit_defaults__imfstability
 
   ;;Now, let's get a specified number of maxima: loop through files, let us know if any don't exist
   h2dFNameFmt                              = '("raw/polarplots_"' + $
