@@ -53,6 +53,7 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
    FILEDAY=fileDia, $
    FOM_TYPE=fom_type, $
    H2DFILEDIR=h2dFileDir, $
+   STABLEIMF=stableIMF, $
    COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
    PLOTYRANGE=plotYRange, $
    AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
@@ -81,28 +82,29 @@ PRO PLOT_FIGURE_OF_MERIT_III_IV_V__DAWN_AND_DUSK_CELL__SPLIT_HEMI__SINGLE_WINDOW
   FOR cell_k=0,1 DO BEGIN
 
      retVal = FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP(HEMI=hemi, $
-                                                   ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
-                                                   ;; INCLUDE_ALLIMF=include_allIMF, $
-                                                   ;; DETREND_WINDOW=detrend_window, $
-                                                   FILEDAY=fileDia, $
-                                                   FOM_TYPE=fom_type, $
-                                                   FOMTYPESTR=fomTypeStr, $
-                                                   COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
-                                                   CELL_TO_PLOT=cellArr[cell_k], $
-                                                   H2DFILEDIR=h2dFileDir, $
-                                                   NWINDOWS=nWindows, $
-                                                   PLOTSPERWINDOW=plotsPerPanel, $
-                                                   PLOTTITLE=plotTitle, $
-                                                   PLOTHEMISTR=plotHemiStr, $
-                                                   PLOTYRANGE=plotYRange, $
-                                                   AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
-                                                   PLOTCOLOR=plotColor, $
-                                                   SCALE_PLOTS_TO_1=scale_plots_to_1, $
-                                                   CELLSTR=cellStr, $
-                                                   IMFCORTSTR=IMFCortStr, $
-                                                   DATARR=datArr, $
-                                                   DELAYLIST=delayList, $
-                                                   LUN=lun)
+                                                               ONLY_SHOW_COMBINED_HEMI=only_show_combined_hemi, $
+                                                               ;; INCLUDE_ALLIMF=include_allIMF, $
+                                                               ;; DETREND_WINDOW=detrend_window, $
+                                                               FILEDAY=fileDia, $
+                                                               FOM_TYPE=fom_type, $
+                                                               FOMTYPESTR=fomTypeStr, $
+                                                               COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
+                                                               CELL_TO_PLOT=cellArr[cell_k], $
+                                                               H2DFILEDIR=h2dFileDir, $
+                                                               STABLEIMF=stableIMF, $
+                                                               NWINDOWS=nWindows, $
+                                                               PLOTSPERWINDOW=plotsPerPanel, $
+                                                               PLOTTITLE=plotTitle, $
+                                                               PLOTHEMISTR=plotHemiStr, $
+                                                               PLOTYRANGE=plotYRange, $
+                                                               AUTO_ADJUST_YRANGE=auto_adjust_yRange, $
+                                                               PLOTCOLOR=plotColor, $
+                                                               SCALE_PLOTS_TO_1=scale_plots_to_1, $
+                                                               CELLSTR=cellStr, $
+                                                               IMFCORTSTR=IMFCortStr, $
+                                                               DATARR=datArr, $
+                                                               DELAYLIST=delayList, $
+                                                               LUN=lun)
 
      IF retVal EQ -1 THEN BEGIN
         PRINT,"Couldn't set up FOM plot! Exiting ..."

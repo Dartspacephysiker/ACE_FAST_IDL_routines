@@ -274,6 +274,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DEL_PS=del_PS, $
                                     EPS_OUTPUT=eps_output, $
                                     OUT_TEMPFILE=out_tempFile, $
+                                    OUT_DATANAMEARR=out_dataNameArr, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -608,8 +609,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   ENDIF
 
-  out_tempFile=tempFile
-
+  out_tempFile        = tempFile
+  out_dataNameArr     = dataNameArr
   WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
                           WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
                           H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $

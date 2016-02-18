@@ -19,7 +19,7 @@ PRO JOURNAL__20160217__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   binMLT                         = 0.5
   shiftMLT                       = 0.25
 
-  stableIMF                      = 5
+  stableIMF                      = 10
   byMin                          = 3
   do_abs_bymin                   = 1
   bzMax                          = 0

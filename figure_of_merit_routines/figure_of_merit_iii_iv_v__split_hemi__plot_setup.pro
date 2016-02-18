@@ -12,6 +12,7 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP, $
    COMBINE_FOMS_FOR_EACH_IMF=combine_foms_for_each_IMF, $
    CELL_TO_PLOT=cell_to_plot, $
    H2DFILEDIR=h2dFileDir, $
+   STABLEIMF=stableIMF, $
    NWINDOWS=nWindows, $
    PLOTSPERWINDOW=plotsPerWindow, $
    PLOTTITLE=plotTitle, $
@@ -37,33 +38,42 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__SPLIT_HEMI__PLOT_SETUP, $
   IF ~KEYWORD_SET(fom_type)     THEN fom_type     = defFOM_type
   IF ~KEYWORD_SET(hemi)         THEN hemi         = defHemi
 
+  stableDir = (KEYWORD_SET(stableIMF) ? STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'minstable/' : '')
+  stableStr = (KEYWORD_SET(stableIMF) ? '--' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'minstable' : '')
+
   IF ~KEYWORD_SET(h2dFileDir) THEN BEGIN
-     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160216--Alfven_cusp_figure_of_merit/data/'
+     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160218--Alfven_cusp_figure_of_merit'+stableDir+'/data/'
   ENDIF
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   ;;input files
-  IF ~KEYWORD_SET(fileDia) THEN fileDia    = '20160216'
+  IF ~KEYWORD_SET(fileDia) THEN fileDia    = '20160217'
 
   CASE fom_type OF
      3: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_III--delays_-25_25min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_III--delays_-25_25min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_III' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_III' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
 
         PRINT,'Using FOM_type = 3'
         fomTypeStr                         = '(Type III)'
      END
      4: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_IV--delays_-25_25min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_IV--delays_-25_25min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_IV' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_IV' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
 
         PRINT,'Using FOM_type = 4'
         fomTypeStr                         = '(Type IV)'
      END
      5: BEGIN
-        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_V--delays_-25_25min.sav'
-        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_V--delays_-25_25min.sav'
+        inFile_north                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--NORTH_figures_of_merit_V' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
+        inFile_south                       = h2dFileDir+'processed/'+fileDia+'--Cusp_splitting--SOUTH_figures_of_merit_V' $ 
+                                             + stableStr + '--delays_-25_25min.sav'
         PRINT,'Using FOM_type = 5'
         fomTypeStr                         = '(Type V)'
      END
