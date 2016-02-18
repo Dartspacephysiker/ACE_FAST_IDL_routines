@@ -15,11 +15,11 @@
 
   minM                                     = 0.00000
   maxM                                     = 24.0000
-  binM                                     = 1.0
+  binM                                     = 0.5
   shiftM                                   = 0.25
 
   h2d_i                                    = 4            ; The one for probability of occurrence
-  n_maxima                                 = 4           ; How many maxima are we getting?
+  n_maxima                                 = 7            ; How many maxima are we getting?
   n_center_maxima                          = 1
   threshold_max                            = ALOG10(1.2)  ; Value shouldn't be more than 10% above 100% occurrence
   nFOM_to_print                            = 25
@@ -90,13 +90,13 @@
      duskIMF_dawnCell_minM                    = Southern_duskIMF_dawnCell_minM
      duskIMF_dawnCell_maxM                    = Southern_duskIMF_dawnCell_maxM
 
-     dusk_minI                                = -78
+     dusk_minI                                = -74
      dusk_maxI                                = -65
      
-     dawn_minI                                = -78
+     dawn_minI                                = -74
      dawn_maxI                                = -65
 
-     center_minI                              = -78
+     center_minI                              = -74
      center_maxI                              = -65
      
   ENDIF ELSE BEGIN
@@ -121,13 +121,13 @@
         duskIMF_dawnCell_maxM                 = Northern_duskIMF_dawnCell_maxM
         
         dusk_minI                             = 65
-        dusk_maxI                             = 78
+        dusk_maxI                             = 74
         
         dawn_minI                             = 65
-        dawn_maxI                             = 78
+        dawn_maxI                             = 74
         
         center_minI                           = 65
-        center_maxI                           = 78
+        center_maxI                           = 74
      ENDIF
   ENDELSE
 

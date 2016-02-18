@@ -4,8 +4,11 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
 
   hemiStrings            = ['NORTH','SOUTH']
   plotHemi               = 'BOTH'
+
   fom_type               = [3,4,5]
   FOMStrings             = ['III','IV','V']
+  ;; fom_type               = [3,4]
+  ;; FOMStrings             = ['III','IV']
 
   cell_to_plot           = ['DAWN','DUSK']
 
