@@ -2,7 +2,7 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
                            DO_ABS_BYMIN=abs_byMin, $
                            DO_ABS_BYMAX=abs_byMax, $
                            DO_ABS_BZMIN=abs_bzMin, $
-                           DO_ABS_BZMAX=abs_bzMax
+                           DO_ABS_BZMAX=abs_bzMax, $
                            LUN=lun
 
   COMMON OMNI_STABILITY

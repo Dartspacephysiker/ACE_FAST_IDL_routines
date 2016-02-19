@@ -100,6 +100,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         maxTime                 = STR_TO_TIME('2000-10-06/00:08:46.938')
         minTime                 = STR_TO_TIME('1996-10-06/20:54:32.622')
         C_OMNI__time_i          = WHERE(mag_UTC LE maxTime AND mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)
+        USE_COMBINED_INDS       = 1
         PRINTF,lun,"Losing " + STRCOMPRESS(nNotAlfvenDB,/REMOVE_ALL) + " OMNI entries because they don't happen during Alfven stuff"
      ENDIF ELSE BEGIN
         C_OMNI__time_i          = INDGEN(N_ELEMENTS(phiClock),/LONG)
@@ -113,7 +114,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
         GET_IMF_CLOCKANGLE_INDS,phiClock, $
                                 CLOCKSTR=clockStr, $
                                 ANGLELIM1=angleLim1, $
-                                ANGLELIM2=angleLim2
+                                ANGLELIM2=angleLim2, $
+                                LUN=lun
         USE_COMBINED_INDS       = 1
      ENDIF
      
@@ -122,7 +124,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                DO_ABS_BYMIN=abs_byMin, $
                                DO_ABS_BYMAX=abs_byMax, $
                                DO_ABS_BZMIN=abs_bzMin, $
-                               DO_ABS_BZMAX=abs_bzMax
+                               DO_ABS_BZMAX=abs_bzMax, $
+                               LUN=lun
         USE_COMBINED_INDS       = 1
      END
 
@@ -138,7 +141,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      ENDIF ELSE BEGIN
         GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i,USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all
-        C_OMNI__stable_i        = INDGEN(C_OMNI__StreakDurArr)
+        IF KEYWORD_SET(USE_COMBINED_INDS) THEN BEGIN
+           ;; C_OMNI__stable_i        = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
+           C_OMNI__stable_i        = INDGEN(N_ELEMENTS(C_OMNI__combined_i),/LONG)
+        ENDIF ELSE BEGIN
+           C_OMNI__stable_i        = INDGEN(N_ELEMENTS(mag_utc),/LONG)
+           PRINTF,lun,"Wait, how did you get here? You have no restrictions whatsoever on IMF?"
+        ENDELSE
      ENDELSE
 
      ;;******************************
@@ -168,12 +177,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
      printf,lun,""
 
 
+     C_OMNI__mag_UTC           = mag_UTC
      C_OMNI__HAVE_STABLE_INDS  = 1
 
   ENDIF
 
   stable_OMNI_inds             = C_OMNI__stable_i
-  mag_UTC                      = C_OMNI__mag_UTC
+  mag_utc                      = C_OMNI__mag_utc
 
   PRINTF,lun,C_OMNI__paramStr
 

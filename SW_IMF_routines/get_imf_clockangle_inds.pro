@@ -2,7 +2,8 @@
 PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
                             CLOCKSTR=clockStr, $
                             ANGLELIM1=angleLim1, $
-                            ANGLELIM2=angleLim2
+                            ANGLELIM2=angleLim2, $
+                            LUN=lun
 
   COMPILE_OPT idl2
 
@@ -24,7 +25,7 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
      ENDELSE
   ENDELSE
 
-  C_OMNI__paramStr                           += STRING(FORMAT='("--",A0,"--negAngle_",I0,"__posAngle_",I0,)', $
+  C_OMNI__paramStr                           += STRING(FORMAT='("--",A0,"--negAngle_",I0,"__posAngle_",I0)', $
                                                         C_OMNI__clockStr,C_OMNI__negAngle,C_OMNI__posAngle)
 
   PRINTF,lun,STRTRIM(N_ELEMENTS(C_OMNI__phiIMF_i),2)+" instances in OMNI where IMF is predominantly " $

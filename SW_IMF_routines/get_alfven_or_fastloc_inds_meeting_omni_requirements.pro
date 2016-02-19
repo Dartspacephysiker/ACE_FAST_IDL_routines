@@ -15,6 +15,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    OMNI_COORDS=OMNI_coords, $
    LUN=lun
   
+  ;; COMMON OMNI_STABILITY
+
   ;;First, get all the OMNI inds that qualify
   stable_OMNI_i       = GET_STABLE_IMF_INDS(MAG_UTC=mag_utc, $
                                             CLOCKSTR=clockStr, $
@@ -49,5 +51,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   qualifying_db_i     = WHERE(before_timeOK OR after_timeOK)
 
   PRINT,"N qualifying db i: " + STRCOMPRESS(N_ELEMENTS(qualifying_db_i),/REMOVE_ALL)
+
+  RETURN,qualifying_db_i
 
 END

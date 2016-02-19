@@ -35,7 +35,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
 
 
-     final_i = get_chaston_ind(dbStruct,satellite,lun, $
+     final_i = GET_CHASTON_IND(dbStruct,satellite,lun, $
                                DBTIMES=dbTimes,dbfile=dbfile, $
                                CHASTDB=do_chastdb, HEMI=hemi, $
                                DESPUNDB=do_despunDB, $
@@ -88,7 +88,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      
      ;; restricted_and_interped_i=FASTDBInterp_i[phiImf_ii]
 
-     restricted_AND_interped_i = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
+     restricted_and_interped_i = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
                                                                                       CLOCKSTR=clockStr, $
                                                                                       ANGLELIM1=angleLim1, $
                                                                                       ANGLELIM2=angleLim2, $
