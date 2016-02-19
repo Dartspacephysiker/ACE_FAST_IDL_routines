@@ -78,49 +78,149 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
            ;;data logged?
            dataLogged = h2dStrArr[h2d_i].is_logged
 
-           ;handle the masked cells
+           ;HANDLE THE MASKED CELLS
+           ;; Old strategy
+           ;; masked_i                        = WHERE(h2dStrArr[-1].data GT 250,COMPLEMENT=notMasked_i,NCOMPLEMENT=nNotMasked)
+           ;; h2dStrArr[h2d_i].data[masked_i] = -10
+           ;; dawn_i                          = CGSETINTERSECTION(dawn_i,notMasked_i)
+           ;; dusk_i                          = CGSETINTERSECTION(dusk_i,notMasked_i)
+           ;; center_i                        = CGSETINTERSECTION(center_i,notMasked_i)
+
+           ;; New strategy
            masked_i                        = WHERE(h2dStrArr[-1].data GT 250,COMPLEMENT=notMasked_i,NCOMPLEMENT=nNotMasked)
-           h2dStrArr[h2d_i].data[masked_i] = -10
-
-
-           dawn_i                          = CGSETINTERSECTION(dawn_i,notMasked_i)
-           dusk_i                          = CGSETINTERSECTION(dusk_i,notMasked_i)
-           center_i                        = CGSETINTERSECTION(center_i,notMasked_i)
+           h2dStrArr[h2d_i].data[masked_i] = (dataLogged ? -6.00 : 0.00)
+           ;; dawn_i                          = CGSETINTERSECTION(dawn_i,notMasked_i)
+           ;; dusk_i                          = CGSETINTERSECTION(dusk_i,notMasked_i)
+           ;; center_i                        = CGSETINTERSECTION(center_i,notMasked_i)
 
            IF dawn_i[0] EQ -1 THEN BEGIN
               PRINT,'No good dawn bins!'
-              dawn_data                    = (dataLogged ? -9.99 : 0.00)
+              dawn_data                    = (dataLogged ? -6.00 : 0.00)
+              dawn_maxes                   = (dataLogged ? -6.00 : 0.00)
            ENDIF ELSE BEGIN
               dawn_data                    = h2dStrArr[h2d_i].data[dawn_i]
+              dawn_maxes                   = GET_N_MAXIMA_IN_ARRAY(dawn_data,N=n_maxima,OUT_I=dawn_maxes_i)
            ENDELSE
            IF dusk_i[0] EQ -1 THEN BEGIN
               PRINT,'No good dusk bins!'
-              dusk_data                    = (dataLogged ? -9.99 : 0.00)
+              dusk_data                    = (dataLogged ? -6.00 : 0.00)
+              dusk_maxes                   = (dataLogged ? -6.00 : 0.00)
            ENDIF ELSE BEGIN
               dusk_data                    = h2dStrArr[h2d_i].data[dusk_i]
+              dusk_maxes                   = GET_N_MAXIMA_IN_ARRAY(dusk_data,N=n_maxima,OUT_I=dusk_maxes_i)
            ENDELSE
            IF center_i[0] EQ -1 AND KEYWORD_SET(subtract_center) THEN BEGIN
               PRINT,'No good center bins!'
-              center_data                  = (dataLogged ? -9.99 : 0.00)
+              center_data                  = (dataLogged ? -6.00 : 0.00)
+              center_maxes                 = (dataLogged ? -6.00 : 0.00)
            ENDIF ELSE BEGIN
               center_data                  = h2dStrArr[h2d_i].data[center_i]
+              center_maxes                 = GET_N_MAXIMA_IN_ARRAY(center_data,N=n_maxima,OUT_I=center_maxes_i)
            ENDELSE
            
            ;;Screen out the bad stuff
+           ;; CASE FOMString OF
+           ;;    'III' : BEGIN ;Straight averaging
+           ;;       IF dataLogged THEN BEGIN
+           ;;          PRINT,'Data were logged! Unlogging for straight average...'
+           ;;          dawn_data                 = 10.0D^(dawn_data)
+           ;;          dusk_data                 = 10.0D^(dusk_data)
+           ;;          center_data               = 10.0D^(center_data)
+           ;;       ENDIF
 
+           ;;       ;;calculate figures of merit
+           ;;       dawn_fom                     = MEAN(dawn_data)
+           ;;       dusk_fom                     = MEAN(dusk_data)
+           ;;       center_fom                   = -2.D*MEAN(center_data)
+
+           ;;       IF KEYWORD_SET(subtract_center) THEN BEGIN
+           ;;          PRINT,'Subtracting center for each FOM...'
+           ;;          ;; dawn_fom                  = dawn_fom+center_fom/2.
+           ;;          ;; dusk_fom                  = dusk_fom+center_fom/2.
+           ;;          dawn_fom                  = dawn_fom+center_fom
+           ;;          dusk_fom                  = dusk_fom+center_fom
+           ;;          comb_fom                  = dawn_fom+dusk_fom+center_fom
+           ;;       ENDIF ELSE BEGIN
+           ;;          comb_fom                  = dawn_fom+dusk_fom
+           ;;       ENDELSE
+           ;;    END
+           ;;    'IV'  : BEGIN ;Log averaging
+           ;;       IF ~dataLogged THEN BEGIN
+           ;;          PRINT,'Data were not logged! Logging for log average...'
+           ;;          dawn_data                 = ALOG10(dawn_data)
+           ;;          dusk_data                 = ALOG10(dusk_data)
+           ;;          center_data               = ALOG10(center_data)
+           ;;       ENDIF
+           ;;       dawn_fom                     = 10.0D^MEAN(dawn_data)
+           ;;       dusk_fom                     = 10.0D^MEAN(dusk_data)
+           ;;       center_fom                   = -2.D*10.0D^(MEAN(center_data))
+           ;;       IF KEYWORD_SET(subtract_center) THEN BEGIN
+           ;;          PRINT,'Subtracting center for each FOM...'
+           ;;          ;; dawn_fom                  = dawn_fom+center_fom/2.
+           ;;          ;; dusk_fom                  = dusk_fom+center_fom/2.
+           ;;          dawn_fom                  = dawn_fom+center_fom
+           ;;          dusk_fom                  = dusk_fom+center_fom
+           ;;          comb_fom                  = dawn_fom+dusk_fom+center_fom
+           ;;       ENDIF ELSE BEGIN
+           ;;          comb_fom                  = dawn_fom+dusk_fom
+           ;;       ENDELSE
+
+           ;;    END
+           ;;    'V'  : BEGIN ;Median
+           ;;       IF dataLogged THEN BEGIN
+           ;;          PRINT,'Data were logged! Unlogging for straight average...'
+           ;;          dawn_data                 = 10.0D^(dawn_data)
+           ;;          dusk_data                 = 10.0D^(dusk_data)
+           ;;          center_data               = 10.0D^(center_data)
+           ;;       ENDIF
+           ;;       IF N_ELEMENTS(dawn_data) GT 1 THEN BEGIN
+           ;;          dawn_fom                  = MEDIAN(dawn_data)
+           ;;       ENDIF ELSE BEGIN
+           ;;          dawn_fom                  = dawn_data
+           ;;       ENDELSE
+           ;;       IF N_ELEMENTS(dusk_data) GT 1 THEN BEGIN
+           ;;          dusk_fom                  = MEDIAN(dusk_data)
+           ;;       ENDIF ELSE BEGIN
+           ;;          dusk_fom                  = dusk_data
+           ;;       ENDELSE
+           ;;       IF N_ELEMENTS(center_data) GT 1 THEN BEGIN
+           ;;          center_fom                  = -2.D*MEDIAN(center_data)
+           ;;       ENDIF ELSE BEGIN
+           ;;          center_fom                  = -2.D*center_data
+           ;;       ENDELSE
+
+           ;;       IF KEYWORD_SET(subtract_center) THEN BEGIN
+           ;;          PRINT,'Subtracting center for each FOM...'
+           ;;          ;; dawn_fom                  = dawn_fom+center_fom/2.
+           ;;          ;; dusk_fom                  = dusk_fom+center_fom/2.
+           ;;          dawn_fom                  = dawn_fom+center_fom
+           ;;          dusk_fom                  = dusk_fom+center_fom
+           ;;          comb_fom                  = dawn_fom+dusk_fom+center_fom
+           ;;       ENDIF ELSE BEGIN
+           ;;          comb_fom                  = dawn_fom+dusk_fom
+           ;;       ENDELSE
+
+           ;;    END
+           ;;    ELSE : BEGIN
+           ;;       PRINT,'Neither III (straight avg) nor IV (log avg) nor V (median) was provided for FOMString!'
+           ;;       PRINT,'What to do?'
+           ;;       PRINT,'OUT'
+           ;;       RETURN
+           ;;    END
+           ;; ENDCASE
            CASE FOMString OF
               'III' : BEGIN ;Straight averaging
                  IF dataLogged THEN BEGIN
                     PRINT,'Data were logged! Unlogging for straight average...'
-                    dawn_data                 = 10.0D^(dawn_data)
-                    dusk_data                 = 10.0D^(dusk_data)
-                    center_data               = 10.0D^(center_data)
+                    dawn_maxes                 = 10.0D^(dawn_maxes)
+                    dusk_maxes                 = 10.0D^(dusk_maxes)
+                    center_maxes               = 10.0D^(center_maxes)
                  ENDIF
 
                  ;;calculate figures of merit
-                 dawn_fom                     = MEAN(dawn_data)
-                 dusk_fom                     = MEAN(dusk_data)
-                 center_fom                   = -2.D*MEAN(center_data)
+                 dawn_fom                     = MEAN(dawn_maxes)
+                 dusk_fom                     = MEAN(dusk_maxes)
+                 center_fom                   = -2.D*MEAN(center_maxes)
 
                  IF KEYWORD_SET(subtract_center) THEN BEGIN
                     PRINT,'Subtracting center for each FOM...'
@@ -136,13 +236,13 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
               'IV'  : BEGIN ;Log averaging
                  IF ~dataLogged THEN BEGIN
                     PRINT,'Data were not logged! Logging for log average...'
-                    dawn_data                 = ALOG10(dawn_data)
-                    dusk_data                 = ALOG10(dusk_data)
-                    center_data               = ALOG10(center_data)
+                    dawn_maxes                 = ALOG10(dawn_maxes)
+                    dusk_maxes                 = ALOG10(dusk_maxes)
+                    center_maxes               = ALOG10(center_maxes)
                  ENDIF
-                 dawn_fom                     = 10.0D^MEAN(dawn_data)
-                 dusk_fom                     = 10.0D^MEAN(dusk_data)
-                 center_fom                   = -2.D*10.0D^(MEAN(center_data))
+                 dawn_fom                     = 10.0D^MEAN(dawn_maxes)
+                 dusk_fom                     = 10.0D^MEAN(dusk_maxes)
+                 center_fom                   = -2.D*10.0D^(MEAN(center_maxes))
                  IF KEYWORD_SET(subtract_center) THEN BEGIN
                     PRINT,'Subtracting center for each FOM...'
                     ;; dawn_fom                  = dawn_fom+center_fom/2.
@@ -158,24 +258,24 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V_FOR_CUSP_SPLITTING__NORTH_OR_SOU
               'V'  : BEGIN ;Median
                  IF dataLogged THEN BEGIN
                     PRINT,'Data were logged! Unlogging for straight average...'
-                    dawn_data                 = 10.0D^(dawn_data)
-                    dusk_data                 = 10.0D^(dusk_data)
-                    center_data               = 10.0D^(center_data)
+                    dawn_maxes                = 10.0D^(dawn_maxes)
+                    dusk_maxes                = 10.0D^(dusk_maxes)
+                    center_maxes              = 10.0D^(center_maxes)
                  ENDIF
-                 IF N_ELEMENTS(dawn_data) GT 1 THEN BEGIN
-                    dawn_fom                  = MEDIAN(dawn_data)
+                 IF N_ELEMENTS(dawn_maxes) GT 1 THEN BEGIN
+                    dawn_fom                  = MEDIAN(dawn_maxes)
                  ENDIF ELSE BEGIN
-                    dawn_fom                  = dawn_data
+                    dawn_fom                  = dawn_maxes
                  ENDELSE
-                 IF N_ELEMENTS(dusk_data) GT 1 THEN BEGIN
-                    dusk_fom                  = MEDIAN(dusk_data)
+                 IF N_ELEMENTS(dusk_maxes) GT 1 THEN BEGIN
+                    dusk_fom                  = MEDIAN(dusk_maxes)
                  ENDIF ELSE BEGIN
-                    dusk_fom                  = dusk_data
+                    dusk_fom                  = dusk_maxes
                  ENDELSE
-                 IF N_ELEMENTS(center_data) GT 1 THEN BEGIN
-                    center_fom                  = -2.D*MEDIAN(center_data)
+                 IF N_ELEMENTS(center_maxes) GT 1 THEN BEGIN
+                    center_fom                = -2.D*MEDIAN(center_maxes)
                  ENDIF ELSE BEGIN
-                    center_fom                  = -2.D*center_data
+                    center_fom                = -2.D*center_maxes
                  ENDELSE
 
                  IF KEYWORD_SET(subtract_center) THEN BEGIN

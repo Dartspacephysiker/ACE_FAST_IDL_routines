@@ -5,19 +5,27 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
   hemiStrings            = ['NORTH','SOUTH']
   plotHemi               = 'BOTH'
 
+  ;;Selecting figure of merit
   fom_type               = [3,4,5]
   FOMStrings             = ['III','IV','V']
+
   ;; fom_type               = [3,4]
   ;; FOMStrings             = ['III','IV']
 
   cell_to_plot           = ['DAWN','DUSK']
 
+  ;; ;;Stable IMF stuff
   ;; stableIMF              = 5
-  plotYRange             = [0.00,0.1]
+  plotYRange             = [0.00,0.25]
   ;; fileDay                = 'Feb_17_16'
   ;; fileDia                = '20160218'
 
-  stableIMF              = 10
+  ;; stableIMF              = 10
+  ;; plotYRange             = [0.00,0.02]
+  ;; fileDay                = 'Feb_18_16'
+  ;; fileDia                = '20160218'
+
+  stableIMF              = 20
   ;; plotYRange             = [0.00,0.02]
   fileDay                = 'Feb_18_16'
   fileDia                = '20160218'

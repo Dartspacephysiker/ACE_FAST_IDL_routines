@@ -67,13 +67,13 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
   ;;lies between mag_utc_delayed[fastDBAceprop_i[i]] and 
   ;;mag_utc_delayed[fastDBAceprop_i[i+1]]
 
-  fastDBAceprop_i=VALUE_LOCATE((mag_utc+delay),dbTimes[db_i])
+  fastDBAceprop_i    = VALUE_LOCATE((mag_utc+delay),dbTimes[db_i])
 
-  mag_idiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
-  mag_iplusdiff=abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
+  mag_idiff          = abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
+  mag_iplusdiff      = abs( mag_utc[ fastDBAceprop_i ]- dbTimes[db_i])
 
   ;;trouble gives where i+1 is closer to chastondb current event
-  trouble=where(abs(mag_idiff) GT abs(mag_iplusdiff))
+  trouble            = WHERE(ABS(mag_idiff) GT ABS(mag_iplusdiff))
 
 
   ;;********************************************************
@@ -81,9 +81,9 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
 
   maxdiff=5.0                   ; (in minutes)
 
-  bigdiff_ii=where((mag_utc[fastDBAceprop_i+1]-mag_utc[fastDBAceprop_i])/60 GT maxdiff,$
+  bigdiff_ii=WHERE((mag_utc[fastDBAceprop_i+1]-mag_utc[fastDBAceprop_i])/60 GT maxdiff,$
                    complement=fastDBSatProppedInterped_ii)
-  unique_iii=uniq(mag_utc[fastDBAceprop_i[bigdiff_ii]+1] - mag_utc[fastDBAceprop_i[bigdiff_ii]])
+  unique_iii=UNIQ(mag_utc[fastDBAceprop_i[bigdiff_ii]+1] - mag_utc[fastDBAceprop_i[bigdiff_ii]])
   ;;Just how big, these gaps?
 
   ;;********************************************************
