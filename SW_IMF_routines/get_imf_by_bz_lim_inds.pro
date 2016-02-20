@@ -47,10 +47,10 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
      C_OMNI__abs_bzMin      = KEYWORD_SET(abs_bzMin)
      IF C_OMNI__abs_bzMin THEN BEGIN
         absStr              = 'ABS_'
-        C_OMNI__bzMin_i     = WHERE(By LE -ABS(C_OMNI__bzMin) OR By GE ABS(C_OMNI__bzMin),NCOMPLEMENT=bzMinLost)
+        C_OMNI__bzMin_i     = WHERE(Bz LE -ABS(C_OMNI__bzMin) OR Bz GE ABS(C_OMNI__bzMin),NCOMPLEMENT=bzMinLost)
      ENDIF ELSE BEGIN
         absStr              = ''
-        C_OMNI__bzMin_i     = WHERE(By GE C_OMNI__bzMin,NCOMPLEMENT=bzMinLost)
+        C_OMNI__bzMin_i     = WHERE(Bz GE C_OMNI__bzMin,NCOMPLEMENT=bzMinLost)
      ENDELSE
 
      PRINTF,lun,FORMAT='("BzMin magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bzMin,bzMinLost
@@ -62,10 +62,10 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
      C_OMNI__abs_bzMax      = KEYWORD_SET(abs_bzMax)
      IF C_OMNI__abs_bzMax THEN BEGIN
         absStr              = 'ABS_'
-        C_OMNI__bzMax_i     = WHERE(ABS(By) LE ABS(C_OMNI__bzMax),NCOMPLEMENT=bzMaxLost)
+        C_OMNI__bzMax_i     = WHERE(ABS(Bz) LE ABS(C_OMNI__bzMax),NCOMPLEMENT=bzMaxLost)
      ENDIF ELSE BEGIN
         absStr              = ''
-        C_OMNI__bzMax_i     = WHERE(By LE C_OMNI__bzMax,NCOMPLEMENT=bzMaxLost)
+        C_OMNI__bzMax_i     = WHERE(Bz LE C_OMNI__bzMax,NCOMPLEMENT=bzMaxLost)
      ENDELSE
 
      PRINTF,lun,""

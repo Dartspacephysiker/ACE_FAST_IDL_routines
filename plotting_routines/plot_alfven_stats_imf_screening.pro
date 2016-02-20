@@ -262,6 +262,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+                                    TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
+                                    TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
+                                    LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -614,6 +617,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                            TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+                           TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
+                           TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
+                           LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
                            ALL_LOGPLOTS=all_logPlots,$
