@@ -92,7 +92,7 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
         SMOOTHWINDOW=smoothWindow, $
         ;; /MEDIANPLOT, $
         /LOGAVGPLOT, $
-        /NPLOTS, $
+        ;; /NPLOTS, $
         ;; /ENUMFLPLOTS, $
         /EPLOTS, $
         ;; /IONPLOTS, $

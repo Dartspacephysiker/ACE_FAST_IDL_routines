@@ -67,7 +67,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    DIVNEVBYAPPLICABLE=divNEvByApplicable, $
    NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
    PROBOCCURRENCEPLOT=probOccurrencePlot, $
-   PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+   PROBOCCURRENCERANGE=probOccurrenceRange, $
+   LOGPROBOCCURRENCE=logProbOccurrence, $
+   TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+   TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+   LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
    SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -178,7 +182,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                      NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
                                      PROBOCCURRENCEPLOT=probOccurrencePlot, $
-                                     PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+                                     PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                     LOGPROBOCCURRENCE=logProbOccurrence, $
+                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      ALL_LOGPLOTS=all_logPlots, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 

@@ -2,7 +2,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    CLOCKSTR=clockStr, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
-   MULTIPLEDELAYS=multipleDelays, $
+   MULTIPLE_DELAYS=multiple_delays, $
    STABLEIMF=stableIMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
@@ -50,7 +50,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             LUN=lun)
   
   
-  IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
+  IF KEYWORD_SET(multiple_delays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
   qual_db_i_list         = LIST()
   FOR iDel=0,NIter-1 DO BEGIN
@@ -76,7 +76,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      qual_db_i_list.add,qualifying_db_i
   ENDFOR
      
-  ;; IF ~KEYWORD_SET(multipleDelays) THEN qual_db_i_list = qual_db_i_list.ToArray
+  ;; IF ~KEYWORD_SET(multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
 
   RETURN,qual_db_i_list
 

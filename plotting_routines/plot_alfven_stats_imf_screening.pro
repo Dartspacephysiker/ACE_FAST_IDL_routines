@@ -256,7 +256,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                     DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
-                                    PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+                                    PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                                    PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                    LOGPROBOCCURRENCE=logProbOccurrence, $
+                                    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+                                    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+                                    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -594,7 +599,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                         DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                         NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
-                        PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+                        PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                        PROBOCCURRENCERANGE=probOccurrenceRange, $
+                        LOGPROBOCCURRENCE=logProbOccurrence, $
+                        TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+                        TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+                        LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
                         MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                         LOGAVGPLOT=logAvgPlot, $
                         ALL_LOGPLOTS=all_logPlots,$
@@ -608,7 +618,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
   tempFile_list                    = LIST()
-  FOR iList=0,N_ELEMENTS(h2dStrArr_list) DO BEGIN
+  FOR iList=0,N_ELEMENTS(h2dStrArr_list)-1 DO BEGIN
      h2dStrArr                     = h2dStrArr_list[iList]
      dataNameArr                   = dataNameArr_list[iList]
      dataRawPtrArr                 = dataRawPtrArr_list[iList]
