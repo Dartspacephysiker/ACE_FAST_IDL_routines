@@ -1,6 +1,7 @@
 ;2015/12/31 Added RESTRICT_WITH_THESE_I keyword so that I can do non-storm 
 ;2016/01/07 Added DO_DESPUNDB keyword
 ;2016/02/10 Added DO_NOT_CONSIDER_IMF keyword
+;2016/02/20 Making restricted_and_interped_i a LIST!
 FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun, $
    DBTIMES=dbTimes,dbfile=dbfile, $
    DO_CHASTDB=do_chastdb, $
@@ -25,8 +26,13 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
    BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
    STABLEIMF=stableIMF, $
-   OMNI_COORDS=omni_Coords,ANGLELIM1=angleLim1,ANGLELIM2=angleLim2, $
-   HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,NO_BURSTDATA=no_burstData, $
+   MULTIPLE_DELAYS=multiple_delays, $
+   OMNI_COORDS=omni_Coords, $
+   ANGLELIM1=angleLim1, $
+   ANGLELIM2=angleLim2, $
+   HWMAUROVAL=HwMAurOval, $
+   HWMKPIND=HwMKpInd, $
+   NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i
   
@@ -61,7 +67,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
   ;;Now handle the rest
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      PRINTF,lun,"Not considering IMF anything!"
-     restricted_and_interped_i              = final_i
+     restricted_and_interped_i_list         = LIST(final_i)
   ENDIF ELSE BEGIN
      ;; phiChast = interp_mag_data(final_i,satellite,delay,lun, $
      ;;                            DBTIMES=dbTimes, $
@@ -88,25 +94,26 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      
      ;; restricted_and_interped_i=FASTDBInterp_i[phiImf_ii]
 
-     restricted_and_interped_i = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
-                                                                                      CLOCKSTR=clockStr, $
-                                                                                      ANGLELIM1=angleLim1, $
-                                                                                      ANGLELIM2=angleLim2, $
-                                                                                      STABLEIMF=stableIMF, $
-                                                                                      /RESTRICT_TO_ALFVENDB_TIMES, $
-                                                                                      BYMIN=byMin, $
-                                                                                      BZMIN=bzMin, $
-                                                                                      BYMAX=byMax, $
-                                                                                      BZMAX=bzMax, $
-                                                                                      DO_ABS_BYMIN=abs_byMin, $
-                                                                                      DO_ABS_BYMAX=abs_byMax, $
-                                                                                      DO_ABS_BZMIN=abs_bzMin, $
-                                                                                      DO_ABS_BZMAX=abs_bzMax, $
-                                                                                      OMNI_COORDS=OMNI_coords, $
-                                                                                      LUN=lun)     
+     restricted_and_interped_i_list = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
+                                                                                           CLOCKSTR=clockStr, $
+                                                                                           ANGLELIM1=angleLim1, $
+                                                                                           ANGLELIM2=angleLim2, $
+                                                                                           MULTIPLE_DELAYS=multiple_delays, $
+                                                                                           STABLEIMF=stableIMF, $
+                                                                                           /RESTRICT_TO_ALFVENDB_TIMES, $
+                                                                                           BYMIN=byMin, $
+                                                                                           BZMIN=bzMin, $
+                                                                                           BYMAX=byMax, $
+                                                                                           BZMAX=bzMax, $
+                                                                                           DO_ABS_BYMIN=abs_byMin, $
+                                                                                           DO_ABS_BYMAX=abs_byMax, $
+                                                                                           DO_ABS_BZMIN=abs_bzMin, $
+                                                                                           DO_ABS_BZMAX=abs_bzMax, $
+                                                                                           OMNI_COORDS=OMNI_coords, $
+                                                                                           LUN=lun)     
      
   ENDELSE
 
-  RETURN,restricted_and_interped_i
+  RETURN,restricted_and_interped_i_list
      
 END

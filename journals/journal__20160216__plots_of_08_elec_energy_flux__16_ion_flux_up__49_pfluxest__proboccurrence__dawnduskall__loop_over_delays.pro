@@ -14,29 +14,30 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
   ;; binILAT                        = 3.0
 
   ;; nEventsPlotRange               = [4e1,4e3]        ; North   ;for chare 4-300eV
-  nEventsPlotRange               = [1e1,1e3]        ; North   ;for chare 300-4000eV
+  nEventsPlotRange               = [3e1,3e3]        ; North   ;for chare 300-4000eV
 
-  binMLT                         = 0.5
-  shiftMLT                       = 0.25
+  binMLT                         = 1.0
+  shiftMLT                       = 0.5
 
-  byMin                          = 3
+  byMin                          = 1
   do_abs_bymin                   = 1
-  bzMax                          = 0
+  ;; bzMax                          = 0
+  ;; bzMax                          = 2
 
-  
-  ;; delayArr                       = [-1500, -1440, -1380, -1320, -1260, $
-  ;;                                   -1200, -1140, -1080, -1020,  -960, $
-  ;;                                    -900,  -840,  -780,  -720,  -660, $
-  ;;                                    -600,  -540,  -480,  -420,  -360, $
-  ;;                                    -300,  -240,  -180,  -120,  -60,  $
-  ;;                                       0,    60,   120,   180,   240, $
-  ;;                                     300,   360,   420,   480,   540, $
-  ;;                                     600,   660,   720,   780,   840, $
-  ;;                                     900,   960,  1020,  1080,  1140, $
-  ;;                                    1200,  1260,  1320,  1380,  1440, $
-  ;;                                    1500]
+  ;; delayArr                          = 0
 
-  delayArr                          = 0
+  delayArr                       = [ $ ;-1500, -1440, -1380, -1320, -1260, $
+                                    ;; -1200, -1140, -1080, -1020,  -960, $
+                                    ;;  -900,  -840,  -780,  -720,  -660, $
+                                     ;; -600,  -540,  -480,  -420,  -360, $
+                                     ;; -300,  -240,  -180,  $
+                                   -120,  -60,  $
+                                        0,    60,   120,   180,   240, $
+                                      300,   360,   420,   480,   540, $
+                                      600,   660,   720,   780,   840, $
+                                      900,   960,  1020,  1080,  1140, $
+                                     1200,  1260,  1320,  1380,  1440, $
+                                     1500]
 
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -49,7 +50,7 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   ;;08--ELEC_ENERGY_FLUX
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [1e-1,1e1]
+  ePlotRange                     = [1e-2,1e0]
   logEFPlot                      = 1
 
   ;;16--ION_FLUX_UP
@@ -63,7 +64,7 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
 
   ;PROBOCCURRENCE
   ;; probOccurrenceRange            = [1e-3,1e-1]   ;;Seemed to work well when byMin=3, hemi='SOUTH', and anglelims=[45,135]
-  probOccurrenceRange            = [1e-3,1e-1]
+  probOccurrenceRange            = [3e-4,3e-2]
 
   do_despun                      = 1
 
@@ -92,10 +93,10 @@ PRO JOURNAL__20160216__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
         ;; /MEDIANPLOT, $
         /LOGAVGPLOT, $
         /NPLOTS, $
-        /ENUMFLPLOTS, $
+        ;; /ENUMFLPLOTS, $
         /EPLOTS, $
-        /IONPLOTS, $
-        /PPLOTS, $
+        ;; /IONPLOTS, $
+        ;; /PPLOTS, $
         /PROBOCCURRENCEPLOT, $
         /LOGNEVENTSPLOT, $
         LOGIFPLOT=logIFPlot, $

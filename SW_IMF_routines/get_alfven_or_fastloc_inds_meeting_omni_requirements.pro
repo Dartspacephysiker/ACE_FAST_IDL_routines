@@ -2,6 +2,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    CLOCKSTR=clockStr, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
+   MULTIPLEDELAYS=multipleDelays, $
    STABLEIMF=stableIMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
@@ -49,25 +50,34 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             LUN=lun)
   
   
-  ;;Now line up the databases (either fastLoc or maximus, as the case may be)
-  aligned_db_ii       = VALUE_LOCATE(C_OMNI__mag_UTC[stable_omni_i]+delay,dbTimes[db_i])
+  IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
-  mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]]+delay
-  mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]+1]+delay
+  qual_db_i_list         = LIST()
+  FOR iDel=0,NIter-1 DO BEGIN
+     ;;Now line up the databases (either fastLoc or maximus, as the case may be)
+     aligned_db_ii       = VALUE_LOCATE(C_OMNI__mag_UTC[stable_omni_i]+delay[iDel],dbTimes[db_i])
 
-  beforeTimes         = mag_utc_muffed-dbTimes[db_i]
-  afterTimes          = mag_utc_muffedAft-dbTimes[db_i]
+     mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]]+delay[iDel]
+     mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]+1]+delay[iDel]
 
-  before_timeOK       = ABS(beforeTimes) LE 90
-  after_timeOK        = ABS(afterTimes) LE 90
+     beforeTimes         = mag_utc_muffed-dbTimes[db_i]
+     afterTimes          = mag_utc_muffedAft-dbTimes[db_i]
 
-  ;;So which are the winners?
-  qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)
+     before_timeOK       = ABS(beforeTimes) LE 30
+     after_timeOK        = ABS(afterTimes) LE 30
 
-  qualifying_db_i     = db_i[qualifying_db_ii]
+     ;;So which are the winners?
+     qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)
 
-  PRINT,"N qualifying db i: " + STRCOMPRESS(N_ELEMENTS(qualifying_db_i),/REMOVE_ALL)
+     qualifying_db_i     = db_i[qualifying_db_ii]
 
-  RETURN,qualifying_db_i
+     PRINT,FORMAT='("N qualifying db i for delay =",F5.2," min: ")',delay[iDel]/60.,N_ELEMENTS(qualifying_db_i)
+
+     qual_db_i_list.add,qualifying_db_i
+  ENDFOR
+     
+  ;; IF ~KEYWORD_SET(multipleDelays) THEN qual_db_i_list = qual_db_i_list.ToArray
+
+  RETURN,qual_db_i_list
 
 END

@@ -189,6 +189,7 @@
 ;                       Dec 2015   : ... And now added stormtime keywords as well as RESTRICT_WITH_THESE_I keyword
 ;                       Jan 2016   : Added DO_DESPUNDB keyword for our new despun database with TEAMS data!
 ;                     2016/02/10   : Added DO_NOT_CONSIDER_IMF keyword
+;                     2016/02/20   : Big changes. Added multiple_delays keyword, which shakes up the whole system.
 ;-
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
@@ -227,6 +228,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SOUTH=south, $
                                     BOTH_HEMIS=both_hemis, $
                                     DELAY=delay, $
+                                    MULTIPLE_DELAYS=multiple_delays, $
                                     STABLEIMF=stableIMF, $
                                     SMOOTHWINDOW=smoothWindow, $
                                     INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -273,8 +275,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
                                     EPS_OUTPUT=eps_output, $
-                                    OUT_TEMPFILE=out_tempFile, $
-                                    OUT_DATANAMEARR=out_dataNameArr, $
+                                    OUT_TEMPFILE_LIST=out_tempFile_list, $
+                                    OUT_DATANAMEARR_list=out_dataNameArr_list, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -336,7 +338,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MEDHISTOUTDATA=medHistOutData, $
                              MEDHISTOUTTXT=medHistOutTxt, $
                              OUTPUTPLOTSUMMARY=outputPlotSummary, $
-                             OUT_TEMPFILE=out_tempFile, $
+                             ;; OUT_TEMPFILE=out_tempFile, $
                              PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
                              DEL_PS=del_PS, $
                              KEEPME=keepMe, $
@@ -362,17 +364,26 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                   DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                   PARAMSTRING=paramString, $
+                                  PARAMSTR_LIST=paramString_list, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                                  DELAY=delay,STABLEIMF=stableIMF, $
+                                  DELAY=delay, $
+                                  MULTIPLE_DELAYS=multiple_delays, $
+                                  STABLEIMF=stableIMF, $
                                   SMOOTHWINDOW=smoothWindow, $
                                   INCLUDENOCONSECDATA=includeNoConsecData, $
                                   LUN=lun
 
 
   ;;Open file for text summary, if desired
-  IF KEYWORD_SET(outputPlotSummary) THEN $
-     OPENW,lun,plotDir + 'outputSummary_'+paramString+'.txt',/GET_LUN $
-  ELSE lun=-1                   ;-1 is lun for STDOUT
+  IF KEYWORD_SET(outputPlotSummary) THEN BEGIN
+     OPENW,lun,plotDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
+     IF KEYWORD_SET(multiple_delays) THEN BEGIN
+        PRINT,"What are you thinking? You're not setup to get multi-output..."
+        STOP
+     ENDIF
+  ENDIF ELSE BEGIN
+     lun=-1                     ;-1 is lun for STDOUT
+  ENDELSE
   
   ;;********************************************************
   ;;Now clean and tap the databases and interpolate satellite data
@@ -402,6 +413,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = ns_t2
            stormString           = 'non-storm'
            paramString          += '--' + stormString
+           IF KEYWORD_SET(multiple_delays) THEN BEGIN
+              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
+                 paramString_list[iDel] += '--' + stormString
+              ENDFOR
+           ENDIF
         END
         KEYWORD_SET(mainPhase): BEGIN
            PRINTF,lun,'Restricting with main-phase indices ...'
@@ -410,7 +426,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = mp_t2
            stormString           = 'mainPhase'
            paramString          += '--' + stormString
-         END
+           IF KEYWORD_SET(multiple_delays) THEN BEGIN
+              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
+                 paramString_list[iDel] += '--' + stormString
+              ENDFOR
+           ENDIF         
+        END
         KEYWORD_SET(recoveryPhase): BEGIN
            PRINTF,lun,'Restricting with recovery-phase indices ...'
            restrict_with_these_i = rp_i
@@ -418,45 +439,51 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = rp_t2
            stormString           = 'recoveryPhase'
            paramString          += '--' + stormString
+           IF KEYWORD_SET(multiple_delays) THEN BEGIN
+              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
+                 paramString_list[iDel] += '--' + stormString
+              ENDFOR
+           ENDIF
          END
      ENDCASE
   ENDIF
 
-  plot_i = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
-                                                  DBTIMES=cdbTime,dbfile=dbfile, $
-                                                  DO_CHASTDB=do_chastdb, $
-                                                  DO_DESPUNDB=do_despunDB, $
-                                                  HEMI=hemi, $
-                                                  ;; NORTH=north, $
-                                                  ;; SOUTH=south, $
-                                                  ;; BOTH_HEMIS=both_hemis, $
-                                                  ORBRANGE=orbRange, $
-                                                  ALTITUDERANGE=altitudeRange, $
-                                                  CHARERANGE=charERange,POYNTRANGE=poyntRange, $
-                                                  MINMLT=minM,MAXMLT=maxM, $
-                                                  BINM=binM, $
-                                                  SHIFTM=shiftM, $
-                                                  MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                  DO_LSHELL=do_lshell, $
-                                                  MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                  SMOOTHWINDOW=smoothWindow, $
-                                                  BYMIN=byMin,BZMIN=bzMin, $
-                                                  BYMAX=byMax,BZMAX=bzMax, $
-                                                  DO_ABS_BYMIN=abs_byMin, $
-                                                  DO_ABS_BYMAX=abs_byMax, $
-                                                  DO_ABS_BZMIN=abs_bzMin, $
-                                                  DO_ABS_BZMAX=abs_bzMax, $
-                                                  CLOCKSTR=clockStr, $
-                                                  RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-                                                  BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                  STABLEIMF=stableIMF, $
-                                                  DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                                  OMNI_COORDS=omni_Coords, $
-                                                  ANGLELIM1=angleLim1, $
-                                                  ANGLELIM2=angleLim2, $
-                                                  HWMAUROVAL=HwMAurOval, $
-                                                  HWMKPIND=HwMKpInd, $
-                                                  NO_BURSTDATA=no_burstData)
+  plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
+                                                                          DBTIMES=cdbTime,dbfile=dbfile, $
+                                                                          DO_CHASTDB=do_chastdb, $
+                                                                          DO_DESPUNDB=do_despunDB, $
+                                                                          HEMI=hemi, $
+                                                                          ;; NORTH=north, $
+                                                                          ;; SOUTH=south, $
+                                                                          ;; BOTH_HEMIS=both_hemis, $
+                                                                          ORBRANGE=orbRange, $
+                                                                          ALTITUDERANGE=altitudeRange, $
+                                                                          CHARERANGE=charERange,POYNTRANGE=poyntRange, $
+                                                                          MINMLT=minM,MAXMLT=maxM, $
+                                                                          BINM=binM, $
+                                                                          SHIFTM=shiftM, $
+                                                                          MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                                          DO_LSHELL=do_lshell, $
+                                                                          MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                                          SMOOTHWINDOW=smoothWindow, $
+                                                                          BYMIN=byMin,BZMIN=bzMin, $
+                                                                          BYMAX=byMax,BZMAX=bzMax, $
+                                                                          DO_ABS_BYMIN=abs_byMin, $
+                                                                          DO_ABS_BYMAX=abs_byMax, $
+                                                                          DO_ABS_BZMIN=abs_bzMin, $
+                                                                          DO_ABS_BZMAX=abs_bzMax, $
+                                                                          CLOCKSTR=clockStr, $
+                                                                          RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                                                          BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                                          MULTIPLE_DELAYS=multiple_delays, $
+                                                                          STABLEIMF=stableIMF, $
+                                                                          DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                                                                          OMNI_COORDS=omni_Coords, $
+                                                                          ANGLELIM1=angleLim1, $
+                                                                          ANGLELIM2=angleLim2, $
+                                                                          HWMAUROVAL=HwMAurOval, $
+                                                                          HWMKPIND=HwMKpInd, $
+                                                                          NO_BURSTDATA=no_burstData)
     
   ;;********************************************
   ;;Variables for histos
@@ -475,7 +502,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;********************************************
   ;;Now time for data summary
 
-  PRINT_ALFVENDB_PLOTSUMMARY,maximus,plot_i,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+  PRINT_ALFVENDB_PLOTSUMMARY,maximus,plot_i_list,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                              ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                              minMLT=minM,maxMLT=maxM, $
                              BINMLT=binM, $
@@ -493,10 +520,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              DO_ABS_BZMIN=abs_bzMin, $
                              DO_ABS_BZMAX=abs_bzMax, $
                              BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
-                             PARAMSTRING=paramString, PARAMSTRPREFIX=plotPrefix,PARAMSTRSUFFIX=plotSuffix,$
+                             PARAMSTRING=paramString, $
+                             PARAMSTR_LIST=paramString_list, $
+                             PARAMSTRPREFIX=plotPrefix, $
+                             PARAMSTRSUFFIX=plotSuffix,$
                              SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                             HEMI=hemi, DELAY=delay, STABLEIMF=stableIMF,SMOOTHWINDOW=smoothWindow,INCLUDENOCONSECDATA=includeNoConsecData, $
-                             HOYDIA=hoyDia,MASKMIN=maskMin,LUN=lun
+                             HEMI=hemi, $
+                             DELAY=delay, $
+                             MULTIPLE_DELAYS=multiple_delays, $
+                             STABLEIMF=stableIMF, $
+                             SMOOTHWINDOW=smoothWindow, $
+                             INCLUDENOCONSECDATA=includeNoConsecData, $
+                             HOYDIA=hoyDia, $
+                             MASKMIN=maskMin, $
+                             LUN=lun
 
 
 
@@ -510,8 +547,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
-  GET_ALFVENDB_2DHISTOS,maximus,plot_i, H2DSTRARR=h2dStrArr, $
-                        KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
+  GET_ALFVENDB_2DHISTOS,maximus,plot_i_list, H2DSTRARR_LIST=h2dStrArr_List, $
+                        KEEPME=keepMe, DATARAWPTRARR_LIST=dataRawPtrArr_List,DATANAMEARR_LIST=dataNameArr_List, $
                         MINMLT=minM,MAXMLT=maxM, $
                         BINMLT=binM, $
                         SHIFTMLT=shiftM, $
@@ -535,7 +572,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                         DO_ABS_BYMAX=abs_byMax, $
                         DO_ABS_BZMIN=abs_bzMin, $
                         DO_ABS_BZMAX=abs_bzMax, $
-                        DELAY=delay, STABLEIMF=stableIMF, $
+                        DELAY=delay, $
+                        MULTIPLE_DELAYS=multiple_delays, $
+                        STABLEIMF=stableIMF, $
                         SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                         NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                         EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
@@ -568,52 +607,74 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;Handle Plots all at once
 
   ;;!!Make sure mask and FluxN are ultimate and penultimate arrays, respectively
-  h2dStrArr=SHIFT(h2dStrArr,-1-(nPlots))
-  IF keepMe THEN BEGIN 
-     dataNameArr=SHIFT(dataNameArr,-2) 
-     dataRawPtrArr=SHIFT(dataRawPtrArr,-2) 
-  ENDIF
+  tempFile_list                    = LIST()
+  FOR iList=0,N_ELEMENTS(h2dStrArr_list) DO BEGIN
+     h2dStrArr                     = h2dStrArr_list[iList]
+     dataNameArr                   = dataNameArr_list[iList]
+     dataRawPtrArr                 = dataRawPtrArr_list[iList]
+     plot_i                        = plot_i_list[iList]
+     paramString                   = paramString_list[iList]
 
-  IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
-  SAVE_ALFVENDB_TEMPDATA,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
-                         MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
-                         BINM=binM, $
-                         SHIFTM=shiftM, $
-                         BINI=binI, $
-                         DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
-                         MINL=minL,MAXL=maxL,BINL=binL,$
-                         RAWDIR=rawDir,PARAMSTR=paramString,$
-                         CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg,STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi,TEMPFILE=tempFile
-  ENDIF
+     h2dStrArr                     = SHIFT(h2dStrArr,-1-(nPlots))
+     IF keepMe THEN BEGIN 
+        dataNameArr                = SHIFT(dataNameArr,-2) 
+        dataRawPtrArr              = SHIFT(dataRawPtrArr,-2) 
+     ENDIF
 
-  ;;Now plots
-  PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,TEMPFILE=tempFile, $
-                         SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
-                         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                         PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
-                         PARAMSTR=paramString, DEL_PS=del_PS, $
-                         HEMI=hemi, $
-                         CLOCKSTR=clockStr, $
-                         NO_COLORBAR=no_colorbar, $
-                         EPS_OUTPUT=eps_output, $
-                         _EXTRA = e
+     ;; h2dStrArr_list[iList]         = SHIFT(h2dStrArr_List[iList],-1-(nPlots))
+     ;; IF keepMe THEN BEGIN 
+     ;;    dataNameArr_list[iList]    = SHIFT(dataNameArr_list[iList],-2) 
+     ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
+     ;; ENDIF
 
-  IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
-     CLOSE,lun 
-     FREE_LUN,lun 
-  ENDIF
+     IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
+        SAVE_ALFVENDB_TEMPDATA,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
+                               MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
+                               BINM=binM, $
+                               SHIFTM=shiftM, $
+                               BINI=binI, $
+                               DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
+                               MINL=minL,MAXL=maxL,BINL=binL,$
+                               RAWDIR=rawDir,PARAMSTR=paramString,$
+                               CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg,STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi,TEMPFILE=tempFile
+     ENDIF
 
-  ;;Save raw data, if desired
-  IF KEYWORD_SET(saveRaw) THEN BEGIN
-     SAVE, /ALL, filename=rawDir+'fluxplots_'+paramString+".dat"
+     ;;Now plots
+     PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,TEMPFILE=tempFile, $
+                            SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
+                            JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                            PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
+                            PARAMSTR=paramString, DEL_PS=del_PS, $
+                            HEMI=hemi, $
+                            CLOCKSTR=clockStr, $
+                            NO_COLORBAR=no_colorbar, $
+                            EPS_OUTPUT=eps_output, $
+                            _EXTRA = e
 
-  ENDIF
+     IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
+        CLOSE,lun 
+        FREE_LUN,lun 
+     ENDIF
 
-  out_tempFile        = tempFile
-  out_dataNameArr     = dataNameArr
-  WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
-                          WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
-                          H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
-                          PARAMSTR=paramString,PLOTDIR=plotDir
+     ;;Save raw data, if desired
+     IF KEYWORD_SET(saveRaw) THEN BEGIN
+        SAVE, /ALL, filename=rawDir+'fluxplots_'+paramString+".dat"
+
+     ENDIF
+
+     ;; WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I_LIST=plot_i_list, $
+     ;;                           WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
+     ;;                           H2DSTRARR_LIST=h2dStrArr_List,DATARAWPTRARR_LIST=dataRawPtrArr_List,DATANAMEARR_LIST=dataNameArr_List, $
+     ;;                           PARAMSTRING_LIST=paramstring_list,PLOTDIR=plotDir
+     WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
+                             WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
+                             H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
+                             PARAMSTR=paramString,PLOTDIR=plotDir
+
+     tempFile_list.add,tempFile
+  ENDFOR
+
+  out_tempFile_list      = tempFile_list
+  out_dataNameArr_list   = dataNameArr_list
 
 END
