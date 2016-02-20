@@ -552,66 +552,78 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
-  GET_ALFVENDB_2DHISTOS,maximus,plot_i_list, H2DSTRARR_LIST=h2dStrArr_List, $
-                        KEEPME=keepMe, DATARAWPTRARR_LIST=dataRawPtrArr_List,DATANAMEARR_LIST=dataNameArr_List, $
-                        MINMLT=minM,MAXMLT=maxM, $
-                        BINMLT=binM, $
-                        SHIFTMLT=shiftM, $
-                        MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                        DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                        ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
-                        CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                        MASKMIN=maskMin, $
-                        SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
-                        HEMI=hemi, $
-                        CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                        DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
-                        DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
-                        STORMSTRING=stormString, $
-                        DSTCUTOFF=dstCutoff, $
-                        T1_ARR=t1_arr, $
-                        T2_ARR=t2_arr, $
-                        BYMIN=byMin, BZMIN=bzMin, $
-                        BYMAX=byMax, BZMAX=bzMax, $
-                        DO_ABS_BYMIN=abs_byMin, $
-                        DO_ABS_BYMAX=abs_byMax, $
-                        DO_ABS_BZMIN=abs_bzMin, $
-                        DO_ABS_BZMAX=abs_bzMax, $
-                        DELAY=delay, $
-                        MULTIPLE_DELAYS=multiple_delays, $
-                        STABLEIMF=stableIMF, $
-                        SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                        NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
-                        EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-                        ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
-                        ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-                        NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
-                        PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-                        NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-                        IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
-                        NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
-                        CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
-                        NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
-                        CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
-                        NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-                        ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                        ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
-                        NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                        DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                        NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
-                        PROBOCCURRENCEPLOT=probOccurrencePlot, $
-                        PROBOCCURRENCERANGE=probOccurrenceRange, $
-                        LOGPROBOCCURRENCE=logProbOccurrence, $
-                        TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
-                        TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
-                        LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
-                        MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                        LOGAVGPLOT=logAvgPlot, $
-                        ALL_LOGPLOTS=all_logPlots,$
-                        TMPLT_H2DSTR=tmplt_h2dStr, $
-                        FANCY_PLOTNAMES=fancy_plotNames, $
-                        LUN=lun
+  IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
+  h2dStrArr_List                   = LIST()
+  dataNameArr_List                 = LIST()
+  dataRawPtrArr_List               = LIST()
+  FOR iDel=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+     h2dStrArr                     = !NULL
+     dataNameArr                   = !NULL
+     dataRawPtrArr                 = !NULL
+     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iDel], H2DSTRARR=h2dStrArr, $
+                           KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
+                           MINMLT=minM,MAXMLT=maxM, $
+                           BINMLT=binM, $
+                           SHIFTMLT=shiftM, $
+                           MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                           DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                           ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
+                           CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
+                           MASKMIN=maskMin, $
+                           SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                           HEMI=hemi, $
+                           CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                           DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
+                           DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
+                           STORMSTRING=stormString, $
+                           DSTCUTOFF=dstCutoff, $
+                           T1_ARR=t1_arr, $
+                           T2_ARR=t2_arr, $
+                           BYMIN=byMin, BZMIN=bzMin, $
+                           BYMAX=byMax, BZMAX=bzMax, $
+                           DO_ABS_BYMIN=abs_byMin, $
+                           DO_ABS_BYMAX=abs_byMax, $
+                           DO_ABS_BZMIN=abs_bzMin, $
+                           DO_ABS_BZMAX=abs_bzMax, $
+                           DELAY=delay[iDel], $
+                           MULTIPLE_DELAYS=multiple_delays, $
+                           STABLEIMF=stableIMF, $
+                           SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                           NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+                           EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                           ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
+                           ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
+                           NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                           PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
+                           NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
+                           IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+                           NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+                           CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+                           NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
+                           CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
+                           NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+                           ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
+                           ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                           NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                           DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                           NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                           PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                           PROBOCCURRENCERANGE=probOccurrenceRange, $
+                           LOGPROBOCCURRENCE=logProbOccurrence, $
+                           TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+                           TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+                           LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+                           MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                           LOGAVGPLOT=logAvgPlot, $
+                           ALL_LOGPLOTS=all_logPlots,$
+                           TMPLT_H2DSTR=tmplt_h2dStr, $
+                           FANCY_PLOTNAMES=fancy_plotNames, $
+                           LUN=lun
+     h2dStrArr_List.add,h2dStrArr
+     dataNameArr_list.add,dataNameArr
+     dataRawPtrArr_list.add,dataRawPtrArr
+  ENDFOR
 
   ;;********************************************************
   ;;Handle Plots all at once

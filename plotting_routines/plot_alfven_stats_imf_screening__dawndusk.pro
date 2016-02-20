@@ -222,7 +222,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
 
-     FOR iDawnDuskSet=0,N_ELEMENTS(outTempFiles_list_list[0,0])-1 DO BEGIN
+     FOR iDawnDuskSet=0,N_ELEMENTS(outTempFiles_list_list[0])-1 DO BEGIN
         outTempFiles              = [outTempFiles_list_list[0,iDawnDuskSet],outTempFiles_list_list[1,iDawnDuskSet]]
 
         COMBINE_ALFVEN_STATS_PLOTS,titles, $
