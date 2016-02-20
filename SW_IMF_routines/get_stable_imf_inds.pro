@@ -22,15 +22,18 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ;; COMMON MAXIMUS,MAXIMUS,MAXIMUS__good_i,MAXIMUS__cleaned_i
   ;; COMMON FASTLOC,FASTLOC,FASTLOC__good_i,FASTLOC__cleaned_i
 
-  COMMON OMNI_STABILITY,C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__magCoords, $
-     C_OMNI__mag_UTC, $
+  ;;This and GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS should be the only two routines that have a full definition of this block
+  COMMON OMNI_STABILITY,C_OMNI__mag_UTC, $
+     C_OMNI__RECALCULATE, $
+     C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__HAVE_STABLE_INDS, $
+     C_OMNI__magCoords, $
      C_OMNI__combined_i,C_OMNI__time_i, $
      C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__clockStr, $
      C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $
      C_OMNI__byMax_i,C_OMNI__byMax,C_OMNI__abs_byMax, $
      C_OMNI__bzMin_i,C_OMNI__bzMin,C_OMNI__abs_bzMin, $
      C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
-     C_OMNI__HAVE_STABLE_INDS,C_OMNI__stableStr, $
+     C_OMNI__stableStr, $
      C_OMNI__paramStr, $
      C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr
 
@@ -42,7 +45,26 @@ FUNCTION GET_STABLE_IMF_INDS, $
      IF ~C_OMNI__HAVE_STABLE_INDS THEN BEGIN
         calculate = 1 
      ENDIF ELSE BEGIN
-        calculate = 0
+
+        ;;Do we need to recalculate anyway?
+        CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
+                                 CLOCKSTR=clockStr, $
+                                 ANGLELIM1=angleLim1, $
+                                 ANGLELIM2=angleLim2, $
+                                 STABLEIMF=stableIMF, $
+                                 RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                 BYMIN=byMin, $
+                                 BZMIN=bzMin, $
+                                 BYMAX=byMax, $
+                                 BZMAX=bzMax, $
+                                 DO_ABS_BYMIN=abs_byMin, $
+                                 DO_ABS_BYMAX=abs_byMax, $
+                                 DO_ABS_BZMIN=abs_bzMin, $
+                                 DO_ABS_BZMAX=abs_bzMax, $
+                                 OMNI_COORDS=OMNI_coords, $
+                                 LUN=lun
+                                    
+        calculate = C_OMNI__RECALCULATE
         IF N_ELEMENTS(C_OMNI__stable_i) EQ 0 THEN BEGIN
            PRINTF,lun,"Impossible! You said this was calculated ..."
            STOP

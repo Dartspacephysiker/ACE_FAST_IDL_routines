@@ -3,7 +3,7 @@ PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim
 
   COMMON OMNI_STABILITY
 
-  C_OMNI__clockStr                            = clockStr
+  C_OMNI__clockStr                             = clockStr
 
   ;;Set up to check correct region: negAngle<phi<posAngle
   CASE STRUPCASE(C_OMNI__clockStr) OF 
