@@ -117,6 +117,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
            phiClock                            = phiClock_GSE
         END
      ENDCASE
+     thetaCone                                 = thetaCone*180/!PI
+     phiClock                                  = phiClock*180/!PI
 
      IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
         maxTime                 = STR_TO_TIME('2000-10-06/00:08:46.938')
@@ -128,11 +130,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
         C_OMNI__time_i          = INDGEN(N_ELEMENTS(phiClock),/LONG)
      ENDELSE
 
-     IF KEYWORD_SET(clockStr) AND (~KEYWORD_SET(C_OMNI__negAngle) OR ~KEYWORD_SET(C_OMNI__posAngle)) THEN BEGIN
-        SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2
-     ENDIF
-
      IF KEYWORD_SET(clockStr) THEN BEGIN
+        SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2
         GET_IMF_CLOCKANGLE_INDS,phiClock, $
                                 CLOCKSTR=clockStr, $
                                 ANGLELIM1=angleLim1, $
@@ -140,7 +139,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                 LUN=lun
         USE_COMBINED_INDS       = 1
      ENDIF
-     
+
      IF N_ELEMENTS(byMin) GT 0 OR N_ELEMENTS(byMax) GT 0 OR N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 THEN BEGIN
         GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
                                DO_ABS_BYMIN=abs_byMin, $

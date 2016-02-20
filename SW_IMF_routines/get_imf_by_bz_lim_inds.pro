@@ -5,6 +5,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
                            DO_ABS_BZMAX=abs_bzMax, $
                            LUN=lun
 
+  COMPILE_OPT idl2
+
   COMMON OMNI_STABILITY
 
   IF ~KEYWORD_SET(lun) THEN lun = -1

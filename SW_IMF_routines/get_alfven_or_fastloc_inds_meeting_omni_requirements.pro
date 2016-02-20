@@ -49,21 +49,22 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             LUN=lun)
   
   
-  mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i]+delay
-  
   ;;Now line up the databases (either fastLoc or maximus, as the case may be)
-  aligned_db_ii       = VALUE_LOCATE(mag_utc_muffed,dbTimes[db_i])
+  aligned_db_ii       = VALUE_LOCATE(C_OMNI__mag_UTC[stable_omni_i]+delay,dbTimes[db_i])
 
-  mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii+1]]+delay
+  mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]]+delay
+  mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]+1]+delay
 
-  beforeTimes         = mag_utc_muffed[aligned_db_ii]-dbTimes[db_i]
-  afterTimes          = mag_utc_muffedAft[aligned_db_ii]-dbTimes[db_i]
+  beforeTimes         = mag_utc_muffed-dbTimes[db_i]
+  afterTimes          = mag_utc_muffedAft-dbTimes[db_i]
 
   before_timeOK       = ABS(beforeTimes) LE 90
   after_timeOK        = ABS(afterTimes) LE 90
 
   ;;So which are the winners?
-  qualifying_db_i     = WHERE(before_timeOK OR after_timeOK)
+  qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)
+
+  qualifying_db_i     = db_i[qualifying_db_ii]
 
   PRINT,"N qualifying db i: " + STRCOMPRESS(N_ELEMENTS(qualifying_db_i),/REMOVE_ALL)
 

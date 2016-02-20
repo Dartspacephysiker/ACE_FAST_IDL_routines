@@ -1,8 +1,10 @@
-PRO COMBINE_OMNI_IMF_INDS
+PRO COMBINE_OMNI_IMF_INDS,LUN=lun
 
   COMPILE_OPT idl2
 
   COMMON OMNI_STABILITY
+
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
   C_OMNI__combined_i              = C_OMNI__time_i
 
