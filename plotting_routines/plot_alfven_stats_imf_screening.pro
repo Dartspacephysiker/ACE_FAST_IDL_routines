@@ -211,7 +211,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                     HWMAUROVAL=HwMAurOval, $
                                     HWMKPIND=HwMKpInd, $
-                                    MIN_NEVENTS=min_nEvents, $
+                                    ;; MIN_NEVENTS=min_nEvents, $
                                     MASKMIN=maskMin, $
                                     BYMIN=byMin, $
                                     BZMIN=bzMin, $
@@ -309,7 +309,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                             MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+                             ;; MIN_NEVENTS=min_nEvents, $
+                             MASKMIN=maskMin, $
+                             DO_DESPUNDB=do_despunDB, $
                              HEMI=hemi, $
                              NORTH=north, $
                              SOUTH=south, $
@@ -336,7 +338,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MEDIANPLOT=medianPlot, $
                              LOGAVGPLOT=logAvgPlot, $
                              PLOTMEDORAVG=plotMedOrAvg, $
-                             DATADIR=dataDir, NO_BURSTDATA=no_burstData, $
+                             DATADIR=dataDir, $
+                             NO_BURSTDATA=no_burstData, $
                              WRITEASCII=writeASCII, $
                              WRITEHDF5=writeHDF5, $
                              WRITEPROCESSEDH2D=writeProcessedH2d, $
