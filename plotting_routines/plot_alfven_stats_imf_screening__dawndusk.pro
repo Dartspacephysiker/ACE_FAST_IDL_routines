@@ -57,6 +57,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
    NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+   OXYPLOTS=oxyPlots, $
+   OXYFLUXPLOTTYPE=oxyFluxPlotType, $
+   LOGOXYFPLOT=logOxyfPlot, $
+   ABSOXYFLUX=absOxyFlux, $
+   NONEGOXYFLUX=noNegOxyFlux, $
+   NOPOSOXYFLUX=noPosOxyFlux, $
+   OXYPLOTRANGE=oxyPlotRange, $
    CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
    NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
    CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
@@ -75,6 +82,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
    TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
    LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
+   DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
    SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -174,6 +182,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                      IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
                                      NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+                                     OXYPLOTS=oxyPlots, $
+                                     OXYFLUXPLOTTYPE=oxyFluxPlotType, $
+                                     LOGOXYFPLOT=logOxyfPlot, $
+                                     ABSOXYFLUX=absOxyFlux, $
+                                     NONEGOXYFLUX=noNegOxyFlux, $
+                                     NOPOSOXYFLUX=noPosOxyFlux, $
+                                     OXYPLOTRANGE=oxyPlotRange, $
                                      CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
                                      NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
                                      CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
@@ -193,6 +208,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
                                      TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
                                      LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
+                                     DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      ALL_LOGPLOTS=all_logPlots, $
                                      SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
