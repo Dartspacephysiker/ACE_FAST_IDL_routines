@@ -63,8 +63,11 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      beforeTimes         = mag_utc_muffed-dbTimes[db_i]
      afterTimes          = mag_utc_muffedAft-dbTimes[db_i]
 
-     before_timeOK       = ABS(beforeTimes) LE 30
-     after_timeOK        = ABS(afterTimes) LE 30
+     ;; before_timeOK       = ABS(beforeTimes) LE 30
+     ;; after_timeOK        = ABS(afterTimes) LE 30
+
+     before_timeOK       = ABS(beforeTimes) LE 60
+     after_timeOK        = ABS(afterTimes) LE 60
 
      ;;So which are the winners?
      qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)
