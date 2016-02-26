@@ -252,8 +252,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
         COMBINE_ALFVEN_STATS_PLOTS,titles, $
                                    N_TO_COMBINE=n_to_combine, $
                                    TEMPFILES=outTempFiles, $
-                                   OUT_IMGS_ARR=out_imgs_arr, $
-                                   OUT_TITLEOBJS_ARR=out_titleObjs_arr, $
+                                   ;; OUT_IMGS_ARR=out_imgs_arr, $
+                                   ;; OUT_TITLEOBJS_ARR=out_titleObjs_arr, $
                                    COMBINED_TO_BUFFER=combined_to_buffer, $
                                    SAVE_COMBINED_WINDOW=save_combined_window, $
                                    SAVE_COMBINED_NAME=save_combined_name, $

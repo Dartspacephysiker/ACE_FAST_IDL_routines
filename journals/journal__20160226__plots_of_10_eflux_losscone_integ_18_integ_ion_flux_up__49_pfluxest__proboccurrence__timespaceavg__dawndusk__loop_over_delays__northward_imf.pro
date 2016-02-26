@@ -1,5 +1,5 @@
 ;2016/02/17 Jim wants to see some super negative delays
-PRO JOURNAL__20160225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWNDUSK__LOOP_OVER_DELAYS
+PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWNDUSK__LOOP_OVER_DELAYS__NORTHWARD_IMF
 
   nonstorm                       = 0
 
@@ -15,7 +15,6 @@ PRO JOURNAL__20160225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
   maxILAT                        = -61
   binILAT                        = 3.0
 
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   ;; binMLT                         = 0.5
@@ -28,7 +27,8 @@ PRO JOURNAL__20160225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
   ;; stableIMF                      = 20
   byMin                          = 3
   do_abs_bymin                   = 1
-  bzMax                          = 0
+  bzMin                          = 0
+  ;; bzMax                          = 0
 
   ;;DB stuff
   do_despun                      = 1
@@ -105,10 +105,10 @@ PRO JOURNAL__20160225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
   logIFPlot                      = 1
 
   ;; FOR i = 0, N_ELEMENTS(delayArr)-1 DO BEGIN
-     PRINT,'********************************************'
-     PRINT,FORMAT='("*************DELAY=",I05,"s*******************")',delayArr[i]
-     PRINT,'********************************************'
-     PRINT,''
+     ;; PRINT,'********************************************'
+     ;; PRINT,FORMAT='("*************DELAY=",I05,"s*******************")',delayArr[i]
+     ;; PRINT,'********************************************'
+     ;; PRINT,''
      PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK, $
         NONSTORM=nonstorm, $
         CHARERANGE=charERange, $
@@ -120,13 +120,13 @@ PRO JOURNAL__20160225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
         /MIDNIGHT, $
-        /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
+        /MULTIPLE_DELAYS, $
         DO_DESPUNDB=do_despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $
-        BZMAX=bzMax, $
+        BZMIN=bzMin, $
         SMOOTHWINDOW=smoothWindow, $
         /LOGAVGPLOT, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
