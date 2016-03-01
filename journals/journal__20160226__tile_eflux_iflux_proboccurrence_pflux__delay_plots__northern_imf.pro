@@ -6,7 +6,8 @@ PRO JOURNAL__20160226__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS__NORTH
   hemi                = 'SOUTH'
   ;; hemi                = 'NORTH'
   
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/20160226/'+hemi+'/'
+  bonusSuff           = 'high-energy_e'
+  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/20160229/'+hemi+'/'
   plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','timeAvgd_pFlux']
 
   delayArr            = [-1500, -1440, -1380, -1320, -1260, $
@@ -24,9 +25,9 @@ PRO JOURNAL__20160226__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS__NORTH
 
   ;; paramStr            = 'Feb_26_16--'+hemi+'--despun--logAvg--maskMin10--OMNI--GSM--duskward__0stable' + delayStr + '__byMin3.0--'
   ;; paramStr            = 'Feb_26_16--'+hemi+'--despun--logAvg--maskMin10--OMNI--GSM--duskward__0stable' + delayStr + '__byMin3.0__bzMin-4.0__bzMax4.0--'
-  paramStr            = 'Feb_26_16--'+hemi+'--despun--logAvg--maskMin10--OMNI--GSM--duskward__0stable' + delayStr + '__byMin4.0__bzMax1.0--'
+  paramStr            = 'Feb_29_16--'+hemi+'--despun--logAvg--maskMin10'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin4.0__bzMax1.0--'
   dataNames           = ['timeAvgd_spatialAvg_LogeNumFl_EFLUX_LOSSCONE_INTEG','timeAvgd_spatialAvg_Logiflux_INTEG_UP','probOccurrence','timeAvgd_pFlux']
-  fileSuff            = '--combined.png'
+  fileSuff            = bonusSuff+'--combined.png'
 
   allFiles_list       = LIST()
   FOR i=0,3 DO BEGIN
