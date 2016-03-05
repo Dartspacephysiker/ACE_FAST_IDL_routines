@@ -1,40 +1,47 @@
-;2016/02/17 Jim wants to see some super negative delays
-PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWNDUSK__LOOP_OVER_DELAYS__FINER_MLT
+;2016/02/29 So now we see each signature; can we filter it out by killing low-energy, broadband electrons?
+PRO JOURNAL__20160229__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWNDUSK__CHARE_LIMITS
 
   nonstorm                       = 0
 
+  ;; charERange                     = [4,300]
+  ;; plotSuff                       = 'low-energy_e'
+
+  charERange                     = [300,4000]
+  plotSuff                       = 'high-energy_e'
+
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
-  binILAT                        = 4.0
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
+  ;; binILAT                        = 5.0
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -61
-  ;; binILAT                        = 4.0
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -61
+  binILAT                        = 4.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
-  shiftMLT                       = 0.375
+  binMLT                         = 0.5
+  shiftMLT                       = 0.25
 
   ;; binMLT                         = 1.0
   ;; shiftMLT                       = 0.5
 
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  byMin                          = 5
+  byMin                          = 4
   do_abs_bymin                   = 1
-  ;; bzMax                          = 0
-  bzMin                          = -1
+  bzMax                          = 1
+  ;; bzMin                          = -4
 
   ;;DB stuff
   do_despun                      = 1
 
   ;;Bonus
-  maskMin                        = 5
+  maskMin                        = 10
   divide_by_width_x              = 1
 
   ;;Delay stuff
@@ -44,9 +51,9 @@ PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
                                     ;;  -600,  -540,  -480,  -420,  -360, $
                                      ;; -300,  -240,  -180,  $
                                    -120,  -60,  $
-                                        0,    60,   120,   180,   240, $
-                                      300,   360,   420,   480,   540, $
-                                      600,   660,   720,   780,   840];, $
+                                        0,    60,   120,   180,   240];, $
+                                     ;;  300,   360,   420,   480,   540, $
+                                     ;;  600,   660,   720,   780,   840, $
                                      ;;  900,   960,  1020,  1080,  1140, $
                                      ;; 1200,  1260,  1320,  1380,  1440, $
                                      ;; 1500]
@@ -77,9 +84,6 @@ PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
   ;;                                   -1020,  -1080,  -1140,  -1200,  -1260,  -1320, $
   ;;                                   -1380,  -1440,  -1500]
   
-  ;; charERange                     = [4,300]
-  ;; charERange                     = [300,4000]
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot stuff
 
@@ -104,6 +108,13 @@ PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
   ;; iPlotRange                     = [10^(3.5),10^(7.5)]  ;for time-averaged plot
   iPlotRange                     = [10.^(4.5),10.^(7.5)] ;for time-averaged plot
   logIFPlot                      = 1
+
+  ;;;;;;;;;;;;
+  ;;For high-energy (300,4000-eV) electrons
+  iPlotRange                     = [10.^(2.5),10.^(6.5)] ;for high-energy electrons
+  pPlotRange                     = [10.^(-4.5),10.^(-1.5)] ;for high-energy electrons
+  eNumFlRange                   = [10.^(-5.5),10.^(-1.5)] ;for high-energy electrons
+
 
   ;; FOR i = 0, N_ELEMENTS(delayArr)-1 DO BEGIN
      PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK, $
@@ -144,6 +155,7 @@ PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
         IFLUXPLOTTYPE=iFluxPlotType, $
         IPLOTRANGE=iPlotRange, $
         LOGIFPLOT=logIFPlot, $
+        PLOTSUFFIX=plotSuff, $
         /CB_FORCE_OOBHIGH, $
         /CB_FORCE_OOBLOW, $
         /COMBINE_PLOTS, $

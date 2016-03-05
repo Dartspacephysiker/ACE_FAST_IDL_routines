@@ -317,7 +317,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              SHIFTMLT=shiftM, $
                              MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                             MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
+                             MIN_MAGCURRENT=minMC, $
+                             MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                              ;; MIN_NEVENTS=min_nEvents, $
                              MASKMIN=maskMin, $
