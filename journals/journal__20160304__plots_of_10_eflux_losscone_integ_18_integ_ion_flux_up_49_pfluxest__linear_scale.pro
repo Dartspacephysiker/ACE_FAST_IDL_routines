@@ -5,23 +5,23 @@ PRO JOURNAL__20160304__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP_49_
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 62
-  maxILAT                        = 83
-  binILAT                        = 3.0
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -83
-  ;; maxILAT                        = -62
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 62
+  ;; maxILAT                        = 83
   ;; binILAT                        = 3.0
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -83
+  maxILAT                        = -62
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  ;; binMLT                         = 0.75
-  ;; shiftMLT                       = 0.375
+  binMLT                         = 0.75
+  shiftMLT                       = 0.375
 
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  ;; binMLT                         = 1.0
+  ;; shiftMLT                       = 0.5
 
   ;;IMF condition stuff
   ;; stableIMF                      = 20
@@ -38,19 +38,18 @@ PRO JOURNAL__20160304__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP_49_
   divide_by_width_x              = 1
 
   ;;Delay stuff
-  delayArr                       = [ $ ;-1500, -1440, -1380, -1320, -1260, $
-                                    ;; -1200, -1140, -1080, -1020,  -960, $
-                                    ;;  -900,  -840,  -780,  -720,  -660, $
-                                    ;;  -600,  -540,  -480,  -420,  -360, $
-                                     ;; -300,  -240,  -180,  $
-                                   ;; -120,  -60,  $
-                                        0,    60,   120] ;,   180,   240] ;, $
-                                      ;; 300,   360,   420,   480,   540, $
-                                      ;; 600,   660,   720,   780,   840];, $
-                                     ;;  900,   960,  1020,  1080,  1140, $
-                                     ;; 1200,  1260,  1320,  1380,  1440, $
-                                     ;; 1500]
-
+  delayArr                       = [ -1500, -1440, -1380, -1320, -1260, $
+                                     -1200, -1140, -1080, -1020,  -960, $
+                                      -900,  -840,  -780,  -720,  -660, $
+                                      -600,  -540,  -480,  -420,  -360, $
+                                      -300,  -240,  -180,  -120,   -60, $
+                                         0,    60,   120,   180,   240, $
+                                       300,   360,   420,   480,   540, $
+                                       600,   660,   720,   780,   840, $
+                                       900,   960,  1020,  1080,  1140, $
+                                      1200,  1260,  1320,  1380,  1440, $
+                                      1500]
+ 
   ;;For test
   ;; delayArr                       = [ $;-1500, -1440, -1380, -1320, -1260, $
                                     ;; -1200, -1140, -1080, -1020,  -960, $
@@ -84,7 +83,7 @@ PRO JOURNAL__20160304__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP_49_
   ;;Plot stuff
 
   ;; ;;PROBOCCURRENCE
-  probOccurrenceRange            = [1e-3,1e-1]
+  ;; probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
 
   probOccurrenceRange            = [0,0.1]
@@ -139,15 +138,15 @@ PRO JOURNAL__20160304__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP_49_
         /PROBOCCURRENCEPLOT, $
         LOGPROBOCCURRENCE=logProbOccurrence, $
         PROBOCCURRENCERANGE=probOccurrenceRange, $
-        ;; /PPLOTS, $
+        /PPLOTS, $
         LOGPFPLOT=logPFPlot, $
         PPLOTRANGE=pPlotRange, $
-        ;; /ENUMFLPLOTS, $
+        /ENUMFLPLOTS, $
         ENUMFLPLOTTYPE=eNumFlPlotType, $
         ENUMFLPLOTRANGE=eNumFlRange, $
         LOGENUMFLPLOT=logENumFlPlot, $
         NONEGENUMFL=noNegENumFl, $
-        ;; /IONPLOTS, $
+        /IONPLOTS, $
         IFLUXPLOTTYPE=iFluxPlotType, $
         IPLOTRANGE=iPlotRange, $
         LOGIFPLOT=logIFPlot, $

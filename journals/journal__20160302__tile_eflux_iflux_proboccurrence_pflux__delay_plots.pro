@@ -6,9 +6,12 @@ PRO JOURNAL__20160302__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS
   hemi                = 'SOUTH'
   ;; hemi                = 'NORTH'
   
+  date                = '20160306'
+  date_alt            = 'Mar_5_16'
+
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/20160304/'+hemi+'/'
+  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'+hemi+'/'
   ;; plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','LogpFlux']
   plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','pFlux']
 
@@ -32,7 +35,7 @@ PRO JOURNAL__20160302__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin10'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin3.0__bzMax-1.0--'
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin3.0__bzMax-3.0--'
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin6.0--'
-  paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin5.0__bzMin-9.0--'
+  paramStr            = date_alt+'--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin5.0__bzMin-9.0--'
   ;; dataNames           = ['timeAvgd_spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG','timeAvgd_spatialAvg_NoNegs--Logiflux_INTEG_UP','probOccurrence','timeAvgd_NoNegs--LogpFlux']
   dataNames           = ['timeAvgd_spatialAvg_NoNegs--eNumFl_EFLUX_LOSSCONE_INTEG','timeAvgd_spatialAvg_NoNegs--Logiflux_INTEG_UP','probOccurrence','timeAvgd_pFlux']
   fileSuff            = bonusSuff+'--combined.png'
