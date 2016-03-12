@@ -273,8 +273,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
                                     LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                                     DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                                    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+                                    SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -570,6 +572,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
+  ;;Need area of each bin for this one
+  IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
+     GET_H2D_BIN_AREAS,h2dAreas, $
+                       CENTERS1=centersMLT,CENTERS2=centersILAT, $
+                       BINSIZE1=binM*15., BINSIZE2=binI, $
+                       MAX1=maxM*15., MAX2=maxI, $
+                       MIN1=minM*15., MIN2=minI, $
+                       SHIFT1=shiftM*15., SHIFT2=shiftI
+  END
+
   IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
   h2dStrArr_List                   = LIST()
@@ -643,8 +655,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
                            LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                           DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+                           GROSSRATE__H2D_AREAS=h2dAreas, $
+                           GROSSRATE__CENTERS_MLT=centersMLT, $
+                           GROSSRATE__CENTERS_ILAT=centersILAT, $
                            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+                           SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
                            ALL_LOGPLOTS=all_logPlots,$
