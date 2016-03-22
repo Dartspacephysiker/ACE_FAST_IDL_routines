@@ -7,12 +7,21 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    DO_CHASTDB=do_chastdb, $
    DO_DESPUNDB=do_despunDB, $
    HEMI=hemi, $
-   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
-   MINMLT=minM,MAXMLT=maxM, $
+   ORBRANGE=orbRange, $
+   ALTITUDERANGE=altitudeRange, $
+   CHARERANGE=charERange, $
+   POYNTRANGE=poyntRange, $
+   MINMLT=minM, $
+   MAXMLT=maxM, $
    BINM=binM, $
    SHIFTM=shiftM, $
-   MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-   DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+   MINILAT=minI, $
+   MAXILAT=maxI, $
+   BINI=binI, $
+   DO_LSHELL=do_lshell, $
+   MINLSHELL=minL, $
+   MAXLSHELL=maxL, $
+   BINL=binL, $
    SMOOTHWINDOW=smoothWindow, $
    BYMIN=byMin, $
    BZMIN=bzMin, $
@@ -28,6 +37,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    STABLEIMF=stableIMF, $
    MULTIPLE_DELAYS=multiple_delays, $
    OMNI_COORDS=omni_Coords, $
+   OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
    HWMAUROVAL=HwMAurOval, $
@@ -110,6 +120,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                                                                            DO_ABS_BZMIN=abs_bzMin, $
                                                                                            DO_ABS_BZMAX=abs_bzMax, $
                                                                                            OMNI_COORDS=OMNI_coords, $
+                                                                                           OUT_OMNI_PARAMSTR=out_omni_paramStr, $
                                                                                            LUN=lun)     
      
   ENDELSE

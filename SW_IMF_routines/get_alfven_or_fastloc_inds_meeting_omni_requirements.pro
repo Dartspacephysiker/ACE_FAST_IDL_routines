@@ -14,6 +14,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
    OMNI_COORDS=OMNI_coords, $
+   OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    LUN=lun
   
   ;;This and GET_STABLE_IMF_INDS should be the only two routines that have a full definition of this block
@@ -47,6 +48,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             DO_ABS_BZMIN=abs_bzMin, $
                                             DO_ABS_BZMAX=abs_bzMax, $
                                             OMNI_COORDS=OMNI_coords, $
+                                            OMNI_PARAMSTR=omni_paramStr, $
                                             LUN=lun)
   
   
@@ -80,6 +82,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   ENDFOR
      
   ;; IF ~KEYWORD_SET(multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
+
+  out_omni_paramStr      = omni_paramStr
 
   RETURN,qual_db_i_list
 

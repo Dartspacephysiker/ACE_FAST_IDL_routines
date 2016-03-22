@@ -17,6 +17,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
    OMNI_COORDS=OMNI_coords, $
+   OMNI_PARAMSTR=omni_paramStr, $
    LUN=lun
   
   ;; COMMON MAXIMUS,MAXIMUS,MAXIMUS__good_i,MAXIMUS__cleaned_i
@@ -210,6 +211,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
   mag_utc                      = C_OMNI__mag_utc
 
   PRINTF,lun,C_OMNI__paramStr
+
+  omni_paramStr                = C_OMNI__paramStr
 
   RETURN,stable_OMNI_inds
 
