@@ -1,71 +1,72 @@
 ;2016/03/21 Can you show me what it's all about?
-PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
+PRO JOURNAL__20160323__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE__ADJ_BASED_ON_TIMEAVGED_POLAR_PLOTS
 
-  crossCorr_pref                 = "journal__20160322__CrossCorr_nev_per_orb_vs_delay--"
-  outPlot_pref                   = "journal__20160322__plot_nev_per_orb_vs_delay--"
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160322__nev_per_orb_and_crosscorrelation_savefiles/'
+  crossCorr_pref                 = "journal__20160323__CrossCorr_nev_per_orb_vs_delay--"
+  outPlot_pref                   = "journal__20160323__plot_nev_per_orb_vs_delay--"
+  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles/'
 
   nonstorm                       = 0
+  do_center_cell                 = 1
+
+  ;; nDelays                        = 401*2 
+  nDelays                        = 4001
+  delayDeltaSec                  = 15
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 66
-  ;; maxILAT                        = 88
-  ;; binILAT                        = 3.0
+  ;;IMF condition stuff
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -88
-  ;; maxILAT                        = -66
-  ;; binILAT                        = 3.0
+  ;; ;;For Dawn/dusk stuff
+  ;; clockStr                       = ['dawnward','duskward']
+  ;; byMin                          = 5
+  ;; do_abs_byMin                   = 1
+  ;; bzMin                          = 1
+  ;; bzMax                          = -1
+
+  ;; ;;For bzNorth/South stuff
+  clockStr                       = ['bzNorth','bzSouth']
+  byMax                          = 5
+  do_abs_byMax                   = 1
+  bzMin                          = 5
+  do_abs_bzMin                   = 1
+
+
+  ;;DB stuff
+  do_despun                      = 1
+  altitudeRange                  = [1000,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Customize 'em!
   ;; hemi                           = 'NORTH'
-  ;; minILAT                        = [ 62, 62, 62, 62]
-  ;; maxILAT                        = [ 78, 78, 78, 78]
-  binILAT                        = 3.0
-  minMLT                         = [ 8.25, 12.25,  8.25, 12.25]
-  maxMLT                         = [11.75, 15.75, 11.75, 15.75]
-  ;; binMLT                         = 1.0
+  ;; minILAT                        = [ 65, 65, 65, 65, 65, 65]
+  ;; maxILAT                        = [ 77, 77, 77, 77, 77, 77]
+  ;; centerMLT__dawn                = 12.0
+  ;; centerMLT__dusk                = 12.0-0.75
 
   ;;Looks like Southern Hemi cells split around 11.25, and the important stuff is below -71 
   hemi                           = 'SOUTH'
-  minILAT                        = -[ 78, 78, 78, 78]
-  maxILAT                        = -[ 62, 62, 62, 62]
-  ;; minILAT                        = [-83,-83,-83,-83]
-  ;; maxILAT                        = [-71,-71,-71,-71]
-  ;; binILAT                        = 3.0
-  ;; minMLT                         = [ 7.0, 11.75,  7.0, 11.75]
-  ;; maxMLT                         = [11.0, 15.75, 11.0, 15.75]
-  ;; binMLT                         = 1.0
+  minILAT                        = -[ 81, 81, 81, 81]
+  maxILAT                        = -[ 69, 69, 69, 69]
+  centerMLT__dawn                = 12.0-0.75
+  centerMLT__dusk                = 12.0-0.75
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  ;; minMLT                         = [8.5,12.0]
-  ;; maxMLT                         = [12.0,15.5]
-  ;; binMLT                         = 0.5
-  ;; shiftMLT                       = 0.25
+  binMLT                         = 0.75
+  nBinsMLT                       = 4.0
 
-  clockStr                       = ['dawnward','duskward']
-  cell                           = ['Dawn cell','Dusk cell']
-  ;; shiftMLT                       = 0.5
+  cell                           = ['Dawn cell','Dusk cell','Center cell']
+  minMLT                         = [ centerMLT__dawn-binMLT*0.5-nBinsMLT*binMLT, centerMLT__dawn+binMLT*0.5                , $ ;;dawnward IMF
+                                     centerMLT__dawn-nBinsMLT*binMLT*0.5       ,                                             $ ;;;(center cell)
+                                     centerMLT__dusk-binMLT*0.5-nBinsMLT*binMLT, centerMLT__dusk+binMLT*0.5                , $ ;;duskward IMF
+                                     centerMLT__dusk-nBinsMLT*binMLT*0.5                                                   ]   ;;;(center cell)
 
-  ;;IMF condition stuff
-  ;; stableIMF                      = 1
-  byMin                          = 5
-  do_abs_bymin                   = 1
-  ;; bzMin                          = 0
-  ;; bzMax                          = -1
+  maxMLT                         = [ centerMLT__dawn-binMLT*0.5                , centerMLT__dawn+binMLT*0.5+nBinsMLT*binMLT, $ ;;dawnward IMF
+                                     centerMLT__dawn+nBinsMLT*binMLT*0.5       ,                                             $ ;;;(center cell)
+                                     centerMLT__dusk-binMLT*0.5                , centerMLT__dusk+binMLT*0.5+nBinsMLT*binMLT, $ ;;duskward IMF
+                                     centerMLT__dusk+nBinsMLT*binMLT*0.5                                                   ]   ;;;(center cell)
 
-  ;;DB stuff
-  do_despun                      = 1
 
-  altitudeRange                  = [1000,4175]
-
-  ;; nDelays                        = 401*2 
-  nDelays                        = 4001 
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*15
+  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot stuff
@@ -74,15 +75,16 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
   ;; fastloc_i_list_list            = LIST()
   title_list                     = LIST()
   nEvArrList                     = LIST()
+  nCells                         = N_ELEMENTS(cell)
   ;;loop over clockstrings, then cells
   FOR clock_i=0,N_ELEMENTS(clockStr)-1 DO BEGIN
-     FOR mlt_i=0,N_ELEMENTS(cell)-1 DO BEGIN
+     FOR mlt_i=0,N_ELEMENTS(cell)-2+KEYWORD_SET(do_center_cell) DO BEGIN
         
         SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
-                                   MINMLT=minMLT[mlt_i+2*clock_i],MAXMLT=maxMLT[mlt_i+2*clock_i], $
+                                   MINMLT=minMLT[mlt_i+nCells*clock_i],MAXMLT=maxMLT[mlt_i+nCells*clock_i], $
                                    BINMLT=binMLT, $
                                    SHIFTMLT=shiftMLT, $
-                                   MINILAT=minILAT[mlt_i+2*clock_i],MAXILAT=maxILAT[mlt_i+2*clock_i],BINILAT=binILAT, $
+                                   MINILAT=minILAT[mlt_i+nCells*clock_i],MAXILAT=maxILAT[mlt_i+nCells*clock_i],BINILAT=binILAT, $
                                    MIN_MAGCURRENT=minMC, $
                                    MAX_NEGMAGCURRENT=maxNegMC, $
                                    HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
@@ -129,11 +131,11 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
                                                                                 ALTITUDERANGE=altitudeRange, $
                                                                                 CHARERANGE=charERange, $
                                                                                 POYNTRANGE=poyntRange, $
-                                                                                MINMLT=minMLT[mlt_i+2*clock_i],MAXMLT=maxMLT[mlt_i+2*clock_i], $
+                                                                                MINMLT=minMLT[mlt_i+nCells*clock_i],MAXMLT=maxMLT[mlt_i+nCells*clock_i], $
                                                                                 BINM=binMLT, $
                                                                                 SHIFTM=shiftMLT, $
-                                                                                MINILAT=minILAT[mlt_i+2*clock_i], $
-                                                                                MAXILAT=maxILAT[mlt_i+2*clock_i], $
+                                                                                MINILAT=minILAT[mlt_i+nCells*clock_i], $
+                                                                                MAXILAT=maxILAT[mlt_i+nCells*clock_i], $
                                                                                 BINI=binILAT, $
                                                                                 DO_LSHELL=do_lshell, $
                                                                                 MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -169,11 +171,11 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
                                       DO_ABS_BYMAX=abs_byMax, $
                                       DO_ABS_BZMIN=abs_bzMin, $
                                       DO_ABS_BZMAX=abs_bzMax, $
-                                      MINMLT=minMLT[mlt_i+2*clock_i],MAXMLT=maxMLT[mlt_i+2*clock_i], $
+                                      MINMLT=minMLT[mlt_i+nCells*clock_i],MAXMLT=maxMLT[mlt_i+nCells*clock_i], $
                                       BINM=binMLT, $
                                       SHIFTM=shiftMLT, $
-                                      MINILAT=minILAT[mlt_i+2*clock_i], $
-                                      MAXILAT=maxILAT[mlt_i+2*clock_i], $
+                                      MINILAT=minILAT[mlt_i+nCells*clock_i], $
+                                      MAXILAT=maxILAT[mlt_i+nCells*clock_i], $
                                       BINI=binILAT, $
                                       SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                       HEMI=hemi, $
@@ -194,7 +196,7 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
         
         ;; plot_i_list_list.add,plot_i_list
         ;; fastLocInterped_i_list_list.add,fastLocInterped_i_list
-        title_list.add,clockStr[clock_i]+'--minM_maxM__'+STRCOMPRESS(minMLT[mlt_i+2*clock_i],/REMOVE_ALL)+'_'+STRCOMPRESS(maxMLT[mlt_i+2*clock_i],/REMOVE_ALL)
+        title_list.add,clockStr[clock_i]+'--minM_maxM__'+STRCOMPRESS(minMLT[mlt_i+nCells*clock_i],/REMOVE_ALL)+'_'+STRCOMPRESS(maxMLT[mlt_i+nCells*clock_i],/REMOVE_ALL)
         
         nEvArr=!NULL
         FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN 
@@ -210,9 +212,9 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
   yRangeMin = MIN(LIST_TO_1DARRAY(nEvArrList,/SKIP_NEG1_ELEMENTS,/WARN),MAX=yRangeMax)
 
   WINDOW_CUSTOM_SETUP,NPLOTCOLUMNS=N_ELEMENTS(clockStr), $
-                      NPLOTROWS=N_ELEMENTS(cell), $
+                      NPLOTROWS=N_ELEMENTS(cell)-1+KEYWORD_SET(do_center_cell), $
                       COLUMN_NAMES=clockStr, $
-                      ROW_NAMES=cell, $
+                      ROW_NAMES=cell[0:1+KEYWORD_SET(do_center_cell)], $
                       SPACE_HORIZ_BETWEEN_COLS=0.08, $
                       SPACE_VERT_BETWEEN_ROWS=0.04, $
                       SPACE_FOR_ROW_NAMES=0.05, $
@@ -231,7 +233,9 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
   ENDFOR
 
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
-  outPlot = outPlot_pref + hemi + "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL)+"--"+omni_paramStr+'.png'
+  delayStr = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
+
+  outPlot = outPlot_pref + hemi + delayStr+"--"+omni_paramStr+'.png'
   PRINT,'saving ' + outPlot
   window.save,plotDir+outPlot
 
@@ -251,7 +255,7 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
 
   lags          = INDGEN(nDelays-2)-(nDelays-2)/2
   dawnward_ccor = C_CORRELATE(nEvArrList[0],nEvArrList[1],lags)
-  duskward_ccor = C_CORRELATE(nEvArrList[2],nEvArrList[3],lags)
+  duskward_ccor = C_CORRELATE(nEvArrList[2+KEYWORD_SET(do_center_cell)],nEvArrList[3+KEYWORD_SET(do_center_cell)],lags)
 
      plot  = PLOT(lags,dawnward_ccor, $
                   XRANGE=[lags[0],lags[-1]], $
@@ -266,16 +270,18 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
                   POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
 
 
-     outPlot_CC= crossCorr_pref + +hemi+"--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL)+"--"+omni_paramStr+'.png'
+     outPlot_CC= crossCorr_pref +hemi+delayStr+"--"+omni_paramStr+'.png'
      PRINT,'saving ' + outPlot_CC
      window_cc.save,plotDir+outPlot_CC
 
-     outFile_dat = crossCorr_pref+hemi+"--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL)+"--"+omni_paramStr+'.sav'
+     outFile_dat = crossCorr_pref+hemi+delayStr+"--"+omni_paramStr+'.sav'
 
-     save,nEvArrList,delayArr,nDelays, $
+     save,nEvArrList,delayArr,nDelays,delayDeltaSec, $
           title_list, $
           lags,duskward_ccor,dawnward_ccor, $
-          omni_paramStr,clockStr,cell, $
+          omni_paramStr,clockStr, $
+          cell, $
+          do_center_cell, $
           hemi,minMLT,maxMLT,minILAT,maxILAT, $
           FILENAME=outFile_dir+outFile_dat
 

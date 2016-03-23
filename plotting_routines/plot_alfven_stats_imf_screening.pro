@@ -710,16 +710,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      ;;Now plots
-     PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,TEMPFILE=tempFile, $
-                            SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
-                            JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                            PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
-                            PARAMSTR=paramString, DEL_PS=del_PS, $
-                            HEMI=hemi, $
-                            CLOCKSTR=clockStr, $
-                            NO_COLORBAR=no_colorbar, $
-                            EPS_OUTPUT=eps_output, $
-                            _EXTRA = e
+     IF ~KEYWORD_SET(justData) THEN BEGIN
+        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,TEMPFILE=tempFile, $
+                               SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
+                               JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                               PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
+                               PARAMSTR=paramString, DEL_PS=del_PS, $
+                               HEMI=hemi, $
+                               CLOCKSTR=clockStr, $
+                               NO_COLORBAR=no_colorbar, $
+                               EPS_OUTPUT=eps_output, $
+                               _EXTRA = e
+     ENDIF
 
      IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
         CLOSE,lun 
