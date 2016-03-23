@@ -1,5 +1,5 @@
 ;2016/03/21 Can you show me what it's all about?
-PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
+PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__BZ_NORTHSOUTH__ON_DAYSIDE
 
   nonstorm                       = 0
 
@@ -17,10 +17,10 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Customize 'em!
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   ;; minILAT                        = [ 62, 62, 62, 62]
   ;; maxILAT                        = [ 78, 78, 78, 78]
-  binILAT                        = 3.0
+  ;; binILAT                        = 3.0
   minMLT                         = [ 8.25, 12.25,  8.25, 12.25]
   maxMLT                         = [11.75, 15.75, 11.75, 15.75]
   ;; binMLT                         = 1.0
@@ -43,16 +43,16 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
   ;; binMLT                         = 0.5
   ;; shiftMLT                       = 0.25
 
-  clockStr                       = ['dawnward','duskward']
+  clockStr                       = ['bzNorth','bzSouth']
   cell                           = ['Dawn cell','Dusk cell']
   ;; shiftMLT                       = 0.5
 
   ;;IMF condition stuff
   ;; stableIMF                      = 1
-  byMin                          = 5
-  do_abs_bymin                   = 1
-  ;; bzMin                          = 0
-  ;; bzMax                          = -1
+  byMax                          = 5
+  do_abs_bymax                   = 1
+  bzMin                          = 5
+  do_abs_bzMin                   = 1
 
   ;;DB stuff
   do_despun                      = 1
@@ -268,18 +268,18 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
                       /MAKE_NEW
 
   lags          = INDGEN(nDelays-2)-(nDelays-2)/2
-  dawnward_ccor = C_CORRELATE(nEvArrList[0],nEvArrList[1],lags)
-  duskward_ccor = C_CORRELATE(nEvArrList[2],nEvArrList[3],lags)
+  bzNorth_ccor = C_CORRELATE(nEvArrList[0],nEvArrList[1],lags)
+  bzSouth_ccor = C_CORRELATE(nEvArrList[2],nEvArrList[3],lags)
 
-     plot  = PLOT(lags,dawnward_ccor, $
+     plot  = PLOT(lags,bzNorth_ccor, $
                   XRANGE=[lags[0],lags[-1]], $
-                  YRANGE=[MIN([dawnward_ccor,duskward_ccor]),MAX([dawnward_ccor,duskward_ccor])], $
+                  YRANGE=[MIN([bzNorth_ccor,bzSouth_ccor]),MAX([bzNorth_ccor,bzSouth_ccor])], $
                   CURRENT=window_cc, $
                   POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
   
-     plot  = PLOT(lags,duskward_ccor, $
+     plot  = PLOT(lags,bzSouth_ccor, $
                   XRANGE=[lags[0],lags[-1]], $
-                  YRANGE=[MIN([dawnward_ccor,duskward_ccor]),MAX([dawnward_ccor,duskward_ccor])], $
+                  YRANGE=[MIN([bzNorth_ccor,bzSouth_ccor]),MAX([bzNorth_ccor,bzSouth_ccor])], $
                   CURRENT=window_cc, $
                   POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
 
@@ -293,7 +293,7 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE
 
      save,nEvArrList,delayArr,nDelays, $
           title_list, $
-          lags,duskward_ccor,dawnward_ccor, $
+          lags,bzSouth_ccor,bzNorth_ccor, $
           omni_paramStr,clockStr,cell, $
           hemi,minMLT,maxMLT,minILAT,maxILAT, $
           FILENAME=outFile_dir+outFile_dat
