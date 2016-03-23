@@ -16,18 +16,18 @@ PRO JOURNAL__20160323__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE__ADJ_BASE
   ;;IMF condition stuff
 
   ;; ;;For Dawn/dusk stuff
-  ;; clockStr                       = ['dawnward','duskward']
-  ;; byMin                          = 5
-  ;; do_abs_byMin                   = 1
+  clockStr                       = ['dawnward','duskward']
+  byMin                          = 5
+  do_abs_byMin                   = 1
+  bzMax                          = -1
   ;; bzMin                          = 1
-  ;; bzMax                          = -1
 
   ;; ;;For bzNorth/South stuff
-  clockStr                       = ['bzNorth','bzSouth']
-  byMax                          = 5
-  do_abs_byMax                   = 1
-  bzMin                          = 5
-  do_abs_bzMin                   = 1
+  ;; clockStr                       = ['bzNorth','bzSouth']
+  ;; byMax                          = 5
+  ;; do_abs_byMax                   = 1
+  ;; bzMin                          = 5
+  ;; do_abs_bzMin                   = 1
 
 
   ;;DB stuff
@@ -44,8 +44,8 @@ PRO JOURNAL__20160323__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE__ADJ_BASE
 
   ;;Looks like Southern Hemi cells split around 11.25, and the important stuff is below -71 
   hemi                           = 'SOUTH'
-  minILAT                        = -[ 81, 81, 81, 81]
-  maxILAT                        = -[ 69, 69, 69, 69]
+  minILAT                        = -[ 81, 81, 81, 81, 81, 81]
+  maxILAT                        = -[ 69, 69, 69, 69, 69, 69]
   centerMLT__dawn                = 12.0-0.75
   centerMLT__dusk                = 12.0-0.75
 
