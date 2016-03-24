@@ -1,22 +1,21 @@
 ;2016/03/24 Improved the limits based on the previous plots
-PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWNDUSK__LOOP_OVER_DELAYS__FIXED_LIMS
+PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__LOGAVG__DAWNDUSK__LOOP_OVER_DELAYS__FIXED_LIMS
 
   nonstorm                       = 0
   justData                       = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 61
-  ;; maxILAT                        = 85
-  ;; ;; binILAT                        = 4.0        ;2016/03/23
-  ;; binILAT                        = 2.0        ;2016/03/24
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -61
-  binILAT                        = 4.0        ;2016/03/23
+  hemi                           = 'NORTH'
+  minILAT                        = 61
+  maxILAT                        = 85
+  ;; binILAT                        = 4.0        ;2016/03/23
   binILAT                        = 2.0        ;2016/03/24
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -61
+  ;; binILAT                        = 4.0        ;2016/03/23
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -24,6 +23,7 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   ;; shiftMLT                       = 0.375       ;2016/03/23
 
   binMLT                         = 1.0       ;2016/03/24
+
   shiftMLT                       = 0.5       ;2016/03/24
 
   ;;IMF condition stuff
@@ -41,7 +41,7 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   divide_by_width_x              = 1
 
   ;;Delay stuff
-  nDelays                        = 61
+  nDelays                        = 201
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*60
   ;; delayArr                       = 15*60
   
@@ -95,9 +95,9 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
         BZMAX=bzMax, $
         BZMIN=bzMin, $
         SMOOTHWINDOW=smoothWindow, $
-        ;; /LOGAVGPLOT, $
+        /LOGAVGPLOT, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
-        /DO_TIMEAVG_FLUXQUANTITIES, $
+        ;; /DO_TIMEAVG_FLUXQUANTITIES, $
         /PROBOCCURRENCEPLOT, $
         LOGPROBOCCURRENCE=logProbOccurrence, $
         PROBOCCURRENCERANGE=probOccurrenceRange, $
@@ -115,7 +115,7 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
         LOGIFPLOT=logIFPlot, $
         /CB_FORCE_OOBHIGH, $
         /CB_FORCE_OOBLOW, $
-        COMBINE_PLOTS=~KEYWORD_SET(justData), $
+        /COMBINE_PLOTS=~KEYWORD_SET(justData), $
         /SAVE_COMBINED_WINDOW, $
         /COMBINED_TO_BUFFER
 
