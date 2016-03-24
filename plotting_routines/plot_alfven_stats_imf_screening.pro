@@ -698,20 +698,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ;; ENDIF
 
      IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
-        SAVE_ALFVENDB_TEMPDATA,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
-                               MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
-                               BINM=binM, $
-                               SHIFTM=shiftM, $
-                               BINI=binI, $
-                               DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
-                               MINL=minL,MAXL=maxL,BINL=binL,$
-                               RAWDIR=rawDir,PARAMSTR=paramString,$
-                               CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg,STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi,TEMPFILE=tempFile
+        SAVE_ALFVENDB_TEMPDATA, $
+           H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
+           MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
+           BINM=binM, $
+           SHIFTM=shiftM, $
+           BINI=binI, $
+           DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
+           MINL=minL,MAXL=maxL,BINL=binL,$
+           RAWDIR=rawDir,PARAMSTR=paramString,$
+           CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg, $
+           STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi, $
+           OUT_TEMPFILE=out_tempFile
      ENDIF
 
      ;;Now plots
      IF ~KEYWORD_SET(justData) THEN BEGIN
-        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,TEMPFILE=tempFile, $
+        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr, $
+                               TEMPFILE=out_tempFile, $
                                SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
                                JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
@@ -743,7 +747,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
                              PARAMSTR=paramString,PLOTDIR=plotDir
 
-     tempFile_list.add,tempFile
+     tempFile_list.add,out_tempFile
   ENDFOR
 
   out_tempFile_list      = tempFile_list
