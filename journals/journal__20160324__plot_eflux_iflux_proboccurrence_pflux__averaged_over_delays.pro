@@ -2,6 +2,8 @@ PRO JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
    HEMI=hemi, $
    CLOCKSTR=clockStr, $
    NDELAYS=nDelays, $
+   AVGTYPE=avgType, $
+   IMFCONDSTR=IMFCondStr, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
    OUT_PLOTDIR=out_plotDir
 
@@ -11,6 +13,8 @@ PRO JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   
   ;; clockStr            = 'duskward'
   IF ~KEYWORD_SET(clockStr) THEN clockStr = 'dawnward'
+
+  IF ~KEYWORD_SET(avgType) THEN avgType   = 'logAvg'
 
   date                = '20160324'
   date_alt            = 'Mar_24_16'
@@ -25,9 +29,9 @@ PRO JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   delayStr            = STRING(FORMAT='("__",F0.2,"mindelay")',delayArr/60.) 
 
 
-  paramPref           = 'polarplots_' + date_alt+'--' + hemi + '--despun--logAvg--maskMin5'
+  paramPref           = 'polarplots_' + date_alt+'--' + hemi + '--despun--'+avgType+'--maskMin5'
   omniPref            = '--OMNI--GSM--'+clockStr+'__0stable'
-  IMFCondStr          = '__byMin5.0__bzMax-1.0'
+  IMFCondStr          = KEYWORD_SET(IMFCondStr) ? IMFCondStr : '__ABS_byMin5.0__bzMax-1.0'
   avgString           = STRING(FORMAT='("__averaged_over_",F0.2,"-",F0.2,"minDelays")',delayArr[0]/60.,delayArr[-1]/60.)
 
   inFile              = paramPref + bonusSuff + omniPref + avgString + IMFCondStr + '.dat'

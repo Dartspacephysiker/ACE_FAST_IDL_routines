@@ -1,10 +1,17 @@
-PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX,HEMI=hemi,CLOCKSTR=clockStr,NDELAYS=nDelays
+PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
+   HEMI=hemi, $
+   CLOCKSTR=clockStr, $
+   NDELAYS=nDelays, $
+   AVGTYPE=avgType, $
+   IMFCONDSTR=IMFCondStr
 
   ;; hemi                = 'SOUTH'
   IF ~KEYWORD_SET(hemi) THEN hemi = 'NORTH'
   
   ;; clockStr            = 'duskward'
   IF ~KEYWORD_SET(clockStr) THEN clockStr = 'dawnward'
+
+  IF ~KEYWORD_SET(avgType) THEN avgType   = 'logAvg'
 
   date                = '20160324'
   date_alt            = 'Mar_24_16'
@@ -26,9 +33,9 @@ PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX,HEM
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin10'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin3.0__bzMax-1.0--'
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin3.0__bzMax-3.0--'
   ;; paramStr            = 'Mar_4_16--'+hemi+'--despun--logAvg--maskMin5'+bonusSuff+'--OMNI--GSM--duskward__0stable'+delayStr + '__byMin6.0--'
-  paramPref           = 'polarplots_' + date_alt+'--' + hemi + '--despun--logAvg--maskMin5'
+  paramPref           = 'polarplots_' + date_alt+'--' + hemi + '--despun--' + avgType + '--maskMin5'
   omniPref            = '--OMNI--GSM--'+clockStr+'__0stable'
-  IMFCondStr          = '__byMin5.0__bzMax-1.0.dat'
+  IMFCondStr          = KEYWORD_SET(IMFCondStr) ? IMFCondStr : '__ABS_byMin5.0__bzMax-1.0'
   avgString           = STRING(FORMAT='("__averaged_over_",F0.2,"-",F0.2,"minDelays")',delayArr[0]/60.,delayArr[-1]/60.)
 
   outFile             = paramPref + bonusSuff + omniPref + avgString + IMFCondStr

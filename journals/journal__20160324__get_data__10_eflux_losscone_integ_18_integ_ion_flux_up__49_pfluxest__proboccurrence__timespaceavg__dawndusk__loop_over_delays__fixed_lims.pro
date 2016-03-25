@@ -15,7 +15,7 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   hemi                           = 'SOUTH'
   minILAT                        = -85
   maxILAT                        = -61
-  binILAT                        = 4.0        ;2016/03/23
+  ;; binILAT                        = 4.0        ;2016/03/23
   binILAT                        = 2.0        ;2016/03/24
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
