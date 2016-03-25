@@ -3,7 +3,9 @@ PRO JOURNAL__20160324__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   nDelArr              = [31,61]
   hemiArr              = ['NORTH','SOUTH']
   clockStrArr          = ['dawnward','duskward']
-  avgTypes             = ['avg','logAvg']
+  ;; avgTypes             = ['avg']
+  ;; avgTypes             = ['avg','logAvg']
+  avgTypes             = ['logAvg']
   IMFCondStrArr        = ['__ABS_byMin5.0__bzMax-1.0','__ABS_byMin5.0__bzMin1.0']
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'

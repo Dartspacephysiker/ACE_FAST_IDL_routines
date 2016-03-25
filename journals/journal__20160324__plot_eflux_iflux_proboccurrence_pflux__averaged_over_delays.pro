@@ -14,7 +14,7 @@ PRO JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   ;; clockStr            = 'duskward'
   IF ~KEYWORD_SET(clockStr) THEN clockStr = 'dawnward'
 
-  IF ~KEYWORD_SET(avgType) THEN avgType   = 'logAvg'
+  ;; IF ~KEYWORD_SET(avgType) THEN avgType   = 'logAvg'
 
   date                = '20160325'
   date_alt            = 'Mar_25_16'

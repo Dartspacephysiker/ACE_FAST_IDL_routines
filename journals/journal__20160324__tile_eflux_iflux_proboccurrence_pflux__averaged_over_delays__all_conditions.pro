@@ -8,21 +8,22 @@ PRO JOURNAL__20160324__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   date                = '20160325'
   date_alt            = 'Mar_25_16'
 
-  dataNamesTimeSpace  = ['timeAvgd_spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
-                         'timeAvgd_spatialAvg_NoNegs--Logiflux_INTEG_UP', $
+  dataNamesTimeSpace  = ['timeAvgd_spatialAvg_NoNegs--eNumFl_EFLUX_LOSSCONE_INTEG', $
+                         'timeAvgd_spatialAvg_iflux_INTEG_UP', $
                          'probOccurrence', $
-                         'timeAvgd_NoNegs--LogpFlux']
+                         'timeAvgd_pFlux']
 
   dataNamesLogAvg     = ['spatialAvg_NoNegs--eNumFl_EFLUX_LOSSCONE_INTEG', $
                          'pFlux', $
                          'spatialAvg_iflux_INTEG_UP', $
-                         'probOccurrence', $
-                         'nEvents']
+                         'probOccurrence'];, $
+;                         'nEvents']
 
 
   nDelArr        = [31,61]
   hemiArr        = ['NORTH','SOUTH']
-  avgTypes       = ['avg','logAvg']
+  ;; avgTypes       = ['avg','logAvg']
+  avgTypes       = ['logAvg']
 
   ;;Set up the names
   omniPref            = '--OMNI--GSM--duskward__0stable'
@@ -38,11 +39,14 @@ PRO JOURNAL__20160324__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
 
   FOR iAvgType=0,N_ELEMENTS(avgTypes)-1 DO BEGIN
 
-     IF avgTypes[iAvgType] EQ 'avg' THEN BEGIN
-        dataNames = dataNamesTimeSpace 
-     ENDIF ELSE BEGIN
-        dataNames = dataNamesLogAvg
-     ENDELSE
+     CASE STRUPCASE(avgTypes[iAvgType]) OF
+        'AVG': BEGIN
+           dataNames = dataNamesTimeSpace 
+        END
+        'LOGAVG': BEGIN
+           dataNames = dataNamesLogAvg
+        END
+     ENDCASE
 
      FOR iCond=0,N_ELEMENTS(IMFCondStrArr)-1 DO BEGIN
         FOR iHemi=0,N_ELEMENTS(hemiArr)-1 DO BEGIN
