@@ -13,8 +13,8 @@ PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
 
   IF ~KEYWORD_SET(avgType) THEN avgType   = 'logAvg'
 
-  date                = '20160324'
-  date_alt            = 'Mar_24_16'
+  date                = '20160325'
+  date_alt            = 'Mar_25_16'
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
@@ -43,7 +43,7 @@ PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
   paramStrArr         = paramPref + bonusSuff + omniPref + delayStr + IMFCondStr
 
   ;;get N plots in these files, initialize average
-  RESTORE,fileDir+paramStrArr[0]
+  RESTORE,fileDir+paramStrArr[0]+'.dat'
 
   nPlots              = N_ELEMENTS(h2dStrArr)
   FOR plot_i=0,nPlots-1 DO BEGIN
@@ -66,7 +66,7 @@ PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
 
   ;;Now combine
   FOR i=1,N_ELEMENTS(delayArr)-1 DO BEGIN
-     RESTORE,fileDir+paramStrArr[i]
+     RESTORE,fileDir+paramStrArr[i]+'.dat'
 
      FOR plot_i=0,nPlots-1 DO BEGIN
         notMasked_i   = WHERE(h2dStrarr[4].data LT 250,COMPLEMENT=masked_i)
@@ -89,8 +89,8 @@ PRO JOURNAL__20160324__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
   h2dstrarr[1].lim[1] = 0.5
   h2dstrarr[2].lim[1] = 1e8
 
-  PRINT,'Saving averaged h2ds to ' + outFile + '...'
-  SAVE_ALFVENDB_TEMPDATA,TEMPFILE=outDir+outFile, $
+  PRINT,'Saving averaged h2ds to ' + outFile + '.dat...'
+  SAVE_ALFVENDB_TEMPDATA,TEMPFILE=outDir+outFile+'.dat', $
                          H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
                          MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
                          BINM=binM, $

@@ -3,7 +3,7 @@ PRO JOURNAL__20160324__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   nDelArr              = [31,61]
   hemiArr              = ['NORTH','SOUTH']
   clockStrArr          = ['dawnward','duskward']
-  avgTypes             = ['logAvg', 'avg']
+  avgTypes             = ['avg','logAvg']
   IMFCondStrArr        = ['__ABS_byMin5.0__bzMax-1.0','__ABS_byMin5.0__bzMin1.0']
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
@@ -13,26 +13,28 @@ PRO JOURNAL__20160324__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   save_combined_window = 1
   combined_to_buffer   = 1
 
-  FOR iCond=0,N_ELEMENTS(IMFCondStrArr)-1 DO BEGIN
-     FOR iHemi=0,N_ELEMENTS(hemiArr)-1 DO BEGIN
-        FOR iDel=0,N_ELEMENTS(nDelArr)-1 DO BEGIN
+  FOR iAvgType=0,N_ELEMENTS(avgTypes)-1 DO BEGIN
+     FOR iCond=0,N_ELEMENTS(IMFCondStrArr)-1 DO BEGIN
+        FOR iHemi=0,N_ELEMENTS(hemiArr)-1 DO BEGIN
+           FOR iDel=0,N_ELEMENTS(nDelArr)-1 DO BEGIN
 
-           fileArr = !NULL
-           FOR iClock=0,N_ELEMENTS(clockStrArr)-1 DO BEGIN
+              fileArr = !NULL
+              FOR iClock=0,N_ELEMENTS(clockStrArr)-1 DO BEGIN
 
-              ;;First make the plots
-              JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELAYS, $
-                 HEMI=hemiArr[iHemi], $
-                 CLOCKSTR=clockStrArr[iClock], $
-                 NDELAYS=nDelArr[iDel], $
-                 AVGTYPE=avgTypes[iAvgType], $
-                 IMFCONDSTR=IMFCondStrArr[iCond], $
-                 OUT_PLOTNAMEPREF=out_plotNamePref, $
-                 OUT_PLOTDIR=plotDir
-              
-              IF KEYWORD_SET(combine_plots) THEN fileArr = [fileArr,out_plotNamePref+'.dat']
+                 ;;First make the plots
+                 JOURNAL__20160324__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELAYS, $
+                    HEMI=hemiArr[iHemi], $
+                    CLOCKSTR=clockStrArr[iClock], $
+                    NDELAYS=nDelArr[iDel], $
+                    AVGTYPE=avgTypes[iAvgType], $
+                    IMFCONDSTR=IMFCondStrArr[iCond], $
+                    OUT_PLOTNAMEPREF=out_plotNamePref, $
+                    OUT_PLOTDIR=plotDir
+                 
+                 IF KEYWORD_SET(combine_plots) THEN fileArr = [fileArr,out_plotNamePref+'.dat']
+              ENDFOR
+              fileList.add,fileArr
            ENDFOR
-           fileList.add,fileArr
         ENDFOR
      ENDFOR
   ENDFOR

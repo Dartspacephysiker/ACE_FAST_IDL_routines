@@ -30,8 +30,8 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   ;; stableIMF                      = 20
   byMin                          = 5
   do_abs_bymin                   = 1
-  bzMax                          = -1
-  ;; bzMin                          = -1
+  ;; bzMax                          = -1
+  bzMin                          = 1
 
   ;;DB stuff
   do_despun                      = 1
@@ -41,7 +41,7 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   divide_by_width_x              = 1
 
   ;;Delay stuff
-  nDelays                        = 201
+  nDelays                        = 61
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*60
   ;; delayArr                       = 15*60
   
