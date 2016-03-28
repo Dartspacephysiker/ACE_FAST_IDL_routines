@@ -42,7 +42,9 @@ PRO JOURNAL__20160324__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
 
   ;;Delay stuff
   nDelays                        = 61
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*60
+  delayDeltaSec                  = 60
+
+  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = 15*60
   
   ;; charERange                     = [4,300]

@@ -14,9 +14,9 @@ PRO JOURNAL__20160324__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
                          'timeAvgd_pFlux']
 
   dataNamesLogAvg     = ['spatialAvg_NoNegs--eNumFl_EFLUX_LOSSCONE_INTEG', $
-                         'pFlux', $
                          'spatialAvg_iflux_INTEG_UP', $
-                         'probOccurrence'];, $
+                         'probOccurrence', $
+                         'pFlux'];, $
 ;                         'nEvents']
 
 
