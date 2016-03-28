@@ -687,8 +687,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      h2dStrArr                     = SHIFT(h2dStrArr,-1-(nPlots))
      IF keepMe THEN BEGIN 
-        dataNameArr                = SHIFT(dataNameArr,-2) 
-        dataRawPtrArr              = SHIFT(dataRawPtrArr,-2) 
+        dataNameArr                = SHIFT(dataNameArr,-1-(nPlots)) 
+        dataRawPtrArr              = SHIFT(dataRawPtrArr,-1-(nPlots)) 
      ENDIF
 
      ;; h2dStrArr_list[iList]         = SHIFT(h2dStrArr_List[iList],-1-(nPlots))
