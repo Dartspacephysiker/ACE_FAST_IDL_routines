@@ -117,7 +117,7 @@
 ;                    NEVENTPERORBPLOT  :  Plot of number of events per orbit.
 ;                    NEVENTPERORBRANGE :  Range for Neventperorbplot.
 ;                    LOGNEVENTPERORB   :  Log of Neventperorbplot (for comparison with Chaston et al. [2003])
-;                    DIVNEVBYAPPLICABLE:  Divide number of events in given bin by the number of orbits occurring 
+;                    DIVNEVBYTOTAL     :  Divide number of events in given bin by the number of orbits occurring 
 ;                                            during specified IMF conditions. (Default is to divide by total number of orbits 
 ;                                            pass through given bin for ANY IMF condition.)
 ;
@@ -261,7 +261,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                                    DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                                    DIVNEVBYTOTAL=divNEvByTotal, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
                                     PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                     PROBOCCURRENCERANGE=probOccurrenceRange, $
@@ -643,7 +643,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                            ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                            NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                           DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                           DIVNEVBYTOTAL=divNEvByTotal, $
                            NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
                            PROBOCCURRENCEPLOT=probOccurrencePlot, $
                            PROBOCCURRENCERANGE=probOccurrenceRange, $

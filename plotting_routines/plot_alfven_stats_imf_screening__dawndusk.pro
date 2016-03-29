@@ -71,7 +71,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
    ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-   DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+   DIVNEVBYTOTAL=divNEvByTotal, $
    NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
    PROBOCCURRENCEPLOT=probOccurrencePlot, $
    PROBOCCURRENCERANGE=probOccurrenceRange, $
@@ -174,7 +174,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NONSTORM=nonStorm, $
                                      RECOVERYPHASE=recoveryPhase, $
                                      MAINPHASE=mainPhase, $
-                                     NPLOTS=nPlots, $
                                      EPLOTS=ePlots, $
                                      EPLOTRANGE=ePlotRange, $                                       
                                      EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
@@ -197,11 +196,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
                                      CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                                      NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+                                     NPLOTS=nPlots, $
+                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                      ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                                     DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+                                     DIVNEVBYTOTAL=divNEvByTotal, $
                                      NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
                                      PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                      PROBOCCURRENCERANGE=probOccurrenceRange, $
@@ -224,7 +225,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
                                      DO_CHASTDB=do_chastDB, $
                                      DO_DESPUNDB=do_despunDB, $
-                                     NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                      SAVERAW=saveRaw, RAWDIR=rawDir, $
                                      JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
