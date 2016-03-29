@@ -6,17 +6,17 @@ PRO JOURNAL__20160328__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
-  binILAT                        = 4.0        ;2016/03/23
-  binILAT                        = 2.0        ;2016/03/24
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -61
-  ;; ;; binILAT                        = 4.0        ;2016/03/23
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 85
+  ;; ;;binILAT                        = 4.0        ;2016/03/23
   ;; binILAT                        = 2.0        ;2016/03/24
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -61
+  ;; binILAT                        = 4.0        ;2016/03/23
+  binILAT                        = 2.0        ;2016/03/24
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -30,8 +30,8 @@ PRO JOURNAL__20160328__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   ;; stableIMF                      = 20
   byMin                          = 5
   do_abs_bymin                   = 1
-  ;; bzMax                          = -1
-  bzMin                          = 1
+  ;; bzMax                          = 0
+  bzMin                          = 0
 
   ;;DB stuff
   do_despun                      = 1
@@ -41,8 +41,8 @@ PRO JOURNAL__20160328__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   divide_by_width_x              = 1
 
   ;;Delay stuff
-  nDelays                        = 241
-  delayDeltaSec                  = 15
+  nDelays                        = 121
+  delayDeltaSec                  = 30
 
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = 15*60
@@ -58,13 +58,13 @@ PRO JOURNAL__20160328__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   logProbOccurrence              = 1
 
   ;;49--pFluxEst
-  pPlotRange                     = [0,5e-1] ;for time-averaged
+  pPlotRange                     = [0,1] ;for time-averaged
   ;; pPlotRange                     = [1e-2,1e0] ;for time-averaged
   logPFPlot                      = 1
 
   ;; 10-EFLUX_LOSSCONE_INTEG
   eNumFlPlotType                = 'Eflux_Losscone_Integ'
-  eNumFlRange                   = [0,5e-1]
+  eNumFlRange                   = [0,1]
   ;; eNumFlRange                   = [10.^(-3.0),10.^(-1.0)]
   logENumFlPlot                 = 1
   noNegeNumFl                   = 1

@@ -7,7 +7,8 @@ PRO JOURNAL__20160328__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
    IMFCONDSTR=IMFCondStr, $
    PLOT_DATESTR=plot_dateStr, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
-   OUT_PLOTDIR=out_plotDir
+   OUT_PLOTDIR=out_plotDir, $
+   QUANTS_TO_PLOT=quants_to_plot
 
 
   ;; hemi                = 'SOUTH'
@@ -27,6 +28,8 @@ PRO JOURNAL__20160328__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   date                = '20160328'
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'
 
+  IF ~KEYWORD_SET(quants_to_plot)     THEN quants_to_plot     = [0,1,2,3]
+
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
   fileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
@@ -45,7 +48,7 @@ PRO JOURNAL__20160328__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
                     /MIDNIGHT, $
                     PLOTDIR=plotDir, $
                     PLOTNAMEPREF=paramPref+omniPref+avgString+IMFCondStr, $
-                    QUANTS_TO_PLOT=[0,1,2,3]
+                    QUANTS_TO_PLOT=quants_to_plot
                     
   out_plotNamePref    = paramPref+omniPref+avgString+IMFCondStr
   out_plotDir         = plotDir

@@ -79,31 +79,6 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      PRINTF,lun,"Not considering IMF anything!"
      restricted_and_interped_i_list         = LIST(final_i)
   ENDIF ELSE BEGIN
-     ;; phiChast = interp_mag_data(final_i,satellite,delay,lun, $
-     ;;                            DBTIMES=dbTimes, $
-     ;;                            FASTDBINTERP_I=FASTDBInterp_i, $
-     ;;                            FASTDBSATPROPPEDINTERPED_I=cdbSatProppedInterped_i, $
-     ;;                            MAG_UTC=mag_utc,PHICLOCK=phiClock, $
-     ;;                            DATADIR=dataDir, $
-     ;;                            SMOOTHWINDOW=smoothWindow, $
-     ;;                            BYMIN=byMin, $
-     ;;                            BZMIN=bzMin, $
-     ;;                            BYMAX=byMax, $
-     ;;                            BZMAX=bzMax, $
-     ;;                            DO_ABS_BYMIN=abs_byMin, $
-     ;;                            DO_ABS_BYMAX=abs_byMax, $
-     ;;                            DO_ABS_BZMIN=abs_bzMin, $
-     ;;                            DO_ABS_BZMAX=abs_bzMax, $
-     ;;                         OMNI_COORDS=omni_Coords)
-     
-     ;; phiImf_ii = check_imf_stability(clockStr,angleLim1,angleLim2, $
-     ;;                                 phiChast,cdbSatProppedInterped_i,stableIMF, $
-     ;;                                 mag_utc,phiClock,$
-     ;;                                 LUN=lun, $
-     ;;                                 BX_OVER_BYBZ=Bx_over_ByBz_Lim)
-     
-     ;; restricted_and_interped_i=FASTDBInterp_i[phiImf_ii]
-
      restricted_and_interped_i_list = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
                                                                                            CLOCKSTR=clockStr, $
                                                                                            ANGLELIM1=angleLim1, $
