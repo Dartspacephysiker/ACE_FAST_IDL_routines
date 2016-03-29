@@ -21,14 +21,17 @@ PRO JOURNAL__20160329__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Delay stuff
-  ;; nDelArr        = [121,241]
-  ;; delayDeltaSec  = 15
+
+  date_alt             = 'Mar_28_16'
+  nDelArr              = [121,241]
+  delayDeltaSec        = [15,15]
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
 
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = [30,30]
 
-  nDelArr              = [31,61]
-  delayDeltaSec        = [60,60]
+  ;; nDelArr              = [31,61]
+  ;; delayDeltaSec        = [60,60]
 
   ;; nDelArr              = [31,61,61,121]
   ;; delayDeltaSec        = [60,60,30,30]
@@ -40,8 +43,11 @@ PRO JOURNAL__20160329__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   ;; in_avgTypes    = ['avg','avg']
   ;; out_avgTypes   = ['avg','logAvg']
 
+  ;; in_avgTypes    = ['avg']
+  ;; out_avgTypes   = ['avg']
+
   in_avgTypes    = ['avg']
-  out_avgTypes   = ['avg']
+  out_avgTypes   = ['timeAvg']
 
   ;;Set up the names
   omniPref            = '--OMNI--GSM--duskward__0stable'
@@ -49,7 +55,7 @@ PRO JOURNAL__20160329__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   ;; IMFCondStr          = '__byMin5.0__bzMax-1.0'
-  IMFCondStrArr       = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
+  ;; IMFCondStrArr       = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''

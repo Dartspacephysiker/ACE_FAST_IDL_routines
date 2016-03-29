@@ -7,14 +7,14 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Delay stuff
-  ;; nDelArr              = [121,241]
-  ;; delayDeltaSec        = [15,15]
+  nDelArr              = [121,241]
+  delayDeltaSec        = [15,15]
   
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = [30,30]
 
-  nDelArr              = [31,61]
-  delayDeltaSec        = [60,60]
+  ;; nDelArr              = [31,61]
+  ;; delayDeltaSec        = [60,60]
 
   ;; nDelArr              = [31,61,61,121]
   ;; delayDeltaSec        = [60,60,30,30]
@@ -30,15 +30,20 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   ;; in_avgTypes             = ['avg']
   ;; out_avgTypes            = ['avg']
 
+  ;; in_avgTypes             = ['avg']
+  ;; out_avgTypes            = ['logAvg']
+
   in_avgTypes             = ['avg']
-  out_avgTypes            = ['logAvg']
+  out_avgTypes            = ['timeAvg']
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
+  ;; plot_dateStr         = 'Mar_29_16'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
-  IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
+  ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
 
-  plot_dateStr         = 'Mar_29_16'
+  plot_dateStr         = 'Mar_28_16'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
   fileList             = LIST()
