@@ -5,10 +5,10 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   save_combined_window = 1
   combined_to_buffer   = 1
 
-  ;; quants_to_plot       = [0,1,2,3,4,5]
-  quants_to_plot       = [0,1,2,3]
-  quants_to_plot       = [3]
-  ;; quants_to_plot       = [3,4]
+  quants_to_plot       = [0,1,2,3,4,5]
+  ;; quants_to_plot       = [0,1,2,3]
+  ;; quants_to_plot       = [3]
+  quants_to_plot       = [0,1,2,3,4,5]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Delay stuff
@@ -20,12 +20,14 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   nDelArr              = [31,61]
   delayDeltaSec        = [60,60]
+  delay_start          = -5
+  delay_stop           = 20
 
   ;; nDelArr              = [31,61,61,121]
   ;; delayDeltaSec        = [60,60,30,30]
 
   hemiArr              = ['NORTH','SOUTH']
-  ;; hemiArr              = ['NORTH']
+  hemiArr              = ['NORTH']
 
   clockStrArr          = ['dawnward','duskward']
 
@@ -48,6 +50,7 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;IMF Conds
   plot_dateStr         = 'Mar_29_16'
   IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
   fileList             = LIST()
@@ -66,6 +69,8 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
                     CLOCKSTR=clockStrArr[iClock], $
                     NDELAYS=nDelArr[iDel], $
                     DELAYDELTASEC=delayDeltaSec[iDel], $
+                    DELAY_START=delay_start, $
+                    DELAY_STOP=delay_stop, $
                     IN_AVGTYPE=in_avgTypes[iAvgType], $
                     OUT_AVGTYPE=out_avgTypes[iAvgType], $
                     IMFCONDSTR=IMFCondStrArr[iCond], $

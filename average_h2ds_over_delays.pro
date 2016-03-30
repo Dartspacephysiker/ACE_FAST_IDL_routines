@@ -4,6 +4,9 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
    CLOCKSTR=clockStr, $
    NDELAYS=nDelays, $
    DELAYDELTASEC=delayDeltaSec, $
+   DELAY_START=delay_start, $
+   DELAY_STOP=delay_stop, $
+   ;; DELAYARR=delayArr, $
    IN_AVGTYPE=in_avgType, $
    OUT_AVGTYPE=out_avgType, $
    LOGAVG_THESE_INDS=logAvg_these_inds, $
@@ -67,7 +70,12 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Now calculate
-  delayArr            = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  IF N_ELEMENTS(delay_start) GT 0 THEN BEGIN
+     delayArr = (INDGEN(FIX((delay_stop-delay_start)*60./delayDeltaSec)+1,/LONG)+delay_start)*delayDeltaSec
+  ENDIF ELSE BEGIN
+     delayArr = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  ENDELSE
+
   delayStr            = STRING(FORMAT='("__",F0.2,"mindelay")',delayArr/60.) 
   avgString           = GET_DELAY_AVG_STRING(in_avgType,delayArr,delayDeltaSec)
   out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec)

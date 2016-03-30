@@ -8,17 +8,20 @@ PRO JOURNAL__20160329__SCRIPT__TIME_AVERAGE_OVER_DELAYS__ADDITIONAL_PLOTS
 
   nDelArr              = [31,61]
   delayDeltaSec        = 60
+  delay_start          = -5
+  delay_stop           = 20
 
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = 30
 
   hemiArr              = ['NORTH','SOUTH']
-  ;; hemiArr              = ['NORTH']
+  hemiArr              = ['NORTH']
 
   clockStrArr          = ['dawnward','duskward']
 
   ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;What type of averaging?
@@ -30,7 +33,7 @@ PRO JOURNAL__20160329__SCRIPT__TIME_AVERAGE_OVER_DELAYS__ADDITIONAL_PLOTS
   ;; in_avgTypes       = 'avg'
   ;; out_avgTypes      = 'logAvg'
 
-  timeAvg_these_inds   = [0,1,2,3]
+  timeAvg_these_inds   = [0,1,2,3,4,5]
   ;; in_avgTypes          = 'logAvg'
   in_avgTypes          = 'avg'
   out_avgTypes         = 'timeAvg'
@@ -38,13 +41,13 @@ PRO JOURNAL__20160329__SCRIPT__TIME_AVERAGE_OVER_DELAYS__ADDITIONAL_PLOTS
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot on linear or log scale?
   dont_logPlot_inds    = [0,1,2,3,4,5]
-  dont_logPlot_inds    = [0,1,2,3]
-  unlogPlot_lims       = [[0.0,0.5], $
+  ;; dont_logPlot_inds    = [0,1,2,3]
+  unlogPlot_lims       = [[0.0,0.25], $
                           [0.0,0.5], $
-                          [0.0,1e8], $
-                          [0.0, 0.1]];, $
-                          ;; [0.0,0.1], $
-                          ;; [0.0,500]]
+                          [0.0,6e7], $
+                          [0.0, 40], $
+                          [0.0,0.1], $
+                          [0.0,1200]]
 
   ;---->Together 2016/03/29
   ;; fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/temp/20160329--not_timeavgd_orbstuff/'
@@ -67,13 +70,15 @@ PRO JOURNAL__20160329__SCRIPT__TIME_AVERAGE_OVER_DELAYS__ADDITIONAL_PLOTS
   FOR iCond=0,N_ELEMENTS(IMFCondStrArr)-1 DO BEGIN
      FOR iHemi=0,N_ELEMENTS(hemiArr)-1 DO BEGIN
         FOR iClock=0,N_ELEMENTS(clockStrArr)-1 DO BEGIN
-           FOR iDel=0,N_ELEMENTS(nDelArr)-1 DO BEGIN
+           FOR iDel=0,N_ELEMENTS(nDelArr)-2 DO BEGIN
               FOR iAvgType=0,N_ELEMENTS(in_avgTypes)-1 DO BEGIN
                  AVERAGE_H2DS_OVER_DELAYS, $
                     HEMI=hemiArr[iHemi], $
                     CLOCKSTR=clockStrArr[iClock], $
                     NDELAYS=nDelArr[iDel], $
                     DELAYDELTASEC=delayDeltaSec, $
+                    DELAY_START=delay_start, $
+                    DELAY_STOP=delay_stop, $
                     IN_AVGTYPE=in_avgTypes[iAvgType], $
                     OUT_AVGTYPE=out_avgTypes[iAvgType], $
                     LOGAVG_THESE_INDS=logAvg_inds, $
