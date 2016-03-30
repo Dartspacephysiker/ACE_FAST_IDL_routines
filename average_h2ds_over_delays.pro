@@ -15,7 +15,8 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
    LIM_FOR_UNLOGPLOT_INDS=lim_for_unlogPlot_inds, $
    MINAVGS_FOR_NOMASK=minAvgs_for_noMask, $
    IMFCONDSTR=IMFCondStr, $
-   PLOT_DATESTR=plot_dateStr
+   PLOT_DATESTR=plot_dateStr, $
+   FILEDIR=fileDir
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;defaults
@@ -89,43 +90,41 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   FOR plot_i=0,nPlots-1 DO BEGIN
 
      ;;Handle requests for which types of plots de skal bli
-     CASE 1 OF
-        KEYWORD_SET(dont_logPlot_these_inds) AND h2dStrArr[plot_i].is_logged: BEGIN
-           unlogMe = WHERE(plot_i EQ dont_logPlot_these_inds)
-           IF unlogMe[0] NE -1 THEN BEGIN
-              h2dStrArr[plot_i].lim               = KEYWORD_SET(lim_for_unlogPlot_inds) ? lim_for_unlogPlot_inds[*,unlogMe] : h2dStrArr[plot_i].lim
-              h2dStrArr[plot_i].lim[0]            = 0.0
-              h2dStrArr[plot_i].force_oobLow      = 0
-           ENDIF
-        END
-        KEYWORD_SET(logPlot_these_inds) AND ~h2dStrArr[plot_i].is_logged: BEGIN
-           logMe = WHERE(plot_i EQ logPlot_these_inds)
-           IF logMe[0] NE -1 THEN BEGIN
-              h2dStrArr[plot_i].lim               = KEYWORD_SET(lim_for_logPlot_inds) ? ALOG10(lim_for_logPlot_inds[*,logMe]) : ALOG10(h2dStrArr[plot_i].lim)
-              h2dStrArr[plot_i].force_oobLow      = 1
-           ENDIF
-        END
-        ELSE: BEGIN
-           good_i                                 = WHERE(not_masked)
-        ENDELSE
-     ENDCASE
+     IF KEYWORD_SET(dont_logPlot_these_inds) THEN BEGIN
+        unlogMe = WHERE(plot_i EQ dont_logPlot_these_inds)
+        IF unlogMe[0] NE -1 THEN BEGIN
+           h2dStrArr[plot_i].lim               = KEYWORD_SET(lim_for_unlogPlot_inds) ? lim_for_unlogPlot_inds[*,unlogMe] : $
+                                                 (KEYWORD_SET(h2dStrArr[plot_i].is_logged) ? 10.^(h2dStrArr[plot_i].lim) : h2dStrArr[plot_i].lim)
+           h2dStrArr[plot_i].lim[0]            = 0.0
+           h2dStrArr[plot_i].force_oobLow      = 0
+        ENDIF
+     ENDIF
+     IF KEYWORD_SET(logPlot_these_inds) THEN BEGIN
+        logMe = WHERE(plot_i EQ logPlot_these_inds)
+        IF logMe[0] NE -1 THEN BEGIN
+           h2dStrArr[plot_i].lim               = KEYWORD_SET(lim_for_logPlot_inds) ? ALOG10(lim_for_logPlot_inds[*,logMe]) : $
+                                                 (KEYWORD_SET(h2dStrArr[plot_i].is_logged) ? h2dStrArr[plot_i].lim : ALOG10(h2dStrArr[plot_i].lim))
+           h2dStrArr[plot_i].force_oobLow      = 1
+        ENDIF
+     ENDIF 
+
 
      mask_str_i       = WHERE(STRMATCH(h2dStrArr.title,'Histogram mask',/FOLD_CASE))
      notMasked_i      = WHERE(h2dStrarr[mask_str_i].data LT 250,COMPLEMENT=masked_i)
 
-     CASE 1 OF
-        KEYWORD_SET(dont_logAvg_these_inds): BEGIN ;Don't logAvg me?
-           unlogMe = WHERE(plot_i EQ dont_logAvg_these_inds)
-           IF unlogMe[0] NE -1 THEN BEGIN
-              PRINT,FORMAT='("This plot will be avgd      :",T35,I0,T40,A0)',plot_i,h2dStrArr[plot_i].title
-              IF h2dStrArr[plot_i].is_logged THEN BEGIN
-                 h2dStrArr[plot_i].data[notMasked_i] = 10.^(h2dStrArr[plot_i].data[notMasked_i])
-                 h2dStrArr[plot_i].is_logged         = 0
-              ENDIF
-              h2dStrArr[plot_i].data[masked_i]       = 0
+     IF KEYWORD_SET(dont_logAvg_these_inds) THEN BEGIN ;Don't logAvg me?
+        unlogMe = WHERE(plot_i EQ dont_logAvg_these_inds)
+        IF unlogMe[0] NE -1 THEN BEGIN
+           PRINT,FORMAT='("This plot will be avgd      :",T35,I0,T40,A0)',plot_i,h2dStrArr[plot_i].title
+           IF h2dStrArr[plot_i].is_logged THEN BEGIN
+              h2dStrArr[plot_i].data[notMasked_i] = 10.^(h2dStrArr[plot_i].data[notMasked_i])
+              h2dStrArr[plot_i].is_logged         = 0
            ENDIF
-        END
-        KEYWORD_SET(logAvg_these_inds): BEGIN ;Do logAvg me?
+           h2dStrArr[plot_i].data[masked_i]       = 0
+        ENDIF
+     ENDIF 
+
+     IF KEYWORD_SET(logAvg_these_inds) THEN BEGIN ;Do logAvg me?
            logMe = WHERE(plot_i EQ logAvg_these_inds)
            IF logMe[0] NE -1 THEN BEGIN
               PRINT,FORMAT='("This plot will be log avged :",T35,I0,T40,A0)',plot_i,h2dStrArr[plot_i].title
@@ -135,19 +134,20 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
               ENDIF
            ENDIF
         END
-        KEYWORD_SET(timeAvg_these_inds): BEGIN ;Don't logAvg me?
-           timeMe = WHERE(plot_i EQ timeAvg_these_inds)
-           IF timeMe[0] NE -1 THEN BEGIN 
-              IF h2dStrArr[plot_i].is_logged THEN BEGIN
-                 h2dStrArr[plot_i].data[notMasked_i] = 10.^(h2dStrArr[plot_i].data[notMasked_i])
-                 h2dStrArr[plot_i].data[masked_i]    = 0
-                 h2dStrArr[plot_i].is_logged         = 0
-              ENDIF
-              h2dStrArr[plot_i].data[notMasked_i]    = h2dStrArr[plot_i].data[notMasked_i]*delayDeltaSec
-              PRINT,FORMAT='("This plot will be time avgd :",T35,I0,T40,A0)',plot_i,h2dStrArr[plot_i].title
+
+     IF KEYWORD_SET(timeAvg_these_inds) THEN BEGIN ;Don't logAvg me?
+        timeMe = WHERE(plot_i EQ timeAvg_these_inds)
+        IF timeMe[0] NE -1 THEN BEGIN 
+           IF h2dStrArr[plot_i].is_logged THEN BEGIN
+              h2dStrArr[plot_i].data[notMasked_i] = 10.^(h2dStrArr[plot_i].data[notMasked_i])
+              h2dStrArr[plot_i].data[masked_i]    = 0
+              h2dStrArr[plot_i].is_logged         = 0
            ENDIF
-        END
-     ENDCASE
+           h2dStrArr[plot_i].data[notMasked_i]    = h2dStrArr[plot_i].data[notMasked_i]*delayDeltaSec
+           PRINT,FORMAT='("This plot will be time avgd :",T35,I0,T40,A0)',plot_i,h2dStrArr[plot_i].title
+        ENDIF
+     ENDIF 
+
 
      ;;set these to zero, give initial update
      nAvgH2DArr[plot_i].data[*,*]              = 0

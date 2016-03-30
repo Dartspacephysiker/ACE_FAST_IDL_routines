@@ -1,5 +1,5 @@
 ;2016/03/29 And NOW the deal is to do the time averaging when averaging over thirty minutes
-PRO JOURNAL__20160329__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE__LOGAVG_FOR_TIMEAVGING_LATER
+PRO JOURNAL__20160329__GET_DATA__PROBOCCURRENCE__ORBSTUFF__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49_PFLUXEST__LOGAVG_FOR_TIMEAVGING_LATER
 
   nonstorm                       = 0
   justData                       = 1
@@ -9,32 +9,33 @@ PRO JOURNAL__20160329__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
   ionPlots                  = 1
   pPlots                    = 1
   eNumFlPlots               = 1
-  probOccurrencePlot        = 1 
+  probOccurrencePlot        = 1
   nEventPerOrbPlot          = 1
   nPlots                    = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bonus
-  do_timeAvg_fluxQuantities = 0
+  do_timeAvg_fluxQuantities      = 1
+  logAvgs                        = 0
   maskMin                        = 5
   divide_by_width_x              = 1
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
+  ;; hemi                           = 'NORTH'
   minILAT                        = 61
-  maxILAT                        = 85
+  maxILAT                        = 86
   ;;binILAT                        = 4.0        ;2016/03/23
-  ;; binILAT                        = 2.0        ;2016/03/24
-  binILAT                        = 3.0        ;2016/03/29
+  ;;binILAT                        = 2.0        ;2016/03/24
+  binILAT                        = 5.0        ;2016/03/29
 
   ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
+  ;; minILAT                        = -86
   ;; maxILAT                        = -61
   ;; ;; binILAT                        = 4.0        ;2016/03/23
-  ;; binILAT                        = 2.0        ;2016/03/24
-  ;; binILAT                        = 3.0        ;2016/03/29
+  ;; ;; binILAT                        = 2.0        ;2016/03/24
+  ;; binILAT                        = 5.0        ;2016/03/29
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -46,20 +47,18 @@ PRO JOURNAL__20160329__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
 
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  byMin                          = 5
+  byMin                          = 4
   do_abs_bymin                   = 1
-  bzMax                          = -3
+  bzMax                          = -2
   ;; bzMin                          = 3
 
   ;;DB stuff
   do_despun                      = 1
 
   ;;Delay stuff
-  nDelays                        = 121
-  delayDeltaSec                  = 30
-
+  nDelays                        = 61
+  delayDeltaSec                  = 60
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-  ;; delayArr                       = 15*60
   
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -119,7 +118,7 @@ PRO JOURNAL__20160329__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
         BZMAX=bzMax, $
         BZMIN=bzMin, $
         SMOOTHWINDOW=smoothWindow, $
-        ;; /LOGAVGPLOT, $
+        LOGAVGPLOT=logAvgs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         PROBOCCURRENCEPLOT=probOccurrencePlot, $
