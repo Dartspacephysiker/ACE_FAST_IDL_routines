@@ -13,7 +13,9 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
    OUT_PLOTDIR=out_plotDir, $
    QUANTS_TO_PLOT=quants_to_plot, $
-   JUST_OUTPUT_NAMES=just_output_names
+   JUST_OUTPUT_NAMES=just_output_names, $
+   DONT_OVERWRITE_EXISTING=dont_overwrite_existing
+
 
 
   ;; hemi                = 'SOUTH'
