@@ -13,8 +13,8 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
    OUT_PLOTDIR=out_plotDir, $
    QUANTS_TO_PLOT=quants_to_plot, $
-   JUST_OUTPUT_NAMES=just_output_names, $
-   DONT_OVERWRITE_EXISTING=dont_overwrite_existing
+   JUST_OUTPUT_NAMES=just_output_names;, $
+   ;; DONT_OVERWRITE_EXISTING=dont_overwrite_existing
 
 
 
@@ -30,7 +30,7 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   IF ~KEYWORD_SET(nDelays)            THEN nDelays            = 31
   IF ~KEYWORD_SET(delayDeltaSec)      THEN delayDeltaSec      = 15
 
-  IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = '__ABS_byMin5.0__bzMax-1.0'
+  IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = ''
 
   date                = '20160328'
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'

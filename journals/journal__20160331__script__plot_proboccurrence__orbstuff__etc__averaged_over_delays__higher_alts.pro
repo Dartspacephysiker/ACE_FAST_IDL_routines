@@ -51,10 +51,12 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   plot_dateStr         = 'Mar_31_16'
+  IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
-  IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
+  ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
+  ;; IMFCondStrArr        = ''
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
   fileList             = LIST()

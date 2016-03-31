@@ -4,7 +4,7 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   nonstorm                       = 0
   justData                       = 1
 
-  altitudeRange                  = [1000,4175]
+  altitudeRange                  = [0000,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Which plots?
@@ -25,21 +25,18 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 86
-  ;;binILAT                        = 4.0        ;2016/03/23
-  ;;binILAT                        = 2.0        ;2016/03/24
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -86
+  maxILAT                        = -61
+
+  ;; binILAT                        = 4.0        ;2016/03/23
+  ;; binILAT                        = 2.0        ;2016/03/24
   ;; binILAT                        = 5.0        ;2016/03/29
   binILAT                        = 2.5        ;2016/03/30
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -61
-  ;; ;; binILAT                        = 4.0        ;2016/03/23
-  ;; ;; binILAT                        = 2.0        ;2016/03/24
-  ;; ;; binILAT                        = 5.0        ;2016/03/29
-  ;; binILAT                        = 2.5        ;2016/03/30
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -49,11 +46,12 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;; binMLT                         = 1.0       ;2016/03/24
   ;; shiftMLT                       = 0.5       ;2016/03/24
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  ;; byMin                          = 5
-  ;; do_abs_bymin                   = 1
-  ;; bzMax                          = -1
+  byMin                          = 7
+  do_abs_bymin                   = 1
+  bzMax                          = 0
   ;; bzMin                          = 3
 
   ;;DB stuff

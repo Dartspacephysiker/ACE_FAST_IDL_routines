@@ -32,7 +32,7 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   IF ~KEYWORD_SET(in_avgType)         THEN in_avgType         = 'logAvg'
   IF ~KEYWORD_SET(out_avgType)        THEN out_avgType        = 'logAvg'
 
-  IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = '__ABS_byMin5.0__bzMax-1.0'
+  IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = ''
 
   IF ~KEYWORD_SET(minAvgs_for_noMask) THEN minAvgs_for_noMask = 10
 

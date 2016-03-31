@@ -20,10 +20,12 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   clockStrArr          = ['dawnward','duskward']
 
   ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
+  IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
-  IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
+  ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-3.0'
+  ;; IMFCondStrArr        = ''
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45,12 +47,23 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   ;;Plot on linear or log scale?
   dont_logPlot_inds    = [0,1,2,3,4,5]
   ;; dont_logPlot_inds    = [0,1,2,3]
-  unlogPlot_lims       = [[0.0,0.25], $
-                          [0.0,0.5], $
-                          [0.0,6e7], $
-                          [0.0, 40], $
+
+  ;2016/03/31 For plots involving byMin7.0__bzMin0.0
+  unlogPlot_lims       = [[0.0,1.5], $
+                          [0.0,1.5], $
+                          [0.0,6e8], $
+                          [0.0, 60], $
                           [0.0,0.1], $
-                          [0.0,1200]]
+                          [0.0,400]]
+
+  ;2016/03/31 For plots only involving clock angle
+  ;; unlogPlot_lims       = [[0.0,0.2], $
+  ;;                         [0.0,0.4], $
+  ;;                         [0.0,6e7], $
+  ;;                         [0.0, 30], $
+  ;;                         [0.0,0.06], $
+  ;;                         [0.0,1500]]
+
 
   ;---->Together 2016/03/29
   ;; fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/temp/20160329--not_timeavgd_orbstuff/'

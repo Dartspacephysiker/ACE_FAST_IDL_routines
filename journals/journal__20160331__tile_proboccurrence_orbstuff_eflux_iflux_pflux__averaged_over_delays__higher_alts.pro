@@ -64,7 +64,8 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin4.0__bzMax-2.0'
-  IMFCondStrArr       = '__ABS_byMin3.0__bzMax-1.0'
+  ;; IMFCondStrArr       = '__ABS_byMin3.0__bzMax-1.0'
+  IMFCondStrArr       = ''
   ;; IMFCondStrArr       = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
 
   ;; bonusSuff           = 'high-energy_e'
