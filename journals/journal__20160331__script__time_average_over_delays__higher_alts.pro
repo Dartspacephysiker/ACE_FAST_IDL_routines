@@ -6,7 +6,7 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   ;; nDelArr              = [121,241]
   ;; delayDeltaSec        = 15
 
-  nDelArr              = [31,61]
+  nDelArr              = [11,21,31,41,51,61]
   delayDeltaSec        = 60
   ;; delay_start          = -5
   ;; delay_stop           = 20
@@ -20,12 +20,13 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   clockStrArr          = ['dawnward','duskward']
 
   ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
-  IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
+  ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
+  ;; IMFCondStrArr        = '__ABS_byMin7.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-3.0'
-  ;; IMFCondStrArr        = ''
+  IMFCondStrArr        = ''
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39,6 +40,7 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   ;; out_avgTypes      = 'logAvg'
 
   timeAvg_these_inds   = [0,1,2,3,4,5]
+  ;; timeAvg_these_inds   = [0,1,2,3,4]
   ;; in_avgTypes          = 'logAvg'
   in_avgTypes          = 'avg'
   out_avgTypes         = 'timeAvg'
@@ -46,23 +48,24 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot on linear or log scale?
   dont_logPlot_inds    = [0,1,2,3,4,5]
+  ;; dont_logPlot_inds    = [0,1,2,3,4]
   ;; dont_logPlot_inds    = [0,1,2,3]
 
   ;2016/03/31 For plots involving byMin7.0__bzMin0.0
-  unlogPlot_lims       = [[0.0,1.5], $
-                          [0.0,1.5], $
-                          [0.0,6e8], $
-                          [0.0, 60], $
-                          [0.0,0.1], $
-                          [0.0,400]]
+  ;; unlogPlot_lims       = [[0.0,0.5], $
+  ;;                         [0.0,0.5], $
+  ;;                         [0.0,1e8], $
+  ;;                         ;; [0.0, 50], $   ; No nEvPerOrb plot this time 'round
+  ;;                         [0.0,0.10], $
+  ;;                         [0.0,1000]]
 
   ;2016/03/31 For plots only involving clock angle
-  ;; unlogPlot_lims       = [[0.0,0.2], $
-  ;;                         [0.0,0.4], $
-  ;;                         [0.0,6e7], $
-  ;;                         [0.0, 30], $
-  ;;                         [0.0,0.06], $
-  ;;                         [0.0,1500]]
+  unlogPlot_lims       = [[0.0,0.2], $
+                          [0.0,0.4], $
+                          [0.0,6e7], $
+                          [0.0, 30], $
+                          [0.0,0.06], $
+                          [0.0,1000]]
 
 
   ;---->Together 2016/03/29

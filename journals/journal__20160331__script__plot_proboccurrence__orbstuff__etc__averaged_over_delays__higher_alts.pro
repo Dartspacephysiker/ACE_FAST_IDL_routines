@@ -5,12 +5,12 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   save_combined_window = 1
   combined_to_buffer   = 1
 
-  dont_overwrite_existing = 1
+  dont_overwrite_existing = 0
 
   quants_to_plot       = [0,1,2,3,4,5]
   ;; quants_to_plot       = [0,1,2,3]
   ;; quants_to_plot       = [3]
-  quants_to_plot       = [0,1,2,3,4,5]
+  ;; quants_to_plot       = [0,1,2,3,4]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Delay stuff
@@ -20,8 +20,12 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = [30,30]
 
-  nDelArr              = [31,61]
-  delayDeltaSec        = [60,60]
+  nDelArr              = [11,21,31,41,51,61]
+  delayDeltaSec        = [60,60,60,60,60,60]
+
+  ;; nDelArr              = [31,61]
+  ;; delayDeltaSec        = [60,60]
+
   ;; delay_start          = -5
   ;; delay_stop           = 20
 
@@ -51,12 +55,13 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   plot_dateStr         = 'Mar_31_16'
-  IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
+  ;; IMFCondStrArr        = '__ABS_byMin7.0'
+  ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
-  ;; IMFCondStrArr        = ''
+  IMFCondStrArr        = ''
 
   fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
   fileList             = LIST()

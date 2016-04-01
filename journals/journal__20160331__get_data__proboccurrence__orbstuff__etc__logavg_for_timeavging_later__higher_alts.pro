@@ -4,14 +4,14 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   nonstorm                       = 0
   justData                       = 1
 
-  altitudeRange                  = [0000,4175]
+  altitudeRange                  = [0500,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Which plots?
   eNumFlPlots               = 1
   pPlots                    = 1
   ionPlots                  = 1
-  nEventPerOrbPlot          = 1
+  nEventPerOrbPlot          = 0
   probOccurrencePlot        = 1
   nPlots                    = 1
 
@@ -27,31 +27,35 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;;ILAT stuff
   ;; hemi                           = 'NORTH'
   ;; minILAT                        = 61
-  ;; maxILAT                        = 86
+  ;; maxILAT                        = 85
 
   hemi                           = 'SOUTH'
-  minILAT                        = -86
+  minILAT                        = -85
   maxILAT                        = -61
 
-  ;; binILAT                        = 4.0        ;2016/03/23
+  ;; binILAT                        = 4.0        ;2016/03/{23,31}
   ;; binILAT                        = 2.0        ;2016/03/24
   ;; binILAT                        = 5.0        ;2016/03/29
-  binILAT                        = 2.5        ;2016/03/30
+  ;; binILAT                        = 2.5        ;2016/03/30
+  binILAT                        = 3.0        ;2016/03/31
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75        ;2016/03/2{3,9}
-  shiftMLT                       = 0.375       ;2016/03/2{3,9}
+  ;; binMLT                         = 0.75        ;2016/03/2{3,9}
+  ;; shiftMLT                       = 0.375       ;2016/03/2{3,9}
 
   ;; binMLT                         = 1.0       ;2016/03/24
   ;; shiftMLT                       = 0.5       ;2016/03/24
+
+  binMLT                         = 1.5       ;2016/03/31
+  shiftMLT                       = 0.75      ;2016/03/31
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
   ;; stableIMF                      = 20
   byMin                          = 7
   do_abs_bymin                   = 1
-  bzMax                          = 0
+  ;; bzMax                          = 0
   ;; bzMin                          = 3
 
   ;;DB stuff

@@ -33,8 +33,11 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = [30,30]
 
-  nDelArr              = [31,61]
-  delayDeltaSec        = [60,60]
+  nDelArr              = [11,21,31,41,51,61]
+  delayDeltaSec        = [60,60,60,60,60,60]
+
+  ;; nDelArr              = [31,61]
+  ;; delayDeltaSec        = [60,60]
   ;; delay_start          = -5
   ;; delay_stop           = 20
 
@@ -61,6 +64,8 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
+  ;; IMFCondStrArr       = '__ABS_byMin7.0'
+  ;; IMFCondStrArr       = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin4.0__bzMax-2.0'
