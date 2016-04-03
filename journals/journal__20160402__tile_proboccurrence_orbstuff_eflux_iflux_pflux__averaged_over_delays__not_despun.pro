@@ -1,4 +1,4 @@
-PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_OVER_DELAYS__HIGHER_ALTS
+PRO JOURNAL__20160402__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_OVER_DELAYS__NOT_DESPUN
 
   combined_to_buffer   = 1
   save_combined_window = 1
@@ -11,8 +11,10 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   maskMin              = 5
   despun               = 0
 
+  just_north           = 1
+
   date                 = '20160403'
-  date_alt             = 'Apr_2_16'
+  date_alt             = 'Apr_3_16'
 
   ;; dataNamesTimeSpace  = ['spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
   ;;                        'spatialAvg_NoNegs--Logiflux_INTEG_UP', $
@@ -50,8 +52,7 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; nDelArr              = [31,61,61,121]
   ;; delayDeltaSec        = [60,60,30,30]
 
-  ;; hemiArr        = ['NORTH','SOUTH']
-  hemiArr        = ['NORTH']
+  IF just_north THEN hemiArr = 'NORTH' ELSE hemiArr = ['NORTH','SOUTH']
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Avg types?
@@ -70,11 +71,13 @@ PRO JOURNAL__20160331__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
+  IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr       = '__ABS_byMin10.0'
+  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin7.0'
   ;; IMFCondStrArr       = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-3.0'
-  IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
+  ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr       = '__ABS_byMin3.0__bzMax-1.0'
   ;; IMFCondStrArr       = ''

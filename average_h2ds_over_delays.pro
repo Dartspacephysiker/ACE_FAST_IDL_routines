@@ -1,6 +1,8 @@
 ;;Standardize
 PRO AVERAGE_H2DS_OVER_DELAYS, $
    HEMI=hemi, $
+   DESPUN=despun, $
+   MASKMIN=maskMin, $
    CLOCKSTR=clockStr, $
    NDELAYS=nDelays, $
    DELAYDELTASEC=delayDeltaSec, $
@@ -26,6 +28,17 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   ;; hemi                                                     = 'SOUTH'
   IF ~KEYWORD_SET(hemi)               THEN hemi               = 'NORTH'
   
+  IF KEYWORD_SET(despun)              THEN despunStr          = 'despun--' ELSE despunStr = ''
+
+  defMaskMin                                                  = 5
+  maskStr                                                     = ''
+  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
+  ELSE BEGIN
+     IF maskMin GT 1 THEN BEGIN
+        maskStr='--maskMin' + STRCOMPRESS(maskMin,/REMOVE_ALL)
+     ENDIF
+  ENDELSE
+
   ;; clockStr                                                 = 'duskward'
   IF ~KEYWORD_SET(clockStr)           THEN clockStr           = 'dawnward'
 
@@ -80,7 +93,7 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   avgString           = GET_DELAY_AVG_STRING(in_avgType,delayArr,delayDeltaSec)
   out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec)
 
-  paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--despun--' + in_avgType + '--maskMin5'
+  paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
 
   IF ~KEYWORD_SET(omniPref) THEN omniPref = '--OMNI--GSM--'+clockStr+'__0stable'
 

@@ -1,12 +1,13 @@
-;;2016/03/31 Now from 1000 to 4175 km in alt
-PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
+;;2016/04/02 Now you not despun, son
+PRO JOURNAL__20160402__SCRIPT__TIME_AVERAGE_OVER_DELAYS__NOT_DESPUN
 
-  ;; plot_dateStr         = 'Mar_31_16'
-  ;; plot_dateStr         = 'Apr_1_16'
-  plot_dateStr         = 'Apr_2_16'
+  ;; plot_dateStr         = 'Apr_2_16'
+  plot_dateStr         = 'Apr_3_16'
 
   despun               = 0
   maskMin              = 5
+
+  just_north           = 1
 
   ;; nDelArr              = [121,241]
   ;; delayDeltaSec        = 15
@@ -19,17 +20,18 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   ;; nDelArr              = [61,121]
   ;; delayDeltaSec        = 30
 
-  hemiArr              = ['NORTH','SOUTH']
-  ;; hemiArr              = ['NORTH']
+  IF just_north THEN hemiArr = 'NORTH' ELSE hemiArr = ['NORTH','SOUTH']
 
   clockStrArr          = ['dawnward','duskward']
 
   ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
+  ;; IMFCondStrArr        = '__ABS_byMin10.0'
+  IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
+  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-3.0'
   ;; IMFCondStrArr        = ''
@@ -57,13 +59,21 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
   dont_logPlot_inds    = [0,1,2,3,4]
   ;; dont_logPlot_inds    = [0,1,2,3]
 
-  ;2016/03/31 For plots involving byMin7.0__bzMin0.0
-  unlogPlot_lims       = [[0.0,0.3], $
-                          [0.0,0.5], $
-                          [0.0,1e8], $
+  ;2016/04/02 For plots involving byMin8.0__bzMin-1.0, NOT DESPUN
+  unlogPlot_lims       = [[0.0,1.0], $
+                          [0.0,2.0], $
+                          [0.0,5e8], $
                           ;; [0.0, 50], $   ; No nEvPerOrb plot this time 'round
-                          [0.0,0.10], $
-                          [0.0,1500]]
+                          [0.0,0.15], $
+                          [0.0,350]]
+
+  ;2016/04/02 For plots involving byMin5.0__bzMin-1.0, NOT DESPUN
+  ;; unlogPlot_lims       = [[0.0,1.0], $
+  ;;                         [0.0,2.0], $
+  ;;                         [0.0,5e8], $
+  ;;                         ;; [0.0, 50], $   ; No nEvPerOrb plot this time 'round
+  ;;                         [0.0,0.2], $
+  ;;                         [0.0,450]]
 
   ;2016/03/31 For plots only involving clock angle
   ;; unlogPlot_lims       = [[0.0,0.2], $

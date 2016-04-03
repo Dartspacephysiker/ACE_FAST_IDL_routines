@@ -1,5 +1,7 @@
 PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    HEMI=hemi, $
+   DESPUN=despun, $
+   MASKMIN=maskMin, $
    CLOCKSTR=clockStr, $
    NDELAYS=nDelays, $
    DELAYDELTASEC=delayDeltaSec, $
@@ -10,6 +12,7 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    OUT_AVGTYPE=out_avgType, $
    IMFCONDSTR=IMFCondStr, $
    PLOT_DATESTR=plot_dateStr, $
+   ADDITIONAL_PLOTDIRSUFF=additional_plotDirSuff, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
    OUT_PLOTDIR=out_plotDir, $
    QUANTS_TO_PLOT=quants_to_plot, $
@@ -21,6 +24,17 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   ;; hemi                = 'SOUTH'
   IF ~KEYWORD_SET(hemi) THEN hemi = 'NORTH'
   
+  IF KEYWORD_SET(despun)              THEN despunStr          = 'despun--' ELSE despunStr = ''
+
+  maskStr                                                     = ''
+  defMaskMin                                                  = 5
+  IF N_ELEMENTS(maskMin) EQ 0 THEN maskMin = defMaskMin $
+  ELSE BEGIN
+     IF maskMin GT 1 THEN BEGIN
+        maskStr='--maskMin' + STRCOMPRESS(maskMin,/REMOVE_ALL)
+     ENDIF
+  ENDELSE
+
   ;; clockStr            = 'duskward'
   IF ~KEYWORD_SET(clockStr) THEN clockStr = 'dawnward'
 
@@ -32,7 +46,6 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
 
   IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = ''
 
-  date                = '20160328'
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'
 
   IF ~KEYWORD_SET(quants_to_plot)     THEN quants_to_plot     = [0,1,2,3]
@@ -49,12 +62,15 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   delayStr            = STRING(FORMAT='("__",F0.2,"mindelay")',delayArr/60.) 
   out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec)
 
-  paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--despun--'+in_avgType+'--maskMin5'
+  paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
   omniPref            = '--OMNI--GSM--'+clockStr+'__0stable'
 
   inFile              = paramPref + bonusSuff + omniPref + out_avgString + IMFCondStr + '.dat'
 
-  SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+  plotDirSuff         = IMFCondStr
+  IF KEYWORD_SET(additional_plotDirSuff) THEN plotDirSuff = plotDirSuff + additional_plotDirSuff
+
+  SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=plotDirSuff
 
   IF ~KEYWORD_SET(just_output_names) THEN BEGIN
      PLOT_2DHISTO_FILE,fileDir+inFile, $

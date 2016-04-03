@@ -1,10 +1,10 @@
-;2016/03/29 And NOW the deal is to do the time averaging when averaging over thirty minutes
-PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEAVGING_LATER__HIGHER_ALTS
+;2016/04/02 And if it's not despun?
+PRO JOURNAL__20160402__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEAVGING_LATER__NOT_DESPUN
 
   nonstorm                       = 0
   justData                       = 1
 
-  altitudeRange                  = [340,4175]
+  ;; altitudeRange                  = [50,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Which plots?
@@ -25,28 +25,28 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 61
-  ;; maxILAT                        = 85
+  hemi                           = 'NORTH'
+  minILAT                        = 61
+  maxILAT                        = 86
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -61
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -86
+  ;; maxILAT                        = -61
 
   ;; binILAT                        = 4.0        ;2016/03/{23,31}
   ;; binILAT                        = 2.0        ;2016/03/24
-  ;; binILAT                        = 5.0        ;2016/03/29
+  binILAT                        = 5.0        ;2016/03/29
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
-  binILAT                        = 4.0        ;2016/03/31
+  ;; binILAT                        = 4.0        ;2016/03/31
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  ;; binMLT                         = 0.75        ;2016/03/2{3,9}
-  ;; shiftMLT                       = 0.375       ;2016/03/2{3,9}
+  binMLT                         = 0.75        ;2016/03/2{3,9}
+  shiftMLT                       = 0.375       ;2016/03/2{3,9}
 
-  binMLT                         = 1.0       ;2016/03/24
-  shiftMLT                       = 0.5       ;2016/03/24
+  ;; binMLT                         = 1.0       ;2016/03/24
+  ;; shiftMLT                       = 0.5       ;2016/03/24
 
   ;; binMLT                         = 1.5       ;2016/03/31
   ;; shiftMLT                       = 0.75      ;2016/03/31
@@ -56,11 +56,11 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;; stableIMF                      = 20
   byMin                          = 10
   do_abs_bymin                   = 1
-  ;; bzMax                          = 0
+  bzMax                          = 2
   ;; bzMin                          = 3
 
   ;;DB stuff
-  do_despun                      = 1
+  do_despun                      = 0
 
   ;;Delay stuff
   nDelays                        = 61

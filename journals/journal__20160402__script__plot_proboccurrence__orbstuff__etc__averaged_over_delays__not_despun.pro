@@ -1,4 +1,4 @@
-PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER_DELAYS__HIGHER_ALTS
+PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER_DELAYS__NOT_DESPUN
 
   create_plots         = 1
   combine_plots        = 1
@@ -9,6 +9,8 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   maskMin              = 5
   despun               = 0
+
+  just_north           = 1
 
   ;; quants_to_plot       = [3]
   ;; quants_to_plot       = [0,1,2,3]
@@ -35,8 +37,7 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;; nDelArr              = [31,61,61,121]
   ;; delayDeltaSec        = [60,60,30,30]
 
-  hemiArr              = ['NORTH','SOUTH']
-  ;; hemiArr              = ['NORTH']
+  IF just_north THEN hemiArr = 'NORTH' ELSE hemiArr = ['NORTH','SOUTH']
 
   clockStrArr          = ['dawnward','duskward']
 
@@ -57,12 +58,14 @@ PRO JOURNAL__20160331__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
-  plot_dateStr         = 'Apr_2_16'
+  plot_dateStr         = 'Apr_3_16'
+  IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'
+  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
   ;; IMFCondStrArr        = ''
