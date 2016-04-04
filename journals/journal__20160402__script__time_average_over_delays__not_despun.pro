@@ -2,9 +2,10 @@
 PRO JOURNAL__20160402__SCRIPT__TIME_AVERAGE_OVER_DELAYS__NOT_DESPUN
 
   ;; plot_dateStr         = 'Apr_2_16'
-  plot_dateStr         = 'Apr_3_16'
+  ;; plot_dateStr         = 'Apr_3_16'
+  plot_dateStr         = 'Apr_4_16'
 
-  despun               = 1
+  despun               = 0
   maskMin              = 5
 
   just_north           = 1

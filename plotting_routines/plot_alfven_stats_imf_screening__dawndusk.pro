@@ -40,6 +40,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    SOUTH=south, $
    DELAY=delay, $
    MULTIPLE_DELAYS=multiple_delays, $
+   RESOLUTION_DELAY=delay_res, $
+   BINOFFSET_DELAY=binOffset_delay, $
    STABLEIMF=stableIMF, $
    SMOOTHWINDOW=smoothWindow, $
    INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -168,6 +170,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DO_ABS_BZMAX=abs_bzMax, $
                                      DELAY=delay, $
                                      MULTIPLE_DELAYS=multiple_delays, $
+                                     RESOLUTION_DELAY=delay_res, $
+                                     BINOFFSET_DELAY=binOffset_delay, $
                                      STABLEIMF=stableIMF, $
                                      SMOOTHWINDOW=smoothWindow, $
                                      INCLUDENOCONSECDATA=includeNoConsecData, $

@@ -36,6 +36,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
    STABLEIMF=stableIMF, $
    MULTIPLE_DELAYS=multiple_delays, $
+   RESOLUTION_DELAY=delay_res, $
+   BINOFFSET_DELAY=binOffset_delay, $
    OMNI_COORDS=omni_Coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    ANGLELIM1=angleLim1, $
@@ -84,6 +86,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                                                                            ANGLELIM1=angleLim1, $
                                                                                            ANGLELIM2=angleLim2, $
                                                                                            MULTIPLE_DELAYS=multiple_delays, $
+                                                                                           RESOLUTION_DELAY=delay_res, $
+                                                                                           BINOFFSET_DELAY=binOffset_delay, $
                                                                                            STABLEIMF=stableIMF, $
                                                                                            /RESTRICT_TO_ALFVENDB_TIMES, $
                                                                                            BYMIN=byMin, $

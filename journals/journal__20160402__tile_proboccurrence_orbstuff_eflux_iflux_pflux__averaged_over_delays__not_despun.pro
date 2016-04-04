@@ -9,12 +9,15 @@ PRO JOURNAL__20160402__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; date_alt            = 'Mar_31_16'
 
   maskMin              = 5
-  despun               = 1
+  despun               = 0
 
   just_north           = 1
 
-  date                 = '20160403'
-  date_alt             = 'Apr_3_16'
+  ;; date                 = '20160403'
+  ;; date_alt             = 'Apr_3_16'
+
+  date                 = '20160404'
+  date_alt             = 'Apr_4_16'
 
   ;; dataNamesTimeSpace  = ['spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
   ;;                        'spatialAvg_NoNegs--Logiflux_INTEG_UP', $

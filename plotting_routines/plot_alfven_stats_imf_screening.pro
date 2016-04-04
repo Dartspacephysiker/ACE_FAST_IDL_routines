@@ -229,6 +229,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BOTH_HEMIS=both_hemis, $
                                     DELAY=delay, $
                                     MULTIPLE_DELAYS=multiple_delays, $
+                                    RESOLUTION_DELAY=delay_res, $
+                                    BINOFFSET_DELAY=binOffset_delay, $
                                     STABLEIMF=stableIMF, $
                                     SMOOTHWINDOW=smoothWindow, $
                                     INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -392,6 +394,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   DELAY=delay, $
                                   MULTIPLE_DELAYS=multiple_delays, $
+                                  RESOLUTION_DELAY=delay_res, $
+                                  BINOFFSET_DELAY=binOffset_delay, $
                                   STABLEIMF=stableIMF, $
                                   SMOOTHWINDOW=smoothWindow, $
                                   INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -500,6 +504,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                                                                           BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                                           MULTIPLE_DELAYS=multiple_delays, $
+                                                                          RESOLUTION_DELAY=delay_res, $
+                                                                          BINOFFSET_DELAY=binOffset_delay, $
                                                                           STABLEIMF=stableIMF, $
                                                                           DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                                                           OMNI_COORDS=omni_Coords, $

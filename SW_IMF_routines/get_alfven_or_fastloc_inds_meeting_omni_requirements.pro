@@ -3,6 +3,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
    MULTIPLE_DELAYS=multiple_delays, $
+   RESOLUTION_DELAY=delay_res, $
+   BINOFFSET_DELAY=binOffset_delay, $
    STABLEIMF=stableIMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
@@ -52,7 +54,15 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             LUN=lun)
   
   
-  IF KEYWORD_SET(multiple_delays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
+  ;;Handle delay stuff
+  IF KEYWORD_SET(multiple_delays)       THEN NIter            = N_ELEMENTS(delay) ELSE NIter = 1
+  IF ~KEYWORD_SET(delay_res)            THEN delay_res        = 120
+  IF N_ELEMENTS(binOffset_delay) EQ 0   THEN binOffset_delay  = 0 
+
+  IF binOffset_delay GT delay_res/2. THEN BEGIN
+     PRINT,'You know that your bin offset actually places the center of the delay bin outside the bin width, right?'
+     STOP
+  ENDIF
 
   qual_db_i_list         = LIST()
   FOR iDel=0,NIter-1 DO BEGIN
@@ -68,8 +78,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      ;; before_timeOK       = ABS(beforeTimes) LE 30
      ;; after_timeOK        = ABS(afterTimes) LE 30
 
-     before_timeOK       = ABS(beforeTimes) LE 60
-     after_timeOK        = ABS(afterTimes) LE 60
+     before_timeOK       = ABS(beforeTimes) LE ABS(delay_res/2.-binOffset_delay)
+     after_timeOK        = ABS(afterTimes) LE ABS(delay_res/2.+binOffset_delay)
 
      ;;So which are the winners?
      qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)

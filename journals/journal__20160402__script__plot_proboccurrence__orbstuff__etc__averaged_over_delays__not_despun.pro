@@ -8,7 +8,7 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   no_overwrite_existing = 0
 
   maskMin              = 5
-  despun               = 1
+  despun               = 0
 
   just_north           = 1
 
@@ -58,7 +58,8 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
-  plot_dateStr         = 'Apr_3_16'
+  ;; plot_dateStr         = 'Apr_3_16'
+  plot_dateStr         = 'Apr_4_16'
   IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'

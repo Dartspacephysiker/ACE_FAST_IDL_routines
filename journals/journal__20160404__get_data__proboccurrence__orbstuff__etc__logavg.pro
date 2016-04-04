@@ -17,8 +17,8 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bonus
-  do_timeAvg_fluxQuantities      = 0
-  logAvgs                        = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgs                        = 0
   maskMin                        = 5
   divide_by_width_x              = 1
 
@@ -55,19 +55,42 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  byMin                          = 10
+  byMin                          = 8
   do_abs_bymin                   = 1
-  bzMax                          = 2
+  bzMax                          = -4
   ;; bzMin                          = 3
 
   ;;DB stuff
-  do_despun                      = 0
+  do_despun                      = 1
 
-  ;;Delay stuff
-  nDelays                        = 61
-  delayDeltaSec                  = 60
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;delay stuff
+  totMinToDisplay                = 120
+
+  ;; delayDeltaSec                  = 900
+  ;; delay_res                      = 900
+  ;; binOffset_delay                = 0
+
+  delayDeltaSec                  = 600
+  delay_res                      = 600
+  binOffset_delay                = 0
+
+  ;; delayDeltaSec                  = 1200
+  ;; delay_res                      = 1200
+  ;; binOffset_delay                = 600
+
+  ;; delayDeltaSec                  = 1800
+  ;; delay_res                      = 1800
+  ;; binOffset_delay                = 900
+
+  ;; nDelays                        = 401
+  nDelays                        = FIX(FLOAT(totMinToDisplay)/delayDeltaSec*60)
+  IF (nDelays MOD 2) EQ 0 THEN nDelays++
+
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-  
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;BONUS
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
 
@@ -118,8 +141,10 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
         /MIDNIGHT, $
-        /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
+        /MULTIPLE_DELAYS, $
+        RESOLUTION_DELAY=delay_res, $
+        BINOFFSET_DELAY=binOffset_delay, $
         DO_DESPUNDB=do_despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $

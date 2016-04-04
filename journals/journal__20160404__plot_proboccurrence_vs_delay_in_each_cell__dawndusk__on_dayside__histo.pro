@@ -1,28 +1,54 @@
-;2016/04/02 Maybe we just need to hate the despun DB
-PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__NOT_DESPUN
-  date                           = '20160403'
+;2016/04/04 Some new approaches
+PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO
+  date                           = '20160404'
 
   crossCorr_pref                 = 'journal__' + date + '__CrossCorr_probOccurrence_vs_delay--all_alts--'
   outPlot_pref                   = 'journal__' + date + '__plot_probOccurrence_vs_delay--all_alts--'
   outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
-  nonstorm                       = 0
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Storm stuff?
+  ;; mainPhase                      = 0
+  ;; recoveryPhase                  = 0
+  ;; nonstorm                       = 0
+  ;; dstCutoff                      = -50
+
   do_center_cell                 = 1
 
-  ;; nDelays                        = 401*2 
-  nDelays                        = 2001
-  delayDeltaSec                  = 60
-  delay_res                      = 120
-  binOffset_delay                = 0
+  minNEvents                     = 2
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;delay stuff
+  totMinToDisplay                = 6000
+
+  ;; delayDeltaSec                  = 900
+  ;; delay_res                      = 900
+  ;; binOffset_delay                = 0
+
+  ;; delayDeltaSec                  = 600
+  ;; delay_res                      = 600
+  ;; binOffset_delay                = 300
+
+  ;; delayDeltaSec                  = 1200
+  ;; delay_res                      = 1200
+  ;; binOffset_delay                = 600
+
+  delayDeltaSec                  = 1800
+  delay_res                      = 1800
+  binOffset_delay                = 900
+
+  ;; nDelays                        = 401
+  nDelays                        = FIX(FLOAT(totMinToDisplay)/delayDeltaSec*60)
+  IF (nDelays MOD 2) EQ 0 THEN nDelays++
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
 
   ;; ;;For Dawn/dusk stuff
   clockStr                       = ['dawnward','duskward']
-  byMin                          = 10
+  byMin                          = 8
   do_abs_byMin                   = 1
-  bzMax                          = 0
+  bzMax                          = -4
   ;; bzMin                          = 1
 
   ;; ;;For bzNorth/South stuff
@@ -34,13 +60,13 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
 
 
   ;;DB stuff
-  do_despun                      = 0
+  do_despun                      = 1
   altitudeRange                  = [0000,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Customize 'em!
   hemi                           = 'NORTH'
-  minILAT                        = [ 67, 67, 67, 67, 67, 67]
+  minILAT                        = [ 66, 66, 66, 66, 66, 66]
   ;; maxILAT                        = [ 79, 79, 79, 79, 79, 79]
   maxILAT                        = [ 74, 74, 74, 74, 74, 74]
   centerMLT__dawn                = 12.0
@@ -49,14 +75,14 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;; Looks like Southern Hemi cells split around 11.25, and the important stuff is below -71 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -[ 79, 79, 79, 79, 79, 79]
-  ;; maxILAT                        = -[ 67, 67, 67, 67, 67, 67]
+  ;; maxILAT                        = -[ 66, 66, 66, 66, 66, 66]
   ;; centerMLT__dawn                = 12.0
   ;; centerMLT__dusk                = 12.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  nBinsMLT                       = 3.0
+  binMLT                         = 0.5
+  nBinsMLT                       = 6.0
 
   cell                           = ['Dawn cell','Dusk cell','Center cell']
   minMLT                         = [ centerMLT__dawn-binMLT*0.5-nBinsMLT*binMLT, centerMLT__dawn+binMLT*0.5                , $ ;;dawnward IMF
@@ -72,6 +98,29 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
 
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;storm stuff
+  IF KEYWORD_SET(nonstorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+     GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+        NONSTORM_I=ns_i, $
+        MAINPHASE_I=mp_i, $
+        RECOVERYPHASE_I=rp_i, $
+        DSTCUTOFF=dstCutoff, $
+        STORM_DST_I=s_dst_i, $
+        NONSTORM_DST_I=ns_dst_i, $
+        MAINPHASE_DST_I=mp_dst_i, $
+        RECOVERYPHASE_DST_I=rp_dst_i, $
+        N_STORM=n_s, $
+        N_NONSTORM=n_ns, $
+        N_MAINPHASE=n_mp, $
+        N_RECOVERYPHASE=n_rp, $
+        NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+        NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+        DO_DESPUN=do_despun, $
+        LUN=lun
+  ENDIF
+     
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot stuff
 
@@ -210,9 +259,38 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
         ;; fastLocInterped_i_list_list.add,fastLocInterped_i_list
         title_list.add,clockStr[clock_i]+'--minM_maxM__'+STRCOMPRESS(minMLT[mlt_i+nCells*clock_i],/REMOVE_ALL)+'_'+STRCOMPRESS(maxMLT[mlt_i+nCells*clock_i],/REMOVE_ALL)
         
+        CASE 1 OF
+           KEYWORD_SET(nonstorm): BEGIN
+              bonus_i = ns_i
+           END
+           KEYWORD_SET(mainPhase): BEGIN
+              bonus_i = mp_i
+           END
+           KEYWORD_SET(recoveryPhase) : BEGIN
+              bonus_i = rp_i
+           END
+           ELSE: BEGIN
+           END
+        ENDCASE
+
+        IF KEYWORD_SET(nonstorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+           FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN 
+              plot_i_list[i] = CGSETINTERSECTION(plot_i_list[i],bonus_i,SUCCESS=success)
+              IF ~success THEN BEGIN
+                 plot_i_list[i] = -1
+                 PRINT,'Lost delay = ' + STRCOMPRESS(delayArr[i],/REMOVE_ALL) + "min to storm restriction ..."
+              ENDIF
+           ENDFOR
+        ENDIF
+
         probOcc=!NULL
         FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN 
-           numerator   = TOTAL(maximus.width_time[plot_i_list[i]])
+           IF plot_i_list[i,0] EQ -1 OR N_ELEMENTS(plot_i_list[i]) LT minNEvents THEN BEGIN
+              numerator = 0 
+              PRINT,'No data for delay = ' + STRCOMPRESS(delayArr[i],/REMOVE_ALL) + '...'
+           ENDIF ELSE BEGIN
+              numerator = TOTAL(maximus.width_time[plot_i_list[i]])
+           ENDELSE
            denominator = TOTAL(fastLoc_delta_t[fastLocInterped_i_list[i]])
            probOcc     = [probOcc,numerator/denominator]
         ENDFOR
@@ -223,6 +301,31 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   xRange    = [delayArr[0],delayArr[-1]]/60.
   yRangeMin = MIN(LIST_TO_1DARRAY(probOccList,/SKIP_NEG1_ELEMENTS,/WARN),MAX=yRangeMax)
 
+  IF KEYWORD_SET(byMin) THEN BEGIN
+     byMinStr       = (KEYWORD_SET(do_abs_byMin) ? "|" : "") + "B!Dy!N min" + (KEYWORD_SET(do_abs_byMin) ? "|" : "") $
+                      + ": " + STRCOMPRESS(byMin,/REMOVE_ALL) + " nT" $
+                      + (KEYWORD_SET(byMax) OR KEYWORD_SET(bzMin) OR KEYWORD_SET(bzMax) ? ", " : "")
+  ENDIF ELSE byMinStr = ""
+
+  IF KEYWORD_SET(byMax) THEN BEGIN
+     byMaxStr       = " " + (KEYWORD_SET(do_abs_byMax) ? "|" : "") + "B!Dy!N max" + (KEYWORD_SET(do_abs_byMax) ? "|" : "") $
+                      + ": " + STRCOMPRESS(byMax,/REMOVE_ALL) + " nT" $
+                      + (KEYWORD_SET(bzMin) OR KEYWORD_SET(bzMax) ? ", " : "")
+  ENDIF ELSE byMaxStr = ""
+
+  IF KEYWORD_SET(bzMin) THEN BEGIN
+     bzMinStr       = " " + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") + "B!Dy!N min" + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") $
+                      + ": " + STRCOMPRESS(bzMin,/REMOVE_ALL) + " nT" $
+                      + (KEYWORD_SET(bzMax) ? ", " : "")
+  ENDIF ELSE bzMinStr = ""
+
+  IF KEYWORD_SET(bzMax) THEN BEGIN
+     bzMaxStr       = " " + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") + "B!Dy!N max" + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") $
+                      + ": " + STRCOMPRESS(bzMax,/REMOVE_ALL) + " nT"
+  ENDIF ELSE bzMaxStr = ""
+
+  winTitle = byMinStr + byMaxStr + bzMinStr + bzMaxStr
+
   WINDOW_CUSTOM_SETUP,NPLOTCOLUMNS=N_ELEMENTS(clockStr), $
                       NPLOTROWS=N_ELEMENTS(cell)-1+KEYWORD_SET(do_center_cell), $
                       COLUMN_NAMES=clockStr, $
@@ -231,23 +334,37 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
                       SPACE_VERT_BETWEEN_ROWS=0.04, $
                       SPACE_FOR_ROW_NAMES=0.05, $
                       SPACE_FOR_COLUMN_NAMES=0.05, $
+                      WINDOW_TITLE=winTitle, $
                       XTITLE='Delay (min)', $
                       YTITLE='Probability of Occurrence', $
                       CURRENT_WINDOW=window,/MAKE_NEW
   
   FOR i=0,N_ELEMENTS(probOccList)-1 DO BEGIN
-     plot  = PLOT(delayArr/60.,probOccList[i], $
-                  ;; TITLE=title_list[i], $
-                  XRANGE=xRange, $
-                  YRANGE=[yRangeMin,yRangeMax], $
-                  CURRENT=window, $
-                  POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
+     delPoints = (delayArr-delayDeltaSec/2.+binOffset_delay)/60.
+     plot      = PLOT(delPoints,probOccList[i], $
+                      ;; TITLE=title_list[i], $
+                      XRANGE=xRange, $
+                      YRANGE=[yRangeMin,yRangeMax], $
+                      /HISTOGRAM, $
+                      CURRENT=window, $
+                      POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
   ENDFOR
 
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
-  delayStr = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
 
-  outPlot = outPlot_pref + hemi + delayStr+"--"+omni_paramStr+'.png'
+  delayStr = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
+  IF N_ELEMENTS(delay_res) GT 0 THEN delayResStr = STRING(FORMAT='("__",F0.2,"Res")',delay_res/60.) ELSE delayResStr = ""
+  IF N_ELEMENTS(binOffset_delay) GT 0 THEN delBinOffStr = STRING(FORMAT='("__",F0.2,"binOffset")',binOffset_delay/60.) ELSE delBinOffStr = ""
+  delayStr = delayStr + delayResStr + delBinOffStr
+
+  stormStr = (KEYWORD_SET(nonstorm) ? "--nonstorm" : "") + $
+             (KEYWORD_SET(mainPhase) ? "--mainPhase" : "") + $
+             (KEYWORD_SET(recoveryPhase) ? "--recoveryPhase" : "")
+  IF KEYWORD_SET(nonstorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+     stormStr = stormStr + "__dstCutoff_" + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT"
+  ENDIF
+
+  outPlot = outPlot_pref + hemi + stormStr + delayStr+"--" + omni_paramStr + '.png'
   PRINT,'saving ' + outPlot
   window.save,plotDir+outPlot
 
