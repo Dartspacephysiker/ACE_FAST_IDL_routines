@@ -1,5 +1,5 @@
 ;2016/04/02 Maybe we just need to hate the despun DB
-PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__NOT_DESPUN
+PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__NORTHSOUTH__ON_DAYSIDE__NOT_DESPUN
   date                           = '20160403'
 
   crossCorr_pref                 = 'journal__' + date + '__CrossCorr_probOccurrence_vs_delay--all_alts--'
@@ -17,18 +17,18 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;;IMF condition stuff
 
   ;; ;;For Dawn/dusk stuff
-  clockStr                       = ['dawnward','duskward']
-  byMin                          = 10
-  do_abs_byMin                   = 1
-  bzMax                          = 0
+  ;; clockStr                       = ['dawnward','duskward']
+  ;; byMin                          = 10
+  ;; do_abs_byMin                   = 1
+  ;; bzMax                          = 0
   ;; bzMin                          = 1
 
   ;; ;;For bzNorth/South stuff
-  ;; clockStr                       = ['bzNorth','bzSouth']
-  ;; byMax                          = 5
-  ;; do_abs_byMax                   = 1
-  ;; bzMin                          = 5
-  ;; do_abs_bzMin                   = 1
+  clockStr                       = ['bzNorth','bzSouth']
+  byMax                          = 4
+  do_abs_byMax                   = 1
+  bzMin                          = 8
+  do_abs_bzMin                   = 1
 
 
   ;;DB stuff
@@ -39,8 +39,7 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;;Customize 'em!
   hemi                           = 'NORTH'
   minILAT                        = [ 67, 67, 67, 67, 67, 67]
-  ;; maxILAT                        = [ 79, 79, 79, 79, 79, 79]
-  maxILAT                        = [ 74, 74, 74, 74, 74, 74]
+  maxILAT                        = [ 79, 79, 79, 79, 79, 79]
   centerMLT__dawn                = 12.0
   centerMLT__dusk                = 12.0
 
