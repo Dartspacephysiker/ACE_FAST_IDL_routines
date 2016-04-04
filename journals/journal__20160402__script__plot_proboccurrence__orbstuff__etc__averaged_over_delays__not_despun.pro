@@ -5,10 +5,10 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   save_combined_window = 1
   combined_to_buffer   = 1
 
-  dont_overwrite_existing = 0
+  no_overwrite_existing = 0
 
   maskMin              = 5
-  despun               = 0
+  despun               = 1
 
   just_north           = 1
 
@@ -60,6 +60,7 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;IMF Conds
   plot_dateStr         = 'Apr_3_16'
   IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
+  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'
   ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
@@ -129,7 +130,7 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
                                    PLOTDIR=plotDir, $
                                    PLOTNAMEPREFARR=plotNamePrefArr, $
                                    /DELETE_PLOTS_WHEN_FINISHED, $
-                                   DONT_OVERWRITE_EXISTING=dont_overwrite_existing
+                                   DONT_OVERWRITE_EXISTING=no_overwrite_existing
      ENDFOR
   ENDIF
 

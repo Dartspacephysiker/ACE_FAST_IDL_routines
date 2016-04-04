@@ -9,7 +9,7 @@ PRO JOURNAL__20160402__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; date_alt            = 'Mar_31_16'
 
   maskMin              = 5
-  despun               = 0
+  despun               = 1
 
   just_north           = 1
 
@@ -72,6 +72,7 @@ PRO JOURNAL__20160402__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
+  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr       = '__ABS_byMin10.0'
   ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin7.0'
@@ -89,7 +90,7 @@ PRO JOURNAL__20160402__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'+IMFCondStrArr+'/'
   fileSuff            = bonusSuff+'--combined.png'
 
-  IF KEYWORD_SET(despun)              THEN despunStr          = 'despun--' ELSE despunStr = ''
+  IF KEYWORD_SET(despun)              THEN despunStr          = '--despun' ELSE despunStr = ''
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;don't mess with Texas below here

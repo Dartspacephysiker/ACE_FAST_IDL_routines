@@ -4,7 +4,7 @@ PRO JOURNAL__20160402__SCRIPT__TIME_AVERAGE_OVER_DELAYS__NOT_DESPUN
   ;; plot_dateStr         = 'Apr_2_16'
   plot_dateStr         = 'Apr_3_16'
 
-  despun               = 0
+  despun               = 1
   maskMin              = 5
 
   just_north           = 1
@@ -27,6 +27,7 @@ PRO JOURNAL__20160402__SCRIPT__TIME_AVERAGE_OVER_DELAYS__NOT_DESPUN
   ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
   ;; IMFCondStrArr        = '__ABS_byMin10.0'
   IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
+  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
@@ -59,13 +60,21 @@ PRO JOURNAL__20160402__SCRIPT__TIME_AVERAGE_OVER_DELAYS__NOT_DESPUN
   dont_logPlot_inds    = [0,1,2,3,4]
   ;; dont_logPlot_inds    = [0,1,2,3]
 
-  ;2016/04/02 For plots involving byMin8.0__bzMin-1.0, NOT DESPUN
-  unlogPlot_lims       = [[0.0,1.0], $
-                          [0.0,2.0], $
-                          [0.0,5e8], $
+  ;2016/04/02 For plots involving byMin10.0__bzMax2.0
+  unlogPlot_lims       = [[0.0,0.3], $
+                          [0.0,1.0], $
+                          [0.0,1e8], $
                           ;; [0.0, 50], $   ; No nEvPerOrb plot this time 'round
                           [0.0,0.15], $
-                          [0.0,350]]
+                          [0.0,800]]
+
+  ;2016/04/02 For plots involving byMin8.0__bzMax-1.0, NOT DESPUN
+  ;; unlogPlot_lims       = [[0.0,0.8], $
+  ;;                         [0.0,2.0], $
+  ;;                         [0.0,3e8], $
+  ;;                         ;; [0.0, 50], $   ; No nEvPerOrb plot this time 'round
+  ;;                         [0.0,0.25], $
+  ;;                         [0.0,500]]
 
   ;2016/04/02 For plots involving byMin5.0__bzMin-1.0, NOT DESPUN
   ;; unlogPlot_lims       = [[0.0,1.0], $

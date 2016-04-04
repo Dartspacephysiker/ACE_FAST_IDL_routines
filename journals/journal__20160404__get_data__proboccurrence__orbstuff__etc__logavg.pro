@@ -1,5 +1,5 @@
-;2016/04/02 And if it's not despun?
-PRO JOURNAL__20160402__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEAVGING_LATER__NOT_DESPUN
+;2016/04/04 How about intensities?
+PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   nonstorm                       = 0
   justData                       = 1
@@ -17,8 +17,8 @@ PRO JOURNAL__20160402__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bonus
-  do_timeAvg_fluxQuantities      = 1
-  logAvgs                        = 0
+  do_timeAvg_fluxQuantities      = 0
+  logAvgs                        = 1
   maskMin                        = 5
   divide_by_width_x              = 1
 
