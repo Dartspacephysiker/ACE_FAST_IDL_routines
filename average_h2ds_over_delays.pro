@@ -6,6 +6,8 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
    CLOCKSTR=clockStr, $
    NDELAYS=nDelays, $
    DELAYDELTASEC=delayDeltaSec, $
+   RESOLUTION_DELAY=delay_res, $
+   BINOFFSET_DELAY=binOffset_delay, $
    DELAY_START=delay_start, $
    DELAY_STOP=delay_stop, $
    ;; DELAYARR=delayArr, $
@@ -47,7 +49,7 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
 
   IF ~KEYWORD_SET(IMFCondStr)         THEN IMFCondStr         = ''
 
-  IF ~KEYWORD_SET(minAvgs_for_noMask) THEN minAvgs_for_noMask = 10
+  IF N_ELEMENTS(minAvgs_for_noMask) EQ 0 THEN minAvgs_for_noMask = 10
 
   ;; IF ~KEYWORD_SET(date)               THEN date               = '20160328'
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'
@@ -59,6 +61,8 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   ;;Delay stuff (nDelays                                      = 61 will average over delays between -30 and 30 min, inclusive)
   IF ~KEYWORD_SET(nDelays)            THEN nDelays            = 31
   IF ~KEYWORD_SET(delayDeltaSec)      THEN delayDeltaSec      = 15
+  IF ~KEYWORD_SET(delay_res)          THEN delay_res          = 120
+  IF N_ELEMENTS(binOffset_delay)EQ 0  THEN binOffset_delay    = 0 
 
   ;;Make sure nothing bad is going to happen
   IF KEYWORD_SET(dont_logAvg_these_inds) AND KEYWORD_SET(logAvg_these_inds) THEN BEGIN
@@ -90,8 +94,12 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   ENDELSE
 
   delayStr            = STRING(FORMAT='("__",F0.2,"mindelay")',delayArr/60.) 
-  avgString           = GET_DELAY_AVG_STRING(in_avgType,delayArr,delayDeltaSec)
-  out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec)
+  IF N_ELEMENTS(delay_res) GT 0 THEN delayResStr = STRING(FORMAT='("__",F0.2,"Res")',delay_res/60.) ELSE delayResStr = ""
+  ;; IF N_ELEMENTS(binOffset_delay) GT 0 THEN delBinOffStr = STRING(FORMAT='("__",F0.2,"binOffset")',binOffset_delay/60.) ELSE delBinOffStr = ""
+  delayStr = delayStr + delayResStr
+
+  avgString           = GET_DELAY_AVG_STRING(in_avgType,delayArr,delayDeltaSec,delay_res)
+  out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec,delay_res)
 
   paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
 
@@ -227,12 +235,20 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
 
   PRINT,'looped over delays! Averaging...'
 
-  finalNotMask                       = nAvgH2dArr[0].data GE minAvgs_for_noMask
+  IF nDelays GT 2 THEN BEGIN
+     finalNotMask = nAvgH2dArr[0].data GE minAvgs_for_noMask 
+  ENDIF ELSE BEGIN
+     finalNotMask = h2dStrarr[mask_str_i].data LT 250
+  ENDELSE
+
+  ;; IF N_ELEMENTS(delayArr) EQ 1 THEN denom = delay_res ELSE denom = (delayArr[-1]-delayArr[0])
+  denom = delay_res*nDelays
+
   FOR plot_i=0,nPlots-1 DO BEGIN
      IF KEYWORD_SET(timeAvg_these_inds) THEN BEGIN
         timeMe = WHERE(plot_i EQ timeAvg_these_inds)
         IF timeMe[0] NE -1 THEN BEGIN 
-           averagedH2ds[plot_i].data = averagedH2ds[plot_i].data/(delayArr[-1]-delayArr[0])
+           averagedH2ds[plot_i].data = averagedH2ds[plot_i].data/denom
         ENDIF ELSE BEGIN
            averagedH2ds[plot_i].data = averagedH2ds[plot_i].data/nDelays
         ENDELSE
@@ -292,14 +308,19 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
         ENDELSE
      ENDCASE
 
+     minDat = MIN(h2dFinArr[plot_i].data[good_i])
+     maxDat = MAX(h2dFinArr[plot_i].data[good_i])
+     medDat = MEDIAN(h2dFinArr[plot_i].data[good_i])
      IF KEYWORD_SET(h2dFinArr[plot_i].is_logged) THEN BEGIN
         PRINT,FORMAT='("This plot will be on a log scale       :",T40,I0,T45,A0)',plot_i,h2dFinArr[plot_i].title
-        PRINT,FORMAT='("Min, max lim    : ",T20,F13.3,T35,F13.3)',h2dFinArr[plot_i].lim[0],h2dFinArr[plot_i].lim[1]
-        PRINT,FORMAT='("Min, max data   : ",T20,F13.3,T35,F13.3)',MIN(h2dFinArr[plot_i].data[good_i]),MAX(h2dFinArr[plot_i].data[good_i])
+        PRINT,FORMAT='("Min, max, med lim  : ",T20,F13.3,T35,F13.3,T50,F13.3)',h2dFinArr[plot_i].lim[0],h2dFinArr[plot_i].lim[1], $
+              MEDIAN(h2dFinArr[plot_i].lim)
+        PRINT,FORMAT='("Min, max, med data : ",T20,F13.3,T35,F13.3,T50,F13.3)',minDat,maxDat,medDat
      ENDIF ELSE BEGIN
         PRINT,FORMAT='("This plot will be on a linear scale    :",T40,I0,T45,A0)',plot_i,h2dFinArr[plot_i].title
-        PRINT,FORMAT='("Min, max lim    : ",T20,G13.3,T35,G13.3)',h2dFinArr[plot_i].lim[0],h2dFinArr[plot_i].lim[1]
-        PRINT,FORMAT='("Min, max data   : ",T20,G13.3,T35,G13.3)',MIN(h2dFinArr[plot_i].data[good_i]),MAX(h2dFinArr[plot_i].data[good_i])
+        PRINT,FORMAT='("Min, max, med lim  : ",T20,G13.3,T35,G13.3,T50,G13.3)',h2dFinArr[plot_i].lim[0],h2dFinArr[plot_i].lim[1], $
+              MEDIAN(h2dFinArr[plot_i].lim)
+        PRINT,FORMAT='("Min, max, med data : ",T20,G13.3,T35,G13.3,T50,G13.3)',minDat,maxDat,medDat
      ENDELSE
      PRINT,''
 

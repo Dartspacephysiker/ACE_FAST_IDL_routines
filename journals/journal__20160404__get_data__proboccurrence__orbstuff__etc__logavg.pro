@@ -25,13 +25,13 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 85
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -61
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -61
 
   ;; binILAT                        = 4.0        ;2016/03/{23,31}
   ;; binILAT                        = 2.0        ;2016/03/24
@@ -43,10 +43,10 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75        ;2016/03/2{3,9}
+  ;; binMLT                         = 0.75        ;2016/03/2{3,9}
   ;; shiftMLT                       = 0.375       ;2016/03/2{3,9}
 
-  ;; binMLT                         = 1.0       ;2016/03/24
+  binMLT                         = 1.0       ;2016/03/24
   ;; shiftMLT                       = 0.5       ;2016/03/24
 
   ;; binMLT                         = 1.5       ;2016/03/31
@@ -71,9 +71,13 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;; delay_res                      = 900
   ;; binOffset_delay                = 0
 
-  delayDeltaSec                  = 600
-  delay_res                      = 600
-  binOffset_delay                = 0
+  ;; delayDeltaSec                  = 600
+  ;; delay_res                      = 600
+
+  delayDeltaSec                  = 1800
+  delay_res                      = 1800
+
+  binOffset_delay                = 900
 
   ;; delayDeltaSec                  = 1200
   ;; delay_res                      = 1200
