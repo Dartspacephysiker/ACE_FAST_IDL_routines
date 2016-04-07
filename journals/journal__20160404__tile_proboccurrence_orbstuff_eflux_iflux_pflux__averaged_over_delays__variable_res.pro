@@ -12,13 +12,13 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   despun               = 1
 
   just_north           = 0
-  just_south           = 1
+  just_south           = 0
 
   ;; date                 = '20160403'
   ;; date_alt             = 'Apr_3_16'
 
-  date                 = '20160404'
-  date_alt             = 'Apr_4_16'
+  date                 = '20160406'
+  date_alt             = 'Apr_6_16'
 
   ;; dataNamesTimeSpace  = ['spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
   ;;                        'spatialAvg_NoNegs--Logiflux_INTEG_UP', $
@@ -49,17 +49,29 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; nDelArr              = [1,3,5]
   ;; delayDeltaSec        = [1200,1200,1200]
 
+  ;; delayDeltaSec                  = [3600,3600]
+  ;; delay_res                      = 3600
+  ;; binOffset_delay                = 0
+  ;; nDelArr              = [1,3]
+
   delay_res            = 1800
   binOffset_delay      = 0
   nDelArr              = [1,3,5]
   delayDeltaSec        = [1800,1800,1800]
 
+  ;; delay_res            = 1800
+  ;; binOffset_delay      = 0
+  ;; nDelArr              = [1,3,5]
+  ;; delayDeltaSec        = [1800,1800,1800]
 
   ;; delay_start          = -5
   ;; delay_stop           = 20
 
-  IF just_north THEN hemiArr = 'NORTH' ELSE hemiArr = ['NORTH','SOUTH']
-  IF just_south THEN hemiArr = 'SOUTH' ELSE hemiArr = ['NORTH','SOUTH']
+  CASE 1 OF
+     just_north: hemiArr = 'NORTH'
+     just_south: hemiArr = 'SOUTH'
+     ELSE: hemiArr = ['NORTH','SOUTH']
+  ENDCASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Avg types?
@@ -81,10 +93,12 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr       = '__ABS_byMin10.0'
-  IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
+  ;; IMFCondStrArr        = '__ABS_byMin9.0__bzMax-3.0'
+  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
   ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
   ;; IMFCondStrArr       = '__ABS_byMin7.0'
   ;; IMFCondStrArr       = '__ABS_byMin7.0__bzMax0.0'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr       = '__ABS_byMin4.0__bzMax-2.0'

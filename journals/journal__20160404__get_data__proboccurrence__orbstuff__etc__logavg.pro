@@ -27,10 +27,10 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;;ILAT stuff
   ;; hemi                           = 'NORTH'
   ;; minILAT                        = 61
-  ;; maxILAT                        = 85
+  ;; maxILAT                        = 86
 
   hemi                           = 'SOUTH'
-  minILAT                        = -85
+  minILAT                        = -86
   maxILAT                        = -61
 
   ;; binILAT                        = 4.0        ;2016/03/{23,31}
@@ -38,7 +38,7 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
   ;; binILAT                        = 5.0        ;2016/03/29
-  binILAT                        = 6.0        ;2016/04/03
+  binILAT                        = 5.0        ;2016/04/03
   ;; binILAT                        = 7.0        ;2016/04/03
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,7 +47,7 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;; shiftMLT                       = 0.375       ;2016/03/2{3,9}
 
   binMLT                         = 1.0       ;2016/03/24
-  ;; shiftMLT                       = 0.5       ;2016/03/24
+  shiftMLT                       = 0.50       ;2016/03/24
 
   ;; binMLT                         = 1.5       ;2016/03/31
   ;; shiftMLT                       = 0.75      ;2016/03/31
@@ -55,9 +55,9 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  byMin                          = 8
+  byMin                          = 5
   do_abs_bymin                   = 1
-  bzMax                          = -4
+  bzMax                          = -5
   ;; bzMin                          = 3
 
   ;;DB stuff
@@ -66,6 +66,8 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;delay stuff
   totMinToDisplay                = 120
+  delayDeltaSec                  = 1800
+  delay_res                      = 1800
 
   ;; delayDeltaSec                  = 900
   ;; delay_res                      = 900
@@ -74,10 +76,11 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;; delayDeltaSec                  = 600
   ;; delay_res                      = 600
 
-  delayDeltaSec                  = 1800
-  delay_res                      = 1800
+  ;; totMinToDisplay                = 180
+  ;; delayDeltaSec                  = 3600
+  ;; delay_res                      = 3600
 
-  binOffset_delay                = 900
+  binOffset_delay                = 0
 
   ;; delayDeltaSec                  = 1200
   ;; delay_res                      = 1200

@@ -1,9 +1,69 @@
 ;2016/04/04 Some new approaches
-PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO
+PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO
   date                           = '20160406'
 
-  crossCorr_pref                 = 'journal__' + date + '__CrossCorr_probOccurrence_vs_delay--all_alts--'
-  outPlot_pref                   = 'journal__' + date + '__plot_probOccurrence_vs_delay--all_alts--'
+  probOccurrence                 = 1
+  pFlux                          = 0
+  eFlux                          = 0
+  iFlux                          = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Average types
+  spatialAvg                     = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Select one...
+  temporalAvg                    = 1
+  logAvg                         = 0
+  avg                            = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Change x axis
+  do_hours_xRange                = 1
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;BEGIN
+
+  CASE 1 OF
+     temporalAvg: avgStr         = 'timeAvg'
+     logAvg:      avgStr         = 'logAvg'
+     avg:         avgStr         = 'avg'
+     ELSE:        avgStr         = ''
+  ENDCASE
+
+  CASE 1 OF
+     pFlux: BEGIN
+        datStr                   = 'pFlux_avg'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged Poynting flux (mW/m!U2!N)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged Poynting flux (mW/m)'
+        ENDELSE
+     END
+     eFlux: BEGIN
+        datStr                   = 'eFlux_losscone_avg'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged e!U-!N flux (mW/m!U2!N)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged e!U-!N flux (mW/m)'
+        ENDELSE
+     END
+     iFlux: BEGIN
+        datStr                   = 'iFlux_upward'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged upward ion flux (#/cm!U2!N-s)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged upward ion flux (#/cm-s)'
+        ENDELSE
+     END
+     probOccurrence: BEGIN
+        datStr                   = 'probOccurrence'
+        title                    = 'Probability of Occurrence'
+     END
+  ENDCASE
+
+  crossCorr_pref                 = 'journal__' + date + '__CrossCorr_' + datStr + '_vs_delay--' + avgStr
+  outPlot_pref                   = 'journal__' + date + '__plot_' + datStr + '_vs_delay--' + avgStr
   outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15,7 +75,7 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
 
   do_center_cell                 = 1
 
-  minNEvents                     = 20
+  minNEvents                     = 10
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;delay stuff
@@ -38,8 +98,8 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;; binOffset_delay                = 900
 
   ;;2016/04/06 Based on the latest, K?
-  delayDeltaSec                  = 1800
-  delay_res                      = 1800
+  delayDeltaSec                  = 3600
+  delay_res                      = 3600
   binOffset_delay                = 0
 
   ;; nDelays                        = 401
@@ -50,10 +110,10 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;;IMF condition stuff
 
   ;; ;;For Dawn/dusk stuff
-  clockStr                       = ['dawnward','duskward'] ;2016/04/06 for negAngle posAngle 60 120
-  byMin                          = 5
-  do_abs_byMin                   = 1
-  bzMax                          = -5
+  ;; clockStr                       = ['dawnward','duskward'] ;2016/04/06 for negAngle posAngle 60 120
+  ;; byMin                          = 8
+  ;; do_abs_byMin                   = 1
+  ;; bzMax                          = -4
   ;; bzMin                          = 1
 
   ;; clockStr                       = ['dawnward','duskward']
@@ -63,11 +123,11 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ;; bzMin                          = 1
 
   ;; ;;For bzNorth/South stuff
-  ;; clockStr                       = ['bzNorth','bzSouth']
-  ;; byMax                          = 5
-  ;; do_abs_byMax                   = 1
-  ;; bzMin                          = 5
-  ;; do_abs_bzMin                   = 1
+  clockStr                       = ['bzNorth','bzSouth']
+  byMax                          = 5
+  do_abs_byMax                   = 1
+  bzMin                          = 5
+  do_abs_bzMin                   = 1
 
 
   ;;DB stuff
@@ -79,7 +139,7 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   hemi                           = 'NORTH'
   minILAT                        = [ 65, 65, 65, 65, 65, 65]
   ;; maxILAT                        = [ 79, 79, 79, 79, 79, 79]
-  maxILAT                        = [ 73, 73, 73, 73, 73, 73]
+  maxILAT                        = [ 75, 75, 75, 75, 75, 75]
   centerMLT__dawn                = 12.0
   centerMLT__dusk                = 12.0
 
@@ -265,6 +325,11 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
                                       OUT_FASTLOC_DELTA_T=fastLoc_delta_t
         
         
+        IF KEYWORD_SET(pFlux) OR KEYWORD_SET(eFlux) OR KEYWORD_SET(iFlux) THEN BEGIN
+           LOAD_MAPPING_RATIO_DB,mapRatio, $
+                                 DO_DESPUNDB=maximus.despun
+        ENDIF
+
         
         ;; plot_i_list_list.add,plot_i_list
         ;; fastLocInterped_i_list_list.add,fastLocInterped_i_list
@@ -297,20 +362,88 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
         probOcc=!NULL
         FOR i=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN 
            IF plot_i_list[i,0] EQ -1 OR N_ELEMENTS(plot_i_list[i]) LT minNEvents THEN BEGIN
-              numerator = 0 
+              ;; IF KEYWORD_SET(logAvg) THEN numerator = 
+              probOcc                 = [probOcc,!Values.D_NaN]
+              ;; IF KEYWORD_SET(logAvg) THEN probOcc = [probOcc,] ELSE probOcc = [probOcc,0]
               PRINT,'No data for delay = ' + STRCOMPRESS(delayArr[i],/REMOVE_ALL) + '...'
            ENDIF ELSE BEGIN
-              numerator = TOTAL(maximus.width_time[plot_i_list[i]])
+              tmp_i                   = plot_i_list[i]
+              CASE 1 OF
+                 pFlux: BEGIN
+                    IF KEYWORD_SET(spatialAvg) THEN BEGIN
+                       numerator         = maximus.pFluxEst[tmp_i]*maximus.width_time[tmp_i]
+                    ENDIF ELSE BEGIN
+                       IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
+                          PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
+                          magFieldFactor = 1.D/SQRT(mapRatio.ratio[tmp_i]) ;This undoes multip. by mapRatio performed in CORRECT_ALFVENDB_FLUXES
+                       ENDIF ELSE BEGIN
+                          magFieldFactor = SQRT(mapRatio.ratio[tmp_i])
+                       ENDELSE
+                       numerator         = maximus.pFluxEst[tmp_i]*maximus.width_time[tmp_i]*maximus.width_x[tmp_i]
+                    ENDELSE
+                 END
+                 eFlux: BEGIN
+                    tmp_i              = CGSETINTERSECTION(tmp_i,WHERE(maximus.eflux_losscone_integ GT 0))
+                    IF KEYWORD_SET(spatialAvg) THEN BEGIN
+                       magFieldFactor  = SQRT(mapRatio.ratio[tmp_i]) ;This scales width_x to the ionosphere
+                       numerator       = maximus.eflux_losscone_integ[tmp_i]*magFieldFactor*maximus.width_time[tmp_i]/maximus.width_x[tmp_i]
+                    ENDIF ELSE BEGIN
+                       numerator       = maximus.eflux_losscone_integ[tmp_i]*maximus.width_time[tmp_i]
+                    ENDELSE
+                 END
+                 iFlux: BEGIN
+                    tmp_i              = CGSETINTERSECTION(tmp_i,WHERE(maximus.integ_ion_flux_up GT 0))
+                    dat                = WHERE(maximus.integ_ion_flux_up[tmp_i] LT 0)
+                    IF dat[0] NE -1 THEN BEGIN
+                       PRINT,'BAD DATA!!!!'
+                       STOP
+                    ENDIF
+                    IF KEYWORD_SET(spatialAvg) THEN BEGIN
+                       magFieldFactor  = SQRT(mapRatio.ratio[tmp_i]) ;This scales width_x to the ionosphere
+                       numerator       = maximus.integ_ion_flux_up[tmp_i]*.01*magFieldFactor*maximus.width_time[tmp_i]/maximus.width_x[tmp_i]
+                    ENDIF ELSE BEGIN
+                       numerator       = maximus.integ_ion_flux_up[tmp_i]*maximus.width_time[tmp_i]
+                    ENDELSE
+                 END
+                 probOccurrence: BEGIN
+                    numerator          = maximus.width_time[tmp_i]
+                 END
+              ENDCASE
+
+              CASE 1 OF
+                 temporalAvg: BEGIN
+                    numerator   = TOTAL(numerator)
+                    denominator = TOTAL(fastLoc_delta_t[fastLocInterped_i_list[i]])
+                    probOcc     = DOUBLE([probOcc,numerator/denominator])
+                 END
+                 logAvg: BEGIN
+                    bad         = WHERE(numerator LT 0)
+                    IF bad[0] NE -1 THEN BEGIN
+                       PRINT,"bad stuff; how you gonna log me?"
+                       STOP
+                    ENDIF
+                    probOcc     = DOUBLE([probOcc,MEAN(ALOG10(numerator))])
+                 END
+                 avg: BEGIN
+                    probOcc     = DOUBLE([probOcc,MEAN(numerator)])
+                 END
+              ENDCASE
            ENDELSE
-           denominator = TOTAL(fastLoc_delta_t[fastLocInterped_i_list[i]])
-           probOcc     = [probOcc,numerator/denominator]
         ENDFOR
         probOccList.add,probOcc
      ENDFOR
   ENDFOR
 
-  xRange    = [delayArr[0],delayArr[-1]]/60.
-  yRangeMin = MIN(LIST_TO_1DARRAY(probOccList,/SKIP_NEG1_ELEMENTS,/WARN),MAX=yRangeMax)
+  IF do_hours_xRange THEN BEGIN
+     xFactor = 3600. 
+     xSuff   = 'hr'
+  ENDIF ELSE BEGIN
+     xFactor = 60.
+     xSuff   = 'min'
+  ENDELSE
+  
+  xRange    = [delayArr[0],delayArr[-1]]/xFactor
+  yRangeMin = MIN(LIST_TO_1DARRAY(probOccList,/SKIP_NEG1_ELEMENTS,/SKIP_NANS,/WARN),MAX=yRangeMax)
 
   IF KEYWORD_SET(byMin) THEN BEGIN
      byMinStr       = (KEYWORD_SET(do_abs_byMin) ? "|" : "") + "B!Dy!N min" + (KEYWORD_SET(do_abs_byMin) ? "|" : "") $
@@ -325,13 +458,13 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
   ENDIF ELSE byMaxStr = ""
 
   IF KEYWORD_SET(bzMin) THEN BEGIN
-     bzMinStr       = " " + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") + "B!Dy!N min" + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") $
+     bzMinStr       = " " + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") + "B!Dz!N min" + (KEYWORD_SET(do_abs_bzMin) ? "|" : "") $
                       + ": " + STRCOMPRESS(bzMin,/REMOVE_ALL) + " nT" $
                       + (KEYWORD_SET(bzMax) ? ", " : "")
   ENDIF ELSE bzMinStr = ""
 
   IF KEYWORD_SET(bzMax) THEN BEGIN
-     bzMaxStr       = " " + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") + "B!Dy!N max" + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") $
+     bzMaxStr       = " " + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") + "B!Dz!N max" + (KEYWORD_SET(do_abs_bzMax) ? "|" : "") $
                       + ": " + STRCOMPRESS(bzMax,/REMOVE_ALL) + " nT"
   ENDIF ELSE bzMaxStr = ""
 
@@ -346,13 +479,14 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
                       SPACE_FOR_ROW_NAMES=0.05, $
                       SPACE_FOR_COLUMN_NAMES=0.05, $
                       WINDOW_TITLE=winTitle, $
-                      XTITLE='Delay (min)', $
-                      YTITLE='Probability of Occurrence', $
+                      ;; XTITLE='Delay (min)', $
+                      XTITLE='Delay ('+xSuff+')', $
+                      YTITLE=title, $
                       CURRENT_WINDOW=window,/MAKE_NEW
   
   FOR i=0,N_ELEMENTS(probOccList)-1 DO BEGIN
-     delPoints = (delayArr-delayDeltaSec/2.+binOffset_delay)/60.
-     plot      = PLOT(delPoints,probOccList[i], $
+     delPoints = ((delayArr-delayDeltaSec/2.+binOffset_delay)/xFactor)[WHERE(FINITE(probOccList[i]))]
+     plot      = PLOT(delPoints,probOccList[i,WHERE(FINITE(probOccList[i]))], $
                       ;; TITLE=title_list[i], $
                       XRANGE=xRange, $
                       YRANGE=[yRangeMin,yRangeMax], $
@@ -375,7 +509,7 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
      stormStr = stormStr + "__dstCutoff_" + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT"
   ENDIF
 
-  outPlot = outPlot_pref + hemi + stormStr + delayStr+"--" + omni_paramStr + '.png'
+  outPlot = outPlot_pref + '--' + hemi + stormStr + delayStr+"--" + omni_paramStr + '.png'
   PRINT,'saving ' + outPlot
   window.save,plotDir+outPlot
 
@@ -388,29 +522,32 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
                       SPACE_VERT_BETWEEN_ROWS=0.04, $
                       SPACE_FOR_ROW_NAMES=0.05, $
                       SPACE_FOR_COLUMN_NAMES=0.05, $
-                      XTITLE='N Lags ($\Delta$Lag = ' + STRCOMPRESS((delayArr[1]-delayArr[0])/60.,/REMOVE_ALL) + ' min)', $
+                      XTITLE='N Lags ($\Delta$Lag = ' + STRCOMPRESS((delayArr[1]-delayArr[0])/xFactor,/REMOVE_ALL) + ' ' + xSuff + ')', $
                       YTITLE='Cross correlation', $
                       CURRENT_WINDOW=window_cc, $
                       /MAKE_NEW
 
-  lags          = INDGEN(nDelays-2)-(nDelays-2)/2
-  dawnward_ccor = C_CORRELATE(probOccList[0],probOccList[1],lags)
-  duskward_ccor = C_CORRELATE(probOccList[2+KEYWORD_SET(do_center_cell)],probOccList[3+KEYWORD_SET(do_center_cell)],lags)
 
-     plot  = PLOT(lags,dawnward_ccor, $
+  dawnward_i    = CGSETINTERSECTION(WHERE(FINITE(probOccList[0])),WHERE(FINITE(probOccList[1])))
+  duskward_i    = CGSETINTERSECTION(WHERE(FINITE(probOccList[2+KEYWORD_SET(do_center_cell)])),WHERE(FINITE(probOccList[3+KEYWORD_SET(do_center_cell)])))
+  lags          = INDGEN(nDelays-2)-(nDelays-2)/2
+  dawnward_ccor = C_CORRELATE(probOccList[0,dawnward_i],probOccList[1,dawnward_i],lags[dawnward_i])
+  duskward_ccor = C_CORRELATE(probOccList[2+KEYWORD_SET(do_center_cell),duskward_i],probOccList[3+KEYWORD_SET(do_center_cell),duskward_i],lags[duskward_i])
+
+     plot  = PLOT(lags[dawnward_i],dawnward_ccor, $
                   XRANGE=[lags[0],lags[-1]], $
                   YRANGE=[MIN([dawnward_ccor,duskward_ccor]),MAX([dawnward_ccor,duskward_ccor])], $
                   CURRENT=window_cc, $
                   POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
   
-     plot  = PLOT(lags,duskward_ccor, $
+     plot  = PLOT(lags[duskward_i],duskward_ccor, $
                   XRANGE=[lags[0],lags[-1]], $
                   YRANGE=[MIN([dawnward_ccor,duskward_ccor]),MAX([dawnward_ccor,duskward_ccor])], $
                   CURRENT=window_cc, $
                   POSITION=WINDOW_CUSTOM_NEXT_POS(/NEXT_ROW))
 
 
-     outPlot_CC= crossCorr_pref +hemi+delayStr+"--"+omni_paramStr+'.png'
+     outPlot_CC= crossCorr_pref + '--' + hemi + delayStr+"--" + omni_paramStr+'.png'
      PRINT,'saving ' + outPlot_CC
      window_cc.save,plotDir+outPlot_CC
 

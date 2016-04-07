@@ -11,7 +11,7 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   despun               = 1
 
   just_north           = 0
-  just_south           = 1
+  just_south           = 0
 
   ;; quants_to_plot       = [3]
   ;; quants_to_plot       = [0,1,2,3]
@@ -31,15 +31,24 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;; delayDeltaSec        = [1200,1200,1200]
 
   delay_res            = 1800
-  binOffset_delay      = 900
+  binOffset_delay      = 0
   nDelArr              = [1,3,5]
   delayDeltaSec        = [1800,1800,1800]
+
+  ;; totMinToDisplay                = 180
+  ;; delayDeltaSec                  = [3600,3600]
+  ;; delay_res                      = 3600
+  ;; binOffset_delay                = 0
+  ;; nDelArr              = [1,3]
 
   ;; delay_start          = -5
   ;; delay_stop           = 20
 
-  IF just_north THEN hemiArr = 'NORTH' ELSE hemiArr = ['NORTH','SOUTH']
-  IF just_south THEN hemiArr = 'SOUTH' ELSE hemiArr = ['NORTH','SOUTH']
+  CASE 1 OF
+     just_north: hemiArr = 'NORTH'
+     just_south: hemiArr = 'SOUTH'
+     ELSE: hemiArr = ['NORTH','SOUTH']
+  ENDCASE
 
   clockStrArr          = ['dawnward','duskward']
 
@@ -61,14 +70,17 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   ;; plot_dateStr         = 'Apr_3_16'
-  plot_dateStr         = 'Apr_4_16'
+  ;; plot_dateStr         = 'Apr_4_16'
+  plot_dateStr         = 'Apr_6_16'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'
+  ;; IMFCondStrArr        = '__ABS_byMin9.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
-  IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
+  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
