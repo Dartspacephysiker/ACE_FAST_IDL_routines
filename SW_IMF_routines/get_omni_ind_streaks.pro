@@ -59,23 +59,26 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
      C_OMNI__StreakDurArr                         = MAKE_ARRAY(N_ELEMENTS(mag_utc),/LONG) 
 
      GET_STREAKS,goodmag_goodtimes_i, $
-                 START_I=C_OMNI__streakstart_i, $
-                 STOP_I=C_OMNI__streakstop_i, $
+                 START_I=C_OMNI__streakstart_ii, $
+                 STOP_I=C_OMNI__streakstop_ii, $
                  OUT_STREAKLENS=C_OMNI__streakLens, $
                  SINGLE_I=C_OMNI__single_i
+     C_OMNI__streakstart_i                        = goodmag_goodtimes_i[C_OMNI__streakstart_ii]
+     C_OMNI__streakstop_i                         = goodmag_goodtimes_i[C_OMNI__streakstop_ii]
+
      C_OMNI__nStreaks                             = N_ELEMENTS(C_OMNI__streakLens)
-     C_OMNI__gapLengths                           = goodmag_goodtimes_i[C_OMNI__streakstart_i[1:-1]]-goodmag_goodtimes_i[C_OMNI__streakstop_i[0:-2]]
+     C_OMNI__gapLengths                           = goodmag_goodtimes_i[C_OMNI__streakstart_ii[1:-1]]-goodmag_goodtimes_i[C_OMNI__streakstop_ii[0:-2]]
 
      FOR streakNum=0,C_OMNI__nStreaks-1 DO BEGIN
         curLen                                    = C_OMNI__streakLens[streakNum]+1
-        curStart                                  = C_OMNI__streakstart_i[streakNum]
-        curStop                                   = C_OMNI__streakstop_i[streakNum]
+        curStart                                  = goodmag_goodtimes_i[C_OMNI__streakstart_ii[streakNum]]
+        curStop                                   = goodmag_goodtimes_i[C_OMNI__streakstop_ii[streakNum]]
         C_OMNI__StreakDurArr[curStart:curStop]    = INDGEN(curLen)
      ENDFOR
      
      ;; IF KEYWORD_SET(saveStreakFile) THEN BEGIN
      ;;    PRINT,'Saving OMNI streak file to ' + outDir + outFile + '...'
-     ;;    save,C_OMNI__StreakDurArr,C_OMNI__streakstart_i,C_OMNI__streakstop_i,C_OMNI__streakLens, $
+     ;;    save,C_OMNI__StreakDurArr,C_OMNI__streakstart_ii,C_OMNI__streakstop_ii,C_OMNI__streakLens, $
      ;;         C_OMNI__single_i,C_OMNI__gapLengths,C_OMNI__nStreaks, $
      ;;         FILENAME=outDir+outFile
      ;; ENDIF

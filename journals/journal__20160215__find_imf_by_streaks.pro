@@ -1,12 +1,12 @@
 PRO JOURNAL__20160215__FIND_IMF_BY_STREAKS
 
   clockStr                         = 'duskward'
-  byMin                            = 3
+  byMin                            = 5
   abs_bymin                        = 1
   do_angles                        = 1
-  bzMax                            = 0
+  bzMax                            = -5
 
-  minStreak                        = 60
+  minStreak                        = 10
 
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
@@ -45,7 +45,7 @@ PRO JOURNAL__20160215__FIND_IMF_BY_STREAKS
 
   GET_STREAKS,good_i,START_I=start_ii,STOP_I=stop_ii,SINGLE_I=single_ii,MIN_STREAK_TO_KEEP=minStreak
 
-  bigStreaks            = GET_N_MAXIMA_IN_ARRAY(stop_ii-start_ii,N=100,OUT_I=bigStreaks_i)
+  bigStreaks            = GET_N_MAXIMA_IN_ARRAY(stop_ii-start_ii,N=100 < N_ELEMENTS(stop_ii)-1,OUT_I=bigStreaks_i)
 
   ;;print longest streaks
   PRINT,FORMAT='("N",T5,"Length (min)",T20,"Start time",T45,"Stop time")'
