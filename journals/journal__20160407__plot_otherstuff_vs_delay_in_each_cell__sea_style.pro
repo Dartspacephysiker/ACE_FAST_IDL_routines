@@ -1,6 +1,6 @@
 ;2016/04/04 Some new approaches
-PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO
-  date                           = '20160406'
+PRO JOURNAL__20160407__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__SEA_STYLE
+  date                           = '20160407'
 
   probOccurrence                 = 1
   pFlux                          = 0

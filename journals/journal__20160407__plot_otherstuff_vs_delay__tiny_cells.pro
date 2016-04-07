@@ -1,6 +1,7 @@
-;2016/04/04 Some new approaches
-PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO
-  date                           = '20160406'
+;2016/04/07 So what if the cells are tiny?
+PRO JOURNAL__20160407__PLOT_OTHERSTUFF_VS_DELAY__TINY_CELLS
+  date                           = '20160407'
+  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   probOccurrence                 = 1
   pFlux                          = 0
@@ -20,51 +21,6 @@ PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Change x axis
   do_hours_xRange                = 1
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;BEGIN
-
-  CASE 1 OF
-     temporalAvg: avgStr         = 'timeAvg'
-     logAvg:      avgStr         = 'logAvg'
-     avg:         avgStr         = 'avg'
-     ELSE:        avgStr         = ''
-  ENDCASE
-
-  CASE 1 OF
-     pFlux: BEGIN
-        datStr                   = 'pFlux_avg'
-        IF KEYWORD_SET(spatialAvg) THEN BEGIN
-           title                 = 'Time-averaged Poynting flux (mW/m!U2!N)'
-        ENDIF ELSE BEGIN
-           title                 = 'Time-averaged Poynting flux (mW/m)'
-        ENDELSE
-     END
-     eFlux: BEGIN
-        datStr                   = 'eFlux_losscone_avg'
-        IF KEYWORD_SET(spatialAvg) THEN BEGIN
-           title                 = 'Time-averaged e!U-!N flux (mW/m!U2!N)'
-        ENDIF ELSE BEGIN
-           title                 = 'Time-averaged e!U-!N flux (mW/m)'
-        ENDELSE
-     END
-     iFlux: BEGIN
-        datStr                   = 'iFlux_upward'
-        IF KEYWORD_SET(spatialAvg) THEN BEGIN
-           title                 = 'Time-averaged upward ion flux (#/cm!U2!N-s)'
-        ENDIF ELSE BEGIN
-           title                 = 'Time-averaged upward ion flux (#/cm-s)'
-        ENDELSE
-     END
-     probOccurrence: BEGIN
-        datStr                   = 'probOccurrence'
-        title                    = 'Probability of Occurrence'
-     END
-  ENDCASE
-
-  crossCorr_pref                 = 'journal__' + date + '__CrossCorr_' + datStr + '_vs_delay--' + avgStr
-  outPlot_pref                   = 'journal__' + date + '__plot_' + datStr + '_vs_delay--' + avgStr
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Storm stuff?
@@ -100,7 +56,7 @@ PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;;2016/04/06 Based on the latest, K?
   delayDeltaSec                  = 3600
   delay_res                      = 3600
-  binOffset_delay                = 0
+  binOffset_delay                = 1800
 
   ;; nDelays                        = 401
   nDelays                        = FIX(FLOAT(totMinToDisplay)/delayDeltaSec*60)
@@ -141,12 +97,53 @@ PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   do_despun                      = 1
   altitudeRange                  = [0000,4175]
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;BEGIN
+
+  CASE 1 OF
+     temporalAvg: avgStr         = '--timeAvg'
+     logAvg:      avgStr         = '--logAvg'
+     avg:         avgStr         = '--avg'
+     ELSE:        avgStr         = ''
+  ENDCASE
+
+  CASE 1 OF
+     pFlux: BEGIN
+        datStr                   = 'pFlux_avg'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged Poynting flux (mW/m!U2!N)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged Poynting flux (mW/m)'
+        ENDELSE
+     END
+     eFlux: BEGIN
+        datStr                   = 'eFlux_losscone_avg'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged e!U-!N flux (mW/m!U2!N)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged e!U-!N flux (mW/m)'
+        ENDELSE
+     END
+     iFlux: BEGIN
+        datStr                   = 'iFlux_upward'
+        IF KEYWORD_SET(spatialAvg) THEN BEGIN
+           title                 = 'Time-averaged upward ion flux (#/cm!U2!N-s)'
+        ENDIF ELSE BEGIN
+           title                 = 'Time-averaged upward ion flux (#/cm-s)'
+        ENDELSE
+     END
+     probOccurrence: BEGIN
+        datStr                   = 'probOccurrence'
+        title                    = 'Probability of Occurrence'
+     END
+  ENDCASE
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Customize 'em!
   hemi                           = 'NORTH'
-  minILAT                        = [ 65, 65, 65, 65, 65, 65]
+  minILAT                        = [ 61, 61, 61, 61, 61, 61]
   ;; maxILAT                        = [ 79, 79, 79, 79, 79, 79]
-  maxILAT                        = [ 75, 75, 75, 75, 75, 75]
+  maxILAT                        = [ 78, 78, 78, 78, 78, 78]
   centerMLT__dawn                = 12.0
   centerMLT__dusk                = 12.0
 
@@ -160,23 +157,26 @@ PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  nBinsMLT                       = 3.0
+  nBinsMLT                       = 1.0
+  centerMLTwidth                 = 1.0
 
   cell                           = ['Dawn cell','Dusk cell','Center cell']
-  minMLT                         = [ centerMLT__dawn-binMLT*0.5-nBinsMLT*binMLT, centerMLT__dawn+binMLT*0.5                , $ ;;dawnward IMF
-                                     centerMLT__dawn-nBinsMLT*binMLT*0.5       ,                                             $ ;;;(center cell)
-                                     centerMLT__dusk-binMLT*0.5-nBinsMLT*binMLT, centerMLT__dusk+binMLT*0.5                , $ ;;duskward IMF
-                                     centerMLT__dusk-nBinsMLT*binMLT*0.5                                                   ]   ;;;(center cell)
+  minMLT                         = [ centerMLT__dawn-centerMLTwidth*0.5-nBinsMLT*binMLT, centerMLT__dawn+centerMLTwidth*0.5, $ ;;dawnward IMF
+                                     centerMLT__dawn-centerMLTwidth*0.5        ,                                             $ ;;;(center cell)
+                                     centerMLT__dusk-centerMLTwidth*0.5-nBinsMLT*binMLT, centerMLT__dusk+centerMLTwidth*0.5, $ ;;duskward IMF
+                                     centerMLT__dusk-centerMLTwidth*0.5                                                    ]   ;;;(center cell)
 
-  maxMLT                         = [ centerMLT__dawn-binMLT*0.5                , centerMLT__dawn+binMLT*0.5+nBinsMLT*binMLT, $ ;;dawnward IMF
-                                     centerMLT__dawn+nBinsMLT*binMLT*0.5       ,                                             $ ;;;(center cell)
-                                     centerMLT__dusk-binMLT*0.5                , centerMLT__dusk+binMLT*0.5+nBinsMLT*binMLT, $ ;;duskward IMF
-                                     centerMLT__dusk+nBinsMLT*binMLT*0.5                                                   ]   ;;;(center cell)
-
+  maxMLT                         = [ centerMLT__dawn-centerMLTwidth*0.5, centerMLT__dawn+centerMLTwidth*0.5+nBinsMLT*binMLT, $ ;;dawnward IMF
+                                     centerMLT__dawn+centerMLTwidth*0.5        ,                                             $ ;;;(center cell)
+                                     centerMLT__dusk-centerMLTwidth*0.5, centerMLT__dusk+centerMLTwidth*0.5+nBinsMLT*binMLT, $ ;;duskward IMF
+                                     centerMLT__dusk+centerMLTwidth*0.5                                                    ]   ;;;(center cell)
 
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-
+  crossCorr_pref                 = 'journal__' + date + '__CrossCorr_' + datStr + '_vs_delay--centerMLTwidth_' + $
+                                   STRCOMPRESS(centerMLTwidth,/REMOVE_ALL) + avgStr
+  outPlot_pref                   = 'journal__' + date + '__plot_' + datStr + '_vs_delay--centerMLTwidth_' + $
+                                   STRCOMPRESS(centerMLTwidth,/REMOVE_ALL) + avgStr
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;storm stuff
   IF KEYWORD_SET(nonstorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN

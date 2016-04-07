@@ -11,6 +11,8 @@ PRO JOURNAL__20160407__EXPLORE_IMF_STREAK_ROUTINES
 
   stableIMF                        = 10
 
+  maxNStreaks                      = 100
+
   ;;No need for this right now
   ;; LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbtime,/GET_GOOD_I,good_i=good_i
 
@@ -46,6 +48,10 @@ PRO JOURNAL__20160407__EXPLORE_IMF_STREAK_ROUTINES
                                            BZMIN=bzMin, $
                                            BYMAX=byMax, $
                                            BZMAX=bzMax, $
+                                           /GET_BY, $
+                                           BY_OUT=By, $
+                                           /GET_BZ, $
+                                           BZ_OUT=Bz, $
                                            DO_ABS_BYMIN=abs_byMin, $
                                            DO_ABS_BYMAX=abs_byMax, $
                                            DO_ABS_BZMIN=abs_bzMin, $
@@ -57,7 +63,9 @@ PRO JOURNAL__20160407__EXPLORE_IMF_STREAK_ROUTINES
 
   GET_STREAKS,stable_OMNI_i,START_I=start_ii,STOP_I=stop_ii,SINGLE_I=single_ii,MIN_STREAK_TO_KEEP=minStreak
 
-  bigStreaks            = GET_N_MAXIMA_IN_ARRAY(stop_ii-start_ii,N=100 < N_ELEMENTS(stop_ii)-1,OUT_I=bigStreaks_i)
+  nStreak               = maxNStreaks < N_ELEMENTS(stop_ii)-1
+
+  bigStreaks            = GET_N_MAXIMA_IN_ARRAY(stop_ii-start_ii,N=nStreaks,OUT_I=bigStreaks_i)
 
   ;;print longest streaks
   PRINT,FORMAT='("N",T5,"Length (min)",T20,"Start time",T45,"Stop time")'

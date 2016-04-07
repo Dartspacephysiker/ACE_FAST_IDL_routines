@@ -6,6 +6,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    CLOCKSTR=clockStr, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
+   DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
    STABLEIMF=stableIMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
@@ -16,6 +17,20 @@ FUNCTION GET_STABLE_IMF_INDS, $
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   GET_BX=get_Bx, $
+   GET_BY=get_By, $
+   GET_BZ=get_Bz, $
+   GET_THETACONE=get_thetaCone, $
+   GET_CLOCKANGLE=get_clockAngle, $
+   GET_CONE_OVERCLOCK=get_cone_overClock, $
+   GET_BXY_OVER_BZ=get_Bxy_over_Bz, $
+   BX_OUT=bx_out,$
+   BY_OUT=by_out,$
+   BZ_OUT=bz_out,$
+   THETACONE_OUT=thetaCone_out, $
+   CLOCKANGLE_OUT=clockAngle_out, $
+   CONE_OVERCLOCK_OUT=cone_overClock_out, $
+   BXY_OVER_BZ_OUT=Bxy_over_Bz_out, $
    OMNI_COORDS=OMNI_coords, $
    OMNI_PARAMSTR=omni_paramStr, $
    LUN=lun
@@ -36,7 +51,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
      C_OMNI__stableStr, $
      C_OMNI__paramStr, $
-     C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr
+     C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
+     C_OMNI__noClockAngles
 
   COMPILE_OPT idl2
 
@@ -52,6 +68,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                  CLOCKSTR=clockStr, $
                                  ANGLELIM1=angleLim1, $
                                  ANGLELIM2=angleLim2, $
+                                 DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                  STABLEIMF=stableIMF, $
                                  RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                  BYMIN=byMin, $
@@ -102,12 +119,16 @@ FUNCTION GET_STABLE_IMF_INDS, $
            Bz                                  = Bz_GSE
            thetaCone                           = thetaCone_GSE
            phiClock                            = phiClock_GSE
+           cone_overClock                      = cone_overClock_GSE
+           Bxy_over_Bz                         = Bxy_over_Bz_GSE
         END
         "GSM": BEGIN
            By                                  = By_GSM
            Bz                                  = Bz_GSM
            thetaCone                           = thetaCone_GSM
            phiClock                            = phiClock_GSM
+           cone_overClock                      = cone_overClock_GSM
+           Bxy_over_Bz                         = Bxy_over_Bz_GSM
         END
         ELSE: BEGIN
            print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSE..."
@@ -116,6 +137,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
            Bz                                  = Bz_GSE
            thetaCone                           = thetaCone_GSE
            phiClock                            = phiClock_GSE
+           cone_overClock                      = cone_overClock_GSE
+           Bxy_over_Bz                         = Bxy_over_Bz_GSE
         END
      ENDCASE
      thetaCone                                 = thetaCone*180/!PI
@@ -132,7 +155,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDELSE
 
      IF KEYWORD_SET(clockStr) THEN BEGIN
-        SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2
+        SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
+                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
+
         GET_IMF_CLOCKANGLE_INDS,phiClock, $
                                 CLOCKSTR=clockStr, $
                                 ANGLELIM1=angleLim1, $
@@ -214,6 +239,27 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   omni_paramStr                = C_OMNI__paramStr
 
+  IF KEYWORD_SET(get_Bx) THEN BEGIN
+     Bx_out                    = Bx
+  ENDIF
+  IF KEYWORD_SET(get_By) THEN BEGIN
+     By_out                    = By
+  ENDIF
+  IF KEYWORD_SET(get_Bz) THEN BEGIN
+     Bz_out                    = Bz
+  ENDIF
+  IF KEYWORD_SET(get_thetaCone) THEN BEGIN
+     thetaCone_out             = thetaCone
+  ENDIF
+  IF KEYWORD_SET(get_clockAngle) THEN BEGIN
+     clockAngle_out            = phiClock
+  ENDIF
+  IF KEYWORD_SET(get_cone_overClock) THEN BEGIN
+     cone_overClock_out        = cone_overClock
+  ENDIF
+  IF KEYWORD_SET(get_Bxy_Over_Bz) THEN BEGIN
+     Bxy_over_Bz_out           = Bxy_over_Bz
+  ENDIF
   RETURN,stable_OMNI_inds
 
 END

@@ -11,6 +11,7 @@ PRO PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat,NAM
    CURRENT=current, $
    MARGIN=margin, $
    LAYOUT=layout, $
+   POSITION=position, $
    CLIP=clip, $
    OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
   
@@ -37,6 +38,7 @@ PRO PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat,NAM
             CURRENT=current, $
             MARGIN=margin, $
             LAYOUT=layout, $
+            POSITION=position, $
             CLIP=clip, $
             TRANSPARENCY=N_ELEMENTS(lineTransp) GT 0 ? lineTransp : defLineTransp, $
             THICK=KEYWORD_SET(lineThick) ? lineThick : defLineThick) 

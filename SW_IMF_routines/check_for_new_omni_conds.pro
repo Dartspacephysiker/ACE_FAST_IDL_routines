@@ -2,6 +2,7 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              CLOCKSTR=clockStr, $
                              ANGLELIM1=angleLim1, $
                              ANGLELIM2=angleLim2, $
+                             DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                              STABLEIMF=stableIMF, $
                              RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                              BYMIN=byMin, $
@@ -18,6 +19,15 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
   COMPILE_OPT idl2
 
   COMMON OMNI_STABILITY
+
+  IF N_ELEMENTS(dont_consider_clockAngles) GT 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__noClockAngles) GT 0 THEN BEGIN
+        IF C_OMNI__noClockAngles NE dont_consider_clockAngles THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
 
   IF KEYWORD_SET(clockStr) THEN BEGIN
      IF KEYWORD_SET(C_OMNI__clockStr) THEN BEGIN
