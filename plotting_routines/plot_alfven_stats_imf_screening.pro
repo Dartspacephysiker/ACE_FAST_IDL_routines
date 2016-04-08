@@ -493,7 +493,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                                                           DO_LSHELL=do_lshell, $
                                                                           MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                                          SMOOTHWINDOW=smoothWindow, $
+                                                                          SMOOTH_IMF=smoothWindow, $
                                                                           BYMIN=byMin,BZMIN=bzMin, $
                                                                           BYMAX=byMax,BZMAX=bzMax, $
                                                                           DO_ABS_BYMIN=abs_byMin, $

@@ -3,6 +3,8 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    DESPUN=despun, $
    MASKMIN=maskMin, $
    CLOCKSTR=clockStr, $
+   STABLEIMF=stableIMF, $
+   SMOOTH_IMF=smooth_IMF, $
    NDELAYS=nDelays, $
    DELAYDELTASEC=delayDeltaSec, $
    RESOLUTION_DELAY=delay_res, $
@@ -27,6 +29,10 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   IF ~KEYWORD_SET(hemi) THEN hemi = 'NORTH'
   
   IF KEYWORD_SET(despun)              THEN despunStr          = 'despun--' ELSE despunStr = ''
+
+  IF N_ELEMENTS(stableIMF) EQ 0       THEN stableIMF          = 0
+
+  IF N_ELEMENTS(smooth_IMF) GT 0      THEN smoothStr          = '__'+STRCOMPRESS(smooth_IMF,/REMOVE_ALL)+'min_IMFsmooth' ELSE smoothStr = ''
 
   maskStr                                                     = ''
   defMaskMin                                                  = 5
@@ -68,7 +74,7 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   out_avgString       = GET_DELAY_AVG_STRING(out_avgType,delayArr,delayDeltaSec,delay_res)
 
   paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
-  omniPref            = '--OMNI--GSM--'+clockStr+'__0stable'
+  omniPref = '--OMNI--GSM--'+clockStr+'__' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'stable' + smoothStr
 
   inFile              = paramPref + bonusSuff + omniPref + out_avgString + IMFCondStr + '.dat'
 

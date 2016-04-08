@@ -1,8 +1,10 @@
-PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
+PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax,bxMin,bxMax, $
                            DO_ABS_BYMIN=abs_byMin, $
                            DO_ABS_BYMAX=abs_byMax, $
                            DO_ABS_BZMIN=abs_bzMin, $
                            DO_ABS_BZMAX=abs_bzMax, $
+                           DO_ABS_BXMIN=abs_bxMin, $
+                           DO_ABS_BXMAX=abs_bxMax, $
                            LUN=lun
 
   COMPILE_OPT idl2
@@ -72,5 +74,36 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax, $
      PRINTF,lun,FORMAT='("BzMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bzMax,bzMaxLost
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bzMax_",F0.2)',absStr,C_OMNI__bzMax)
   ENDIF  
+
+  IF N_ELEMENTS(bxMin) GT 0 THEN BEGIN 
+     C_OMNI__bxMin          = bxMin
+     C_OMNI__abs_bxMin      = KEYWORD_SET(abs_bxMin)
+     IF C_OMNI__abs_bxMin THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__bxMin_i     = WHERE(Bx LE -ABS(C_OMNI__bxMin) OR Bx GE ABS(C_OMNI__bxMin),NCOMPLEMENT=bxMinLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__bxMin_i     = WHERE(Bx GE C_OMNI__bxMin,NCOMPLEMENT=bxMinLost)
+     ENDELSE
+
+     PRINTF,lun,FORMAT='("BxMin magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bxMin,bxMinLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxMin_",F0.2)',absStr,C_OMNI__bxMin)
+  ENDIF
+
+  IF N_ELEMENTS(bxMax) GT 0 THEN BEGIN 
+     C_OMNI__bxMax          = bxMax
+     C_OMNI__abs_bxMax      = KEYWORD_SET(abs_bxMax)
+     IF C_OMNI__abs_bxMax THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__bxMax_i     = WHERE(ABS(Bx) LE ABS(C_OMNI__bxMax),NCOMPLEMENT=bxMaxLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__bxMax_i     = WHERE(Bx LE C_OMNI__bxMax,NCOMPLEMENT=bxMaxLost)
+     ENDELSE
+
+     PRINTF,lun,""
+     PRINTF,lun,FORMAT='("BxMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bxMax,bxMaxLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxMax_",F0.2)',absStr,C_OMNI__bxMax)
+  ENDIF
 
 END

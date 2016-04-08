@@ -3,8 +3,8 @@
 ;; Could be good, Spence. ... Come on—think about it, bro ...
 PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
 
-  histoRange                     = [0.0,0.1]
-  histobinsize                   = 1.5
+  histoRange                     = [0.0,0.2]
+  histobinsize                   = 1.0
   do_despun                      = 1
 
 
@@ -44,22 +44,24 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
   ;;SEA options
   tBeforeEpoch                     = 9
   tAfterEpoch                      = 9
-  remove_dupes                     = 1
+  remove_dupes                     = 0
   only_OMNI_plots                  = 0
 
 
   ;;IMF options
   clockStr                         = 'duskward'
-  byMin                            = 10
-  abs_bymin                        = 1
-  do_angles                        = 0
-  ;; bzMax                            = -2
+  dont_consider_clockAngles        = 1
 
-  angleLim1                        = 45.
-  angleLim2                        = 135.
+  byMin                            = 5
+  abs_bymin                        = 1
+  bzMax                            = -5
+
+  angleLim1                        = 60.
+  angleLim2                        = 120.
   
-  stableIMF                        = 15
-  maxNStreaks                      = 300
+  smoothWindow                     = 10
+  stableIMF                        = 10
+  maxNStreaks                      = 500
 
   ;; OMNI_quantities_to_plot          = 'by_gse,bz_gse,bx_gse'
   ;; omni_quantity_ranges             = [[-30,30],[-30,30],[-30,30]]
@@ -71,6 +73,7 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
   ;; LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbtime,/GET_GOOD_I,good_i=good_i
 
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, $
                                   BYMIN=byMin, $
                                   BZMIN=bzMin, $
@@ -91,14 +94,18 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
   
   stable_OMNI_i      = GET_STABLE_IMF_INDS(MAG_UTC=mag_utc, $
                                            CLOCKSTR=clockStr, $
+                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                            ANGLELIM1=angleLim1, $
                                            ANGLELIM2=angleLim2, $
                                            STABLEIMF=stableIMF, $
+                                           SMOOTH_IMF=smoothWindow, $
                                            /RESTRICT_TO_ALFVENDB_TIMES, $
                                            BYMIN=byMin, $
                                            BZMIN=bzMin, $
+                                           BXMIN=bxMin, $
                                            BYMAX=byMax, $
                                            BZMAX=bzMax, $
+                                           BXMAX=bxMax, $
                                            /GET_BY, $
                                            BY_OUT=By, $
                                            /GET_BZ, $
@@ -107,6 +114,8 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
                                            DO_ABS_BYMAX=abs_byMax, $
                                            DO_ABS_BZMIN=abs_bzMin, $
                                            DO_ABS_BZMAX=abs_bzMax, $
+                                           DO_ABS_BXMIN=abs_bxMin, $
+                                           DO_ABS_BXMAX=abs_bxMax, $
                                            OMNI_COORDS=OMNI_coords, $
                                            OMNI_PARAMSTR=omni_paramStr, $
                                            LUN=lun)
@@ -161,6 +170,7 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
                                          OMNI_QUANTITIES_TO_PLOT=OMNI_quantities_to_plot, $
                                          OMNI_QUANTITY_RANGES=OMNI_quantity_ranges, $
                                          LOG_OMNI_QUANTITIES=log_omni_quantities, $
+                                         SMOOTHWINDOW=smoothWindow, $
                                          /USE_DARTDB_START_ENDDATE, $
                                          DO_DESPUNDB=do_despun, $
                                          REMOVE_DUPES=remove_dupes, $
