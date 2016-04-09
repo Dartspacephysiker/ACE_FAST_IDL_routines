@@ -299,6 +299,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     EPS_OUTPUT=eps_output, $
                                     OUT_TEMPFILE_LIST=out_tempFile_list, $
                                     OUT_DATANAMEARR_list=out_dataNameArr_list, $
+                                    TILE_IMAGES=tile_images, $
+                                    N_TILE_ROWS=n_tile_rows, $
+                                    N_TILE_COLUMNS=n_tile_columns, $
+                                    TILEPLOTSUFF=tilePlotSuff, $
+                                    TILING_ORDER=tiling_order, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -730,6 +735,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                PARAMSTR=paramString, DEL_PS=del_PS, $
                                HEMI=hemi, $
                                CLOCKSTR=clockStr, $
+                               TILE_IMAGES=tile_images, $
+                               N_TILE_ROWS=n_tile_rows, $
+                               N_TILE_COLUMNS=n_tile_columns, $
+                               TILEPLOTSUFF=tilePlotSuff, $
+                               TILING_ORDER=tiling_order, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
                                _EXTRA = e
