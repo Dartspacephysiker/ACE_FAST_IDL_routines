@@ -1,4 +1,4 @@
-PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_OVER_DELAYS__VARIABLE_RES__SMOOTH_AND_STABLE
+PRO JOURNAL__20160409__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_OVER_DELAYS__BZNORTHSOUTH
 
   combined_to_buffer   = 1
   save_combined_window = 1
@@ -14,10 +14,7 @@ PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   just_north           = 1
   just_south           = 0
 
-  ;; date                 = '20160408'
-  ;; date_alt             = 'Apr_8_16'
-
-  date                 = '20160409'
+  date                 = '20160410'
   date_alt             = 'Apr_9_16'
 
   ;; dataNamesTimeSpace  = ['spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
@@ -59,10 +56,10 @@ PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   nDelArr              = [1,3,5]
   delayDeltaSec        = [1800,1800,1800]
 
-  ;; delay_res            = 1800
+  ;; delay_res            = 3600
   ;; binOffset_delay      = 0
-  ;; nDelArr              = [1,3,5]
-  ;; delayDeltaSec        = [1800,1800,1800]
+  ;; nDelArr              = [1,3]
+  ;; delayDeltaSec        = [3600,3600]
 
   ;; delay_start          = -5
   ;; delay_stop           = 20
@@ -72,27 +69,6 @@ PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
      just_south: hemiArr = 'SOUTH'
      ELSE: hemiArr = ['NORTH','SOUTH']
   ENDCASE
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;IMF Conds
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
-  ;; IMFCondStrArr       = '__ABS_byMin10.0'
-  ;; IMFCondStrArr        = '__ABS_byMin9.0__bzMax-3.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
-  ;; IMFCondStrArr       = '__ABS_byMin7.0'
-  ;; IMFCondStrArr       = '__ABS_byMin7.0__bzMax0.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
-  ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-3.0'
-  ;; IMFCondStrArr       = '__ABS_byMin5.0__bzMax-1.0'
-  ;; IMFCondStrArr       = '__ABS_byMin4.0__bzMax-2.0'
-  ;; IMFCondStrArr       = '__ABS_byMin3.0__bzMax-1.0'
-  ;; IMFCondStrArr       = ''
-  ;; IMFCondStrArr       = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
-
-  stableIMF            = 5 
-  smooth_IMF           = 10
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Avg types?
@@ -106,6 +82,13 @@ PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   in_avgTypes    = ['avg']
   out_avgTypes   = ['timeAvg']
 
+  ;;Set up the names
+  omniPref            = '--OMNI--GSM--bzSouth__0stable'
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;IMF Conds
+  IMFCondStrArr        = '__ABS_byMax5.0__ABS_bzMin-5.0'
+
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
 
@@ -113,13 +96,6 @@ PRO JOURNAL__20160408__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   fileSuff            = bonusSuff+'--combined.png'
 
   IF KEYWORD_SET(despun)              THEN despunStr          = '--despun' ELSE despunStr = ''
-
-  IF N_ELEMENTS(stableIMF) EQ 0       THEN stableIMF          = 0
-
-  IF N_ELEMENTS(smooth_IMF) GT 0      THEN smoothStr          = '__'+STRCOMPRESS(smooth_IMF,/REMOVE_ALL)+'min_IMFsmooth' ELSE smoothStr = ''
-
-  ;;Set up the names
-  omniPref = '--OMNI--GSM--duskward__' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'stable' + smoothStr
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;don't mess with Texas below here

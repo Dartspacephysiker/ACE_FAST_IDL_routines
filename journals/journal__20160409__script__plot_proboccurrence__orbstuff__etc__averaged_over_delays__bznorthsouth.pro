@@ -1,4 +1,4 @@
-PRO JOURNAL__20160408__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER_DELAYS__VARIABLE_RES__STABLE_AND_SMOOTH
+PRO JOURNAL__20160409__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER_DELAYS__BZNORTHSOUTH
 
   create_plots         = 1
   combine_plots        = 1
@@ -50,10 +50,7 @@ PRO JOURNAL__20160408__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
      ELSE: hemiArr = ['NORTH','SOUTH']
   ENDCASE
 
-  clockStrArr          = ['dawnward','duskward']
-
-  stableIMF            = 5 
-  smooth_IMF           = 10
+  clockStrArr          = ['bzNorth','bzSouth']
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Avg types?
@@ -72,24 +69,9 @@ PRO JOURNAL__20160408__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
-  ;; plot_dateStr         = 'Apr_3_16'
-  ;; plot_dateStr         = 'Apr_4_16'
-  ;; plot_dateStr         = 'Apr_8_16'
   plot_dateStr         = 'Apr_9_16'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0'
-  ;; IMFCondStrArr        = '__ABS_byMin9.0__bzMax-3.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
-  ;; IMFCondStrArr        = '__ABS_byMin7.0'
-  ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
-  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
-  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
-  ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
-  ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-1.0'
-  ;; IMFCondStrArr        = ''
+
+  IMFCondStrArr        = '__ABS_byMax5.0__ABS_bzMin-5.0'
 
   ;; plotDirSuff          = 'not_despun'
 
@@ -110,8 +92,6 @@ PRO JOURNAL__20160408__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
                     DESPUN=despun, $
                     MASKMIN=maskMin, $
                     CLOCKSTR=clockStrArr[iClock], $
-                    STABLEIMF=stableIMF, $
-                    SMOOTH_IMF=smooth_IMF, $
                     NDELAYS=nDelArr[iDel], $
                     DELAYDELTASEC=delayDeltaSec[iDel], $
                     RESOLUTION_DELAY=delay_res, $
@@ -139,7 +119,7 @@ PRO JOURNAL__20160408__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
      
-     titles             = ['Dawnward','Duskward']
+     titles             = ['B!Dz!N North','B!Dz!N South']
      FOR iDawnDuskSet=0,N_ELEMENTS(fileList)-1 DO BEGIN
         plotNamePrefArr           = [STRMID(fileList[iDawnDuskSet,0],0,STRLEN(fileList[iDawnDuskSet,0])-4), $
                                      STRMID(fileList[iDawnDuskSet,1],0,STRLEN(fileList[iDawnDuskSet,1])-4)]

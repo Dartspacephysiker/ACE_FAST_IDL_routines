@@ -1,5 +1,5 @@
 ;2016/04/04 How about intensities?
-PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
+PRO JOURNAL__20160409__GET_DATA__PROBOCCURRENCE__ORBSTUFF__HUGE_BINS
 
   nonstorm                       = 0
   justData                       = 1
@@ -25,20 +25,20 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 86
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 81
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -61
+  hemi                           = 'SOUTH'
+  minILAT                        = -86
+  maxILAT                        = -61
 
   ;; binILAT                        = 4.0        ;2016/03/{23,31}
   ;; binILAT                        = 2.0        ;2016/03/24
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
-  ;; binILAT                        = 5.0        ;2016/03/29
-  binILAT                        = 5.0        ;2016/04/03
+  binILAT                        = 5.0        ;2016/03/29
+  ;; binILAT                        = 10.0        ;2016/04/03
   ;; binILAT                        = 7.0        ;2016/04/03
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -54,18 +54,11 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
-  ;; stableIMF                      = 20
-  ;; byMin                          = 5
-  ;; do_abs_bymin                   = 1
-  ;; bzMax                          = -5
+  stableIMF                      = 0
+  byMin                          = 5
+  do_abs_bymin                   = 1
+  bzMax                          = -5
   ;; bzMin                          = 3
-
-  ;;2016/04/09 For Jim
-  northSouth                     = 1
-  byMax                          = 5
-  do_abs_bymax                   = 1
-  bzMin                          = -5
-  DO_abs_bzMin                   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;DB stuff

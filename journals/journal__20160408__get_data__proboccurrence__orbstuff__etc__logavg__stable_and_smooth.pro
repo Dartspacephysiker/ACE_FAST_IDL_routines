@@ -27,7 +27,7 @@ PRO JOURNAL__20160408__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG__STABLE_A
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 61
-  maxILAT                        = 86
+  maxILAT                        = 85
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
@@ -38,7 +38,8 @@ PRO JOURNAL__20160408__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG__STABLE_A
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
   ;; binILAT                        = 5.0        ;2016/03/29
-  binILAT                        = 5.0        ;2016/04/03
+  ;; binILAT                        = 5.0        ;2016/04/03
+  binILAT                         = 6.0
   ;; binILAT                        = 7.0        ;2016/04/03
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -57,7 +58,7 @@ PRO JOURNAL__20160408__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG__STABLE_A
   ;; stableIMF                      = 20
   byMin                          = 5
   do_abs_bymin                   = 1
-  bzMax                          = -3
+  bzMax                          = -1
   ;; bzMin                          = 3
 
   ;;DB stuff
@@ -65,6 +66,10 @@ PRO JOURNAL__20160408__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG__STABLE_A
 
   smoothIMF                      = 10
   stableIMF                      = 5
+
+  angleLim1                      = 30.0
+  angleLim2                      = 150.0
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;delay stuff

@@ -17,8 +17,11 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; date                 = '20160403'
   ;; date_alt             = 'Apr_3_16'
 
-  date                 = '20160406'
-  date_alt             = 'Apr_6_16'
+  ;; date                 = '20160406'
+  ;; date_alt             = 'Apr_6_16'
+
+  date                 = '20160410'
+  date_alt             = 'Apr_9_16'
 
   ;; dataNamesTimeSpace  = ['spatialAvg_NoNegs--LogeNumFl_EFLUX_LOSSCONE_INTEG', $
   ;;                        'spatialAvg_NoNegs--Logiflux_INTEG_UP', $
@@ -59,10 +62,10 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   nDelArr              = [1,3,5]
   delayDeltaSec        = [1800,1800,1800]
 
-  ;; delay_res            = 1800
+  ;; delay_res            = 3600
   ;; binOffset_delay      = 0
-  ;; nDelArr              = [1,3,5]
-  ;; delayDeltaSec        = [1800,1800,1800]
+  ;; nDelArr              = [1,3]
+  ;; delayDeltaSec        = [3600,3600]
 
   ;; delay_start          = -5
   ;; delay_stop           = 20

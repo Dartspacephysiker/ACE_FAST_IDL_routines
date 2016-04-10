@@ -1,5 +1,5 @@
 ;;2016/04/04
-PRO JOURNAL__20160404__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES
+PRO JOURNAL__20160409__SCRIPT__TIME_AVERAGE_OVER_DELAYS__BZNORTHSOUTH
 
   ;; plot_dateStr         = 'Apr_2_16'
   ;; plot_dateStr         = 'Apr_3_16'
@@ -10,7 +10,7 @@ PRO JOURNAL__20160404__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES
   maskMin              = 5
   minAvgs_for_noMask   = 1
 
-  just_north           = 0
+  just_north           = 1
   just_south           = 0
 
   ;; nDelArr              = [121,241]
@@ -60,24 +60,10 @@ PRO JOURNAL__20160404__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES
      ELSE: hemiArr = ['NORTH','SOUTH']
   ENDCASE
 
-  clockStrArr          = ['dawnward','duskward']
+  clockStrArr          = ['bzNorth','bzSouth']
 
-  ;; IMFCondStrArr        = ['__ABS_byMin5.0__bzMax0.0','__ABS_byMin5.0__bzMin0.0']
-  ;; IMFCondStrArr        = '__ABS_byMin10.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
-  ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
-  ;; IMFCondStrArr        = '__ABS_byMin9.0__bzMax-3.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-1.0'
-  ;; IMFCondStrArr        = '__ABS_byMin8.0__bzMax-4.0'
-  ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
-  ;; IMFCondStrArr        = '__ABS_byMin7.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
-  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
-  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
-  ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
-  ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-3.0'
-  ;; IMFCondStrArr        = ''
 
+  IMFCondStrArr        = '__ABS_byMax5.0__ABS_bzMin-5.0'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;What type of averaging?

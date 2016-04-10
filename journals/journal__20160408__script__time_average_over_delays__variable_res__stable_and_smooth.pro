@@ -3,7 +3,8 @@ PRO JOURNAL__20160408__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES__STABLE_AN
 
   ;; plot_dateStr         = 'Apr_2_16'
   ;; plot_dateStr         = 'Apr_3_16'
-  plot_dateStr         = 'Apr_8_16'
+  ;; plot_dateStr         = 'Apr_8_16'
+  plot_dateStr         = 'Apr_9_16'
 
   despun               = 1
   maskMin              = 5
@@ -73,8 +74,8 @@ PRO JOURNAL__20160408__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES__STABLE_AN
   ;; IMFCondStrArr        = '__ABS_byMin7.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin7.0'
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
-  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   ;; IMFCondStrArr        = '__ABS_byMin4.0__bzMax-2.0'
   ;; IMFCondStrArr        = '__ABS_byMin3.0__bzMax-3.0'
   ;; IMFCondStrArr        = ''

@@ -1,6 +1,6 @@
 ;2016/04/04 Some new approaches
 PRO JOURNAL__20160408__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSIDE__HISTO__SMOOTH_AND_STABLE
-  date                           = '20160408'
+  date                           = '20160409'
 
   probOccurrence                 = 1
   pFlux                          = 0
@@ -98,8 +98,8 @@ PRO JOURNAL__20160408__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;; binOffset_delay                = 900
 
   ;;2016/04/06 Based on the latest, K?
-  delayDeltaSec                  = 3600
-  delay_res                      = 3600
+  delayDeltaSec                  = 7200
+  delay_res                      = 7200
   binOffset_delay                = 0
 
   ;; nDelays                        = 401
@@ -114,6 +114,12 @@ PRO JOURNAL__20160408__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;; byMin                          = 8
   ;; do_abs_byMin                   = 1
   ;; bzMax                          = -4
+  ;; bzMin                          = 1
+
+  clockStr                       = ['dawnward','duskward'] ;2016/04/06 for negAngle posAngle 60 120
+  byMin                          = 5
+  do_abs_byMin                   = 1
+  bzMax                          = -1
   ;; bzMin                          = 1
 
   ;; clockStr                       = ['dawnward','duskward']
@@ -139,11 +145,11 @@ PRO JOURNAL__20160408__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
   ;; do_abs_bzMin                   = 1
 
   ;; ;;For bzNorth/South stuff
-  clockStr                       = ['bzNorth','bzSouth']
-  byMax                          = 5
-  do_abs_byMax                   = 1
-  bzMin                          = 5
-  do_abs_bzMin                   = 1
+  ;; clockStr                       = ['bzNorth','bzSouth']
+  ;; byMax                          = 5
+  ;; do_abs_byMax                   = 1
+  ;; bzMin                          = 5
+  ;; do_abs_bzMin                   = 1
 
 
   ;;DB stuff

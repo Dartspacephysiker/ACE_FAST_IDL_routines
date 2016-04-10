@@ -71,7 +71,8 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;;IMF Conds
   ;; plot_dateStr         = 'Apr_3_16'
   ;; plot_dateStr         = 'Apr_4_16'
-  plot_dateStr         = 'Apr_6_16'
+  ;; plot_dateStr         = 'Apr_6_16'
+  plot_dateStr         = 'Apr_9_16'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'

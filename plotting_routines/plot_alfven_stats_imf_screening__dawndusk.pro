@@ -6,6 +6,7 @@
 ;;
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    CLOCKSTR=clockStr, $
+   NORTHSOUTH=northSouth, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
@@ -134,8 +135,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   ;; suff            = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   ;; clockStrings    = [""+suff,"mainphase"+suff,"recoveryphase"+suff]
-  titles             = ['Dawnward','Duskward']
-  clockStrings       = ['dawnward','duskward']
+  IF KEYWORD_SET(northSouth) THEN BEGIN
+  titles             = ['B!Dz!N North','B!Dz!N South']
+  clockStrings       = ['bzNorth','bzSouth']
+ENDIF ELSE BEGIN
+   titles             = ['Dawnward','Duskward']
+   clockStrings       = ['dawnward','duskward']
+ENDELSE
   ;; titles             = ['Duskward','Dawnward']
   ;; clockStrings       = ['duskward','dawnward']
 

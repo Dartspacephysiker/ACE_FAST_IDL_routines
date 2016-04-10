@@ -1,5 +1,5 @@
 ;2016/04/04 How about intensities?
-PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
+PRO JOURNAL__20160409__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG__BZNORTHSOUTH
 
   nonstorm                       = 0
   justData                       = 1
@@ -164,12 +164,13 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
         DO_DESPUNDB=do_despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
+        BYMAX=byMax, $
+        BZMAX=bzMax, $
+        BZMIN=bzMin, $
         DO_ABS_BYMIN=do_abs_bymin, $
         DO_ABS_BYMAX=do_abs_byMax, $
         DO_ABS_BZMIN=do_abs_bzmin, $
         DO_ABS_BZMAX=do_abs_bzMax, $
-        BZMAX=bzMax, $
-        BZMIN=bzMin, $
         SMOOTHWINDOW=smoothWindow, $
         LOGAVGPLOT=logAvgs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
