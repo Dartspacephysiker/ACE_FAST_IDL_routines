@@ -20,6 +20,7 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
    OUT_PLOTNAMEPREF=out_plotNamePref, $
    OUT_PLOTDIR=out_plotDir, $
    QUANTS_TO_PLOT=quants_to_plot, $
+   DO_SUBTRACTED_PLOTS=do_subtracted_plots, $
    JUST_OUTPUT_NAMES=just_output_names;, $
    ;; DONT_OVERWRITE_EXISTING=dont_overwrite_existing
 
@@ -58,6 +59,8 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
 
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'
 
+  IF KEYWORD_SET(do_subtracted_plots) THEN subtractStr        = '_subtract' ELSE subtractStr = ''
+
   IF ~KEYWORD_SET(quants_to_plot)     THEN quants_to_plot     = [0,1,2,3]
 
   ;; bonusSuff           = 'high-energy_e'
@@ -76,9 +79,9 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
   paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
   omniPref = '--OMNI--GSM--'+clockStr+'__' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'stable' + smoothStr
 
-  inFile              = paramPref + bonusSuff + omniPref + out_avgString + IMFCondStr + '.dat'
+  inFile              = paramPref + bonusSuff + omniPref + out_avgString + IMFCondStr + '.dat' + subtractStr
 
-  plotDirSuff         = IMFCondStr
+  plotDirSuff         = IMFCondStr + subtractStr
   IF KEYWORD_SET(additional_plotDirSuff) THEN plotDirSuff = plotDirSuff + additional_plotDirSuff
 
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=plotDirSuff

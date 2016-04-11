@@ -193,10 +193,7 @@
 ;-
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
-                                    CLOCKSTR=clockStr, $
                                     RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-                                    ANGLELIM1=angleLim1, $
-                                    ANGLELIM2=angleLim2, $
                                     ORBRANGE=orbRange, $
                                     ALTITUDERANGE=altitudeRange, $
                                     CHARERANGE=charERange, $
@@ -213,6 +210,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     HWMKPIND=HwMKpInd, $
                                     ;; MIN_NEVENTS=min_nEvents, $
                                     MASKMIN=maskMin, $
+                                    CLOCKSTR=clockStr, $
+                                    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                    ANGLELIM1=angleLim1, $
+                                    ANGLELIM2=angleLim2, $
                                     BYMIN=byMin, $
                                     BZMIN=bzMin, $
                                     BYMAX=byMax, $
@@ -393,6 +394,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   DO_ABS_BZMIN=abs_bzMin, $
                                   DO_ABS_BZMAX=abs_bzMax, $
                                   BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                   DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                   PARAMSTRING=paramString, $
                                   PARAMSTR_LIST=paramString_list, $
@@ -506,6 +508,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           DO_ABS_BZMIN=abs_bzMin, $
                                                                           DO_ABS_BZMAX=abs_bzMax, $
                                                                           CLOCKSTR=clockStr, $
+                                                                          DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                                                                           BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                                           MULTIPLE_DELAYS=multiple_delays, $
@@ -614,7 +617,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            MASKMIN=maskMin, $
                            SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                            HEMI=hemi, $
-                           CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+                           CLOCKSTR=clockStr, $
+                           ANGLELIM1=angleLim1, $
+                           ANGLELIM2=angleLim2, $
+                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                            DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
                            DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
                            STORMSTRING=stormString, $

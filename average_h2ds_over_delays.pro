@@ -4,6 +4,7 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
    DESPUN=despun, $
    MASKMIN=maskMin, $
    CLOCKSTR=clockStr, $
+   IMFCONDSTR=IMFCondStr, $
    STABLEIMF=stableIMF, $
    SMOOTH_IMF=smooth_IMF, $
    NDELAYS=nDelays, $
@@ -23,9 +24,9 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
    LIM_FOR_LOGPLOT_INDS=lim_for_logPlot_inds, $
    LIM_FOR_UNLOGPLOT_INDS=lim_for_unlogPlot_inds, $
    MINAVGS_FOR_NOMASK=minAvgs_for_noMask, $
-   IMFCONDSTR=IMFCondStr, $
    PLOT_DATESTR=plot_dateStr, $
-   FILEDIR=fileDir
+   FILEDIR=fileDir, $
+   OUT_FILENAME=out_fileName
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;defaults
@@ -48,7 +49,9 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
   ENDELSE
 
   ;; clockStr                                                 = 'duskward'
-  IF ~KEYWORD_SET(clockStr)           THEN clockStr           = 'dawnward'
+  IF ~KEYWORD_SET(clockStr)           THEN clockStr           = '' ;'dawnward'
+
+  IF clockStr EQ '' THEN outClockStr = '' ELSE outClockStr = '--' + clockStr
 
   IF ~KEYWORD_SET(in_avgType)         THEN in_avgType         = 'logAvg'
   IF ~KEYWORD_SET(out_avgType)        THEN out_avgType        = 'logAvg'
@@ -109,7 +112,7 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
 
   paramPref           = 'polarplots_' + plot_dateStr+'--' + hemi + '--' + despunStr + in_avgType + maskStr
 
-  IF ~KEYWORD_SET(omniPref) THEN omniPref = '--OMNI--GSM--'+clockStr+'__' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'stable' + smoothStr
+  IF ~KEYWORD_SET(omniPref) THEN omniPref = '--OMNI--GSM'+outClockStr+'__' + STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'stable' + smoothStr
 
   outFile             = paramPref + bonusSuff + omniPref + out_avgString + IMFCondStr
   paramStrArr         = paramPref + bonusSuff + omniPref + delayStr + IMFCondStr
@@ -351,4 +354,6 @@ PRO AVERAGE_H2DS_OVER_DELAYS, $
                          /QUIET, $
                          LUN=lun
   
+  out_fileName = outDir+outFile+'.dat'
+
 END
