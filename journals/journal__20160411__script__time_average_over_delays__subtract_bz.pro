@@ -1,14 +1,14 @@
 ;;2016/04/04
-PRO JOURNAL__20160411__SCRIPT__TIME_AVERAGE_OVER_DELAYS__SUBTRACT_BZ
+PRO JOURNAL__20160411__SCRIPT__TIME_AVERAGE_OVER_DELAYS__SUBTRACT_BZ,JUST_NORTH=just_north,JUST_SOUTH=just_south
 
   plot_dateStr                   = 'Apr_11_16'
 
   despun                         = 1
-  maskMin                        = 5
+  maskMin                        = 10
   minAvgs_for_noMask             = 1
 
-  just_north                     = 0
-  just_south                     = 0
+  IF ~KEYWORD_SET(just_north) THEN just_north = 0
+  IF ~KEYWORD_SET(just_south) THEN just_south = 0
 
   do_subtract_file               = 1
 
@@ -40,21 +40,23 @@ PRO JOURNAL__20160411__SCRIPT__TIME_AVERAGE_OVER_DELAYS__SUBTRACT_BZ
   ;; nDelArr              = [1,3]
 
   CASE 1 OF
-     just_north: hemiArr         = 'NORTH'
-     just_south: hemiArr         = 'SOUTH'
+     KEYWORD_SET(just_north): hemiArr         = 'NORTH'
+     KEYWORD_SET(just_south): hemiArr         = 'SOUTH'
      ELSE: hemiArr               = ['NORTH','SOUTH']
   ENDCASE                        
                                  
   clockStrArr                    = ['dawnward','duskward']
   IMFCondStrArr                  = '__ABS_byMin5.0__bzMax-5.0'
+  IMFCondStrArr                  = '__ABS_byMin5.0__bzMax-3.0'
+  ;; IMFCondStrArr                  = '__ABS_byMin5.0__bzMax-1.0'
                                  
   subtract__clockStrArr          = ['','']
-  subtract__IMFCondStrArr        = '__bzMax-5.0'
+  subtract__IMFCondStrArr        = '__bzMax-3.0'
 
-  subtract__newDataLims          = [[-0.5,0.5], $
+  subtract__newDataLims          = [[-0.3,0.3], $
                                     [-0.5,0.5], $
                                     [-5e7,5e7], $
-                                    [-0.10,0.10], $
+                                    [-0.05,0.05], $
                                     [-3000,0]]
 
   ;; subtract__newTitles            = ['Difference']

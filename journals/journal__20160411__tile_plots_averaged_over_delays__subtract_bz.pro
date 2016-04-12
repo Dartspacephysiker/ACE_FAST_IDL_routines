@@ -1,4 +1,4 @@
-PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ
+PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ,JUST_NORTH=just_north,JUST_SOUTH=just_south
 
   combined_to_buffer   = 1
   save_combined_window = 1
@@ -8,13 +8,13 @@ PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ
   ;; date                = '20160331'
   ;; date_alt            = 'Mar_31_16'
 
-  maskMin              = 5
+  maskMin              = 10
   despun               = 1
 
   do_subtracted_plots  = 1
 
-  just_north           = 0
-  just_south           = 0
+  IF ~KEYWORD_SET(just_north) THEN just_north = 0
+  IF ~KEYWORD_SET(just_south) THEN just_south = 0
 
   date                 = '20160411'
   date_alt             = 'Apr_11_16'
@@ -30,9 +30,9 @@ PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ
   ;;                        'timeAvgd_NoNegs--LogpFlux']
 
   dataNamesTimeSpace     = ['timeSpace_avg--subtract--EFLUX_LOSSCONE_INTEG', $
-                            'timeSpace_avg--subtract--LogpFlux', $
                             'timeSpace_avg--subtract--Logiflux_INTEG_UP', $
                             'timeSpace_avg--subtract--probOccurrence', $
+                            'timeSpace_avg--subtract--LogpFlux', $
                             'subtract--nEvents']
 
   ;; dataNamesLogAvg     = ['spatialAvg_NoNegs--eNumFl_EFLUX_LOSSCONE_INTEG', $
@@ -99,6 +99,8 @@ PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
   IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''

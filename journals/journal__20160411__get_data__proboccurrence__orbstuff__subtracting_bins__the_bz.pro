@@ -19,26 +19,26 @@ PRO JOURNAL__20160411__GET_DATA__PROBOCCURRENCE__ORBSTUFF__SUBTRACTING_BINS__THE
   ;;Bonus
   do_timeAvg_fluxQuantities      = 1
   logAvgs                        = 0
-  maskMin                        = 5
+  maskMin                        = 10
   divide_by_width_x              = 1
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 61
-  ;; maxILAT                        = 86
+  hemi                           = 'NORTH'
+  minILAT                        = 64
+  maxILAT                        = 88
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -86
-  maxILAT                        = -61
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -88
+  ;; maxILAT                        = -63
 
   ;; binILAT                        = 4.0        ;2016/03/{23,31}
   ;; binILAT                        = 2.0        ;2016/03/24
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
   ;; binILAT                        = 5.0        ;2016/03/29
-  binILAT                        = 5.0        ;2016/04/03
+  binILAT                        = 8.0        ;2016/04/03
   ;; binILAT                        = 7.0        ;2016/04/03
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,7 +61,7 @@ PRO JOURNAL__20160411__GET_DATA__PROBOCCURRENCE__ORBSTUFF__SUBTRACTING_BINS__THE
   dont_consider_clockAngles      = 1
   ;; byMin                          = 5
   ;; do_abs_bymin                   = 1
-  bzMax                          = -5
+  bzMax                          = -3
 
   ;; byMax                          = 5
   ;; do_abs_bymax                   = 1

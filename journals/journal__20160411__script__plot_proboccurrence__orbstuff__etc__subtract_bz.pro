@@ -1,4 +1,4 @@
-PRO JOURNAL__20160411__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__SUBTRACT_BZ
+PRO JOURNAL__20160411__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__SUBTRACT_BZ,JUST_NORTH=just_north,JUST_SOUTH=just_south
 
   create_plots         = 1
   combine_plots        = 1
@@ -7,13 +7,13 @@ PRO JOURNAL__20160411__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__SUBTRACT_BZ
 
   no_overwrite_existing = 0
 
-  maskMin              = 5
+  maskMin              = 10
   despun               = 1
 
   do_subtracted_plots  = 1
 
-  just_north           = 0
-  just_south           = 0
+  IF ~KEYWORD_SET(just_north) THEN just_north = 0
+  IF ~KEYWORD_SET(just_south) THEN just_south = 0
 
   ;; quants_to_plot       = [3]
   quants_to_plot       = [0,1,2,3]
@@ -75,7 +75,9 @@ PRO JOURNAL__20160411__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__SUBTRACT_BZ
   plot_dateStr         = 'Apr_11_16'
 
   ;; IMFCondStrArr        = '__ABS_byMax5.0__ABS_bzMin-5.0'
-  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-5.0'
+  IMFCondStrArr        = '__ABS_byMin5.0__bzMax-3.0'
+  ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
 
   ;; plotDirSuff          = 'not_despun'
 

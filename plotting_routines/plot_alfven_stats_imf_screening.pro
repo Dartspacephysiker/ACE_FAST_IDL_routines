@@ -266,9 +266,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                     DIVNEVBYTOTAL=divNEvByTotal, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                                    NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                                    NOWEPCO_RANGE=nowepco_range, $
                                     PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                     PROBOCCURRENCERANGE=probOccurrenceRange, $
                                     LOGPROBOCCURRENCE=logProbOccurrence, $
+                                    THISTDENOMINATORPLOT=tHistDenominatorPlot, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -353,6 +356,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              ORBFREQPLOT=orbFreqPlot, $
                              NEVENTPERORBPLOT=nEventPerOrbPlot, $
                              NEVENTPERMINPLOT=nEventPerMinPlot, $
+                             NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                              PROBOCCURRENCEPLOT=probOccurrencePlot, $
                              SQUAREPLOT=squarePlot, $
                              POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -535,7 +539,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              CHAREPLOTRANGE=charePlotRange,CHARERANGE=charERange, $
                              CHARIEPLOTRANGE=chariEPlotRange, $
                              NEVENTPERMINRANGE=nEventPerMinRange, $
-                             PROBOCCURRENCERANGE=probOccurrenceRange
+                             PROBOCCURRENCERANGE=probOccurrenceRange, $
+                             NOWEPCO_RANGE=nowepco_range
+
   
   ;;********************************************
   ;;Now time for data summary
@@ -664,9 +670,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                            DIVNEVBYTOTAL=divNEvByTotal, $
                            NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                           NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                           NOWEPCO_RANGE=nowepco_range, $
                            PROBOCCURRENCEPLOT=probOccurrencePlot, $
                            PROBOCCURRENCERANGE=probOccurrenceRange, $
                            LOGPROBOCCURRENCE=logProbOccurrence, $
+                           THISTDENOMINATORPLOT=tHistDenominatorPlot, $
                            TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                            TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
