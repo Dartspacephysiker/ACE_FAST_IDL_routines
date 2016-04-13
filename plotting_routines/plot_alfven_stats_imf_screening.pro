@@ -263,6 +263,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
                                     ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                                    ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                     DIVNEVBYTOTAL=divNEvByTotal, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
@@ -358,6 +359,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              CHARETYPE=charEType, $
                              CHARIEPLOTS=chariEPlots, $
                              ORBCONTRIBPLOT=orbContribPlot, $
+                             ORBCONTRIB_NOMASK=orbContrib_noMask, $
                              ORBTOTPLOT=orbTotPlot, $
                              ORBFREQPLOT=orbFreqPlot, $
                              NEVENTPERORBPLOT=nEventPerOrbPlot, $
@@ -677,6 +679,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
                            ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
                            ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                           ORBCONTRIB_NOMASK=orbContrib_noMask, $
                            NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                            DIVNEVBYTOTAL=divNEvByTotal, $
                            NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
