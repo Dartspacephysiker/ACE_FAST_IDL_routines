@@ -4,13 +4,14 @@ PRO JOURNAL__20160404__SCRIPT__TIME_AVERAGE_OVER_DELAYS__VARIABLE_RES
   ;; plot_dateStr         = 'Apr_2_16'
   ;; plot_dateStr         = 'Apr_3_16'
   ;; plot_dateStr         = 'Apr_6_16'
-  plot_dateStr         = 'Apr_9_16'
+  ;; plot_dateStr         = 'Apr_9_16'
+  plot_dateStr         = 'Apr_12_16'
 
   despun               = 1
   maskMin              = 5
   minAvgs_for_noMask   = 1
 
-  just_north           = 0
+  just_north           = 1
   just_south           = 0
 
   ;; nDelArr              = [121,241]

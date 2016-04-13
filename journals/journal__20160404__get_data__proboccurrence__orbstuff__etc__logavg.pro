@@ -55,17 +55,17 @@ PRO JOURNAL__20160404__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
   ;; stableIMF                      = 20
-  ;; byMin                          = 5
-  ;; do_abs_bymin                   = 1
-  ;; bzMax                          = -5
+  byMin                          = 5
+  do_abs_bymin                   = 1
+  bzMax                          = -5
   ;; bzMin                          = 3
 
   ;;2016/04/09 For Jim
-  northSouth                     = 1
-  byMax                          = 5
-  do_abs_bymax                   = 1
-  bzMin                          = -5
-  DO_abs_bzMin                   = 1
+  ;; northSouth                     = 1
+  ;; byMax                          = 5
+  ;; do_abs_bymax                   = 1
+  ;; bzMin                          = -5
+  ;; DO_abs_bzMin                   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;DB stuff

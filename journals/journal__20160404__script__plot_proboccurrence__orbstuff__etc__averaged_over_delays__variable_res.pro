@@ -10,7 +10,7 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   maskMin              = 5
   despun               = 1
 
-  just_north           = 0
+  just_north           = 1
   just_south           = 0
 
   ;; quants_to_plot       = [3]
@@ -72,7 +72,8 @@ PRO JOURNAL__20160404__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
   ;; plot_dateStr         = 'Apr_3_16'
   ;; plot_dateStr         = 'Apr_4_16'
   ;; plot_dateStr         = 'Apr_6_16'
-  plot_dateStr         = 'Apr_9_16'
+  ;; plot_dateStr         = 'Apr_9_16'
+  plot_dateStr         = 'Apr_12_16'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax2.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0__bzMax0.0'
   ;; IMFCondStrArr        = '__ABS_byMin10.0'

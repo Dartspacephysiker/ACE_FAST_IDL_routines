@@ -272,6 +272,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     PROBOCCURRENCERANGE=probOccurrenceRange, $
                                     LOGPROBOCCURRENCE=logProbOccurrence, $
                                     THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+                                    THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+                                    THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+                                    THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -289,7 +292,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
                                     DO_CHASTDB=do_chastDB, $
                                     DO_DESPUNDB=do_despunDB, $
-                                    NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+                                    NEVENTSPLOTRANGE=nEventsPlotRange, $
+                                    LOGNEVENTSPLOT=logNEventsPlot, $
+                                    NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
                                     JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
@@ -308,6 +313,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     N_TILE_COLUMNS=n_tile_columns, $
                                     TILEPLOTSUFF=tilePlotSuff, $
                                     TILING_ORDER=tiling_order, $
+                                    TILEPLOTTITLE=tilePlotTitle, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -540,6 +546,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              CHARIEPLOTRANGE=chariEPlotRange, $
                              NEVENTPERMINRANGE=nEventPerMinRange, $
                              PROBOCCURRENCERANGE=probOccurrenceRange, $
+                             THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
                              NOWEPCO_RANGE=nowepco_range
 
   
@@ -645,7 +652,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            BINOFFSET_DELAY=binOffset_delay, $
                            STABLEIMF=stableIMF, $
                            SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                           NPLOTS=nPlots, NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+                           NPLOTS=nPlots, $
+                           NEVENTSPLOTRANGE=nEventsPlotRange, $
+                           LOGNEVENTSPLOT=logNEventsPlot, $
+                           NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                            EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                            ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
                            ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
@@ -676,6 +686,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            PROBOCCURRENCERANGE=probOccurrenceRange, $
                            LOGPROBOCCURRENCE=logProbOccurrence, $
                            THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+                           THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+                           THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+                           THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                            TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                            TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -755,6 +768,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                N_TILE_COLUMNS=n_tile_columns, $
                                TILEPLOTSUFF=tilePlotSuff, $
                                TILING_ORDER=tiling_order, $
+                               TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
                                _EXTRA = e

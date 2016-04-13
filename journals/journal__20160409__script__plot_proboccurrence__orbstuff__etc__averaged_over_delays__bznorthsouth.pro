@@ -69,7 +69,8 @@ PRO JOURNAL__20160409__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF Conds
-  plot_dateStr         = 'Apr_9_16'
+  ;; plot_dateStr         = 'Apr_9_16'
+  plot_dateStr         = 'Apr_12_16'
 
   IMFCondStrArr        = '__ABS_byMax5.0__ABS_bzMin-5.0'
 

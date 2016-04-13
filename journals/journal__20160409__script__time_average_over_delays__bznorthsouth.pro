@@ -4,7 +4,8 @@ PRO JOURNAL__20160409__SCRIPT__TIME_AVERAGE_OVER_DELAYS__BZNORTHSOUTH
   ;; plot_dateStr         = 'Apr_2_16'
   ;; plot_dateStr         = 'Apr_3_16'
   ;; plot_dateStr         = 'Apr_6_16'
-  plot_dateStr         = 'Apr_9_16'
+  ;; plot_dateStr         = 'Apr_9_16'
+  plot_dateStr         = 'Apr_12_16'
 
   despun               = 1
   maskMin              = 5
