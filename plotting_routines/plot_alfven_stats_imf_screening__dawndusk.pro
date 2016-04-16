@@ -89,6 +89,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+   ADD_VARIANCE_PLOTS=add_variance_plots, $
+   ONLY_VARIANCE_PLOTS=only_variance_plots, $
+   VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
    SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
@@ -227,6 +230,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                      DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+                                     ADD_VARIANCE_PLOTS=add_variance_plots, $
+                                     ONLY_VARIANCE_PLOTS=only_variance_plots, $
+                                     VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                      SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      ALL_LOGPLOTS=all_logPlots, $
