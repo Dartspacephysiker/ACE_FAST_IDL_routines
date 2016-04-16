@@ -315,8 +315,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     TILE_IMAGES=tile_images, $
                                     N_TILE_ROWS=n_tile_rows, $
                                     N_TILE_COLUMNS=n_tile_columns, $
-                                    TILEPLOTSUFF=tilePlotSuff, $
                                     TILING_ORDER=tiling_order, $
+                                    TILE__FAVOR_ROWS=tile__favor_rows, $
+                                    TILEPLOTSUFF=tilePlotSuff, $
                                     TILEPLOTTITLE=tilePlotTitle, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
@@ -775,8 +776,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                TILE_IMAGES=tile_images, $
                                N_TILE_ROWS=n_tile_rows, $
                                N_TILE_COLUMNS=n_tile_columns, $
-                               TILEPLOTSUFF=tilePlotSuff, $
                                TILING_ORDER=tiling_order, $
+                               TILE__FAVOR_ROWS=tile__favor_rows, $
+                               TILEPLOTSUFF=tilePlotSuff, $
                                TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
