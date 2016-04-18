@@ -289,6 +289,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ADD_VARIANCE_PLOTS=add_variance_plots, $
                                     ONLY_VARIANCE_PLOTS=only_variance_plots, $
                                     VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
+                                    VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
                                     SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
@@ -712,6 +713,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ADD_VARIANCE_PLOTS=add_variance_plots, $
                            ONLY_VARIANCE_PLOTS=only_variance_plots, $
                            VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
+                           VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
                            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
