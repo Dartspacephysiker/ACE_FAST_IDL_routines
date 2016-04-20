@@ -108,6 +108,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
    CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
    CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+   LOG_CUSTOM_MAXIND=log_custom_maxInd, $
    SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
@@ -264,6 +265,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
                                      CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
                                      CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+                                     LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                                      SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      ALL_LOGPLOTS=all_logPlots, $
