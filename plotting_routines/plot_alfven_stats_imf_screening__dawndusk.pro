@@ -71,13 +71,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
    CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
    NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+   AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
    ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-   ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+   ORBCONTRIBRANGE=orbContribRange, $
+   ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+   ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
    DIVNEVBYTOTAL=divNEvByTotal, $
    NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+   NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+   LOG_NOWEPCOPLOT=log_nowepcoPlot, $
+   NOWEPCO_RANGE=nowepco_range, $
+   NOWEPCO_AUTOSCALE=nowepco_autoscale, $
    PROBOCCURRENCEPLOT=probOccurrencePlot, $
    PROBOCCURRENCERANGE=probOccurrenceRange, $
+   PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
    LOGPROBOCCURRENCE=logProbOccurrence, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
@@ -94,6 +102,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    VAR__PLOTRANGE=var__plotRange, $
    VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
    VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+   PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
+   CUSTOM_MAXINDS=custom_maxInds, $
+   CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
+   CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
+   CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
+   CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
    SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
@@ -214,13 +228,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NPLOTS=nPlots, $
                                      NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                      ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                                     ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                                     ORBCONTRIBRANGE=orbContribRange, $
+                                     ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                                     ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYTOTAL=divNEvByTotal, $
                                      NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+                                     NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                                     LOG_NOWEPCOPLOT=log_nowepcoPlot, $
+                                     NOWEPCO_RANGE=nowepco_range, $
+                                     NOWEPCO_AUTOSCALE=nowepco_autoscale, $
                                      PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                      PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                     PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
                                      LOGPROBOCCURRENCE=logProbOccurrence, $
                                      TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                      TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
@@ -237,6 +258,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      VAR__PLOTRANGE=var__plotRange, $
                                      VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                      VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                                     PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
+                                     CUSTOM_MAXINDS=custom_maxInds, $
+                                     CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
+                                     CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
+                                     CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
+                                     CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
                                      SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                      MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                      ALL_LOGPLOTS=all_logPlots, $

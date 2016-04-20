@@ -261,20 +261,31 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
                                     CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                                     NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-                                    ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                                    ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                                    AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                                    ORBCONTRIBPLOT=orbContribPlot, $
+                                    LOGORBCONTRIBPLOT=logOrbContribPlot, $
+                                    ORBTOTPLOT=orbTotPlot, $
+                                    ORBFREQPLOT=orbFreqPlot, $
+                                    ORBCONTRIBRANGE=orbContribRange, $
+                                    ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                                    ORBTOTRANGE=orbTotRange, $
+                                    ORBFREQRANGE=orbFreqRange, $
                                     ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                     DIVNEVBYTOTAL=divNEvByTotal, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
                                     NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                                     NOWEPCO_RANGE=nowepco_range, $
+                                    NOWEPCO_AUTOSCALE=nowepco_autoscale, $
+                                    LOG_NOWEPCOPLOT=log_nowepcoPlot, $
                                     PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                     PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                    PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
                                     LOGPROBOCCURRENCE=logProbOccurrence, $
                                     THISTDENOMINATORPLOT=tHistDenominatorPlot, $
                                     THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
                                     THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+                                    THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
                                     THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
@@ -291,6 +302,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     VAR__PLOTRANGE=var__plotRange, $
                                     VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                     VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                                    PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
+                                    CUSTOM_MAXINDS=custom_maxInds, $
+                                    CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
+                                    CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
+                                    CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
+                                    CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
                                     SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
@@ -300,6 +317,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_DESPUNDB=do_despunDB, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, $
                                     LOGNEVENTSPLOT=logNEventsPlot, $
+                                    NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
                                     NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -364,6 +382,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              CHAREPLOTS=charEPlots, $
                              CHARETYPE=charEType, $
                              CHARIEPLOTS=chariEPlots, $
+                             AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                              ORBCONTRIBPLOT=orbContribPlot, $
                              ORBCONTRIB_NOMASK=orbContrib_noMask, $
                              ORBTOTPLOT=orbTotPlot, $
@@ -663,6 +682,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            NPLOTS=nPlots, $
                            NEVENTSPLOTRANGE=nEventsPlotRange, $
                            LOGNEVENTSPLOT=logNEventsPlot, $
+                           NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
                            NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                            EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                            ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
@@ -683,19 +703,30 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
                            CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                            NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-                           ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                           ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+                           AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                           ORBCONTRIBPLOT=orbContribPlot, $
+                           LOGORBCONTRIBPLOT=logOrbContribPlot, $
+                           ORBTOTPLOT=orbTotPlot, $
+                           ORBFREQPLOT=orbFreqPlot, $
+                           ORBCONTRIBRANGE=orbContribRange, $
+                           ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                           ORBTOTRANGE=orbTotRange, $
+                           ORBFREQRANGE=orbFreqRange, $
                            ORBCONTRIB_NOMASK=orbContrib_noMask, $
                            NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                            DIVNEVBYTOTAL=divNEvByTotal, $
                            NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
                            NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                            NOWEPCO_RANGE=nowepco_range, $
+                           NOWEPCO_AUTOSCALE=nowepco_autoscale, $
+                           LOG_NOWEPCOPLOT=log_nowepcoPlot, $
                            PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                           PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
                            PROBOCCURRENCERANGE=probOccurrenceRange, $
                            LOGPROBOCCURRENCE=logProbOccurrence, $
                            THISTDENOMINATORPLOT=tHistDenominatorPlot, $
                            THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+                           THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
                            THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
                            THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                            TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
@@ -716,6 +747,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            VAR__PLOTRANGE=var__plotRange, $
                            VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                            VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                           PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
+                           CUSTOM_MAXINDS=custom_maxInds, $
+                           CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
+                           CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
+                           CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
+                           CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
                            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
