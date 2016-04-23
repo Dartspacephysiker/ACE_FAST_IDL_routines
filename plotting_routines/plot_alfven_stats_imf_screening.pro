@@ -298,6 +298,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                     DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                     DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+                                    WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                     ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -305,6 +306,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     VAR__PLOTRANGE=var__plotRange, $
                                     VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                     VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                                    VAR__AUTOSCALE=var__autoscale, $
                                     PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
                                     CUSTOM_MAXINDS=custom_maxInds, $
                                     CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
@@ -632,8 +634,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
   ;;Need area or length of each bin for gross rates
-  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR KEYWORD_SET(do_grossRate_with_long_with) THEN BEGIN
-     IF KEYWORD_SET(do_grossRate_fluxQuantities) AND KEYWORD_SET(do_grossRate_with_long_with) THEN BEGIN
+  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
+     IF KEYWORD_SET(do_grossRate_fluxQuantities) AND KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         PRINTF,lun,"Can't do both types of gross rates simultaneously!!!"
         STOP
      ENDIF
@@ -649,6 +651,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         GET_H2D_BIN_LENGTHS,h2dLongWidths, $
+                            /LONGITUDINAL, $
                             CENTERS1=centersMLT,CENTERS2=centersILAT, $
                             BINSIZE1=binM*15., BINSIZE2=binI, $
                             MAX1=maxM*15., MAX2=maxI, $
@@ -657,12 +660,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
   ENDIF
 
+  IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
+     SETUP_GROSSRATE_INFO_FILE,grossRate_info_file, $
+                               GROSSLUN=grossLun, $
+                               PARAMSTRING=paramString
+  ENDIF
+
   IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
   dataRawPtrArr_List               = LIST()
   FOR iDel=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+
+     IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
+        PRINTF,grossLun,""
+        PRINTF,grossLun,paramString_list[iList]
+     ENDIF
+
      h2dStrArr                     = !NULL
      dataNameArr                   = !NULL
      dataRawPtrArr                 = !NULL
@@ -765,6 +780,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            GROSSRATE__H2D_LONGWIDTHS=h2dLongWidths, $
                            GROSSRATE__CENTERS_MLT=centersMLT, $
                            GROSSRATE__CENTERS_ILAT=centersILAT, $
+                           WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+                           GROSSLUN=grossLun, $
                            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                            ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -772,6 +789,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            VAR__PLOTRANGE=var__plotRange, $
                            VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                            VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                           VAR__AUTOSCALE=var__autoscale, $
                            PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
                            CUSTOM_MAXINDS=custom_maxInds, $
                            CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
@@ -791,6 +809,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      dataNameArr_list.add,dataNameArr
      dataRawPtrArr_list.add,dataRawPtrArr
   ENDFOR
+
+  IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
+     CLOSE_GROSSRATE_INFO_FILE,grossRate_info_file,grossLun
+  ENDIF
+
 
   ;;********************************************************
   ;;Handle Plots all at once

@@ -98,6 +98,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
    DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+   WRITE_GROSSRATE_INFO_TO_THIS_FILE=write_grossRate_info_to_this_file, $
+   GROSSLUN=grossLun, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
    ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -105,6 +107,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    VAR__PLOTRANGE=var__plotRange, $
    VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
    VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+   VAR__AUTOSCALE=var__autoscale, $
    PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
    CUSTOM_MAXINDS=custom_maxInds, $
    CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
@@ -260,6 +263,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                      DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                      DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+                                     WRITE_GROSSRATE_INFO_TO_THIS_FILE=write_grossRate_info_to_this_file, $
+                                     GROSSLUN=grossLun, $
                                      DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                      ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -267,6 +272,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      VAR__PLOTRANGE=var__plotRange, $
                                      VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                      VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                                     VAR__AUTOSCALE=var__autoscale, $
                                      PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
                                      CUSTOM_MAXINDS=custom_maxInds, $
                                      CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
