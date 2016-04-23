@@ -262,6 +262,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                                     NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
                                     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                                    DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
+                                    DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
                                     ORBCONTRIBPLOT=orbContribPlot, $
                                     LOGORBCONTRIBPLOT=logOrbContribPlot, $
                                     ORBTOTPLOT=orbTotPlot, $
@@ -295,6 +297,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                                     DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                     DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+                                    DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                     ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -308,6 +311,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
                                     CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
                                     CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+                                    CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
                                     LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                                     SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
@@ -627,15 +631,31 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
-  ;;Need area of each bin for this one
-  IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
-     GET_H2D_BIN_AREAS,h2dAreas, $
-                       CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                       BINSIZE1=binM*15., BINSIZE2=binI, $
-                       MAX1=maxM*15., MAX2=maxI, $
-                       MIN1=minM*15., MIN2=minI, $
-                       SHIFT1=shiftM*15., SHIFT2=shiftI
-  END
+  ;;Need area or length of each bin for gross rates
+  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR KEYWORD_SET(do_grossRate_with_long_with) THEN BEGIN
+     IF KEYWORD_SET(do_grossRate_fluxQuantities) AND KEYWORD_SET(do_grossRate_with_long_with) THEN BEGIN
+        PRINTF,lun,"Can't do both types of gross rates simultaneously!!!"
+        STOP
+     ENDIF
+     
+     IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
+        GET_H2D_BIN_AREAS,h2dAreas, $
+                          CENTERS1=centersMLT,CENTERS2=centersILAT, $
+                          BINSIZE1=binM*15., BINSIZE2=binI, $
+                          MAX1=maxM*15., MAX2=maxI, $
+                          MIN1=minM*15., MIN2=minI, $
+                          SHIFT1=shiftM*15., SHIFT2=shiftI
+     END
+
+     IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
+        GET_H2D_BIN_LENGTHS,h2dLongWidths, $
+                            CENTERS1=centersMLT,CENTERS2=centersILAT, $
+                            BINSIZE1=binM*15., BINSIZE2=binI, $
+                            MAX1=maxM*15., MAX2=maxI, $
+                            MIN1=minM*15., MIN2=minI, $
+                            SHIFT1=shiftM*15., SHIFT2=shiftI
+     ENDIF
+  ENDIF
 
   IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
 
@@ -705,6 +725,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                            NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
                            AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                           DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
+                           DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
                            ORBCONTRIBPLOT=orbContribPlot, $
                            LOGORBCONTRIBPLOT=logOrbContribPlot, $
                            ORBTOTPLOT=orbTotPlot, $
@@ -739,6 +761,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                            DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                            GROSSRATE__H2D_AREAS=h2dAreas, $
+                           DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+                           GROSSRATE__H2D_LONGWIDTHS=h2dLongWidths, $
                            GROSSRATE__CENTERS_MLT=centersMLT, $
                            GROSSRATE__CENTERS_ILAT=centersILAT, $
                            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
@@ -754,6 +778,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
                            CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
                            CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+                           CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
                            LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
