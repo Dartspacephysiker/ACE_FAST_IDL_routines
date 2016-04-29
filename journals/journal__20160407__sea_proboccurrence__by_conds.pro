@@ -164,7 +164,7 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS
                                 ;; window_sum)
      spn               = savePlotPref+plotSuff
 
-  SUPERPOSE_SEA_TIMES_ALFVENDBQUANTITIES,seaTimeArray_utc, $
+  SUPERPOSE_SEA_TIMES_ALFVENDBQUANTITIES, $
                                          TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                          SEA_CENTERTIMES_UTC=streakStart_UTC, $
                                          OMNI_QUANTITIES_TO_PLOT=OMNI_quantities_to_plot, $

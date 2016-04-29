@@ -95,7 +95,7 @@ PRO JOURNAL__20160407__TEST_SEA_PLOTTER_WITH_BY_CONDS
 
   streakstart_UTC = streakstart_UTC[SORT(streakStart_UTC)]
 
-  SUPERPOSE_SEA_TIMES_ALFVENDBQUANTITIES,seaTimeArray_utc, $
+  SUPERPOSE_SEA_TIMES_ALFVENDBQUANTITIES, $
                                          TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                          STARTDATE=startDate, STOPDATE=stopDate, $
                                          DAYSIDE=dayside,NIGHTSIDE=nightside, $
