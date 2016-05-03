@@ -275,7 +275,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                     NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                     DIVNEVBYTOTAL=divNEvByTotal, $
-                                    NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                                    NEVENTPERMINPLOT=nEventPerMinPlot, $
+                                    NEVENTPERMINRANGE=nEventPerMinRange, $
+                                    LOGNEVENTPERMIN=logNEventPerMin, $
+                                    NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
                                     NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                                     NOWEPCO_RANGE=nowepco_range, $
                                     NOWEPCO_AUTOSCALE=nowepco_autoscale, $
@@ -319,7 +322,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+                                    DBFILE=dbfile, $
+                                    RESET_GOOD_INDS=reset_good_inds, $
+                                    NO_BURSTDATA=no_burstData, $
+                                    DATADIR=dataDir, $
                                     DO_CHASTDB=do_chastDB, $
                                     DO_DESPUNDB=do_despunDB, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, $
@@ -421,6 +427,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              PARAMSTRING=paramString, $
                              PARAMSTRPREFIX=plotPrefix, $
                              PARAMSTRSUFFIX=plotSuffix,$
+                             OUT_PARAMSTRING_LIST=out_paramString_list, $
                              HOYDIA=hoyDia,LUN=lun,_EXTRA=e
   
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $
@@ -565,6 +572,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           ANGLELIM2=angleLim2, $
                                                                           HWMAUROVAL=HwMAurOval, $
                                                                           HWMKPIND=HwMKpInd, $
+                                                                          RESET_GOOD_INDS=reset_good_inds, $
                                                                           NO_BURSTDATA=no_burstData)
     
   ;;********************************************
@@ -753,7 +761,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ORBCONTRIB_NOMASK=orbContrib_noMask, $
                            NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                            DIVNEVBYTOTAL=divNEvByTotal, $
-                           NEVENTPERMINPLOT=nEventPerMinPlot, NEVENTPERMINRANGE=nEventPerMinRange, LOGNEVENTPERMIN=logNEventPerMin, $
+                           NEVENTPERMINPLOT=nEventPerMinPlot, $
+                           NEVENTPERMINRANGE=nEventPerMinRange, $
+                           LOGNEVENTPERMIN=logNEventPerMin, $
+                           NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
                            NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                            NOWEPCO_RANGE=nowepco_range, $
                            NOWEPCO_AUTOSCALE=nowepco_autoscale, $
@@ -803,6 +814,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            LOGAVGPLOT=logAvgPlot, $
                            ALL_LOGPLOTS=all_logPlots,$
                            TMPLT_H2DSTR=tmplt_h2dStr, $
+                           RESET_GOOD_INDS=reset_good_inds, $
                            FANCY_PLOTNAMES=fancy_plotNames, $
                            LUN=lun
      h2dStrArr_List.add,h2dStrArr
@@ -901,5 +913,5 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   out_tempFile_list      = tempFile_list
   out_dataNameArr_list   = dataNameArr_list
-
+  out_paramString_list   = paramString_list
 END

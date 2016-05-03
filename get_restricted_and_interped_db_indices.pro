@@ -45,6 +45,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    HWMAUROVAL=HwMAurOval, $
    HWMKPIND=HwMKpInd, $
+   RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i
@@ -66,6 +67,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
+                               RESET_GOOD_INDS=reset_good_inds, $
                                NO_BURSTDATA=no_burstData, $
                                GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i)
 
