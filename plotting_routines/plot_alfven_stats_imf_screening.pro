@@ -207,6 +207,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BINILAT=binI, $
                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                                    MIN_MAGCURRENT=minMC, $
+                                    MAX_NEGMAGCURRENT=maxNegMC, $
                                     HWMAUROVAL=HwMAurOval, $
                                     HWMKPIND=HwMKpInd, $
                                     ;; MIN_NEVENTS=min_nEvents, $
@@ -276,7 +278,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ORBTOTRANGE=orbTotRange, $
                                     ORBFREQRANGE=orbFreqRange, $
                                     ORBCONTRIB_NOMASK=orbContrib_noMask, $
-                                    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, $
+                                    NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                    NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
                                     DIVNEVBYTOTAL=divNEvByTotal, $
                                     NEVENTPERMINPLOT=nEventPerMinPlot, $
                                     NEVENTPERMINRANGE=nEventPerMinRange, $
@@ -385,7 +389,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC, $
                              MAX_NEGMAGCURRENT=maxNegMC, $
-                             HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+                             HWMAUROVAL=HwMAurOval, $
+                             HWMKPIND=HwMKpInd, $
                              ;; MIN_NEVENTS=min_nEvents, $
                              MASKMIN=maskMin, $
                              DO_DESPUNDB=do_despunDB, $
@@ -561,6 +566,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                                                           DO_LSHELL=do_lshell, $
                                                                           MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                                          MIN_MAGCURRENT=minMC, $
+                                                                          MAX_NEGMAGCURRENT=maxNegMC, $
                                                                           SMOOTH_IMF=smoothWindow, $
                                                                           BYMIN=byMin,BZMIN=bzMin, $
                                                                           BYMAX=byMax,BZMAX=bzMax, $
@@ -572,6 +579,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           CLOCKSTR=clockStr, $
                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                                                          /DO_NOT_SET_DEFAULTS, $
                                                                           BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                                           MULTIPLE_DELAYS=multiple_delays, $
                                                                           RESOLUTION_DELAY=delay_res, $
@@ -702,6 +710,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      dataRawPtrArr                 = !NULL
      GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iDel], H2DSTRARR=h2dStrArr, $
                            KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
+                           /DO_NOT_SET_DEFAULTS, $
                            MINMLT=minM,MAXMLT=maxM, $
                            BINMLT=binM, $
                            SHIFTMLT=shiftM, $
@@ -774,7 +783,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ORBTOTRANGE=orbTotRange, $
                            ORBFREQRANGE=orbFreqRange, $
                            ORBCONTRIB_NOMASK=orbContrib_noMask, $
-                           NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                           NEVENTPERORBPLOT=nEventPerOrbPlot, $
+                           LOGNEVENTPERORB=logNEventPerOrb, $
+                           NEVENTPERORBRANGE=nEventPerOrbRange, $
+                           NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
                            DIVNEVBYTOTAL=divNEvByTotal, $
                            NEVENTPERMINPLOT=nEventPerMinPlot, $
                            NEVENTPERMINRANGE=nEventPerMinRange, $

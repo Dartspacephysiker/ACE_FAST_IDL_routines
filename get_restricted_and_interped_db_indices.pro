@@ -23,6 +23,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    MINLSHELL=minL, $
    MAXLSHELL=maxL, $
    BINL=binL, $
+   MIN_MAGCURRENT=minMC, $
+   MAX_NEGMAGCURRENT=maxNegMC, $
    BYMIN=byMin, $
    BZMIN=bzMin, $
    BYMAX=byMax, $
@@ -50,7 +52,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
-   RESTRICT_WITH_THESE_I=restrict_with_these_i
+   RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+   DO_NOT_SET_DEFAULTS=do_not_set_defaults
+
   
   COMPILE_OPT idl2
 
@@ -69,8 +73,10 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                MINMLT=minM,MAXMLT=maxM,BINM=binM, $
                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                               MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                                HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
                                RESET_GOOD_INDS=reset_good_inds, $
+                               DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
                                NO_BURSTDATA=no_burstData, $
                                GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i)
 

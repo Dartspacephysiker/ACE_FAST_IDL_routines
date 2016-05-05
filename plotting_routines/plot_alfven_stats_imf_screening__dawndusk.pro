@@ -22,6 +22,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
    DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
    MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+   MIN_MAGCURRENT=minMC, $
+   MAX_NEGMAGCURRENT=maxNegMC, $
    HWMAUROVAL=HwMAurOval, $
    HWMKPIND=HwMKpInd, $
    MIN_NEVENTS=min_nEvents, $
@@ -203,6 +205,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                      DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                      MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                     MIN_MAGCURRENT=minMC, $
+                                     MAX_NEGMAGCURRENT=maxNegMC, $
                                      BOTH_HEMIS=both_hemis, $
                                      NORTH=north, $
                                      SOUTH=south, $
