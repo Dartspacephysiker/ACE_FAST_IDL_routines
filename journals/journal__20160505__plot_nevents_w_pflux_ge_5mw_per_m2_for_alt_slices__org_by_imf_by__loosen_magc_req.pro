@@ -3,10 +3,14 @@
 PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY_IMF_BY__LOOSEN_MAGC_REQ
 
   ;;The reason we're gathered
-  pFluxMin                 = 1
+  pFluxMin                 = 10
 
-  minMC                    = 5
+  ;; minMC                    = 5
+  ;; maxNegMC                 = minMC*(-1)
+  minMC                    = 10
   maxNegMC                 = minMC*(-1)
+
+  ;; sample_t_restriction     = 0.1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Scatterplot options
@@ -31,9 +35,6 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
 
   reset_good_inds          = 1
 
-  hemi                     = 'NORTH'
-  ;; hemi                     = 'SOUTH'
-  
   orbContribPlot           = 1
   logOrbContribPlot        = 0
   ;; orbContribRange          = [
@@ -88,7 +89,7 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[2000,4180]]
+  altRange                 = [[1000,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
@@ -102,13 +103,13 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
   ;; byMax                          = 5
   ;; abs_byMax                      = 1
 
-  ;; clockStr                       = 'duskward'
-  ;; byMin                          = 5
+  clockStr                       = 'duskward'
+  byMin                          = 10
   ;; bzMax                          = -1
 
-  clockStr                       = 'dawnward'
-  byMax                          = -5
-  bzMax                          = -5
+  ;; clockStr                       = 'dawnward'
+  ;; byMax                          = -10
+  ;; bzMax                          = -5
 
   ;;DB stuff
   do_despun                      = 1
@@ -122,13 +123,13 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 85
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -61
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -61
 
   ;; binILAT                        = 2.0
   binILAT                        = 4.0
@@ -185,6 +186,7 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
      tilePlotTitleFinal  = IMFTitle + ' ' + tilePlotTitle
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
+        SAMPLE_T_RESTRICTION=sample_t_restriction, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
         ALTITUDERANGE=altitudeRange, $
@@ -375,8 +377,12 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
            ANCILLARY_DATAPROD=maximus.pFluxEst, $
            ANCILLARY_DP_FORMAT='F-8.2', $
            ANCILLARY_DP_TITLE='Poynt. flux', $
+           OUT_PARSED=orbStrArr_list, $
            OUTDIR=plotDir
      ENDIF
+
+     PRINT,'Saving outorbstrarr_list to ' + paramStr+'.sav...'
+     SAVE,orbStrArr_list,FILENAME=paramStr+'.sav'
 
   ENDFOR
 END
