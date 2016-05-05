@@ -11,6 +11,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    ALTITUDERANGE=altitudeRange, $
    CHARERANGE=charERange, $
    POYNTRANGE=poyntRange, $
+   SAMPLE_T_RESTRICTION=sample_t_restriction, $
    MINMLT=minM, $
    MAXMLT=maxM, $
    BINM=binM, $
@@ -30,6 +31,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   RESET_OMNI_INDS=reset_omni_inds, $
    CLOCKSTR=clockStr, $
    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
    ANGLELIM1=angleLim1, $
@@ -63,6 +65,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                ALTITUDERANGE=altitudeRange, $
                                CHARERANGE=charERange, $
                                POYNTRANGE=poyntRange, $
+                               SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                MINMLT=minM,MAXMLT=maxM,BINM=binM, $
                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -103,6 +106,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                                                                            DO_ABS_BYMAX=abs_byMax, $
                                                                                            DO_ABS_BZMIN=abs_bzMin, $
                                                                                            DO_ABS_BZMAX=abs_bzMax, $
+                                                                                           RESET_OMNI_INDS=reset_omni_inds, $
                                                                                            OMNI_COORDS=OMNI_coords, $
                                                                                            OUT_OMNI_PARAMSTR=out_omni_paramStr, $
                                                                                            LUN=lun)     

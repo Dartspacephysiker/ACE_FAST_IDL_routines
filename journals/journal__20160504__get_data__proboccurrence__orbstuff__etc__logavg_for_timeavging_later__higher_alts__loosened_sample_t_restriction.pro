@@ -1,10 +1,13 @@
-;2016/04/28 The deal now is that we know the biggest pFlux events change location 
-PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEAVGING_LATER__HIGHER_ALTS
+;2016/05/04 The deal now is that we know the biggest pFlux events change location 
+PRO JOURNAL__20160504__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEAVGING_LATER__HIGHER_ALTS__LOOSENED_SAMPLE_T_RESTRICTION
 
   nonstorm                       = 0
+  ;; dstCutoff                      = -30
   justData                       = 0
 
-  altitudeRange                  = [2000,4180]
+  ;; sample_t_restriction           = 0.1
+
+  altitudeRange                  = [1000,4180]
   altString                      = STRING(FORMAT='("--",I0,"-",I0,"km")',altitudeRange[0],altitudeRange[1])
 
   keep_colorbar                  = 1
@@ -25,7 +28,7 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bonus
   do_timeAvg_fluxQuantities      = 0
-  div_fluxPlots_by_applicable_orbs = 1
+  div_fluxPlots_by_applicable_orbs = 0
   logAvgs                        = 1
   maskMin                        = 5
   divide_by_width_x              = 1
@@ -34,8 +37,8 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
+  minILAT                        = 60
+  maxILAT                        = 84
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -85
@@ -46,25 +49,25 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;; binILAT                        = 5.0        ;2016/03/29
   ;; binILAT                        = 2.5        ;2016/03/30
   ;; binILAT                        = 3.0        ;2016/03/31
-  binILAT                        = 4.0        ;2016/03/31
+  binILAT                        = 6.0        ;2016/03/31
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   ;; binMLT                         = 0.75        ;2016/03/2{3,9}
   ;; shiftMLT                       = 0.375       ;2016/03/2{3,9}
 
-  binMLT                         = 1.0       ;2016/03/24
-  shiftMLT                       = 0.5       ;2016/03/24
+  binMLT                         = 1.5       ;2016/03/24
+  shiftMLT                       = 0.75       ;2016/03/24
 
   ;; binMLT                         = 1.5       ;2016/03/31
   ;; shiftMLT                       = 0.75      ;2016/03/31
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff
-  ;; stableIMF                      = 20
-  byMin                          = 5
+  stableIMF                      = 0
+  byMin                          = 3
   do_abs_bymin                   = 1
-  bzMax                          = 0
+  bzMax                          = -3
   ;; bzMin                          = 3
 
   ;;DB stuff
@@ -74,6 +77,7 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   nDelays                        = 1
   delayDeltaSec                  = 1800
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  ;; binOffset_delay                = delayDeltaSec/2
   
   ;; charERange                     = [4,300]
   ;; charERange                     = [300,4000]
@@ -98,6 +102,8 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   ;; ;;PROBOCCURRENCE
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
+  probOccurrenceRange            = [0,0.05]
+  logProbOccurrence              = 0
 
   ;; Events per orb
   nEventPerOrbRange              = [1,30]
@@ -120,23 +126,26 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
   eNumFlPlotType                = ['Eflux_Losscone_Integ','ESA_Number_flux']
   eNumFlRange                   = [[0,1], $
                                    [0,1e9]]
-  ;; eNumFlRange                   = [[10.^(-1.0),10.^(1.0)], $
-  ;;                                  [1e6,1e9]]
   logENumFlPlot                 = [0,0]
+  eNumFlRange                   = [[10.^(-1.0),10.^(1.0)], $
+                                   [5e7,5e9]]
+  logENumFlPlot                 = [1,1]
   noNegeNumFl                   = [1,1]
 
   ;;18--INTEG_ION_FLUX_UP
   iFluxPlotType                  = 'Integ_Up'
   ;; iPlotRange                     = [0,1e8] ;for time-averaged plot
-  iPlotRange                     = [10^(6.5),10^(9.5)]  ;for time-averaged plot
+  iPlotRange                     = [10^(7.0),10^(9.0)]  ;for time-averaged plot
   logIFPlot                      = 1
   noNegIFlux                     = 1  
 
   PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK, $
      JUSTDATA=justData, $
      NONSTORM=nonstorm, $
+     DSTCUTOFF=dstCutoff, $
      CHARERANGE=charERange, $
      ALTITUDERANGE=altitudeRange, $
+     SAMPLE_T_RESTRICTION=sample_t_restriction, $
      MASKMIN=maskMin, $
      HEMI=hemi, $
      BINMLT=binMLT, $

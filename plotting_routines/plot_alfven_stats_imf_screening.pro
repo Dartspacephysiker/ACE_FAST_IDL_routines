@@ -198,6 +198,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ALTITUDERANGE=altitudeRange, $
                                     CHARERANGE=charERange, $
                                     POYNTRANGE=poyntRange, $
+                                    SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     NUMORBLIM=numOrbLim, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINMLT=binM, $
@@ -222,6 +223,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_ABS_BYMAX=abs_byMax, $
                                     DO_ABS_BZMIN=abs_bzMin, $
                                     DO_ABS_BZMAX=abs_bzMax, $
+                                    RESET_OMNI_INDS=reset_omni_inds, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
                                     HEMI=hemi, $
@@ -239,6 +241,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONSTORM=nonStorm, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
+                                    DSTCUTOFF=dstCutoff, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
                                     EPLOTRANGE=ePlotRange, $                                       
@@ -343,8 +346,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
                                     EPS_OUTPUT=eps_output, $
-                                    OUT_TEMPFILE_LIST=out_tempFile_list, $
-                                    OUT_DATANAMEARR_list=out_dataNameArr_list, $
                                     TILE_IMAGES=tile_images, $
                                     N_TILE_ROWS=n_tile_rows, $
                                     N_TILE_COLUMNS=n_tile_columns, $
@@ -356,6 +357,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
+                                    OUT_TEMPFILE_LIST=out_tempFile_list, $
+                                    OUT_DATANAMEARR_list=out_dataNameArr_list, $
+                                    OUT_PARAMSTRING_LIST=out_paramString_list, $
+                                    OUT_PLOT_I_LIST=out_plot_i_list, $
                                     _EXTRA = e
   
 ;;  COMPILE_OPT idl2
@@ -368,7 +373,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
   ENDELSE
 
-  SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, $
+  SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
+                             ALTITUDERANGE=altitudeRange, $
+                             CHARERANGE=charERange, $
+                             POYNTRANGE=poyntRange, $
+                             SAMPLE_T_RESTRICTION=sample_t_restriction, $
                              MINMLT=minM,MAXMLT=maxM, $
                              BINMLT=binM, $
                              SHIFTMLT=shiftM, $
@@ -397,12 +406,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              CHARIEPLOTS=chariEPlots, $
                              AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                              ORBCONTRIBPLOT=orbContribPlot, $
-                             ORBCONTRIB_NOMASK=orbContrib_noMask, $
+                             ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                              ORBTOTPLOT=orbTotPlot, $
                              ORBFREQPLOT=orbFreqPlot, $
                              NEVENTPERORBPLOT=nEventPerOrbPlot, $
                              NEVENTPERMINPLOT=nEventPerMinPlot, $
-                             NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                             ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                              PROBOCCURRENCEPLOT=probOccurrencePlot, $
                              SQUAREPLOT=squarePlot, $
                              POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -421,13 +430,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MEDHISTOUTTXT=medHistOutTxt, $
                              OUTPUTPLOTSUMMARY=outputPlotSummary, $
                              ;; OUT_TEMPFILE=out_tempFile, $
-                             PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
+                             ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
                              DEL_PS=del_PS, $
                              KEEPME=keepMe, $
                              PARAMSTRING=paramString, $
                              PARAMSTRPREFIX=plotPrefix, $
                              PARAMSTRSUFFIX=plotSuffix,$
-                             OUT_PARAMSTRING_LIST=out_paramString_list, $
                              HOYDIA=hoyDia,LUN=lun,_EXTRA=e
   
   SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $
@@ -544,7 +552,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           ;; BOTH_HEMIS=both_hemis, $
                                                                           ORBRANGE=orbRange, $
                                                                           ALTITUDERANGE=altitudeRange, $
-                                                                          CHARERANGE=charERange,POYNTRANGE=poyntRange, $
+                                                                          CHARERANGE=charERange, $
+                                                                          POYNTRANGE=poyntRange, $
+                                                                          SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                                                           MINMLT=minM,MAXMLT=maxM, $
                                                                           BINM=binM, $
                                                                           SHIFTM=shiftM, $
@@ -558,6 +568,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           DO_ABS_BYMAX=abs_byMax, $
                                                                           DO_ABS_BZMIN=abs_bzMin, $
                                                                           DO_ABS_BZMAX=abs_bzMax, $
+                                                                          RESET_OMNI_INDS=reset_omni_inds, $
                                                                           CLOCKSTR=clockStr, $
                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
@@ -696,8 +707,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            SHIFTMLT=shiftM, $
                            MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                            DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                           ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
-                           CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
+                           ORBRANGE=orbRange, $
+                           ALTITUDERANGE=altitudeRange, $
+                           CHARERANGE=charERange, $
+                           POYNTRANGE=poyntRange, $
+                           SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                           NUMORBLIM=numOrbLim, $
                            MASKMIN=maskMin, $
                            SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                            HEMI=hemi, $
@@ -914,4 +929,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   out_tempFile_list      = tempFile_list
   out_dataNameArr_list   = dataNameArr_list
   out_paramString_list   = paramString_list
+  out_plot_i_list        = plot_i_list
+
 END

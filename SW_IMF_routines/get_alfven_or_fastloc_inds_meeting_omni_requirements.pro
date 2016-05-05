@@ -17,6 +17,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   RESET_OMNI_INDS=reset_omni_inds, $
    OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    LUN=lun
@@ -62,6 +63,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             DO_ABS_BYMAX=abs_byMax, $
                                             DO_ABS_BZMIN=abs_bzMin, $
                                             DO_ABS_BZMAX=abs_bzMax, $
+                                            RESET_OMNI_INDS=reset_omni_inds, $
                                             OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $
                                             LUN=lun)

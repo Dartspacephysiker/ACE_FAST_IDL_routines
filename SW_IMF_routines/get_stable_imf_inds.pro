@@ -22,6 +22,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    DO_ABS_BZMAX=abs_bzMax, $
    DO_ABS_BXMIN=abs_bxMin, $
    DO_ABS_BXMAX=abs_bxMax, $
+   RESET_OMNI_INDS=reset_omni_inds, $
    GET_BX=get_Bx, $
    GET_BY=get_By, $
    GET_BZ=get_Bz, $
@@ -71,9 +72,15 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
+        IF KEYWORD_SET(reset_omni_inds) THEN BEGIN
+           PRINT,"Resetting OMNI inds..."
+           RESET_OMNI_INDS
+        ENDIF
   IF N_ELEMENTS(C_OMNI__HAVE_STABLE_INDS) GT 0 THEN BEGIN
      IF ~C_OMNI__HAVE_STABLE_INDS THEN BEGIN
         calculate = 1 
+        C_OMNI__HAVE_STABLE_INDS = 0
+        C_OMNI__STABLE_I         = !NULL
      ENDIF ELSE BEGIN
 
         ;;Do we need to recalculate anyway?
@@ -146,14 +153,14 @@ FUNCTION GET_STABLE_IMF_INDS, $
            C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSM)
         END
         ELSE: BEGIN
-           print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSE..."
+           print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSM..."
            WAIT,1.0
-           C_OMNI__By                          = TEMPORARY(By_GSE)
-           C_OMNI__Bz                          = TEMPORARY(Bz_GSE)
-           C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSE)
-           C_OMNI__phiClock                    = TEMPORARY(phiClock_GSE)
-           C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSE)
-           C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSE)
+           C_OMNI__By                          = TEMPORARY(By_GSM)
+           C_OMNI__Bz                          = TEMPORARY(Bz_GSM)
+           C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSM)
+           C_OMNI__phiClock                    = TEMPORARY(phiClock_GSM)
+           C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSM)
+           C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSM)
         END
      ENDCASE
      C_OMNI__Bx                                = TEMPORARY(Bx)

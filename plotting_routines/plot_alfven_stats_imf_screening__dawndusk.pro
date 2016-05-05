@@ -14,6 +14,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    ALTITUDERANGE=altitudeRange, $
    CHARERANGE=charERange, $
    POYNTRANGE=poyntRange, $
+   SAMPLE_T_RESTRICTION=sample_t_restriction, $
    NUMORBLIM=numOrbLim, $
    MINMLT=minMLT,MAXMLT=maxMLT, $
    BINMLT=binMLT, $
@@ -49,6 +50,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    NONSTORM=nonStorm, $
    RECOVERYPHASE=recoveryPhase, $
    MAINPHASE=mainPhase, $
+   DSTCUTOFF=dstCutoff, $
    NPLOTS=nPlots, $
    EPLOTS=ePlots, $
    EPLOTRANGE=ePlotRange, $                                       
@@ -91,6 +93,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    PROBOCCURRENCERANGE=probOccurrenceRange, $
    PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
    LOGPROBOCCURRENCE=logProbOccurrence, $
+   THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+   THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+   THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+   THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
+   THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -145,6 +152,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    SAVE_COMBINED_WINDOW=save_combined_window, $
    SAVE_COMBINED_NAME=save_combined_name, $
    NO_COLORBAR=no_colorbar, $
+   KEEP_COLORBAR=keep_colorbar,$
    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
    CB_FORCE_OOBLOW=cb_force_oobLow, $
    FANCY_PLOTNAMES=fancy_plotNames, $
@@ -160,7 +168,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
      outTempFiles = !NULL
-     no_colorbar  = [0,1]
+     no_colorbar  = KEYWORD_SET(keep_colorbar) ? [0,0] : [0,1]
   ENDIF ELSE BEGIN
      no_colorbar  = [0,0]
   ENDELSE
@@ -183,8 +191,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      CLOCKSTR=clockStrings[i], $
                                      ANGLELIM1=angleLim1, $
                                      ANGLELIM2=angleLim2, $
-                                     ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, $
-                                     CHARERANGE=charERange, POYNTRANGE=poyntRange, $
+                                     ORBRANGE=orbRange, $
+                                     ALTITUDERANGE=altitudeRange, $
+                                     CHARERANGE=charERange, $
+                                     POYNTRANGE=poyntRange, $
+                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                      NUMORBLIM=numOrbLim, $
                                      MINMLT=minMLT,MAXMLT=maxMLT, $
                                      BINMLT=binMLT, $
@@ -217,6 +228,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NONSTORM=nonStorm, $
                                      RECOVERYPHASE=recoveryPhase, $
                                      MAINPHASE=mainPhase, $
+                                     DSTCUTOFF=dstCutoff, $
                                      EPLOTS=ePlots, $
                                      EPLOTRANGE=ePlotRange, $                                       
                                      EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
@@ -260,6 +272,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      PROBOCCURRENCERANGE=probOccurrenceRange, $
                                      PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
                                      LOGPROBOCCURRENCE=logProbOccurrence, $
+                                     THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+                                     THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+                                     THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+                                     THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
+                                     THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                                      TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                      TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                      LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
