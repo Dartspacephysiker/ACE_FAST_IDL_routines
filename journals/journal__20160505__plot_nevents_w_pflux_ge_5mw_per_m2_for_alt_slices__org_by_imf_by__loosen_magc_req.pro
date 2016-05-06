@@ -103,12 +103,12 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
   ;; byMax                          = 5
   ;; abs_byMax                      = 1
 
-  clockStr                       = 'duskward'
-  byMin                          = 10
+  ;; clockStr                       = 'duskward'
+  ;; byMin                          = 5
   ;; bzMax                          = -1
 
-  ;; clockStr                       = 'dawnward'
-  ;; byMax                          = -10
+  clockStr                       = 'dawnward'
+  byMax                          = -5
   ;; bzMax                          = -5
 
   ;;DB stuff
