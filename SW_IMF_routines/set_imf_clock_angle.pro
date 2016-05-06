@@ -17,59 +17,122 @@ PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim
 
      C_OMNI__clockStr                             = clockStr
 
+     ;;Convert stupid angleLim1 and angleLim2
+     tempAngle1                                   = angleLim1-90.
+     tempAngle2                                   = angleLim2-90.
+
      ;;Set up to check correct region: negAngle<phi<posAngle
+     ;; CASE STRUPCASE(C_OMNI__clockStr) OF 
+     ;;    STRUPCASE('duskward'): BEGIN 
+     ;;         ctrAngle                          = 90 
+     ;;       C_OMNI__negAngle                       = angleLim1 
+     ;;       C_OMNI__posAngle                       = angleLim2 
+     ;;    END
+     ;;    STRUPCASE('dawnward'): BEGIN  
+     ;;         ctrAngle                          = -90 
+     ;;       C_OMNI__negAngle                       = -angleLim2 
+     ;;       C_OMNI__posAngle                       = -angleLim1 
+     ;;    END
+     ;;    STRUPCASE('bzNorth'): BEGIN 
+     ;;         ctrAngle                          = 0 
+     ;;       C_OMNI__negAngle                       = -angleLim1 
+     ;;       C_OMNI__posAngle                       = angleLim1 
+     ;;    END
+     ;;    STRUPCASE('bzSouth'): BEGIN  
+     ;;         ctrAngle                          = 180 
+     ;;       C_OMNI__negAngle                       = angleLim2 
+     ;;       C_OMNI__posAngle                       = -angleLim2 
+     ;;    END
+     ;;    STRUPCASE('all_IMF'): BEGIN 
+     ;;       C_OMNI__negAngle                       = -angleLim1 
+     ;;       C_OMNI__posAngle                       = angleLim2 
+     ;;    END
+     ;;    STRUPCASE('dawn-north'): BEGIN
+     ;;         ctrAngle                          = -45
+     ;;       ;; C_OMNI__negAngle                       = -90.0
+     ;;       ;; C_OMNI__posAngle                       = -angleLim1
+     ;;       C_OMNI__negAngle                       = -angleLim2+45.
+     ;;       C_OMNI__posAngle                       = -angleLim1+45.
+     ;;    END
+     ;;    STRUPCASE('dawn-south'): BEGIN
+     ;;       ctrAngle                            = -135
+     ;;       ;; C_OMNI__negAngle                       = -angleLim2
+     ;;       ;; C_OMNI__posAngle                       = -90.0
+     ;;       C_OMNI__negAngle                       = -angleLim2-45.
+     ;;       C_OMNI__posAngle                       = -angleLim1+45.
+     ;;    END
+     ;;    STRUPCASE('dusk-north'): BEGIN
+     ;;       ctrAngle                            = 45
+     ;;       ;; C_OMNI__negAngle                       = angleLim1
+     ;;       ;; C_OMNI__posAngle                       = 90.0
+     ;;       C_OMNI__negAngle                       = angleLim1-45.
+     ;;       C_OMNI__posAngle                       = angleLim2-45.
+     ;;    END
+     ;;    STRUPCASE('dusk-south'): BEGIN
+     ;;       ctrAngle                            = 135
+     ;;       ;; C_OMNI__negAngle                       = 90.0
+     ;;       ;; C_OMNI__posAngle                       = angleLim2
+     ;;       C_OMNI__negAngle                       = angleLim1+45.
+     ;;       C_OMNI__posAngle                       = angleLim2+45.
+     ;;    END
+     ;;    ELSE: BEGIN
+     ;;       PRINTF,lun, "Only nine options, brother."
+     ;;       STOP
+     ;;    END
+     ;; ENDCASE
+
      CASE STRUPCASE(C_OMNI__clockStr) OF 
         STRUPCASE('duskward'): BEGIN 
-           ;;   ctrAngle                          = 90 
-           C_OMNI__negAngle                       = angleLim1 
-           C_OMNI__posAngle                       = angleLim2 
+             ctrAngle                          = 90 
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('dawnward'): BEGIN  
-           ;;   ctrAngle                          = -90 
-           C_OMNI__negAngle                       = -angleLim2 
-           C_OMNI__posAngle                       = -angleLim1 
+             ctrAngle                          = -90 
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('bzNorth'): BEGIN 
-           ;;   ctrAngle                          = 0 
-           C_OMNI__negAngle                       = -angleLim1 
-           C_OMNI__posAngle                       = angleLim1 
+             ctrAngle                          = 0 
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('bzSouth'): BEGIN  
-           ;;   ctrAngle                          = 180 
-           C_OMNI__negAngle                       = angleLim2 
-           C_OMNI__posAngle                       = -angleLim2 
+             ctrAngle                          = 180 
+           C_OMNI__negAngle                    = 180 + tempAngle1
+           C_OMNI__posAngle                    = tempAngle2
         END
         STRUPCASE('all_IMF'): BEGIN 
-           C_OMNI__negAngle                       = -angleLim1 
-           C_OMNI__posAngle                       = angleLim2 
+           C_OMNI__negAngle                       = -180
+           C_OMNI__posAngle                       = 180
         END
         STRUPCASE('dawn-north'): BEGIN
-           ;;   ctrAngle                          = -45
+             ctrAngle                          = -45
            ;; C_OMNI__negAngle                       = -90.0
            ;; C_OMNI__posAngle                       = -angleLim1
-           C_OMNI__negAngle                       = -angleLim2+45.
-           C_OMNI__posAngle                       = -angleLim1+45.
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('dawn-south'): BEGIN
-           ;; ctrAngle                            = -135
+           ctrAngle                            = -135
            ;; C_OMNI__negAngle                       = -angleLim2
            ;; C_OMNI__posAngle                       = -90.0
-           C_OMNI__negAngle                       = -angleLim2-45.
-           C_OMNI__posAngle                       = -angleLim1+45.
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('dusk-north'): BEGIN
-           ;; ctrAngle                            = 45
+           ctrAngle                            = 45
            ;; C_OMNI__negAngle                       = angleLim1
            ;; C_OMNI__posAngle                       = 90.0
-           C_OMNI__negAngle                       = angleLim1-45.
-           C_OMNI__posAngle                       = angleLim2-45.
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         STRUPCASE('dusk-south'): BEGIN
-           ;; ctrAngle                            = 135
+           ctrAngle                            = 135
            ;; C_OMNI__negAngle                       = 90.0
            ;; C_OMNI__posAngle                       = angleLim2
-           C_OMNI__negAngle                       = angleLim1+45.
-           C_OMNI__posAngle                       = angleLim2+45.
+           C_OMNI__negAngle                    = ctrAngle + tempAngle1
+           C_OMNI__posAngle                    = ctrAngle + tempAngle2
         END
         ELSE: BEGIN
            PRINTF,lun, "Only nine options, brother."

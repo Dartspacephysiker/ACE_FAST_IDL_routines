@@ -14,7 +14,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Scatterplot options
-  do_scatterplot           = 1
+  do_scatterplot           = 0
 
   overlayAurZone           = 1
 
@@ -24,7 +24,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
   centerLon                = 270
   sTrans                   = 20
   savePlot                 = 1
-  add_orbit_legend         = 1
+  add_orbit_legend         = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
@@ -42,7 +42,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
   orbContrib_noMask        = 1
 
   nOrbsWithEventsPerContribOrbsPlot = 1
-  nowepco_range            = [0.0,1.0]
+  nowepco_range            = [0.0,0.3]
   nowepco_autoscale        = 0
 
   nEventPerOrbPlot         = 1
@@ -93,7 +93,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
+  btMin                          = 10
 
   ;;Delay stuff
   nDelays                        = 1
@@ -203,10 +203,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
         MAX_NEGMAGCURRENT=maxNegMC, $
         HWMAUROVAL=HwMAurOval, $
         HWMKPIND=HwMKpInd, $
-        ;; MIN_NEVENTS=min_nEvents, $
         MASKMIN=maskMin, $
-        CLOCKSTR=clockStr, $
-        ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
         ANGLELIM1=angleLim1, $
         ANGLELIM2=angleLim2, $
         BYMIN=byMin, $
@@ -307,7 +304,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
         DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despunDB, $
+        DO_DESPUNDB=do_despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -347,7 +344,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
      PRINT,'K! Doing other stuff...'
      FOR j=0,7 DO BEGIN
         plot_i                   = (plot_i_list_list[j])[0]
-        paramStr                 = (paramString_list_list[j])[0]
+        paramStr                 = (paramStr_list_list[j])[0]
         plotTitle                = hemi + 'ERN HEMI: Poynting flux $\geq$ ' + STRCOMPRESS(pFluxMin,/REMOVE_ALL) + ' mW/m!U2!N' + $
                                    (KEYWORD_SET(altitudeRange) OR KEYWORD_SET(gotStorms) ? '(' + altStr + ')' : '')
         scatterPlotName          = 'scatterplot--' + paramStr + altStr + '.gif'

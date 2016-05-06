@@ -253,6 +253,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      ALTITUDERANGE=altitudeRange, $
                                      CHARERANGE=charERange, $
                                      POYNTRANGE=poyntRange, $
+                                     RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                                      SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                      NUMORBLIM=numOrbLim, $
                                      MINMLT=minMLT,MAXMLT=maxMLT, $

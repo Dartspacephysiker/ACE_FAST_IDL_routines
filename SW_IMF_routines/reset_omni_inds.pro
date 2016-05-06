@@ -22,6 +22,7 @@ PRO RESET_OMNI_INDS
   C_OMNI__posAngle               = !NULL
   C_OMNI__clockStr               = !NULL
   C_OMNI__noClockAngles          = !NULL
+  C_OMNI__treat_angles_like_bz_south = !NULL
   C_OMNI__byMin_i                = !NULL
   C_OMNI__byMin                  = !NULL
   C_OMNI__abs_byMin              = !NULL
@@ -34,6 +35,18 @@ PRO RESET_OMNI_INDS
   C_OMNI__bzMax_i                = !NULL
   C_OMNI__bzMax                  = !NULL
   C_OMNI__abs_bzMax              = !NULL
+  C_OMNI__btMin_i                = !NULL
+  C_OMNI__btMin                  = !NULL
+  C_OMNI__abs_btMin              = !NULL
+  C_OMNI__btMax_i                = !NULL
+  C_OMNI__btMax                  = !NULL
+  C_OMNI__abs_btMax              = !NULL
+  C_OMNI__bxMin_i                = !NULL
+  C_OMNI__bxMin                  = !NULL
+  C_OMNI__abs_bxMin              = !NULL
+  C_OMNI__bxMax_i                = !NULL
+  C_OMNI__bxMax                  = !NULL
+  C_OMNI__abs_bxMax              = !NULL
   C_OMNI__stableStr              = !NULL
   C_OMNI__paramStr               = !NULL
   C_OMNI__DONE_FIRST_STREAK_CALC = !NULL
