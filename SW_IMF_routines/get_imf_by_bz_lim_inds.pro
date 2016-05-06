@@ -1,8 +1,10 @@
-PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax,bxMin,bxMax, $
+PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
                            DO_ABS_BYMIN=abs_byMin, $
                            DO_ABS_BYMAX=abs_byMax, $
                            DO_ABS_BZMIN=abs_bzMin, $
                            DO_ABS_BZMAX=abs_bzMax, $
+                           DO_ABS_BTMIN=abs_btMin, $
+                           DO_ABS_BTMAX=abs_btMax, $
                            DO_ABS_BXMIN=abs_bxMin, $
                            DO_ABS_BXMAX=abs_bxMax, $
                            LUN=lun
@@ -74,6 +76,37 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax,bxMin,bxMax, $
      PRINTF,lun,FORMAT='("BzMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bzMax,bzMaxLost
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bzMax_",F0.2)',absStr,C_OMNI__bzMax)
   ENDIF  
+
+  IF N_ELEMENTS(btMin) GT 0 THEN BEGIN 
+     C_OMNI__btMin          = btMin
+     C_OMNI__abs_btMin      = KEYWORD_SET(abs_btMin)
+     IF C_OMNI__abs_btMin THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__btMin_i     = WHERE(Bt LE -ABS(C_OMNI__btMin) OR Bt GE ABS(C_OMNI__btMin),NCOMPLEMENT=btMinLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__btMin_i     = WHERE(Bt GE C_OMNI__btMin,NCOMPLEMENT=btMinLost)
+     ENDELSE
+
+     PRINTF,lun,FORMAT='("BtMin magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__btMin,btMinLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"btMin_",F0.2)',absStr,C_OMNI__btMin)
+  ENDIF
+
+  IF N_ELEMENTS(btMax) GT 0 THEN BEGIN 
+     C_OMNI__btMax          = btMax
+     C_OMNI__abs_btMax      = KEYWORD_SET(abs_btMax)
+     IF C_OMNI__abs_btMax THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__btMax_i     = WHERE(ABS(Bt) LE ABS(C_OMNI__btMax),NCOMPLEMENT=btMaxLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__btMax_i     = WHERE(Bt LE C_OMNI__btMax,NCOMPLEMENT=btMaxLost)
+     ENDELSE
+
+     PRINTF,lun,""
+     PRINTF,lun,FORMAT='("BtMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__btMax,btMaxLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"btMax_",F0.2)',absStr,C_OMNI__btMax)
+  ENDIF
 
   IF N_ELEMENTS(bxMin) GT 0 THEN BEGIN 
      C_OMNI__bxMin          = bxMin

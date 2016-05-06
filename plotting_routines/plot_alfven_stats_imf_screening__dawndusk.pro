@@ -29,13 +29,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    MIN_NEVENTS=min_nEvents, $
    MASKMIN=maskMin, $
    BYMIN=byMin, $
-   BZMIN=bzMin, $
    BYMAX=byMax, $
+   BZMIN=bzMin, $
    BZMAX=bzMax, $
+   BTMIN=btMin, $
+   BTMAX=btMax, $
+   BXMIN=bxMin, $
+   BXMAX=bxMax, $
    DO_ABS_BYMIN=abs_byMin, $
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   DO_ABS_BTMIN=abs_btMin, $
+   DO_ABS_BTMAX=abs_btMax, $
+   DO_ABS_BXMIN=abs_bxMin, $
+   DO_ABS_BXMAX=abs_bxMax, $
+   RUN_AROUND_THE_RING_OF_CLOCK_ANGLES=ring_of_clock_angles, $
    SATELLITE=satellite, $
    OMNI_COORDS=omni_Coords, $
    HEMI=hemi, $
@@ -160,6 +169,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    FANCY_PLOTNAMES=fancy_plotNames, $
    _EXTRA = e, $
    PRINT_DATA_AVAILABILITY=print_data_availability, $
+   GET_PLOT_I_LIST_LIST=get_plot_i_list_list, $
+   GET_PARAMSTR_LIST_LIST=get_paramStr_list_list, $
+   PLOT_I_LIST_LIST=plot_i_list_list, $
+   PARAMSTR_LIST_LIST=paramStr_list_list, $
+   TILE_IMAGES=tile_images, $
+   N_TILE_ROWS=n_tile_rows, $
+   N_TILE_COLUMNS=n_tile_columns, $
+   TILEPLOTSUFFS=tilePlotSuffs, $
+   TILING_ORDER=tiling_order, $
+   TILEPLOTTITLES=tilePlotTitles, $
    VERBOSE=verbose, $
    LUN=lun
 
@@ -177,17 +196,54 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
   ;; suff            = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   ;; clockStrings    = [""+suff,"mainphase"+suff,"recoveryphase"+suff]
-  IF KEYWORD_SET(northSouth) THEN BEGIN
-     titles             = ['B!Dz!N North','B!Dz!N South']
-     clockStrings       = ['bzNorth','bzSouth']
-  ENDIF ELSE BEGIN
-     titles             = ['Dawnward','Duskward']
-     clockStrings       = ['dawnward','duskward']
-  ENDELSE
+  CASE 1 OF
+     KEYWORD_SET(northSouth): BEGIN
+        titles          = ['B!Dz!N North','B!Dz!N South']
+        clockStrings    = ['bzNorth','bzSouth']
+     END
+     KEYWORD_SET(ring_of_clock_angles): BEGIN
+        PRINT,'Running the ring of clock angles!'
+        titles          = ['B!Dz!N North','Dusk-North','Duskward','Dusk-South','B!Dz!N South','Dawn-South','Dawnward','Dawn-north']
+        clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
+        angleLim1       = 67.5
+        angleLim2       = 112.5
+        no_colorbar     = [0,0,0,0,0,0,0,0]
+     END
+     ELSE: BEGIN
+        titles          = ['Dawnward','Duskward']
+        clockStrings    = ['dawnward','duskward']
+     END
+  ENDCASE
   
   outTempfiles_list_list = LIST()
-  out_paramStr_list_list = LIST()
-  FOR i=0,1 DO BEGIN
+  plot_i_list_list       = LIST()
+  paramStr_list_list     = LIST()
+  FOR i=0,N_ELEMENTS(clockStrings)-1 DO BEGIN
+
+     IF KEYWORD_SET(tile_images) THEN BEGIN
+
+        CASE N_ELEMENTS(tilePlotSuffs) OF
+           0: BEGIN
+              END
+           1: BEGIN
+              tilePlotSuffFinal = tilePlotSuffs
+           END
+           ELSE: BEGIN
+              tilePlotSuffFinal = tilePlotSuffs[i]
+           END
+        ENDCASE
+
+        CASE N_ELEMENTS(tilePlotTitles) OF
+           0: BEGIN
+              END
+           1: BEGIN
+              tilePlotTitleFinal = tilePlotTitles
+           END
+           ELSE: BEGIN
+              tilePlotTitleFinal = tilePlotTitles[i]
+           END
+        ENDCASE
+     ENDIF
 
      PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                      CLOCKSTR=clockStrings[i], $
@@ -215,13 +271,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      MIN_NEVENTS=min_nEvents, $
                                      MASKMIN=maskMin, $
                                      BYMIN=byMin, $
-                                     BZMIN=bzMin, $
                                      BYMAX=byMax, $
+                                     BZMIN=bzMin, $
                                      BZMAX=bzMax, $
+                                     BTMIN=btMin, $
+                                     BTMAX=btMax, $
+                                     BXMIN=bxMin, $
+                                     BXMAX=bxMax, $
                                      DO_ABS_BYMIN=abs_byMin, $
                                      DO_ABS_BYMAX=abs_byMax, $
                                      DO_ABS_BZMIN=abs_bzMin, $
                                      DO_ABS_BZMAX=abs_bzMax, $
+                                     DO_ABS_BTMIN=abs_btMin, $
+                                     DO_ABS_BTMAX=abs_btMax, $
+                                     DO_ABS_BXMIN=abs_bxMin, $
+                                     DO_ABS_BXMAX=abs_bxMax, $
                                      DELAY=delay, $
                                      MULTIPLE_DELAYS=multiple_delays, $
                                      RESOLUTION_DELAY=delay_res, $
@@ -329,7 +393,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
                                      OUT_TEMPFILE_LIST=out_tempFile_list, $
                                      OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
-                                     ;; OUT_TEMPFILE=out_tempFile, $
+                                     OUT_PARAMSTRING_LIST=out_paramString_list, $
+                                     OUT_PLOT_I_LIST=out_plot_i_list, $
+                                     TILE_IMAGES=tile_images, $
+                                     N_TILE_ROWS=n_tile_rows, $
+                                     N_TILE_COLUMNS=n_tile_columns, $
+                                     TILEPLOTSUFF=tilePlotSuffFinal, $
+                                     TILING_ORDER=tiling_order, $
+                                     TILEPLOTTITLE=tilePlotTitleFinal, $
                                      NO_COLORBAR=no_colorbar[i], $
                                      CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                      CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -342,9 +413,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
         ;; ENDIF 
      ENDIF
               
+     IF KEYWORD_SET(get_plot_i_list_list) THEN BEGIN
+        plot_i_list_list.add,out_plot_i_list
+     ENDIF
+
+     IF KEYWORD_SET(get_paramStr_list_list) THEN BEGIN
+        paramStr_list_list.add,out_paramString_list
+     ENDIF
+
   ENDFOR
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
+
+     IF KEYWORD_SET(ring_of_clock_angles) THEN BEGIN
+        PRINT,"Can't combine when we're doing ring of clock angles!"
+        STOP
+     ENDIF
 
      FOR iDawnDuskSet=0,N_ELEMENTS(outTempFiles_list_list[0])-1 DO BEGIN
         outTempFiles              = [outTempFiles_list_list[0,iDawnDuskSet],outTempFiles_list_list[1,iDawnDuskSet]]

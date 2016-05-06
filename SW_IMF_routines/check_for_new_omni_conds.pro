@@ -6,13 +6,21 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              STABLEIMF=stableIMF, $
                              RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                              BYMIN=byMin, $
-                             BZMIN=bzMin, $
                              BYMAX=byMax, $
+                             BZMIN=bzMin, $
                              BZMAX=bzMax, $
+                             BTMIN=btMin, $
+                             BTMAX=btMax, $
+                             BXMIN=bxMin, $
+                             BXMAX=bxMax, $
                              DO_ABS_BYMIN=abs_byMin, $
                              DO_ABS_BYMAX=abs_byMax, $
                              DO_ABS_BZMIN=abs_bzMin, $
                              DO_ABS_BZMAX=abs_bzMax, $
+                             DO_ABS_BTMIN=abs_btMin, $
+                             DO_ABS_BTMAX=abs_btMax, $
+                             DO_ABS_BXMIN=abs_bxMin, $
+                             DO_ABS_BXMAX=abs_bxMax, $
                              OMNI_COORDS=OMNI_coords, $
                              LUN=lun
 
@@ -81,15 +89,6 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
      ENDIF
   ENDIF
 
-  IF N_ELEMENTS(bzMin) NE 0 THEN BEGIN
-     IF N_ELEMENTS(C_OMNI__bzMin) NE 0 THEN BEGIN
-        IF C_OMNI__bzMin NE bzMin THEN BEGIN
-           C_OMNI__RECALCULATE = 1
-           RETURN
-        ENDIF
-     ENDIF
-  ENDIF
-
   IF N_ELEMENTS(byMax) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__byMax) NE 0 THEN BEGIN
         IF C_OMNI__byMax NE byMax THEN BEGIN
@@ -99,9 +98,55 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
      ENDIF
   ENDIF
 
+  IF N_ELEMENTS(bzMin) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__bzMin) NE 0 THEN BEGIN
+        IF C_OMNI__bzMin NE bzMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+
   IF N_ELEMENTS(bzMax) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__bzMax) NE 0 THEN BEGIN
         IF C_OMNI__bzMax NE bzMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(btMin) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__btMin) NE 0 THEN BEGIN
+        IF C_OMNI__btMin NE btMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(btMax) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__btMax) NE 0 THEN BEGIN
+        IF C_OMNI__btMax NE btMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(bxMin) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__bxMin) NE 0 THEN BEGIN
+        IF C_OMNI__bxMin NE bxMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(bxMax) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__bxMax) NE 0 THEN BEGIN
+        IF C_OMNI__bxMax NE bxMax THEN BEGIN
            C_OMNI__RECALCULATE = 1
            RETURN
         ENDIF
@@ -138,6 +183,42 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
   IF N_ELEMENTS(abs_bzMax) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__abs_bzMax) NE 0 THEN BEGIN
         IF C_OMNI__abs_bzMax NE abs_bzMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(abs_btMin) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_btMin) NE 0 THEN BEGIN
+        IF C_OMNI__abs_btMin NE abs_btMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(abs_btMax) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_btMax) NE 0 THEN BEGIN
+        IF C_OMNI__abs_btMax NE abs_btMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(abs_bxMin) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_bxMin) NE 0 THEN BEGIN
+        IF C_OMNI__abs_bxMin NE abs_bxMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(abs_bxMax) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_bxMax) NE 0 THEN BEGIN
+        IF C_OMNI__abs_bxMax NE abs_bxMax THEN BEGIN
            C_OMNI__RECALCULATE = 1
            RETURN
         ENDIF

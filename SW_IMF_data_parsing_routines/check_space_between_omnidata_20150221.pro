@@ -13,33 +13,35 @@
 
 PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
 
+  dataDir             = '/SPENCEdata/Research/Cusp/database/'
+
   ;;db in memory
-  restore,dataDir+'sw_omnidata/sw_data.dat'
+  RESTORE,dataDir+'sw_omnidata/sw_data.dat'
 
   ;;where to save data
-  culledDataStr="/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata.dat"
-  culledDataStructStr='/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata_struct.dat'
-  ;;culledDataStr=dataDir + "/processed/culled_OMNI_magdata.dat"
+  culledDataStr       = "/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata.dat"
+  culledDataStructStr = '/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata_struct.dat'
+  ;;culledDataStr = dataDir + "/processed/culled_OMNI_magdata.dat"
 
   ;;time between observations thing
   help,sw_data.time_btwn_obs
 
   ;;simplify life
-  tbo=sw_data.time_btwn_obs.dat
+  tbo = sw_data.time_btwn_obs.dat
 
   ;;total num elements
-  print,n_elements(tbo)
+  print,N_ELEMENTS(tbo)
   ;;4428000
 
-  print,n_elements(where(tbo GT 1e5))
+  print,N_ELEMENTS(WHERE(tbo GT 1e5))
   ;;346852--yeesh
 
   ;;n spaces greater than 10 min
-  print,n_elements(where(tbo GT 600))
+  print,N_ELEMENTS(WHERE(tbo GT 600))
   ;;;398142--OK, lots
 
   ;;;OK, now I see...
-  print,n_elements(where(tbo EQ 999999))
+  print,N_ELEMENTS(WHERE(tbo EQ 999999))
   ;;346852
 
   ;;Right, it all adds up now...
@@ -48,63 +50,65 @@ PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
 
   ;;but there is still some garbage in there
   ;;I need to cull this db
-  print,n_elements(where(tbo GT 10000 AND tbo LT 999999))
+  print,N_ELEMENTS(WHERE(tbo GT 10000 AND tbo LT 999999))
   ;;116
 
   ;;Disturbingly, this number isn't equal to the number of bad time_btwn_obs vals
-  print,n_elements(where(sw_data.by_gsm.dat EQ 9999.99))
+  print,N_ELEMENTS(WHERE(sw_data.by_gsm.dat EQ 9999.99))
   ;;286451
 
   ;;all right, cull 'em
   ;;times
-  goodtimes_i=where(ABS(sw_data.time_btwn_obs.dat) LE 10000)
+  goodtimes_i = WHERE(ABS(sw_data.time_btwn_obs.dat) LE 10000)
   help,goodtimes_i
   ;;GOODTIMES_I     LONG      = Array[4080915]
 
   ;;mag vals
-  goodmagvals_i=where((abs(sw_data.bx_gse.dat) LE 99.9) AND (abs(sw_data.by_gsm.dat) LE 99.9) AND (abs(sw_data.bz_gsm.dat) LE 99.9) AND (abs(sw_data.by_gse.dat) LE 99.9) AND (abs(sw_data.bz_gse.dat) LE 99.9))
+  goodmagvals_i = WHERE((ABS(sw_data.bx_gse.dat) LE 99.9) AND (ABS(sw_data.by_gsm.dat) LE 99.9) AND (ABS(sw_data.bz_gsm.dat) LE 99.9) AND (ABS(sw_data.by_gse.dat) LE 99.9) AND (ABS(sw_data.bz_gse.dat) LE 99.9))
   help,goodmagvals_i
   ;;GOODMAGVALS_I   LONG      = Array[4141549]
 
-  goodmag_goodtimes_i=cgsetintersection(goodmagvals_i,goodtimes_i)
+  goodmag_goodtimes_i = CGSETINTERSECTION(goodmagvals_i,goodtimes_i)
   help,goodmag_goodtimes_i
   ;;GOODMAG_GOODTIME_I LONG      = Array[4080915]
 
   ;;;here is the way to check out a time with this silly SPDF epoch format thing
-  biz=CDF_EPOCH_TOJULDAYS(sw_data.epoch.dat[1004], /string)
+  biz                 = CDF_EPOCH_TOJULDAYS(sw_data.epoch.dat[1004], /string)
   print,biz
   ;;1996-08-01T16:44:00.000
 
   ;;pure gold
-  t_to_1970=62167219200000.0000D
-  biz=CDF_EPOCH_TOJULDAYS(t_to_1970, /string) & print,biz
+  t_to_1970           = 62167219200000.0000D
+  biz                 = CDF_EPOCH_TOJULDAYS(t_to_1970, /string) & print,biz
   ;;1970-01-01T00:00:00.000
 
   ;;times in a way that is proper for time_to_str
-  mag_utc=(sw_data.epoch.dat[goodmag_goodtimes_i]-62167219200000.0000D)/1000.0D
-  print,time_to_str(mag_utc[0])
+  mag_utc             = (sw_data.epoch.dat[goodmag_goodtimes_i]-62167219200000.0000D)/1000.0D
+  PRINT,TIME_TO_STR(mag_utc[0])
 
   ;;Now the GSE and GSM components
   ;;Remember, Bx is the same in both coord systems
-  Bx=sw_data.bx_gse.dat[goodmag_goodtimes_i]
-  By_GSE=sw_data.by_gse.dat[goodmag_goodtimes_i]
-  Bz_GSE=sw_data.bz_gse.dat[goodmag_goodtimes_i]
-  By_GSM=sw_data.by_gsm.dat[goodmag_goodtimes_i]
-  Bz_GSM=sw_data.bz_gsm.dat[goodmag_goodtimes_i]
+  Bx                  = sw_data.bx_gse.dat[goodmag_goodtimes_i]
+  By_GSE              = sw_data.by_gse.dat[goodmag_goodtimes_i]
+  Bz_GSE              = sw_data.bz_gse.dat[goodmag_goodtimes_i]
+  By_GSM              = sw_data.by_gsm.dat[goodmag_goodtimes_i]
+  Bz_GSM              = sw_data.bz_gsm.dat[goodmag_goodtimes_i]
 
   ;;The foregoing should be all the ingredients for a new SW database
 
   ;;some derived stuff
-  phiClock_GSE=ATAN(By_GSE,Bz_GSE)
-  thetaCone_GSE=ACOS(abs(Bx)/SQRT(Bx*Bx+By_GSE*By_GSE+Bz_GSE*Bz_GSE))
-  Bxy_over_Bz_GSE=sqrt(Bx*Bx+By_GSE*By_GSE)/abs(Bz_GSE)
-  cone_overClock_GSE=thetaCone_GSE/phiClock_GSE
+  Bt_GSE              = SQRT(By_GSE*By_GSE+Bz_GSE*Bz_GSE)
+  phiClock_GSE        = ATAN(By_GSE,Bz_GSE)
+  thetaCone_GSE       = ACOS(ABS(Bx)/SQRT(Bx*Bx+By_GSE*By_GSE+Bz_GSE*Bz_GSE))
+  Bxy_over_Bz_GSE     = SQRT(Bx*Bx+By_GSE*By_GSE)/ABS(Bz_GSE)
+  cone_overClock_GSE  = thetaCone_GSE/phiClock_GSE
 
   ;;now GSM
-  phiClock_GSM=ATAN(By_GSM,Bz_GSM)
-  thetaCone_GSM=ACOS(abs(Bx)/SQRT(Bx*Bx+By_GSM*By_GSM+Bz_GSM*Bz_GSM))
-  Bxy_over_Bz_GSM=sqrt(Bx*Bx+By_GSM*By_GSM)/abs(Bz_GSM)
-  cone_overClock_GSM=thetaCone_GSM/phiClock_GSM
+  Bt_GSM              = SQRT(By_GSM*By_GSM+Bz_GSM*Bz_GSM)
+  phiClock_GSM        = ATAN(By_GSM,Bz_GSM)
+  thetaCone_GSM       = ACOS(ABS(Bx)/SQRT(Bx*Bx+By_GSM*By_GSM+Bz_GSM*Bz_GSM))
+  Bxy_over_Bz_GSM     = SQRT(Bx*Bx+By_GSM*By_GSM)/ABS(Bz_GSM)
+  cone_overClock_GSM  = thetaCone_GSM/phiClock_GSM
 
   ;;histos
   ;;cghistoplot,bxy_over_bz,maxinput=70,mininput=-70,xtitle="Sqrt(Bx^2+By^2)/Bz",title="Histogram of Bxy over Bz for ACE data, 1998-2000",output="bxy_over_bz.png"
@@ -112,17 +116,29 @@ PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
   ;;cgHistoplot,180/!PI*phiClock,title="Distr. of IMF clock angles, 1998-2000",xtitle="IMF clock angle, degrees",output="IMFclockangle_histo.png"
   ;;cgHistoplot,180/!PI*thetaCone,title="Distr. of IMF cone angles, 1998-2000",xtitle="IMF cone angle, degrees",output="IMFconeangle_histo.png"
 
-  help,culledDataStr,Bx,By_GSE,By_GSM,Bz_GSE,Bz_GSM,phiClock_GSE,phiClock_GSM,thetaCone_GSE,thetaCone_GSM, $
+  HELP,culledDataStr,Bx,By_GSE,By_GSM,Bz_GSE,Bz_GSM,Bt_GSE,Bt_GSM,phiClock_GSE,phiClock_GSM,thetaCone_GSE,thetaCone_GSM, $
        cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc,goodmag_goodtimes_i
 
   PRINT,'Saving culled OMNI data to ' + culledDataStr
-  save,filename=culledDataStr,Bx,By_GSE,By_GSM,Bz_GSE,Bz_GSM,phiClock_GSE,phiClock_GSM,thetaCone_GSE,thetaCone_GSM, $
-       cone_overClock_GSE,cone_overClock_GSM,bxy_over_bz_GSE,Bxy_over_Bz_GSM,mag_utc,goodmag_goodtimes_i
+  save,FILENAME=culledDataStr, $
+       Bx, $
+       By_GSE,By_GSM, $
+       Bz_GSE,Bz_GSM, $
+       Bt_GSE,Bt_GSM, $
+       phiClock_GSE,phiClock_GSM, $
+       thetaCone_GSE,thetaCone_GSM, $
+       cone_overClock_GSE,cone_overClock_GSM, $
+       bxy_over_bz_GSE,Bxy_over_Bz_GSM, $
+       mag_utc, $
+       goodmag_goodtimes_i
 
   sw_data_culled                 = {BX:Bx, $
                                     BY_GSE:By_GSE, $
+                                    BY_GSM:By_GSM, $
                                     BZ_GSE:Bz_GSE, $
                                     BZ_GSM:Bz_GSM, $
+                                    BT_GSE:Bt_GSE, $
+                                    BT_GSM:Bt_GSM, $
                                     PHICLOCK_GSE:phiClock_GSE, $
                                     PHICLOCK_GSM:phiClock_GSM, $
                                     THETACONE_GSE:thetaCone_GSE, $
@@ -135,6 +151,6 @@ PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
                                     GOODMAG_GOODTIMES_I:goodmag_goodtimes_i}
 
   PRINT,'Saving culled OMNI data struct to ' + culledDataStructStr
-  save,sw_data_culled,FILENAME=culledDataStructStr
+  SAVE,sw_data_culled,FILENAME=culledDataStructStr
 
 END

@@ -10,13 +10,21 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    SMOOTH_IMF=smooth_IMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
-   BZMIN=bzMin, $
    BYMAX=byMax, $
+   BZMIN=bzMin, $
    BZMAX=bzMax, $
+   BTMIN=btMin, $
+   BTMAX=btMax, $
+   BXMIN=bxMin, $
+   BXMAX=bxMax, $
    DO_ABS_BYMIN=abs_byMin, $
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   DO_ABS_BTMIN=abs_btMin, $
+   DO_ABS_BTMAX=abs_btMax, $
+   DO_ABS_BXMIN=abs_bxMin, $
+   DO_ABS_BXMAX=abs_bxMax, $
    RESET_OMNI_INDS=reset_omni_inds, $
    OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -27,6 +35,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      C_OMNI__Bx, $
      C_OMNI__By, $
      C_OMNI__Bz, $
+     C_OMNI__Bt, $
      C_OMNI__thetaCone, $
      C_OMNI__phiClock, $
      C_OMNI__cone_overClock, $
@@ -37,10 +46,15 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      C_OMNI__combined_i,C_OMNI__time_i, $
      C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__clockStr, $
      C_OMNI__noClockAngles, $
+     C_OMNI__treat_angles_like_bz_south, $
      C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $
      C_OMNI__byMax_i,C_OMNI__byMax,C_OMNI__abs_byMax, $
      C_OMNI__bzMin_i,C_OMNI__bzMin,C_OMNI__abs_bzMin, $
      C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
+     C_OMNI__btMin_i,C_OMNI__btMin,C_OMNI__abs_btMin, $
+     C_OMNI__btMax_i,C_OMNI__btMax,C_OMNI__abs_btMax, $
+     C_OMNI__bxMin_i,C_OMNI__bxMin,C_OMNI__abs_bxMin, $
+     C_OMNI__bxMax_i,C_OMNI__bxMax,C_OMNI__abs_bxMax, $
      C_OMNI__stableStr, $
      C_OMNI__paramStr, $
      C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
@@ -56,13 +70,21 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             SMOOTH_IMF=smooth_IMF, $
                                             RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                             BYMIN=byMin, $
-                                            BZMIN=bzMin, $
                                             BYMAX=byMax, $
+                                            BZMIN=bzMin, $
                                             BZMAX=bzMax, $
+                                            BTMIN=btMin, $
+                                            BTMAX=btMax, $
+                                            BXMIN=bxMin, $
+                                            BXMAX=bxMax, $
                                             DO_ABS_BYMIN=abs_byMin, $
                                             DO_ABS_BYMAX=abs_byMax, $
                                             DO_ABS_BZMIN=abs_bzMin, $
                                             DO_ABS_BZMAX=abs_bzMax, $
+                                            DO_ABS_BTMIN=abs_btMin, $
+                                            DO_ABS_BTMAX=abs_btMax, $
+                                            DO_ABS_BXMIN=abs_bxMin, $
+                                            DO_ABS_BXMAX=abs_bxMax, $
                                             RESET_OMNI_INDS=reset_omni_inds, $
                                             OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $

@@ -11,21 +11,26 @@ FUNCTION GET_STABLE_IMF_INDS, $
    SMOOTH_IMF=smooth_IMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    BYMIN=byMin, $
-   BZMIN=bzMin, $
-   BXMIN=bxMin, $
    BYMAX=byMax, $
+   BZMIN=bzMin, $
    BZMAX=bzMax, $
+   BTMIN=btMin, $
+   BTMAX=btMax, $
+   BXMIN=bxMin, $
    BXMAX=bxMax, $
    DO_ABS_BYMIN=abs_byMin, $
    DO_ABS_BYMAX=abs_byMax, $
    DO_ABS_BZMIN=abs_bzMin, $
    DO_ABS_BZMAX=abs_bzMax, $
+   DO_ABS_BTMIN=abs_btMin, $
+   DO_ABS_BTMAX=abs_btMax, $
    DO_ABS_BXMIN=abs_bxMin, $
    DO_ABS_BXMAX=abs_bxMax, $
    RESET_OMNI_INDS=reset_omni_inds, $
    GET_BX=get_Bx, $
    GET_BY=get_By, $
    GET_BZ=get_Bz, $
+   GET_BT=get_Bt, $
    GET_THETACONE=get_thetaCone, $
    GET_CLOCKANGLE=get_clockAngle, $
    GET_CONE_OVERCLOCK=get_cone_overClock, $
@@ -33,6 +38,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    BX_OUT=bx_out,$
    BY_OUT=by_out,$
    BZ_OUT=bz_out,$
+   BT_OUT=bt_out,$
    THETACONE_OUT=thetaCone_out, $
    CLOCKANGLE_OUT=clockAngle_out, $
    CONE_OVERCLOCK_OUT=cone_overClock_out, $
@@ -49,6 +55,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      C_OMNI__Bx, $
      C_OMNI__By, $
      C_OMNI__Bz, $
+     C_OMNI__Bt, $
      C_OMNI__thetaCone, $
      C_OMNI__phiClock, $
      C_OMNI__cone_overClock, $
@@ -59,10 +66,15 @@ FUNCTION GET_STABLE_IMF_INDS, $
      C_OMNI__combined_i,C_OMNI__time_i, $
      C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__clockStr, $
      C_OMNI__noClockAngles, $
+     C_OMNI__treat_angles_like_bz_south, $
      C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $
      C_OMNI__byMax_i,C_OMNI__byMax,C_OMNI__abs_byMax, $
      C_OMNI__bzMin_i,C_OMNI__bzMin,C_OMNI__abs_bzMin, $
      C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
+     C_OMNI__btMin_i,C_OMNI__btMin,C_OMNI__abs_btMin, $
+     C_OMNI__btMax_i,C_OMNI__btMax,C_OMNI__abs_btMax, $
+     C_OMNI__bxMin_i,C_OMNI__bxMin,C_OMNI__abs_bxMin, $
+     C_OMNI__bxMax_i,C_OMNI__bxMax,C_OMNI__abs_bxMax, $
      C_OMNI__stableStr, $
      C_OMNI__paramStr, $
      C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
@@ -92,13 +104,21 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                  STABLEIMF=stableIMF, $
                                  RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                  BYMIN=byMin, $
-                                 BZMIN=bzMin, $
                                  BYMAX=byMax, $
+                                 BZMIN=bzMin, $
                                  BZMAX=bzMax, $
+                                 BTMIN=btMin, $
+                                 BTMAX=btMax, $
+                                 BXMIN=bxMin, $
+                                 BXMAX=bxMax, $
                                  DO_ABS_BYMIN=abs_byMin, $
                                  DO_ABS_BYMAX=abs_byMax, $
                                  DO_ABS_BZMIN=abs_bzMin, $
                                  DO_ABS_BZMAX=abs_bzMax, $
+                                 DO_ABS_BTMIN=abs_btMin, $
+                                 DO_ABS_BTMAX=abs_btMax, $
+                                 DO_ABS_BXMIN=abs_bxMin, $
+                                 DO_ABS_BXMAX=abs_bxMax, $
                                  OMNI_COORDS=OMNI_coords, $
                                  LUN=lun
                                     
@@ -135,10 +155,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
         C_OMNI__magCoords                      = 'GSE'
      ENDELSE
 
+     ;;No need to pick up Bx with magcoords, since it's the same either way
+     C_OMNI__Bx                                = TEMPORARY(Bx)
      CASE C_OMNI__magCoords OF 
         "GSE": BEGIN
            C_OMNI__By                          = TEMPORARY(By_GSE)
            C_OMNI__Bz                          = TEMPORARY(Bz_GSE)
+           C_OMNI__Bt                          = TEMPORARY(Bt_GSE)
            C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSE)
            C_OMNI__phiClock                    = TEMPORARY(phiClock_GSE)
            C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSE)
@@ -147,6 +170,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         "GSM": BEGIN
            C_OMNI__By                          = TEMPORARY(By_GSM)
            C_OMNI__Bz                          = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt                          = TEMPORARY(Bt_GSM)
            C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSM)
            C_OMNI__phiClock                    = TEMPORARY(phiClock_GSM)
            C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSM)
@@ -157,25 +181,27 @@ FUNCTION GET_STABLE_IMF_INDS, $
            WAIT,1.0
            C_OMNI__By                          = TEMPORARY(By_GSM)
            C_OMNI__Bz                          = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt                          = TEMPORARY(Bt_GSM)
            C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSM)
            C_OMNI__phiClock                    = TEMPORARY(phiClock_GSM)
            C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSM)
            C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSM)
         END
      ENDCASE
-     C_OMNI__Bx                                = TEMPORARY(Bx)
      C_OMNI__thetaCone                         = C_OMNI__thetaCone*180/!PI
      C_OMNI__phiClock                          = C_OMNI__phiClock*180/!PI
 
      ;;Any smoothing to be done?
      IF KEYWORD_SET(smooth_IMF) THEN BEGIN
         SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
-                        BYMIN=byMin, $
-                        BZMIN=bzMin, $
-                        BXMIN=bxMin, $
-                        BYMAX=byMax, $
-                        BZMAX=bzMax, $
-                        BXMAX=bxMax
+                           BYMIN=byMin, $
+                           BYMAX=byMax, $
+                           BZMIN=bzMin, $
+                           BZMAX=bzMax, $
+                           BTMIN=btMin, $
+                           BTMAX=btMax, $
+                           BXMIN=bxMin, $
+                           BXMAX=bxMax
      ENDIF
 
      IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
@@ -201,11 +227,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF
 
      IF N_ELEMENTS(byMin) GT 0 OR N_ELEMENTS(byMax) GT 0 OR N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 THEN BEGIN
-        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,byMin,byMax,bzMin,bzMax,bxMin,bxMax, $
+        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
                                DO_ABS_BYMIN=abs_byMin, $
                                DO_ABS_BYMAX=abs_byMax, $
                                DO_ABS_BZMIN=abs_bzMin, $
                                DO_ABS_BZMAX=abs_bzMax, $
+                               DO_ABS_BTMIN=abs_btMin, $
+                               DO_ABS_BTMAX=abs_btMax, $
                                DO_ABS_BXMIN=abs_bxMin, $
                                DO_ABS_BXMAX=abs_bxMax, $
                                LUN=lun
@@ -282,6 +310,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ENDIF
   IF KEYWORD_SET(get_Bz) THEN BEGIN
      Bz_out                    = C_OMNI__Bz
+  ENDIF
+  IF KEYWORD_SET(get_Bt) THEN BEGIN
+     Bt_out                    = C_OMNI__Bt
   ENDIF
   IF KEYWORD_SET(get_thetaCone) THEN BEGIN
      thetaCone_out             = C_OMNI__thetaCone

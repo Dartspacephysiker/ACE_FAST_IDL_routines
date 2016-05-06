@@ -1,11 +1,12 @@
 PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
-                    BYMIN=byMin, $
-                    BZMIN=bzMin, $
-                    BXMIN=bxMin, $
-                    BYMAX=byMax, $
-                    BZMAX=bzMax, $
-                    BXMAX=bxMax
-                    
+                           BYMIN=byMin, $
+                           BYMAX=byMax, $
+                           BZMIN=bzMin, $
+                           BZMAX=bzMax, $
+                           BTMIN=btMin, $
+                           BTMAX=btMax, $
+                           BXMIN=bxMin, $
+                           BXMAX=bxMax                    
 
   COMMON OMNI_STABILITY
 
@@ -48,6 +49,9 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
         ENDIF
         IF N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
            C_OMNI__Bz[curStart:curStop]        = SMOOTH(C_OMNI__Bz[curStart:curStop],smooth_IMF,/EDGE_TRUNCATE)
+        ENDIF
+        IF N_ELEMENTS(btMin) GT 0 OR N_ELEMENTS(btMax) GT 0 THEN BEGIN 
+           C_OMNI__Bt[curStart:curStop]        = SMOOTH(C_OMNI__Bt[curStart:curStop],smooth_IMF,/EDGE_TRUNCATE)
         ENDIF
         IF N_ELEMENTS(bxMin) GT 0 OR N_ELEMENTS(bxMax) GT 0 THEN BEGIN 
            C_OMNI__Bx[curStart:curStop]        = SMOOTH(C_OMNI__Bx[curStart:curStop],smooth_IMF,/EDGE_TRUNCATE)

@@ -218,13 +218,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ANGLELIM1=angleLim1, $
                                     ANGLELIM2=angleLim2, $
                                     BYMIN=byMin, $
-                                    BZMIN=bzMin, $
                                     BYMAX=byMax, $
+                                    BZMIN=bzMin, $
                                     BZMAX=bzMax, $
+                                    BTMIN=btMin, $
+                                    BTMAX=btMax, $
+                                    BXMIN=bxMin, $
+                                    BXMAX=bxMax, $
                                     DO_ABS_BYMIN=abs_byMin, $
                                     DO_ABS_BYMAX=abs_byMax, $
                                     DO_ABS_BZMIN=abs_bzMin, $
                                     DO_ABS_BZMAX=abs_bzMax, $
+                                    DO_ABS_BTMIN=abs_btMin, $
+                                    DO_ABS_BTMAX=abs_btMax, $
+                                    DO_ABS_BXMIN=abs_bxMin, $
+                                    DO_ABS_BXMAX=abs_bxMax, $
                                     RESET_OMNI_INDS=reset_omni_inds, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
@@ -569,12 +577,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           MIN_MAGCURRENT=minMC, $
                                                                           MAX_NEGMAGCURRENT=maxNegMC, $
                                                                           SMOOTH_IMF=smoothWindow, $
-                                                                          BYMIN=byMin,BZMIN=bzMin, $
-                                                                          BYMAX=byMax,BZMAX=bzMax, $
+                                                                          BYMIN=byMin, $
+                                                                          BYMAX=byMax, $
+                                                                          BZMIN=bzMin, $
+                                                                          BZMAX=bzMax, $
+                                                                          BTMIN=btMin, $
+                                                                          BTMAX=btMax, $
+                                                                          BXMIN=bxMin, $
+                                                                          BXMAX=bxMax, $
                                                                           DO_ABS_BYMIN=abs_byMin, $
                                                                           DO_ABS_BYMAX=abs_byMax, $
                                                                           DO_ABS_BZMIN=abs_bzMin, $
                                                                           DO_ABS_BZMAX=abs_bzMax, $
+                                                                          DO_ABS_BTMIN=abs_btMin, $
+                                                                          DO_ABS_BTMAX=abs_btMax, $
+                                                                          DO_ABS_BXMIN=abs_bxMin, $
+                                                                          DO_ABS_BXMAX=abs_bxMax, $
                                                                           RESET_OMNI_INDS=reset_omni_inds, $
                                                                           CLOCKSTR=clockStr, $
                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -624,13 +642,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                              BYMIN=byMin, $
-                             BZMIN=bzMin, $
                              BYMAX=byMax, $
+                             BZMIN=bzMin, $
                              BZMAX=bzMax, $
+                             BTMIN=btMin, $
+                             BTMAX=btMax, $
+                             BXMIN=bxMin, $
+                             BXMAX=bxMax, $
                              DO_ABS_BYMIN=abs_byMin, $
                              DO_ABS_BYMAX=abs_byMax, $
                              DO_ABS_BZMIN=abs_bzMin, $
                              DO_ABS_BZMAX=abs_bzMax, $
+                             DO_ABS_BTMIN=abs_btMin, $
+                             DO_ABS_BTMAX=abs_btMax, $
+                             DO_ABS_BXMIN=abs_bxMin, $
+                             DO_ABS_BXMAX=abs_bxMax, $
                              BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                              PARAMSTRING=paramString, $
                              PARAMSTR_LIST=paramString_list, $
@@ -735,12 +761,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            DSTCUTOFF=dstCutoff, $
                            T1_ARR=t1_arr, $
                            T2_ARR=t2_arr, $
-                           BYMIN=byMin, BZMIN=bzMin, $
-                           BYMAX=byMax, BZMAX=bzMax, $
+                           BYMIN=byMin, $
+                           BYMAX=byMax, $
+                           BZMIN=bzMin, $
+                           BZMAX=bzMax, $
+                           BTMIN=btMin, $
+                           BTMAX=btMax, $
+                           BXMIN=bxMin, $
+                           BXMAX=bxMax, $
                            DO_ABS_BYMIN=abs_byMin, $
                            DO_ABS_BYMAX=abs_byMax, $
                            DO_ABS_BZMIN=abs_bzMin, $
                            DO_ABS_BZMAX=abs_bzMax, $
+                           DO_ABS_BTMIN=abs_btMin, $
+                           DO_ABS_BTMAX=abs_btMax, $
+                           DO_ABS_BXMIN=abs_bxMin, $
+                           DO_ABS_BXMAX=abs_bxMax, $
                            DELAY=delay[iDel], $
                            MULTIPLE_DELAYS=multiple_delays, $
                            RESOLUTION_DELAY=delay_res, $
