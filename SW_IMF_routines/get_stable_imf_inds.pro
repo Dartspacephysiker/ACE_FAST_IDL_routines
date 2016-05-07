@@ -230,7 +230,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         OR N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 $
         OR N_ELEMENTS(btMin) GT 0 OR N_ELEMENTS(btMax) GT 0 $
         OR N_ELEMENTS(bxMin) GT 0 OR N_ELEMENTS(bxMax) GT 0 THEN BEGIN
-        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
+        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,C_OMNI__Bt,C_OMNI__Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
                                DO_ABS_BYMIN=abs_byMin, $
                                DO_ABS_BYMAX=abs_byMax, $
                                DO_ABS_BZMIN=abs_bzMin, $

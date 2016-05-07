@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
+PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   ;;The reason we're gathered
   pFluxMin                 = 1
@@ -37,27 +37,27 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
 
   orbContribPlot           = 1
   logOrbContribPlot        = 0
-  orbContribRange          = [0,350]
+  orbContribRange          = [0,240]
   orbContribAutoscale      = 0
   orbContrib_noMask        = 1
 
   nOrbsWithEventsPerContribOrbsPlot = 1
-  nowepco_range            = [0.0,0.3]
+  nowepco_range            = [0.0,0.45]
   nowepco_autoscale        = 0
 
   nEventPerOrbPlot         = 1
   logNEventPerOrb          = 0
   nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,3]
+  nEventPerOrbRange        = [0,10]
 
   nPlots                   = 1
   ;; nEventsPlotNormalize     = 1  
-  nEventsPlotRange         = [0,600]
+  nEventsPlotRange         = [0,1000]
   nEventsPlotAutoscale     = 0
 
   tHistDenominatorPlot     = 1
   ;; tHistDenomPlotNormalize  = 1
-  tHistDenomPlotRange      = [0,600]
+  tHistDenomPlotRange      = [0,400]
   tHistDenomPlotAutoscale  = 0
   tHistDenomPlot_noMask    = 1
 
@@ -65,7 +65,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
   nEventPerMinAutoscale    = 0
   ;; nEventPerMinRange        = [1e-1,10]
   ;; logNEventPerMin          = 1
-  nEventPerMinRange        = [0,2.5]
+  nEventPerMinRange        = [0,8.0]
   ;; logNEventPerMin          = 0
 
   tile_images              = 1

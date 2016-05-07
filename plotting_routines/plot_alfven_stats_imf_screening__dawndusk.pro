@@ -96,6 +96,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    NEVENTPERMINPLOT=nEventPerMinPlot, $
    NEVENTPERMINRANGE=nEventPerMinRange, $
    LOGNEVENTPERMIN=logNEventPerMin, $
+   NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
    NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
    LOG_NOWEPCOPLOT=log_nowepcoPlot, $
    NOWEPCO_RANGE=nowepco_range, $
@@ -152,7 +153,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
    PLOTDIR=plotDir, $
    PLOTPREFIX=plotPrefix, $
-   PLOTSUFFIX=plotSuffix, $
+   PLOTSUFFIXES=plotSuffixes, $
    MEDHISTOUTDATA=medHistOutData, $
    MEDHISTOUTTXT=medHistOutTxt, $
    OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -230,6 +231,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
            END
            ELSE: BEGIN
               tilePlotSuffFinal = tilePlotSuffs[i]
+           END
+        ENDCASE
+
+        CASE N_ELEMENTS(plotSuffixes) OF
+           0: BEGIN
+              END
+           1: BEGIN
+              plotSuffix        = plotSuffixes
+           END
+           ELSE: BEGIN
+              plotSuffix        = plotSuffixes[i]
            END
         ENDCASE
 
@@ -332,7 +344,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      NEVENTPERORBPLOT=nEventPerOrbPlot, $
                                      LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                      DIVNEVBYTOTAL=divNEvByTotal, $
-                                     NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+                                     NEVENTPERMINPLOT=nEventPerMinPlot, $
+                                     NEVENTPERMINRANGE=nEventPerMinRange, $
+                                     LOGNEVENTPERMIN=logNEventPerMin, $
+                                     NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
                                      NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                                      LOG_NOWEPCOPLOT=log_nowepcoPlot, $
                                      NOWEPCO_RANGE=nowepco_range, $

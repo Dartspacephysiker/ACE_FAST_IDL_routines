@@ -100,7 +100,7 @@ PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim
         STRUPCASE('bzSouth'): BEGIN  
              ctrAngle                          = 180 
            C_OMNI__negAngle                    = 180 + tempAngle1
-           C_OMNI__posAngle                    = tempAngle2
+           C_OMNI__posAngle                    = -180 + tempAngle2
         END
         STRUPCASE('all_IMF'): BEGIN 
            C_OMNI__negAngle                       = -180

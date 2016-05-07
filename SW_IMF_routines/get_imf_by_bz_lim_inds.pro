@@ -1,4 +1,4 @@
-PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
+PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
                            DO_ABS_BYMIN=abs_byMin, $
                            DO_ABS_BYMAX=abs_byMax, $
                            DO_ABS_BZMIN=abs_bzMin, $
