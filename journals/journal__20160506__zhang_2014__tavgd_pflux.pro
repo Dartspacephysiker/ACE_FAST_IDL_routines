@@ -23,14 +23,14 @@ PRO JOURNAL__20160506__ZHANG_2014__TAVGD_PFLUX
   ;; ENumFlPlotRange          = [[1e-2,1e0], $
   ;;                             [1e6,1e9]]
   logENumFlPlot            = [0,0]
-  ENumFlPlotRange          = [[0,0.3], $
-                              [0,3e8]]
+  ENumFlPlotRange          = [[0,0.5], $
+                              [0,5e8]]
 
   pPlots                   = 1
   ;; logPfPlot                = 1
   ;; PPlotRange               = [1e-2,1e0]
   logPfPlot                = 0
-  PPlotRange               = [0,0.3]
+  PPlotRange               = [0,0.5]
 
   ionPlots                 = 1
   ifluxPlotType            = 'Integ_Up'
@@ -38,11 +38,11 @@ PRO JOURNAL__20160506__ZHANG_2014__TAVGD_PFLUX
   ;; logIfPlot                = 1
   ;; IPlotRange               = [1e6,1e8]
   logIfPlot                = 0
-  IPlotRange               = [0,3e7]
+  IPlotRange               = [0,5e7]
   
   probOccurrencePlot       = 1
   logProbOccurrence        = 0
-  probOccurrenceRange      = [0,0.05]
+  probOccurrenceRange      = [0,0.08]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -64,7 +64,7 @@ PRO JOURNAL__20160506__ZHANG_2014__TAVGD_PFLUX
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
+  btMin                          = 10
   ;; btMax                          = 5
 
   ;;Delay stuff
@@ -76,13 +76,13 @@ PRO JOURNAL__20160506__ZHANG_2014__TAVGD_PFLUX
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 62
-  ;; maxILAT                        = 86
+  hemi                           = 'NORTH'
+  minILAT                        = 62
+  maxILAT                        = 86
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -86
-  maxILAT                        = -62
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -86
+  ;; maxILAT                        = -62
 
   ;; binILAT                        = 2.0
   binILAT                        = 4.0

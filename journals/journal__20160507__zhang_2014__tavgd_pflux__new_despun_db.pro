@@ -1,90 +1,70 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
-
-  ;;The reason we're gathered
-  pFluxMin                 = 1
+PRO JOURNAL__20160507__ZHANG_2014__TAVGD_PFLUX__NEW_DESPUN_DB
 
   run_the_clockAngle_ring  = 1
 
-  ;; sample_t_restriction     = 0.1
+  do_timeAvg_fluxQuantities = 1
+  logAvgPlot                = 0
+  divide_by_width_x         = 1
 
   ;;DB stuff
   do_despun                = 1
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Scatterplot options
-  do_scatterplot           = 0
+  autoscale_fluxPlots      = 0
 
-  overlayAurZone           = 1
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;The plots
 
-  ;; nonStorm                 = 1
-  mainPhase                = 0
+  eNumFlPlots              = 1
 
-  centerLon                = 270
-  sTrans                   = 20
-  savePlot                 = 1
-  add_orbit_legend         = 0
+  ;; eNumFlPlotType           = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  ;; noNegENumFl              = [1,1]
+  ;; ;; logENumFlPlot            = [1,1]
+  ;; ;; ENumFlPlotRange          = [[1e-2,1e0], $
+  ;; ;;                             [1e6,1e9]]
+  ;; logENumFlPlot            = [0,0]
+  ;; ENumFlPlotRange          = [[0,0.5], $
+  ;;                             [0,5e8]]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;orbit txt file?
-  output_orbit_details     = 1
+  ;;junking electron energy--who needs it?
+  eNumFlPlotType           = 'ESA_Number_flux'
+  noNegENumFl              = 1
+  ;; logENumFlPlot            = [1,1]
+  ;; ENumFlPlotRange          = [[1e-2,1e0], $
+  ;;                             [1e6,1e9]]
+  logENumFlPlot            = 0
+  ENumFlPlotRange          = [0,1e9]
+
+
+  pPlots                   = 1
+  ;; logPfPlot                = 1
+  ;; PPlotRange               = [1e-2,1e0]
+  logPfPlot                = 0
+  PPlotRange               = [0,0.5]
+
+  ionPlots                 = 1
+  ifluxPlotType            = 'Integ_Up'
+  noNegIflux               = 1
+  ;; logIfPlot                = 1
+  ;; IPlotRange               = [1e6,1e8]
+  logIfPlot                = 0
+  IPlotRange               = [0,5e7]
+  
+  probOccurrencePlot       = 1
+  logProbOccurrence        = 0
+  probOccurrenceRange      = [0,0.1]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
   reset_good_inds          = 1
 
-  orbContribPlot           = 1
-  logOrbContribPlot        = 0
-  orbContribRange          = [0,240]
-  orbContribAutoscale      = 0
-  orbContrib_noMask        = 1
-
-  nOrbsWithEventsPerContribOrbsPlot = 1
-  nowepco_range            = [0.0,0.45]
-  nowepco_autoscale        = 0
-
-  nEventPerOrbPlot         = 1
-  logNEventPerOrb          = 0
-  nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,15]
-
-  nPlots                   = 1
-  ;; nEventsPlotNormalize     = 1  
-  nEventsPlotRange         = [0,1000]
-  nEventsPlotAutoscale     = 0
-
-  tHistDenominatorPlot     = 1
-  ;; tHistDenomPlotNormalize  = 1
-  tHistDenomPlotRange      = [0,400]
-  tHistDenomPlotAutoscale  = 0
-  tHistDenomPlot_noMask    = 1
-
-  nEventPerMinPlot         = 1
-  nEventPerMinAutoscale    = 0
-  ;; nEventPerMinRange        = [1e-1,10]
-  ;; logNEventPerMin          = 1
-  nEventPerMinRange        = [0,15.0]
-  ;; logNEventPerMin          = 0
-
   tile_images              = 1
   ;; tiling_order             = [2,0,1]
-  n_tile_columns           = 3
+  n_tile_columns           = 2
   n_tile_rows              = 2
-  tilePlotSuff             = "--normed_nEvents_tHistos__and_nEvPerMin"
-
-  ;; altRange                 = [[0,4180], $
-  ;;                             [340,500], $
-  ;;                             [500,1000], $
-  ;;                             [1000,1500], $
-  ;;                             [1500,2000], $
-  ;;                             [2000,2500], $
-  ;;                             [2500,3000], $
-  ;;                             [3000,3500], $
-  ;;                             [3500,3800], $
-  ;;                             [3800,4000], $
-  ;;                             [4000,4180]]
+  tilePlotSuff             = "--pFlux_n_eFlux_n_everyone"
 
   ;; altRange                 = [[340,1180], $
   ;;                             [1180,2180], $
@@ -96,38 +76,38 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
   btMin                          = 5
+  ;; btMax                          = 5
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1200
+  delayDeltaSec                  = 1800
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   reset_omni_inds                = 1
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 62
-  maxILAT                        = 86
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -62
+  hemi                           = 'SOUTH'
+  minILAT                        = -86
+  maxILAT                        = -61
 
   ;; binILAT                        = 2.0
-  binILAT                        = 4.0
+  binILAT                        = 5.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
   shiftMLT                       = 0.5
 
+  ;; minMLT                         = 6
+  ;; maxMLT                         = 18
+
   ;;Bonus
-  maskMin                        = 1
-
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
-
-  restrict_with_these_i          = WHERE(maximus.pFluxEst GE pFluxMin)
+  maskMin                        = 5
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      IF KEYWORD_SET(minMC) THEN BEGIN
@@ -139,17 +119,15 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
      ENDELSE
 
      altitudeRange = altRange[*,i]
-     altStr        = STRING(FORMAT='("--",I0,"-",I0,A0,"--pFlux_GE_",I0)', $
+     altStr        = STRING(FORMAT='("--",I0,"-",I0,A0)', $
                             altitudeRange[0], $
                             altitudeRange[1], $
-                            magCStr, $
-                            pFluxMin)
+                            magCStr)
      ;; tilePlotTitle = STRING(FORMAT='(I0,"-",I0," km, Poynting flux $\geq$ ",I0," mW m!U-2!N")',altitudeRange[0],altitudeRange[1],pFluxMin)
-     tilePlotTitle = STRING(FORMAT='(I0,"-",I0," km",A0,", pFlux GE ",I0)', $
+     tilePlotTitle = STRING(FORMAT='(I0,"-",I0," km",A0)', $
                             altitudeRange[0], $
                             altitudeRange[1], $
-                            magCTitStr, $
-                            pFluxMin)
+                            magCTitStr)
 
      IMFStr        = ['1--bzNorth','2--dusk-north','3--duskward','4--dusk-south','5--bzSouth','6--dawn-south','7--dawnward','8--dawn-north']
      IMFTitle      = ['B!Dz!N North','Dusk-North','Duskward','Dusk-South','B!Dz!N South','Dawn-South','Dawnward','Dawn-north']
@@ -260,6 +238,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
         NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+        AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
@@ -338,63 +317,12 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        _EXTRA = e, $
-        /GET_PLOT_I_LIST_LIST, $
-        /GET_PARAMSTR_LIST_LIST, $
-        PLOT_I_LIST_LIST=plot_i_list_list, $
-        PARAMSTR_LIST_LIST=paramStr_list_list
+        _EXTRA=e
+        ;; /GET_PLOT_I_LIST_LIST, $
+        ;; /GET_PARAMSTR_LIST_LIST, $
+        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
+        ;; PARAMSTR_LIST_LIST=paramStr_list_list
   
-     
-     PRINT,'K! Doing other stuff...'
-     FOR j=0,7 DO BEGIN
-        plot_i                   = (plot_i_list_list[j])[0]
-        paramStr                 = (paramStr_list_list[j])[0]
-        plotTitle                = hemi + 'ERN HEMI: Poynting flux $\geq$ ' + STRCOMPRESS(pFluxMin,/REMOVE_ALL) + ' mW/m!U2!N' + $
-                                   (KEYWORD_SET(altitudeRange) OR KEYWORD_SET(gotStorms) ? '(' + altStr + ')' : '')
-        scatterPlotName          = 'scatterplot--' + paramStr + altStr + '.gif'
-        outOrbDetFile            = 'orbit_details--' + paramStr + altStr + '.txt'
-        
-        IF KEYWORD_SET(do_scatterplot) THEN BEGIN
-           KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus, $
-                                      HEMI=hemi, $
-                                      OVERLAYAURZONE=overlayAurZone, $
-                                      ADD_ORBIT_LEGEND=add_orbit_legend, $
-                                      CENTERLON=centerLon, $
-                                      OVERPLOT=overplot, $
-                                      LAYOUT=layout, $
-                                      PLOTPOSITION=plotPosition, $
-                                      OUT_PLOT=out_plot, $
-                                      CURRENT_WINDOW=window, $
-                                      PLOTSUFF=plotSuff, $
-                                      DBFILE=dbFile, $
-                                      JUST_PLOT_I=plot_i, $
-                                      STRANS=sTrans, $
-                                      SAVEPLOT=savePlot, $
-                                      SPNAME=scatterPlotName, $
-                                      PLOTDIR=plotDir, $
-                                      /CLOSE_AFTER_SAVE, $
-                                      OUTPUT_ORBIT_DETAILS=output_orbit_details, $
-                                      OUT_ORBSTRARR_LIST=out_orbStrArr_list, $
-                                      PLOTTITLE=plotTitle, $
-                                      _EXTRA = e
-        ENDIF
-        
-        IF KEYWORD_SET(output_orbit_details) THEN BEGIN
-           IF ~KEYWORD_SET(do_scatterplot) THEN out_orbStrArr_list = plot_i
-           
-           PRINT_ORBIT_DETAILS_FROM_ORBSTRARR_LIST__OR__PLOT_I,out_orbStrArr_list,maximus, $
-              ORBIT_DETAILS_FILENAME=outOrbDetFile, $
-              ORBIT_DETAILS_HEADER=paramStr, $
-              ANCILLARY_DATAPROD=maximus.pFluxEst, $
-              ANCILLARY_DP_FORMAT='F-8.2', $
-              ANCILLARY_DP_TITLE='Poynt. flux', $
-              OUT_PARSED=orbStrArr_list, $
-              OUTDIR=plotDir
-        ENDIF
-        
-        PRINT,'Saving outorbstrarr_list to ' + paramStr+'.sav...'
-        SAVE,orbStrArr_list,FILENAME=paramStr+'.sav'
-     ENDFOR
   ENDFOR
 
 

@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
+PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_DB
 
   ;;The reason we're gathered
   pFluxMin                 = 1
@@ -28,7 +28,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
-  output_orbit_details     = 1
+  output_orbit_details     = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -48,7 +48,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
   nEventPerOrbPlot         = 1
   logNEventPerOrb          = 0
   nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,15]
+  nEventPerOrbRange        = [0,20]
 
   nPlots                   = 1
   ;; nEventsPlotNormalize     = 1  
@@ -99,23 +99,23 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1200
+  delayDeltaSec                  = 1800
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   reset_omni_inds                = 1
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 62
-  maxILAT                        = 86
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -62
+  hemi                           = 'SOUTH'
+  minILAT                        = -86
+  maxILAT                        = -61
 
   ;; binILAT                        = 2.0
-  binILAT                        = 4.0
+  binILAT                        = 5.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

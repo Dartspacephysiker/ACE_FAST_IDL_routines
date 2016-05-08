@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
+PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__HALF_ILAT_RES__NEW_DESPUN_DB
 
   ;;The reason we're gathered
   pFluxMin                 = 1
@@ -28,7 +28,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
-  output_orbit_details     = 1
+  output_orbit_details     = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -37,7 +37,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   orbContribPlot           = 1
   logOrbContribPlot        = 0
-  orbContribRange          = [0,240]
+  orbContribRange          = [0,280]
   orbContribAutoscale      = 0
   orbContrib_noMask        = 1
 
@@ -48,16 +48,16 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
   nEventPerOrbPlot         = 1
   logNEventPerOrb          = 0
   nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,15]
+  nEventPerOrbRange        = [0,10]
 
   nPlots                   = 1
   ;; nEventsPlotNormalize     = 1  
-  nEventsPlotRange         = [0,1000]
+  nEventsPlotRange         = [0,1800]
   nEventsPlotAutoscale     = 0
 
   tHistDenominatorPlot     = 1
   ;; tHistDenomPlotNormalize  = 1
-  tHistDenomPlotRange      = [0,400]
+  tHistDenomPlotRange      = [0,600]
   tHistDenomPlotAutoscale  = 0
   tHistDenomPlot_noMask    = 1
 
@@ -65,7 +65,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
   nEventPerMinAutoscale    = 0
   ;; nEventPerMinRange        = [1e-1,10]
   ;; logNEventPerMin          = 1
-  nEventPerMinRange        = [0,15.0]
+  nEventPerMinRange        = [0,7.0]
   ;; logNEventPerMin          = 0
 
   tile_images              = 1
@@ -95,7 +95,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
+  btMin                          = 10
 
   ;;Delay stuff
   nDelays                        = 1
@@ -115,7 +115,7 @@ PRO JOURNAL__20160507__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1
   ;; maxILAT                        = -62
 
   ;; binILAT                        = 2.0
-  binILAT                        = 4.0
+  binILAT                        = 8.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
