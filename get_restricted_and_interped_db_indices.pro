@@ -53,6 +53,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    MULTIPLE_DELAYS=multiple_delays, $
    RESOLUTION_DELAY=delay_res, $
    BINOFFSET_DELAY=binOffset_delay, $
+   MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
    OMNI_COORDS=omni_Coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    HWMAUROVAL=HwMAurOval, $
@@ -99,40 +100,82 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
   ;;Now handle the rest
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      PRINTF,lun,"Not considering IMF anything!"
-     restricted_and_interped_i_list         = LIST(final_i)
+     restricted_and_interped_i_list        = LIST(final_i)
   ENDIF ELSE BEGIN
-     restricted_and_interped_i_list = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
-                                                                                           CLOCKSTR=clockStr, $
-                                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                                           ANGLELIM1=angleLim1, $
-                                                                                           ANGLELIM2=angleLim2, $
-                                                                                           MULTIPLE_DELAYS=multiple_delays, $
-                                                                                           RESOLUTION_DELAY=delay_res, $
-                                                                                           BINOFFSET_DELAY=binOffset_delay, $
-                                                                                           STABLEIMF=stableIMF, $
-                                                                                           SMOOTH_IMF=smooth_IMF, $
-                                                                                           /RESTRICT_TO_ALFVENDB_TIMES, $
-                                                                                           BYMIN=byMin, $
-                                                                                           BYMAX=byMax, $
-                                                                                           BZMIN=bzMin, $
-                                                                                           BZMAX=bzMax, $
-                                                                                           BTMIN=btMin, $
-                                                                                           BTMAX=btMax, $
-                                                                                           BXMIN=bxMin, $
-                                                                                           BXMAX=bxMax, $
-                                                                                           DO_ABS_BYMIN=abs_byMin, $
-                                                                                           DO_ABS_BYMAX=abs_byMax, $
-                                                                                           DO_ABS_BZMIN=abs_bzMin, $
-                                                                                           DO_ABS_BZMAX=abs_bzMax, $
-                                                                                           DO_ABS_BTMIN=abs_btMin, $
-                                                                                           DO_ABS_BTMAX=abs_btMax, $
-                                                                                           DO_ABS_BXMIN=abs_bxMin, $
-                                                                                           DO_ABS_BXMAX=abs_bxMax, $
-                                                                                           RESET_OMNI_INDS=reset_omni_inds, $
-                                                                                           OMNI_COORDS=OMNI_coords, $
-                                                                                           OUT_OMNI_PARAMSTR=out_omni_paramStr, $
-                                                                                           LUN=lun)     
-     
+     IF KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
+        
+        nIter=N_ELEMENTS(clockStr)
+        restricted_and_interped_i_list    = LIST()
+        FOR iClock=0,N_ELEMENTS(clockStr)-1 DO BEGIN
+           tempClockStr                   = clockStr[iClock]
+           tempList = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
+                                                                           CLOCKSTR=tempClockStr, $
+                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                                                           ANGLELIM1=angleLim1, $
+                                                                           ANGLELIM2=angleLim2, $
+                                                                           MULTIPLE_DELAYS=multiple_delays, $
+                                                                           RESOLUTION_DELAY=delay_res, $
+                                                                           BINOFFSET_DELAY=binOffset_delay, $
+                                                                           STABLEIMF=stableIMF, $
+                                                                           SMOOTH_IMF=smooth_IMF, $
+                                                                           /RESTRICT_TO_ALFVENDB_TIMES, $
+                                                                           BYMIN=byMin, $
+                                                                           BYMAX=byMax, $
+                                                                           BZMIN=bzMin, $
+                                                                           BZMAX=bzMax, $
+                                                                           BTMIN=btMin, $
+                                                                           BTMAX=btMax, $
+                                                                           BXMIN=bxMin, $
+                                                                           BXMAX=bxMax, $
+                                                                           DO_ABS_BYMIN=abs_byMin, $
+                                                                           DO_ABS_BYMAX=abs_byMax, $
+                                                                           DO_ABS_BZMIN=abs_bzMin, $
+                                                                           DO_ABS_BZMAX=abs_bzMax, $
+                                                                           DO_ABS_BTMIN=abs_btMin, $
+                                                                           DO_ABS_BTMAX=abs_btMax, $
+                                                                           DO_ABS_BXMIN=abs_bxMin, $
+                                                                           DO_ABS_BXMAX=abs_bxMax, $
+                                                                           /RESET_OMNI_INDS, $
+                                                                           OMNI_COORDS=OMNI_coords, $
+                                                                           OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                                                                           LUN=lun)     
+
+           restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here
+        ENDFOR
+     ENDIF ELSE BEGIN
+        restricted_and_interped_i_list = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,final_i,delay, $
+                                                                                              CLOCKSTR=clockStr, $
+                                                                                              DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                                                                              ANGLELIM1=angleLim1, $
+                                                                                              ANGLELIM2=angleLim2, $
+                                                                                              MULTIPLE_DELAYS=multiple_delays, $
+                                                                                              RESOLUTION_DELAY=delay_res, $
+                                                                                              BINOFFSET_DELAY=binOffset_delay, $
+                                                                                              STABLEIMF=stableIMF, $
+                                                                                              SMOOTH_IMF=smooth_IMF, $
+                                                                                              /RESTRICT_TO_ALFVENDB_TIMES, $
+                                                                                              BYMIN=byMin, $
+                                                                                              BYMAX=byMax, $
+                                                                                              BZMIN=bzMin, $
+                                                                                              BZMAX=bzMax, $
+                                                                                              BTMIN=btMin, $
+                                                                                              BTMAX=btMax, $
+                                                                                              BXMIN=bxMin, $
+                                                                                              BXMAX=bxMax, $
+                                                                                              DO_ABS_BYMIN=abs_byMin, $
+                                                                                              DO_ABS_BYMAX=abs_byMax, $
+                                                                                              DO_ABS_BZMIN=abs_bzMin, $
+                                                                                              DO_ABS_BZMAX=abs_bzMax, $
+                                                                                              DO_ABS_BTMIN=abs_btMin, $
+                                                                                              DO_ABS_BTMAX=abs_btMax, $
+                                                                                              DO_ABS_BXMIN=abs_bxMin, $
+                                                                                              DO_ABS_BXMAX=abs_bxMax, $
+                                                                                              RESET_OMNI_INDS=reset_omni_inds, $
+                                                                                              OMNI_COORDS=OMNI_coords, $
+                                                                                              OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                                                                                              LUN=lun)     
+        
+     ENDELSE
   ENDELSE
 
   RETURN,restricted_and_interped_i_list

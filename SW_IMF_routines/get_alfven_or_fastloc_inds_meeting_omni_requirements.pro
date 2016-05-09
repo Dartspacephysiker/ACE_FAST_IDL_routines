@@ -6,6 +6,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    MULTIPLE_DELAYS=multiple_delays, $
    RESOLUTION_DELAY=delay_res, $
    BINOFFSET_DELAY=binOffset_delay, $
+   ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
    STABLEIMF=stableIMF, $
    SMOOTH_IMF=smooth_IMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
@@ -92,9 +93,9 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   
   
   ;;Handle delay stuff
-  IF KEYWORD_SET(multiple_delays)       THEN NIter            = N_ELEMENTS(delay) ELSE NIter = 1
-  IF ~KEYWORD_SET(delay_res)            THEN delay_res        = 120
-  IF N_ELEMENTS(binOffset_delay) EQ 0   THEN binOffset_delay  = 0 
+  IF KEYWORD_SET(multiple_delays)           THEN NIter            = N_ELEMENTS(delay)    ELSE NIter = 1
+  IF ~KEYWORD_SET(delay_res)                THEN delay_res        = 120
+  IF N_ELEMENTS(binOffset_delay) EQ 0       THEN binOffset_delay  = 0 
 
   IF binOffset_delay GT delay_res/2. THEN BEGIN
      PRINT,'You know that your bin offset actually places the center of the delay bin outside the bin width, right?'

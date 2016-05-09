@@ -259,6 +259,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
 
      PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                      CLOCKSTR=clockStrings[i], $
+                                     ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
                                      ANGLELIM1=angleLim1, $
                                      ANGLELIM2=angleLim2, $
                                      ORBRANGE=orbRange, $
@@ -417,6 +418,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      TILEPLOTSUFF=tilePlotSuffFinal, $
                                      TILING_ORDER=tiling_order, $
                                      TILEPLOTTITLE=tilePlotTitleFinal, $
+                                     GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                      NO_COLORBAR=no_colorbar[i], $
                                      CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                      CB_FORCE_OOBLOW=cb_force_oobLow, $

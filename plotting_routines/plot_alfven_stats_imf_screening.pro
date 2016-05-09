@@ -242,6 +242,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BOTH_HEMIS=both_hemis, $
                                     DELAY=delay, $
                                     MULTIPLE_DELAYS=multiple_delays, $
+                                    MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
                                     RESOLUTION_DELAY=delay_res, $
                                     BINOFFSET_DELAY=binOffset_delay, $
                                     STABLEIMF=stableIMF, $
@@ -363,6 +364,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     N_TILE_COLUMNS=n_tile_columns, $
                                     TILING_ORDER=tiling_order, $
                                     TILE__FAVOR_ROWS=tile__favor_rows, $
+                                    GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+                                    SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
+                                    ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
                                     TILEPLOTSUFF=tilePlotSuff, $
                                     TILEPLOTTITLE=tilePlotTitle, $
                                     NO_COLORBAR=no_colorbar, $
@@ -379,11 +383,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   !EXCEPT=0                                                      ;Do report errors, please
 
-  IF KEYWORD_SET(do_not_consider_IMF) THEN  BEGIN
+  IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY
   ENDIF ELSE BEGIN
      SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
   ENDELSE
+
+  IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
+     PRINT,"Not set up to handle multiples of both conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
+     STOP
+  ENDIF
 
   SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
                              ALTITUDERANGE=altitudeRange, $
@@ -481,6 +490,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                                   DELAY=delay, $
                                   MULTIPLE_DELAYS=multiple_delays, $
+                                  MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                  OUT_EXECUTING_MULTIPLES=executing_multiples, $
+                                  OUT_MULTIPLES=multiples, $
+                                  OUT_MULTISTRING=multiString, $
                                   RESOLUTION_DELAY=delay_res, $
                                   BINOFFSET_DELAY=binOffset_delay, $
                                   STABLEIMF=stableIMF, $
@@ -492,7 +505,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN
      OPENW,lun,plotDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
-     IF KEYWORD_SET(multiple_delays) THEN BEGIN
+     IF KEYWORD_SET(executing_multiples) THEN BEGIN
         PRINT,"What are you thinking? You're not setup to get multi-output..."
         STOP
      ENDIF
@@ -528,9 +541,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = ns_t2
            stormString           = 'non-storm'
            paramString          += '--' + stormString
-           IF KEYWORD_SET(multiple_delays) THEN BEGIN
-              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
-                 paramString_list[iDel] += '--' + stormString
+           IF KEYWORD_SET(executing_multiples) THEN BEGIN
+              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                 paramString_list[iMult] += '--' + stormString
               ENDFOR
            ENDIF
         END
@@ -541,9 +554,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = mp_t2
            stormString           = 'mainPhase'
            paramString          += '--' + stormString
-           IF KEYWORD_SET(multiple_delays) THEN BEGIN
-              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
-                 paramString_list[iDel] += '--' + stormString
+           IF KEYWORD_SET(executing_multiples) THEN BEGIN
+              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                 paramString_list[iMult] += '--' + stormString
               ENDFOR
            ENDIF         
         END
@@ -554,9 +567,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            t2_arr                = rp_t2
            stormString           = 'recoveryPhase'
            paramString          += '--' + stormString
-           IF KEYWORD_SET(multiple_delays) THEN BEGIN
-              FOR iDel=0,N_ELEMENTS(delay)-1 DO BEGIN
-                 paramString_list[iDel] += '--' + stormString
+           IF KEYWORD_SET(executing_multiples) THEN BEGIN
+              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                 paramString_list[iMult] += '--' + stormString
               ENDFOR
            ENDIF
          END
@@ -610,6 +623,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           MULTIPLE_DELAYS=multiple_delays, $
                                                                           RESOLUTION_DELAY=delay_res, $
                                                                           BINOFFSET_DELAY=binOffset_delay, $
+                                                                          MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
                                                                           STABLEIMF=stableIMF, $
                                                                           DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                                                           OMNI_COORDS=omni_Coords, $
@@ -674,6 +688,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              HEMI=hemi, $
                              DELAY=delay, $
                              MULTIPLE_DELAYS=multiple_delays, $
+                             MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
                              STABLEIMF=stableIMF, $
                              SMOOTHWINDOW=smoothWindow, $
                              INCLUDENOCONSECDATA=includeNoConsecData, $
@@ -727,12 +742,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                PARAMSTRING=paramString
   ENDIF
 
-  IF KEYWORD_SET(multipleDelays) THEN NIter = N_ELEMENTS(delay) ELSE NIter = 1
+  IF KEYWORD_SET(executing_multiples) THEN NIter = N_ELEMENTS(multiples) ELSE NIter = 1
 
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
   dataRawPtrArr_List               = LIST()
-  FOR iDel=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+  ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
+  FOR iMulti=0,NIter-1 DO BEGIN
 
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
         PRINTF,grossLun,""
@@ -742,14 +758,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      h2dStrArr                     = !NULL
      dataNameArr                   = !NULL
      dataRawPtrArr                 = !NULL
-     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iDel], H2DSTRARR=h2dStrArr, $
-                           KEEPME=keepMe, DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
+
+     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti], $
+                           H2DSTRARR=h2dStrArr, $
+                           KEEPME=keepMe, $
+                           DATARAWPTRARR=dataRawPtrArr, $
+                           DATANAMEARR=dataNameArr, $
                            /DO_NOT_SET_DEFAULTS, $
-                           MINMLT=minM,MAXMLT=maxM, $
+                           MINMLT=minM, $
+                           MAXMLT=maxM, $
                            BINMLT=binM, $
                            SHIFTMLT=shiftM, $
-                           MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                           DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                           MINILAT=minI, $
+                           MAXILAT=maxI, $
+                           BINILAT=binI, $
+                           DO_LSHELL=do_lShell, $
+                           MINLSHELL=minL, $
+                           MAXLSHELL=maxL, $
+                           BINLSHELL=binL, $
                            ORBRANGE=orbRange, $
                            ALTITUDERANGE=altitudeRange, $
                            CHARERANGE=charERange, $
@@ -759,7 +785,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            MASKMIN=maskMin, $
                            SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                            HEMI=hemi, $
-                           CLOCKSTR=clockStr, $
+                           CLOCKSTR=KEYWORD_SET(multiple_IMF_clockAngles) ? clockStr[iMulti] : clockStr, $
                            ANGLELIM1=angleLim1, $
                            ANGLELIM2=angleLim2, $
                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -785,10 +811,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            DO_ABS_BTMAX=abs_btMax, $
                            DO_ABS_BXMIN=abs_bxMin, $
                            DO_ABS_BXMAX=abs_bxMax, $
-                           DELAY=delay[iDel], $
-                           MULTIPLE_DELAYS=multiple_delays, $
-                           RESOLUTION_DELAY=delay_res, $
-                           BINOFFSET_DELAY=binOffset_delay, $
+                           DELAY=KEYWORD_SET(multiple_delays) ? delay[iMulti] : delay, $
+                           ;; MULTIPLE_DELAYS=multiple_delays, $
+                           ;; RESOLUTION_DELAY=delay_res, $
+                           ;; BINOFFSET_DELAY=binOffset_delay, $
                            STABLEIMF=stableIMF, $
                            SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                            NPLOTS=nPlots, $
@@ -886,6 +912,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ALL_LOGPLOTS=all_logPlots,$
                            TMPLT_H2DSTR=tmplt_h2dStr, $
                            RESET_GOOD_INDS=reset_good_inds, $
+                           RESET_OMNI_INDS=reset_omni_inds, $
                            FANCY_PLOTNAMES=fancy_plotNames, $
                            LUN=lun
      h2dStrArr_List.add,h2dStrArr
@@ -897,6 +924,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      CLOSE_GROSSRATE_INFO_FILE,grossRate_info_file,grossLun
   ENDIF
 
+
+  IF KEYWORD_SET(executing_multiples) AND KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
+     REARRANGE_H2DSTRARR_LIST_INTO_LIKE_PLOTS,h2dStrArr_list,dataNameArr_list,dataRawPtrArr_list,paramString_list, $
+                                              HAS_NPLOTS=nplots, $
+                                              NEW_PARAMSTR_FOR_LIKE_PLOTARRS=multiString, $
+                                              SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
+                                              DO_REARRANGE_DATARAWPTRARR_LIST=do_rearrange_dataRawPtrArr_list, $
+                                              OUT_MASK_H2DSTRARR=h2dMaskArr
+  ENDIF
 
   ;;********************************************************
   ;;Handle Plots all at once
@@ -910,17 +946,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      plot_i                        = plot_i_list[iList]
      paramString                   = paramString_list[iList]
 
-     h2dStrArr                     = SHIFT(h2dStrArr,-1-(nPlots))
-     IF keepMe THEN BEGIN 
-        dataNameArr                = SHIFT(dataNameArr,-1-(nPlots)) 
-        dataRawPtrArr              = SHIFT(dataRawPtrArr,-1-(nPlots)) 
+     IF ~KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
+        ;;Shift the way we historically have
+        h2dStrArr                     = SHIFT(h2dStrArr,-1-(nPlots))
+        IF keepMe THEN BEGIN 
+           dataNameArr                = SHIFT(dataNameArr,-1-(nPlots)) 
+           dataRawPtrArr              = SHIFT(dataRawPtrArr,-1-(nPlots)) 
+        ENDIF
+        
+        ;; h2dStrArr_list[iList]         = SHIFT(h2dStrArr_List[iList],-1-(nPlots))
+        ;; IF keepMe THEN BEGIN 
+        ;;    dataNameArr_list[iList]    = SHIFT(dataNameArr_list[iList],-2) 
+        ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
+        ;; ENDIF
      ENDIF
-
-     ;; h2dStrArr_list[iList]         = SHIFT(h2dStrArr_List[iList],-1-(nPlots))
-     ;; IF keepMe THEN BEGIN 
-     ;;    dataNameArr_list[iList]    = SHIFT(dataNameArr_list[iList],-2) 
-     ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
-     ;; ENDIF
 
      IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
         SAVE_ALFVENDB_TEMPDATA, $
@@ -940,6 +979,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ;;Now plots
      IF ~KEYWORD_SET(justData) THEN BEGIN
         PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr, $
+                               H2DMASKARR=h2dMaskArr, $
                                TEMPFILE=out_tempFile, $
                                SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
                                JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
@@ -952,6 +992,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                N_TILE_COLUMNS=n_tile_columns, $
                                TILING_ORDER=tiling_order, $
                                TILE__FAVOR_ROWS=tile__favor_rows, $
+                               ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
                                TILEPLOTSUFF=tilePlotSuff, $
                                TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
