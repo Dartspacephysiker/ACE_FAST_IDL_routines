@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_DB__TILED__3000KM_AND_ABOVE
+PRO JOURNAL__20160510__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_DB__GET_DAYSIDE_ORBIT_DETAILS
   ;;The reason we're gathered
   pFluxMin                 = 1
 
@@ -137,7 +137,9 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
+  minMLT                         = 8.0
+  maxMLT                         = 16.0
 
   ;;Bonus
   maskMin                        = 1

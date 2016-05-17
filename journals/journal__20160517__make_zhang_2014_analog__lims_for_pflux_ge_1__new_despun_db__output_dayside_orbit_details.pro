@@ -1,52 +1,31 @@
-;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
-;;several different clock angles. Here goes.
-PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_DB__TILED__3000KM_AND_ABOVE
+;;2016/05/16 Try new text output
+PRO JOURNAL__20160517__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_DB__OUTPUT_DAYSIDE_ORBIT_DETAILS
   ;;The reason we're gathered
-  pFluxMin                 = 1
-
-  ;; sample_t_restriction     = 0.1
+  pFluxMin                 = 5
 
   ;;DB stuff
   do_despun                = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tile stuff
-  multiple_IMF_clockAngles = 1
-  clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
-  angleLim1       = 67.5
-  angleLim2       = 112.5  
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Scatterplot options
-  do_scatterplot           = 0
-
-  overlayAurZone           = 1
-
-  ;; nonStorm                 = 1
-  mainPhase                = 0
-
-  centerLon                = 270
-  sTrans                   = 20
-  savePlot                 = 1
-  add_orbit_legend         = 0
+  ;; SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings,angleLim1,angleLim2,IMFStr,IMFTitle
+  ;; multiple_IMF_clockAngles = 1
+  ;; clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
+  ;; angleLim1       = 67.5
+  ;; angleLim2       = 112.5  
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
-  output_orbit_details     = 1
+  write_obsArr_textFile    = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-
-  tile_images                 = 1
-  tiling_order                = [7,0,1,6,-9,2,5,4,3]
+  ;; group_like_plots_for_tiling = 0
+  ;; n_tile_columns              = 3
+  ;; n_tile_rows                 = 2
   group_like_plots_for_tiling = 1
   scale_like_plots_for_tiling = 0
-  ;; tiling_order             = [2,0,1]
-  n_tile_columns              = 3
-  n_tile_rows                 = 3
-  tilePlotSuff             = "--a_la_Zhang_2014"
-
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot stuff
@@ -84,11 +63,11 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
   nEventPerMinRange        = [0,30.0]
   ;; logNEventPerMin          = 0
 
-  tile_images              = 1
-  ;; tiling_order             = [2,0,1]
-  n_tile_columns           = 3
-  n_tile_rows              = 2
-  tilePlotSuff             = "--normed_nEvents_tHistos__and_nEvPerMin"
+  pPlots                   = 1
+  PPlotRange               = [pFluxMin,1e2]
+  logPfPlot                = 0
+
+  ;; tilePlotSuff             = "--nEvents_tHistos_nEvPerMin_nEvPerOrb_NOWEPCO"
 
   ;; altRange                 = [[0,4180], $
   ;;                             [340,500], $
@@ -137,7 +116,9 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
+  ;; minMLT                         = 0.0
+  ;; maxMLT                         = 16.0
 
   ;;Bonus
   maskMin                        = 1
@@ -168,38 +149,30 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
      ;;                        magCTitStr, $
      ;;                        pFluxMin)
 
-     IMFStr        = ['1--bzNorth','2--dusk-north','3--duskward','4--dusk-south','5--bzSouth','6--dawn-south','7--dawnward','8--dawn-north']
-     IMFTitle      = ['B!Dz!N North','Dusk-North','Duskward','Dusk-South','B!Dz!N South','Dawn-South','Dawnward','Dawn-north']
-
-     IF N_ELEMENTS(byMax) GT 0 THEN BEGIN 
-        IMFStr += '--byMax_' + STRCOMPRESS(byMax,/REMOVE_ALL)
-        IMFTitle += ' B!Dy!N Max: ' + STRCOMPRESS(byMax,/REMOVE_ALL) + 'nT'
-     ENDIF
-     IF N_ELEMENTS(byMin) GT 0 THEN BEGIN
-        IMFStr += '--byMin_' + STRCOMPRESS(byMin,/REMOVE_ALL)
-        IMFTitle += ' B!Dy!N Min: ' + STRCOMPRESS(byMin,/REMOVE_ALL) + 'nT'
-     ENDIF
-     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
-        IMFStr += '--bzMax_' + STRCOMPRESS(bzMax,/REMOVE_ALL)
-        IMFTitle += ' B!Dz!N Max: ' + STRCOMPRESS(bzMax,/REMOVE_ALL) + 'nT'
-     ENDIF
-     IF N_ELEMENTS(bzMin) GT 0 THEN BEGIN
-        IMFStr += '--bzMin_' + STRCOMPRESS(bzMin,/REMOVE_ALL)
-        IMFTitle += ' B!Dz!N Min: ' + STRCOMPRESS(bzMin,/REMOVE_ALL) + 'nT'
-     ENDIF
-     IF N_ELEMENTS(btMax) GT 0 THEN BEGIN 
-        IMFStr += '--btMax_' + STRCOMPRESS(btMax,/REMOVE_ALL)
-        IMFTitle += ' B!Dt!N Max: ' + STRCOMPRESS(btMax,/REMOVE_ALL) + 'nT'
-     ENDIF
-     IF N_ELEMENTS(btMin) GT 0 THEN BEGIN
-        IMFStr += '--btMin_' + STRCOMPRESS(btMin,/REMOVE_ALL)
-        IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(btMin,/REMOVE_ALL) + 'nT'
-     ENDIF
-
-     tilePlotSuffs       = tilePlotSuff
+     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
+                                   angleLim1,angleLim2, $
+                                   IMFStr,IMFTitle, $
+                                   BYMIN=byMin, $
+                                   BYMAX=byMax, $
+                                   BZMIN=bzMin, $
+                                   BZMAX=bzMax, $
+                                   BTMIN=btMin, $
+                                   BTMAX=btMax, $
+                                   BXMIN=bxMin, $
+                                   BXMAX=bxMax, $
+                                   /AND_TILING_OPTIONS, $
+                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+                                   TILE_IMAGES=tile_images, $
+                                   TILING_ORDER=tiling_order, $
+                                   N_TILE_COLUMNS=n_tile_columns, $
+                                   N_TILE_ROWS=n_tile_rows, $
+                                   TILEPLOTSUFF=plotSuff
+     
+     ;; tilePlotSuffs       = tilePlotSuff
      ;; tilePlotTitles      = IMFTitle + ' ' + tilePlotTitle
 
-     plotSuffs           = '--'+IMFStr+altStr
+     plotPrefix          = altStr
+     ;; plotSuffs           = '--'+IMFStr+altStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
@@ -315,6 +288,7 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -335,7 +309,7 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuffs, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -348,7 +322,7 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
-        TILEPLOTSUFFS=tilePlotSuff, $
+        ;; TILEPLOTSUFFS=tilePlotSuff, $
         TILING_ORDER=tiling_order, $
         TILEPLOTTITLE=tilePlotTitle, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
@@ -360,56 +334,6 @@ PRO JOURNAL__20160509__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__NEW_DESPUN_D
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA = e  
      
-     PRINT,'K! Doing other stuff...'
-     ;; FOR j=0,7 DO BEGIN
-     ;;    plot_i                   = (plot_i_list_list[j])[0]
-     ;;    paramStr                 = (paramStr_list_list[j])[0]
-     ;;    plotTitle                = hemi + 'ERN HEMI: Poynting flux $\geq$ ' + STRCOMPRESS(pFluxMin,/REMOVE_ALL) + ' mW/m!U2!N' + $
-     ;;                               (KEYWORD_SET(altitudeRange) OR KEYWORD_SET(gotStorms) ? '(' + altStr + ')' : '')
-     ;;    scatterPlotName          = 'scatterplot--' + paramStr + altStr + '.gif'
-     ;;    outOrbDetFile            = 'orbit_details--' + paramStr + altStr + '.txt'
-        
-     ;;    IF KEYWORD_SET(do_scatterplot) THEN BEGIN
-     ;;       KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus, $
-     ;;                                  HEMI=hemi, $
-     ;;                                  OVERLAYAURZONE=overlayAurZone, $
-     ;;                                  ADD_ORBIT_LEGEND=add_orbit_legend, $
-     ;;                                  CENTERLON=centerLon, $
-     ;;                                  OVERPLOT=overplot, $
-     ;;                                  LAYOUT=layout, $
-     ;;                                  PLOTPOSITION=plotPosition, $
-     ;;                                  OUT_PLOT=out_plot, $
-     ;;                                  CURRENT_WINDOW=window, $
-     ;;                                  PLOTSUFF=plotSuff, $
-     ;;                                  DBFILE=dbFile, $
-     ;;                                  JUST_PLOT_I=plot_i, $
-     ;;                                  STRANS=sTrans, $
-     ;;                                  SAVEPLOT=savePlot, $
-     ;;                                  SPNAME=scatterPlotName, $
-     ;;                                  PLOTDIR=plotDir, $
-     ;;                                  /CLOSE_AFTER_SAVE, $
-     ;;                                  OUTPUT_ORBIT_DETAILS=output_orbit_details, $
-     ;;                                  OUT_ORBSTRARR_LIST=out_orbStrArr_list, $
-     ;;                                  PLOTTITLE=plotTitle, $
-     ;;                                  _EXTRA = e
-     ;;    ENDIF
-        
-     ;;    IF KEYWORD_SET(output_orbit_details) THEN BEGIN
-     ;;       IF ~KEYWORD_SET(do_scatterplot) THEN out_orbStrArr_list = plot_i
-           
-     ;;       PRINT_ORBIT_DETAILS_FROM_ORBSTRARR_LIST__OR__PLOT_I,out_orbStrArr_list,maximus, $
-     ;;          ORBIT_DETAILS_FILENAME=outOrbDetFile, $
-     ;;          ORBIT_DETAILS_HEADER=paramStr, $
-     ;;          ANCILLARY_DATAPROD=maximus.pFluxEst, $
-     ;;          ANCILLARY_DP_FORMAT='F-8.2', $
-     ;;          ANCILLARY_DP_TITLE='Poynt. flux', $
-     ;;          OUT_PARSED=orbStrArr_list, $
-     ;;          OUTDIR=plotDir
-     ;;    ENDIF
-        
-     ;;    PRINT,'Saving outorbstrarr_list to ' + paramStr+'.sav...'
-     ;;    SAVE,orbStrArr_list,FILENAME=paramStr+'.sav'
-     ;; ENDFOR
   ENDFOR
 
 

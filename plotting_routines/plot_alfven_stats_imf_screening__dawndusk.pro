@@ -121,6 +121,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
    WRITE_GROSSRATE_INFO_TO_THIS_FILE=write_grossRate_info_to_this_file, $
    GROSSLUN=grossLun, $
+   WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
    ADD_VARIANCE_PLOTS=add_variance_plots, $
@@ -373,6 +374,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                      WRITE_GROSSRATE_INFO_TO_THIS_FILE=write_grossRate_info_to_this_file, $
                                      GROSSLUN=grossLun, $
+                                     WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
                                      DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                      ADD_VARIANCE_PLOTS=add_variance_plots, $
