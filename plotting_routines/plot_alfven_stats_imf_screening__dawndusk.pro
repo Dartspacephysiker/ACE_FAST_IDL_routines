@@ -155,6 +155,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    PLOTDIR=plotDir, $
    PLOTPREFIX=plotPrefix, $
    PLOTSUFFIXES=plotSuffixes, $
+   TXTOUTPUTDIR=txtOutputDir, $
    MEDHISTOUTDATA=medHistOutData, $
    MEDHISTOUTTXT=medHistOutTxt, $
    OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -188,6 +189,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+  SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY
 
   IF KEYWORD_SET(combine_plots) THEN BEGIN
      outTempFiles = !NULL
@@ -408,7 +410,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      PLOTDIR=plotDir, $
                                      PLOTPREFIX=plotPrefix, $
                                      PLOTSUFFIX=plotSuffix, $
-                                     MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                     TXTOUTPUTDIR=txtOutputDir, $
+                                     MEDHISTOUTDATA=medHistOutData, $
+                                     MEDHISTOUTTXT=medHistOutTxt, $
                                      OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
                                      OUT_TEMPFILE_LIST=out_tempFile_list, $
                                      OUT_DATANAMEARR_LIST=out_dataNameArr_list, $

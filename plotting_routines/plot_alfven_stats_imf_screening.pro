@@ -355,6 +355,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     PLOTDIR=plotDir, $
                                     PLOTPREFIX=plotPrefix, $
                                     PLOTSUFFIX=plotSuffix, $
+                                    TXTOUTPUTDIR=txtOutputDir, $
                                     MEDHISTOUTDATA=medHistOutData, $
                                     MEDHISTOUTTXT=medHistOutTxt, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -386,8 +387,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY
+     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY
   ENDIF ELSE BEGIN
      SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
+     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY
   ENDELSE
 
   IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
@@ -448,7 +451,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              WRITEPROCESSEDH2D=writeProcessedH2d, $
                              SAVERAW=saveRaw, RAWDIR=rawDir, $
                              SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                             PLOTDIR=plotDir, $
+                             ;; PLOTDIR=plotDir, $
                              MEDHISTOUTDATA=medHistOutData, $
                              MEDHISTOUTTXT=medHistOutTxt, $
                              OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -505,7 +508,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(outputPlotSummary) THEN BEGIN
-     OPENW,lun,plotDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
+     OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
      IF KEYWORD_SET(executing_multiples) THEN BEGIN
         PRINT,"What are you thinking? You're not setup to get multi-output..."
         STOP
@@ -919,7 +922,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            RESET_GOOD_INDS=reset_good_inds, $
                            RESET_OMNI_INDS=reset_omni_inds, $
                            FANCY_PLOTNAMES=fancy_plotNames, $
-                           PLOTDIR=plotDir, $
+                           TXTOUTPUTDIR=txtOutputDir, $
                            LUN=lun
      h2dStrArr_List.add,h2dStrArr
      dataNameArr_list.add,dataNameArr
@@ -1024,7 +1027,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      WRITE_ALFVENDB_2DHISTOS,MAXIMUS=maximus,PLOT_I=plot_i, $
                              WRITEHDF5=writeHDF5,WRITEPROCESSEDH2D=WRITEPROCESSEDH2D,WRITEASCII=writeASCII, $
                              H2DSTRARR=h2dStrArr,DATARAWPTRARR=dataRawPtrArr,DATANAMEARR=dataNameArr, $
-                             PARAMSTR=paramString,PLOTDIR=plotDir
+                             PARAMSTR=paramString, $
+                             TXTOUTPUTDIR=txtOutputDir
 
      tempFile_list.add,out_tempFile
   ENDFOR
