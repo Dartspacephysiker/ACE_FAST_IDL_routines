@@ -353,9 +353,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
                                     JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                     PLOTDIR=plotDir, $
+                                    SUFFIX_PLOTDIR=suffix_plotDir, $
                                     PLOTPREFIX=plotPrefix, $
                                     PLOTSUFFIX=plotSuffix, $
                                     TXTOUTPUTDIR=txtOutputDir, $
+                                    SUFFIX_TXTDIR=suffix_txtDir, $
                                     MEDHISTOUTDATA=medHistOutData, $
                                     MEDHISTOUTTXT=medHistOutTxt, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -386,11 +388,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   !EXCEPT=0                                                      ;Do report errors, please
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
-     SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY
-     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY
+     SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+
+     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
   ENDIF ELSE BEGIN
-     SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
-     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY
+     SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_txtDir
   ENDELSE
 
   IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
