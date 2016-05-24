@@ -105,7 +105,7 @@ PRO JOURNAL__20160411__TILE_PLOTS_AVERAGED_OVER_DELAYS__SUBTRACT_BZ,JUST_NORTH=j
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
 
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'+IMFCondStrArr+subtractStr+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/'+date+'/'+IMFCondStrArr+subtractStr+'/'
   fileSuff            = bonusSuff+'--combined.png'
 
   IF KEYWORD_SET(despun)              THEN despunStr          = '--despun' ELSE despunStr = ''

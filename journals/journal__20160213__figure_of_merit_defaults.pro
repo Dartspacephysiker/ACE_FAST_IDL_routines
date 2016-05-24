@@ -4,7 +4,7 @@
 
   printemall                               = 0
 
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
+  h2dFileDir                               = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
   outFile                                  = h2dFileDir+'processed/'+hoyDia+'--Cusp_splitting--'+STRUPCASE(hemi)+'_figures_of_merit_' + FOMString + '--delays_0-30min.sav'
 
   ;;same for everyone

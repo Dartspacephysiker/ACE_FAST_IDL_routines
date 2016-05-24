@@ -64,7 +64,7 @@ PRO JOURNAL__20160406__PLOT_OTHERSTUFF_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_DAYSI
 
   crossCorr_pref                 = 'journal__' + date + '__CrossCorr_' + datStr + '_vs_delay--' + avgStr
   outPlot_pref                   = 'journal__' + date + '__plot_' + datStr + '_vs_delay--' + avgStr
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Storm stuff?

@@ -10,7 +10,7 @@ get_inds_from_db,INDPREFIX='20150604_duskward_inds_for_KS_analysis--6-18MLT',min
 ;**************************************************
 ;All IMF
 ;; get_inds_from_db,INDPREFIX='20150604_allIMF_inds_for_KS_analysis--6-18MLT',minmlt=6,maxmlt=18,clockstr='all_IMF',stableimf=0
-;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Cusp/ACE_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
+;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Satellites/FAST/OMNI_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
 ;Min altitude: 1000.00
 ;Max altitude: 5000.00
 ;Min characteristic electron energy: 4.00000
@@ -54,7 +54,7 @@ get_inds_from_db,INDPREFIX='20150604_duskward_inds_for_KS_analysis--6-18MLT',min
 ;**************************************************
 ;Duskward
 ;; get_inds_from_db,INDPREFIX='20150604_duskward_inds_for_KS_analysis--6-18MLT',minmlt=6,maxmlt=18,clockstr='duskward',stableimf=0,bymin=5
-;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Cusp/ACE_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
+;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Satellites/FAST/OMNI_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
 ;Min altitude: 1000.00
 ;Max altitude: 5000.00
 ;Min characteristic electron energy: 4.00000
@@ -101,7 +101,7 @@ get_inds_from_db,INDPREFIX='20150604_duskward_inds_for_KS_analysis--6-18MLT',min
 ;**************************************************
 ;Dawnward
 ;; get_inds_from_db,INDPREFIX='20150604_dawnward_inds_for_KS_analysis--6-18MLT',minmlt=6,maxmlt=18,clockstr='dawnward',stableimf=0,bymin=5
-;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Cusp/ACE_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
+;There is already a maximus struct loaded! Not loading /SPENCEdata/Research/Satellites/FAST/OMNI_FAST//SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav
 ;Min altitude: 1000.00
 ;Max altitude: 5000.00
 ;Min characteristic electron energy: 4.00000

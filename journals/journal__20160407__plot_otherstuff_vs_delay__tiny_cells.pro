@@ -1,7 +1,7 @@
 ;2016/04/07 So what if the cells are tiny?
 PRO JOURNAL__20160407__PLOT_OTHERSTUFF_VS_DELAY__TINY_CELLS
   date                           = '20160407'
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   probOccurrence                 = 1
   pFlux                          = 0

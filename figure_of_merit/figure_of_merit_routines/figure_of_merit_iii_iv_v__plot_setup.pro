@@ -38,7 +38,7 @@ FUNCTION FIGURE_OF_MERIT_III_IV_V__PLOT_SETUP, $
   IF ~KEYWORD_SET(hemi)         THEN hemi         = defHemi
 
   IF ~KEYWORD_SET(h2dFileDir) THEN BEGIN
-     h2dFileDir                            = '/SPENCEdata/Research/Cusp/ACE_FAST/20160215--Alfven_cusp_figure_of_merit/data/'
+     h2dFileDir                            = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160215--Alfven_cusp_figure_of_merit/data/'
   ENDIF
 
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)

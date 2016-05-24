@@ -6,7 +6,7 @@
 
   stableStr                                = STRCOMPRESS(stableIMF,/REMOVE_ALL)
 
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160217--Alfven_cusp_figure_of_merit/'+stableStr+'minstable/data/'
+  h2dFileDir                               = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160217--Alfven_cusp_figure_of_merit/'+stableStr+'minstable/data/'
   outFile                                  = h2dFileDir+'processed/'+hoyDia+'--Cusp_splitting--'+STRUPCASE(hemi)+'_figures_of_merit_' $
                                               + FOMString + '--'+stableStr+'minstable--delays_-25_25min.sav'
 

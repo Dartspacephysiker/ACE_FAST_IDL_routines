@@ -9,7 +9,7 @@ PRO tauest_wrapper, x, t, orbit, TOrA, detrend, nsimx, iseed7, cBias, $
 
   defMaxDelay=5
 
-  ;; defOutDir='/SPENCEdata/Research/Cusp/ACE_FAST/fortran/TAUEST/'
+  ;; defOutDir='/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/fortran/TAUEST/'
   defOutDir='./out/'
   defOutFilePref='tauest_data'
   defOutExt='.tmp'

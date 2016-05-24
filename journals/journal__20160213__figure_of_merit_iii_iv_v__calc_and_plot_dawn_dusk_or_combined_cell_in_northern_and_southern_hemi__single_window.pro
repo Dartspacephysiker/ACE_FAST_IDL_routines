@@ -12,7 +12,7 @@ PRO JOURNAL__20160213__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_DUSK_OR_COMB
 
   plotYRange             = [[-0.1,0.02],[-0.1,0.01],[-0.4,0.01]]
 
-  h2dFileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
+  h2dFileDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160213--Alfven_cusp_figure_of_merit/data/'
   fileDia                = '20160214'
 
   FOR i=0,N_ELEMENTS(fom_type)-1 DO BEGIN

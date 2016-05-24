@@ -11,7 +11,7 @@ PRO JOURNAL__20160302__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'+hemi+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/'+date+'/'+hemi+'/'
   ;; plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','LogpFlux']
   plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','pFlux']
 

@@ -16,7 +16,7 @@ PRO JOURNAL__20160328__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   ;; IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
   IMFCondStrArr        = ['__ABS_byMin5.0__bzMax-1.0','__ABS_byMin5.0__bzMin1.0']
 
-  fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir              = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
   fileList             = LIST()
 
   combine_plots        = 1

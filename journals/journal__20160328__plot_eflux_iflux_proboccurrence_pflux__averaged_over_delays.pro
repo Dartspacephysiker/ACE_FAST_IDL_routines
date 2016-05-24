@@ -32,7 +32,7 @@ PRO JOURNAL__20160328__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
-  fileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
 
   delayArr            = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   delayStr            = STRING(FORMAT='("__",F0.2,"mindelay")',delayArr/60.) 

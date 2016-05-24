@@ -33,10 +33,10 @@ PRO JOURNAL__20160402__RESAMPLE_AND_PLOT_PROBOCCURRENCE_CELL_DATA
 
   crossCorrStr                 = 'journal__' + date + '__CrossCorr_probOccurrence_vs_delay--all_alts--'
   plotPrefStr                  = 'journal__' + date + '__plot_probOccurrence_vs_delay--all_alts--'
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
   delayStr               = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
                          
-  inDir                  = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
+  inDir                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
   inFile                 = crossCorrStr + hemi + delayStr + omniParamStr
 
   ;; resampStr              = STRING(FORMAT='("factor-of-",F0.2,"_resampling")',resampFactor)

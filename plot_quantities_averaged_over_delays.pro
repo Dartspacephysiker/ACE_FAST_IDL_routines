@@ -65,7 +65,7 @@ PRO PLOT_QUANTITIES_AVERAGED_OVER_DELAYS, $
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
-  fileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
 
   IF N_ELEMENTS(delay_start) GT 0 THEN BEGIN
      delayArr = (INDGEN(FIX((delay_stop-delay_start)*60./delayDeltaSec)+1,/LONG)+delay_start)*delayDeltaSec

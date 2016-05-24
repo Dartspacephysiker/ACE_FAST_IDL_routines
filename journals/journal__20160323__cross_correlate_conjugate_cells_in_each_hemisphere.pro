@@ -8,7 +8,7 @@ PRO JOURNAL__20160323__CROSS_CORRELATE_CONJUGATE_CELLS_IN_EACH_HEMISPHERE
   omniParamStr      = 'OMNI_params--duskward--negAngle_45__posAngle_135--ABS_byMin_5.00--bzMax_-1.00.sav'
   ;; omniParamStr      = 'OMNI_params--duskward--negAngle_45__posAngle_135--ABS_byMin_5.00.sav'
 
-  inDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles'
+  inDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles'
   inFile            = 'journal__20160323__CrossCorr_nev_per_orb_vs_delay--'+hemiArr+'--n_delays__4001--' + $
                       omniParamStr
 

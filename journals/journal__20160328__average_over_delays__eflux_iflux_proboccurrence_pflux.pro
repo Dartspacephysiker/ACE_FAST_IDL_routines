@@ -30,8 +30,8 @@ PRO JOURNAL__20160328__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX, $
   IF ~KEYWORD_SET(plot_dateStr)       THEN plot_dateStr       = 'Mar_28_16'
 
   IF ~KEYWORD_SET(bonusSuff)          THEN bonusSuff          = ''
-  IF ~KEYWORD_SET(fileDir)            THEN fileDir            = '/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
-  IF ~KEYWORD_SET(outDir)             THEN outdir             = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  IF ~KEYWORD_SET(fileDir)            THEN fileDir            = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
+  IF ~KEYWORD_SET(outDir)             THEN outdir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
 
   ;;Delay stuff (nDelays                                      = 61 will average over delays between -30 and 30 min, inclusive)
   IF ~KEYWORD_SET(nDelays)            THEN nDelays            = 31

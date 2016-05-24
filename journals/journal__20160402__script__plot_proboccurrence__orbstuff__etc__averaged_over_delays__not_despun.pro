@@ -74,7 +74,7 @@ PRO JOURNAL__20160402__SCRIPT__PLOT_PROBOCCURRENCE__ORBSTUFF__ETC__AVERAGED_OVER
 
   ;; plotDirSuff          = 'not_despun'
 
-  fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir              = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
   fileList             = LIST()
 
   FOR iAvgType=0,N_ELEMENTS(in_avgTypes)-1 DO BEGIN

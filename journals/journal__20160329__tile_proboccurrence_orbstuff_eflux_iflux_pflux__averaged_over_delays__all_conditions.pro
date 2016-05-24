@@ -68,7 +68,7 @@ PRO JOURNAL__20160329__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
 
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/'+date+'/'
   fileSuff            = bonusSuff+'--combined.png'
 
   FOR iAvgType=0,N_ELEMENTS(in_avgTypes)-1 DO BEGIN

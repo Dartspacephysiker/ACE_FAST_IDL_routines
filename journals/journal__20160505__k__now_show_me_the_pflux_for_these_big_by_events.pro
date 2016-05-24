@@ -7,7 +7,7 @@ PRO JOURNAL__20160505__K__NOW_SHOW_ME_THE_PFLUX_FOR_THESE_BIG_BY_EVENTS
   symTransp_maxInd                 = 40
   min_nEvents                      = 5
 
-  dir                              = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/'
+  dir                              = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
   file1                            = 'May_5_16--NORTH--avg--1000-4180km--ABSmagc_GE_10--pFlux_GE_10--OMNI--GSM--dawnward__0stable__0.00mindelay__30.00Res__byMax-10.0.sav'
   file2                            = 'May_5_16--NORTH--avg--1000-4180km--ABSmagc_GE_10--pFlux_GE_10--OMNI--GSM--duskward__0stable__0.00mindelay__30.00Res__byMin10.0.sav'
 

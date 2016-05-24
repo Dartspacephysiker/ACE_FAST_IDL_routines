@@ -4,7 +4,7 @@ PRO JOURNAL__20160404__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
 
   crossCorr_pref                 = 'journal__' + date + '__CrossCorr_probOccurrence_vs_delay--all_alts--'
   outPlot_pref                   = 'journal__' + date + '__plot_probOccurrence_vs_delay--all_alts--'
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__' + date + '__probOccurrence_and_crosscorrelation_savefiles/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Storm stuff?

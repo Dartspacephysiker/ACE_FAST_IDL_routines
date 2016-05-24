@@ -6,7 +6,7 @@ PRO JOURNAL__20160225__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS
   hemi                = 'SOUTH'
   ;; hemi                = 'NORTH'
   
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/20160225/'+hemi+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/20160225/'+hemi+'/'
 
   plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','timeAvgd_pFlux']
  

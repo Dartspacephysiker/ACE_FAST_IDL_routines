@@ -25,7 +25,7 @@ PRO JOURNAL__20160331__SMOOTH_AND_PLOT_PROBOCCURRENCE_CELL_DATA
   plotPrefStr            = "journal__20160330__plot_probOccurrence_vs_delay--all_alts--"
   delayStr               = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
                          
-  inDir                  = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160330__probOccurrence_and_crosscorrelation_savefiles'
+  inDir                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160330__probOccurrence_and_crosscorrelation_savefiles'
   inFile                 = crossCorrStr + hemi + delayStr + omniParamStr
 
   smoothStr              = STRCOMPRESS(nSmooths,/REMOVE_ALL) + "_" + STRCOMPRESS(nSmoothPoints,/REMOVE_ALL) + "-point_smooths--"

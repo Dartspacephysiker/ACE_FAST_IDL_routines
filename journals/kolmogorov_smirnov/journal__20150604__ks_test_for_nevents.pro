@@ -84,7 +84,7 @@ print,maximus.(4)(2)
 ;      21.2632
 print,maximus.MLT(2)
 ;      21.2632
-.run "/SPENCEdata/Research/Cusp/ACE_FAST/JOURNAL__20150604__boxplots_for_allIMF_dawn_dusk_nevents.pro"
+.run "/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/JOURNAL__20150604__boxplots_for_allIMF_dawn_dusk_nevents.pro"
 help,/breakpoints
 .run "/tmp/idltemp23802-PH"
 save,'idlwave_print_safe','idlwave_routine_info','idlwave_print_info_entry','idlwave_get_class_tags','idlwave_get_sysvars',FILE='/tmp/idltemp23802NeN',/ROUTINES

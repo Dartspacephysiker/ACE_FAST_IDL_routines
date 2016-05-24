@@ -289,7 +289,7 @@ PRO JOURNAL__20160322__PLOT_NEV_PER_ORB_VS_DELAY__BZ_NORTHSOUTH__ON_DAYSIDE
      window_cc.save,plotDir+outPlot_CC
 
      outFile_dat = "journal__20160322__CrossCorr_nev_per_orb_vs_delay--"+hemi+"--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL)+"--"+omni_paramStr+'.sav'
-     outFile_dir = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160322__nev_per_orb_and_crosscorrelation_savefiles/'
+     outFile_dir = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160322__nev_per_orb_and_crosscorrelation_savefiles/'
 
      save,nEvArrList,delayArr,nDelays, $
           title_list, $

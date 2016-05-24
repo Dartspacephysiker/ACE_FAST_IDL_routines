@@ -22,7 +22,7 @@ PRO JOURNAL__20160323__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
 
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/'+date+'/'
   fileSuff            = bonusSuff+'--combined.png'
 
   FOR iHemi=0,N_ELEMENTS(hemiArr)-1 DO BEGIN

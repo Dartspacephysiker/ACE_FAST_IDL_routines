@@ -115,7 +115,7 @@ PRO JOURNAL__20160404__TILE_PROBOCCURRENCE_ORBSTUFF_EFLUX_IFLUX_PFLUX__AVERAGED_
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
 
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/'+date+'/'+IMFCondStrArr+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/'+date+'/'+IMFCondStrArr+'/'
   fileSuff            = bonusSuff+'--combined.png'
 
   IF KEYWORD_SET(despun)              THEN despunStr          = '--despun' ELSE despunStr = ''

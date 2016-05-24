@@ -1,6 +1,6 @@
 ; IDL Version 8.4.1 (linux x86_64 m64)
 ; Journal File for spencerh@thelonious.dartmouth.edu
-; Working directory: /SPENCEdata/Research/Cusp/ACE_FAST/scripts_for_processing_Dartmouth_data
+; Working directory: /SPENCEdata/Research/Satellites/FAST/OMNI_FAST/scripts_for_processing_Dartmouth_data
 ; Date: Fri May  1 08:05:47 2015
  
 

@@ -75,7 +75,7 @@ PRO JOURNAL__20160331__SCRIPT__TIME_AVERAGE_OVER_DELAYS__HIGHER_ALTS
 
 
   ;---->Together 2016/03/29
-  ;; fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/temp/20160329--not_timeavgd_orbstuff/'
+  ;; fileDir              = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/20160329--not_timeavgd_orbstuff/'
   ;; dont_logPlot_inds    = [3,4]
   ;; unlogPlot_lims       = [[0,1e2], $
   ;;                         [0.0,0.1]]

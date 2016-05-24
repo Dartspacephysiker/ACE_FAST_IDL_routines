@@ -1,6 +1,6 @@
 PRO JOURNAL__20160217__PLOT_ALL_SOUTHERN_AND_NORTHERN_DELAYS_AGAIN
 
-  dawnDir      = '/SPENCEdata/Research/Cusp/ACE_FAST/20160216--Alfven_cusp_figure_of_merit/data/raw/'
+  dawnDir      = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160216--Alfven_cusp_figure_of_merit/data/raw/'
   dawnFiles    = ['polarplots_Feb_16_16--NORTH--logAvg--dawnward--0stable--OMNI_GSM_-1.00mindelay_byMin3.0.dat', $
                   'polarplots_Feb_16_16--NORTH--logAvg--dawnward--0stable--OMNI_GSM_-10.00mindelay_byMin3.0.dat', $
                   'polarplots_Feb_16_16--NORTH--logAvg--dawnward--0stable--OMNI_GSM_-11.00mindelay_byMin3.0.dat', $

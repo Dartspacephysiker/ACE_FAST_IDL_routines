@@ -45,7 +45,7 @@ PRO JOURNAL__20160329__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   plot_dateStr         = 'Mar_28_16'
   IMFCondStrArr        = '__ABS_byMin5.0__bzMax-1.0'
 
-  fileDir              = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir              = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
   fileList             = LIST()
 
   FOR iAvgType=0,N_ELEMENTS(in_avgTypes)-1 DO BEGIN

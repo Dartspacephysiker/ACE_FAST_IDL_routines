@@ -17,7 +17,7 @@ PRO JOURNAL__20160323__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
 
   ;; bonusSuff           = 'high-energy_e'
   bonusSuff           = ''
-  fileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
 
   ;;Delay stuff (nDelays = 61 will average over delays between -30 and 30 min, inclusive)
   IF ~KEYWORD_SET(nDelays) THEN nDelays = 31

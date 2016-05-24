@@ -13,7 +13,7 @@ PRO JOURNAL__20160328__CROSS_CORRELATE_CONJUGATE_CELLS_IN_EACH_HEMISPHERE
 
   delayStr          = "--n_delays__"+STRCOMPRESS(nDelays,/REMOVE_ALL) + "--delay_delta_" + STRCOMPRESS(delayDeltaSec,/REMOVE_ALL) + "sec"
 
-  inDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160328__nev_per_orb_and_crosscorrelation_savefiles'
+  inDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160328__nev_per_orb_and_crosscorrelation_savefiles'
   inFile            = 'journal__20160328__CrossCorr_nev_per_orb_vs_delay--' + hemiArr + delayStr + omniParamStr
 
   smoothStr         = STRCOMPRESS(nSmooths,/REMOVE_ALL) + "_" + STRCOMPRESS(nSmoothPoints,/REMOVE_ALL) + "-point_smooths--"

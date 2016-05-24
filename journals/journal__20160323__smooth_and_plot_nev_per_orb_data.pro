@@ -16,7 +16,7 @@ PRO JOURNAL__20160323__SMOOTH_AND_PLOT_NEV_PER_ORB_DATA
   ;; omniParamStr      = 'OMNI_params--duskward--negAngle_45__posAngle_135--ABS_byMin_5.00.sav'
 
 
-  inDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles'
+  inDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles'
   inFile            = 'journal__20160323__CrossCorr_nev_per_orb_vs_delay--'+hemi+'--n_delays__4001--' + $
                       omniParamStr
 

@@ -30,7 +30,7 @@ PRO JOURNAL__20160218__FIGURE_OF_MERIT_III_IV_V__CALC_AND_PLOT_DAWN_AND_DUSK_CEL
   fileDay                = 'Feb_18_16'
   fileDia                = '20160218'
 
-  h2dFileDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/20160217--Alfven_cusp_figure_of_merit/' + $
+  h2dFileDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160217--Alfven_cusp_figure_of_merit/' + $
                            STRCOMPRESS(stableIMF,/REMOVE_ALL) + 'minstable/data/'
 
   ;; scale_plots_to_1       = 1

@@ -4,7 +4,7 @@ PRO JOURNAL__20160323__SCRIPT__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_O
   hemiArr        = ['NORTH','SOUTH']
   clockStrArr    = ['dawnward','duskward']
   
-  fileDir        = '/SPENCEdata/Research/Cusp/ACE_FAST/processed/'
+  fileDir        = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/processed/'
   fileList       = LIST()
 
   combine_plots        = 1

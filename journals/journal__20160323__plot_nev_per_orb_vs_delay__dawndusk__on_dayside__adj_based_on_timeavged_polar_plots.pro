@@ -3,7 +3,7 @@ PRO JOURNAL__20160323__PLOT_NEV_PER_ORB_VS_DELAY__DAWNDUSK__ON_DAYSIDE__ADJ_BASE
 
   crossCorr_pref                 = "journal__20160323__CrossCorr_nev_per_orb_vs_delay--"
   outPlot_pref                   = "journal__20160323__plot_nev_per_orb_vs_delay--"
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160323__nev_per_orb_and_crosscorrelation_savefiles/'
 
   nonstorm                       = 0
   do_center_cell                 = 1

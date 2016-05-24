@@ -4,7 +4,7 @@ PRO JOURNAL__20160201__FIGURE_OF_MERIT_II__COMBINE_NORTHERN_AND_SOUTHERN
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun         = -1 ;stdout
 
-  h2dFileDir                               = '/SPENCEdata/Research/Cusp/ACE_FAST/20160130--Alfven_cusp_figure_of_merit/data/'
+  h2dFileDir                               = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/20160130--Alfven_cusp_figure_of_merit/data/'
 
   include_allIMF                           = 0
   hoyDia                                   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)

@@ -1,6 +1,6 @@
 PRO JOURNAL__20160308__SUM_E_ENERGY_AND_PFLUX_ENERGY_FROM_SAV_FILES___WHAT_HAPPENS
 
-  h2dFileDir                = '/SPENCEdata/Research/Cusp/ACE_FAST/temp/'
+  h2dFileDir                = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
   h2dFilePref               = 'polarplots_Mar_5_16--NORTH--despun--logAvg--maskMin5--OMNI--GSM--'
   h2dFileClockStr           = ['dawnward','duskward']
 

@@ -7,7 +7,7 @@ PRO JOURNAL__20160226__TILE_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__DELAY_PLOTS__NORTH
   ;; hemi                = 'NORTH'
   
   bonusSuff           = 'high-energy_e'
-  plotDir             = '/SPENCEdata/Research/Cusp/ACE_FAST/plots/20160302/'+hemi+'/'
+  plotDir             = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plots/20160302/'+hemi+'/'
   plot_subDirs        = ['EFLUX_LOSSCONE_INTEG','iflux_INTEG_UP','probOccurrence','timeAvgd_pFlux']
 
   delayArr            = [-1500, -1440, -1380, -1320, -1260, $

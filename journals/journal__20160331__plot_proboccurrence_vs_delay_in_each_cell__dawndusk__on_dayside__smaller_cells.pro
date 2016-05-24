@@ -3,7 +3,7 @@ PRO JOURNAL__20160331__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__DAWNDUSK__ON_D
 
   crossCorr_pref                 = "journal__20160331__CrossCorr_probOccurrence_vs_delay--smaller_cells--"
   outPlot_pref                   = "journal__20160331__plot_probOccurrence_vs_delay--smaller_cells--"
-  outFile_dir                    = '/SPENCEdata/Research/Cusp/ACE_FAST/journals/journal__20160330__probOccurrence_and_crosscorrelation_savefiles/'
+  outFile_dir                    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/journal__20160330__probOccurrence_and_crosscorrelation_savefiles/'
 
   nonstorm                       = 0
   do_center_cell                 = 1
