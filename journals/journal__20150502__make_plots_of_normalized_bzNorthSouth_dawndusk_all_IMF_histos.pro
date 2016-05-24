@@ -1,7 +1,7 @@
 ;Make plots of all normalized time histos! (They are normalized to themselves, you know--see
 ;JOURNAL_normalizing_time...20150502.pro)
 
-datfile='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--normalized_timehistos--all_IMF_dawndusk_bzNorthSouth--20150504.sav'
+datfile='/SPENCEdata/Research/database/FAST/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--normalized_timehistos--all_IMF_dawndusk_bzNorthSouth--20150504.sav'
 restore,datFile
 
 ;now we've got [orientation]_normedTimeHisto_struct, [orientation]_temp_or_rawfile, which

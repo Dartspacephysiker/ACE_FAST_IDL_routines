@@ -5,7 +5,7 @@ PRO JOURNAL__20150604__boxplots_for_allIMF_dawn_dusk_nevents,MAXIND=maxInd
   ;defaults
   defPref='Boxplots--Number_of_events--'
   defSuff='allIMF_dawn_dusk--'
-  defDBFile='/SPENCEdata/Research/database/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav'
+  defDBFile='/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_02282015--500-14999--maximus.sav'
   defPlot_i_dir = 'plot_indices_saves/'
 
   allIMFF='PLOT_INDICES_20150604_allIMF_inds_for_KS_analysis--6-18MLTNorth_all_IMF--0stable--OMNI_GSM_Jun_4_15.sav'

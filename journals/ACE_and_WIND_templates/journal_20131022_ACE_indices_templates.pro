@@ -11,8 +11,8 @@
 ;mag_prop=read_ascii("../magdata/acemagP_199802-200012.dat",template=ACE_magdata_tmplt)
 ;tap_prop=read_ascii("../tapdata/aceTAP_199802-200012.dat",template=ACE_tapdata_tmplt)
 ;save,/variables,filename="idl_ACEdata.dat"
-;restore,"../../glob_ind_1999-2009/dst_ae_ascii_tmplts_IAGA.dat"
-;dst=read_ascii("../ind_1999-2009/DST_1996-2009_IAGA2002.dat",template=tmplt_dst)
-;ae=read_ascii("../ind_1999-2009/AE_1996-2009_IAGA2002.dat",template=tmplt_ae)
+;restore,"../../glob_geomag_indices__1999-2009/dst_ae_ascii_tmplts_IAGA.dat"
+;dst=read_ascii("../geomag_indices__1999-2009/DST_1996-2009_IAGA2002.dat",template=tmplt_dst)
+;ae=read_ascii("../geomag_indices__1999-2009/AE_1996-2009_IAGA2002.dat",template=tmplt_ae)
 ;save,ae,dst,filename="idl_ae_dst.dat"
 

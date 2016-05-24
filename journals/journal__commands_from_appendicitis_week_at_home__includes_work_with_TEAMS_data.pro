@@ -59,7 +59,7 @@ cghistoplot,maximus.delta_e(where(maximus.mag_current GE 5)),maxinput=30,binsize
 
 
 ;**************************************************
-restore, '/SPENCEdata/Research/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
+restore, '/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 print,n_elements(where(maximus.mag_current LT 0))
 print,n_elements(where(maximus.mag_current GT 0))
 print,n_elements(where(maximus.mag_current GT 10))
@@ -169,7 +169,7 @@ help,chris
 
 
 ;**************************************************
-restore, '/SPENCEdata/Research/database/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
+restore, '/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_02112015--500-14999--maximus.sav'
 ls
 help,maximus
 newcurrent=maximus.width_x*maximus.mag_current
