@@ -1,7 +1,7 @@
 ; GET ALL THOSE NORMALIZED TIME HISTOS
 ;2015/05/04
 
-fastLocDir='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/'
+fastLocDir='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/'
 date='20150504'
 
 ;files

@@ -13,14 +13,14 @@
 
 PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
 
-  dataDir             = '/SPENCEdata/Research/Cusp/database/'
+  dataDir             = '/SPENCEdata/Research/database/'
 
   ;;db in memory
   RESTORE,dataDir+'sw_omnidata/sw_data.dat'
 
   ;;where to save data
-  culledDataStr       = "/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata.dat"
-  culledDataStructStr = '/SPENCEdata/Research/Cusp/database/processed/culled_OMNI_magdata_struct.dat'
+  culledDataStr       = "/SPENCEdata/Research/database/processed/culled_OMNI_magdata.dat"
+  culledDataStructStr = '/SPENCEdata/Research/database/processed/culled_OMNI_magdata_struct.dat'
   ;;culledDataStr = dataDir + "/processed/culled_OMNI_magdata.dat"
 
   ;;time between observations thing

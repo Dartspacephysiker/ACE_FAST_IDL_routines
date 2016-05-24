@@ -59,7 +59,7 @@ PRO SW_DATA_PLOTTER_AND_DARTDB_IND_GETTER, $
    OUTFILE=outFile
 
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Defaults

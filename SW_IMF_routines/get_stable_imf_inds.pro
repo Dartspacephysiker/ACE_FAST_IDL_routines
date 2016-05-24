@@ -142,7 +142,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;;Restore ACE/OMNI data
      ;; IF N_ELEMENTS(mag_utc) EQ 0 THEN BEGIN
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
-     dataDir                                = "/SPENCEdata/Research/Cusp/database/"
+     dataDir                                = "/SPENCEdata/Research/database/"
      restore,dataDir + "/processed/culled_OMNI_magdata.dat"
      ;; ENDIF
 

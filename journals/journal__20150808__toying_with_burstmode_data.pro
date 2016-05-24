@@ -4,7 +4,7 @@
 ; Date: Sat Aug  8 18:44:39 2015
  
 ;restore the burst-mode file (see below for code that generated it in this form)
-;; restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/maximus_and_cdbtime--burstmode_orbs1000-16361_cleaned_and_only_gt_10current.sav'
+;; restore,'/SPENCEdata/Research/database/dartdb/saves/maximus_and_cdbtime--burstmode_orbs1000-16361_cleaned_and_only_gt_10current.sav'
 
 ;;Now it's time to plot
 plot_alfven_stats_imf_screening,maximus,clockstr='all_IMF',/orbtotplot,/include_burstdata, $

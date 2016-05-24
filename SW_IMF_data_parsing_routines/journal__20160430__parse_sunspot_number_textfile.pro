@@ -1,6 +1,6 @@
 PRO JOURNAL__20160430__PARSE_SUNSPOT_NUMBER_TEXTFILE
 
-  sn_dir             = '/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+  sn_dir             = '/SPENCEdata/Research/database/sw_omnidata/'
   sn_file            = 'Sunspot_Number--20160430--V2.txt'
   out_sn_file        = 'SSN--20160430--V2.dat'
 

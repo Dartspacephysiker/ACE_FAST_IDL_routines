@@ -2,13 +2,13 @@
 ;batch_get_inds_from_db,smoothwindow=5,stableimf=1
 
 ;first, get inds from the database for Chaston's stuff
-;; batch_get_inds_from_db,smoothwindow=5,stableimf=1,dbfile='/SPENCEdata/Research/Cusp/database/processed/maximus.dat',indprefix='original_chaston_db--', $
+;; batch_get_inds_from_db,smoothwindow=5,stableimf=1,dbfile='/SPENCEdata/Research/database/processed/maximus.dat',indprefix='original_chaston_db--', $
 ;;                        DIRECTIONS=['all_IMF','dawnward', 'duskward'],/do_chastdb ;default
 ;you'll need these lines, trust me:
   ;; ind_n_orbs=where(maximus.char_elec_energy GE charERange[0] AND maximus.char_elec_energy LE charERange[1])
 
 ;chaston ind files
-chastDBFile = '/SPENCEdata/Research/Cusp/database/processed/maximus.dat'
+chastDBFile = '/SPENCEdata/Research/database/processed/maximus.dat'
 
 chastDB_dawn_ind = 'PLOT_INDICES_original_chaston_db--North_dawnward--1stable--5min_IMFsmooth--OMNI_GSM_Apr_ 2_15.sav'
 chastDB_dusk_ind = 'PLOT_INDICES_original_chaston_db--North_duskward--1stable--5min_IMFsmooth--OMNI_GSM_Apr_ 2_15.sav'

@@ -7,10 +7,10 @@ PRO LOAD_OMNI_DB,sw_data, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  defSWDBDir           = '/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+  defSWDBDir           = '/SPENCEdata/Research/database/sw_omnidata/'
   defSWDBFile          = 'sw_data.dat'
 
-  defCulledSWDBDir     = '/SPENCEdata/Research/Cusp/database/processed/'
+  defCulledSWDBDir     = '/SPENCEdata/Research/database/processed/'
   defCulledSWDBFile    = 'culled_OMNI_magdata_struct.dat'
 
   IF N_ELEMENTS(swDBDir) EQ 0 THEN BEGIN

@@ -2,7 +2,7 @@ PRO JOURNAL__20160430__GENERATE_DIPOLE_TILT_DATA_FROM_GEOPACK
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;output
-  outDir          = '/SPENCEdata/Research/Cusp/database/geopack_data/'
+  outDir          = '/SPENCEdata/Research/database/geopack_data/'
   outFile         = 'GEOPACK--dipole_tilt_angle--1990--2010.dat'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

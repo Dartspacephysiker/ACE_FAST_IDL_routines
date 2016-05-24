@@ -32,7 +32,7 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
   ;;If using cleaned DB, use all indices!
   ;;  IF KEYWORD_SET(cleaned_DB) THEN db_i=lindgen(n_elements(cleaned_DB.time))
 
-  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/database/"
 
   ;;********************************************************
   ;;Restore ACE/OMNI data, if need be

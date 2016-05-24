@@ -7,10 +7,10 @@ PRO LOAD_TILTANGLE_DB,tiltAngle, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  deftAngleDBDir           = '/SPENCEdata/Research/Cusp/database/geopack_data/'
+  deftAngleDBDir           = '/SPENCEdata/Research/database/geopack_data/'
   deftAngleDBFile          = 'GEOPACK--dipole_tilt_angle--1990--2010.dat'
 
-  ;; defCulledSWDBDir     = '/SPENCEdata/Research/Cusp/database/processed/'
+  ;; defCulledSWDBDir     = '/SPENCEdata/Research/database/processed/'
   ;; defCulledSWDBFile    = 'culled_OMNI_magdata_struct.dat'
 
   IF N_ELEMENTS(tAngleDBDir) EQ 0 THEN BEGIN

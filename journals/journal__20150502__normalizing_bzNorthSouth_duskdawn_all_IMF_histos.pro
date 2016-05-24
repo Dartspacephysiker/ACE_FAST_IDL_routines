@@ -2,15 +2,15 @@
 ;11:55 p.m. on Saturday night... 20150502
 
 ;files
-allIMF_file='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--all_IMF_180.00-180.00deg--OMNI_GSM--byMin_0.0--stableIMF_0min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14999--timehisto--20150420.sav'
+allIMF_file='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--all_IMF_180.00-180.00deg--OMNI_GSM--byMin_0.0--stableIMF_0min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14999--timehisto--20150420.sav'
 
-dawn_file='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--dawnward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs520-10983--timehisto--20150420.sav'
+dawn_file='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--dawnward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs520-10983--timehisto--20150420.sav'
 
-dusk_file='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--duskward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14976--timehisto--20150420.sav'
+dusk_file='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--duskward_45.00-135.00deg--OMNI_GSM--byMin_5.0--stableIMF_1min--delay_660--smoothWindow_5min--6-18-0.75_MLT--60-84-2_ILAT--orbs500-14976--timehisto--20150420.sav'
 
-bzNorth_file='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--bzNorth_45.00-135.00deg--OMNI_GSM--byMin_0.0--bzMin_2.0--stableIMF_1min--delay_660--smoothWindow_5min.sav'
+bzNorth_file='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--bzNorth_45.00-135.00deg--OMNI_GSM--byMin_0.0--bzMin_2.0--stableIMF_1min--delay_660--smoothWindow_5min.sav'
 
-bzSouth_file='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--bzSouth_45.00-135.00deg--OMNI_GSM--byMin_0.0--bzMin_2.0--stableIMF_1min--delay_660--smoothWindow_5min.sav'
+bzSouth_file='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--bzSouth_45.00-135.00deg--OMNI_GSM--byMin_0.0--bzMin_2.0--stableIMF_1min--delay_660--smoothWindow_5min.sav'
 
 ;;;;;;;;
 ;all IMF 
@@ -141,4 +141,4 @@ save, $
    bzSouth_timehisto,bzSouth_timehisto_normalized,bzSouth_min_i, $
    allimf_normedTimeHisto_struct,dawn_normedTimeHisto_struct,dusk_normedTimeHisto_struct, bzNorth_normedTimeHisto_struct, bzSouth_normedTimeHisto_struct, $
    allimf_temp_or_rawfile, dawn_temp_or_rawfile, dusk_temp_or_rawfile, bzNorth_temp_or_rawfile, bzSouth_temp_or_rawfile, $
-   filename='/SPENCEdata/Research/Cusp/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--normalized_timehistos--all_IMF-dawn-dusk-bzNorthSouth--20150502.sav'
+   filename='/SPENCEdata/Research/database/dartdb/saves/fastLoc_timeHistos/fastLoc_intervals2--normalized_timehistos--all_IMF-dawn-dusk-bzNorthSouth--20150502.sav'

@@ -22,7 +22,7 @@ FUNCTION GET_OMNI_IMF_INDS_AND_QUANTITIES,satellite, $
   COMPILE_OPT idl2
 
   IF ~KEYWORD_SET(lun) THEN lun           = -1
-  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/Cusp/database/"
+  IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/database/"
 
   ;;********************************************************
   ;;Restore ACE/OMNI data, if need be

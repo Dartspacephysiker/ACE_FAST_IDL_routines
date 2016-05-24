@@ -7,10 +7,10 @@ PRO LOAD_SSN_DB,ssn, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  defSSNDBDir           = '/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+  defSSNDBDir           = '/SPENCEdata/Research/database/sw_omnidata/'
   defSSNDBFile          = 'SSN--20160430--V2.dat'
 
-  ;; defCulledSWDBDir     = '/SPENCEdata/Research/Cusp/database/processed/'
+  ;; defCulledSWDBDir     = '/SPENCEdata/Research/database/processed/'
   ;; defCulledSWDBFile    = 'culled_OMNI_magdata_struct.dat'
 
   IF N_ELEMENTS(ssnDBDir) EQ 0 THEN BEGIN

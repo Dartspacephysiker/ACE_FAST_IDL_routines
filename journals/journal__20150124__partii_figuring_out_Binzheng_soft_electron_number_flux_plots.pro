@@ -3,7 +3,7 @@
 ;;for electron energy flux--that the vast, vast majority of events are not the outliers.
 ;;At the bottom I think you'll discover that the proper way to go about this is to restrict the data
 ;;to something like -1e7 through 1e7, or maybe less
-restore,'/SPENCEdata/Research/Cusp/database/dartdb/saves/Dartdb_01242015_maximus.sav'
+restore,'/SPENCEdata/Research/database/dartdb/saves/Dartdb_01242015_maximus.sav'
 help,maximus,/str
 ;;** Structure <de47c8>, 46 tags, length=52204440, data length=52204430, refs=1:
 ;;  ORBIT           INT       Array[269095]

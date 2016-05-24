@@ -12,7 +12,7 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
 
   ;; SAVE_IF_RECALC_SET                           = 1
 
-  ;; outDir                                       = '/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+  ;; outDir                                       = '/SPENCEdata/Research/database/sw_omnidata/'
   ;; outFile                                      = 'OMNI_ind_streaks.dat'
 
   ;; IF N_ELEMENTS(C_OMNI__StreakDurArr) EQ 0 OR KEYWORD_SET(recalculate) THEN BEGIN

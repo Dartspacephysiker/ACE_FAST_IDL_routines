@@ -3,7 +3,7 @@
 ;statistical auroral oval. To fix that, I'm generating a binary array that indicates whether
 ;or not an event is above the statistical auroral oval
 
-dataDir='/SPENCEdata/Research/Cusp/database/dartdb/saves/'
+dataDir='/SPENCEdata/Research/database/dartdb/saves/'
 DBFile='Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 
 restore,dataDir+DBFile
