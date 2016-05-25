@@ -135,7 +135,7 @@ print,min(maximus.orbit,max=maxOrb) & print,maxOrb
 ;   14979
 .full_reset_session
 ; % Program caused arithmetic error: Floating divide by 0
-;Data dir set to /SPENCEdata2/Research/Cusp/database/
+;Data dir set to /SPENCEdata2/Research/database/
 .run "/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/plot_alfven_stats_imf_screening.pro"
 ; % Syntax error.
 ; % 1 Compilation error(s) in module PLOT_ALFVEN_STATS_IMF_SCREENING.
