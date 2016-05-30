@@ -356,6 +356,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SUFFIX_PLOTDIR=suffix_plotDir, $
                                     PLOTPREFIX=plotPrefix, $
                                     PLOTSUFFIX=plotSuffix, $
+                                    SAVE_ALF_INDICES=save_alf_indices, $
                                     TXTOUTPUTDIR=txtOutputDir, $
                                     SUFFIX_TXTDIR=suffix_txtDir, $
                                     MEDHISTOUTDATA=medHistOutData, $
@@ -703,7 +704,72 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MASKMIN=maskMin, $
                              LUN=lun
 
-
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Saving indices?
+  IF KEYWORD_SET(save_alf_indices) THEN BEGIN
+     IF N_ELEMENTS(paramString_list) GT 0 THEN BEGIN
+        alfDB_ind_filename    = paramString_list.toArray() + '--' + 'alfDB_indices.sav'
+     ENDIF ELSE BEGIN
+        alfDB_ind_filename    = paramString + '--' + 'alfDB_indices.sav'
+     ENDELSE
+     alfDB_ind_fileDir     = plotDir + '../../saves_output_etc/'
+     SAVE_ALFVENDB_INDICES,alfDB_ind_filename, $
+                           alfDB_ind_fileDir, $
+                           plot_i_list, $
+                           CLOCKSTR=clockStr, $
+                           ANGLELIM1=angleLim1, $
+                           ANGLELIM2=angleLim2, $
+                           ORBRANGE=orbRange, $
+                           ALTITUDERANGE=altitudeRange, $
+                           CHARERANGE=charERange, $
+                           minMLT=minM, $
+                           maxMLT=maxM, $
+                           BINMLT=binM, $
+                           SHIFTMLT=shiftM, $
+                           MINILAT=minI, $
+                           MAXILAT=maxI, $
+                           BINILAT=binI, $
+                           DO_LSHELL=do_lShell, $
+                           MINLSHELL=minL, $
+                           MAXLSHELL=maxL, $
+                           BINLSHELL=binL, $
+                           MIN_MAGCURRENT=minMC, $
+                           MAX_NEGMAGCURRENT=maxNegMC, $
+                           HWMAUROVAL=HwMAurOval, $
+                           HWMKPIND=HwMKpInd, $
+                           BYMIN=byMin, $
+                           BYMAX=byMax, $
+                           BZMIN=bzMin, $
+                           BZMAX=bzMax, $
+                           BTMIN=btMin, $
+                           BTMAX=btMax, $
+                           BXMIN=bxMin, $
+                           BXMAX=bxMax, $
+                           DO_ABS_BYMIN=abs_byMin, $
+                           DO_ABS_BYMAX=abs_byMax, $
+                           DO_ABS_BZMIN=abs_bzMin, $
+                           DO_ABS_BZMAX=abs_bzMax, $
+                           DO_ABS_BTMIN=abs_btMin, $
+                           DO_ABS_BTMAX=abs_btMax, $
+                           DO_ABS_BXMIN=abs_bxMin, $
+                           DO_ABS_BXMAX=abs_bxMax, $
+                           BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                           PARAMSTRING=paramString, $
+                           PARAMSTR_LIST=paramString_list, $
+                           PARAMSTRPREFIX=plotPrefix, $
+                           PARAMSTRSUFFIX=plotSuffix,$
+                           SATELLITE=satellite, $
+                           OMNI_COORDS=omni_Coords, $
+                           HEMI=hemi, $
+                           DELAY=delay, $
+                           MULTIPLE_DELAYS=multiple_delays, $
+                           MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                           STABLEIMF=stableIMF, $
+                           SMOOTHWINDOW=smoothWindow, $
+                           INCLUDENOCONSECDATA=includeNoConsecData, $
+                           HOYDIA=hoyDia, $
+                           MASKMIN=maskMin
+  ENDIF
 
   ;;********************************************************
   ;;HISTOS

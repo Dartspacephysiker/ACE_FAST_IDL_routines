@@ -155,6 +155,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    PLOTDIR=plotDir, $
    PLOTPREFIX=plotPrefix, $
    PLOTSUFFIXES=plotSuffixes, $
+   SAVE_ALF_INDICES=save_alf_indices, $
    TXTOUTPUTDIR=txtOutputDir, $
    MEDHISTOUTDATA=medHistOutData, $
    MEDHISTOUTTXT=medHistOutTxt, $
@@ -410,6 +411,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      PLOTDIR=plotDir, $
                                      PLOTPREFIX=plotPrefix, $
                                      PLOTSUFFIX=plotSuffix, $
+                                     SAVE_ALF_INDICES=save_alf_indices, $
                                      TXTOUTPUTDIR=txtOutputDir, $
                                      MEDHISTOUTDATA=medHistOutData, $
                                      MEDHISTOUTTXT=medHistOutTxt, $
