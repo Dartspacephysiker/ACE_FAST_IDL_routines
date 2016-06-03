@@ -110,6 +110,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
    THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
    THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
    THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
+   NEWELLPLOTS=newellPlots, $
+   NEWELL_PLOTRANGE=newell_plotRange, $
+   LOG_NEWELLPLOT=log_newellPlot, $
+   NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
+   NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -366,6 +371,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING__DAWNDUSK,maximus, $
                                      THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
                                      THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
                                      THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
+                                     NEWELLPLOTS=newellPlots, $
+                                     NEWELL_PLOTRANGE=newell_plotRange, $
+                                     LOG_NEWELLPLOT=log_newellPlot, $
+                                     NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
+                                     NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
                                      TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                      TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                      LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
