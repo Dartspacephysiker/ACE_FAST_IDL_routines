@@ -263,6 +263,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                                     NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
                                     NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+                                    NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
+                                    NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                                     PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                     NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                     IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -316,6 +318,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     LOG_NEWELLPLOT=log_newellPlot, $
                                     NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
                                     NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+                                    NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -964,6 +967,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            LOG_NEWELLPLOT=log_newellPlot, $
                            NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
                            NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+                           NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
                            TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                            TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
