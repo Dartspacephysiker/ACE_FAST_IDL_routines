@@ -197,6 +197,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ORBRANGE=orbRange, $
                                     ALTITUDERANGE=altitudeRange, $
                                     CHARERANGE=charERange, $
+                                    CHARIERANGE=charIERange, $ ;;Only applicable for non-Alfvén stuff
                                     POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     NUMORBLIM=numOrbLim, $
@@ -593,6 +594,91 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ENDIF
          END
      ENDCASE
+  ENDIF
+
+  IF KEYWORD_SET(nonAlfven_flux_plots) THEN BEGIN
+
+     GET_NONALFVEN_FLUX_DATA,plot_i, $
+                             FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
+                             FOR_IMF_SCREENING=for_IMF_screening, $
+                             NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
+                             DESPUN_ALF_DB=do_despunDB, $
+                             T1_ARR=t1_arr,T2_ARR=t2_arr, $
+                             EPLOTS=ePlots, $
+                             EFLUXPLOTTYPE=eFluxPlotType, $
+                             ENUMFLPLOTS=eNumFlPlots, $
+                             ENUMFLPLOTTYPE=eNumFlPlotType, $
+                             IONPLOTS=ionPlots, $
+                             IFLUXPLOTTYPE=iFluxPlotType, $
+                             OUT_EFLUX_DATA=eFlux_nonAlfven_data, $
+                             OUT_ENUMFLUX_DATA=eNumFlux_nonAlfven_data, $
+                             OUT_IFLUX_DATA=iFlux_nonAlfven_data, $
+                             OUT_INUMFLUX_DATA=iNumFlux_nonAlfven_data, $
+                             INDICES__NONALFVEN_ESPEC=indices__nonAlfven_eSpec, $
+                             INDICES__NONALFVEN_ION=indices__nonAlfven_ion, $
+                             ESPEC__MLTS=eSpec__mlts, $
+                             ESPEC__ILATS=eSpec__ilats, $
+                             ION__MLTS=ion__mlts, $
+                             ION__ILATS=ion__ilats, $
+                             ORBRANGE=orbRange, $
+                             ALTITUDERANGE=altitudeRange, $
+                             CHARERANGE=charERange, $
+                             CHARIERANGE=charIERange, $
+                             BOTH_HEMIS=both_hemis, $
+                             NORTH=north, $
+                             SOUTH=south, $
+                             HEMI=hemi, $
+                             HWMAUROVAL=HwMAurOval, $
+                             HWMKPIND=HwMKpInd, $
+                             MINMLT=minM, $
+                             MAXMLT=maxM, $
+                             BINM=binM, $
+                             MINILAT=minI, $
+                             MAXILAT=maxI, $
+                             BINILAT=binI, $
+                             ;; DO_LSHELL=do_lshell, $
+                             ;; MINLSHELL=minL, $
+                             ;; MAXLSHELL=maxL, $
+                             ;; BINLSHELL=binL, $
+                             DAYSIDE=dayside, $
+                             NIGHTSIDE=nightside, $
+                             SATELLITE=satellite, $
+                             SMOOTH_IMF=smoothWindow, $
+                             BYMIN=byMin, $
+                             BYMAX=byMax, $
+                             BZMIN=bzMin, $
+                             BZMAX=bzMax, $
+                             BTMIN=btMin, $
+                             BTMAX=btMax, $
+                             BXMIN=bxMin, $
+                             BXMAX=bxMax, $
+                             DO_ABS_BYMIN=abs_byMin, $
+                             DO_ABS_BYMAX=abs_byMax, $
+                             DO_ABS_BZMIN=abs_bzMin, $
+                             DO_ABS_BZMAX=abs_bzMax, $
+                             DO_ABS_BTMIN=abs_btMin, $
+                             DO_ABS_BTMAX=abs_btMax, $
+                             DO_ABS_BXMIN=abs_bxMin, $
+                             DO_ABS_BXMAX=abs_bxMax, $
+                             RESET_OMNI_INDS=reset_omni_inds, $
+                             CLOCKSTR=clockStr, $
+                             DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                             RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                             /DO_NOT_SET_DEFAULTS, $
+                             BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                             MULTIPLE_DELAYS=multiple_delays, $
+                             RESOLUTION_DELAY=delay_res, $
+                             BINOFFSET_DELAY=binOffset_delay, $
+                             MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                             STABLEIMF=stableIMF, $
+                             DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                             OMNI_COORDS=omni_Coords, $
+                             ANGLELIM1=angleLim1, $
+                             ANGLELIM2=angleLim2, $
+                             ;; GET_ESPEC_I_NOT_ION_I=get_eSpec_i, $
+                             RESET_GOOD_INDS=reset_good_inds, $
+                             /DO_NOT_SET_DEFAULTS
+
   ENDIF
 
   plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
