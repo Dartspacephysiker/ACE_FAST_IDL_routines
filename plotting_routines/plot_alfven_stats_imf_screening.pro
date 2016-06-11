@@ -600,7 +600,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      GET_NONALFVEN_FLUX_DATA,plot_i, $
                              FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
-                             FOR_IMF_SCREENING=for_IMF_screening, $
+                             /FOR_IMF_SCREENING, $
+                             ;; FOR_IMF_SCREENING=for_IMF_screening, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                              DESPUN_ALF_DB=do_despunDB, $
                              T1_ARR=t1_arr,T2_ARR=t2_arr, $
