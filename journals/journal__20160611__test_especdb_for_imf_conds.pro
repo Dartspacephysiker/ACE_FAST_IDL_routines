@@ -3,148 +3,156 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
 
   COMPILE_OPT IDL2
 
-  multiple_IMF_clockAngles = 1
-  tiling_order    = [7,0,1,6,-9,2,5,4,3]
-  clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
-  angleLim1       = 67.5
-  angleLim2       = 112.5  
+  multiple_IMF_clockAngles     = 1
+  tiling_order                 = [7,0,1,6,-9,2,5,4,3]
+  clockStrings                 = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
+  angleLim1                    = 67.5
+  angleLim2                    = 112.5
 
   ;;DB stuff
-  do_despun                = 0
+  do_despun                    = 1
 
-  autoscale_fluxPlots      = 0
-
+  ;; autoscale_fluxPlots          = 0
+  newell_analyze_eFlux         = 1
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;NEWELL PLOTS
-  newell_plotRange         = [1,500] 
-  ;; log_newellPlot           = 1
-  newellPlot_autoscale     = 0
-  newellPlot_normalize     = 0
-
+  newell_plotRange             = [1,500]
+  ;; log_newellPlot              = 1
+  newellPlot_autoscale         = 0
+  newellPlot_normalize         = 0
+  newellPlot_probOccurrence    = 1
+  newell_plotRange             = [0.1,1]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
-  newellPlots              = 1
-  eNumFlPlots              = 0
-  pPlots                   = 0
-  ionPlots                 = 0
-  probOccurrencePlot       = 0
+  newellPlots                  = 1
+  ePlots                       = 1
+  eNumFlPlots                  = 0
+  pPlots                       = 0
+  ionPlots                     = 0
+  probOccurrencePlot           = 0
 
-  ;; eNumFlPlotType           = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl              = [1,1]
-  ;; ;; logENumFlPlot            = [1,1]
-  ;; ;; ENumFlPlotRange          = [[1e-2,1e0], $
+  ;; eNumFlPlotType            = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  ;; noNegENumFl               = [1,1]
+  ;; ;; logENumFlPlot          = [1,1]
+  ;; ;; ENumFlPlotRange        = [[1e-2,1e0], $
   ;; ;;                             [1e6,1e9]]
-  ;; logENumFlPlot            = [0,0]
-  ;; ENumFlPlotRange          = [[0,0.5], $
+  ;; logENumFlPlot             = [0,0]
+  ;; ENumFlPlotRange           = [[0,0.5], $
   ;;                             [0,5e8]]
 
+  ePlotRange                   = [1e-1,1e1]
+  ;; eFluxPlotType                =
+  logEfPlot                    = 1
+  noNegEflux                   = 1
+
+
   ;;junking electron energy--who needs it?
-  eNumFlPlotType           = 'ESA_Number_flux'
-  noNegENumFl              = 1
-  ;; logENumFlPlot            = [1,1]
-  ;; ENumFlPlotRange          = [[1e-2,1e0], $
+  eNumFlPlotType               = 'ESA_Number_flux'
+  noNegENumFl                  = 1
+  ;; logENumFlPlot             = [1,1]
+  ;; ENumFlPlotRange           = [[1e-2,1e0], $
   ;;                             [1e6,1e9]]
-  logENumFlPlot            = 0
-  ENumFlPlotRange          = [0,2e9]
+  logENumFlPlot                = 0
+  ENumFlPlotRange              = [0,2e9]
 
 
-  ;; logPfPlot                = 1
-  ;; PPlotRange               = [1e-2,1e0]
-  logPfPlot                = 0
-  PPlotRange               = [0,1.0]
+  ;; logPfPlot                 = 1
+  ;; PPlotRange                = [1e-2,1e0]
+  logPfPlot                    = 0
+  PPlotRange                   = [0,1.0]
 
-  ifluxPlotType            = 'Integ_Up'
-  noNegIflux               = 1
-  ;; logIfPlot                = 1
-  ;; IPlotRange               = [1e6,1e8]
-  logIfPlot                = 0
-  IPlotRange               = [0,1e8]
-  
-  logProbOccurrence        = 0
-  probOccurrenceRange      = [0,0.15]
+  ifluxPlotType                = 'Integ_Up'
+  noNegIflux                   = 1
+  ;; logIfPlot                 = 1
+  ;; IPlotRange                = [1e6,1e8]
+  logIfPlot                    = 0
+  IPlotRange                   = [0,1e8]
+
+  logProbOccurrence            = 0
+  probOccurrenceRange          = [0,0.15]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  reset_good_inds             = 1
+  reset_good_inds              = 1
 
-  tile_images                 = 1
-  group_like_plots_for_tiling = 1
-  scale_like_plots_for_tiling = 0
-  ;; tiling_order             = [2,0,1]
-  n_tile_columns              = 3
-  n_tile_rows                 = 3
-  tilePlotSuff                = "--a_la_Zhang_2014"
+  tile_images                  = 1
+  group_like_plots_for_tiling  = 1
+  scale_like_plots_for_tiling  = 0
+  ;; tiling_order              = [2,0,1]
+  n_tile_columns               = 3
+  n_tile_rows                  = 3
+  tilePlotSuff                 = "--a_la_Zhang_2014"
 
-  ;; altRange                 = [[340,1180], $
+  ;; altRange                  = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[3000,4180]]
+  altRange                     = [[3000,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
-  ;; btMax                          = 5
+  btMin                        = 5
+  ;; btMax                     = 5
 
   ;;Delay stuff
-  nDelays                        = 1
-  delayDeltaSec                  = 1800
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  nDelays                      = 1
+  delayDeltaSec                = 1800
+  delayArr                     = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  reset_omni_inds                = 1
-                                                                                                           
+  reset_omni_inds              = 1
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 86
+  hemi                         = 'NORTH'
+  minILAT                      = 61
+  maxILAT                      = 86
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -61
+  ;; hemi                      = 'SOUTH'
+  ;; minILAT                   = -86
+  ;; maxILAT                   = -61
 
-  ;; binILAT                        = 2.0
-  binILAT                        = 5.0
+  ;; binILAT                   = 2.0
+  binILAT                      = 5.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  binMLT                       = 1.0
+  shiftMLT                     = 0.5
 
-  ;; minMLT                         = 6
-  ;; maxMLT                         = 18
+  ;; minMLT                    = 6
+  ;; maxMLT                    = 18
 
   ;;Bonus
-  maskMin                        = 10
+  maskMin                      = 10
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      IF KEYWORD_SET(minMC) THEN BEGIN
-        magCStr    = STRING(FORMAT='("--ABSmagc_GE_",I0)',minMC)
-        magCTitStr = STRING(FORMAT='(", magc GE ",I0)',minMC)
+        magCStr                = STRING(FORMAT='("--ABSmagc_GE_",I0)',minMC)
+        magCTitStr             = STRING(FORMAT='(", magc GE ",I0)',minMC)
      ENDIF ELSE BEGIN
-        magCStr    = ''
-        magCTitStr = ''
+        magCStr                = ''
+        magCTitStr             = ''
      ENDELSE
 
-     altitudeRange = altRange[*,i]
-     altStr        = STRING(FORMAT='("--",I0,"-",I0,A0)', $
+     altitudeRange             = altRange[*,i]
+     altStr                    = STRING(FORMAT='("--",I0,"-",I0,A0)', $
                             altitudeRange[0], $
                             altitudeRange[1], $
                             magCStr)
-     ;; tilePlotTitle = STRING(FORMAT='(I0,"-",I0," km, Poynting flux $\geq$ ",I0," mW m!U-2!N")',altitudeRange[0],altitudeRange[1],pFluxMin)
-     tilePlotTitle = STRING(FORMAT='(I0,"-",I0," km",A0)', $
+     ;; tilePlotTitle          = STRING(FORMAT='(I0,"-",I0," km, Poynting flux $\geq$ ",I0," mW m!U-2!N")',altitudeRange[0],altitudeRange[1],pFluxMin)
+     tilePlotTitle             = STRING(FORMAT='(I0,"-",I0," km",A0)', $
                             altitudeRange[0], $
                             altitudeRange[1], $
                             magCTitStr)
 
-     IMFStr        = ['1--bzNorth','2--dusk-north','3--duskward','4--dusk-south','5--bzSouth','6--dawn-south','7--dawnward','8--dawn-north']
-     IMFTitle      = ['B!Dz!N North','Dusk-North','Duskward','Dusk-South','B!Dz!N South','Dawn-South','Dawnward','Dawn-north']
+     IMFStr                    = ['1--bzNorth','2--dusk-north','3--duskward','4--dusk-south','5--bzSouth','6--dawn-south','7--dawnward','8--dawn-north']
+     IMFTitle                  = ['B!Dz!N North','Dusk-North','Duskward','Dusk-South','B!Dz!N South','Dawn-South','Dawnward','Dawn-north']
 
-     IF N_ELEMENTS(byMax) GT 0 THEN BEGIN 
+     IF N_ELEMENTS(byMax) GT 0 THEN BEGIN
         IMFStr += '--byMax_' + STRCOMPRESS(byMax,/REMOVE_ALL)
         IMFTitle += ' B!Dy!N Max: ' + STRCOMPRESS(byMax,/REMOVE_ALL) + 'nT'
      ENDIF
@@ -152,7 +160,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         IMFStr += '--byMin_' + STRCOMPRESS(byMin,/REMOVE_ALL)
         IMFTitle += ' B!Dy!N Min: ' + STRCOMPRESS(byMin,/REMOVE_ALL) + 'nT'
      ENDIF
-     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
+     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN
         IMFStr += '--bzMax_' + STRCOMPRESS(bzMax,/REMOVE_ALL)
         IMFTitle += ' B!Dz!N Max: ' + STRCOMPRESS(bzMax,/REMOVE_ALL) + 'nT'
      ENDIF
@@ -160,7 +168,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         IMFStr += '--bzMin_' + STRCOMPRESS(bzMin,/REMOVE_ALL)
         IMFTitle += ' B!Dz!N Min: ' + STRCOMPRESS(bzMin,/REMOVE_ALL) + 'nT'
      ENDIF
-     IF N_ELEMENTS(btMax) GT 0 THEN BEGIN 
+     IF N_ELEMENTS(btMax) GT 0 THEN BEGIN
         IMFStr += '--btMax_' + STRCOMPRESS(btMax,/REMOVE_ALL)
         IMFTitle += ' B!Dt!N Max: ' + STRCOMPRESS(btMax,/REMOVE_ALL) + 'nT'
      ENDIF
@@ -169,10 +177,10 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(btMin,/REMOVE_ALL) + 'nT'
      ENDIF
 
-     tilePlotSuffs       = tilePlotSuff
-     tilePlotTitles      = IMFTitle + ' ' + tilePlotTitle
+     tilePlotSuffs             = tilePlotSuff
+     tilePlotTitles            = IMFTitle + ' ' + tilePlotTitle
 
-     plotSuffs           = '--'+IMFStr+altStr
+     plotSuffs                 = '--'+IMFStr+altStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
@@ -231,13 +239,29 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         MAINPHASE=mainPhase, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
-        EPLOTRANGE=ePlotRange, $                                       
-        EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-        ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-        ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-        NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
-        PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-        NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
+        EPLOTRANGE=ePlotRange, $
+        EFLUXPLOTTYPE=eFluxPlotType, $
+        LOGEFPLOT=logEfPlot, $
+        ABSEFLUX=abseflux, $
+        NOPOSEFLUX=noPosEFlux, $
+        NONEGEFLUX=noNegEflux, $
+        ENUMFLPLOTS=eNumFlPlots, $
+        ENUMFLPLOTTYPE=eNumFlPlotType, $
+        LOGENUMFLPLOT=logENumFlPlot, $
+        ABSENUMFL=absENumFl, $
+        NONEGENUMFL=noNegENumFl, $
+        NOPOSENUMFL=noPosENumFl, $
+        ENUMFLPLOTRANGE=ENumFlPlotRange, $
+        NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+        NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
+        NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
+        PPLOTS=pPlots, $
+        LOGPFPLOT=logPfPlot, $
+        ABSPFLUX=absPflux, $
+        NONEGPFLUX=noNegPflux, $
+        NOPOSPFLUX=noPosPflux, $
+        PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
         NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
         OXYPLOTS=oxyPlots, $
@@ -309,6 +333,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         LOG_NEWELLPLOT=log_newellPlot, $
         NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
         NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+        NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, RAWDIR=rawDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
@@ -342,7 +367,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         ;; /GET_PARAMSTR_LIST_LIST, $
         ;; PLOT_I_LIST_LIST=plot_i_list_list, $
         ;; PARAMSTR_LIST_LIST=paramStr_list_list
-  
+
   ENDFOR
 
 END

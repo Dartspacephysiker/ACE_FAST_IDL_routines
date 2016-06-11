@@ -257,17 +257,29 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
                                     EPLOTRANGE=ePlotRange, $                                       
-                                    EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-                                    ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-                                    ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-                                    NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                                    EFLUXPLOTTYPE=eFluxPlotType, $
+                                    LOGEFPLOT=logEfPlot, $
+                                    ABSEFLUX=abseflux, $
+                                    NOPOSEFLUX=noPosEFlux, $
+                                    NONEGEFLUX=noNegEflux, $
+                                    ENUMFLPLOTS=eNumFlPlots, $
+                                    ENUMFLPLOTTYPE=eNumFlPlotType, $
+                                    LOGENUMFLPLOT=logENumFlPlot, $
+                                    ABSENUMFL=absENumFl, $
+                                    NONEGENUMFL=noNegENumFl, $
+                                    NOPOSENUMFL=noPosENumFl, $
+                                    ENUMFLPLOTRANGE=ENumFlPlotRange, $
                                     AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                                     NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
                                     NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
-                                    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-                                    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
+                                    PPLOTS=pPlots, $
+                                    LOGPFPLOT=logPfPlot, $
+                                    ABSPFLUX=absPflux, $
+                                    NONEGPFLUX=noNegPflux, $
+                                    NOPOSPFLUX=noPosPflux, $
+                                    PPLOTRANGE=PPlotRange, $
                                     IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
                                     NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
                                     OXYPLOTS=oxyPlots, $
