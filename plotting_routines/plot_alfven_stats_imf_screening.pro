@@ -407,6 +407,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUT_DATANAMEARR_list=out_dataNameArr_list, $
                                     OUT_PARAMSTRING_LIST=out_paramString_list, $
                                     OUT_PLOT_I_LIST=out_plot_i_list, $
+                                    DONT_LOAD_IN_MEMORY=nonMem, $
                                     _EXTRA = e
   
 ;;  COMPILE_OPT idl2
@@ -625,12 +626,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              ENUMFLPLOTTYPE=eNumFlPlotType, $
                              IONPLOTS=ionPlots, $
                              IFLUXPLOTTYPE=iFluxPlotType, $
+                             DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                             ESPEC_DELTA_T=eSpec_delta_t, $
+                             ION_DELTA_T=ion_delta_t, $
                              OUT_EFLUX_DATA=eFlux_nonAlfven_data, $
                              OUT_ENUMFLUX_DATA=eNumFlux_nonAlfven_data, $
                              OUT_IFLUX_DATA=iFlux_nonAlfven_data, $
                              OUT_INUMFLUX_DATA=iNumFlux_nonAlfven_data, $
-                             INDICES__NONALFVEN_ESPEC=indices__nonAlfven_eSpec, $
-                             INDICES__NONALFVEN_ION=indices__nonAlfven_ion, $
+                             INDICES__NONALFVEN_ESPEC=indices__nonAlfven_eSpec_list, $
+                             INDICES__NONALFVEN_ION=indices__nonAlfven_ion_list, $
                              ESPEC__MLTS=eSpec__mlts, $
                              ESPEC__ILATS=eSpec__ilats, $
                              ION__MLTS=ion__mlts, $
@@ -691,7 +695,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              ANGLELIM1=angleLim1, $
                              ANGLELIM2=angleLim2, $
                              ;; GET_ESPEC_I_NOT_ION_I=get_eSpec_i, $
-                             RESET_GOOD_INDS=reset_good_inds
+                             RESET_GOOD_INDS=reset_good_inds, $
+                             DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR KEYWORD_SET(nonMem)
 
   ENDIF
 
@@ -751,7 +756,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           HWMAUROVAL=HwMAurOval, $
                                                                           HWMKPIND=HwMKpInd, $
                                                                           RESET_GOOD_INDS=reset_good_inds, $
-                                                                          NO_BURSTDATA=no_burstData)
+                                                                          NO_BURSTDATA=no_burstData, $
+                                                                          DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
     
   ;;********************************************
   ;;Variables for histos
@@ -943,6 +949,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      dataNameArr                   = !NULL
      dataRawPtrArr                 = !NULL
 
+     IF KEYWORD_SET(indices__nonAlfven_ion_list) THEN BEGIN
+        indices__nonAlfven_ion = indices__nonAlfven_ion_list[iMulti]
+     ENDIF
+     IF KEYWORD_SET(indices__nonAlfven_eSpec_list) THEN BEGIN
+        indices__nonAlfven_eSpec = indices__nonAlfven_eSpec_list[iMulti]
+     ENDIF
+
      GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti], $
                            H2DSTRARR=h2dStrArr, $
                            KEEPME=keepMe, $
@@ -1025,6 +1038,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ESPEC__ILATS=eSpec__ilats, $
                            ION__MLTS=ion__mlts, $
                            ION__ILATS=ion__ilats, $
+                           ESPEC_DELTA_T=eSpec_delta_t, $
+                           ION_DELTA_T=ion_delta_t, $
                            PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                            NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                            IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $

@@ -64,7 +64,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    FOR_ESPEC_OR_ION_DB=for_eSpec_or_ion_db, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-   DO_NOT_SET_DEFAULTS=do_not_set_defaults
+   DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
+   GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $   ;NOTE: DON'T CONFUSE THIS WITH FOR_ESPEC_OR_ION_DB
+   DONT_LOAD_IN_MEMORY=nonMem
 
   
   COMPILE_OPT idl2
@@ -78,56 +80,58 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      PRINT,'Getting eSpec/ion DB indices for specified IMF conditions ...'
 
      good_i                            = GET_ESPEC_ION_DB_IND(dbStruct,lun, $
-                                                               FOR_ALFVEN_DB=for_alfven_db, $
-                                                               ;; DBFILE=dbfile, $
-                                                               ;; DBDIR=dbDir, $
-                                                               ORBRANGE=orbRange, $
-                                                               ALTITUDERANGE=altitudeRange, $
-                                                               CHARERANGE=charERange, $
-                                                               CHARIERANGE=charIERange, $
-                                                               BOTH_HEMIS=both_hemis, $
-                                                               HEMI=hemi, $
-                                                               HWMAUROVAL=HwMAurOval, $
-                                                               HWMKPIND=HwMKpInd, $
-                                                               MINMLT=minM, $
-                                                               MAXMLT=maxM, $
-                                                               BINM=binM, $
-                                                               MINILAT=minI, $
-                                                               MAXILAT=maxI, $
-                                                               BINILAT=binI, $
-                                                               ;; DO_LSHELL=do_lshell, $
-                                                               ;; MINLSHELL=minL, $
-                                                               ;; MAXLSHELL=maxL, $
-                                                               ;; BINLSHELL=binL, $
-                                                               ;; DAYSIDE=dayside, $
-                                                               ;; NIGHTSIDE=nightside, $
-                                                               ;; /GET_ESPEC_I_NOT_ION_I, $
-                                                               ;; GET_ION_I=get_ion_i, $
-                                                               RESET_GOOD_INDS=reset_good_inds, $
-                                                               DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
-                                                               ;; /DONT_LOAD_IN_MEMORY, $
-                                                               ;; DONT_LOAD_IN_MEMORY=nonMem, $
-                                                               /PRINT_PARAM_SUMMARY)
+                                                              FOR_ALFVEN_DB=for_alfven_db, $
+                                                              ;; DBFILE=dbfile, $
+                                                              ;; DBDIR=dbDir, $
+                                                              ORBRANGE=orbRange, $
+                                                              ALTITUDERANGE=altitudeRange, $
+                                                              CHARERANGE=charERange, $
+                                                              CHARIERANGE=charIERange, $
+                                                              BOTH_HEMIS=both_hemis, $
+                                                              HEMI=hemi, $
+                                                              HWMAUROVAL=HwMAurOval, $
+                                                              HWMKPIND=HwMKpInd, $
+                                                              MINMLT=minM, $
+                                                              MAXMLT=maxM, $
+                                                              BINM=binM, $
+                                                              MINILAT=minI, $
+                                                              MAXILAT=maxI, $
+                                                              BINILAT=binI, $
+                                                              ;; DO_LSHELL=do_lshell, $
+                                                              ;; MINLSHELL=minL, $
+                                                              ;; MAXLSHELL=maxL, $
+                                                              ;; BINLSHELL=binL, $
+                                                              ;; DAYSIDE=dayside, $
+                                                              ;; NIGHTSIDE=nightside, $
+                                                              ;; /GET_ESPEC_I_NOT_ION_I, $
+                                                              ;; GET_ION_I=get_ion_i, $
+                                                              RESET_GOOD_INDS=reset_good_inds, $
+                                                              DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
+                                                              ;; /DONT_LOAD_IN_MEMORY, $
+                                                              DONT_LOAD_IN_MEMORY=nonMem, $
+                                                              /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN
      good_i                            = GET_CHASTON_IND(dbStruct,satellite,lun, $
-                                                          DBTIMES=dbTimes,dbfile=dbfile, $
-                                                          CHASTDB=do_chastdb, HEMI=hemi, $
-                                                          DESPUNDB=do_despunDB, $
-                                                          ORBRANGE=orbRange, $
-                                                          ALTITUDERANGE=altitudeRange, $
-                                                          CHARERANGE=charERange, $
-                                                          POYNTRANGE=poyntRange, $
-                                                          SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                                          MINMLT=minM,MAXMLT=maxM,BINM=binM, $
-                                                          MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                          DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                          MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
-                                                          HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
-                                                          RESET_GOOD_INDS=reset_good_inds, $
-                                                          DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
-                                                          NO_BURSTDATA=no_burstData, $
-                                                          GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i)
+                                                         DBTIMES=dbTimes,dbfile=dbfile, $
+                                                         CHASTDB=do_chastdb, HEMI=hemi, $
+                                                         DESPUNDB=do_despunDB, $
+                                                         ORBRANGE=orbRange, $
+                                                         ALTITUDERANGE=altitudeRange, $
+                                                         CHARERANGE=charERange, $
+                                                         POYNTRANGE=poyntRange, $
+                                                         SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                                         MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                                                         MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                         DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                         MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
+                                                         HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
+                                                         RESET_GOOD_INDS=reset_good_inds, $
+                                                         DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
+                                                         NO_BURSTDATA=no_burstData, $
+                                                         GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
+                                                         FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                                         DONT_LOAD_IN_MEMORY=nonMem)
 
   ENDELSE
 
