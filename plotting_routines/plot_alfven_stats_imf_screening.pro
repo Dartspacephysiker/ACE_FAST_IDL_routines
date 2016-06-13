@@ -274,6 +274,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
+                                    NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
                                     ABSPFLUX=absPflux, $
@@ -615,6 +616,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              /FOR_IMF_SCREENING, $
                              ;; FOR_IMF_SCREENING=for_IMF_screening, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
+                             NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                              DESPUN_ALF_DB=do_despunDB, $
                              T1_ARR=t1_arr,T2_ARR=t2_arr, $
                              EPLOTS=ePlots, $
@@ -689,8 +691,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              ANGLELIM1=angleLim1, $
                              ANGLELIM2=angleLim2, $
                              ;; GET_ESPEC_I_NOT_ION_I=get_eSpec_i, $
-                             RESET_GOOD_INDS=reset_good_inds, $
-                             /DO_NOT_SET_DEFAULTS
+                             RESET_GOOD_INDS=reset_good_inds
 
   ENDIF
 
@@ -1012,6 +1013,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                            NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
                            NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+                           EFLUX_NONALFVEN_DATA=eFlux_nonAlfven_data, $
+                           ENUMFLUX_NONALFVEN_DATA=eNumFlux_nonAlfven_data, $
+                           IFLUX_NONALFVEN_DATA=iFlux_nonAlfven_data, $
+                           INUMFLUX_NONALFVEN_DATA=iNumFlux_nonAlfven_data, $
+                           INDICES__NONALFVEN_ESPEC=indices__nonAlfven_eSpec, $
+                           INDICES__NONALFVEN_ION=indices__nonAlfven_ion, $
+                           NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
+                           NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+                           ESPEC__MLTS=eSpec__mlts, $
+                           ESPEC__ILATS=eSpec__ilats, $
+                           ION__MLTS=ion__mlts, $
+                           ION__ILATS=ion__ilats, $
                            PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                            NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                            IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
