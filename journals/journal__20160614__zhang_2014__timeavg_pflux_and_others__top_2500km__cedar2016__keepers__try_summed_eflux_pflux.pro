@@ -1,11 +1,9 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
+PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__KEEPERS__TRY_SUMMED_EFLUX_PFLUX
 
-  run_the_clockAngle_ring  = 1
-
-  do_timeAvg_fluxQuantities = 0
-  logAvgPlot                = 1
+  do_timeAvg_fluxQuantities = 1
+  logAvgPlot                = 0
   divide_by_width_x         = 1
 
   ;;DB stuff
@@ -19,15 +17,20 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;;The plots
 
   eNumFlPlots              = 1
+  pPlots                   = 1
+  ionPlots                 = 1
+  probOccurrencePlot       = 1
+  sum_electron_and_poyntingflux = 1
+
 
   eNumFlPlotType           = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl              = [1,1]
+  noNegENumFl              = [1,1]
   ;; logENumFlPlot            = [1,1]
   ;; ENumFlPlotRange          = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot            = [0,0]
-  ENumFlPlotRange          = [[0,10], $
-                              [0,1e9]]
+  ENumFlPlotRange          = [[0,1], $
+                              [0,3e9]]
 
   ;;junking electron energy--who needs it?
   ;; eNumFlPlotType           = 'ESA_Number_flux'
@@ -39,23 +42,22 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;; ENumFlPlotRange          = [0,1e9]
 
 
-  pPlots                   = 1
   ;; logPfPlot                = 1
   ;; PPlotRange               = [1e-1,1e1]
   logPfPlot                = 0
-  PPlotRange               = [0,10]
+  PPlotRange               = [0,1.5]
 
-  ionPlots                 = 1
   ifluxPlotType            = 'Integ_Up'
   noNegIflux               = 1
   ;; logIfPlot                = 1
   ;; IPlotRange               = [1e6,1e8]
   logIfPlot                = 0
-  IPlotRange               = [0,1e9]
+  IPlotRange               = [0,3e8]
   
-  probOccurrencePlot       = 1
   logProbOccurrence        = 0
-  probOccurrenceRange      = [0,0.1]
+  probOccurrenceRange      = [0,0.15]
+
+  summed_eFlux_pFluxplotRange = [0,2]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -67,7 +69,7 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[3675,4180]]
+  altRange                 = [[1500,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -84,15 +86,15 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 61
-  maxILAT                        = 85
+  minILAT                        = 62
+  maxILAT                        = 86
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
   ;; maxILAT                        = -61
 
   ;; binILAT                        = 2.0
-  binILAT                        = 4.0
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -103,7 +105,7 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;; maxMLT                         = 18
 
   ;;Bonus
-  maskMin                        = 5
+  maskMin                        = 10
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      IF KEYWORD_SET(minMC) THEN BEGIN
@@ -264,6 +266,7 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
+        SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
         MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots, $
         SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $

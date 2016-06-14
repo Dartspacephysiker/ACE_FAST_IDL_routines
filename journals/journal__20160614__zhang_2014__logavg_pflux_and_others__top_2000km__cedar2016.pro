@@ -1,15 +1,13 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
-
-  run_the_clockAngle_ring  = 1
+PRO JOURNAL__20160614__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_2000KM__CEDAR2016
 
   do_timeAvg_fluxQuantities = 0
   logAvgPlot                = 1
   divide_by_width_x         = 1
 
   ;;DB stuff
-  do_despun                = 1
+  do_despun                = 0
 
   autoscale_fluxPlots      = 0
 
@@ -19,15 +17,19 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;;The plots
 
   eNumFlPlots              = 1
+  pPlots                   = 1
+  ionPlots                 = 1
+  probOccurrencePlot       = 1
+
 
   eNumFlPlotType           = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl              = [1,1]
+  noNegENumFl              = [1,1]
   ;; logENumFlPlot            = [1,1]
   ;; ENumFlPlotRange          = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot            = [0,0]
   ENumFlPlotRange          = [[0,10], $
-                              [0,1e9]]
+                              [1e7,1e8]]
 
   ;;junking electron energy--who needs it?
   ;; eNumFlPlotType           = 'ESA_Number_flux'
@@ -39,21 +41,18 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;; ENumFlPlotRange          = [0,1e9]
 
 
-  pPlots                   = 1
   ;; logPfPlot                = 1
   ;; PPlotRange               = [1e-1,1e1]
   logPfPlot                = 0
-  PPlotRange               = [0,10]
+  PPlotRange               = [0,5]
 
-  ionPlots                 = 1
   ifluxPlotType            = 'Integ_Up'
   noNegIflux               = 1
   ;; logIfPlot                = 1
   ;; IPlotRange               = [1e6,1e8]
   logIfPlot                = 0
-  IPlotRange               = [0,1e9]
+  IPlotRange               = [0,5e8]
   
-  probOccurrencePlot       = 1
   logProbOccurrence        = 0
   probOccurrenceRange      = [0,0.1]
 
@@ -67,7 +66,7 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[3675,4180]]
+  altRange                 = [[2500,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -92,12 +91,12 @@ PRO JOURNAL__20160613__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016
   ;; maxILAT                        = -61
 
   ;; binILAT                        = 2.0
-  binILAT                        = 4.0
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
 
   ;; minMLT                         = 6
   ;; maxMLT                         = 18

@@ -364,6 +364,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
                                     LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                                     SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
+                                    SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -397,6 +398,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     N_TILE_COLUMNS=n_tile_columns, $
                                     TILING_ORDER=tiling_order, $
                                     TILE__FAVOR_ROWS=tile__favor_rows, $
+                                    TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
                                     GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                     SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
                                     ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
@@ -1138,6 +1140,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
                            LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
+                           SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
                            ALL_LOGPLOTS=all_logPlots,$
@@ -1227,6 +1230,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                N_TILE_COLUMNS=n_tile_columns, $
                                TILING_ORDER=tiling_order, $
                                TILE__FAVOR_ROWS=tile__favor_rows, $
+                               TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
                                ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
                                TILEPLOTSUFF=tilePlotSuff, $
                                TILEPLOTTITLE=tilePlotTitle, $
