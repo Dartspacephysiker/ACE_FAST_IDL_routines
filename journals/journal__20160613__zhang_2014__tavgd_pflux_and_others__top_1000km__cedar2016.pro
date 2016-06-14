@@ -2,8 +2,6 @@
 ;;several different clock angles. Here goes.
 PRO JOURNAL__20160613__ZHANG_2014__TAVGD_PFLUX_AND_OTHERS__TOP_1000KM__CEDAR2016
 
-  run_the_clockAngle_ring  = 1
-
   do_timeAvg_fluxQuantities = 1
   logAvgPlot                = 0
   divide_by_width_x         = 1

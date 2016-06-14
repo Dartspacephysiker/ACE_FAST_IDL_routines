@@ -113,8 +113,10 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
      
   ENDIF ELSE BEGIN
      good_i                            = GET_CHASTON_IND(dbStruct,satellite,lun, $
-                                                         DBTIMES=dbTimes,dbfile=dbfile, $
-                                                         CHASTDB=do_chastdb, HEMI=hemi, $
+                                                         DBTIMES=dbTimes, $
+                                                         DBFILE=dbfile, $
+                                                         CHASTDB=do_chastdb, $
+                                                         HEMI=hemi, $
                                                          DESPUNDB=do_despunDB, $
                                                          ORBRANGE=orbRange, $
                                                          ALTITUDERANGE=altitudeRange, $
