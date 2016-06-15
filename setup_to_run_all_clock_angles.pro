@@ -15,6 +15,8 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                   TILING_ORDER=tiling_order, $
                                   N_TILE_COLUMNS=n_tile_columns, $
                                   N_TILE_ROWS=n_tile_rows, $
+                                  TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                  TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                   TILEPLOTSUFF=tilePlotSuff
 
   multiple_IMF_clockAngles = 1
@@ -62,11 +64,17 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
   IF KEYWORD_SET(and_tiling_options) THEN BEGIN
      tile_images                 = 1
      IF KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
-        tiling_order             = [7,0,1,6,-9,2,5,4,3]
+        tiling_order             = [7,0,1, $
+                                    6,-9,2, $
+                                    5,4,3]
         n_tile_columns           = 3
         n_tile_rows              = 3
+        IF KEYWORD_SET(tile__cb_in_center_panel) THEN BEGIN
+           tile__no_colorbar_array = [1,1,1, $
+                                      1,1,1, $
+                                      1,1,1]
+        ENDIF
+        tilePlotSuff                = "--a_la_Zhang_2014"
      ENDIF
-     tilePlotSuff                = "--a_la_Zhang_2014"
   ENDIF
-
 END

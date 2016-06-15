@@ -393,12 +393,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
                                     EPS_OUTPUT=eps_output, $
+                                    SUPPRESS_TITLES=suppress_titles, $
+                                    SUPPRESS_GRIDLABELS=suppress_gridLabels, $
                                     TILE_IMAGES=tile_images, $
                                     N_TILE_ROWS=n_tile_rows, $
                                     N_TILE_COLUMNS=n_tile_columns, $
                                     TILING_ORDER=tiling_order, $
                                     TILE__FAVOR_ROWS=tile__favor_rows, $
                                     TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+                                    TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                    TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                     GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                     SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
                                     ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
@@ -1225,12 +1229,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                PARAMSTR=paramString, DEL_PS=del_PS, $
                                HEMI=hemi, $
                                CLOCKSTR=clockStr, $
+                               SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+                               SUPPRESS_TITLES=suppress_titles, $
                                TILE_IMAGES=tile_images, $
                                N_TILE_ROWS=n_tile_rows, $
                                N_TILE_COLUMNS=n_tile_columns, $
                                TILING_ORDER=tiling_order, $
                                TILE__FAVOR_ROWS=tile__favor_rows, $
                                TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+                               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
                                TILEPLOTSUFF=tilePlotSuff, $
                                TILEPLOTTITLE=tilePlotTitle, $

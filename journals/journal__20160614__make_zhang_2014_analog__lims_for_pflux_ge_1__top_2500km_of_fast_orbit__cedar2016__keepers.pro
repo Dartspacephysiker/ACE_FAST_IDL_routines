@@ -1,65 +1,67 @@
 PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_OF_FAST_ORBIT__CEDAR2016__KEEPERS
   ;;The reason we're gathered
-  pFluxMin                 = 1
+  pFluxMin                           = 1
 
   ;;DB stuff
-  do_despun                = 1
+  do_despun                          = 1
 
-  suffix_plotDir           = 'binILAT_3_0'
+  suffix_plotDir                     = 'binILAT_3_0'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
-  write_obsArr_textFile    = 0
+  write_obsArr_textFile              = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  ;; group_like_plots_for_tiling = 0
-  ;; n_tile_columns              = 3
-  ;; n_tile_rows                 = 2
-  tile__include_IMF_arrows    = 1
-  group_like_plots_for_tiling = 1
-  scale_like_plots_for_tiling = 0
+  ;; group_like_plots_for_tiling     = 0
+  ;; n_tile_columns                  = 3
+  ;; n_tile_rows                     = 2
+  group_like_plots_for_tiling        = 1
+  tile__include_IMF_arrows           = 1
+  tile__cb_in_center_panel           = 1
+  scale_like_plots_for_tiling        = 0
+  cb_force_oobHigh                   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot stuff
 
-  orbContribPlot           = 1
-  logOrbContribPlot        = 0
-  orbContribRange          = [0,170]
-  orbContribAutoscale      = 0
-  orbContrib_noMask        = 1
+  orbContribPlot                     = 1
+  logOrbContribPlot                  = 0
+  orbContribRange                    = [0,170]
+  orbContribAutoscale                = 0
+  orbContrib_noMask                  = 1
 
-  nOrbsWithEventsPerContribOrbsPlot = 1
-  nowepco_range            = [0.0,0.7]
-  nowepco_autoscale        = 0
+  nOrbsWithEventsPerContribOrbsPlot  = 1
+  nowepco_range                      = [0.0,0.7]
+  nowepco_autoscale                  = 0
 
-  nEventPerMinPlot         = 1
-  nEventPerMinAutoscale    = 0
-  ;; nEventPerMinRange        = [1e-1,10]
-  ;; logNEventPerMin          = 1
-  nEventPerMinRange        = [0,40.0]
-  ;; logNEventPerMin          = 0
+  nEventPerMinPlot                   = 1
+  nEventPerMinAutoscale              = 0
+  ;; nEventPerMinRange               = [1e-1,10]
+  ;; logNEventPerMin                 = 1
+  nEventPerMinRange                  = [0,40.0]
+  ;; logNEventPerMin                 = 0
 
-  nEventPerOrbPlot         = 1
-  logNEventPerOrb          = 0
-  nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,30]
+  nEventPerOrbPlot                   = 1
+  logNEventPerOrb                    = 0
+  nEventPerOrbAutoscale              = 0
+  nEventPerOrbRange                  = [0,30]
 
-  nPlots                   = 1
-  ;; nEventsPlotNormalize     = 1  
-  nEventsPlotRange         = [0,1000]
-  nEventsPlotAutoscale     = 0
+  nPlots                             = 1
+  ;; nEventsPlotNormalize            = 1  
+  nEventsPlotRange                   = [0,1050]
+  nEventsPlotAutoscale               = 0
 
-  tHistDenominatorPlot     = 1
-  ;; tHistDenomPlotNormalize  = 1
-  tHistDenomPlotRange      = [0,200]
-  tHistDenomPlotAutoscale  = 0
-  tHistDenomPlot_noMask    = 1
+  tHistDenominatorPlot               = 1
+  ;; tHistDenomPlotNormalize         = 1
+  tHistDenomPlotRange                = [0,200]
+  tHistDenomPlotAutoscale            = 0
+  tHistDenomPlot_noMask              = 1
 
-  ;; tilePlotSuff             = "--nEvents_tHistos_nEvPerMin_nEvPerOrb_NOWEPCO"
+  ;; tilePlotSuff                    = "--nEvents_tHistos_nEvPerMin_nEvPerOrb_NOWEPCO"
 
-  ;; altRange                 = [[0,4180], $
+  ;; altRange                        = [[0,4180], $
   ;;                             [340,500], $
   ;;                             [500,1000], $
   ;;                             [1000,1500], $
@@ -71,55 +73,55 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_O
   ;;                             [3800,4000], $
   ;;                             [4000,4180]]
 
-  ;; altRange                 = [[340,1180], $
+  ;; altRange                        = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[1500,4180]]
+  altRange                           = [[1500,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
+  btMin                              = 5
 
   ;;Delay stuff
-  nDelays                        = 1
-  delayDeltaSec                  = 1800
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  nDelays                            = 1
+  delayDeltaSec                      = 1800
+  delayArr                           = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  reset_omni_inds                = 1
-  reset_good_inds                = 1
+  reset_omni_inds                    = 1
+  reset_good_inds                    = 1
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 62
-  maxILAT                        = 86
+  ;; hemi                               = 'NORTH'
+  ;; minILAT                            = 62
+  ;; maxILAT                            = 86
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -62
+  hemi                            = 'SOUTH'
+  minILAT                         = -86
+  maxILAT                         = -62
 
-  ;; binILAT                        = 2.0
-  binILAT                        = 3.0
+  ;; binILAT                         = 2.0
+  binILAT                            = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
-  ;; minMLT                         = 0.0
-  ;; maxMLT                         = 16.0
+  binMLT                             = 1.0
+  shiftMLT                           = 0.5
+  ;; minMLT                          = 0.0
+  ;; maxMLT                          = 16.0
 
   ;;Bonus
-  maskMin                        = 1
+  maskMin                            = 1
 
   LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
 
-  restrict_with_these_i          = WHERE(maximus.pFluxEst GE pFluxMin)
+  restrict_with_these_i              = WHERE(maximus.pFluxEst GE pFluxMin)
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange = altRange[*,i]
-     altStr        = STRING(FORMAT='("/",I0,"-",I0,"--pFlux_GE_",I0)', $
+     altitudeRange                   = altRange[*,i]
+     altStr                          = STRING(FORMAT='("/",I0,"-",I0,"--pFlux_GE_",I0)', $
                             altitudeRange[0], $
                             altitudeRange[1], $
                             pFluxMin)
@@ -141,9 +143,11 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_O
                                    TILING_ORDER=tiling_order, $
                                    N_TILE_COLUMNS=n_tile_columns, $
                                    N_TILE_ROWS=n_tile_rows, $
+                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                    TILEPLOTSUFF=plotSuff
      
-     suffix_plotDir      = (N_ELEMENTS(suffix_plotDir) GT 0) ?  '/' + suffix_plotDir + '/' + altStr : '/' + altStr
+     suffix_plotDir                  = (N_ELEMENTS(suffix_plotDir) GT 0) ?  '/' + suffix_plotDir + '/' + altStr : '/' + altStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
@@ -302,12 +306,14 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_O
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
+        TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+        TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        _EXTRA = e  
+        _EXTRA                       = e  
      
   ENDFOR
 

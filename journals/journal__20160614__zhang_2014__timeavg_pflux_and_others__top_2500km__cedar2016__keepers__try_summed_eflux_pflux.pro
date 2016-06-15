@@ -2,79 +2,83 @@
 ;;several different clock angles. Here goes.
 PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__KEEPERS__TRY_SUMMED_EFLUX_PFLUX
 
-  do_timeAvg_fluxQuantities = 1
-  logAvgPlot                = 0
-  divide_by_width_x         = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
+  divide_by_width_x              = 1
 
   ;;DB stuff
-  do_despun                = 1
+  do_despun                      = 1
 
-  autoscale_fluxPlots      = 0
+  autoscale_fluxPlots            = 0
 
-  group_like_plots_for_tiling = 1
-  tile__include_IMF_arrows = 1
+  group_like_plots_for_tiling    = 1
+  tile__include_IMF_arrows       = 1
+  tile__cb_in_center_panel       = 1
+  cb_force_oobHigh               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
-  eNumFlPlots              = 1
-  pPlots                   = 1
-  ionPlots                 = 1
-  probOccurrencePlot       = 1
-  sum_electron_and_poyntingflux = 1
+  ePlots                         = 1
+  eNumFlPlots                    = 1
+  pPlots                         = 1
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  sum_electron_and_poyntingflux  = 1
 
 
-  eNumFlPlotType           = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl              = [1,1]
-  ;; logENumFlPlot            = [1,1]
-  ;; ENumFlPlotRange          = [[1e-1,1e1], $
+  ;;e- energy flux
+  eFluxPlotType                  = 'Eflux_losscone_integ'
+  ePlotRange                     = [0,1]
+  logEfPlot                      = 0
+  noNegEflux                     = 0
+
+  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  ;; noNegENumFl                    = [1,1]
+  ;; logENumFlPlot               = [1,1]
+  ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
-  logENumFlPlot            = [0,0]
-  ENumFlPlotRange          = [[0,1], $
-                              [0,3e9]]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,1], $
+  ;;                             [0,2e9]]
+  eNumFlPlotType                 = 'ESA_Number_flux'
+  noNegENumFl                    = 0
+  logENumFlPlot                  = 0
+  ENumFlPlotRange                = [0,2e9]
 
-  ;;junking electron energy--who needs it?
-  ;; eNumFlPlotType           = 'ESA_Number_flux'
-  ;; noNegENumFl              = 1
-  ;; logENumFlPlot            = [1,1]
-  ;; ENumFlPlotRange          = [[1e-2,1e0], $
-  ;;                             [1e6,1e9]]
-  ;; logENumFlPlot            = 0
-  ;; ENumFlPlotRange          = [0,1e9]
+  ;; logPfPlot                   = 1
+  ;; PPlotRange                  = [1e-1,1e1]
+  logPfPlot                      = 0
+  PPlotRange                     = [0,1.5]
 
-
-  ;; logPfPlot                = 1
-  ;; PPlotRange               = [1e-1,1e1]
-  logPfPlot                = 0
-  PPlotRange               = [0,1.5]
-
-  ifluxPlotType            = 'Integ_Up'
-  noNegIflux               = 1
-  ;; logIfPlot                = 1
-  ;; IPlotRange               = [1e6,1e8]
-  logIfPlot                = 0
-  IPlotRange               = [0,3e8]
+  ifluxPlotType                  = 'Integ_Up'
+  noNegIflux                     = 1
+  ;; logIfPlot                   = 1
+  ;; IPlotRange                  = [1e6,1e8]
+  logIfPlot                      = 0
+  IPlotRange                     = [0,3e8]
   
-  logProbOccurrence        = 0
-  probOccurrenceRange      = [0,0.15]
+  logProbOccurrence              = 0
+  probOccurrenceRange            = [0,0.15]
 
-  summed_eFlux_pFluxplotRange = [0,2]
+  summed_eFlux_pFluxplotRange    = [0,1.5]
+  
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  reset_good_inds          = 1
+  reset_good_inds                = 1
 
-  ;; altRange                 = [[340,1180], $
+  ;; altRange                    = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                 = [[1500,4180]]
+  altRange                       = [[1500,4180]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
   btMin                          = 5
-  ;; btMax                          = 5
+  ;; btMax                       = 5
 
   ;;Delay stuff
   nDelays                        = 1
@@ -89,11 +93,11 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   minILAT                        = 62
   maxILAT                        = 86
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -86
-  ;; maxILAT                        = -62
+  ;; hemi                        = 'SOUTH'
+  ;; minILAT                     = -86
+  ;; maxILAT                     = -62
 
-  ;; binILAT                        = 2.0
+  ;; binILAT                     = 2.0
   binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -101,15 +105,15 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   binMLT                         = 1.0
   shiftMLT                       = 0.5
 
-  ;; minMLT                         = 6
-  ;; maxMLT                         = 18
+  ;; minMLT                      = 6
+  ;; maxMLT                      = 18
 
   ;;Bonus
   maskMin                        = 10
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange = altRange[*,i]
-     altStr        = STRING(FORMAT='("--",I0,"-",I0)', $
+     altitudeRange               = altRange[*,i]
+     altStr                      = STRING(FORMAT='("--",I0,"-",I0)', $
                             altitudeRange[0], $
                             altitudeRange[1])
 
@@ -130,6 +134,8 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
                                    TILING_ORDER=tiling_order, $
                                    N_TILE_COLUMNS=n_tile_columns, $
                                    N_TILE_ROWS=n_tile_rows, $
+                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                    TILEPLOTSUFF=plotSuff
 
 
@@ -287,6 +293,8 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         ;; TILEPLOTSUFFS=tilePlotSuffs, $
         TILING_ORDER=tiling_order, $
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+        TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+        TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
         TILEPLOTTITLES=tilePlotTitle, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $

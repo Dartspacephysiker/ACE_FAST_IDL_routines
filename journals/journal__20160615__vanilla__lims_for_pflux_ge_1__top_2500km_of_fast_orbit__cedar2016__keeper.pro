@@ -256,6 +256,8 @@ PRO JOURNAL__20160615__VANILLA__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_OF_FAST_ORBIT__C
         TILING_ORDER=tiling_order, $
         TILEPLOTTITLE=tilePlotTitle, $
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+        TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+        TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         NO_COLORBAR=no_colorbar, $
