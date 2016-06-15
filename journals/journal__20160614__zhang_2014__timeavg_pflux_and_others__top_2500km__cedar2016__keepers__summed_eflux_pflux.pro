@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__KEEPERS__TRY_SUMMED_EFLUX_PFLUX
+PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__KEEPERS__SUMMED_EFLUX_PFLUX
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -15,6 +15,9 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
+
+  ;;bonus
+  print_avg_imf_components       = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -110,7 +113,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;; maxMLT                      = 18
 
   ;;Bonus
-  maskMin                        = 20
+  maskMin                        = 10
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
@@ -188,6 +191,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         RESET_OMNI_INDS=reset_omni_inds, $
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
+        PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $

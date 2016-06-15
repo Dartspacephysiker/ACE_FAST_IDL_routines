@@ -29,6 +29,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    RESET_OMNI_INDS=reset_omni_inds, $
    OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+   PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    LUN=lun
   
   ;;This and GET_STABLE_IMF_INDS should be the only two routines that have a full definition of this block
@@ -89,6 +90,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             RESET_OMNI_INDS=reset_omni_inds, $
                                             OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $
+                                            PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                             LUN=lun)
   
   

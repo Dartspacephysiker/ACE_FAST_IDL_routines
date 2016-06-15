@@ -59,6 +59,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    HWMAUROVAL=HwMAurOval, $
    HWMKPIND=HwMKpInd, $
+   PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
@@ -188,6 +189,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun
                                                                                                /RESET_OMNI_INDS, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                                                                                               PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                                                                                LUN=lun)     
 
            restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here

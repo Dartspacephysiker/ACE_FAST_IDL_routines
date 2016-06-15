@@ -45,6 +45,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    BXY_OVER_BZ_OUT=Bxy_over_Bz_out, $
    OMNI_COORDS=OMNI_coords, $
    OMNI_PARAMSTR=omni_paramStr, $
+   PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    LUN=lun
   
   ;; COMMON MAXIMUS,MAXIMUS,MAXIMUS__good_i,MAXIMUS__cleaned_i
@@ -302,6 +303,26 @@ FUNCTION GET_STABLE_IMF_INDS, $
   mag_utc                      = C_OMNI__mag_utc
 
   PRINTF,lun,C_OMNI__paramStr
+  IF KEYWORD_SET(print_avg_imf_components) THEN BEGIN
+     file = '~/Desktop/' + C_OMNI__paramStr + '.txt'
+     PRINT,"opening " + file + ' ...'
+     OPENW,outLun,file,/GET_LUN
+
+     PRINTF,outLun,C_OMNI__paramStr
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("N datapoints",T35,": ",F10.3)',N_ELEMENTS(stable_omni_inds)
+     PRINTF,outLun,FORMAT='("Average Bx",T35,": ",F10.3)',MEAN(C_OMNI__Bx[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average By",T35,": ",F10.3)',MEAN(C_OMNI__By[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average Bz",T35,": ",F10.3)',MEAN(C_OMNI__Bz[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average Bt",T35,": ",F10.3)',MEAN(C_OMNI__Bt[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',MEAN(C_OMNI__thetaCone[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',MEAN(C_OMNI__phiClock[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',MEAN(C_OMNI__cone_overClock[stable_omni_inds])
+
+     CLOSE,outLun
+     FREE_LUN,outLun
+  ENDIF
+
 
   omni_paramStr                = C_OMNI__paramStr
 

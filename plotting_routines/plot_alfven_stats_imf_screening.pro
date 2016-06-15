@@ -237,6 +237,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RESET_OMNI_INDS=reset_omni_inds, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
+                                    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                     HEMI=hemi, $
                                     NORTH=north, $
                                     SOUTH=south, $
@@ -530,7 +531,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                   DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                   PARAMSTRING=paramString, $
                                   PARAMSTR_LIST=paramString_list, $
-                                  SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
+                                  SATELLITE=satellite, $
+                                  OMNI_COORDS=omni_Coords, $
                                   DELAY=delay, $
                                   MULTIPLE_DELAYS=multiple_delays, $
                                   MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
@@ -675,6 +677,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           ANGLELIM2=angleLim2, $
                                                                           HWMAUROVAL=HwMAurOval, $
                                                                           HWMKPIND=HwMKpInd, $
+                                                                          PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                                                           RESET_GOOD_INDS=reset_good_inds, $
                                                                           NO_BURSTDATA=no_burstData, $
                                                                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
