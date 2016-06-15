@@ -18,34 +18,34 @@ PRO JOURNAL__20160615__VANILLA__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_OF_FAST_ORBIT__C
 
   orbContribPlot           = 1
   logOrbContribPlot        = 0
-  orbContribRange          = [0,1000]
+  orbContribRange          = [0,760]
   orbContribAutoscale      = 0
   orbContrib_noMask        = 1
 
   nOrbsWithEventsPerContribOrbsPlot = 1
-  nowepco_range            = [0.0,0.7]
+  nowepco_range            = [0.0,0.35]
   nowepco_autoscale        = 0
 
   nEventPerMinPlot         = 1
   nEventPerMinAutoscale    = 0
   ;; nEventPerMinRange        = [1e-1,10]
   ;; logNEventPerMin          = 1
-  nEventPerMinRange        = [0,40.0]
+  nEventPerMinRange        = [0,10.0]
   ;; logNEventPerMin          = 0
 
   nEventPerOrbPlot         = 1
   logNEventPerOrb          = 0
   nEventPerOrbAutoscale    = 0
-  nEventPerOrbRange        = [0,30]
+  nEventPerOrbRange        = [0,9]
 
   nPlots                   = 1
   ;; nEventsPlotNormalize     = 1  
-  nEventsPlotRange         = [0,6000]
+  nEventsPlotRange         = [0,3100]
   nEventsPlotAutoscale     = 0
 
   tHistDenominatorPlot     = 1
   ;; tHistDenomPlotNormalize  = 1
-  tHistDenomPlotRange      = [0,1000]
+  tHistDenomPlotRange      = [0,1050]
   tHistDenomPlotAutoscale  = 0
   tHistDenomPlot_noMask    = 1
 

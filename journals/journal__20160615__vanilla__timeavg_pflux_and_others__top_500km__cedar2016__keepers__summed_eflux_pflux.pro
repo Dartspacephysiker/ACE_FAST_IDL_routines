@@ -1,6 +1,6 @@
 ;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
 ;;several different clock angles. Here goes.
-PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__KEEPERS__TRY_SUMMED_EFLUX_PFLUX
+PRO JOURNAL__20160615__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016__KEEPERS__SUMMED_EFLUX_PFLUX
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -11,10 +11,9 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
 
   autoscale_fluxPlots            = 0
 
-  group_like_plots_for_tiling    = 1
-  tile__include_IMF_arrows       = 1
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
+  do_not_consider_IMF            = 1
+
+  cb_force_oobHigh               = 0
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -63,30 +62,17 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
 
   summed_eFlux_pFluxplotRange    = [0,1.5]
   
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Tiled plot options
-
+  ;;Otros
   reset_good_inds                = 1
+  reset_omni_inds                = 1
 
   ;; altRange                    = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1500,4180]]
+  altRange                       = [[3500,4180]]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;IMF condition stuff--run the ring!
-  btMin                          = 5
-  ;; btMax                       = 5
-
-  ;;Delay stuff
-  nDelays                        = 1
-  delayDeltaSec                  = 1800
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-
-  reset_omni_inds                = 1
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
@@ -110,7 +96,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;; maxMLT                      = 18
 
   ;;Bonus
-  maskMin                        = 20
+  maskMin                        = 10
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
@@ -118,31 +104,9 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
                             altitudeRange[0], $
                             altitudeRange[1])
 
-     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                   angleLim1,angleLim2, $
-                                   IMFStr,IMFTitle, $
-                                   BYMIN=byMin, $
-                                   BYMAX=byMax, $
-                                   BZMIN=bzMin, $
-                                   BZMAX=bzMax, $
-                                   BTMIN=btMin, $
-                                   BTMAX=btMax, $
-                                   BXMIN=bxMin, $
-                                   BXMAX=bxMax, $
-                                   /AND_TILING_OPTIONS, $
-                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                   TILE_IMAGES=tile_images, $
-                                   TILING_ORDER=tiling_order, $
-                                   N_TILE_COLUMNS=n_tile_columns, $
-                                   N_TILE_ROWS=n_tile_rows, $
-                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                   TILEPLOTSUFF=plotSuff
-
-
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
-        CLOCKSTR=clockStrings, $
-        MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+        ;; CLOCKSTR=clockStrings, $
+        ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
@@ -192,7 +156,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
         INCLUDENOCONSECDATA=includeNoConsecData, $
-        ;; /DO_NOT_CONSIDER_IMF, $
+        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
