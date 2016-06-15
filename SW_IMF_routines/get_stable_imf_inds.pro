@@ -133,7 +133,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ENDELSE
 
   IF calculate THEN BEGIN
-     printf,lun,"****BEGIN GET_STABLE_IMF_INDS****"
+     PRINTF,lun,"****BEGIN GET_STABLE_IMF_INDS****"
      PRINTF,lun,"Calculating stable IMF inds for this run..."
      C_OMNI__paramStr                          = 'OMNI_params'
      C_OMNI__stableStr                         = 'OMNI_stability'
@@ -143,7 +143,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;; IF N_ELEMENTS(mag_utc) EQ 0 THEN BEGIN
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
      dataDir                                = "/SPENCEdata/Research/database/"
-     restore,dataDir + "/OMNI/culled_OMNI_magdata.dat"
+     RESTORE,dataDir + "/OMNI/culled_OMNI_magdata.dat"
      ;; ENDIF
 
      C_OMNI__mag_UTC                           = TEMPORARY(mag_UTC)
@@ -290,8 +290,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;; ENDIF
 
 
-     printf,lun,"****END text from GET_STABLE_IMF_INDS****"
-     printf,lun,""
+     PRINTF,lun,"****END text from GET_STABLE_IMF_INDS****"
+     PRINTF,lun,""
 
 
      C_OMNI__HAVE_STABLE_INDS  = 1

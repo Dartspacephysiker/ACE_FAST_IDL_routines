@@ -12,7 +12,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   autoscale_fluxPlots      = 0
 
   group_like_plots_for_tiling = 1
-  tile__include_IMF_arrows = 0
+  tile__include_IMF_arrows = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
