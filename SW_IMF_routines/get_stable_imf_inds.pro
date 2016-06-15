@@ -308,16 +308,65 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINT,"opening " + file + ' ...'
      OPENW,outLun,file,/GET_LUN
 
+     
+     By_avg              = MEAN(C_OMNI__By[stable_omni_inds])
+     Bz_avg              = MEAN(C_OMNI__Bz[stable_omni_inds])
+     ;;Get cusp predictions
+     PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
+                                               LAT_CUSP_NWLL_1989=lat_cusp_nwll_1989, $
+                                               MLAT_DIAMAG=mlat_diamag, $  
+                                               MLAT_DENS_ENH=mlat_dens_enh, $
+                                               MLAT_PAR_ION=mlat_par_ion, $ 
+                                               MLT_DIAMAG=MLT_diamag, $  
+                                               MLT_DENS_ENH=MLT_dens_enh, $
+                                               MLT_PAR_ION=MLT_par_ion, $ 
+                                               ILAT_CUSP_CTR=ILAT_cusp_ctr, $  
+                                               ILAT_CUSP_EQW_B=ILAT_cusp_eqw_b, $
+                                               ILAT_CUSP_PW_B=ILAT_cusp_pw_b
+
+     ;;output
+     PRINTF,outLun,'**********************'
+     PRINTF,outLun,'Average IMF conditions'
+     PRINTF,outLun,''
      PRINTF,outLun,C_OMNI__paramStr
+     PRINTF,outLun,'**********************'
      PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("N datapoints",T35,": ",F10.3)',N_ELEMENTS(stable_omni_inds)
+     PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("Average Bx",T35,": ",F10.3)',MEAN(C_OMNI__Bx[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average By",T35,": ",F10.3)',MEAN(C_OMNI__By[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average Bz",T35,": ",F10.3)',MEAN(C_OMNI__Bz[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average Bt",T35,": ",F10.3)',MEAN(C_OMNI__Bt[stable_omni_inds])
+     PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',MEAN(C_OMNI__thetaCone[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',MEAN(C_OMNI__phiClock[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',MEAN(C_OMNI__cone_overClock[stable_omni_inds])
+     PRINTF,outLun,''
+     PRINTF,outLun,''
+     PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+     PRINTF,outLun,"From Newell et al. [1989]"
+     PRINTF,outLun,"Some low-altitude cusp dependencies on!Nthe interplanetary magnetic field"
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("LAT_CUSP_NWLL_1989",T35,": ",F10.3)',Bz_avg LE 0 ? LAT_CUSP_NWLL_1989 : -9999.999
+     PRINTF,outLun,''
+     PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+     PRINTF,outLun,"From Zhang et al. [2013]"
+     PRINTF,outLun,"Predicting the Location of Polar Cusp in!Cthe Lyon-Fedder-Mobarry global magnetosphere simulation"
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("MLAT_DIAMAG",T35,": ",F10.3)',Bz_avg LE 0 ? mlat_diamag : -9999.999
+     PRINTF,outLun,FORMAT='("MLAT_DENS_ENH",T35,": ",F10.3)',Bz_avg LE 0 ? mlat_dens_enh : -9999.999
+     PRINTF,outLun,FORMAT='("MLAT_PAR_ION",T35,": ",F10.3)',Bz_avg LE 0 ? mlat_par_ion : -9999.999
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("MLT_DIAMAG",T35,": ",F10.3)',MLT_DIAMAG        
+     PRINTF,outLun,FORMAT='("MLT_DENS_ENH",T35,": ",F10.3)',MLT_DENS_ENH      
+     PRINTF,outLun,FORMAT='("MLT_PAR_ION",T35,": ",F10.3)',MLT_PAR_ION       
+     PRINTF,outLun,''
+     PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+     PRINTF,outLun,"From Zhou et al. [2000]"
+     PRINTF,outLun,"Solar wind control of the polar cusp at high altitude"
+     PRINTF,outLun,FORMAT='("ILAT_CUSP_CTR",T35,": ",F10.3)',ILAT_CUSP_CTR     
+     PRINTF,outLun,FORMAT='("ILAT_CUSP_EQW_B",T35,": ",F10.3)',ILAT_CUSP_EQW_B   
+     PRINTF,outLun,FORMAT='("ILAT_CUSP_PW_B",T35,": ",F10.3)',ILAT_CUSP_PW_B    
 
      CLOSE,outLun
      FREE_LUN,outLun
