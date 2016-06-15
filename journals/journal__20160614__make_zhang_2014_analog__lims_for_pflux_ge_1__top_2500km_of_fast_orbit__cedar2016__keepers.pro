@@ -96,9 +96,9 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__TOP_2500KM_O
   minILAT                        = 62
   maxILAT                        = 86
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -86
-  maxILAT                        = -62
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -86
+  ;; maxILAT                        = -62
 
   ;; binILAT                        = 2.0
   binILAT                        = 3.0

@@ -85,13 +85,13 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
                                                                                                            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 62
-  ;; maxILAT                        = 86
+  hemi                           = 'NORTH'
+  minILAT                        = 62
+  maxILAT                        = 86
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -86
-  maxILAT                        = -62
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -86
+  ;; maxILAT                        = -62
 
   ;; binILAT                        = 2.0
   binILAT                        = 3.0
