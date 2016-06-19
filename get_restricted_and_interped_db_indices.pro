@@ -2,8 +2,10 @@
 ;2016/01/07 Added DO_DESPUNDB keyword
 ;2016/02/10 Added DO_NOT_CONSIDER_IMF keyword
 ;2016/02/20 Making restricted_and_interped_i a LIST!
-FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay,LUN=lun, $
-   DBTIMES=dbTimes,dbfile=dbfile, $
+FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
+   LUN=lun, $
+   DBTIMES=dbTimes, $
+   DBFILE=dbfile, $
    DO_CHASTDB=do_chastdb, $
    DO_DESPUNDB=do_despunDB, $
    HEMI=hemi, $

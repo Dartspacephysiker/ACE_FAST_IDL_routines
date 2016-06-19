@@ -214,6 +214,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     HWMKPIND=HwMKpInd, $
                                     ;; MIN_NEVENTS=min_nEvents, $
                                     MASKMIN=maskMin, $
+                                    THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                                     CLOCKSTR=clockStr, $
                                     DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                     ANGLELIM1=angleLim1, $
@@ -414,7 +415,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
                                     OUT_TEMPFILE_LIST=out_tempFile_list, $
-                                    OUT_DATANAMEARR_list=out_dataNameArr_list, $
+                                    OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
                                     OUT_PARAMSTRING_LIST=out_paramString_list, $
                                     OUT_PLOT_I_LIST=out_plot_i_list, $
                                     DONT_LOAD_IN_MEMORY=nonMem, $
@@ -996,6 +997,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            SAMPLE_T_RESTRICTION=sample_t_restriction, $
                            NUMORBLIM=numOrbLim, $
                            MASKMIN=maskMin, $
+                           THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                            SATELLITE=satellite, OMNI_COORDS=omni_Coords, $
                            HEMI=hemi, $
                            CLOCKSTR=KEYWORD_SET(multiple_IMF_clockAngles) ? clockStr[iMulti] : clockStr, $
