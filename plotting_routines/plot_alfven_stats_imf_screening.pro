@@ -395,8 +395,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                     DEL_PS=del_PS, $
                                     EPS_OUTPUT=eps_output, $
-                                    SUPPRESS_TITLES=suppress_titles, $
+                                    SUPPRESS_THICKGRID=suppress_thickGrid, $
                                     SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+                                    SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
+                                    SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
+                                    SUPPRESS_MLT_NAME=suppress_MLT_name, $
+                                    SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
+                                    SUPPRESS_TITLES=suppress_titles, $
                                     TILE_IMAGES=tile_images, $
                                     N_TILE_ROWS=n_tile_rows, $
                                     N_TILE_COLUMNS=n_tile_columns, $
@@ -1234,7 +1239,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                PARAMSTR=paramString, DEL_PS=del_PS, $
                                HEMI=hemi, $
                                CLOCKSTR=clockStr, $
+                               SUPPRESS_THICKGRID=suppress_thickGrid, $
                                SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+                               SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
+                               SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
+                               SUPPRESS_MLT_NAME=suppress_MLT_name, $
+                               SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
                                SUPPRESS_TITLES=suppress_titles, $
                                TILE_IMAGES=tile_images, $
                                N_TILE_ROWS=n_tile_rows, $
