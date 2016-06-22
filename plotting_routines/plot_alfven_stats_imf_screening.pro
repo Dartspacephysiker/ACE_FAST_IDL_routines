@@ -367,6 +367,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                                     SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                                     SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
+                                    SUMMED_EFLUX_PFLUX_LOGPLOT=summed_eFlux_pFlux_logPlot, $
                                     MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                     ALL_LOGPLOTS=all_logPlots, $
                                     SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -1155,6 +1156,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
                            SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
+                           SUMMED_EFLUX_PFLUX_LOGPLOT=summed_eFlux_pFlux_logPlot, $
                            MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                            LOGAVGPLOT=logAvgPlot, $
                            ALL_LOGPLOTS=all_logPlots,$

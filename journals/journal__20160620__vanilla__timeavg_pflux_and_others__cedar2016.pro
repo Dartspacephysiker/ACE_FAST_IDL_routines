@@ -1,7 +1,6 @@
-;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
-PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__FINAL
-
-  COMPILE_OPT IDL2
+;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
+;;several different clock angles. Here goes.
+PRO JOURNAL__20160620__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -11,18 +10,10 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   do_despun                      = 1
 
   autoscale_fluxPlots            = 0
-  
-  group_like_plots_for_tiling    = 1
-  tile__include_IMF_arrows       = 1
-  tile__cb_in_center_panel       = 1
+
+  do_not_consider_IMF            = 1
+
   cb_force_oobHigh               = 1
-
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
-
-  ;;bonus
-  print_avg_imf_components       = 0
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -37,7 +28,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.5]
+  ePlotRange                     = [0,0.15]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -48,7 +39,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
   ENumFlPlotRange                = [[0,0.5], $
-                                    [0,1.0e9]]
+                              [0,4e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -57,48 +48,33 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.5]
+  PPlotRange                     = [0,0.25]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.0e8]
+  IPlotRange                     = [0,5e7]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.10]
+  probOccurrenceRange            = [0,0.04]
 
-  summed_eFlux_pFluxplotRange    = [0,1.5]
+  summed_eFlux_pFluxplotRange    = [0,0.4]
   
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Tiled plot options
-
+  ;;Otros
   reset_good_inds                = 1
+  reset_omni_inds                = 1
 
   ;; altRange                    = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  ;; altRange                       = [[340,4180]]
   altRange                       = [[340,4180]]
 
   orbRange                       = [500,12670]
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;IMF condition stuff--run the ring!
-  btMin                          = 5
-  ;; btMax                       = 5
-
-  ;;Delay stuff
-  nDelays                        = 1
-  delayDeltaSec                  = 1800
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-
-  reset_omni_inds                = 1
-  
+                                                                                                           
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
@@ -107,11 +83,12 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   maskMin                        = 10
   tHist_mask_bins_below_thresh   = 10
 
+
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -86
   ;; maxILAT                     = -62
-  ;; maskMin                        =  5.0
-  ;; tHist_mask_bins_below_thresh   =  5.0
+  ;; maskMin                        = 5
+  ;; tHist_mask_bins_below_thresh   = 5
 
   ;; binILAT                     = 2.0
   binILAT                        = 3.0
@@ -124,42 +101,15 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
 
-  ;;Bonus
-
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbits_",I0,"-",I0)', $
-                                          altitudeRange[0], $
-                                          altitudeRange[1], $
-                                          orbRange[0], $
-                                          orbRange[1])
-     plotPrefix                  = altStr
-
-     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                   angleLim1,angleLim2, $
-                                   IMFStr,IMFTitle, $
-                                   BYMIN=byMin, $
-                                   BYMAX=byMax, $
-                                   BZMIN=bzMin, $
-                                   BZMAX=bzMax, $
-                                   BTMIN=btMin, $
-                                   BTMAX=btMax, $
-                                   BXMIN=bxMin, $
-                                   BXMAX=bxMax, $
-                                   /AND_TILING_OPTIONS, $
-                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                   TILE_IMAGES=tile_images, $
-                                   TILING_ORDER=tiling_order, $
-                                   N_TILE_COLUMNS=n_tile_columns, $
-                                   N_TILE_ROWS=n_tile_rows, $
-                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                   TILEPLOTSUFF=plotSuff
-
+     altStr                      = STRING(FORMAT='("--",I0,"-",I0)', $
+                            altitudeRange[0], $
+                            altitudeRange[1])
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
-        CLOCKSTR=clockStrings, $
-        MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+        ;; CLOCKSTR=clockStrings, $
+        ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
@@ -206,12 +156,11 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         RESET_OMNI_INDS=reset_omni_inds, $
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
-        PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
         INCLUDENOCONSECDATA=includeNoConsecData, $
-        ;; /DO_NOT_CONSIDER_IMF, $
+        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
@@ -302,13 +251,6 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
-        SUPPRESS_THICKGRID=suppress_thickGrid, $
-        SUPPRESS_GRIDLABELS=suppress_gridLabels, $
-        SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
-        SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
-        SUPPRESS_MLT_NAME=suppress_MLT_name, $
-        SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
-        SUPPRESS_TITLES=suppress_titles, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
@@ -329,11 +271,13 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
-     ;; /GET_PLOT_I_LIST_LIST, $
-     ;; /GET_PARAMSTR_LIST_LIST, $
-     ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-     ;; PARAMSTR_LIST_LIST=paramStr_list_list
-     
+        ;; /GET_PLOT_I_LIST_LIST, $
+        ;; /GET_PARAMSTR_LIST_LIST, $
+        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
+        ;; PARAMSTR_LIST_LIST=paramStr_list_list
+  
   ENDFOR
+
+
 
 END

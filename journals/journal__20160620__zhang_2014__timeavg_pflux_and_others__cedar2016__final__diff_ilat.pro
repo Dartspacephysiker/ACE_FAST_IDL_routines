@@ -1,5 +1,5 @@
 ;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
-PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__FINAL
+PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__DIFF_ILAT
 
   COMPILE_OPT IDL2
 
@@ -26,12 +26,12 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
-  pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
+  pPlots                         = 0
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  sum_electron_and_poyntingflux  = 0
 
 
   ;;e- energy flux
@@ -42,7 +42,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   noNegEflux                     = 0
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl                    = [1,1]
+  noNegENumFl                    = [1,1]
   ;; logENumFlPlot               = [1,1]
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
@@ -102,10 +102,10 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 62
-  maxILAT                        = 86
-  maskMin                        = 10
-  tHist_mask_bins_below_thresh   = 10
+  minILAT                        = 60
+  maxILAT                        = 85
+  maskMin                        = 5
+  tHist_mask_bins_below_thresh   = 5
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -86
@@ -114,7 +114,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   ;; tHist_mask_bins_below_thresh   =  5.0
 
   ;; binILAT                     = 2.0
-  binILAT                        = 3.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

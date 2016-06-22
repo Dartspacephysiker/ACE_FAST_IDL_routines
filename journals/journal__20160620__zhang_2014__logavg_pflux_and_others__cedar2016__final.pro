@@ -1,10 +1,10 @@
-;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
-PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__FINAL
+;2016/06/20 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
+PRO JOURNAL__20160620__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL
 
   COMPILE_OPT IDL2
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
+  do_timeAvg_fluxQuantities      = 0
+  logAvgPlot                     = 1
   divide_by_width_x              = 1
 
   ;;DB stuff
@@ -13,7 +13,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   autoscale_fluxPlots            = 0
   
   group_like_plots_for_tiling    = 1
-  tile__include_IMF_arrows       = 1
+  tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -28,48 +28,58 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
 
   ePlots                         = 1
   eNumFlPlots                    = 1
+  charEPlots                     = 1
   pPlots                         = 1
   ionPlots                       = 1
-  probOccurrencePlot             = 1
+  ;; probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
+
+
+  charEType                      = 'losscone'
+  logCharEPlot                   = 1
+  CharEPlotRange                 = [1e1,1e3]
 
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.5]
-  logEfPlot                      = 0
-  noNegEflux                     = 0
+  ;; ePlotRange                     = [0,0.75]
+  ;; logEfPlot                      = 0
+  ePlotRange                     = [5e-1,5e0]
+  logEfPlot                      = 1
+  noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.5], $
-                                    [0,1.0e9]]
+  noNegENumFl                    = [1,1]
+  logENumFlPlot               = [1,1]
+  ENumFlPlotRange             = [[1e-1,1e1], $
+                              [5e7,5e9]]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,0.75], $
+  ;;                                   [0,1.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
   ;; ENumFlPlotRange                = [0,2e9]
 
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [1e-1,1e1]
-  logPfPlot                      = 0
-  PPlotRange                     = [0,0.5]
+  logPfPlot                   = 1
+  PPlotRange                  = [5e-1,5e0]
+  ;; logPfPlot                      = 0
+  ;; PPlotRange                     = [0,0.75]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,1.0e8]
+  logIfPlot                   = 1
+  IPlotRange                  = [1e7,1e9]
+  ;; logIfPlot                      = 0
+  ;; IPlotRange                     = [0,1.0e8]
   
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.10]
+  ;; logProbOccurrence              = 1
+  ;; probOccurrenceRange            = [0,0.10]
 
-  summed_eFlux_pFluxplotRange    = [0,1.5]
+  summed_eFlux_pFluxplotRange    = [1e0,1e1]
+  summed_eFlux_pFlux_logPlot     = 1
+  ;; summed_eFlux_pFluxplotRange    = [0,1.5]
   
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -104,17 +114,17 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
   hemi                           = 'NORTH'
   minILAT                        = 62
   maxILAT                        = 86
-  maskMin                        = 10
-  tHist_mask_bins_below_thresh   = 10
+  maskMin                        = 20.0
+  tHist_mask_bins_below_thresh   = 20.0
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -86
   ;; maxILAT                     = -62
-  ;; maskMin                        =  5.0
-  ;; tHist_mask_bins_below_thresh   =  5.0
+  ;; maskMin                        = 5.0
+  ;; tHist_mask_bins_below_thresh   = 5.0
 
   ;; binILAT                     = 2.0
-  binILAT                        = 3.0
+  binILAT                        = 8.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -123,8 +133,6 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
-
-  ;;Bonus
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
@@ -279,6 +287,7 @@ PRO JOURNAL__20160618__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR20
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
         SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
+        SUMMED_EFLUX_PFLUX_LOGPLOT=summed_eFlux_pFlux_logPlot, $
         MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots, $
         SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
