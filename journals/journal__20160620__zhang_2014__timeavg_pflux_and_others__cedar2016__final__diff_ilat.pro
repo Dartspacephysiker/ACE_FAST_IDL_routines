@@ -26,12 +26,12 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
-  ePlots                         = 0
+  ePlots                         = 1
   eNumFlPlots                    = 1
-  pPlots                         = 0
-  ionPlots                       = 0
-  probOccurrencePlot             = 0
-  sum_electron_and_poyntingflux  = 0
+  pPlots                         = 1
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  sum_electron_and_poyntingflux  = 1
 
 
   ;;e- energy flux
@@ -71,6 +71,21 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
 
   summed_eFlux_pFluxplotRange    = [0,1.5]
   
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Southern hemi ranges
+  ePlotRange                     = [0,0.25]
+
+  noNegENumFl                    = [1,1]
+  logENumFlPlot                  = [0,0]
+  ENumFlPlotRange                = [[0,0.25], $
+                                    [0,8.0e8]]
+
+  PPlotRange                     = [0,0.25]
+
+  IPlotRange                     = [0,7.0e7]
+
+  summed_eFlux_pFluxplotRange    = [0,0.8]
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -101,17 +116,17 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
-  maskMin                        = 5
-  tHist_mask_bins_below_thresh   = 5
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
+  ;; maskMin                        = 10
+  ;; tHist_mask_bins_below_thresh   = 10
 
-  ;; hemi                        = 'SOUTH'
-  ;; minILAT                     = -86
-  ;; maxILAT                     = -62
-  ;; maskMin                        =  5.0
-  ;; tHist_mask_bins_below_thresh   =  5.0
+  hemi                        = 'SOUTH'
+  minILAT                     = -85
+  maxILAT                     = -60
+  maskMin                        =  10.0
+  tHist_mask_bins_below_thresh   =  10.0
 
   ;; binILAT                     = 2.0
   binILAT                        = 2.5

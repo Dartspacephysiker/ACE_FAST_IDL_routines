@@ -1,76 +1,156 @@
-;;2016/06/22 For Figure 2 of this Alf IMF paper
-PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAPE__FIG2
-
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
+PRO JOURNAL__20160623__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_1__ALL_ALTS__ALFIMF_PAPE
+  ;;The reason we're gathered
+  pFluxMin                           = 1
 
   ;;DB stuff
-  do_despun                      = 1
+  do_despun                          = 1
 
-  autoscale_fluxPlots            = 0
+  suffix_plotDir                     = 'binILAT_2_5'
 
-  do_not_consider_IMF            = 1
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;orbit txt file?
+  write_obsArr_textFile              = 0
 
-  cb_force_oobHigh               = 0
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;The plots
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Tiled plot options
 
-  pPlots                         = 1
-  tHistDenominatorPlot           = 1
+  ;; group_like_plots_for_tiling     = 0
+  ;; n_tile_columns                  = 3
+  ;; n_tile_rows                     = 2
+  group_like_plots_for_tiling        = 1
+  tile__include_IMF_arrows           = 1
+  tile__cb_in_center_panel           = 1
+  scale_like_plots_for_tiling        = 0
+  cb_force_oobHigh                   = 1
 
-  ;;For logAvg
-  ;; logPfPlot                      = 0
-  ;; PPlotRange                     = [0,2.0]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Plot stuff
 
-  ;;for timeAvg
-  ;; logPfPlot                      = 0
-  ;; PPlotRange                     = [0,0.1]
-  logPfPlot                      = 1
-  PPlotRange                     = [0.002,0.2]
+  orbContribPlot                     = 1
+  logOrbContribPlot                  = 0
+  orbContribRange                    = [0,170]
+  orbContribAutoscale                = 0
+  orbContrib_noMask                  = 1
 
-  ;; tHistDenomPlotRange            = 
-  ;; tHistDenomPlotNormalize        = 
-  tHistDenomPlotAutoscale        = 1
-  tHistDenomPlot_noMask          = 1
+  nOrbsWithEventsPerContribOrbsPlot  = 1
+  nowepco_range                      = [0.0,0.7]
+  nowepco_autoscale                  = 0
 
-  ;;Otros
-  reset_good_inds                = 1
-  reset_omni_inds                = 1
+  nEventPerMinPlot                   = 1
+  nEventPerMinAutoscale              = 0
+  ;; nEventPerMinRange               = [1e-1,10]
+  ;; logNEventPerMin                 = 1
+  nEventPerMinRange                  = [0,40.0]
+  ;; logNEventPerMin                 = 0
 
-  altRange                       = [[340,4180]]
+  nEventPerOrbPlot                   = 1
+  logNEventPerOrb                    = 0
+  nEventPerOrbAutoscale              = 0
+  nEventPerOrbRange                  = [0,30]
 
-  orbRange                       = [500,12670]
+  nPlots                             = 1
+  ;; nEventsPlotNormalize            = 1  
+  nEventsPlotRange                   = [0,1050]
+  nEventsPlotAutoscale               = 0
+
+  tHistDenominatorPlot               = 1
+  ;; tHistDenomPlotNormalize         = 1
+  tHistDenomPlotRange                = [0,200]
+  tHistDenomPlotAutoscale            = 0
+  tHistDenomPlot_noMask              = 1
+
+  ;; tilePlotSuff                    = "--nEvents_tHistos_nEvPerMin_nEvPerOrb_NOWEPCO"
+
+  ;; altRange                        = [[0,4180], $
+  ;;                             [340,500], $
+  ;;                             [500,1000], $
+  ;;                             [1000,1500], $
+  ;;                             [1500,2000], $
+  ;;                             [2000,2500], $
+  ;;                             [2500,3000], $
+  ;;                             [3000,3500], $
+  ;;                             [3500,3800], $
+  ;;                             [3800,4000], $
+  ;;                             [4000,4180]]
+
+  ;; altRange                        = [[340,1180], $
+  ;;                             [1180,2180], $
+  ;;                             [2180,3180], $
+  ;;                             [3180,4180]]
+
+  altRange                           = [[340,4180]]
+
+  orbRange                           = [500,12670]
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;IMF condition stuff--run the ring!
+  btMin                              = 5
+
+  ;;Delay stuff
+  nDelays                            = 1
+  delayDeltaSec                      = 1800
+  delayArr                           = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+
+  reset_omni_inds                    = 1
+  reset_good_inds                    = 1
+                                                                                                           
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
+  ;; hemi                               = 'NORTH'
+  ;; minILAT                            = 60
+  ;; maxILAT                            = 85
 
-  hemi                        = 'SOUTH'
-  minILAT                     = -85
-  maxILAT                     = -60
+  hemi                            = 'SOUTH'
+  minILAT                         = -85
+  maxILAT                         = -60
 
-  binILAT                        = 2.5
+  binILAT                            = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  binMLT                             = 1.0
+  shiftMLT                           = 0.5
 
   ;;Bonus
-  maskMin                        = STRUPCASE(hemi) EQ 'NORTH' ? 10 : 5
-  tHist_mask_bins_below_thresh   = KEYWORD_SET(logAvgPlot) ? !NULL : $
-                                   STRUPCASE(hemi) EQ 'NORTH' ? 10 : 5
+  maskMin                            = 1
+
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
+
+  restrict_with_these_i              = WHERE(maximus.pFluxEst GE pFluxMin)
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='("--",I0,"-",I0)', $
+     altitudeRange                   = altRange[*,i]
+     altStr                          = STRING(FORMAT='("/",I0,"-",I0,"--pFlux_GE_",I0)', $
                             altitudeRange[0], $
-                            altitudeRange[1])
+                            altitudeRange[1], $
+                            pFluxMin)
+
+     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
+                                   angleLim1,angleLim2, $
+                                   IMFStr,IMFTitle, $
+                                   BYMIN=byMin, $
+                                   BYMAX=byMax, $
+                                   BZMIN=bzMin, $
+                                   BZMAX=bzMax, $
+                                   BTMIN=btMin, $
+                                   BTMAX=btMax, $
+                                   BXMIN=bxMin, $
+                                   BXMAX=bxMax, $
+                                   /AND_TILING_OPTIONS, $
+                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+                                   TILE_IMAGES=tile_images, $
+                                   TILING_ORDER=tiling_order, $
+                                   N_TILE_COLUMNS=n_tile_columns, $
+                                   N_TILE_ROWS=n_tile_rows, $
+                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
+                                   TILEPLOTSUFF=plotSuff
+     
+     suffix_plotDir                  = (N_ELEMENTS(suffix_plotDir) GT 0) ?  '/' + suffix_plotDir + '/' + altStr : '/' + altStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
-        ;; CLOCKSTR=clockStrings, $
-        ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+        CLOCKSTR=clockStrings, $
+        MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
@@ -94,7 +174,6 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         HWMAUROVAL=HwMAurOval, $
         HWMKPIND=HwMKpInd, $
         MASKMIN=maskMin, $
-        THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
         ANGLELIM1=angleLim1, $
         ANGLELIM2=angleLim2, $
         BYMIN=byMin, $
@@ -113,7 +192,6 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         DO_ABS_BTMAX=abs_btMax, $
         DO_ABS_BXMIN=abs_bxMin, $
         DO_ABS_BXMAX=abs_bxMax, $
-        ;; RUN_AROUND_THE_RING_OF_CLOCK_ANGLES=run_the_clockAngle_ring, $
         RESET_OMNI_INDS=reset_omni_inds, $
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
@@ -121,7 +199,7 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
         INCLUDENOCONSECDATA=includeNoConsecData, $
-        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+        ;; /DO_NOT_CONSIDER_IMF, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
@@ -147,7 +225,6 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-        AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
@@ -185,10 +262,10 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
-        SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
         MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots, $
         SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
@@ -205,8 +282,11 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         SAVERAW=saveRaw, RAWDIR=rawDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
+        SUFFIX_PLOTDIR=suffix_plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
+        TXTOUTPUTDIR=txtOutputDir, $
+        SUFFIX_TXTDIR=suffix_txtDir, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -216,27 +296,24 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
         OUT_PARAMSTRING_LIST=out_paramString_list, $
-        GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
-        ;; TILEPLOTSUFFS=tilePlotSuffs, $
+        ;; TILEPLOTSUFFS=tilePlotSuff, $
         TILING_ORDER=tiling_order, $
+        TILEPLOTTITLE=tilePlotTitle, $
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+        GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+        SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
         TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-        TILEPLOTTITLES=tilePlotTitle, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        _EXTRA=e
-        ;; /GET_PLOT_I_LIST_LIST, $
-        ;; /GET_PARAMSTR_LIST_LIST, $
-        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-        ;; PARAMSTR_LIST_LIST=paramStr_list_list
-  
+        _EXTRA                       = e  
+     
   ENDFOR
 
 
