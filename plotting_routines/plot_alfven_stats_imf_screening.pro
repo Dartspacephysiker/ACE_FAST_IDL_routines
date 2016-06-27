@@ -383,7 +383,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                                     WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                    JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                                    JUSTDATA=justData, $
+                                    SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                     PLOTDIR=plotDir, $
                                     SUFFIX_PLOTDIR=suffix_plotDir, $
                                     PLOTPREFIX=plotPrefix, $
@@ -433,7 +434,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
-
      SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
   ENDIF ELSE BEGIN
      SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
