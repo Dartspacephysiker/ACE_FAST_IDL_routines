@@ -1,76 +1,177 @@
-;;2016/06/22 For Figure 2 of this Alf IMF paper
-PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAPE__FIG2
+;2016/06/28 Want to, you know, check out some gross rates
+PRO JOURNAL__20160628__BZ_SOUTH_STEPS__GET_AVG_STDDEV_FOR_OMNI_QUANTS__ALFIMFPAPE
 
-  do_timeAvg_fluxQuantities      = 1
+  COMPILE_OPT IDL2
+
+  do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0
+  divide_by_width_x              = 0
 
   ;;DB stuff
   do_despun                      = 1
 
-  autoscale_fluxPlots            = 0
-
-  do_not_consider_IMF            = 1
-
-  cb_force_oobHigh               = 0
+  ;;bonus
+  print_avg_imf_components       = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
-  pPlots                         = 1
-  tHistDenominatorPlot           = 0
+  nPlots                         = 1
+  nEventsPlotAutoscale           = 1
 
-  ;;For logAvg
+  ePlots                         = 0
+  eNumFlPlots                    = 0
+  pPlots                         = 0
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  sum_electron_and_poyntingflux  = 0
+
+
+  ;;e- energy flux
+  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
+  ;; eFluxPlotType                  = 'Max'
+  ;; ePlotRange                     = [0,1e8]
+  ;; logEfPlot                      = 0
+  ;; noNegEflux                     = 0
+
+  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  ;; noNegENumFl                    = [1,1]
+  ;; logENumFlPlot               = [1,1]
+  ;; ENumFlPlotRange             = [[1e-1,1e1], $
+  ;;                             [1e7,1e9]]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,1e8], $
+  ;;                                   [0,1e24]]
+  ;; eNumFlPlotType                 = 'ESA_Number_flux'
+  ;; noNegENumFl                    = 0
+  ;; logENumFlPlot                  = 0
+  ;; ENumFlPlotRange                = [0,2e9]
+
+  ;; logPfPlot                   = 1
+  ;; PPlotRange                  = [1e-1,1e1]
   ;; logPfPlot                      = 0
-  ;; PPlotRange                     = [0,2.0]
+  ;; PPlotRange                     = [0,1e8]
 
-  ;;for timeAvg
-  logPfPlot                      = 0
-  PPlotRange                     = [0,0.1]
-  ;; logPfPlot                      = 1
-  ;; PPlotRange                     = [0.002,0.2]
+  ;; ifluxPlotType                  = 'Integ_Up'
+  ;; noNegIflux                     = 1
+  ;; logIfPlot                   = 1
+  ;; IPlotRange                  = [1e6,1e8]
+  ;; logIfPlot                      = 0
+  ;; IPlotRange                     = [0,1e23]
+  
+  ;; logProbOccurrence              = 0
+  ;; probOccurrenceRange            = [0,0.10]
 
-  ;; tHistDenomPlotRange            = 
-  ;; tHistDenomPlotNormalize        = 
-  ;; tHistDenomPlotAutoscale        = 1
-  ;; tHistDenomPlot_noMask          = 1
+  ;; summed_eFlux_pFluxplotRange    = [0,2e8]
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Southern hemi ranges
+  ;; ePlotRange                     = [0,0.25]
 
-  ;;Otros
+  ;; noNegENumFl                    = [1,1]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,0.25], $
+  ;;                                   [0,8.0e8]]
+
+  ;; PPlotRange                     = [0,0.25]
+
+  ;; IPlotRange                     = [0,7.0e7]
+
+  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
+
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Tiled plot options
+
   reset_good_inds                = 1
-  reset_omni_inds                = 1
+  reset_OMNI_inds                = 1
 
-  altRange                       = [[340,4180]]
+  ;; altRange                    = [[340,1180], $
+  ;;                             [1180,2180], $
+  ;;                             [2180,3180], $
+  ;;                             [3180,4180]]
+
+  ;; altRange                       = [[340,4180]]
+  altitudeRange                  = [[340,4180]]
 
   orbRange                       = [500,12670]
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;IMF condition stuff--run the ring!
+  stepWidth                      = 5
+  nSteps                         = 8
+  stepDelta                      = 1
+  bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta
+  bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)
+
+  clockStrings                   = 'bzSouth'
+
+
+  angleLim1                      = 67.5
+  angleLim2                      = 112.5  
+
+  ;;Delay stuff
+  nDelays                        = 1
+  delayDeltaSec                  = 1800
+  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
+  maskMin                        = 10
+  tHist_mask_bins_below_thresh   = 10
 
-  hemi                        = 'SOUTH'
-  minILAT                     = -85
-  maxILAT                     = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; maskMin                        =  10.0
+  ;; tHist_mask_bins_below_thresh   =  10.0
 
+  ;; binILAT                     = 2.0
   binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
+
+  ;; minMLT                      = 6
+  ;; maxMLT                      = 18
 
   ;;Bonus
-  maskMin                        = STRUPCASE(hemi) EQ 'NORTH' ? 10 : 5
-  tHist_mask_bins_below_thresh   = KEYWORD_SET(logAvgPlot) ? !NULL : $
-                                   STRUPCASE(hemi) EQ 'NORTH' ? 10 : 5
 
-  FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='("--",I0,"-",I0)', $
-                            altitudeRange[0], $
-                            altitudeRange[1])
+  IF N_ELEMENTS(minMLT) EQ 0 THEN minMLT = 0
+  IF N_ELEMENTS(maxMLT) EQ 0 THEN maxMLT = 24
+
+  FOR i=0,N_ELEMENTS(bzMinArr)-1 DO BEGIN
+     IMFStr                      = clockStrings
+     IMFTitle                    = ''
+     bzMin                       = bzMinArr[i]
+     bzMax                       = bzMaxArr[i]
+
+     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbits_",I0,"-",I0)', $
+                                          altitudeRange[0], $
+                                          altitudeRange[1], $
+                                          orbRange[0], $
+                                          orbRange[1])
+     plotPrefix                  = altStr
+
+     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
+        IMFStr += '--bzMax_' + STRCOMPRESS(bzMax,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Max: ' + STRCOMPRESS(bzMax,/REMOVE_ALL) + 'nT'
+     ENDIF
+     IF N_ELEMENTS(bzMin) GT 0 THEN BEGIN
+        IMFStr += '--bzMin_' + STRCOMPRESS(bzMin,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(bzMin,/REMOVE_ALL) + 'nT'
+     ENDIF
+
+     suffix_plotDir                 = '/' + IMFStr
+     suffix_txtDir                  = '/' + IMFStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
-        ;; CLOCKSTR=clockStrings, $
-        ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+        CLOCKSTR=clockStrings, $
+        MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
@@ -117,11 +218,12 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         RESET_OMNI_INDS=reset_omni_inds, $
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
+        PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
         INCLUDENOCONSECDATA=includeNoConsecData, $
-        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+        ;; /DO_NOT_CONSIDER_IMF, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
@@ -185,6 +287,8 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -198,10 +302,13 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         DATADIR=dataDir, $
         DO_CHASTDB=do_chastDB, $
         DO_DESPUNDB=do_despun, $
-        NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+        NEVENTSPLOTRANGE=nEventsPlotRange, $
+        LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
-        WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+        WRITEASCII=writeASCII, $
+        WRITEHDF5=writeHDF5, $
+        WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, RAWDIR=rawDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
@@ -209,9 +316,18 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         PLOTSUFFIXES=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
+        SUFFIX_PLOTDIR=suffix_plotDir, $
+        SUFFIX_TXTDIR=suffix_txtDir, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
+        SUPPRESS_THICKGRID=suppress_thickGrid, $
+        SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+        SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
+        SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
+        SUPPRESS_MLT_NAME=suppress_MLT_name, $
+        SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
+        SUPPRESS_TITLES=suppress_titles, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
@@ -231,14 +347,14 @@ PRO JOURNAL__20160622__TIMEAVG_AND_LOGAVG_PFLUX__THISTDENOM__ALL_ALTS__ALFIMFPAP
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
+        MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e
-        ;; /GET_PLOT_I_LIST_LIST, $
-        ;; /GET_PARAMSTR_LIST_LIST, $
-        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-        ;; PARAMSTR_LIST_LIST=paramStr_list_list
-  
+     ;; /GET_PLOT_I_LIST_LIST, $
+     ;; /GET_PARAMSTR_LIST_LIST, $
+     ;; PLOT_I_LIST_LIST=plot_i_list_list, $
+     ;; PARAMSTR_LIST_LIST=paramStr_list_list
+     
   ENDFOR
 
-
-
 END
+

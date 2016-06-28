@@ -227,6 +227,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                RESET_OMNI_INDS=reset_omni_inds, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                                                                                               PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                                                                                LUN=lun)     
         
      ENDELSE

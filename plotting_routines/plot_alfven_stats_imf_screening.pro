@@ -381,7 +381,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     LOGNEVENTSPLOT=logNEventsPlot, $
                                     NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
                                     NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
-                                    WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+                                    WRITEASCII=writeASCII, $
+                                    WRITEHDF5=writeHDF5, $
+                                    WRITEPROCESSEDH2D=writeProcessedH2d, $
                                     SAVERAW=saveRaw, RAWDIR=rawDir, $
                                     JUSTDATA=justData, $
                                     SHOWPLOTSNOSAVE=showPlotsNoSave, $
@@ -421,6 +423,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
+                                    MAKE_INTEGRAL_FILE=make_integral_file, $
                                     OUT_TEMPFILE_LIST=out_tempFile_list, $
                                     OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
                                     OUT_PARAMSTRING_LIST=out_paramString_list, $
@@ -951,8 +954,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
      SETUP_GROSSRATE_INFO_FILE,grossRate_info_file, $
+                               PARAMSTRING=paramString, $
+                               TXTOUTPUTDIR=txtOutputDir, $
                                GROSSLUN=grossLun, $
-                               PARAMSTRING=paramString
+                               LUN=lun
   ENDIF
 
   IF KEYWORD_SET(executing_multiples) THEN NIter = N_ELEMENTS(multiples) ELSE NIter = 1
@@ -1261,6 +1266,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
+                               MAKE_INTEGRAL_FILE=make_integral_file, $
+                               TXTOUTPUTDIR=txtOutputDir, $
                                _EXTRA = e
      ENDIF
 

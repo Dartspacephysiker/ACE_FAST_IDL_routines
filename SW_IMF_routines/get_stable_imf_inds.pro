@@ -311,6 +311,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      
      By_avg              = MEAN(C_OMNI__By[stable_omni_inds])
      Bz_avg              = MEAN(C_OMNI__Bz[stable_omni_inds])
+
+     By_stdDev           = STDDEV(C_OMNI__By[stable_omni_inds])
+     Bz_stdDev           = STDDEV(C_OMNI__Bz[stable_omni_inds])
      ;;Get cusp predictions
      PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
                                                LAT_CUSP_NWLL_1989=lat_cusp_nwll_1989, $
@@ -342,6 +345,15 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',MEAN(C_OMNI__phiClock[stable_omni_inds])
      PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',MEAN(C_OMNI__cone_overClock[stable_omni_inds])
      PRINTF,outLun,''
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bx[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__By[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bz[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bt[stable_omni_inds])
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__thetaCone[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__phiClock[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
      PRINTF,outLun,''
      PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
      PRINTF,outLun,"From Newell et al. [1989]"

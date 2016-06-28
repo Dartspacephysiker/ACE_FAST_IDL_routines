@@ -109,24 +109,24 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1800
+  delayDeltaSec                  = 3600
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   reset_omni_inds                = 1
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; maskMin                        = 10
-  ;; tHist_mask_bins_below_thresh   = 10
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
+  maskMin                        = 10
+  tHist_mask_bins_below_thresh   = 10
 
-  hemi                        = 'SOUTH'
-  minILAT                     = -85
-  maxILAT                     = -60
-  maskMin                        =  10.0
-  tHist_mask_bins_below_thresh   =  10.0
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; maskMin                        =  10.0
+  ;; tHist_mask_bins_below_thresh   =  10.0
 
   ;; binILAT                     = 2.0
   binILAT                        = 2.5
