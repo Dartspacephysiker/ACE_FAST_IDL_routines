@@ -43,7 +43,7 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,1e8]
+  ePlotRange                     = [0,7e7]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -54,7 +54,7 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
   ENumFlPlotRange                = [[0,1e8], $
-                                    [0,1e24]]
+                                    [0,2e24]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -75,7 +75,7 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.10]
 
-  summed_eFlux_pFluxplotRange    = [0,5e9]
+  summed_eFlux_pFluxplotRange    = [0,5e8]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges

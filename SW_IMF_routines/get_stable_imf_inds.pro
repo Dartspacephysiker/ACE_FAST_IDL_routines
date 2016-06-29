@@ -65,7 +65,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__HAVE_STABLE_INDS, $
      C_OMNI__magCoords, $
      C_OMNI__combined_i,C_OMNI__time_i, $
-     C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__clockStr, $
+     C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__N_angle_sets, $
+     C_OMNI__clockStr, $
      C_OMNI__noClockAngles, $
      C_OMNI__treat_angles_like_bz_south, $
      C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $

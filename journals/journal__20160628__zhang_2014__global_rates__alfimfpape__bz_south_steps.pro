@@ -102,14 +102,14 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_STEPS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
+  start_bz                       = 10
   stepWidth                      = 5
-  nSteps                         = 8
+  nSteps                         = 2
   stepDelta                      = 1
-  bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta
-  bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)
+  bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta+start_bz
+  bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)+start_bz
 
-  clockStrings                   = 'bzSouth'
-
+  clockStrings                   = 'all_Bz'
 
   angleLim1                      = 67.5
   angleLim2                      = 112.5  
