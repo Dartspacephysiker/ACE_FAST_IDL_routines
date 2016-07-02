@@ -1,10 +1,11 @@
-;;2016/05/06 Professor LaBelle would like to see something similar to the Zhang et al. [2014] paper showing Alfvénic activity for
-;;several different clock angles. Here goes.
-PRO JOURNAL__20160621__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__ALL_ALTS__ALFIMFPAPE
+;;2016/07/02 What about this?
+PRO JOURNAL__20160702__TIMEAVG_PFLUX__POLARCONTOUR__ALL_ALTS__ALFIMFPAPE
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
   divide_by_width_x              = 1
+
+  polarContour                   = 1
 
   ;;DB stuff
   do_despun                      = 1
@@ -19,11 +20,11 @@ PRO JOURNAL__20160621__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__ALL_ALTS__ALFIMFPAPE
 
   ePlots                         = 0
   eNumFlPlots                    = 0
-  pPlots                         = 0
+  pPlots                         = 1
   ionPlots                       = 0
   probOccurrencePlot             = 0
   sum_electron_and_poyntingflux  = 0
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
