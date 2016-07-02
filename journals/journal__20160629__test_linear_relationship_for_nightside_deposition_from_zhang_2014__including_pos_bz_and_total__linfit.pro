@@ -1,6 +1,8 @@
 ;;2016/06/29
 PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZHANG_2014__INCLUDING_POS_BZ_AND_TOTAL__LINFIT
 
+  savePlot          = 0
+
   inDir             = '/home/spencerh/Desktop/Spence_paper_drafts/2016/Alfvens_IMF/avg_IMF_conds/'
   inFile            = '20160628--test_linear_relationship_between_nightside_energy_deposition_and_bz_from_Zhang_2014--trimmed.txt'
   asciiTmpltFile    = '20160628--ascii_tmplt--relationship_tween_nightside_energy_dep.sav'
@@ -57,7 +59,7 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   nightPosFitCoeff  = LINFIT(xPos,pNight[posInds], $
                              MEASURE_ERRORS=nightPosError, $
                              YFIT=nightPosFit)
-  nightPosName      = STRING(FORMAT='("Night fit (pos)",T16,": ",F0.3,"X+",F0.3)', $
+  nightPosName      = STRING(FORMAT='("Night (B!Dz!N > 0)",T20,": ",F0.3,"X+",F0.3,"!C")', $
                              nightPosFitCoeff[0], $
                              nightPosFitCoeff[1])
 
@@ -69,7 +71,7 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   nightNegFitCoeff  = LINFIT(xNeg,pNight[negInds], $
                              MEASURE_ERRORS=nightNegError, $
                              YFIT=nightNegFit)
-  nightNegName      = STRING(FORMAT='("Night fit (neg)",T16,": ",F0.3,"X",F0.3)', $
+  nightNegName      = STRING(FORMAT='("Night (B!Dz!N < 0)",T20,": ",F0.3,"X",F0.3)', $
                              nightNegFitCoeff[0], $
                              nightNegFitCoeff[1])
 
@@ -90,7 +92,7 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   dayPosFitCoeff    = LINFIT(xPos,pDay[posInds], $
                              MEASURE_ERRORS=dayPosError, $
                              YFIT=dayPosFit)
-  dayPosName        = STRING(FORMAT='("Day fit   (pos)",T16,": ",F0.3,"X+",F0.3)', $
+  dayPosName        = STRING(FORMAT='("Day   (B!Dz!N > 0)",T20,": ",F0.3,"X+",F0.3)', $
                              dayPosFitCoeff[0], $
                              dayPosFitCoeff[1])
 
@@ -102,7 +104,7 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   dayNegFitCoeff    = LINFIT(xNeg,pDay[negInds], $
                              MEASURE_ERRORS=dayNegError, $
                              YFIT=dayNegFit)
-  dayNegName        = STRING(FORMAT='("Day fit   (neg)",T16,": ",F0.3,"X",F0.3)', $
+  dayNegName        = STRING(FORMAT='("Day   (B!Dz!N < 0)",T20,": ",F0.3,"X",F0.3)', $
                              dayNegFitCoeff[0], $
                              dayNegFitCoeff[1])
 
@@ -123,7 +125,7 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   totalPosFitCoeff  = LINFIT(xPos,pTot[posInds], $
                              MEASURE_ERRORS=totalPosError, $
                              YFIT=totalPosFit)
-  totalPosName      = STRING(FORMAT='("Total fit (pos)",T16,": ",F0.3,"X+",F0.3)', $
+  totalPosName      = STRING(FORMAT='("Total (B!Dz!N > 0)",T20,": ",F0.3,"X+",F0.3)', $
                              totalPosFitCoeff[0], $
                              totalPosFitCoeff[1])
 
@@ -135,16 +137,16 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   totalNegFitCoeff  = LINFIT(xNeg,pTot[negInds], $
                              MEASURE_ERRORS=totalNegError, $
                              YFIT=totalNegFit)
-  totalNegName      = STRING(FORMAT='("Total fit (neg)",T16,": ",F0.3,"X",F0.3)', $
+  totalNegName      = STRING(FORMAT='("Total (B!Dz!N < 0)",T20,": ",F0.3,"X",F0.3)', $
                              totalNegFitCoeff[0], $
                              totalNegFitCoeff[1])
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot options
-  ;; title          = 'Hemispheric ' + ANSI_VALUE('Alfvénic') + ' Power'
+  title          = 'IMF B!Dz!N Control of Integrated ' + ANSI_VALUE('Alfvénic') + ' Power in the Northern Hemisphere'
 
   xTitle            = 'B!Dz!N (nT)'
-  yTitle            = 'Integrated ' + ANSI_VALUE('Alfvénic') + 'Power (GW)' 
+  yTitle            = 'Power (GW)' 
 
   ;; xRange         = [-8,0]
   ;; xRange         = [0,8]
@@ -156,11 +158,12 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   ;; yMax           = ROUND_NTH_SIG_DIGIT(MAX(pTot]),2)
   ;; yRange         = [yMin, $
   ;;                    yMax]
-  yRange            = [0,2.8e9]/1.0e9
+  yRange            = [0,3.0e9]/1.0e9
 
   fontSize          = 18
-  legFontSize       = 10
+  legFontSize       = 16
   legFont           = 'Courier'
+  legPos            = [0.74,0.84]
 
   sym               = ['td','tu','D']
   sym_thick         = 2.0
@@ -177,157 +180,170 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
   window            = WINDOW(DIMENSIONS=[1200,800])
   plotArr           = MAKE_ARRAY(9,/OBJ)
   
-  plotArr[0]        = ERRORPLOT(xVal, $
-                                pNight, $
-                                g_pFlux.bzStdDev, $
-                                yError, $
-                                TITLE=title, $
-                                XTITLE=xTitle, $
-                                YTITLE=yTitle, $
-                                XRANGE=xRange, $
-                                YRANGE=yRange, $
-                                SYMBOL=sym[0], $
-                                ERRORBAR_CAPSIZE=eb_cs, $
-                                ERRORBAR_LINESTYLE=eb_lineStyle[0], $
-                                SYM_THICK=sym_thick, $
-                                THICK=thick, $
-                                TRANSPARENCY=transp, $
-                                LINESTYLE=lineStyle[0], $
-                                NAME='Nightside', $
-                                COLOR='blue', $
-                                FONT_SIZE=fontSize, $
-                                CURRENT=window)
+  ;;Structure of this thing is:
+  ;;dayScatter,dayPosFit,dayNegFit,
+  ;;nightScatter,nightPosFit,nightNegFit,
+  ;;totalScatter,totalPosFit,totalNegFit,
+  plotInds          = [1,4,7, $
+                       2,5,8, $
+                       0,3,6]
 
-  plotArr[1]        = ERRORPLOT(xVal, $
-                                pDay, $
-                                g_pFlux.bzStdDev, $
-                                yError, $
-                                XRANGE=xRange, $
-                                YRANGE=yRange, $
-                                ERRORBAR_CAPSIZE=eb_cs, $
-                                ERRORBAR_LINESTYLE=eb_lineStyle[1], $
-                                SYMBOL=sym[1], $
-                                SYM_THICK=sym_thick, $
-                                THICK=thick, $
-                                TRANSPARENCY=transp, $
-                                LINESTYLE=lineStyle[1], $
-                                NAME='Dayside', $
-                                COLOR='red', $
-                                FONT_SIZE=fontSize, $
-                                CURRENT=window, $
-                                /OVERPLOT)
+  pInd_nightNeg     = 0
+  pInd_nightPos     = 0
+  pInd_night        = 0
 
-  plotArr[2]        = ERRORPLOT(xVal, $
-                                pTot, $
-                                g_pFlux.bzStdDev, $
-                                yError, $
-                                XRANGE=xRange, $
-                                YRANGE=yRange, $
-                                ERRORBAR_CAPSIZE=eb_cs, $
-                                ERRORBAR_LINESTYLE=eb_lineStyle[2], $
-                                SYMBOL=sym[2], $
-                                SYM_THICK=sym_thick, $
-                                THICK=thick, $
-                                TRANSPARENCY=transp, $
-                                LINESTYLE=lineStyle[2], $
-                                NAME='Total', $
-                                COLOR='Black', $
-                                FONT_SIZE=fontSize, $
-                                CURRENT=window, $
-                                /OVERPLOT)
+  plotArr[plotInds[0]]        = ERRORPLOT(xVal, $
+                                          pDay, $
+                                          g_pFlux.bzStdDev, $
+                                          yError, $
+                                          XRANGE=xRange, $
+                                          YRANGE=yRange, $
+                                          ERRORBAR_CAPSIZE=eb_cs, $
+                                          ERRORBAR_LINESTYLE=eb_lineStyle[1], $
+                                          SYMBOL=sym[1], $
+                                          SYM_THICK=sym_thick, $
+                                          THICK=thick, $
+                                          TRANSPARENCY=transp, $
+                                          LINESTYLE=lineStyle[1], $
+                                          TITLE=title, $
+                                          NAME='Dayside', $
+                                          COLOR='red', $
+                                          FONT_SIZE=fontSize, $
+                                          CURRENT=window)
 
-  plotArr[3]        = PLOT(xPos, $
-                           nightPosFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[0], $
-                           NAME=nightPosName, $
-                           COLOR='blue', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[1]]        = PLOT(xPos, $
+                                     dayPosFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[1], $
+                                     NAME=dayPosName, $
+                                     COLOR='red', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
 
-  plotArr[4]        = PLOT(xPos, $
-                           dayPosFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[1], $
-                           NAME=dayPosName, $
-                           COLOR='red', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[2]]        = PLOT(xNeg, $
+                                     dayNegFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[1], $
+                                     NAME=dayNegName, $
+                                     COLOR='red', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
 
-  plotArr[5]        = PLOT(xPos, $
-                           totalPosFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[2], $
-                           NAME=totalPosName, $
-                           COLOR='black', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[3]]        = ERRORPLOT(xVal, $
+                                          pNight, $
+                                          g_pFlux.bzStdDev, $
+                                          yError, $
+                                          TITLE=title, $
+                                          XTITLE=xTitle, $
+                                          YTITLE=yTitle, $
+                                          XRANGE=xRange, $
+                                          YRANGE=yRange, $
+                                          SYMBOL=sym[0], $
+                                          ERRORBAR_CAPSIZE=eb_cs, $
+                                          ERRORBAR_LINESTYLE=eb_lineStyle[0], $
+                                          SYM_THICK=sym_thick, $
+                                          THICK=thick, $
+                                          TRANSPARENCY=transp, $
+                                          LINESTYLE=lineStyle[0], $
+                                          NAME='Nightside!C', $
+                                          COLOR='blue', $
+                                          FONT_SIZE=fontSize, $
+                                          CURRENT=window, $
+                                          /OVERPLOT)
 
-  plotArr[6]        = PLOT(xNeg, $
-                           nightNegFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[0], $
-                           NAME=nightNegName, $
-                           COLOR='blue', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[4]]        = PLOT(xPos, $
+                                     nightPosFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[0], $
+                                     NAME=nightPosName, $
+                                     COLOR='blue', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
 
-  plotArr[7]        = PLOT(xNeg, $
-                           dayNegFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[1], $
-                           NAME=dayNegName, $
-                           COLOR='red', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[5]]        = PLOT(xNeg, $
+                                     nightNegFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[0], $
+                                     NAME=nightNegName, $
+                                     COLOR='blue', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
 
-  plotArr[8]        = PLOT(xNeg, $
-                           totalNegFit, $
-                           XRANGE=xRange, $
-                           YRANGE=yRange, $
-                           ;; SYMBOL=sym[0], $
-                           ;; SYM_THICK=sym_thick, $
-                           THICK=thick, $
-                           TRANSPARENCY=transp, $
-                           LINESTYLE=fitLineStyle[2], $
-                           NAME=totalNegName, $
-                           COLOR='black', $
-                           FONT_SIZE=fontSize, $
-                           CURRENT=window, $
-                           /OVERPLOT)
+  plotArr[plotInds[6]]        = ERRORPLOT(xVal, $
+                                          pTot, $
+                                          g_pFlux.bzStdDev, $
+                                          yError, $
+                                          XRANGE=xRange, $
+                                          YRANGE=yRange, $
+                                          ERRORBAR_CAPSIZE=eb_cs, $
+                                          ERRORBAR_LINESTYLE=eb_lineStyle[2], $
+                                          SYMBOL=sym[2], $
+                                          SYM_THICK=sym_thick, $
+                                          THICK=thick, $
+                                          TRANSPARENCY=transp, $
+                                          LINESTYLE=lineStyle[2], $
+                                          NAME='Total', $
+                                          COLOR='Black', $
+                                          FONT_SIZE=fontSize, $
+                                          CURRENT=window, $
+                                          /OVERPLOT)
+
+  plotArr[plotInds[7]]        = PLOT(xPos, $
+                                     totalPosFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[2], $
+                                     NAME=totalPosName, $
+                                     COLOR='black', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
+
+  plotArr[plotInds[8]]        = PLOT(xNeg, $
+                                     totalNegFit, $
+                                     XRANGE=xRange, $
+                                     YRANGE=yRange, $
+                                     ;; SYMBOL=sym[0], $
+                                     ;; SYM_THICK=sym_thick, $
+                                     THICK=thick, $
+                                     TRANSPARENCY=transp, $
+                                     LINESTYLE=fitLineStyle[2], $
+                                     NAME=totalNegName, $
+                                     COLOR='black', $
+                                     FONT_SIZE=fontSize, $
+                                     CURRENT=window, $
+                                     /OVERPLOT)
 
   legend            = LEGEND(TARGET=plotArr[0:-1], $
-                             POSITION=[0.8,0.8], $
+                             POSITION=legPos, $
                              FONT_SIZE=legFontSize, $
                              FONT_NAME=legFont, $
                              ;; ALIGNMENT=0.5, $
@@ -335,8 +351,9 @@ PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZH
                              /NORMAL)
 
 
-  PRINT,'Saving ' + outPlotName + ' ...'
-  window.save,inDir+outPlotName
-
+  IF KEYWORD_SET(savePlot) THEN BEGIN
+     PRINT,'Saving ' + outPlotName + ' ...'
+     window.save,inDir+outPlotName
+  ENDIF
 
 END
