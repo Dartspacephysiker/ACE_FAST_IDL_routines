@@ -86,10 +86,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-        IF KEYWORD_SET(reset_omni_inds) THEN BEGIN
-           PRINT,"Resetting OMNI inds..."
-           RESET_OMNI_INDS
-        ENDIF
+  IF KEYWORD_SET(reset_omni_inds) THEN BEGIN
+     PRINT,"Resetting OMNI inds..."
+     RESET_OMNI_INDS
+  ENDIF
   IF N_ELEMENTS(C_OMNI__HAVE_STABLE_INDS) GT 0 THEN BEGIN
      IF ~C_OMNI__HAVE_STABLE_INDS THEN BEGIN
         calculate = 1 
@@ -123,7 +123,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                  DO_ABS_BXMAX=abs_bxMax, $
                                  OMNI_COORDS=OMNI_coords, $
                                  LUN=lun
-                                    
+        
         calculate = C_OMNI__RECALCULATE
         IF N_ELEMENTS(C_OMNI__stable_i) EQ 0 THEN BEGIN
            PRINTF,lun,"Impossible! You said this was calculated ..."
@@ -131,84 +131,113 @@ FUNCTION GET_STABLE_IMF_INDS, $
         ENDIF
      ENDELSE
   ENDIF ELSE BEGIN
-     calculate                                 = 1
+     calculate                     = 1
   ENDELSE
 
   IF calculate THEN BEGIN
      PRINTF,lun,"****BEGIN GET_STABLE_IMF_INDS****"
      PRINTF,lun,"Calculating stable IMF inds for this run..."
-     C_OMNI__paramStr                          = 'OMNI_params'
-     C_OMNI__stableStr                         = 'OMNI_stability'
+     C_OMNI__paramStr              = 'OMNI_params'
+     C_OMNI__stableStr             = 'OMNI_stability'
      
      ;;********************************************************
      ;;Restore ACE/OMNI data
      ;; IF N_ELEMENTS(mag_utc) EQ 0 THEN BEGIN
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
-     dataDir                                = "/SPENCEdata/Research/database/"
+     dataDir                       = "/SPENCEdata/Research/database/"
      RESTORE,dataDir + "/OMNI/culled_OMNI_magdata.dat"
+     ;; RESTORE,dataDir + "/OMNI/culled_OMNI_magdata__20160702.dat"
      ;; ENDIF
 
-     C_OMNI__mag_UTC                           = TEMPORARY(mag_UTC)
+     C_OMNI__mag_UTC               = TEMPORARY(mag_UTC)
 
      IF KEYWORD_SET(OMNI_coords) THEN BEGIN
-        C_OMNI__magCoords                      = OMNI_coords 
+        C_OMNI__magCoords          = OMNI_coords 
      ENDIF ELSE BEGIN
         PRINTF,lun,'No OMNI coordinate type selected! Defaulting to GSE ...'
-        C_OMNI__magCoords                      = 'GSE'
+        C_OMNI__magCoords          = 'GSE'
      ENDELSE
 
      ;;No need to pick up Bx with magcoords, since it's the same either way
-     C_OMNI__Bx                                = TEMPORARY(Bx)
+     C_OMNI__Bx                    = TEMPORARY(Bx)
      CASE C_OMNI__magCoords OF 
         "GSE": BEGIN
-           C_OMNI__By                          = TEMPORARY(By_GSE)
-           C_OMNI__Bz                          = TEMPORARY(Bz_GSE)
-           C_OMNI__Bt                          = TEMPORARY(Bt_GSE)
-           C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSE)
-           C_OMNI__phiClock                    = TEMPORARY(phiClock_GSE)
-           C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSE)
-           C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSE)
+           C_OMNI__By              = TEMPORARY(By_GSE)
+           C_OMNI__Bz              = TEMPORARY(Bz_GSE)
+           C_OMNI__Bt              = TEMPORARY(Bt_GSE)
+           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSE)
+           C_OMNI__phiClock        = TEMPORARY(phiClock_GSE)
+           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSE)
+           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSE)
         END
         "GSM": BEGIN
-           C_OMNI__By                          = TEMPORARY(By_GSM)
-           C_OMNI__Bz                          = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt                          = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock                    = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSM)
+           C_OMNI__By              = TEMPORARY(By_GSM)
+           C_OMNI__Bz              = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt              = TEMPORARY(Bt_GSM)
+           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSM)
+           C_OMNI__phiClock        = TEMPORARY(phiClock_GSM)
+           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSM)
+           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSM)
         END
         ELSE: BEGIN
            print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSM..."
            WAIT,1.0
-           C_OMNI__By                          = TEMPORARY(By_GSM)
-           C_OMNI__Bz                          = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt                          = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone                   = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock                    = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock              = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz                 = TEMPORARY(Bxy_over_Bz_GSM)
+           C_OMNI__By              = TEMPORARY(By_GSM)
+           C_OMNI__Bz              = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt              = TEMPORARY(Bt_GSM)
+           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSM)
+           C_OMNI__phiClock        = TEMPORARY(phiClock_GSM)
+           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSM)
+           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSM)
         END
      ENDCASE
-     C_OMNI__thetaCone                         = C_OMNI__thetaCone*180/!PI
-     C_OMNI__phiClock                          = C_OMNI__phiClock*180/!PI
+     C_OMNI__thetaCone             = C_OMNI__thetaCone*180/!PI
+     C_OMNI__phiClock              = C_OMNI__phiClock*180/!PI
+
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;Do the cleaning
+
+     ;; clean_i                    = WHERE((ABS(bx_gse) LE 99.9) AND $
+     ;;                                                   (ABS(by_gsm) LE 99.9) AND $
+     ;;                                                   (ABS(bz_gsm) LE 99.9) AND $
+     ;;                                                   (ABS(by_gse) LE 99.9) AND $
+     ;;                                                   (ABS(bz_gse) LE 99.9))
+
+     clean_i                       = WHERE((ABS(C_OMNI__Bx) LE 99.9) AND $
+                                           (ABS(C_OMNI__By) LE 99.9) AND $
+                                           (ABS(C_OMNI__Bz) LE 99.9),nClean, $
+                                           NCOMPLEMENT=nNotClean)
+     
+     PRINTF,lun,"Losing " + STRCOMPRESS(nNotClean,/REMOVE_ALL) + $
+            " OMNI entries because they are bad news"     
+     
+     C_OMNI__By                       = C_OMNI__By[clean_i]            
+     C_OMNI__Bz                       = C_OMNI__Bz[clean_i]            
+     C_OMNI__Bt                       = C_OMNI__Bt[clean_i]            
+     C_OMNI__thetaCone                = C_OMNI__thetaCone[clean_i]     
+     C_OMNI__phiClock                 = C_OMNI__phiClock[clean_i]      
+     C_OMNI__cone_overClock           = C_OMNI__cone_overClock[clean_i]
+     C_OMNI__Bxy_over_Bz              = C_OMNI__Bxy_over_Bz[clean_i]
+     C_OMNI__mag_UTC                  = C_OMNI__mag_UTC[clean_i]
+     goodmag_goodtimes_i              = goodmag_goodtimes_i[clean_i]
 
      ;;Any smoothing to be done?
      IF KEYWORD_SET(smooth_IMF) THEN BEGIN
         SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
-                           BYMIN=byMin, $
-                           BYMAX=byMax, $
-                           BZMIN=bzMin, $
-                           BZMAX=bzMax, $
-                           BTMIN=btMin, $
-                           BTMAX=btMax, $
-                           BXMIN=bxMin, $
-                           BXMAX=bxMax
+                        BYMIN=byMin, $
+                        BYMAX=byMax, $
+                        BZMIN=bzMin, $
+                        BZMAX=bzMax, $
+                        BTMIN=btMin, $
+                        BTMAX=btMax, $
+                        BXMIN=bxMin, $
+                        BXMAX=bxMax
      ENDIF
 
      IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
-        maxTime                                = STR_TO_TIME('2000-10-06/00:08:46.938')
-        minTime                                = STR_TO_TIME('1996-10-06/20:54:32.622')
+        maxTime                                = STR_TO_TIME('1999-11-03/03:21:00.000')
+        ;; maxTime                                = STR_TO_TIME('2000-10-06/00:08:46.938')
+        minTime                                = STR_TO_TIME('1996-10-06/16:26:02.0')
         C_OMNI__time_i                         = WHERE(C_OMNI__mag_UTC LE maxTime AND C_OMNI__mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)
         USE_COMBINED_INDS                      = 1
         PRINTF,lun,"Losing " + STRCOMPRESS(nNotAlfvenDB,/REMOVE_ALL) + " OMNI entries because they don't happen during Alfven stuff"
@@ -252,7 +281,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         C_OMNI__stableIMF                      = stableIMF
         C_OMNI__paramStr                      += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 
-        GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $                        ; Get streaks in the database first of all
+        GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all
                              USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS, $
                              RECALCULATE_OMNI_IND_STREAKS=calculate                
         C_OMNI__stable_i                       = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute

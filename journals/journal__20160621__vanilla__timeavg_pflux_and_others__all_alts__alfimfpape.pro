@@ -19,11 +19,11 @@ PRO JOURNAL__20160621__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__ALL_ALTS__ALFIMFPAPE
 
   ePlots                         = 0
   eNumFlPlots                    = 0
-  pPlots                         = 0
+  pPlots                         = 1
   ionPlots                       = 0
   probOccurrencePlot             = 0
   sum_electron_and_poyntingflux  = 0
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'

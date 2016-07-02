@@ -15,11 +15,11 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
   CASE C_OMNI__N_angle_sets OF
      1: BEGIN
         IF C_OMNI__clockStr NE 'bzSouth' AND C_OMNI__clockStr NE 'all_IMF' THEN BEGIN
-           C_OMNI__phiIMF_i                         = WHERE(phiClock GE C_OMNI__negAngle AND phiClock LE C_OMNI__posAngle)
+           C_OMNI__phiIMF_i                         = WHERE(phiClock GE C_OMNI__negAngle AND phiClock LT C_OMNI__posAngle)
         ENDIF ELSE BEGIN
            IF STRUPCASE(C_OMNI__clockStr) EQ STRUPCASE('bzSouth') OR KEYWORD_SET(C_OMNI__treat_angles_like_bz_south) THEN BEGIN
               C_OMNI__phiIMF_i                      = CGSETUNION(WHERE(phiClock GE C_OMNI__negAngle, /NULL),$
-                                                                 WHERE(phiClock LE C_OMNI__posAngle, /NULL)) 
+                                                                 WHERE(phiClock LT C_OMNI__posAngle, /NULL)) 
            ENDIF ELSE BEGIN
               IF STRUPCASE(C_OMNI__clockStr) EQ STRUPCASE('all_IMF') THEN BEGIN
                  C_OMNI__phiIMF_i                   = WHERE(phiClock EQ phiClock, /NULL)
@@ -39,7 +39,7 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
         IF STRUPCASE(C_OMNI__clockStr) NE STRUPCASE('all_Bz') THEN BEGIN
            C_OMNI__phiIMF_i                         = !NULL
            FOR iAngle=0,C_OMNI__N_angle_sets-1 DO BEGIN
-              temp_i                                = WHERE(phiClock GE C_OMNI__negAngle[iAngle] AND phiClock LE C_OMNI__posAngle[iAngle],nTemp)
+              temp_i                                = WHERE(phiClock GE C_OMNI__negAngle[iAngle] AND phiClock LT C_OMNI__posAngle[iAngle],nTemp)
 
               IF nTemp GT 0 THEN BEGIN
                  C_OMNI__phiIMF_i                   = [C_OMNI__phiIMF_i,temp_i]
@@ -54,10 +54,10 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
            FOR iAngle=0,C_OMNI__N_angle_sets-1 DO BEGIN
               IF STRUPCASE(C_OMNI__clockStr) EQ STRUPCASE('bzSouth') OR KEYWORD_SET(C_OMNI__treat_angles_like_bz_south[iAngle]) THEN BEGIN
                  temp_i                             = CGSETUNION(WHERE(phiClock GE C_OMNI__negAngle[iAngle], /NULL),$
-                                                                 WHERE(phiClock LE C_OMNI__posAngle[iAngle], /NULL)) 
+                                                                 WHERE(phiClock LT C_OMNI__posAngle[iAngle], /NULL)) 
                  nTemp                              = N_ELEMENTS(temp_i)
               ENDIF ELSE BEGIN
-                 temp_i                             = WHERE(phiClock GE C_OMNI__negAngle[iAngle] AND phiClock LE C_OMNI__posAngle[iAngle],nTemp)
+                 temp_i                             = WHERE(phiClock GE C_OMNI__negAngle[iAngle] AND phiClock LT C_OMNI__posAngle[iAngle],nTemp)
               ENDELSE
               IF nTemp GT 0 THEN BEGIN
                  C_OMNI__phiIMF_i                   = [C_OMNI__phiIMF_i,temp_i]

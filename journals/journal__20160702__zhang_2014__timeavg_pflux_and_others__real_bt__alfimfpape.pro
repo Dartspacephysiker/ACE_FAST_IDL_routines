@@ -1,5 +1,5 @@
 ;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
-PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__DIFF_ILAT
+PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
 
   COMPILE_OPT IDL2
 
@@ -37,7 +37,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.5]
+  ePlotRange                     = [0,1.0]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -47,8 +47,8 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.5], $
-                                    [0,1.0e9]]
+  ENumFlPlotRange                = [[0,1.0], $
+                                    [0,1.5e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -57,7 +57,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.5]
+  PPlotRange                     = [0,1.0]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -67,24 +67,24 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   IPlotRange                     = [0,1.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.10]
+  probOccurrenceRange            = [0,0.15]
 
   summed_eFlux_pFluxplotRange    = [0,1.5]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
-  ePlotRange                     = [0,0.25]
+  ;; ePlotRange                     = [0,0.25]
 
-  noNegENumFl                    = [1,1]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.25], $
-                                    [0,8.0e8]]
+  ;; noNegENumFl                    = [1,1]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,0.25], $
+  ;;                                   [0,8.0e8]]
 
-  PPlotRange                     = [0,0.25]
+  ;; PPlotRange                     = [0,0.25]
 
-  IPlotRange                     = [0,7.0e7]
+  ;; IPlotRange                     = [0,7.0e7]
 
-  summed_eFlux_pFluxplotRange    = [0,0.8]
+  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -104,7 +104,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 5
+  btMin                          = 3
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -118,7 +118,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
-  maxILAT                        = 85
+  maxILAT                        = 87
   maskMin                        = 10
   tHist_mask_bins_below_thresh   = 10
 
@@ -129,7 +129,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
   ;; tHist_mask_bins_below_thresh   =  10.0
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

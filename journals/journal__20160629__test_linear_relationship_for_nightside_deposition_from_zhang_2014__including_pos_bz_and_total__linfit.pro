@@ -1,7 +1,7 @@
 ;;2016/06/29
 PRO JOURNAL__20160629__TEST_LINEAR_RELATIONSHIP_FOR_NIGHTSIDE_DEPOSITION_FROM_ZHANG_2014__INCLUDING_POS_BZ_AND_TOTAL__LINFIT
 
-  savePlot          = 0
+  savePlot          = 1
 
   inDir             = '/home/spencerh/Desktop/Spence_paper_drafts/2016/Alfvens_IMF/avg_IMF_conds/'
   inFile            = '20160628--test_linear_relationship_between_nightside_energy_deposition_and_bz_from_Zhang_2014--trimmed.txt'
