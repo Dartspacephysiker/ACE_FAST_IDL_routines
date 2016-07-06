@@ -46,6 +46,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
    OMNI_COORDS=OMNI_coords, $
    OMNI_PARAMSTR=omni_paramStr, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+   PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+   SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    LUN=lun
   
   ;; COMMON MAXIMUS,MAXIMUS,MAXIMUS__good_i,MAXIMUS__cleaned_i
@@ -84,7 +86,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   COMPILE_OPT idl2
 
-  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
+  IF N_ELEMENTS(lun) EQ 0 THEN lun  = -1
 
   IF KEYWORD_SET(reset_omni_inds) THEN BEGIN
      PRINT,"Resetting OMNI inds..."
@@ -92,9 +94,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ENDIF
   IF N_ELEMENTS(C_OMNI__HAVE_STABLE_INDS) GT 0 THEN BEGIN
      IF ~C_OMNI__HAVE_STABLE_INDS THEN BEGIN
-        calculate = 1 
-        C_OMNI__HAVE_STABLE_INDS = 0
-        C_OMNI__STABLE_I         = !NULL
+        calculate                   = 1 
+        C_OMNI__HAVE_STABLE_INDS    = 0
+        C_OMNI__STABLE_I            = !NULL
      ENDIF ELSE BEGIN
 
         ;;Do we need to recalculate anyway?
@@ -124,102 +126,102 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                  OMNI_COORDS=OMNI_coords, $
                                  LUN=lun
         
-        calculate = C_OMNI__RECALCULATE
+        calculate                   = C_OMNI__RECALCULATE
         IF N_ELEMENTS(C_OMNI__stable_i) EQ 0 THEN BEGIN
            PRINTF,lun,"Impossible! You said this was calculated ..."
            STOP
         ENDIF
      ENDELSE
   ENDIF ELSE BEGIN
-     calculate                     = 1
+     calculate                      = 1
   ENDELSE
 
   IF calculate THEN BEGIN
      PRINTF,lun,"****BEGIN GET_STABLE_IMF_INDS****"
      PRINTF,lun,"Calculating stable IMF inds for this run..."
-     C_OMNI__paramStr              = 'OMNI_params'
-     C_OMNI__stableStr             = 'OMNI_stability'
+     C_OMNI__paramStr               = 'OMNI_params'
+     C_OMNI__stableStr              = 'OMNI_stability'
      
      ;;********************************************************
      ;;Restore ACE/OMNI data
      ;; IF N_ELEMENTS(mag_utc) EQ 0 THEN BEGIN
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
-     dataDir                       = "/SPENCEdata/Research/database/"
+     dataDir                        = "/SPENCEdata/Research/database/"
      RESTORE,dataDir + "/OMNI/culled_OMNI_magdata.dat"
      ;; RESTORE,dataDir + "/OMNI/culled_OMNI_magdata__20160702.dat"
      ;; ENDIF
 
-     C_OMNI__mag_UTC               = TEMPORARY(mag_UTC)
+     C_OMNI__mag_UTC                = TEMPORARY(mag_UTC)
 
      IF KEYWORD_SET(OMNI_coords) THEN BEGIN
-        C_OMNI__magCoords          = OMNI_coords 
+        C_OMNI__magCoords           = OMNI_coords 
      ENDIF ELSE BEGIN
         PRINTF,lun,'No OMNI coordinate type selected! Defaulting to GSE ...'
-        C_OMNI__magCoords          = 'GSE'
+        C_OMNI__magCoords           = 'GSE'
      ENDELSE
 
      ;;No need to pick up Bx with magcoords, since it's the same either way
-     C_OMNI__Bx                    = TEMPORARY(Bx)
+     C_OMNI__Bx                     = TEMPORARY(Bx)
      CASE C_OMNI__magCoords OF 
         "GSE": BEGIN
-           C_OMNI__By              = TEMPORARY(By_GSE)
-           C_OMNI__Bz              = TEMPORARY(Bz_GSE)
-           C_OMNI__Bt              = TEMPORARY(Bt_GSE)
-           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSE)
-           C_OMNI__phiClock        = TEMPORARY(phiClock_GSE)
-           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSE)
-           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSE)
+           C_OMNI__By               = TEMPORARY(By_GSE)
+           C_OMNI__Bz               = TEMPORARY(Bz_GSE)
+           C_OMNI__Bt               = TEMPORARY(Bt_GSE)
+           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSE)
+           C_OMNI__phiClock         = TEMPORARY(phiClock_GSE)
+           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSE)
+           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSE)
         END
         "GSM": BEGIN
-           C_OMNI__By              = TEMPORARY(By_GSM)
-           C_OMNI__Bz              = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt              = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock        = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSM)
+           C_OMNI__By               = TEMPORARY(By_GSM)
+           C_OMNI__Bz               = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt               = TEMPORARY(Bt_GSM)
+           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
+           C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
+           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
+           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
         END
         ELSE: BEGIN
            print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSM..."
            WAIT,1.0
-           C_OMNI__By              = TEMPORARY(By_GSM)
-           C_OMNI__Bz              = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt              = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone       = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock        = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock  = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz     = TEMPORARY(Bxy_over_Bz_GSM)
+           C_OMNI__By               = TEMPORARY(By_GSM)
+           C_OMNI__Bz               = TEMPORARY(Bz_GSM)
+           C_OMNI__Bt               = TEMPORARY(Bt_GSM)
+           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
+           C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
+           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
+           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
         END
      ENDCASE
-     C_OMNI__thetaCone             = C_OMNI__thetaCone*180/!PI
-     C_OMNI__phiClock              = C_OMNI__phiClock*180/!PI
+     C_OMNI__thetaCone              = C_OMNI__thetaCone*180/!PI
+     C_OMNI__phiClock               = C_OMNI__phiClock*180/!PI
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;Do the cleaning
 
-     ;; clean_i                    = WHERE((ABS(bx_gse) LE 99.9) AND $
+     ;; clean_i                     = WHERE((ABS(bx_gse) LE 99.9) AND $
      ;;                                                   (ABS(by_gsm) LE 99.9) AND $
      ;;                                                   (ABS(bz_gsm) LE 99.9) AND $
      ;;                                                   (ABS(by_gse) LE 99.9) AND $
      ;;                                                   (ABS(bz_gse) LE 99.9))
 
-     clean_i                       = WHERE((ABS(C_OMNI__Bx) LE 99.9) AND $
-                                           (ABS(C_OMNI__By) LE 99.9) AND $
-                                           (ABS(C_OMNI__Bz) LE 99.9),nClean, $
-                                           NCOMPLEMENT=nNotClean)
+     clean_i                        = WHERE((ABS(C_OMNI__Bx) LE 99.9) AND $
+                                            (ABS(C_OMNI__By) LE 99.9) AND $
+                                            (ABS(C_OMNI__Bz) LE 99.9),nClean, $
+                                            NCOMPLEMENT=nNotClean)
      
      PRINTF,lun,"Losing " + STRCOMPRESS(nNotClean,/REMOVE_ALL) + $
             " OMNI entries because they are bad news"     
      
-     C_OMNI__By                       = C_OMNI__By[clean_i]            
-     C_OMNI__Bz                       = C_OMNI__Bz[clean_i]            
-     C_OMNI__Bt                       = C_OMNI__Bt[clean_i]            
-     C_OMNI__thetaCone                = C_OMNI__thetaCone[clean_i]     
-     C_OMNI__phiClock                 = C_OMNI__phiClock[clean_i]      
-     C_OMNI__cone_overClock           = C_OMNI__cone_overClock[clean_i]
-     C_OMNI__Bxy_over_Bz              = C_OMNI__Bxy_over_Bz[clean_i]
-     C_OMNI__mag_UTC                  = C_OMNI__mag_UTC[clean_i]
-     goodmag_goodtimes_i              = goodmag_goodtimes_i[clean_i]
+     C_OMNI__By                     = C_OMNI__By[clean_i]            
+     C_OMNI__Bz                     = C_OMNI__Bz[clean_i]            
+     C_OMNI__Bt                     = C_OMNI__Bt[clean_i]            
+     C_OMNI__thetaCone              = C_OMNI__thetaCone[clean_i]     
+     C_OMNI__phiClock               = C_OMNI__phiClock[clean_i]      
+     C_OMNI__cone_overClock         = C_OMNI__cone_overClock[clean_i]
+     C_OMNI__Bxy_over_Bz            = C_OMNI__Bxy_over_Bz[clean_i]
+     C_OMNI__mag_UTC                = C_OMNI__mag_UTC[clean_i]
+     goodmag_goodtimes_i            = goodmag_goodtimes_i[clean_i]
 
      ;;Any smoothing to be done?
      IF KEYWORD_SET(smooth_IMF) THEN BEGIN
@@ -235,14 +237,14 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF
 
      IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
-        maxTime                                = STR_TO_TIME('1999-11-03/03:21:00.000')
-        ;; maxTime                                = STR_TO_TIME('2000-10-06/00:08:46.938')
-        minTime                                = STR_TO_TIME('1996-10-06/16:26:02.0')
-        C_OMNI__time_i                         = WHERE(C_OMNI__mag_UTC LE maxTime AND C_OMNI__mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)
-        USE_COMBINED_INDS                      = 1
+        maxTime                     = STR_TO_TIME('1999-11-03/03:21:00.000')
+        ;; maxTime                  = STR_TO_TIME('2000-10-06/00:08:46.938')
+        minTime                     = STR_TO_TIME('1996-10-06/16:26:02.0')
+        C_OMNI__time_i              = WHERE(C_OMNI__mag_UTC LE maxTime AND C_OMNI__mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)
+        USE_COMBINED_INDS           = 1
         PRINTF,lun,"Losing " + STRCOMPRESS(nNotAlfvenDB,/REMOVE_ALL) + " OMNI entries because they don't happen during Alfven stuff"
      ENDIF ELSE BEGIN
-        C_OMNI__time_i                         = INDGEN(N_ELEMENTS(C_OMNI__phiClock),/LONG)
+        C_OMNI__time_i              = INDGEN(N_ELEMENTS(C_OMNI__phiClock),/LONG)
      ENDELSE
 
      IF KEYWORD_SET(clockStr) THEN BEGIN
@@ -254,7 +256,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                 ANGLELIM1=angleLim1, $
                                 ANGLELIM2=angleLim2, $
                                 LUN=lun
-        USE_COMBINED_INDS                      = 1
+        USE_COMBINED_INDS           = 1
      ENDIF
 
      IF N_ELEMENTS(byMin) GT 0 OR N_ELEMENTS(byMax) GT 0 $
@@ -271,28 +273,28 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                DO_ABS_BXMIN=abs_bxMin, $
                                DO_ABS_BXMAX=abs_bxMax, $
                                LUN=lun
-        USE_COMBINED_INDS                      = 1
+        USE_COMBINED_INDS           = 1
      END
 
      ;;Now combine all of these
      COMBINE_OMNI_IMF_INDS
 
      IF KEYWORD_SET(stableIMF) THEN BEGIN
-        C_OMNI__stableIMF                      = stableIMF
+        C_OMNI__stableIMF           = stableIMF
         C_OMNI__paramStr                      += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all
                              USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS, $
                              RECALCULATE_OMNI_IND_STREAKS=calculate                
-        C_OMNI__stable_i                       = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
+        C_OMNI__stable_i            = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
 
      ENDIF ELSE BEGIN
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i,USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all
         IF KEYWORD_SET(USE_COMBINED_INDS) THEN BEGIN
-           ;; C_OMNI__stable_i        = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
-           C_OMNI__stable_i                    = C_OMNI__combined_i
+           ;; C_OMNI__stable_i      = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
+           C_OMNI__stable_i         = C_OMNI__combined_i
         ENDIF ELSE BEGIN
-           C_OMNI__stable_i                    = INDGEN(N_ELEMENTS(C_OMNI__mag_UTC),/LONG)
+           C_OMNI__stable_i         = INDGEN(N_ELEMENTS(C_OMNI__mag_UTC),/LONG)
            PRINTF,lun,"Wait, how did you get here? You have no restrictions whatsoever on IMF?"
            STOP
         ENDELSE
@@ -325,25 +327,41 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,lun,""
 
 
-     C_OMNI__HAVE_STABLE_INDS  = 1
+     C_OMNI__HAVE_STABLE_INDS       = 1
 
   ENDIF
 
-  stable_OMNI_inds             = C_OMNI__stable_i
-  mag_utc                      = C_OMNI__mag_utc
+  stable_OMNI_inds                  = C_OMNI__stable_i
+  mag_utc                           = C_OMNI__mag_utc
 
   PRINTF,lun,C_OMNI__paramStr
-  IF KEYWORD_SET(print_avg_imf_components) THEN BEGIN
-     file = '~/Desktop/' + C_OMNI__paramStr + '.txt'
-     PRINT,"opening " + file + ' ...'
-     OPENW,outLun,file,/GET_LUN
+  IF KEYWORD_SET(print_avg_imf_components) OR $
+     KEYWORD_SET(print_master_file) THEN BEGIN
 
-     
-     By_avg              = MEAN(C_OMNI__By[stable_omni_inds])
-     Bz_avg              = MEAN(C_OMNI__Bz[stable_omni_inds])
+     nPoints                        = N_ELEMENTS(stable_omni_inds)
+     nTime                          = N_ELEMENTS(C_OMNI__time_i)
 
-     By_stdDev           = STDDEV(C_OMNI__By[stable_omni_inds])
-     Bz_stdDev           = STDDEV(C_OMNI__Bz[stable_omni_inds])
+     By_avg                         = MEAN(C_OMNI__By[stable_omni_inds])
+     Bz_avg                         = MEAN(C_OMNI__Bz[stable_omni_inds])
+
+     cone_overClock_avg             = MEAN(C_OMNI__cone_overClock[stable_omni_inds])
+     cone_overClock_stdDev          = STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
+
+     phiClock_avg                   = MEAN(C_OMNI__phiClock[stable_omni_inds])
+     phiClock_stdDev                = STDDEV(C_OMNI__phiClock[stable_omni_inds])
+
+     thetaCone_avg                  = MEAN(C_OMNI__thetaCone[stable_omni_inds])
+     thetaCone_stdDev               = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
+
+     Bx_Avg                         = MEAN(C_OMNI__Bx[Stable_Omni_Inds])
+     Bx_StdDev                      = STDDEV(C_OMNI__Bx[Stable_Omni_Inds])
+
+     Bt_Avg                         = MEAN(C_OMNI__Bt[Stable_Omni_Inds])
+     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_Omni_Inds])
+
+     By_stdDev                      = STDDEV(C_OMNI__By[stable_omni_inds])
+     Bz_stdDev                      = STDDEV(C_OMNI__Bz[stable_omni_inds])
+
      ;;Get cusp predictions
      PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
                                                LAT_CUSP_NWLL_1989=lat_cusp_nwll_1989, $
@@ -357,6 +375,14 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                                ILAT_CUSP_EQW_B=ILAT_cusp_eqw_b, $
                                                ILAT_CUSP_PW_B=ILAT_cusp_pw_b
 
+  ENDIF
+
+  IF KEYWORD_SET(print_avg_imf_components) THEN BEGIN
+
+     file                           = '~/Desktop/' + C_OMNI__paramStr + '.txt'
+     PRINT,"opening " + file + ' ...'
+     OPENW,outLun,file,/GET_LUN
+
      ;;output
      PRINTF,outLun,'**********************'
      PRINTF,outLun,'Average IMF conditions'
@@ -364,26 +390,26 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,C_OMNI__paramStr
      PRINTF,outLun,'**********************'
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("N datapoints",T35,": ",F10.3)',N_ELEMENTS(stable_omni_inds)
+     PRINTF,outLun,FORMAT='("N datapoints",T35,": ",F10.3)',nPoints
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Average Bx",T35,": ",F10.3)',MEAN(C_OMNI__Bx[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Average By",T35,": ",F10.3)',MEAN(C_OMNI__By[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Average Bz",T35,": ",F10.3)',MEAN(C_OMNI__Bz[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Average Bt",T35,": ",F10.3)',MEAN(C_OMNI__Bt[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average Bx",T35,": ",F10.3)',Bx_avg
+     PRINTF,outLun,FORMAT='("Average By",T35,": ",F10.3)',By_avg
+     PRINTF,outLun,FORMAT='("Average Bz",T35,": ",F10.3)',Bz_avg
+     PRINTF,outLun,FORMAT='("Average Bt",T35,": ",F10.3)',Bt_avg
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',MEAN(C_OMNI__thetaCone[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',MEAN(C_OMNI__phiClock[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',MEAN(C_OMNI__cone_overClock[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',thetaCone_avg
+     PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',phiClock_avg
+     PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',cone_overClock_avg
      PRINTF,outLun,''
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bx[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__By[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bz[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__Bt[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',Bx_avg
+     PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',By_avg
+     PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',Bz_avg
+     PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',Bt_avg
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__thetaCone[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__phiClock[stable_omni_inds])
-     PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
+     PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',thetaCone_stdDev
+     PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',phiClock_stdDev
+     PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',cone_overClock_stdDev
      PRINTF,outLun,''
      PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
      PRINTF,outLun,"From Newell et al. [1989]"
@@ -412,34 +438,90 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      CLOSE,outLun
      FREE_LUN,outLun
+
   ENDIF
 
+  IF KEYWORD_SET(print_master_OMNI_file) THEN BEGIN
+     
+     file                           = '~/Desktop/master_OMNI_file.txt'
+     file_exist                     = FILE_TEST(file)
+     PRINT,"Opening " + file + ' ...'
+     OPENW,outLun,file,/GET_LUN,/APPEND
 
-  omni_paramStr                = C_OMNI__paramStr
+     IF ~file_exist THEN BEGIN
+        PRINTF,outLun, $
+               FORMAT='("Clock",T10,"Bx_avg",T20,"By_avg",T30,"Bz_avg",T40,"Bt_avg",T50,"Bx_stddev",T60,"By_stddev",T70,"Bz_stddev",T80,"Bt_stddev",T90,"Tfrac",T100,"days",A0)', $
+               ''
+     ENDIF
+
+     mFormat                        = '(A0,T10,F-8.3,T20,F-8.3,T30,F-8.3,T40,F-8.3,T50,F-8.3,T60,F-8.3,T70,F-8.3,T80,F-8.3,T90,F-8.3,T100,F-8.3)'
+
+     PRINTF,outLun, $
+            FORMAT=mFormat, $
+            C_OMNI__clockStr, $
+            Bx_avg, $
+            By_avg, $
+            Bz_avg, $
+            Bt_avg, $
+            Bx_stdDev, $
+            By_stdDev, $
+            Bz_stdDev, $
+            Bt_stdDev, $
+            nPoints/FLOAT(nTime), $
+            FLOAT(nPoints)/60./24.
+
+     CLOSE,outLun
+     FREE_LUN,outLun
+
+  ENDIF
+
+  IF KEYWORD_SET(save_master_OMNI_inds) THEN BEGIN
+     file = '~/Desktop/master_OMNI_ind_list--Alfvens_IMF_v4.sav'
+     test = FILE_TEST(file)
+     IF test THEN BEGIN
+        PRINT,'Restoring master OMNI file, adding these OMNI inds ...'
+        RESTORE,file
+        IF N_ELEMENTS(stable_omni_ind_list) EQ 0 OR N_ELEMENTS(clockStr_list) EQ 0 THEN BEGIN
+           PRINT,"Corrupted file? Couldn't find any inds!"
+           stable_omni_ind_list = LIST(stable_omni_inds)
+           clockStr_list        = LIST(C_OMNI__clockStr)
+        ENDIF ELSE BEGIN
+           stable_omni_ind_list.Add,stable_omni_inds
+           clockStr_list.Add,C_OMNI__clockStr
+        ENDELSE
+     ENDIF ELSE BEGIN
+        PRINT,"Creating stable OMNI inds file ..."
+        stable_omni_ind_list = LIST(stable_omni_inds)
+        clockStr_list        = LIST(C_OMNI__clockStr)
+     ENDELSE
+        SAVE,stable_omni_ind_list,clockStr_list,FILENAME=file
+  ENDIF
+
+  omni_paramStr                     = C_OMNI__paramStr
 
   IF KEYWORD_SET(get_Bx) THEN BEGIN
-     Bx_out                    = C_OMNI__Bx
+     Bx_out                         = C_OMNI__Bx
   ENDIF
   IF KEYWORD_SET(get_By) THEN BEGIN
-     By_out                    = C_OMNI__By
+     By_out                         = C_OMNI__By
   ENDIF
   IF KEYWORD_SET(get_Bz) THEN BEGIN
-     Bz_out                    = C_OMNI__Bz
+     Bz_out                         = C_OMNI__Bz
   ENDIF
   IF KEYWORD_SET(get_Bt) THEN BEGIN
-     Bt_out                    = C_OMNI__Bt
+     Bt_out                         = C_OMNI__Bt
   ENDIF
   IF KEYWORD_SET(get_thetaCone) THEN BEGIN
-     thetaCone_out             = C_OMNI__thetaCone
+     thetaCone_out                  = C_OMNI__thetaCone
   ENDIF
   IF KEYWORD_SET(get_clockAngle) THEN BEGIN
-     clockAngle_out            = C_OMNI__phiClock
+     clockAngle_out                 = C_OMNI__phiClock
   ENDIF
   IF KEYWORD_SET(get_cone_overClock) THEN BEGIN
-     cone_overClock_out        = C_OMNI__cone_overClock
+     cone_overClock_out             = C_OMNI__cone_overClock
   ENDIF
   IF KEYWORD_SET(get_Bxy_Over_Bz) THEN BEGIN
-     Bxy_over_Bz_out           = C_OMNI__Bxy_over_Bz
+     Bxy_over_Bz_out                = C_OMNI__Bxy_over_Bz
   ENDIF
   RETURN,stable_OMNI_inds
 

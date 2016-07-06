@@ -239,6 +239,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
                                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                     HEMI=hemi, $
                                     NORTH=north, $
                                     SOUTH=south, $
@@ -688,6 +690,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                           HWMAUROVAL=HwMAurOval, $
                                                                           HWMKPIND=HwMKpInd, $
                                                                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                                                          PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                                                          SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                                                           RESET_GOOD_INDS=reset_good_inds, $
                                                                           NO_BURSTDATA=no_burstData, $
                                                                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))

@@ -1,5 +1,5 @@
 ;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
-PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
+PRO JOURNAL__20160704__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BTMIN_2__ALFIMFPAPE
 
   COMPILE_OPT IDL2
 
@@ -13,7 +13,7 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
   autoscale_fluxPlots            = 0
   
   group_like_plots_for_tiling    = 1
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -23,15 +23,18 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
 
   ;;bonus
   print_avg_imf_components       = 1
+  print_master_OMNI_file         = 1
+  save_master_OMNI_inds          = 1
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
   ePlots                         = 1
   eNumFlPlots                    = 1
   pPlots                         = 1
-  ionPlots                       = 0
+  ionPlots                       = 1
   probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 0
+  sum_electron_and_poyntingflux  = 1
 
 
   ;;e- energy flux
@@ -47,8 +50,8 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.7], $
-                                    [0,1.2e9]]
+  ENumFlPlotRange                = [[0,0.6], $
+                                    [0,1.6e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -67,7 +70,7 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
   IPlotRange                     = [0,1.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.12]
+  probOccurrenceRange            = [0,0.13]
 
   summed_eFlux_pFluxplotRange    = [0,1.5]
   
@@ -222,6 +225,8 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
         PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+        PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+        SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
@@ -307,8 +312,10 @@ PRO JOURNAL__20160702__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BT__ALFIMFPAPE
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
-        JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+        SAVERAW=saveRaw, $
+        RAWDIR=rawDir, $
+        JUSTDATA=justData, $
+        SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
         PLOTSUFFIXES=plotSuff, $

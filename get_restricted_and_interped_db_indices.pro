@@ -62,6 +62,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    HWMAUROVAL=HwMAurOval, $
    HWMKPIND=HwMKpInd, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+   PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+   SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
@@ -192,6 +194,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
                                                                                                PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                                                                               PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                                                                               SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                                                                                LUN=lun)     
 
            restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here
@@ -228,6 +232,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
                                                                                                PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                                                                               PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                                                                               SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                                                                                LUN=lun)     
         
      ENDELSE
