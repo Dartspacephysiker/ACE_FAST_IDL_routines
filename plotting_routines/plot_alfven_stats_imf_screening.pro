@@ -419,6 +419,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
                                     GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                     SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
+                                    ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
+                                    ADJ_LOWER_PLOTLIM_IF_NTH_MIN_IS_GREATER=adj_lower_plotlim_thresh, $
                                     ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
                                     TILEPLOTSUFF=tilePlotSuff, $
                                     TILEPLOTTITLE=tilePlotTitle, $
@@ -1196,6 +1198,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                               NEW_PARAMSTR_FOR_LIKE_PLOTARRS=multiString, $
                                               SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
                                               DO_REARRANGE_DATARAWPTRARR_LIST=do_rearrange_dataRawPtrArr_list, $
+                                              ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
+                                              ADJ_LOWER_PLOTLIM_IF_NTH_MIN_IS_GREATER=adj_lower_plotlim_thresh, $
                                               OUT_MASK_H2DSTRARR=h2dMaskArr
   ENDIF
 
