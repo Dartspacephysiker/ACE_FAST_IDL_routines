@@ -308,6 +308,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ORBFREQPLOT=orbFreqPlot, $
                                     ORBCONTRIBRANGE=orbContribRange, $
                                     ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                                    ORBCONTRIB__REFERENCE_ALFVENDB_NOT_EPHEMERIS=orbContrib__reference_alfvenDB, $
                                     ORBTOTRANGE=orbTotRange, $
                                     ORBFREQRANGE=orbFreqRange, $
                                     ORBCONTRIB_NOMASK=orbContrib_noMask, $
@@ -1098,6 +1099,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ORBFREQPLOT=orbFreqPlot, $
                            ORBCONTRIBRANGE=orbContribRange, $
                            ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                           ORBCONTRIB__REFERENCE_ALFVENDB_NOT_EPHEMERIS=orbContrib__reference_alfvenDB, $
                            ORBTOTRANGE=orbTotRange, $
                            ORBFREQRANGE=orbFreqRange, $
                            ORBCONTRIB_NOMASK=orbContrib_noMask, $
