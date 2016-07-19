@@ -1,5 +1,5 @@
 ;2016/07/16 As part of my response to Bill Lotko's concerns, I said I'd try a few other measures of Poynting flux. Here's another.
-PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
+PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE__WIDER_MLTS
 
   COMPILE_OPT IDL2
 
@@ -126,9 +126,9 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 60
+  minILAT                        = 61
   maxILAT                        = 85
-  maskMin                        = 10
+  maskMin                        = 15
   ;; tHist_mask_bins_below_thresh   = 5
   numOrbLim                      = 10
 
@@ -140,12 +140,12 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; numOrbLim                      = 3
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  binMLT                         = 1.5
+  shiftMLT                       = 0.75
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

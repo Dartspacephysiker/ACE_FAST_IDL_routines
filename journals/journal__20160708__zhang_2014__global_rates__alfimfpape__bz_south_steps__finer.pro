@@ -1,38 +1,25 @@
-;2016/07/16 As part of my response to Bill Lotko's concerns, I said I'd try a few other measures of Poynting flux. Here's another.
-PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
+;2016/07/08 Jim pointed out that these steps need to be fined
+PRO JOURNAL__20160708__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_STEPS__FINER
 
   COMPILE_OPT IDL2
 
-  do_timeAvg_fluxQuantities      = 0
+  do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
-  medianPlot                     = 1
   divide_by_width_x              = 1
 
+  ;;grossrate stuff
+  do_grossRate_fluxQuantities    = 1
+  grossRate_info_file_pref       = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
+                                   '--grossRates--alfIMFpaper--'
+  make_integral_file             = 1
+  
   ;;DB stuff
   do_despun                      = 1
 
-  ;; plotPref                       = 
-
   autoscale_fluxPlots            = 0
   
-  group_like_plots_for_tiling    = 1
-  scale_like_plots_for_tiling    = 0
-  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
-  adj_lower_plotlim_thresh       = 2 ;;Check minima
-
-  tile__include_IMF_arrows       = 0
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
-
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
-
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
-
+  print_avg_imf_components       = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -40,14 +27,14 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   eNumFlPlots                    = 1
   pPlots                         = 1
   ionPlots                       = 1
-  ;; probOccurrencePlot             = 
+  probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
 
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,9.0]
+  ePlotRange                     = [0,1e8]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -57,8 +44,8 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,9.0], $
-                                    [0,1.5e10]]
+  ENumFlPlotRange                = [[0,1e8], $
+                                    [0,1e24]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -67,19 +54,19 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.9]
+  PPlotRange                     = [0,1e8]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,9.0e8]
+  IPlotRange                     = [0,1e23]
   
-  ;; logProbOccurrence              = 0
-  ;; probOccurrenceRange            = [0,0.13]
+  logProbOccurrence              = 0
+  probOccurrenceRange            = [0,0.10]
 
-  summed_eFlux_pFluxplotRange    = [0,10]
+  summed_eFlux_pFluxplotRange    = [0,2e8]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -101,50 +88,57 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;;Tiled plot options
 
   reset_good_inds                = 1
+  reset_OMNI_inds                = 1
 
   ;; altRange                    = [[340,1180], $
   ;;                             [1180,2180], $
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4180]]
+  ;; altRange                       = [[340,4180]]
+  altitudeRange                  = [[340,4180]]
 
   orbRange                       = [500,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2
-  ;; btMax                       = 5
+  start_bz                       = 10
+  stepWidth                      = 2.5
+  nSteps                         = 8
+  stepDelta                      = 2.5
+  bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta+start_bz
+  bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)+start_bz
+
+  clockStrings                   = 'all_Bz'
+
+  angleLim1                      = 67.5
+  angleLim2                      = 112.5  
 
   ;;Delay stuff
   nDelays                        = 1
   delayDeltaSec                  = 1800
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  reset_omni_inds                = 1
-  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
+  minILAT                        = 61
+  maxILAT                        = 88
   maskMin                        = 10
-  ;; tHist_mask_bins_below_thresh   = 5
-  numOrbLim                      = 10
+  tHist_mask_bins_below_thresh   = 5
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -85
   ;; maxILAT                        = -60
   ;; maskMin                        =  10.0
-  ;; tHist_mask_bins_below_thresh   = 5
-  ;; numOrbLim                      = 3
+  ;; tHist_mask_bins_below_thresh   =  10.0
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 2.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -152,36 +146,39 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
 
   ;;Bonus
 
-  FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange               = altRange[*,i]
+  IF N_ELEMENTS(minMLT) EQ 0 THEN minMLT = 0
+  IF N_ELEMENTS(maxMLT) EQ 0 THEN maxMLT = 24
+
+  FOR i=0,N_ELEMENTS(bzMinArr)-1 DO BEGIN
+     IMFStr                      = clockStrings
+     IMFTitle                    = ''
+     bzMin                       = bzMinArr[i]
+     bzMax                       = bzMaxArr[i]
+
      altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbits_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
                                           orbRange[1])
-     plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
+     plotPrefix                  = altStr
 
-     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                   angleLim1,angleLim2, $
-                                   IMFStr,IMFTitle, $
-                                   BYMIN=byMin, $
-                                   BYMAX=byMax, $
-                                   BZMIN=bzMin, $
-                                   BZMAX=bzMax, $
-                                   BTMIN=btMin, $
-                                   BTMAX=btMax, $
-                                   BXMIN=bxMin, $
-                                   BXMAX=bxMax, $
-                                   /AND_TILING_OPTIONS, $
-                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                   TILE_IMAGES=tile_images, $
-                                   TILING_ORDER=tiling_order, $
-                                   N_TILE_COLUMNS=n_tile_columns, $
-                                   N_TILE_ROWS=n_tile_rows, $
-                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                   TILEPLOTSUFF=plotSuff
+     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
+        IMFStr += '--bzMax_' + STRCOMPRESS(bzMax,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Max: ' + STRCOMPRESS(bzMax,/REMOVE_ALL) + 'nT'
+     ENDIF
+     IF N_ELEMENTS(bzMin) GT 0 THEN BEGIN
+        IMFStr += '--bzMin_' + STRCOMPRESS(bzMin,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(bzMin,/REMOVE_ALL) + 'nT'
+     ENDIF
 
+     grossRate_info_file            = STRING(FORMAT='(A0,A0,I0,"-",I0,"_MLT.txt")', $
+                                             grossRate_info_file_pref, $
+                                             IMFStr, $
+                                             minMLT, $
+                                             maxMLT)
+
+     suffix_plotDir                 = '/' + IMFStr
+     suffix_txtDir                  = '/' + IMFStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
@@ -233,8 +230,6 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
         PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-        PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-        SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
@@ -303,6 +298,8 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -320,15 +317,15 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
-        JUSTDATA=justData, $
-        SHOWPLOTSNOSAVE=showPlotsNoSave, $
+        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
         PLOTSUFFIXES=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
+        SUFFIX_PLOTDIR=suffix_plotDir, $
+        SUFFIX_TXTDIR=suffix_txtDir, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
@@ -344,9 +341,6 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         OUT_PLOT_I_LIST=out_plot_i_list, $
         OUT_PARAMSTRING_LIST=out_paramString_list, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-        SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-        ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-        ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
@@ -361,6 +355,7 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
+        MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $
@@ -370,5 +365,4 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ENDFOR
 
 END
-
 

@@ -1,7 +1,10 @@
 ;2016/07/16 As part of my response to Bill Lotko's concerns, I said I'd try a few other measures of Poynting flux. Here's another.
-PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
+PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE__TRY_NONSTORM
 
   COMPILE_OPT IDL2
+
+  nonstorm                       = 1
+  DSTcutoff                      = -50
 
   do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0
@@ -40,14 +43,14 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   eNumFlPlots                    = 1
   pPlots                         = 1
   ionPlots                       = 1
-  ;; probOccurrencePlot             = 
+  probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
 
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,9.0]
+  ePlotRange                     = [0,11.0]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -57,8 +60,8 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,9.0], $
-                                    [0,1.5e10]]
+  ENumFlPlotRange                = [[0,11.0], $
+                                    [0,1.0e10]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -67,17 +70,17 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.9]
+  PPlotRange                     = [0,1.3]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,9.0e8]
+  IPlotRange                     = [0,5.0e8]
   
-  ;; logProbOccurrence              = 0
-  ;; probOccurrenceRange            = [0,0.13]
+  logProbOccurrence              = 0
+  probOccurrenceRange            = [0,0.13]
 
   summed_eFlux_pFluxplotRange    = [0,10]
   
@@ -113,7 +116,7 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2
+  btMin                          = 3
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -126,11 +129,11 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
+  minILAT                        = 62
+  maxILAT                        = 86
   maskMin                        = 10
   ;; tHist_mask_bins_below_thresh   = 5
-  numOrbLim                      = 10
+  numOrbLim                      = 2
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -85
@@ -140,12 +143,12 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
   ;; numOrbLim                      = 3
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  binMLT                         = 1.5
+  shiftMLT                       = 0.75
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
@@ -243,6 +246,7 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
+        DSTCUTOFF=dstCutoff, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       

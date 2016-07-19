@@ -61,7 +61,7 @@ PRO INTERP_POLAR2DCONTOUR,temp,tempname, $
   mlts                        = mlts*15
 
                                 ; Load the colors for the plot.
-  nLevels                     = 12
+  nLevels                     = 13
 
   ;;Is this a log plot? If so, do integral of exponentiated value
   logPlotzz                   = STRMATCH(temp.title, '*log*',/FOLD_CASE)
@@ -92,12 +92,14 @@ PRO INTERP_POLAR2DCONTOUR,temp,tempname, $
                RGB_TABLE=ct
   ENDIF ELSE BEGIN
      ;;This one is for data that includes negs
-     cgLoadCT, 22, $
-               /BREWER, $
-               /REVERSE, $
-               NCOLORS=nLevels, $
-               RGB_TABLE=ct
+     ;; cgLoadCT, 22, $
+     ;;           /BREWER, $
+     ;;           /REVERSE, $
+     ;;           NCOLORS=nLevels, $
+     ;;           RGB_TABLE=ct
   ENDELSE
+  RAINBOW_COLORS,N_COLORS=nLevels
+  TVLCT,ct,/GET
 
   c                           = CONTOUR(temp.data,mlts,ilats, $
                                         /FILL, $
