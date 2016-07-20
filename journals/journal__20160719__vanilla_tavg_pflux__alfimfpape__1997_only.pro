@@ -1,6 +1,6 @@
 ;;2016/07/16 As part of my response to Bill Lotko's concerns, I said I'd try a few other measures of Poynting flux. Here's one.
 ;;I'm also only going over the time (all of 1997) that Keiling et al. [2003] gave for Poynting flux averages derived from Polar
-PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
+PRO JOURNAL__20160719__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -11,6 +11,7 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
   do_despun                      = 1
 
   plotPref                       = 'just_1997'
+  suppress_ILAT_labels           = 1
 
   autoscale_fluxPlots            = 0
 
@@ -55,7 +56,7 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [0.05,50.0]
   logPfPlot                      = 0
-  PPlotRange                     = [0.00,2.0]
+  PPlotRange                     = [0.00,0.11]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -116,8 +117,8 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
@@ -281,6 +282,7 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
+        SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $

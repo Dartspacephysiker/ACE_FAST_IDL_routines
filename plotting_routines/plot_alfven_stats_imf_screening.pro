@@ -577,6 +577,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;Now clean and tap the databases and interpolate satellite data
   IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
      GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+        DO_DESPUNDB=do_despunDB, $
         DSTCUTOFF=dstCutoff, $
         NONSTORM_I=ns_i, $
         MAINPHASE_I=mp_i, $
