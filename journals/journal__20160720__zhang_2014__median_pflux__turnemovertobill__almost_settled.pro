@@ -1,6 +1,11 @@
-;;07/19/16
-;;The idea is to just make the same figs with the same ILAT/MLT binning that I made before so that they're easy to compare.
-PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
+;;07/20/16
+;;OK, I'm pretty much settled on what's going to go on these plots. 
+;;Don't mess with orbRange, don't mess with altRange. They're good. Somewhere around Orbit 11000 there is a huge eNumFlux
+;;deposition event post-noon. It seems to mess with every quantity.
+;;I'm just here to decide on masking, binMLT, and whether btMin ought to be 1 or 2. That's IT.
+
+;;-->Pick almost no masking since that way Bill can make his own call about stuff
+PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLED
 
   COMPILE_OPT IDL2
 
@@ -45,7 +50,9 @@ PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
   ionPlots                       = 1
   probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
+  nOrbsWithEventsPerContribOrbsPlot = 1
 
+  nowepco_range                  = [0,1]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
@@ -70,7 +77,7 @@ PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.6]
+  PPlotRange                     = [0,1.0]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -80,7 +87,7 @@ PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
   IPlotRange                     = [0,3.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.10]
+  probOccurrenceRange            = [0,0.05]
 
   summed_eFlux_pFluxplotRange    = [0,8]
   
@@ -116,7 +123,7 @@ PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2
+  btMin                          = 1
   ;; btMax                       = 5
 
   ;;Delay stuff

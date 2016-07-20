@@ -440,266 +440,386 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   !EXCEPT=0                                                      ;Do report errors, please
 
-  IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
-     SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
-     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
+  lastSessionFile = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/last_session.sav'
+
+  IF KEYWORD_SET(restore_last_session) THEN BEGIN
+     RESTORE,lastSessionFile
   ENDIF ELSE BEGIN
-     SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
-     SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_txtDir
-  ENDELSE
 
-  IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
-     PRINT,"Not set up to handle multiples of both conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
-     STOP
-  ENDIF
+     IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
+        SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+        SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
+     ENDIF ELSE BEGIN
+        SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+        SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_txtDir
+     ENDELSE
 
-  SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
-                             ALTITUDERANGE=altitudeRange, $
-                             CHARERANGE=charERange, $
-                             POYNTRANGE=poyntRange, $
-                             SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                             MINMLT=minM,MAXMLT=maxM, $
-                             BINMLT=binM, $
-                             SHIFTMLT=shiftM, $
-                             MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                             DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                             MIN_MAGCURRENT=minMC, $
-                             MAX_NEGMAGCURRENT=maxNegMC, $
-                             HWMAUROVAL=HwMAurOval, $
-                             HWMKPIND=HwMKpInd, $
-                             ;; MIN_NEVENTS=min_nEvents, $
-                             MASKMIN=maskMin, $
-                             DO_DESPUNDB=do_despunDB, $
-                             HEMI=hemi, $
-                             NORTH=north, $
-                             SOUTH=south, $
-                             BOTH_HEMIS=both_hemis, $
-                             NPLOTS=nPlots, $
-                             EPLOTS=ePlots, $
-                             EFLUXPLOTTYPE=eFluxPlotType, $
-                             ENUMFLPLOTS=eNumFlPlots, $
-                             ENUMFLPLOTTYPE=eNumFlPlotType, $
-                             PPLOTS=pPlots, $
-                             IONPLOTS=ionPlots, $
-                             IFLUXPLOTTYPE=ifluxPlotType, $
-                             CHAREPLOTS=charEPlots, $
-                             CHARETYPE=charEType, $
-                             CHARIEPLOTS=chariEPlots, $
-                             AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-                             ORBCONTRIBPLOT=orbContribPlot, $
-                             ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
-                             ORBTOTPLOT=orbTotPlot, $
-                             ORBFREQPLOT=orbFreqPlot, $
-                             NEVENTPERORBPLOT=nEventPerOrbPlot, $
-                             NEVENTPERMINPLOT=nEventPerMinPlot, $
-                             ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
-                             PROBOCCURRENCEPLOT=probOccurrencePlot, $
-                             SQUAREPLOT=squarePlot, $
-                             POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                             MEDIANPLOT=medianPlot, $
-                             LOGAVGPLOT=logAvgPlot, $
-                             PLOTMEDORAVG=plotMedOrAvg, $
-                             DATADIR=dataDir, $
-                             NO_BURSTDATA=no_burstData, $
-                             WRITEASCII=writeASCII, $
-                             WRITEHDF5=writeHDF5, $
-                             WRITEPROCESSEDH2D=writeProcessedH2d, $
-                             SAVERAW=saveRaw, RAWDIR=rawDir, $
-                             SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                             ;; PLOTDIR=plotDir, $
-                             MEDHISTOUTDATA=medHistOutData, $
-                             MEDHISTOUTTXT=medHistOutTxt, $
-                             OUTPUTPLOTSUMMARY=outputPlotSummary, $
-                             ;; OUT_TEMPFILE=out_tempFile, $
-                             ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
-                             DEL_PS=del_PS, $
-                             KEEPME=keepMe, $
-                             PARAMSTRING=paramString, $
-                             PARAMSTRPREFIX=plotPrefix, $
-                             PARAMSTRSUFFIX=plotSuffix,$
-                             HOYDIA=hoyDia,LUN=lun,_EXTRA=e
-  
-  SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $
-                                  ANGLELIM1=angleLim1, $
-                                  ANGLELIM2=angleLim2, $
-                                  ORBRANGE=orbRange, $
-                                  ALTITUDERANGE=altitudeRange, $
-                                  CHARERANGE=charERange, $
-                                  BYMIN=byMin, $
-                                  BYMAX=byMax, $
-                                  BZMIN=bzMin, $
-                                  BZMAX=bzMax, $
-                                  BTMIN=btMin, $
-                                  BTMAX=btMax, $
-                                  BXMIN=bxMin, $
-                                  BXMAX=bxMax, $
-                                  DO_ABS_BYMIN=abs_byMin, $
-                                  DO_ABS_BYMAX=abs_byMax, $
-                                  DO_ABS_BZMIN=abs_bzMin, $
-                                  DO_ABS_BZMAX=abs_bzMax, $
-                                  DO_ABS_BTMIN=abs_btMin, $
-                                  DO_ABS_BTMAX=abs_btMax, $
-                                  DO_ABS_BXMIN=abs_bxMin, $
-                                  DO_ABS_BXMAX=abs_bxMax, $
-                                  BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
-                                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                  DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                  PARAMSTRING=paramString, $
-                                  PARAMSTR_LIST=paramString_list, $
-                                  SATELLITE=satellite, $
-                                  OMNI_COORDS=omni_Coords, $
-                                  DELAY=delay, $
-                                  MULTIPLE_DELAYS=multiple_delays, $
-                                  MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                  OUT_EXECUTING_MULTIPLES=executing_multiples, $
-                                  OUT_MULTIPLES=multiples, $
-                                  OUT_MULTISTRING=multiString, $
-                                  RESOLUTION_DELAY=delay_res, $
-                                  BINOFFSET_DELAY=binOffset_delay, $
-                                  STABLEIMF=stableIMF, $
-                                  SMOOTHWINDOW=smoothWindow, $
-                                  INCLUDENOCONSECDATA=includeNoConsecData, $
-                                  LUN=lun
-
-
-  ;;Open file for text summary, if desired
-  IF KEYWORD_SET(outputPlotSummary) THEN BEGIN
-     OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
-     IF KEYWORD_SET(executing_multiples) THEN BEGIN
-        PRINT,"What are you thinking? You're not setup to get multi-output..."
+     IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
+        PRINT,"Not set up to handle multiples of both conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
         STOP
      ENDIF
-  ENDIF ELSE BEGIN
-     lun=-1                     ;-1 is lun for STDOUT
-  ENDELSE
-  
-  ;;********************************************************
-  ;;Now clean and tap the databases and interpolate satellite data
-  IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
-     GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-        DO_DESPUNDB=do_despunDB, $
-        DSTCUTOFF=dstCutoff, $
-        NONSTORM_I=ns_i, $
-        MAINPHASE_I=mp_i, $
-        RECOVERYPHASE_I=rp_i, $
-        STORM_DST_I=s_dst_i, $
-        NONSTORM_DST_I=ns_dst_i, $
-        MAINPHASE_DST_I=mp_dst_i, $
-        RECOVERYPHASE_DST_I=rp_dst_i, $
-        N_STORM=n_s, $
-        N_NONSTORM=n_ns, $
-        N_MAINPHASE=n_mp, $
-        N_RECOVERYPHASE=n_rp, $
-        NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-        NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
 
+     SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
+                                ALTITUDERANGE=altitudeRange, $
+                                CHARERANGE=charERange, $
+                                POYNTRANGE=poyntRange, $
+                                SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                MINMLT=minM,MAXMLT=maxM, $
+                                BINMLT=binM, $
+                                SHIFTMLT=shiftM, $
+                                MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                                MIN_MAGCURRENT=minMC, $
+                                MAX_NEGMAGCURRENT=maxNegMC, $
+                                HWMAUROVAL=HwMAurOval, $
+                                HWMKPIND=HwMKpInd, $
+                                ;; MIN_NEVENTS=min_nEvents, $
+                                MASKMIN=maskMin, $
+                                DO_DESPUNDB=do_despunDB, $
+                                HEMI=hemi, $
+                                NORTH=north, $
+                                SOUTH=south, $
+                                BOTH_HEMIS=both_hemis, $
+                                NPLOTS=nPlots, $
+                                EPLOTS=ePlots, $
+                                EFLUXPLOTTYPE=eFluxPlotType, $
+                                ENUMFLPLOTS=eNumFlPlots, $
+                                ENUMFLPLOTTYPE=eNumFlPlotType, $
+                                PPLOTS=pPlots, $
+                                IONPLOTS=ionPlots, $
+                                IFLUXPLOTTYPE=ifluxPlotType, $
+                                CHAREPLOTS=charEPlots, $
+                                CHARETYPE=charEType, $
+                                CHARIEPLOTS=chariEPlots, $
+                                AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                                ORBCONTRIBPLOT=orbContribPlot, $
+                                ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
+                                ORBTOTPLOT=orbTotPlot, $
+                                ORBFREQPLOT=orbFreqPlot, $
+                                NEVENTPERORBPLOT=nEventPerOrbPlot, $
+                                NEVENTPERMINPLOT=nEventPerMinPlot, $
+                                ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                                PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                                SQUAREPLOT=squarePlot, $
+                                POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+                                MEDIANPLOT=medianPlot, $
+                                LOGAVGPLOT=logAvgPlot, $
+                                PLOTMEDORAVG=plotMedOrAvg, $
+                                DATADIR=dataDir, $
+                                NO_BURSTDATA=no_burstData, $
+                                WRITEASCII=writeASCII, $
+                                WRITEHDF5=writeHDF5, $
+                                WRITEPROCESSEDH2D=writeProcessedH2d, $
+                                SAVERAW=saveRaw, RAWDIR=rawDir, $
+                                SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                                ;; PLOTDIR=plotDir, $
+                                MEDHISTOUTDATA=medHistOutData, $
+                                MEDHISTOUTTXT=medHistOutTxt, $
+                                OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                                ;; OUT_TEMPFILE=out_tempFile, $
+                                ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
+                                DEL_PS=del_PS, $
+                                KEEPME=keepMe, $
+                                PARAMSTRING=paramString, $
+                                PARAMSTRPREFIX=plotPrefix, $
+                                PARAMSTRSUFFIX=plotSuffix,$
+                                HOYDIA=hoyDia,LUN=lun,_EXTRA=e
      
-     CASE 1 OF
-        KEYWORD_SET(nonStorm): BEGIN
-           PRINTF,lun,'Restricting with non-storm indices ...'
-           restrict_with_these_i = ns_i
-           t1_arr                = ns_t1
-           t2_arr                = ns_t2
-           stormString           = 'non-storm'
-           paramString          += '--' + stormString
-           IF KEYWORD_SET(executing_multiples) THEN BEGIN
-              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                 paramString_list[iMult] += '--' + stormString
-              ENDFOR
-           ENDIF
-        END
-        KEYWORD_SET(mainPhase): BEGIN
-           PRINTF,lun,'Restricting with main-phase indices ...'
-           restrict_with_these_i = mp_i
-           t1_arr                = mp_t1
-           t2_arr                = mp_t2
-           stormString           = 'mainPhase'
-           paramString          += '--' + stormString
-           IF KEYWORD_SET(executing_multiples) THEN BEGIN
-              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                 paramString_list[iMult] += '--' + stormString
-              ENDFOR
-           ENDIF         
-        END
-        KEYWORD_SET(recoveryPhase): BEGIN
-           PRINTF,lun,'Restricting with recovery-phase indices ...'
-           restrict_with_these_i = rp_i
-           t1_arr                = rp_t1
-           t2_arr                = rp_t2
-           stormString           = 'recoveryPhase'
-           paramString          += '--' + stormString
-           IF KEYWORD_SET(executing_multiples) THEN BEGIN
-              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                 paramString_list[iMult] += '--' + stormString
-              ENDFOR
-           ENDIF
-         END
-     ENDCASE
-  ENDIF
+     SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $
+                                     ANGLELIM1=angleLim1, $
+                                     ANGLELIM2=angleLim2, $
+                                     ORBRANGE=orbRange, $
+                                     ALTITUDERANGE=altitudeRange, $
+                                     CHARERANGE=charERange, $
+                                     BYMIN=byMin, $
+                                     BYMAX=byMax, $
+                                     BZMIN=bzMin, $
+                                     BZMAX=bzMax, $
+                                     BTMIN=btMin, $
+                                     BTMAX=btMax, $
+                                     BXMIN=bxMin, $
+                                     BXMAX=bxMax, $
+                                     DO_ABS_BYMIN=abs_byMin, $
+                                     DO_ABS_BYMAX=abs_byMax, $
+                                     DO_ABS_BZMIN=abs_bzMin, $
+                                     DO_ABS_BZMAX=abs_bzMax, $
+                                     DO_ABS_BTMIN=abs_btMin, $
+                                     DO_ABS_BTMAX=abs_btMax, $
+                                     DO_ABS_BXMIN=abs_bxMin, $
+                                     DO_ABS_BXMAX=abs_bxMax, $
+                                     BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                                     DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                     DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                                     PARAMSTRING=paramString, $
+                                     PARAMSTR_LIST=paramString_list, $
+                                     SATELLITE=satellite, $
+                                     OMNI_COORDS=omni_Coords, $
+                                     DELAY=delay, $
+                                     MULTIPLE_DELAYS=multiple_delays, $
+                                     MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                     OUT_EXECUTING_MULTIPLES=executing_multiples, $
+                                     OUT_MULTIPLES=multiples, $
+                                     OUT_MULTISTRING=multiString, $
+                                     RESOLUTION_DELAY=delay_res, $
+                                     BINOFFSET_DELAY=binOffset_delay, $
+                                     STABLEIMF=stableIMF, $
+                                     SMOOTHWINDOW=smoothWindow, $
+                                     INCLUDENOCONSECDATA=includeNoConsecData, $
+                                     LUN=lun
 
 
-  plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
-                                                                          DBTIMES=cdbTime,dbfile=dbfile, $
-                                                                          DO_CHASTDB=do_chastdb, $
-                                                                          DO_DESPUNDB=do_despunDB, $
-                                                                          HEMI=hemi, $
-                                                                          ;; NORTH=north, $
-                                                                          ;; SOUTH=south, $
-                                                                          ;; BOTH_HEMIS=both_hemis, $
-                                                                          ORBRANGE=orbRange, $
-                                                                          ALTITUDERANGE=altitudeRange, $
-                                                                          CHARERANGE=charERange, $
-                                                                          POYNTRANGE=poyntRange, $
-                                                                          SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                                                          MINMLT=minM,MAXMLT=maxM, $
-                                                                          BINM=binM, $
-                                                                          SHIFTM=shiftM, $
-                                                                          MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                                          DO_LSHELL=do_lshell, $
-                                                                          MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                                          MIN_MAGCURRENT=minMC, $
-                                                                          MAX_NEGMAGCURRENT=maxNegMC, $
-                                                                          SMOOTH_IMF=smoothWindow, $
-                                                                          BYMIN=byMin, $
-                                                                          BYMAX=byMax, $
-                                                                          BZMIN=bzMin, $
-                                                                          BZMAX=bzMax, $
-                                                                          BTMIN=btMin, $
-                                                                          BTMAX=btMax, $
-                                                                          BXMIN=bxMin, $
-                                                                          BXMAX=bxMax, $
-                                                                          DO_ABS_BYMIN=abs_byMin, $
-                                                                          DO_ABS_BYMAX=abs_byMax, $
-                                                                          DO_ABS_BZMIN=abs_bzMin, $
-                                                                          DO_ABS_BZMAX=abs_bzMax, $
-                                                                          DO_ABS_BTMIN=abs_btMin, $
-                                                                          DO_ABS_BTMAX=abs_btMax, $
-                                                                          DO_ABS_BXMIN=abs_bxMin, $
-                                                                          DO_ABS_BXMAX=abs_bxMax, $
-                                                                          RESET_OMNI_INDS=reset_omni_inds, $
-                                                                          CLOCKSTR=clockStr, $
-                                                                          DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                          RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-                                                                          /DO_NOT_SET_DEFAULTS, $
-                                                                          BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                                          MULTIPLE_DELAYS=multiple_delays, $
-                                                                          RESOLUTION_DELAY=delay_res, $
-                                                                          BINOFFSET_DELAY=binOffset_delay, $
-                                                                          MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                                                          STABLEIMF=stableIMF, $
-                                                                          DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                                                          OMNI_COORDS=omni_Coords, $
-                                                                          ANGLELIM1=angleLim1, $
-                                                                          ANGLELIM2=angleLim2, $
-                                                                          HWMAUROVAL=HwMAurOval, $
-                                                                          HWMKPIND=HwMKpInd, $
-                                                                          PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                                                          PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                                                          SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                                                          RESET_GOOD_INDS=reset_good_inds, $
-                                                                          NO_BURSTDATA=no_burstData, $
-                                                                          DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
+     ;;Open file for text summary, if desired
+     IF KEYWORD_SET(outputPlotSummary) THEN BEGIN
+        OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
+        IF KEYWORD_SET(executing_multiples) THEN BEGIN
+           PRINT,"What are you thinking? You're not setup to get multi-output..."
+           STOP
+        ENDIF
+     ENDIF ELSE BEGIN
+        lun=-1                  ;-1 is lun for STDOUT
+     ENDELSE
+     
+     ;;********************************************************
+     ;;Now clean and tap the databases and interpolate satellite data
+     IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           DO_DESPUNDB=do_despunDB, $
+           DSTCUTOFF=dstCutoff, $
+           NONSTORM_I=ns_i, $
+           MAINPHASE_I=mp_i, $
+           RECOVERYPHASE_I=rp_i, $
+           STORM_DST_I=s_dst_i, $
+           NONSTORM_DST_I=ns_dst_i, $
+           MAINPHASE_DST_I=mp_dst_i, $
+           RECOVERYPHASE_DST_I=rp_dst_i, $
+           N_STORM=n_s, $
+           N_NONSTORM=n_ns, $
+           N_MAINPHASE=n_mp, $
+           N_RECOVERYPHASE=n_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+
+        
+        CASE 1 OF
+           KEYWORD_SET(nonStorm): BEGIN
+              PRINTF,lun,'Restricting with non-storm indices ...'
+              restrict_with_these_i = ns_i
+              t1_arr                = ns_t1
+              t2_arr                = ns_t2
+              stormString           = 'non-storm'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF
+           END
+           KEYWORD_SET(mainPhase): BEGIN
+              PRINTF,lun,'Restricting with main-phase indices ...'
+              restrict_with_these_i = mp_i
+              t1_arr                = mp_t1
+              t2_arr                = mp_t2
+              stormString           = 'mainPhase'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF         
+           END
+           KEYWORD_SET(recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting with recovery-phase indices ...'
+              restrict_with_these_i = rp_i
+              t1_arr                = rp_t1
+              t2_arr                = rp_t2
+              stormString           = 'recoveryPhase'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF
+           END
+        ENDCASE
+
+        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
+           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+           OR KEYWORD_SET(nEventPerOrbPlot) $
+           OR KEYWORD_SET(tHistDenominatorPlot) $
+           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+           OR KEYWORD_SET(numOrbLim) $
+        THEN BEGIN 
+
+           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+              /GET_TIME_I_NOT_ALFDB_I, $
+              DSTCUTOFF=dstCutoff, $
+              NONSTORM_I=ns_FL_i, $
+              MAINPHASE_I=mp_FL_i, $
+              RECOVERYPHASE_I=rp_FL_i, $
+              STORM_DST_I=s_dst_FL_i, $
+              NONSTORM_DST_I=ns_dst_FL_i, $
+              MAINPHASE_DST_I=mp_dst_FL_i, $
+              RECOVERYPHASE_DST_I=rp_dst_FL_i, $
+              N_STORM=n_FL_s, $
+              N_NONSTORM=n_FL_ns, $
+              N_MAINPHASE=n_FL_mp, $
+              N_RECOVERYPHASE=n_FL_rp, $
+              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           
+           CASE 1 OF
+              KEYWORD_SET(nonStorm): BEGIN
+                 restrict_with_these_FL_i = ns_FL_i
+              END
+              KEYWORD_SET(mainPhase): BEGIN
+                 restrict_with_these_FL_i = mp_FL_i
+              END
+              KEYWORD_SET(recoveryPhase): BEGIN
+                 restrict_with_these_FL_i = rp_FL_i
+              END
+           ENDCASE
+
+
+        ENDIF
+     ENDIF
+
+
+
+     plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
+                                                                             DBTIMES=cdbTime,dbfile=dbfile, $
+                                                                             DO_CHASTDB=do_chastdb, $
+                                                                             DO_DESPUNDB=do_despunDB, $
+                                                                             HEMI=hemi, $
+                                                                             ORBRANGE=orbRange, $
+                                                                             ALTITUDERANGE=altitudeRange, $
+                                                                             CHARERANGE=charERange, $
+                                                                             POYNTRANGE=poyntRange, $
+                                                                             SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                                                             MINMLT=minM,MAXMLT=maxM, $
+                                                                             BINM=binM, $
+                                                                             SHIFTM=shiftM, $
+                                                                             MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                                             DO_LSHELL=do_lshell, $
+                                                                             MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                                             MIN_MAGCURRENT=minMC, $
+                                                                             MAX_NEGMAGCURRENT=maxNegMC, $
+                                                                             SMOOTH_IMF=smoothWindow, $
+                                                                             BYMIN=byMin, $
+                                                                             BYMAX=byMax, $
+                                                                             BZMIN=bzMin, $
+                                                                             BZMAX=bzMax, $
+                                                                             BTMIN=btMin, $
+                                                                             BTMAX=btMax, $
+                                                                             BXMIN=bxMin, $
+                                                                             BXMAX=bxMax, $
+                                                                             DO_ABS_BYMIN=abs_byMin, $
+                                                                             DO_ABS_BYMAX=abs_byMax, $
+                                                                             DO_ABS_BZMIN=abs_bzMin, $
+                                                                             DO_ABS_BZMAX=abs_bzMax, $
+                                                                             DO_ABS_BTMIN=abs_btMin, $
+                                                                             DO_ABS_BTMAX=abs_btMax, $
+                                                                             DO_ABS_BXMIN=abs_bxMin, $
+                                                                             DO_ABS_BXMAX=abs_bxMax, $
+                                                                             RESET_OMNI_INDS=reset_omni_inds, $
+                                                                             CLOCKSTR=clockStr, $
+                                                                             DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                                                             RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                                                             /DO_NOT_SET_DEFAULTS, $
+                                                                             BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                                             MULTIPLE_DELAYS=multiple_delays, $
+                                                                             RESOLUTION_DELAY=delay_res, $
+                                                                             BINOFFSET_DELAY=binOffset_delay, $
+                                                                             MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                                                             STABLEIMF=stableIMF, $
+                                                                             DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                                                                             OMNI_COORDS=omni_Coords, $
+                                                                             ANGLELIM1=angleLim1, $
+                                                                             ANGLELIM2=angleLim2, $
+                                                                             HWMAUROVAL=HwMAurOval, $
+                                                                             HWMKPIND=HwMKpInd, $
+                                                                             PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                                                             PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                                                             SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                                                             RESET_GOOD_INDS=reset_good_inds, $
+                                                                             NO_BURSTDATA=no_burstData, $
+                                                                             DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
     
+
+
+     IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
+        ;; OR KEYWORD_SET(timeAvgd_pfluxPlot) OR KEYWORD_SET(timeAvgd_eFluxMaxPlot) $
+        OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+        OR KEYWORD_SET(nEventPerOrbPlot) $
+        OR KEYWORD_SET(tHistDenominatorPlot) $
+        OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+        OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+        OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+        OR KEYWORD_SET(numOrbLim) $
+     THEN BEGIN 
+        fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(fastLoc,satellite,delay,LUN=lun, $
+                                                                           DBTIMES=fastLoc_times,dbfile=fastLocDBFile, $
+                                                                           HEMI=hemi, $
+                                                                           ORBRANGE=orbRange, $
+                                                                           ALTITUDERANGE=altitudeRange, $
+                                                                           CHARERANGE=charERange, $
+                                                                           POYNTRANGE=poyntRange, $
+                                                                           SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                                                           MINMLT=minM,MAXMLT=maxM, $
+                                                                           BINM=binM, $
+                                                                           SHIFTM=shiftM, $
+                                                                           MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                                                           DO_LSHELL=do_lshell, $
+                                                                           MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                                                           MIN_MAGCURRENT=minMC, $
+                                                                           MAX_NEGMAGCURRENT=maxNegMC, $
+                                                                           SMOOTH_IMF=smoothWindow, $
+                                                                           BYMIN=byMin, $
+                                                                           BYMAX=byMax, $
+                                                                           BZMIN=bzMin, $
+                                                                           BZMAX=bzMax, $
+                                                                           BTMIN=btMin, $
+                                                                           BTMAX=btMax, $
+                                                                           BXMIN=bxMin, $
+                                                                           BXMAX=bxMax, $
+                                                                           DO_ABS_BYMIN=abs_byMin, $
+                                                                           DO_ABS_BYMAX=abs_byMax, $
+                                                                           DO_ABS_BZMIN=abs_bzMin, $
+                                                                           DO_ABS_BZMAX=abs_bzMax, $
+                                                                           DO_ABS_BTMIN=abs_btMin, $
+                                                                           DO_ABS_BTMAX=abs_btMax, $
+                                                                           DO_ABS_BXMIN=abs_bxMin, $
+                                                                           DO_ABS_BXMAX=abs_bxMax, $
+                                                                           RESET_OMNI_INDS=reset_omni_inds, $
+                                                                           CLOCKSTR=clockStr, $
+                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
+                                                                           /DO_NOT_SET_DEFAULTS, $
+                                                                           BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                                                           MULTIPLE_DELAYS=multiple_delays, $
+                                                                           RESOLUTION_DELAY=delay_res, $
+                                                                           BINOFFSET_DELAY=binOffset_delay, $
+                                                                           MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                                                           STABLEIMF=stableIMF, $
+                                                                           DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                                                                           OMNI_COORDS=omni_Coords, $
+                                                                           ANGLELIM1=angleLim1, $
+                                                                           ANGLELIM2=angleLim2, $
+                                                                           HWMAUROVAL=HwMAurOval, $
+                                                                           HWMKPIND=HwMKpInd, $
+                                                                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                                                           PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                                                           SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                                                           RESET_GOOD_INDS=reset_good_inds, $
+                                                                           NO_BURSTDATA=no_burstData, $
+                                                                           /GET_TIME_I_NOT_ALFVENDB_I, $
+                                                                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
+     ENDIF
+
+     PRINT,'Saving this session''s vars...'
+     SAVE,/VARIABLES,FILENAME=lastSessionFile
+  ENDELSE
 
   IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN
 
@@ -791,7 +911,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              RESET_GOOD_INDS=reset_good_inds, $
                              DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR KEYWORD_SET(nonMem)
 
-  ENDIF
+  ENDIF   
 
   ;;********************************************
   ;;Variables for histos
@@ -992,7 +1112,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         indices__nonAlfven_eSpec = indices__nonAlfven_eSpec_list[iMulti]
      ENDIF
 
-     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti], $
+     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti],fastLocInterped_i_list[iMulti], $
                            H2DSTRARR=h2dStrArr, $
                            KEEPME=keepMe, $
                            DATARAWPTRARR=dataRawPtrArr, $
@@ -1023,12 +1143,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ANGLELIM1=angleLim1, $
                            ANGLELIM2=angleLim2, $
                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                           DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
-                           DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
-                           STORMSTRING=stormString, $
-                           DSTCUTOFF=dstCutoff, $
-                           T1_ARR=t1_arr, $
-                           T2_ARR=t2_arr, $
+                           ;; DO_IMF_CONDS=~KEYWORD_SET(do_not_consider_IMF), $
+                           ;; DO_UTC_RANGE=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase), $
+                           ;; STORMSTRING=stormString, $
+                           ;; DSTCUTOFF=dstCutoff, $
+                           ;; T1_ARR=t1_arr, $
+                           ;; T2_ARR=t2_arr, $
                            BYMIN=byMin, $
                            BYMAX=byMax, $
                            BZMIN=bzMin, $
@@ -1046,9 +1166,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            DO_ABS_BXMIN=abs_bxMin, $
                            DO_ABS_BXMAX=abs_bxMax, $
                            DELAY=KEYWORD_SET(multiple_delays) ? delay[iMulti] : delay, $
-                           ;; MULTIPLE_DELAYS=multiple_delays, $
-                           ;; RESOLUTION_DELAY=delay_res, $
-                           ;; BINOFFSET_DELAY=binOffset_delay, $
                            STABLEIMF=stableIMF, $
                            SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                            NPLOTS=nPlots, $
