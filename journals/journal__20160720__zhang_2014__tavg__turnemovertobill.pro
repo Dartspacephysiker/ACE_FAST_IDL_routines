@@ -5,17 +5,15 @@
 ;;I'm just here to decide on masking, binMLT, and whether btMin ought to be 1 or 2. That's IT.
 
 ;;-->Pick almost no masking since that way Bill can make his own call about stuff
-PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLED
+PRO JOURNAL__20160720__ZHANG_2014__TAVG__TURNEMOVERTOBILL
 
   COMPILE_OPT IDL2
 
-  restore_last_session           = 0
-
   nonstorm                       = 1
-  DSTcutoff                      = -30
+  DSTcutoff                      = -20
 
-  do_timeAvg_fluxQuantities      = 0
-  logAvgPlot                     = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -59,7 +57,7 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,5.0]
+  ePlotRange                     = [0,0.3]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -69,8 +67,8 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,5.0], $
-                                    [0,4.0e9]]
+  ENumFlPlotRange                = [[0,0.3], $
+                                    [0,4.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -79,19 +77,19 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.0]
+  PPlotRange                     = [0,0.15]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.0e8]
+  IPlotRange                     = [0,5.0e7]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.05]
+  probOccurrenceRange            = [0,0.08]
 
-  summed_eFlux_pFluxplotRange    = [0,8]
+  summed_eFlux_pFluxplotRange    = [0,0.3]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -125,12 +123,12 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2
+  btMin                          = 4
   ;; btMax                       = 5
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1800
+  delayDeltaSec                  = 1200
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
@@ -140,25 +138,25 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
-  maxILAT                        = 88
+  maxILAT                        = 85
   maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
   ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -88
+  ;; minILAT                        = -85
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
   ;; numOrbLim                      = 3
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
-  shiftMLT                       = 0.0
+  binMLT                         = 1.0
+  shiftMLT                       = 0.5
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
@@ -167,7 +165,7 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
+     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbits_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
@@ -375,7 +373,6 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        RESTORE_LAST_SESSION=restore_last_session, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $
