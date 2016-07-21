@@ -56,7 +56,7 @@ PRO JOURNAL__20160720__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE__1997_ONLY
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [0.05,50.0]
   logPfPlot                      = 0
-  PPlotRange                     = [0.00,1.5]
+  PPlotRange                     = [0.00,1.1]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -113,11 +113,11 @@ PRO JOURNAL__20160720__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE__1997_ONLY
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 1.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6

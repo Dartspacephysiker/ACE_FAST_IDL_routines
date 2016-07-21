@@ -138,19 +138,20 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 88
-  maskMin                        = 1
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 88
+  ;; maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -88
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -88
+  maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
-  ;; numOrbLim                      = 3
+
+  numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
   binILAT                        = 1.0
