@@ -158,7 +158,7 @@ PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
