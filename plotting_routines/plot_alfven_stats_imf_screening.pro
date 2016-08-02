@@ -380,7 +380,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DATADIR=dataDir, $
                                     DO_CHASTDB=do_chastDB, $
                                     DO_DESPUNDB=do_despunDB, $
-                                    USE_AACGM=use_aacgm, $
+                                    COORDINATE_SYSTEM=coordinate_system, $
+                                    USE_AACGM=use_AACGM, $
+                                    USE_MAG_COORDS=use_MAG, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, $
                                     LOGNEVENTSPLOT=logNEventsPlot, $
                                     NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -478,6 +480,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ;; MIN_NEVENTS=min_nEvents, $
                                 MASKMIN=maskMin, $
                                 DO_DESPUNDB=do_despunDB, $
+                                USE_AACGM=use_AACGM, $
+                                USE_MAG_COORDS=use_MAG, $
                                 HEMI=hemi, $
                                 NORTH=north, $
                                 SOUTH=south, $
@@ -586,7 +590,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            DO_DESPUNDB=do_despunDB, $
-           USE_AACGM=use_aacgm, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
            NONSTORM_I=ns_i, $
            MAINPHASE_I=mp_i, $
@@ -694,7 +700,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                              DBTIMES=cdbTime,dbfile=dbfile, $
                                                                              DO_CHASTDB=do_chastdb, $
                                                                              DO_DESPUNDB=do_despunDB, $
-                                                                             USE_AACGM=use_aacgm, $
+                                                                             COORDINATE_SYSTEM=coordinate_system, $
+                                                                             USE_AACGM_COORDS=use_AACGM, $
                                                                              HEMI=hemi, $
                                                                              ORBRANGE=orbRange, $
                                                                              ALTITUDERANGE=altitudeRange, $
@@ -763,8 +770,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         OR KEYWORD_SET(numOrbLim) $
      THEN BEGIN 
         fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(fastLoc,satellite,delay,LUN=lun, $
-                                                                           DBTIMES=fastLoc_times,dbfile=fastLocDBFile, $
-                                                                           USE_AACGM=use_aacgm, $
+                                                                           DBTIMES=fastLoc_times, $
+                                                                           DBFILE=fastLocDBFile, $
+                                                                           COORDINATE_SYSTEM=coordinate_system, $
+                                                                           USE_AACGM=use_AACGM, $
+                                                                           USE_MAG_COORDS=use_MAG, $
+
                                                                            HEMI=hemi, $
                                                                            ORBRANGE=orbRange, $
                                                                            ALTITUDERANGE=altitudeRange, $
@@ -836,7 +847,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                              DESPUN_ALF_DB=do_despunDB, $
-                             USE_AACGM=use_aacgm, $
+                             COORDINATE_SYSTEM=coordinate_system, $
+                             USE_AACGM=use_AACGM, $
+                             USE_MAG_COORDS=use_MAG, $
                              T1_ARR=t1_arr,T2_ARR=t2_arr, $
                              EPLOTS=ePlots, $
                              EFLUXPLOTTYPE=eFluxPlotType, $

@@ -8,7 +8,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    DBFILE=dbfile, $
    DO_CHASTDB=do_chastdb, $
    DO_DESPUNDB=do_despunDB, $
-   USE_AACGM=use_aacgm, $
+   COORDINATE_SYSTEM=coordinate_system, $
+   USE_AACGM_COORDS=use_aacgm, $
+   USE_MAG_COORDS=use_mag, $
    HEMI=hemi, $
    ORBRANGE=orbRange, $
    ALTITUDERANGE=altitudeRange, $
@@ -87,7 +89,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
 
      good_i                            = GET_ESPEC_ION_DB_IND(dbStruct,lun, $
                                                               FOR_ALFVEN_DB=for_alfven_db, $
-                                                              USE_AACGM=use_aacgm, $
+                                                              COORDINATE_SYSTEM=coordinate_system, $
+                                                              USE_AACGM_COORDS=use_aacgm, $
+                                                              USE_MAG_COORDS=use_mag, $
                                                               ;; DBFILE=dbfile, $
                                                               ;; DBDIR=dbDir, $
                                                               ORBRANGE=orbRange, $
@@ -125,7 +129,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                          CHASTDB=do_chastdb, $
                                                          HEMI=hemi, $
                                                          DESPUNDB=do_despunDB, $
-                                                         USE_AACGM=use_aacgm, $
+                                                         COORDINATE_SYSTEM=coordinate_system, $
+                                                         USE_AACGM_COORDS=use_aacgm, $
+                                                         USE_MAG_COORDS=use_mag, $
                                                          ORBRANGE=orbRange, $
                                                          ALTITUDERANGE=altitudeRange, $
                                                          CHARERANGE=charERange, $
