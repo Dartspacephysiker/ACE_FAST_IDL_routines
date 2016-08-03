@@ -451,11 +451,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ENDIF ELSE BEGIN
 
      IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
-        SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
-        SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
+        IF ~KEYWORD_SET(plotDir) THEN SET_PLOT_DIR,plotDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+        IF ~KEYWORD_SET(txtOutputDir) THEN SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_ALFVENDB,/ADD_TODAY,ADD_SUFF=suffix_txtDir
      ENDIF ELSE BEGIN
-        SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
-        SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_txtDir
+        IF ~KEYWORD_SET(plotDir) THEN SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_plotDir
+        IF ~KEYWORD_SET(txtOutputDir) THEN SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF=suffix_txtDir
      ENDELSE
 
      IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
