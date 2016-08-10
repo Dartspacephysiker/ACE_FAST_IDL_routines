@@ -114,7 +114,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[500,4180]]
+  altRange                       = [[1000,4180]]
 
   orbRange                       = [500,10600]
 
@@ -122,7 +122,8 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;;IMF condition stuff--run the ring!
   ;; btMinArr                       = 3.5
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
-  btMinArr                       = [1.0,1.5,2.0]
+  ;; btMinArr                       = [1.0,1.5,2.0]
+  btMinArr                       = [2.0]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
@@ -136,20 +137,20 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 89
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 88
   ;; maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -89
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -89
+  ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
 
-  numOrbLim                      = 2
+  numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
   binILAT                        = 1.5

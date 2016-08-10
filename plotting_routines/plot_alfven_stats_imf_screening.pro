@@ -354,6 +354,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+                                    MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $
                                     ADD_VARIANCE_PLOTS=add_variance_plots, $
                                     ONLY_VARIANCE_PLOTS=only_variance_plots, $
                                     VAR__PLOTRANGE=var__plotRange, $
@@ -1260,6 +1261,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
                            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+                           MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $
                            ADD_VARIANCE_PLOTS=add_variance_plots, $
                            ONLY_VARIANCE_PLOTS=only_variance_plots, $
                            VAR__PLOTRANGE=var__plotRange, $
