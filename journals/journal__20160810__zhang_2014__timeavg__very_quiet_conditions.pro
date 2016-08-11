@@ -1,6 +1,6 @@
 ;;08/02/16
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
-PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
+PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   COMPILE_OPT IDL2
 
@@ -9,8 +9,8 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   nonstorm                       = 1
   Dstcutoff                      = -20
 
-  do_timeAvg_fluxQuantities      = 0
-  logAvgPlot                     = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -47,14 +47,14 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ionPlots                       = 1
   probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
+  nOrbsWithEventsPerContribOrbsPlot = 3
 
   nowepco_range                  = [0,0.64]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,8.0]
+  ePlotRange                     = [0,0.12]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -64,8 +64,8 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,5.0], $
-                                    [0,4.0e9]]
+  ENumFlPlotRange                = [[0,0.1], $
+                                    [0,2.5e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -74,19 +74,19 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.5]
+  PPlotRange                     = [0,0.12]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,3.0e8]
+  IPlotRange                     = [0,2.5e7]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.06]
+  probOccurrenceRange            = [0,0.05]
 
-  summed_eFlux_pFluxplotRange    = [0,8]
+  summed_eFlux_pFluxplotRange    = [0,0.2]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -120,7 +120,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  ;; btMinArr                       = 3.5						
+  ;; btMinArr                       = 3.5
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
   btMinArr                       = [2.0]
@@ -154,7 +154,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
 
-  numOrbLim                      = 2
+  numOrbLim                      = 5
 
   ;; binILAT                     = 2.0
   binILAT                        = 1.25

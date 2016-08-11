@@ -834,8 +834,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                            DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
      ENDIF
 
-     PRINT,'Saving this session''s vars...'
-     SAVE,/VARIABLES,FILENAME=lastSessionFile
+     ;; PRINT,'Saving this session''s vars...'
+     ;; SAVE,/VARIABLES,FILENAME=lastSessionFile
   ENDELSE
 
   IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN
