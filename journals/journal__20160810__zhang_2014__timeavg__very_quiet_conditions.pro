@@ -84,7 +84,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   IPlotRange                     = [0,2.5e7]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.05]
+  probOccurrenceRange            = [0,0.03]
 
   summed_eFlux_pFluxplotRange    = [0,0.2]
   
@@ -114,7 +114,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4180]]
+  altRange                       = [[1000,4180]]
 
   orbRange                       = [1000,10800]
 
@@ -137,32 +137,32 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; IF KEYWORD_SET(southern_hemi_plotScales) THEN BEGIN
   ;;    probOccurrenceRange            = [0,0.1]
   ;; ENDIF
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 10
+  ;; tHist_mask_bins_below_thresh   = 10
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.25
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
-  shiftMLT                       = 0.75
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

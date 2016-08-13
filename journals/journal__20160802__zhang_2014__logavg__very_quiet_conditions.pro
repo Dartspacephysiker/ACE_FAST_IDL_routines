@@ -1,4 +1,4 @@
-;;08/02/16
+;;08/13/16
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
 PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
 
@@ -84,7 +84,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   IPlotRange                     = [0,3.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.06]
+  probOccurrenceRange            = [0,0.05]
 
   summed_eFlux_pFluxplotRange    = [0,8]
   
@@ -114,7 +114,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4180]]
+  altRange                       = [[1000,4180]]
 
   orbRange                       = [1000,10800]
 
@@ -156,13 +156,13 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
 
   ;; numOrbLim                      = 10
 
-  ;; binILAT                     = 2.0
-  binILAT                        = 1.25
+  binILAT                     = 2.0
+  ;; binILAT                        = 1.25
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
-  shiftMLT                       = 0.75
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

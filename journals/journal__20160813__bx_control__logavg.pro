@@ -115,11 +115,11 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
   ;; bxMin                          = 2.0
-  ;; bxMax                          = -2.0
+  bxMax                          = -2.0
 
   ;;But what about the middle range? If you're interested ...
-  bxMax                          = 2.0
-  abs_bxMax                      = 1
+  ;; bxMax                          = 2.0
+  ;; abs_bxMax                      = 1
 
   ;;Delay stuff
   nDelays                        = 1
@@ -131,16 +131,16 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; IF KEYWORD_SET(southern_hemi_plotScales) THEN BEGIN
   ;;    probOccurrenceRange            = [0,0.1]

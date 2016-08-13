@@ -106,18 +106,18 @@ PRO JOURNAL__20160720__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE__1997_ONLY
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
-  maxILAT                        = 85
+  maxILAT                        = 90
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -86
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.0
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.75
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
