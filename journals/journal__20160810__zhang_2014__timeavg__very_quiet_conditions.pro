@@ -129,7 +129,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1200
+  delayDeltaSec                  = 1800
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
@@ -152,9 +152,9 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;;    probOccurrenceRange            = [0,0.1]
   ;; ENDIF
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 5
+  tHist_mask_bins_below_thresh   = 10
 
-  numOrbLim                      = 5
+  ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
   binILAT                        = 1.25
@@ -162,7 +162,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.5
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.75
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

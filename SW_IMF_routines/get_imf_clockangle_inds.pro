@@ -14,7 +14,9 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
   ;;we don't append a value of -1 to phiImf_ii
   CASE C_OMNI__N_angle_sets OF
      1: BEGIN
-        IF C_OMNI__clockStr NE 'bzSouth' AND C_OMNI__clockStr NE 'all_IMF' THEN BEGIN
+        IF STRUPCASE(C_OMNI__clockStr) NE STRUPCASE('bzSouth') AND $
+           STRUPCASE(C_OMNI__clockStr) NE STRUPCASE('all_IMF') $
+        THEN BEGIN
            C_OMNI__phiIMF_i                         = WHERE(phiClock GE C_OMNI__negAngle AND phiClock LT C_OMNI__posAngle)
         ENDIF ELSE BEGIN
            IF STRUPCASE(C_OMNI__clockStr) EQ STRUPCASE('bzSouth') OR KEYWORD_SET(C_OMNI__treat_angles_like_bz_south) THEN BEGIN

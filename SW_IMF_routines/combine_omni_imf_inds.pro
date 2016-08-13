@@ -15,6 +15,20 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
         STOP
      ENDIF
   ENDIF
+  IF KEYWORD_SET(C_OMNI__bxMin_i) THEN BEGIN
+     C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bxMin_i,SUCCESS=success)
+     IF ~success THEN BEGIN
+        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        STOP
+     ENDIF
+  ENDIF
+  IF KEYWORD_SET(C_OMNI__bxMax_i) THEN BEGIN
+     C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bxMax_i,SUCCESS=success)
+     IF ~success THEN BEGIN
+        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        STOP
+     ENDIF
+  ENDIF
   IF KEYWORD_SET(C_OMNI__byMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__byMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
