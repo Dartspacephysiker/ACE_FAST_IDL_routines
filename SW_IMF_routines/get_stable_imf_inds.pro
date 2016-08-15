@@ -237,7 +237,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF
 
      IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
-        maxTime                     = STR_TO_TIME('1999-11-03/03:21:00.000')
+        ;; maxTime                     = STR_TO_TIME('1999-11-03/03:21:00.000')
+        maxTime                     = STR_TO_TIME('1999-05-16/00:00:00.0')
         ;; maxTime                  = STR_TO_TIME('2000-10-06/00:08:46.938')
         minTime                     = STR_TO_TIME('1996-10-06/16:26:02.0')
         C_OMNI__time_i              = WHERE(C_OMNI__mag_UTC LE maxTime AND C_OMNI__mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)

@@ -88,7 +88,7 @@ PRO JOURNAL__20160719__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[340,4180]]
+  altRange                       = [[1000,4180]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -106,14 +106,14 @@ PRO JOURNAL__20160719__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
-  maxILAT                        = 85
+  maxILAT                        = 90
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -86
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

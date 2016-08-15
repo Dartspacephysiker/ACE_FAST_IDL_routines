@@ -22,8 +22,8 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   autoscale_fluxPlots            = 0
   
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41,7 +41,7 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0.0,6.0]
+  ePlotRange                     = [0.0,10.0]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -51,8 +51,8 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,6.0], $
-                                    [0,1.0e9]]
+  ENumFlPlotRange                = [[0,10.0], $
+                                    [0,5.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -61,14 +61,14 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.2]
+  PPlotRange                     = [0,3.5]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.0e8]
+  IPlotRange                     = [0,4.0e8]
   
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.05]
@@ -114,8 +114,8 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   btMinArr                       = [0.0]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
-  ;; bxMin                          = 2.0
-  bxMax                          = -2.0
+  bxMin                          = 1.0
+  ;; bxMax                          = -1.0
 
   ;;But what about the middle range? If you're interested ...
   ;; bxMax                          = 2.0
@@ -151,12 +151,12 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.25
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
-  shiftMLT                       = 0.75
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

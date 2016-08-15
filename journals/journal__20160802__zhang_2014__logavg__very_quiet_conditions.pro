@@ -35,9 +35,9 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
+  print_avg_imf_components       = 1
+  print_master_OMNI_file         = 1
+  save_master_OMNI_inds          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots

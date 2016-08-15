@@ -1,6 +1,6 @@
-;;08/02/16
-;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
-PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
+;;08/13/16
+;;And now—the role of Bx
+PRO JOURNAL__20160813__ZHANG_2014__TIMEAVG__BX_RESTRICTION
 
   COMPILE_OPT IDL2
 
@@ -21,9 +21,22 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
 
   autoscale_fluxPlots            = 0
   
+  group_like_plots_for_tiling    = 1
+  scale_like_plots_for_tiling    = 0
+  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
+  adj_lower_plotlim_thresh       = 2 ;;Check minima
+
+  tile__include_IMF_arrows       = 0
+  tile__cb_in_center_panel       = 1
+  cb_force_oobHigh               = 1
+
+  suppress_gridLabels            = [0,1,1, $
+                                    1,1,1, $
+                                    1,1,1]
+
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34,7 +47,7 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ionPlots                       = 1
   probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
+  nOrbsWithEventsPerContribOrbsPlot = 3
 
   nowepco_range                  = [0,0.64]
 
@@ -61,7 +74,7 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.11]
+  PPlotRange                     = [0,0.12]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -101,7 +114,7 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1000,4180]]
+  altRange                       = [[340,4180]]
 
   orbRange                       = [1000,10800]
 
@@ -110,16 +123,11 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ;; btMinArr                       = 3.5
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
-  clockStr                       = 'bzSouth'
   btMinArr                       = [0.0]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
-  bxMin                          = 2.0
-  ;; bxMax                          = -2.0
-
-  ;;But what about the middle range? If you're interested ...
-  ;; bxMax                          = 2.0
-  ;; abs_bxMax                      = 1
+  bxMax                          = 2.0
+  abs_bxMax                      = 1
 
   ;;Delay stuff
   nDelays                        = 1
@@ -131,16 +139,16 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -90
+  ;; maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; IF KEYWORD_SET(southern_hemi_plotScales) THEN BEGIN
   ;;    probOccurrenceRange            = [0,0.1]
@@ -151,11 +159,11 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 1.25
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -184,30 +192,30 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
 
         plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
-        ;; SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-        ;;                               angleLim1,angleLim2, $
-        ;;                               IMFStr,IMFTitle, $
-        ;;                               BYMIN=byMin, $
-        ;;                               BYMAX=byMax, $
-        ;;                               BZMIN=bzMin, $
-        ;;                               BZMAX=bzMax, $
-        ;;                               BTMIN=btMin, $
-        ;;                               BTMAX=btMax, $
-        ;;                               BXMIN=bxMin, $
-        ;;                               BXMAX=bxMax, $
-        ;;                               /AND_TILING_OPTIONS, $
-        ;;                               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-        ;;                               TILE_IMAGES=tile_images, $
-        ;;                               TILING_ORDER=tiling_order, $
-        ;;                               N_TILE_COLUMNS=n_tile_columns, $
-        ;;                               N_TILE_ROWS=n_tile_rows, $
-        ;;                               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-        ;;                               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-        ;;                               TILEPLOTSUFF=plotSuff
+        SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
+                                      angleLim1,angleLim2, $
+                                      IMFStr,IMFTitle, $
+                                      BYMIN=byMin, $
+                                      BYMAX=byMax, $
+                                      BZMIN=bzMin, $
+                                      BZMAX=bzMax, $
+                                      BTMIN=btMin, $
+                                      BTMAX=btMax, $
+                                      BXMIN=bxMin, $
+                                      BXMAX=bxMax, $
+                                      /AND_TILING_OPTIONS, $
+                                      GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+                                      TILE_IMAGES=tile_images, $
+                                      TILING_ORDER=tiling_order, $
+                                      N_TILE_COLUMNS=n_tile_columns, $
+                                      N_TILE_ROWS=n_tile_rows, $
+                                      TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+                                      TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
+                                      TILEPLOTSUFF=plotSuff
 
 
         PLOT_ALFVEN_STATS_IMF_SCREENING, $
-           CLOCKSTR=clockStr, $
+           CLOCKSTR=clockStrings, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            SAMPLE_T_RESTRICTION=sample_t_restriction, $
            RESTRICT_WITH_THESE_I=restrict_with_these_i, $
@@ -396,5 +404,4 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
   ENDFOR
 
 END
-
 

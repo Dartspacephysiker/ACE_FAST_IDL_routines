@@ -88,7 +88,7 @@ PRO JOURNAL__20160720__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE__1997_ONLY
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[340,4180]]
+  altRange                       = [[1000,4180]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
