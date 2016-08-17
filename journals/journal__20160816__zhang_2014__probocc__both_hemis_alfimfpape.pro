@@ -1,6 +1,6 @@
-;;08/02/16
+;;08/16/16
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
-PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
+PRO JOURNAL__20160816__ZHANG_2014__PROBOCC__BOTH_HEMIS_ALFIMFPAPE
 
   COMPILE_OPT IDL2
 
@@ -9,8 +9,8 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   nonstorm                       = 1
   Dstcutoff                      = -20
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
+  do_timeAvg_fluxQuantities      = 0
+  logAvgPlot                     = 1
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -41,20 +41,20 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                         = 1
-  eNumFlPlots                    = 1
-  pPlots                         = 1
-  ionPlots                       = 1
+  ePlots                         = 0
+  eNumFlPlots                    = 0
+  pPlots                         = 0
+  ionPlots                       = 0
   probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
+  sum_electron_and_poyntingflux  = 0
+  nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,0.64]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.15]
+  ePlotRange                     = [0,8.0]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -64,8 +64,8 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.15], $
-                                    [0,2.5e8]]
+  ENumFlPlotRange                = [[0,5.0], $
+                                    [0,4.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -74,19 +74,19 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
+  PPlotRange                     = [0,1.5]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,2.5e7]
+  IPlotRange                     = [0,3.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.03]
+  probOccurrenceRange            = [0,0.05]
 
-  summed_eFlux_pFluxplotRange    = [0,0.2]
+  summed_eFlux_pFluxplotRange    = [0,8]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -120,7 +120,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  ;; btMinArr                       = 3.5
+  ;; btMinArr                       = 3.5						
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
   btMinArr                       = [2.0]
@@ -137,16 +137,16 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
-  ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 1
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
+  ;; maskMin                        = 10
+  ;; tHist_mask_bins_below_thresh   = 5
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; IF KEYWORD_SET(southern_hemi_plotScales) THEN BEGIN
   ;;    probOccurrenceRange            = [0,0.1]
@@ -156,8 +156,8 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   ;; numOrbLim                      = 10
 
-  ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                     = 2.0
+  ;; binILAT                        = 1.25
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

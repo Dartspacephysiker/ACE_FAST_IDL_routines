@@ -1,6 +1,6 @@
 ;;08/02/16
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
-PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
+PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG
 
   COMPILE_OPT IDL2
 
@@ -21,18 +21,13 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
   autoscale_fluxPlots            = 0
   
-  group_like_plots_for_tiling    = 1
-  scale_like_plots_for_tiling    = 0
-  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
-  adj_lower_plotlim_thresh       = 2 ;;Check minima
-
-  tile__include_IMF_arrows       = 1
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
-
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
+  ;; make_integral_file             = 1
+  do_grossRate_fluxQuantities    = 1
+  ;; grossRate_info_file            = 'hammertime-bxMax-1--SOUTH.txt'
+  ;; grossRate_info_file            = 'hammertime-bxMin1--SOUTH--timeAvg.txt'
+  ;; grossRate_info_file            = 'hammertime-bxMax-1--SOUTH--timeAvg.txt'
+  ;; grossRate_info_file            = 'hammertime-bxMax-1--NORTH--timeAvg.txt'
+  ;; grossRate_info_file            = 'hammertime-bxMin1--NORTH--timeAvg.txt'
 
   ;;bonus
   print_avg_imf_components       = 0
@@ -47,14 +42,14 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ionPlots                       = 1
   probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
+  nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,0.64]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.15]
+  ePlotRange                     = [0.0,2e7]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -64,8 +59,8 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.15], $
-                                    [0,2.5e8]]
+  ENumFlPlotRange                = [[0,2e7], $
+                                    [0,5.0e23]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -74,19 +69,19 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
+  PPlotRange                     = [0,2e7]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,2.5e7]
+  IPlotRange                     = [0,1.0e22]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.03]
+  probOccurrenceRange            = [0,0.05]
 
-  summed_eFlux_pFluxplotRange    = [0,0.2]
+  summed_eFlux_pFluxplotRange    = [0,4e7]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -123,9 +118,16 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ;; btMinArr                       = 3.5
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
-  btMinArr                       = [2.0]
+  clockStr                       = 'bzSouth'
+  btMinArr                       = [0.0]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
+  ;; bxMin                          = 1.0
+  bxMax                          = -1.0
+
+  ;;But what about the middle range? If you're interested ...
+  ;; bxMax                          = 2.0
+  ;; abs_bxMax                      = 1
 
   ;;Delay stuff
   nDelays                        = 1
@@ -190,30 +192,30 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
 
         plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
-        SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                      angleLim1,angleLim2, $
-                                      IMFStr,IMFTitle, $
-                                      BYMIN=byMin, $
-                                      BYMAX=byMax, $
-                                      BZMIN=bzMin, $
-                                      BZMAX=bzMax, $
-                                      BTMIN=btMin, $
-                                      BTMAX=btMax, $
-                                      BXMIN=bxMin, $
-                                      BXMAX=bxMax, $
-                                      /AND_TILING_OPTIONS, $
-                                      GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                      TILE_IMAGES=tile_images, $
-                                      TILING_ORDER=tiling_order, $
-                                      N_TILE_COLUMNS=n_tile_columns, $
-                                      N_TILE_ROWS=n_tile_rows, $
-                                      TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                      TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                      TILEPLOTSUFF=plotSuff
+        ;; SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
+        ;;                               angleLim1,angleLim2, $
+        ;;                               IMFStr,IMFTitle, $
+        ;;                               BYMIN=byMin, $
+        ;;                               BYMAX=byMax, $
+        ;;                               BZMIN=bzMin, $
+        ;;                               BZMAX=bzMax, $
+        ;;                               BTMIN=btMin, $
+        ;;                               BTMAX=btMax, $
+        ;;                               BXMIN=bxMin, $
+        ;;                               BXMAX=bxMax, $
+        ;;                               /AND_TILING_OPTIONS, $
+        ;;                               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+        ;;                               TILE_IMAGES=tile_images, $
+        ;;                               TILING_ORDER=tiling_order, $
+        ;;                               N_TILE_COLUMNS=n_tile_columns, $
+        ;;                               N_TILE_ROWS=n_tile_rows, $
+        ;;                               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+        ;;                               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
+        ;;                               TILEPLOTSUFF=plotSuff
 
 
         PLOT_ALFVEN_STATS_IMF_SCREENING, $
-           CLOCKSTR=clockStrings, $
+           CLOCKSTR=clockStr, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            SAMPLE_T_RESTRICTION=sample_t_restriction, $
            RESTRICT_WITH_THESE_I=restrict_with_these_i, $
@@ -333,6 +335,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
            LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
            DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+           WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -391,6 +394,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
+           MAKE_INTEGRAL_FILE=make_integral_file, $
            RESTORE_LAST_SESSION=restore_last_session, $
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
@@ -402,4 +406,5 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   ENDFOR
 
 END
+
 

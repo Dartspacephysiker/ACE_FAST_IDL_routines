@@ -21,6 +21,11 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
 
   autoscale_fluxPlots            = 0
   
+  make_integral_file             = 1
+  do_grossRate_fluxQuantities    = 1
+  ;; grossRate_info_file            = 'hammertime-bxMax-1--SOUTH.txt'
+  grossRate_info_file            = 'hammertime-bxMin1--SOUTH.txt'
+
   ;;bonus
   print_avg_imf_components       = 0
   print_master_OMNI_file         = 0
@@ -327,6 +332,7 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
            LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
            DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+           WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
            SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -385,6 +391,7 @@ PRO JOURNAL__20160813__BX_CONTROL__LOGAVG
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
+           MAKE_INTEGRAL_FILE=make_integral_file, $
            RESTORE_LAST_SESSION=restore_last_session, $
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
