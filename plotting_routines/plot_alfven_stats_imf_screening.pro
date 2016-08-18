@@ -235,6 +235,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_ABS_BTMAX=abs_btMax, $
                                     DO_ABS_BXMIN=abs_bxMin, $
                                     DO_ABS_BXMAX=abs_bxMax, $
+                                    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                     RESET_OMNI_INDS=reset_omni_inds, $
                                     SATELLITE=satellite, $
                                     OMNI_COORDS=omni_Coords, $
@@ -554,6 +556,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                      DO_ABS_BTMAX=abs_btMax, $
                                      DO_ABS_BXMIN=abs_bxMin, $
                                      DO_ABS_BXMAX=abs_bxMax, $
+                                     BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                     BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                      BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                      DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                      DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
@@ -734,6 +738,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                              DO_ABS_BTMAX=abs_btMax, $
                                                                              DO_ABS_BXMIN=abs_bxMin, $
                                                                              DO_ABS_BXMAX=abs_bxMax, $
+                                                                             BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                                                             BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                                                              RESET_OMNI_INDS=reset_omni_inds, $
                                                                              CLOCKSTR=clockStr, $
                                                                              DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -770,6 +776,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
         OR KEYWORD_SET(numOrbLim) $
      THEN BEGIN 
+        do_fastLoc_i              = 1
+     ENDIF
+
+     IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
         fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(fastLoc,satellite,delay,LUN=lun, $
                                                                            DBTIMES=fastLoc_times, $
                                                                            DBFILE=fastLocDBFile, $
@@ -808,6 +818,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                            DO_ABS_BTMAX=abs_btMax, $
                                                                            DO_ABS_BXMIN=abs_bxMin, $
                                                                            DO_ABS_BXMAX=abs_bxMax, $
+                                                                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                                                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                                                            RESET_OMNI_INDS=reset_omni_inds, $
                                                                            CLOCKSTR=clockStr, $
                                                                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -911,6 +923,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              DO_ABS_BTMAX=abs_btMax, $
                              DO_ABS_BXMIN=abs_bxMin, $
                              DO_ABS_BXMAX=abs_bxMax, $
+                             BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                             BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                              RESET_OMNI_INDS=reset_omni_inds, $
                              CLOCKSTR=clockStr, $
                              DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -1129,10 +1143,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         indices__nonAlfven_ion = indices__nonAlfven_ion_list[iMulti]
      ENDIF
      IF KEYWORD_SET(indices__nonAlfven_eSpec_list) THEN BEGIN
-        indices__nonAlfven_eSpec = indices__nonAlfven_eSpec_list[iMulti]
+        indices__nonAlfven_eSpec   = indices__nonAlfven_eSpec_list[iMulti]
      ENDIF
 
-     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti],fastLocInterped_i_list[iMulti], $
+     IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
+        fastLocInterped_i          = fastLocInterped_i_list[iMulti]
+     ENDIF
+
+     GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti],fastLocInterped_i, $
                            H2DSTRARR=h2dStrArr, $
                            KEEPME=keepMe, $
                            DATARAWPTRARR=dataRawPtrArr, $

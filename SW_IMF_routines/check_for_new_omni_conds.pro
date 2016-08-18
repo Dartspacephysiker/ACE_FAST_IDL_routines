@@ -21,6 +21,8 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              DO_ABS_BTMAX=abs_btMax, $
                              DO_ABS_BXMIN=abs_bxMin, $
                              DO_ABS_BXMAX=abs_bxMax, $
+                             BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                             BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                              OMNI_COORDS=OMNI_coords, $
                              LUN=lun
 
@@ -219,6 +221,24 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
   IF N_ELEMENTS(abs_bxMax) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__abs_bxMax) NE 0 THEN BEGIN
         IF C_OMNI__abs_bxMax NE abs_bxMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(bx_over_by_ratio_max) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__bx_over_by_ratio_max) NE 0 THEN BEGIN
+        IF C_OMNI__bx_over_by_ratio_max NE bx_over_by_ratio_max THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(bx_over_by_ratio_min) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__bx_over_by_ratio_min) NE 0 THEN BEGIN
+        IF C_OMNI__bx_over_by_ratio_min NE bx_over_by_ratio_min THEN BEGIN
            C_OMNI__RECALCULATE = 1
            RETURN
         ENDIF

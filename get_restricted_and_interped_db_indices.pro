@@ -47,6 +47,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    DO_ABS_BTMAX=abs_btMax, $
    DO_ABS_BXMIN=abs_bxMin, $
    DO_ABS_BXMAX=abs_bxMax, $
+   BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+   BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
    RESET_OMNI_INDS=reset_omni_inds, $
    CLOCKSTR=clockStr, $
    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -199,6 +201,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                DO_ABS_BTMAX=abs_btMax, $
                                                                                                DO_ABS_BXMIN=abs_bxMin, $
                                                                                                DO_ABS_BXMAX=abs_bxMax, $
+                                                                                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                                                                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                                                                                /RESET_OMNI_INDS, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -237,6 +241,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                DO_ABS_BTMAX=abs_btMax, $
                                                                                                DO_ABS_BXMIN=abs_bxMin, $
                                                                                                DO_ABS_BXMAX=abs_bxMax, $
+                                                                                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                                                                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                                                                                RESET_OMNI_INDS=reset_omni_inds, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $

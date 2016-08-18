@@ -7,6 +7,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
                            DO_ABS_BTMAX=abs_btMax, $
                            DO_ABS_BXMIN=abs_bxMin, $
                            DO_ABS_BXMAX=abs_bxMax, $
+                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                            LUN=lun
 
   COMPILE_OPT idl2
@@ -137,6 +139,41 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      PRINTF,lun,""
      PRINTF,lun,FORMAT='("BxMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__bxMax,bxMaxLost
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxMax_",F0.2)',absStr,C_OMNI__bxMax)
+  ENDIF
+
+  IF N_ELEMENTS(bx_over_by_ratio_min) GT 0 THEN BEGIN 
+     C_OMNI__bx_over_by_ratio_min          = bx_over_by_ratio_min
+     ;; C_OMNI__abs_bx_over_by_ratio_min      = KEYWORD_SET(abs_bx_over_by_ratio_min)
+     ;; IF C_OMNI__abs_bx_over_by_ratio_min THEN BEGIN
+     ;;    absStr              = 'ABS_'
+     ;;    C_OMNI__bx_over_by_ratio_min_i     = WHERE(ABS(Bx) LE ABS(C_OMNI__bx_over_by_ratio_min),NCOMPLEMENT=bx_over_by_ratio_minLost)
+     ;; ENDIF ELSE BEGIN
+     absStr                = ''
+     tmpRatio                           = ABS(Bx/By)
+     C_OMNI__bx_over_by_ratio_min_i     = WHERE((FINITE(tmpRatio)) AND (tmpRatio GE C_OMNI__bx_over_by_ratio_min),NCOMPLEMENT=bx_over_by_ratio_minLost)
+     ;; ENDELSE
+
+     PRINTF,lun,""
+     PRINTF,lun,FORMAT='("Bx_Over_By_Ratio_Min requirement, nLost:",T40,F5.2,", ",T50,I0)',C_OMNI__bx_over_by_ratio_min,bx_over_by_ratio_minLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxy_ratioMin_",F0.2)',absStr,C_OMNI__bx_over_by_ratio_min)
+  ENDIF
+
+  IF N_ELEMENTS(bx_over_by_ratio_max) GT 0 THEN BEGIN 
+     C_OMNI__bx_over_by_ratio_max          = bx_over_by_ratio_max
+     ;; C_OMNI__abs_bx_over_by_ratio_max      = KEYWORD_SET(abs_bx_over_by_ratio_max)
+     ;; IF C_OMNI__abs_bx_over_by_ratio_max THEN BEGIN
+     ;;    absStr              = 'ABS_'
+     ;;    C_OMNI__bx_over_by_ratio_max_i     = WHERE(ABS(Bx) LE ABS(C_OMNI__bx_over_by_ratio_max),NCOMPLEMENT=bx_over_by_ratio_maxLost)
+     ;; ENDIF ELSE BEGIN
+     absStr                = ''
+     tmpRatio                              = ABS(Bx/By)
+     C_OMNI__bx_over_by_ratio_max_i        = WHERE((FINITE(tmpRatio)) AND (tmpRatio LE C_OMNI__bx_over_by_ratio_max),NCOMPLEMENT=bx_over_by_ratio_maxLost)
+     ;; C_OMNI__bx_over_by_ratio_max_i        = WHERE(ABS(Bx/By) LE C_OMNI__bx_over_by_ratio_max,NCOMPLEMENT=bx_over_by_ratio_maxLost)
+     ;; ENDELSE
+
+     PRINTF,lun,""
+     PRINTF,lun,FORMAT='("Bx_Over_By_Ratio_Max requirement, nLost:",T40,F5.2,", ",T50,I0)',C_OMNI__bx_over_by_ratio_max,bx_over_by_ratio_maxLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxy_ratioMax_",F0.2)',absStr,C_OMNI__bx_over_by_ratio_max)
   ENDIF
 
 END

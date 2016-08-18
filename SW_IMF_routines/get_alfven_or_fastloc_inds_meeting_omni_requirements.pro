@@ -26,6 +26,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    DO_ABS_BTMAX=abs_btMax, $
    DO_ABS_BXMIN=abs_bxMin, $
    DO_ABS_BXMAX=abs_bxMax, $
+   BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+   BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
    RESET_OMNI_INDS=reset_omni_inds, $
    OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -60,6 +62,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      C_OMNI__btMax_i,C_OMNI__btMax,C_OMNI__abs_btMax, $
      C_OMNI__bxMin_i,C_OMNI__bxMin,C_OMNI__abs_bxMin, $
      C_OMNI__bxMax_i,C_OMNI__bxMax,C_OMNI__abs_bxMax, $
+     C_OMNI__bx_over_by_ratio_max_i,C_OMNI__bx_over_by_ratio_max, $
+     C_OMNI__bx_over_by_ratio_min_i,C_OMNI__bx_over_by_ratio_min, $
      C_OMNI__stableStr, $
      C_OMNI__paramStr, $
      C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
@@ -90,6 +94,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             DO_ABS_BTMAX=abs_btMax, $
                                             DO_ABS_BXMIN=abs_bxMin, $
                                             DO_ABS_BXMAX=abs_bxMax, $
+                                            BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                            BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                             RESET_OMNI_INDS=reset_omni_inds, $
                                             OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $
