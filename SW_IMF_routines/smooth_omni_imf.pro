@@ -8,7 +8,8 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
                            BXMIN=bxMin, $
                            BXMAX=bxMax                    
 
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   ;;max gap to allow for smoothing
   def_maxSmoothGap                             = 3

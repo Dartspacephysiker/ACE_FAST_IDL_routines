@@ -656,6 +656,50 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            END
         ENDCASE
 
+        ;;Now OMNI, if desired
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
+           OMNI_COORDS=OMNI_coords, $
+           /RESTRICT_TO_ALFVENDB_TIMES, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           DSTCUTOFF=dstCutoff, $
+           NONSTORM_I=ns_OMNI_i, $
+           MAINPHASE_I=mp_OMNI_i, $
+           RECOVERYPHASE_I=rp_OMNI_i, $
+           STORM_DST_I=s_dst_OMNI_i, $
+           NONSTORM_DST_I=ns_dst_OMNI_i, $
+           MAINPHASE_DST_I=mp_dst_OMNI_i, $
+           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
+           N_STORM=n_OMNI_s, $
+           N_NONSTORM=n_OMNI_ns, $
+           N_MAINPHASE=n_OMNI_mp, $
+           N_RECOVERYPHASE=n_OMNI_rp, $
+           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
+           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
+
+        CASE 1 OF
+           KEYWORD_SET(nonStorm): BEGIN
+              PRINTF,lun,'Restricting OMNI with non-storm indices ...'
+              restrict_OMNI_with_these_i = ns_OMNI_i
+              t1_OMNI_arr                = ns_OMNI_t1
+              t2_OMNI_arr                = ns_OMNI_t2
+           END
+           KEYWORD_SET(mainPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with main-phase indices ...'
+              restrict_OMNI_with_these_i = mp_OMNI_i
+              t1_OMNI_arr                = mp_OMNI_t1
+              t2_OMNI_arr                = mp_OMNI_t2         
+           END
+           KEYWORD_SET(recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
+              restrict_OMNI_with_these_i = rp_OMNI_i
+              t1_OMNI_arr                = rp_OMNI_t1
+              t2_OMNI_arr                = rp_OMNI_t2
+           END
+        ENDCASE
+
+        ;;Now fastLoc
         IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
            OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
            OR KEYWORD_SET(nEventPerOrbPlot) $
@@ -744,6 +788,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                              CLOCKSTR=clockStr, $
                                                                              DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                                                              RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                                                                             RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                                                              /DO_NOT_SET_DEFAULTS, $
                                                                              BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                                              MULTIPLE_DELAYS=multiple_delays, $
@@ -824,6 +869,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                                                            CLOCKSTR=clockStr, $
                                                                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                                                            RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
+                                                                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                                                            /DO_NOT_SET_DEFAULTS, $
                                                                            BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                                                            MULTIPLE_DELAYS=multiple_delays, $

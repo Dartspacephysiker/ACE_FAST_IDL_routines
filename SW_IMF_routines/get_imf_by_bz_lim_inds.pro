@@ -13,7 +13,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
 
   COMPILE_OPT idl2
 
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   IF ~KEYWORD_SET(lun) THEN lun = -1
 

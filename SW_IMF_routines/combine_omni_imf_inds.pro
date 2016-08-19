@@ -2,11 +2,30 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
 
   COMPILE_OPT idl2
 
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  C_OMNI__combined_i              = C_OMNI__time_i
+  ;; C_OMNI__combined_i              = C_OMNI__time_i
+  C_OMNI__combined_i          = CGSETINTERSECTION(C_OMNI__time_i,C_OMNI__clean_i, $
+                                                  COUNT=nCombined)
+  IF nCombined LE 1 THEN BEGIN
+     PRINTF,lun,"No OMNI indices to speak of!!!"
+     STOP
+  ENDIF
+
+  IF KEYWORD_SET(C_OMNI__restrict_i) THEN BEGIN
+     PRINTF,lun,"Restricting OMNI with user-provided indices ..."
+     C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__restrict_i, $
+                                                  COUNT=nCombinedRestr)
+     IF nCombined LE 1 THEN BEGIN
+        PRINTF,lun,"No OMNI indices to speak of!!!"
+        STOP
+     ENDIF
+     PRINTF,lun,"Losing " + STRCOMPRESS(nCombined-nCombinedRestr,/REMOVE_ALL) + $
+            " OMNI entries because they don't know how to listen in class"     
+  ENDIF
 
   IF KEYWORD_SET(C_OMNI__phiIMF_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__phiIMF_i,SUCCESS=success)

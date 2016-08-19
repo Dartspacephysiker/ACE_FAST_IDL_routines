@@ -6,7 +6,8 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
   COMPILE_OPT idl2
 
   ;;Vars for OMNI stability
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun             = -1
 

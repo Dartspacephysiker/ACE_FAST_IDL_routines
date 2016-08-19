@@ -74,6 +74,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    FOR_ESPEC_OR_ION_DB=for_eSpec_or_ion_db, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+   RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
    GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $   ;NOTE: DON'T CONFUSE THIS WITH FOR_ESPEC_OR_ION_DB
    DONT_LOAD_IN_MEMORY=nonMem
@@ -203,6 +204,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                DO_ABS_BXMAX=abs_bxMax, $
                                                                                                BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                                                                                                BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                                                                               RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                                                                                /RESET_OMNI_INDS, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -243,6 +245,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                                                                                DO_ABS_BXMAX=abs_bxMax, $
                                                                                                BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                                                                                                BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                                                                               RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                                                                                RESET_OMNI_INDS=reset_omni_inds, $
                                                                                                OMNI_COORDS=OMNI_coords, $
                                                                                                OUT_OMNI_PARAMSTR=out_omni_paramStr, $

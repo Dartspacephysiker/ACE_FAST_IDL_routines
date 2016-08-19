@@ -15,7 +15,10 @@
      C_OMNI__RECALCULATE, $
      C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__HAVE_STABLE_INDS, $
      C_OMNI__magCoords, $
-     C_OMNI__combined_i,C_OMNI__time_i, $
+     C_OMNI__combined_i, $
+     C_OMNI__time_i, $
+     C_OMNI__clean_i, $
+     C_OMNI__restrict_i, $
      C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__N_angle_sets, $
      C_OMNI__clockStr, $
      C_OMNI__noClockAngles, $

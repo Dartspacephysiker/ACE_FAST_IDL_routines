@@ -28,6 +28,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    DO_ABS_BXMAX=abs_bxMax, $
    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
    GET_BX=get_Bx, $
    GET_BY=get_By, $
@@ -56,39 +57,6 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   ;;This and GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS should be the only two routines that have a full definition of this block
   @common__omni_stability.pro
-
-  ;; COMMON OMNI_STABILITY,C_OMNI__mag_UTC, $
-  ;;    C_OMNI__Bx, $
-  ;;    C_OMNI__By, $
-  ;;    C_OMNI__Bz, $
-  ;;    C_OMNI__Bt, $
-  ;;    C_OMNI__thetaCone, $
-  ;;    C_OMNI__phiClock, $
-  ;;    C_OMNI__cone_overClock, $
-  ;;    C_OMNI__Bxy_over_Bz, $
-  ;;    C_OMNI__RECALCULATE, $
-  ;;    C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__HAVE_STABLE_INDS, $
-  ;;    C_OMNI__magCoords, $
-  ;;    C_OMNI__combined_i,C_OMNI__time_i, $
-  ;;    C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__N_angle_sets, $
-  ;;    C_OMNI__clockStr, $
-  ;;    C_OMNI__noClockAngles, $
-  ;;    C_OMNI__treat_angles_like_bz_south, $
-  ;;    C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $
-  ;;    C_OMNI__byMax_i,C_OMNI__byMax,C_OMNI__abs_byMax, $
-  ;;    C_OMNI__bzMin_i,C_OMNI__bzMin,C_OMNI__abs_bzMin, $
-  ;;    C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
-  ;;    C_OMNI__btMin_i,C_OMNI__btMin,C_OMNI__abs_btMin, $
-  ;;    C_OMNI__btMax_i,C_OMNI__btMax,C_OMNI__abs_btMax, $
-  ;;    C_OMNI__bxMin_i,C_OMNI__bxMin,C_OMNI__abs_bxMin, $
-  ;;    C_OMNI__bxMax_i,C_OMNI__bxMax,C_OMNI__abs_bxMax, $
-  ;;    C_OMNI__bx_over_by_ratio_max_i,C_OMNI__bx_over_by_ratio_max, $
-  ;;    C_OMNI__bx_over_by_ratio_min_i,C_OMNI__bx_over_by_ratio_min, $
-  ;;    C_OMNI__stableStr, $
-  ;;    C_OMNI__paramStr, $
-  ;;    C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
-  ;;    C_OMNI__is_smoothed, C_OMNI__smoothLen
-
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun  = -1
 
@@ -127,6 +95,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                  DO_ABS_BTMAX=abs_btMax, $
                                  DO_ABS_BXMIN=abs_bxMin, $
                                  DO_ABS_BXMAX=abs_bxMax, $
+                                 RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                  BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                                  BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                  OMNI_COORDS=OMNI_coords, $
@@ -159,75 +128,41 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      C_OMNI__mag_UTC                = TEMPORARY(mag_UTC)
 
-     IF KEYWORD_SET(OMNI_coords) THEN BEGIN
-        C_OMNI__magCoords           = OMNI_coords 
-     ENDIF ELSE BEGIN
-        PRINTF,lun,'No OMNI coordinate type selected! Defaulting to GSE ...'
-        C_OMNI__magCoords           = 'GSE'
-     ENDELSE
-
-     ;;No need to pick up Bx with magcoords, since it's the same either way
-     C_OMNI__Bx                     = TEMPORARY(Bx)
-     CASE C_OMNI__magCoords OF 
-        "GSE": BEGIN
-           C_OMNI__By               = TEMPORARY(By_GSE)
-           C_OMNI__Bz               = TEMPORARY(Bz_GSE)
-           C_OMNI__Bt               = TEMPORARY(Bt_GSE)
-           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSE)
-           C_OMNI__phiClock         = TEMPORARY(phiClock_GSE)
-           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSE)
-           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSE)
-        END
-        "GSM": BEGIN
-           C_OMNI__By               = TEMPORARY(By_GSM)
-           C_OMNI__Bz               = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt               = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
-        END
-        ELSE: BEGIN
-           print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSM..."
-           WAIT,1.0
-           C_OMNI__By               = TEMPORARY(By_GSM)
-           C_OMNI__Bz               = TEMPORARY(Bz_GSM)
-           C_OMNI__Bt               = TEMPORARY(Bt_GSM)
-           C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
-           C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
-           C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
-           C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
-        END
-     ENDCASE
-     C_OMNI__thetaCone              = C_OMNI__thetaCone*180/!PI
-     C_OMNI__phiClock               = C_OMNI__phiClock*180/!PI
+     OMNI__SELECT_COORDS,Bx, $
+                         By_GSE,Bz_GSE,Bt_GSE, $
+                         thetaCone_GSE,phiClock_GSE,cone_overClock_GSE,Bxy_over_Bz_GSE, $
+                         By_GSM,Bz_GSM,Bt_GSM, $
+                         thetaCone_GSM,phiClock_GSM,cone_overClock_GSM,Bxy_over_Bz_GSM, $
+                         OMNI_COORDS=OMNI_coords, $
+                         LUN=lun
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;Do the cleaning
 
+     C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
+                                        LUN=lun)
      ;; clean_i                     = WHERE((ABS(bx_gse) LE 99.9) AND $
      ;;                                                   (ABS(by_gsm) LE 99.9) AND $
      ;;                                                   (ABS(bz_gsm) LE 99.9) AND $
      ;;                                                   (ABS(by_gse) LE 99.9) AND $
      ;;                                                   (ABS(bz_gse) LE 99.9))
 
-     clean_i                        = WHERE((ABS(C_OMNI__Bx) LE 99.9) AND $
-                                            (ABS(C_OMNI__By) LE 99.9) AND $
-                                            (ABS(C_OMNI__Bz) LE 99.9),nClean, $
-                                            NCOMPLEMENT=nNotClean)
      
-     PRINTF,lun,"Losing " + STRCOMPRESS(nNotClean,/REMOVE_ALL) + $
-            " OMNI entries because they are bad news"     
-     
-     C_OMNI__By                     = C_OMNI__By[clean_i]            
-     C_OMNI__Bz                     = C_OMNI__Bz[clean_i]            
-     C_OMNI__Bt                     = C_OMNI__Bt[clean_i]            
-     C_OMNI__thetaCone              = C_OMNI__thetaCone[clean_i]     
-     C_OMNI__phiClock               = C_OMNI__phiClock[clean_i]      
-     C_OMNI__cone_overClock         = C_OMNI__cone_overClock[clean_i]
-     C_OMNI__Bxy_over_Bz            = C_OMNI__Bxy_over_Bz[clean_i]
-     C_OMNI__mag_UTC                = C_OMNI__mag_UTC[clean_i]
-     goodmag_goodtimes_i            = goodmag_goodtimes_i[clean_i]
+     IF KEYWORD_SET(restrict_OMNI_with_these_i) THEN BEGIN
+
+        C_OMNI__restrict_i = restrict_OMNI_with_these_i
+
+     ENDIF
+     ;;Don't clean here! These will get cleaned as part of COMBINE_OMNI_IMF_INDS
+     ;; C_OMNI__By                     = C_OMNI__By[C_OMNI__clean_i]            
+     ;; C_OMNI__Bz                     = C_OMNI__Bz[C_OMNI__clean_i]            
+     ;; C_OMNI__Bt                     = C_OMNI__Bt[C_OMNI__clean_i]            
+     ;; C_OMNI__thetaCone              = C_OMNI__thetaCone[C_OMNI__clean_i]     
+     ;; C_OMNI__phiClock               = C_OMNI__phiClock[C_OMNI__clean_i]      
+     ;; C_OMNI__cone_overClock         = C_OMNI__cone_overClock[C_OMNI__clean_i]
+     ;; C_OMNI__Bxy_over_Bz            = C_OMNI__Bxy_over_Bz[C_OMNI__clean_i]
+     ;; C_OMNI__mag_UTC                = C_OMNI__mag_UTC[C_OMNI__clean_i]
+     ;; goodmag_goodtimes_i            = goodmag_goodtimes_i[C_OMNI__clean_i]
 
      ;;Any smoothing to be done?
      IF KEYWORD_SET(smooth_IMF) THEN BEGIN
@@ -242,17 +177,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
                         BXMAX=bxMax
      ENDIF
 
-     IF KEYWORD_SET(restrict_to_alfvendb_times) THEN BEGIN
-        ;; maxTime                     = STR_TO_TIME('1999-11-03/03:21:00.000')
-        maxTime                     = STR_TO_TIME('1999-05-16/00:00:00.0')
-        ;; maxTime                  = STR_TO_TIME('2000-10-06/00:08:46.938')
-        minTime                     = STR_TO_TIME('1996-10-06/16:26:02.0')
-        C_OMNI__time_i              = WHERE(C_OMNI__mag_UTC LE maxTime AND C_OMNI__mag_UTC GE minTime,/NULL,NCOMPLEMENT=nNotAlfvenDB)
-        USE_COMBINED_INDS           = 1
-        PRINTF,lun,"Losing " + STRCOMPRESS(nNotAlfvenDB,/REMOVE_ALL) + " OMNI entries because they don't happen during Alfven stuff"
-     ENDIF ELSE BEGIN
-        C_OMNI__time_i              = INDGEN(N_ELEMENTS(C_OMNI__phiClock),/LONG)
-     ENDELSE
+     C_OMNI__time_i = GET_OMNI_TIME_I(C_OMNI__mag_UTC, $
+                                      RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                      LUN=lun)
 
      IF KEYWORD_SET(clockStr) THEN BEGIN
         SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $

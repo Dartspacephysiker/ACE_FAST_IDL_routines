@@ -28,6 +28,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    DO_ABS_BXMAX=abs_bxMax, $
    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
    OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -36,40 +37,9 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    LUN=lun
   
-  ;;This and GET_STABLE_IMF_INDS should be the only two routines that have a full definition of this block
-  @common__omni_stability.pro
+  COMPILE_OPT idl2
 
-  ;; COMMON OMNI_STABILITY,C_OMNI__mag_UTC, $
-  ;;    C_OMNI__Bx, $
-  ;;    C_OMNI__By, $
-  ;;    C_OMNI__Bz, $
-  ;;    C_OMNI__Bt, $
-  ;;    C_OMNI__thetaCone, $
-  ;;    C_OMNI__phiClock, $
-  ;;    C_OMNI__cone_overClock, $
-  ;;    C_OMNI__Bxy_over_Bz, $
-  ;;    C_OMNI__RECALCULATE, $
-  ;;    C_OMNI__stable_i,C_OMNI__stableIMF,C_OMNI__HAVE_STABLE_INDS, $
-  ;;    C_OMNI__magCoords, $
-  ;;    C_OMNI__combined_i,C_OMNI__time_i, $
-  ;;    C_OMNI__phiIMF_i,C_OMNI__negAngle,C_OMNI__posAngle,C_OMNI__N_angle_sets, $
-  ;;    C_OMNI__clockStr, $
-  ;;    C_OMNI__noClockAngles, $
-  ;;    C_OMNI__treat_angles_like_bz_south, $
-  ;;    C_OMNI__byMin_i,C_OMNI__byMin,C_OMNI__abs_byMin, $
-  ;;    C_OMNI__byMax_i,C_OMNI__byMax,C_OMNI__abs_byMax, $
-  ;;    C_OMNI__bzMin_i,C_OMNI__bzMin,C_OMNI__abs_bzMin, $
-  ;;    C_OMNI__bzMax_i,C_OMNI__bzMax,C_OMNI__abs_bzMax, $
-  ;;    C_OMNI__btMin_i,C_OMNI__btMin,C_OMNI__abs_btMin, $
-  ;;    C_OMNI__btMax_i,C_OMNI__btMax,C_OMNI__abs_btMax, $
-  ;;    C_OMNI__bxMin_i,C_OMNI__bxMin,C_OMNI__abs_bxMin, $
-  ;;    C_OMNI__bxMax_i,C_OMNI__bxMax,C_OMNI__abs_bxMax, $
-  ;;    C_OMNI__bx_over_by_ratio_max_i,C_OMNI__bx_over_by_ratio_max, $
-  ;;    C_OMNI__bx_over_by_ratio_min_i,C_OMNI__bx_over_by_ratio_min, $
-  ;;    C_OMNI__stableStr, $
-  ;;    C_OMNI__paramStr, $
-  ;;    C_OMNI__DONE_FIRST_STREAK_CALC,C_OMNI__StreakDurArr, $
-  ;;    C_OMNI__is_smoothed, C_OMNI__smoothLen
+  @common__omni_stability.pro
 
   ;;First, get all the OMNI inds that qualify
   stable_OMNI_i       = GET_STABLE_IMF_INDS(MAG_UTC=mag_utc, $
@@ -98,6 +68,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             DO_ABS_BXMAX=abs_bxMax, $
                                             BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                                             BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                            RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                             RESET_OMNI_INDS=reset_omni_inds, $
                                             OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $

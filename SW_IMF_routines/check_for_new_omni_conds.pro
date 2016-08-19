@@ -23,12 +23,14 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              DO_ABS_BXMAX=abs_bxMax, $
                              BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                              BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                             RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                              OMNI_COORDS=OMNI_coords, $
                              LUN=lun
 
   COMPILE_OPT idl2
 
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   IF N_ELEMENTS(dont_consider_clockAngles) GT 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__noClockAngles) GT 0 THEN BEGIN
@@ -248,6 +250,15 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
   IF N_ELEMENTS(OMNI_coords) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__magCoords) NE 0 THEN BEGIN
         IF C_OMNI__magCoords NE OMNI_coords THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF N_ELEMENTS(restrict_OMNI_with_these_i) NE 0 THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__restrict_i) NE 0 THEN BEGIN
+        IF ~ARRAY_EQUAL(restrict_OMNI_with_these_i,C_OMNI__restrict_i) THEN BEGIN
            C_OMNI__RECALCULATE = 1
            RETURN
         ENDIF

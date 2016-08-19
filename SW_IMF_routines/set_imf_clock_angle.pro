@@ -2,7 +2,8 @@
 PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
                         DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
 
-  COMMON OMNI_STABILITY
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   ;;In any case, if we've made it here then ZERO this thing
   C_OMNI__treat_angles_like_bz_south              = 0

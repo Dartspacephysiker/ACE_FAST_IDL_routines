@@ -7,7 +7,8 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
 
   COMPILE_OPT idl2
 
-  COMMON OMNI_STABILITY  
+  @common__omni_stability.pro
+  ;; COMMON OMNI_STABILITY
 
   ;;Everyone but bzSouth (and sometimes the off-cardinal directions) is amenable to what's below
   ;;NOTE: /NULL used in WHERE so that if no elements are returned,
