@@ -29,7 +29,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   ;; grossRate_info_file            = 'hammertime-bxMax-1--NORTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMin1--NORTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMax0--NORTH--timeAvg.txt'
-  grossRate_info_file            = 'hammertime-bxMin0--NORTH--timeAvg.txt'
+  ;; grossRate_info_file            = 'hammertime-bxMin0--NORTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMax0--SOUTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMin0--SOUTH--timeAvg.txt'
 
@@ -53,7 +53,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0.0,2e7]
+  ePlotRange                     = [0.0,1e7]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -63,8 +63,8 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,2e7], $
-                                    [0,5.0e23]]
+  ENumFlPlotRange                = [[0,1e7], $
+                                    [0,2.0e23]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -73,7 +73,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,2e7]
+  PPlotRange                     = [0,1e7]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -139,7 +139,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   bxMin                          = 0.0
   ;; bxMax                          = 0.0
 
-  bx_over_by_ratio_min           = 0.5
+  bx_over_by_ratio_min           = 0.66
 
   angleLim1                      = 0.
   angleLim2                      = 180.
@@ -182,7 +182,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 1.5
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
