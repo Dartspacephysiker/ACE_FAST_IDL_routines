@@ -7,7 +7,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   restore_last_session           = 0
 
   nonstorm                       = 1
-  Dstcutoff                      = -20
+  Dstcutoff                      = -50
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -26,7 +26,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   adj_lower_plotlim_thresh       = 2 ;;Check minima
 
-  tile__include_IMF_arrows       = 1
+  tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 

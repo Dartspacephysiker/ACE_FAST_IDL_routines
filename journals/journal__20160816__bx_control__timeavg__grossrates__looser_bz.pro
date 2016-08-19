@@ -7,7 +7,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   restore_last_session           = 0
 
   nonstorm                       = 1
-  Dstcutoff                      = -20
+  Dstcutoff                      = -30
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -31,12 +31,12 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   ;; grossRate_info_file            = 'hammertime-bxMax0--NORTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMin0--NORTH--timeAvg.txt'
   ;; grossRate_info_file            = 'hammertime-bxMax0--SOUTH--timeAvg.txt'
-  ;; grossRate_info_file            = 'hammertime-bxMin0--SOUTH--timeAvg.txt'
+  grossRate_info_file            = 'hammertime-bxMin0--SOUTH--timeAvg.txt'
 
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
+  print_avg_imf_components       = 1
+  print_master_OMNI_file         = 1
+  save_master_OMNI_inds          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -158,16 +158,16 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; IF KEYWORD_SET(southern_hemi_plotScales) THEN BEGIN
   ;;    probOccurrenceRange            = [0,0.1]
@@ -202,7 +202,11 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
      FOR jow=0,N_ELEMENTS(btMinArr)-1 DO BEGIN
 
         btMin      = btMinArr[jow]
-        btMinStr   = STRING(FORMAT='("/btMin_",F0.1,"/DstMin_",I0)',btMin,DstCutoff)
+        btMinStr   = STRING(FORMAT='("/btMin_",F0.1)',btMin)
+        IF KEYWORD_SET(nonstorm) THEN BEGIN
+           btMinStr   = btMinStr + STRING(FORMAT='("/DstMin_",I0)',DstCutoff)
+        ENDIF
+
         IF KEYWORD_SET(numOrbLim) THEN BEGIN
            btMinStr += STRING(FORMAT='("/numOrbLim_",I0)',numOrbLim)
         ENDIF
