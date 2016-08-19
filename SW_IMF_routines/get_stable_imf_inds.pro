@@ -289,11 +289,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
      thetaCone_avg                  = MEAN(C_OMNI__thetaCone[stable_omni_inds])
      thetaCone_stdDev               = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
 
-     Bx_Avg                         = MEAN(C_OMNI__Bx[Stable_Omni_Inds])
-     Bx_StdDev                      = STDDEV(C_OMNI__Bx[Stable_Omni_Inds])
+     Bx_Avg                         = MEAN(C_OMNI__Bx[stable_omni_Inds])
+     Bx_StdDev                      = STDDEV(C_OMNI__Bx[stable_omni_Inds])
 
-     Bt_Avg                         = MEAN(C_OMNI__Bt[Stable_Omni_Inds])
-     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_Omni_Inds])
+     Bt_Avg                         = MEAN(C_OMNI__Bt[stable_omni_Inds])
+     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_omni_Inds])
 
      By_stdDev                      = STDDEV(C_OMNI__By[stable_omni_inds])
      Bz_stdDev                      = STDDEV(C_OMNI__Bz[stable_omni_inds])
@@ -412,7 +412,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ENDIF
 
   IF KEYWORD_SET(save_master_OMNI_inds) THEN BEGIN
-     file = '~/Desktop/master_OMNI_ind_list--Alfvens_IMF_v4.sav'
+     file = '~/Desktop/master_OMNI_ind_list--Alfvens_IMF_v8--nonstorm.sav'
      test = FILE_TEST(file)
      IF test THEN BEGIN
         PRINT,'Restoring master OMNI file, adding these OMNI inds ...'
