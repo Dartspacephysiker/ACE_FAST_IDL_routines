@@ -7,7 +7,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
   restore_last_session           = 0
 
   nonstorm                       = 1
-  Dstcutoff                      = -50
+  Dstcutoff                      = -20
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0

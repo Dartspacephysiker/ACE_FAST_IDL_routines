@@ -140,8 +140,8 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  maskMin                        = 10
-  tHist_mask_bins_below_thresh   = 5
+  ;; maskMin                        = 10
+  ;; tHist_mask_bins_below_thresh   = 5
   ;; numOrbLim                      = 5
 
   ;; hemi                           = 'SOUTH'

@@ -7,7 +7,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   restore_last_session           = 0
 
   nonstorm                       = 1
-  Dstcutoff                      = -50
+  Dstcutoff                      = -20
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -35,9 +35,9 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
-  save_master_OMNI_inds          = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
+  save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
