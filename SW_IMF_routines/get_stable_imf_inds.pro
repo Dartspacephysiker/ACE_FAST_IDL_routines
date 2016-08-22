@@ -277,8 +277,17 @@ FUNCTION GET_STABLE_IMF_INDS, $
      nPoints                        = N_ELEMENTS(stable_omni_inds)
      nTime                          = N_ELEMENTS(C_OMNI__time_i)
 
+     Bx_Avg                         = MEAN(C_OMNI__Bx[stable_omni_Inds])
+     Bx_StdDev                      = STDDEV(C_OMNI__Bx[stable_omni_Inds])
+
      By_avg                         = MEAN(C_OMNI__By[stable_omni_inds])
+     By_stdDev                      = STDDEV(C_OMNI__By[stable_omni_inds])
+
      Bz_avg                         = MEAN(C_OMNI__Bz[stable_omni_inds])
+     Bz_stdDev                      = STDDEV(C_OMNI__Bz[stable_omni_inds])
+
+     Bt_Avg                         = MEAN(C_OMNI__Bt[stable_omni_Inds])
+     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_omni_Inds])
 
      cone_overClock_avg             = MEAN(C_OMNI__cone_overClock[stable_omni_inds])
      cone_overClock_stdDev          = STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
@@ -288,15 +297,6 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      thetaCone_avg                  = MEAN(C_OMNI__thetaCone[stable_omni_inds])
      thetaCone_stdDev               = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
-
-     Bx_Avg                         = MEAN(C_OMNI__Bx[stable_omni_Inds])
-     Bx_StdDev                      = STDDEV(C_OMNI__Bx[stable_omni_Inds])
-
-     Bt_Avg                         = MEAN(C_OMNI__Bt[stable_omni_Inds])
-     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_omni_Inds])
-
-     By_stdDev                      = STDDEV(C_OMNI__By[stable_omni_inds])
-     Bz_stdDev                      = STDDEV(C_OMNI__Bz[stable_omni_inds])
 
      ;;Get cusp predictions
      PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
@@ -338,10 +338,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',cone_overClock_avg
      PRINTF,outLun,''
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',Bx_avg
-     PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',By_avg
-     PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',Bz_avg
-     PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',Bt_avg
+     PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',Bx_stdDev
+     PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',By_stdDev
+     PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',Bz_stdDev
+     PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',Bt_stdDev
      PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',thetaCone_stdDev
      PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',phiClock_stdDev

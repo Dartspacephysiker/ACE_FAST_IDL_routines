@@ -1,5 +1,6 @@
 ;;2016/08/19
 ;;But why exclude storms now??
+
 PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
 
   COMPILE_OPT IDL2
@@ -22,12 +23,13 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
   make_integral_file             = 1
   do_grossRate_fluxQuantities    = 1
   grossRate_info_file_pref       = 'hammertime'
-  grossRate_info_file_suff       = '--timeAvg'
+  ;; grossRate_info_file_suff       = '--timeAvg'
+  grossRate_info_file_suff       = '--timeAvg--bxy_rat0.5'
 
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
+  print_avg_imf_components       = 1
+  print_master_OMNI_file         = 1
+  save_master_OMNI_inds          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -49,7 +51,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
   noNegEflux                     = 0
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
+  noNegENumFl                    = [1,0]
   ;; logENumFlPlot               = [1,1]
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
@@ -74,7 +76,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
   IPlotRange                     = [0,1.0e22]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.05]
+  probOccurrenceRange            = [0,0.04]
 
   summed_eFlux_pFluxplotRange    = [0,2e7]
   
@@ -118,8 +120,8 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
-  bxMagnitude                    = 1.0
-  bx_over_by_ratio_min           = 0.66
+  bxMagnitude                    = 0.0
+  bx_over_by_ratio_min           = 0.5
 
   angleLim1                      = 0.
   angleLim2                      = 180.
@@ -162,7 +164,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.5
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -306,13 +308,24 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
               NPLOTS=nPlots, $
               EPLOTS=ePlots, $
               EPLOTRANGE=ePlotRange, $                                       
-              EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-              ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-              ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-              NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+              EFLUXPLOTTYPE=eFluxPlotType, $
+              LOGEFPLOT=logEfPlot, $
+              ABSEFLUX=abseflux, $
+              NOPOSEFLUX=noPosEFlux, $
+              NONEGEFLUX=noNegEflux, $
+              ENUMFLPLOTS=eNumFlPlots, $
+              ENUMFLPLOTTYPE=eNumFlPlotType, $
+              LOGENUMFLPLOT=logENumFlPlot, $
+              ABSENUMFL=absENumFl, $
+              NONEGENUMFL=noNegENumFl, $
+              NOPOSENUMFL=noPosENumFl, $
+              ENUMFLPLOTRANGE=ENumFlPlotRange, $
               PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
               NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-              IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+              IONPLOTS=ionPlots, $
+              IFLUXPLOTTYPE=ifluxPlotType, $
+              LOGIFPLOT=logIfPlot, $
+              ABSIFLUX=absIflux, $
               NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
               OXYPLOTS=oxyPlots, $
               OXYFLUXPLOTTYPE=oxyFluxPlotType, $

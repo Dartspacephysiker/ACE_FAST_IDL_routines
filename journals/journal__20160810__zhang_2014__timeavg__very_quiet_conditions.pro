@@ -7,7 +7,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
   restore_last_session           = 0
 
   nonstorm                       = 1
-  Dstcutoff                      = -20
+  Dstcutoff                      = -25
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
