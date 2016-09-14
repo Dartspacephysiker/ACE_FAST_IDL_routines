@@ -482,6 +482,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 HWMKPIND=HwMKpInd, $
                                 ;; MIN_NEVENTS=min_nEvents, $
                                 MASKMIN=maskMin, $
+                                THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                                 DO_DESPUNDB=do_despunDB, $
                                 USE_AACGM=use_AACGM, $
                                 USE_MAG_COORDS=use_MAG, $
@@ -1130,6 +1131,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    MAX1=maxM,MAX2=(KEYWORD_SET(DO_LSHELL) ? maxL : maxI), $
                                    SHIFT1=shiftM,SHIFT2=shiftI, $
                                    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                                   ;; DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+                                   BOTH_HEMIS=STRUPCASE(hemi) EQ 'BOTH', $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
