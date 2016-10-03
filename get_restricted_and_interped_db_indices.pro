@@ -18,6 +18,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    CHARIERANGE=charIERange, $ ;Only for non-Alfvén ions
    POYNTRANGE=poyntRange, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
+   INCLUDE_32HZ=include_32Hz, $
    MINMLT=minM, $
    MAXMLT=maxM, $
    BINM=binM, $
@@ -90,67 +91,68 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
      
      PRINT,'Getting eSpec/ion DB indices for specified IMF conditions ...'
 
-     good_i                            = GET_ESPEC_ION_DB_IND(dbStruct,lun, $
-                                                              FOR_ALFVEN_DB=for_alfven_db, $
-                                                              COORDINATE_SYSTEM=coordinate_system, $
-                                                              USE_AACGM_COORDS=use_aacgm, $
-                                                              USE_MAG_COORDS=use_mag, $
-                                                              ;; DBFILE=dbfile, $
-                                                              ;; DBDIR=dbDir, $
-                                                              ORBRANGE=orbRange, $
-                                                              ALTITUDERANGE=altitudeRange, $
-                                                              CHARERANGE=charERange, $
-                                                              CHARIERANGE=charIERange, $
-                                                              BOTH_HEMIS=both_hemis, $
-                                                              HEMI=hemi, $
-                                                              HWMAUROVAL=HwMAurOval, $
-                                                              HWMKPIND=HwMKpInd, $
-                                                              MINMLT=minM, $
-                                                              MAXMLT=maxM, $
-                                                              BINM=binM, $
-                                                              MINILAT=minI, $
-                                                              MAXILAT=maxI, $
-                                                              BINILAT=binI, $
-                                                              ;; DO_LSHELL=do_lshell, $
-                                                              ;; MINLSHELL=minL, $
-                                                              ;; MAXLSHELL=maxL, $
-                                                              ;; BINLSHELL=binL, $
-                                                              ;; DAYSIDE=dayside, $
-                                                              ;; NIGHTSIDE=nightside, $
-                                                              ;; /GET_ESPEC_I_NOT_ION_I, $
-                                                              ;; GET_ION_I=get_ion_i, $
-                                                              RESET_GOOD_INDS=reset_good_inds, $
-                                                              DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
-                                                              ;; /DONT_LOAD_IN_MEMORY, $
-                                                              DONT_LOAD_IN_MEMORY=nonMem, $
-                                                              /PRINT_PARAM_SUMMARY)
+     good_i  = GET_ESPEC_ION_DB_IND(dbStruct,lun, $
+                                    FOR_ALFVEN_DB=for_alfven_db, $
+                                    COORDINATE_SYSTEM=coordinate_system, $
+                                    USE_AACGM_COORDS=use_aacgm, $
+                                    USE_MAG_COORDS=use_mag, $
+                                    ;; DBFILE=dbfile, $
+                                    ;; DBDIR=dbDir, $
+                                    ORBRANGE=orbRange, $
+                                    ALTITUDERANGE=altitudeRange, $
+                                    CHARERANGE=charERange, $
+                                    CHARIERANGE=charIERange, $
+                                    BOTH_HEMIS=both_hemis, $
+                                    HEMI=hemi, $
+                                    HWMAUROVAL=HwMAurOval, $
+                                    HWMKPIND=HwMKpInd, $
+                                    MINMLT=minM, $
+                                    MAXMLT=maxM, $
+                                    BINM=binM, $
+                                    MINILAT=minI, $
+                                    MAXILAT=maxI, $
+                                    BINILAT=binI, $
+                                    ;; DO_LSHELL=do_lshell, $
+                                    ;; MINLSHELL=minL, $
+                                    ;; MAXLSHELL=maxL, $
+                                    ;; BINLSHELL=binL, $
+                                    ;; DAYSIDE=dayside, $
+                                    ;; NIGHTSIDE=nightside, $
+                                    ;; /GET_ESPEC_I_NOT_ION_I, $
+                                    ;; GET_ION_I=get_ion_i, $
+                                    RESET_GOOD_INDS=reset_good_inds, $
+                                    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
+                                    ;; /DONT_LOAD_IN_MEMORY, $
+                                    DONT_LOAD_IN_MEMORY=nonMem, $
+                                    /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN
-     good_i                            = GET_CHASTON_IND(dbStruct,satellite,lun, $
-                                                         DBTIMES=dbTimes, $
-                                                         DBFILE=dbfile, $
-                                                         CHASTDB=do_chastdb, $
-                                                         HEMI=hemi, $
-                                                         DESPUNDB=do_despunDB, $
-                                                         COORDINATE_SYSTEM=coordinate_system, $
-                                                         USE_AACGM_COORDS=use_aacgm, $
-                                                         USE_MAG_COORDS=use_mag, $
-                                                         ORBRANGE=orbRange, $
-                                                         ALTITUDERANGE=altitudeRange, $
-                                                         CHARERANGE=charERange, $
-                                                         POYNTRANGE=poyntRange, $
-                                                         SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                                         MINMLT=minM,MAXMLT=maxM,BINM=binM, $
-                                                         MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                         DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                         MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
-                                                         HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
-                                                         RESET_GOOD_INDS=reset_good_inds, $
-                                                         DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
-                                                         NO_BURSTDATA=no_burstData, $
-                                                         GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
-                                                         FOR_ESPEC_DBS=for_eSpec_DBs, $
-                                                         DONT_LOAD_IN_MEMORY=nonMem)
+     good_i  = GET_CHASTON_IND(dbStruct,satellite,lun, $
+                               DBTIMES=dbTimes, $
+                               DBFILE=dbfile, $
+                               CHASTDB=do_chastdb, $
+                               HEMI=hemi, $
+                               DESPUNDB=do_despunDB, $
+                               COORDINATE_SYSTEM=coordinate_system, $
+                               USE_AACGM_COORDS=use_aacgm, $
+                               USE_MAG_COORDS=use_mag, $
+                               ORBRANGE=orbRange, $
+                               ALTITUDERANGE=altitudeRange, $
+                               CHARERANGE=charERange, $
+                               POYNTRANGE=poyntRange, $
+                               SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                               INCLUDE_32HZ=include_32Hz, $
+                               MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                               MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                               MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
+                               HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$
+                               RESET_GOOD_INDS=reset_good_inds, $
+                               DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
+                               NO_BURSTDATA=no_burstData, $
+                               GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
+                               FOR_ESPEC_DBS=for_eSpec_DBs, $
+                               DONT_LOAD_IN_MEMORY=nonMem)
 
   ENDELSE
 
@@ -172,87 +174,89 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
         nIter=N_ELEMENTS(clockStr)
         restricted_and_interped_i_list  = LIST()
         FOR iClock=0,N_ELEMENTS(clockStr)-1 DO BEGIN
-           tempClockStr                 = clockStr[iClock]
-           tempList                     = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(KEYWORD_SET(for_eSpec_or_ion_db) ? $
-                                                                                               dbStruct.x : $
-                                                                                               dbTimes,good_i,delay, $
-                                                                                               CLOCKSTR=tempClockStr, $
-                                                                                               DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                                               ANGLELIM1=angleLim1, $
-                                                                                               ANGLELIM2=angleLim2, $
-                                                                                               MULTIPLE_DELAYS=multiple_delays, $
-                                                                                               RESOLUTION_DELAY=delay_res, $
-                                                                                               BINOFFSET_DELAY=binOffset_delay, $
-                                                                                               STABLEIMF=stableIMF, $
-                                                                                               SMOOTH_IMF=smooth_IMF, $
-                                                                                               /RESTRICT_TO_ALFVENDB_TIMES, $
-                                                                                               BYMIN=byMin, $
-                                                                                               BYMAX=byMax, $
-                                                                                               BZMIN=bzMin, $
-                                                                                               BZMAX=bzMax, $
-                                                                                               BTMIN=btMin, $
-                                                                                               BTMAX=btMax, $
-                                                                                               BXMIN=bxMin, $
-                                                                                               BXMAX=bxMax, $
-                                                                                               DO_ABS_BYMIN=abs_byMin, $
-                                                                                               DO_ABS_BYMAX=abs_byMax, $
-                                                                                               DO_ABS_BZMIN=abs_bzMin, $
-                                                                                               DO_ABS_BZMAX=abs_bzMax, $
-                                                                                               DO_ABS_BTMIN=abs_btMin, $
-                                                                                               DO_ABS_BTMAX=abs_btMax, $
-                                                                                               DO_ABS_BXMIN=abs_bxMin, $
-                                                                                               DO_ABS_BXMAX=abs_bxMax, $
-                                                                                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                                                                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                                                                               RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                                                                               /RESET_OMNI_INDS, $
-                                                                                               OMNI_COORDS=OMNI_coords, $
-                                                                                               OUT_OMNI_PARAMSTR=out_omni_paramStr, $
-                                                                                               PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                                                                               PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                                                                               SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                                                                               LUN=lun)     
+           tempClockStr  = clockStr[iClock]
+           tempList      = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS( $
+                           KEYWORD_SET(for_eSpec_or_ion_db) ? $
+                           dbStruct.x : $
+                           dbTimes,good_i,delay, $
+                           CLOCKSTR=tempClockStr, $
+                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                           ANGLELIM1=angleLim1, $
+                           ANGLELIM2=angleLim2, $
+                           MULTIPLE_DELAYS=multiple_delays, $
+                           RESOLUTION_DELAY=delay_res, $
+                           BINOFFSET_DELAY=binOffset_delay, $
+                           STABLEIMF=stableIMF, $
+                           SMOOTH_IMF=smooth_IMF, $
+                           /RESTRICT_TO_ALFVENDB_TIMES, $
+                           BYMIN=byMin, $
+                           BYMAX=byMax, $
+                           BZMIN=bzMin, $
+                           BZMAX=bzMax, $
+                           BTMIN=btMin, $
+                           BTMAX=btMax, $
+                           BXMIN=bxMin, $
+                           BXMAX=bxMax, $
+                           DO_ABS_BYMIN=abs_byMin, $
+                           DO_ABS_BYMAX=abs_byMax, $
+                           DO_ABS_BZMIN=abs_bzMin, $
+                           DO_ABS_BZMAX=abs_bzMax, $
+                           DO_ABS_BTMIN=abs_btMin, $
+                           DO_ABS_BTMAX=abs_btMax, $
+                           DO_ABS_BXMIN=abs_bxMin, $
+                           DO_ABS_BXMAX=abs_bxMax, $
+                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                           /RESET_OMNI_INDS, $
+                           OMNI_COORDS=OMNI_coords, $
+                           OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                           PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                           SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                           LUN=lun)     
 
            restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here
         ENDFOR
      ENDIF ELSE BEGIN
-        restricted_and_interped_i_list  = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS(dbTimes,good_i,delay, $
-                                                                                               CLOCKSTR=clockStr, $
-                                                                                               DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                                               ANGLELIM1=angleLim1, $
-                                                                                               ANGLELIM2=angleLim2, $
-                                                                                               MULTIPLE_DELAYS=multiple_delays, $
-                                                                                               RESOLUTION_DELAY=delay_res, $
-                                                                                               BINOFFSET_DELAY=binOffset_delay, $
-                                                                                               STABLEIMF=stableIMF, $
-                                                                                               SMOOTH_IMF=smooth_IMF, $
-                                                                                               /RESTRICT_TO_ALFVENDB_TIMES, $
-                                                                                               BYMIN=byMin, $
-                                                                                               BYMAX=byMax, $
-                                                                                               BZMIN=bzMin, $
-                                                                                               BZMAX=bzMax, $
-                                                                                               BTMIN=btMin, $
-                                                                                               BTMAX=btMax, $
-                                                                                               BXMIN=bxMin, $
-                                                                                               BXMAX=bxMax, $
-                                                                                               DO_ABS_BYMIN=abs_byMin, $
-                                                                                               DO_ABS_BYMAX=abs_byMax, $
-                                                                                               DO_ABS_BZMIN=abs_bzMin, $
-                                                                                               DO_ABS_BZMAX=abs_bzMax, $
-                                                                                               DO_ABS_BTMIN=abs_btMin, $
-                                                                                               DO_ABS_BTMAX=abs_btMax, $
-                                                                                               DO_ABS_BXMIN=abs_bxMin, $
-                                                                                               DO_ABS_BXMAX=abs_bxMax, $
-                                                                                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                                                                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                                                                               RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                                                                               RESET_OMNI_INDS=reset_omni_inds, $
-                                                                                               OMNI_COORDS=OMNI_coords, $
-                                                                                               OUT_OMNI_PARAMSTR=out_omni_paramStr, $
-                                                                                               PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                                                                               PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                                                                               SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                                                                               LUN=lun)     
+        restricted_and_interped_i_list  = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS($
+                                          dbTimes,good_i,delay, $
+                                          CLOCKSTR=clockStr, $
+                                          DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                          ANGLELIM1=angleLim1, $
+                                          ANGLELIM2=angleLim2, $
+                                          MULTIPLE_DELAYS=multiple_delays, $
+                                          RESOLUTION_DELAY=delay_res, $
+                                          BINOFFSET_DELAY=binOffset_delay, $
+                                          STABLEIMF=stableIMF, $
+                                          SMOOTH_IMF=smooth_IMF, $
+                                          /RESTRICT_TO_ALFVENDB_TIMES, $
+                                          BYMIN=byMin, $
+                                          BYMAX=byMax, $
+                                          BZMIN=bzMin, $
+                                          BZMAX=bzMax, $
+                                          BTMIN=btMin, $
+                                          BTMAX=btMax, $
+                                          BXMIN=bxMin, $
+                                          BXMAX=bxMax, $
+                                          DO_ABS_BYMIN=abs_byMin, $
+                                          DO_ABS_BYMAX=abs_byMax, $
+                                          DO_ABS_BZMIN=abs_bzMin, $
+                                          DO_ABS_BZMAX=abs_bzMax, $
+                                          DO_ABS_BTMIN=abs_btMin, $
+                                          DO_ABS_BTMAX=abs_btMax, $
+                                          DO_ABS_BXMIN=abs_bxMin, $
+                                          DO_ABS_BXMAX=abs_bxMax, $
+                                          BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                          BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                          RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                                          RESET_OMNI_INDS=reset_omni_inds, $
+                                          OMNI_COORDS=OMNI_coords, $
+                                          OUT_OMNI_PARAMSTR=out_omni_paramStr, $
+                                          PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                          PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                          SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                          LUN=lun)     
         
      ENDELSE
   ENDELSE

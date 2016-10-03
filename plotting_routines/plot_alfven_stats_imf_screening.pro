@@ -200,6 +200,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CHARIERANGE=charIERange, $ ;;Only applicable for non-Alfvén stuff
                                     POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                    INCLUDE_32HZ=include_32Hz, $
                                     NUMORBLIM=numOrbLim, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINMLT=binM, $
@@ -384,7 +385,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_CHASTDB=do_chastDB, $
                                     DO_DESPUNDB=do_despunDB, $
                                     COORDINATE_SYSTEM=coordinate_system, $
-                                    USE_AACGM=use_AACGM, $
+                                    USE_AACGM_COORDS=use_AACGM, $
                                     USE_MAG_COORDS=use_MAG, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, $
                                     LOGNEVENTSPLOT=logNEventsPlot, $
@@ -471,6 +472,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 CHARERANGE=charERange, $
                                 POYNTRANGE=poyntRange, $
                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                INCLUDE_32HZ=include_32Hz, $
                                 MINMLT=minM,MAXMLT=maxM, $
                                 BINMLT=binM, $
                                 SHIFTMLT=shiftM, $
@@ -484,7 +486,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 MASKMIN=maskMin, $
                                 THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                                 DO_DESPUNDB=do_despunDB, $
-                                USE_AACGM=use_AACGM, $
+                                USE_AACGM_COORDS=use_AACGM, $
                                 USE_MAG_COORDS=use_MAG, $
                                 HEMI=hemi, $
                                 NORTH=north, $
@@ -746,69 +748,73 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
 
 
-     plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delay,LUN=lun, $
-                                                                             DBTIMES=cdbTime,dbfile=dbfile, $
-                                                                             DO_CHASTDB=do_chastdb, $
-                                                                             DO_DESPUNDB=do_despunDB, $
-                                                                             COORDINATE_SYSTEM=coordinate_system, $
-                                                                             USE_AACGM_COORDS=use_AACGM, $
-                                                                             HEMI=hemi, $
-                                                                             ORBRANGE=orbRange, $
-                                                                             ALTITUDERANGE=altitudeRange, $
-                                                                             CHARERANGE=charERange, $
-                                                                             POYNTRANGE=poyntRange, $
-                                                                             SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                                                             MINMLT=minM,MAXMLT=maxM, $
-                                                                             BINM=binM, $
-                                                                             SHIFTM=shiftM, $
-                                                                             MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                                             DO_LSHELL=do_lshell, $
-                                                                             MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                                             MIN_MAGCURRENT=minMC, $
-                                                                             MAX_NEGMAGCURRENT=maxNegMC, $
-                                                                             SMOOTH_IMF=smoothWindow, $
-                                                                             BYMIN=byMin, $
-                                                                             BYMAX=byMax, $
-                                                                             BZMIN=bzMin, $
-                                                                             BZMAX=bzMax, $
-                                                                             BTMIN=btMin, $
-                                                                             BTMAX=btMax, $
-                                                                             BXMIN=bxMin, $
-                                                                             BXMAX=bxMax, $
-                                                                             DO_ABS_BYMIN=abs_byMin, $
-                                                                             DO_ABS_BYMAX=abs_byMax, $
-                                                                             DO_ABS_BZMIN=abs_bzMin, $
-                                                                             DO_ABS_BZMAX=abs_bzMax, $
-                                                                             DO_ABS_BTMIN=abs_btMin, $
-                                                                             DO_ABS_BTMAX=abs_btMax, $
-                                                                             DO_ABS_BXMIN=abs_bxMin, $
-                                                                             DO_ABS_BXMAX=abs_bxMax, $
-                                                                             BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                                                             BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                                                             RESET_OMNI_INDS=reset_omni_inds, $
-                                                                             CLOCKSTR=clockStr, $
-                                                                             DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                             RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-                                                                             RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                                                             /DO_NOT_SET_DEFAULTS, $
-                                                                             BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                                             MULTIPLE_DELAYS=multiple_delays, $
-                                                                             RESOLUTION_DELAY=delay_res, $
-                                                                             BINOFFSET_DELAY=binOffset_delay, $
-                                                                             MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                                                             STABLEIMF=stableIMF, $
-                                                                             DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                                                             OMNI_COORDS=omni_Coords, $
-                                                                             ANGLELIM1=angleLim1, $
-                                                                             ANGLELIM2=angleLim2, $
-                                                                             HWMAUROVAL=HwMAurOval, $
-                                                                             HWMKPIND=HwMKpInd, $
-                                                                             PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                                                             PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                                                             SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                                                             RESET_GOOD_INDS=reset_good_inds, $
-                                                                             NO_BURSTDATA=no_burstData, $
-                                                                             DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
+     plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
+                    maximus,satellite,delay, $
+                    DBTIMES=cdbTime, $
+                    DBFILE=dbfile, $
+                    LUN=lun, $
+                    DO_CHASTDB=do_chastdb, $
+                    DO_DESPUNDB=do_despunDB, $
+                    COORDINATE_SYSTEM=coordinate_system, $
+                    USE_AACGM_COORDS=use_AACGM, $
+                    HEMI=hemi, $
+                    ORBRANGE=orbRange, $
+                    ALTITUDERANGE=altitudeRange, $
+                    CHARERANGE=charERange, $
+                    POYNTRANGE=poyntRange, $
+                    SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                    INCLUDE_32HZ=include_32Hz, $
+                    MINMLT=minM,MAXMLT=maxM, $
+                    BINM=binM, $
+                    SHIFTM=shiftM, $
+                    MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                    DO_LSHELL=do_lshell, $
+                    MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                    MIN_MAGCURRENT=minMC, $
+                    MAX_NEGMAGCURRENT=maxNegMC, $
+                    SMOOTH_IMF=smoothWindow, $
+                    BYMIN=byMin, $
+                    BYMAX=byMax, $
+                    BZMIN=bzMin, $
+                    BZMAX=bzMax, $
+                    BTMIN=btMin, $
+                    BTMAX=btMax, $
+                    BXMIN=bxMin, $
+                    BXMAX=bxMax, $
+                    DO_ABS_BYMIN=abs_byMin, $
+                    DO_ABS_BYMAX=abs_byMax, $
+                    DO_ABS_BZMIN=abs_bzMin, $
+                    DO_ABS_BZMAX=abs_bzMax, $
+                    DO_ABS_BTMIN=abs_btMin, $
+                    DO_ABS_BTMAX=abs_btMax, $
+                    DO_ABS_BXMIN=abs_bxMin, $
+                    DO_ABS_BXMAX=abs_bxMax, $
+                    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                    RESET_OMNI_INDS=reset_omni_inds, $
+                    CLOCKSTR=clockStr, $
+                    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                    /DO_NOT_SET_DEFAULTS, $
+                    BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                    MULTIPLE_DELAYS=multiple_delays, $
+                    RESOLUTION_DELAY=delay_res, $
+                    BINOFFSET_DELAY=binOffset_delay, $
+                    MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                    STABLEIMF=stableIMF, $
+                    DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                    OMNI_COORDS=omni_Coords, $
+                    ANGLELIM1=angleLim1, $
+                    ANGLELIM2=angleLim2, $
+                    HWMAUROVAL=HwMAurOval, $
+                    HWMKPIND=HwMKpInd, $
+                    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                    RESET_GOOD_INDS=reset_good_inds, $
+                    NO_BURSTDATA=no_burstData, $
+                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
     
 
 
@@ -826,71 +832,72 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
-        fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(fastLoc,satellite,delay,LUN=lun, $
-                                                                           DBTIMES=fastLoc_times, $
-                                                                           DBFILE=fastLocDBFile, $
-                                                                           COORDINATE_SYSTEM=coordinate_system, $
-                                                                           USE_AACGM=use_AACGM, $
-                                                                           USE_MAG_COORDS=use_MAG, $
-
-                                                                           HEMI=hemi, $
-                                                                           ORBRANGE=orbRange, $
-                                                                           ALTITUDERANGE=altitudeRange, $
-                                                                           CHARERANGE=charERange, $
-                                                                           POYNTRANGE=poyntRange, $
-                                                                           SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                                                           MINMLT=minM,MAXMLT=maxM, $
-                                                                           BINM=binM, $
-                                                                           SHIFTM=shiftM, $
-                                                                           MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                                                           DO_LSHELL=do_lshell, $
-                                                                           MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                                                           MIN_MAGCURRENT=minMC, $
-                                                                           MAX_NEGMAGCURRENT=maxNegMC, $
-                                                                           SMOOTH_IMF=smoothWindow, $
-                                                                           BYMIN=byMin, $
-                                                                           BYMAX=byMax, $
-                                                                           BZMIN=bzMin, $
-                                                                           BZMAX=bzMax, $
-                                                                           BTMIN=btMin, $
-                                                                           BTMAX=btMax, $
-                                                                           BXMIN=bxMin, $
-                                                                           BXMAX=bxMax, $
-                                                                           DO_ABS_BYMIN=abs_byMin, $
-                                                                           DO_ABS_BYMAX=abs_byMax, $
-                                                                           DO_ABS_BZMIN=abs_bzMin, $
-                                                                           DO_ABS_BZMAX=abs_bzMax, $
-                                                                           DO_ABS_BTMIN=abs_btMin, $
-                                                                           DO_ABS_BTMAX=abs_btMax, $
-                                                                           DO_ABS_BXMIN=abs_bxMin, $
-                                                                           DO_ABS_BXMAX=abs_bxMax, $
-                                                                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                                                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                                                           RESET_OMNI_INDS=reset_omni_inds, $
-                                                                           CLOCKSTR=clockStr, $
-                                                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                                                           RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
-                                                                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                                                           /DO_NOT_SET_DEFAULTS, $
-                                                                           BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
-                                                                           MULTIPLE_DELAYS=multiple_delays, $
-                                                                           RESOLUTION_DELAY=delay_res, $
-                                                                           BINOFFSET_DELAY=binOffset_delay, $
-                                                                           MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                                                           STABLEIMF=stableIMF, $
-                                                                           DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                                                           OMNI_COORDS=omni_Coords, $
-                                                                           ANGLELIM1=angleLim1, $
-                                                                           ANGLELIM2=angleLim2, $
-                                                                           HWMAUROVAL=HwMAurOval, $
-                                                                           HWMKPIND=HwMKpInd, $
-                                                                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                                                           PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                                                           SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                                                           RESET_GOOD_INDS=reset_good_inds, $
-                                                                           NO_BURSTDATA=no_burstData, $
-                                                                           /GET_TIME_I_NOT_ALFVENDB_I, $
-                                                                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
+        fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
+                                    fastLoc,satellite,delay,LUN=lun, $
+                                    DBTIMES=fastLoc_times, $
+                                    DBFILE=fastLocDBFile, $
+                                    COORDINATE_SYSTEM=coordinate_system, $
+                                    USE_AACGM=use_AACGM, $
+                                    USE_MAG_COORDS=use_MAG, $
+                                    HEMI=hemi, $
+                                    ORBRANGE=orbRange, $
+                                    ALTITUDERANGE=altitudeRange, $
+                                    CHARERANGE=charERange, $
+                                    POYNTRANGE=poyntRange, $
+                                    SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                    INCLUDE_32HZ=include_32Hz, $
+                                    MINMLT=minM,MAXMLT=maxM, $
+                                    BINM=binM, $
+                                    SHIFTM=shiftM, $
+                                    MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                    DO_LSHELL=do_lshell, $
+                                    MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                    MIN_MAGCURRENT=minMC, $
+                                    MAX_NEGMAGCURRENT=maxNegMC, $
+                                    SMOOTH_IMF=smoothWindow, $
+                                    BYMIN=byMin, $
+                                    BYMAX=byMax, $
+                                    BZMIN=bzMin, $
+                                    BZMAX=bzMax, $
+                                    BTMIN=btMin, $
+                                    BTMAX=btMax, $
+                                    BXMIN=bxMin, $
+                                    BXMAX=bxMax, $
+                                    DO_ABS_BYMIN=abs_byMin, $
+                                    DO_ABS_BYMAX=abs_byMax, $
+                                    DO_ABS_BZMIN=abs_bzMin, $
+                                    DO_ABS_BZMAX=abs_bzMax, $
+                                    DO_ABS_BTMIN=abs_btMin, $
+                                    DO_ABS_BTMAX=abs_btMax, $
+                                    DO_ABS_BXMIN=abs_bxMin, $
+                                    DO_ABS_BXMAX=abs_bxMax, $
+                                    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                    RESET_OMNI_INDS=reset_omni_inds, $
+                                    CLOCKSTR=clockStr, $
+                                    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                    RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
+                                    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                                    /DO_NOT_SET_DEFAULTS, $
+                                    BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                                    MULTIPLE_DELAYS=multiple_delays, $
+                                    RESOLUTION_DELAY=delay_res, $
+                                    BINOFFSET_DELAY=binOffset_delay, $
+                                    MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                    STABLEIMF=stableIMF, $
+                                    DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                                    OMNI_COORDS=omni_Coords, $
+                                    ANGLELIM1=angleLim1, $
+                                    ANGLELIM2=angleLim2, $
+                                    HWMAUROVAL=HwMAurOval, $
+                                    HWMKPIND=HwMKpInd, $
+                                    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                    RESET_GOOD_INDS=reset_good_inds, $
+                                    NO_BURSTDATA=no_burstData, $
+                                    /GET_TIME_I_NOT_ALFVENDB_I, $
+                                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
      ENDIF
 
      ;; PRINT,'Saving this session''s vars...'

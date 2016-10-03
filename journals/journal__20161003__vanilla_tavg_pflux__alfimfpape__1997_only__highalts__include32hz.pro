@@ -1,13 +1,18 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
-PRO JOURNAL__20160818__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY__HIGHALTS
+PRO JOURNAL__20161003__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY__HIGHALTS__INCLUDE32HZ
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
+  include_32Hz                   = 0
+
+  ;; minMC                          = 5
+  ;; maxnegMC                       = -5
+
   ;;DB stuff
-  do_despun                      = 1
+  do_despun                      = 0
 
   plotPref                       = 'just_1997'
   suppress_ILAT_labels           = 1
@@ -87,20 +92,20 @@ PRO JOURNAL__20160818__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY__HIGHALTS
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[3500,4180]]
+  altRange                       = [[1000,4180]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
 
-  ;; t1Str                    = '1997-01-01/00:00:00.000'
-  ;; t2Str                    = '1997-12-31/23:59:59.999'
-  ;; t1                       = STR_TO_TIME(t1Str)
-  ;; t2                       = STR_TO_TIME(t2Str)
+  t1Str                    = '1997-01-01/00:00:00.000'
+  t2Str                    = '1997-12-31/23:59:59.999'
+  t1                       = STR_TO_TIME(t1Str)
+  t2                       = STR_TO_TIME(t2Str)
 
 
-  ;; LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DO_DESPUNDB=do_despun
-  ;; orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
-  orbRange                    = [1000,10800]
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DO_DESPUNDB=do_despun
+  orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
+  ;; orbRange                    = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
@@ -113,11 +118,11 @@ PRO JOURNAL__20160818__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY__HIGHALTS
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -312,4 +317,5 @@ PRO JOURNAL__20160818__VANILLA_TAVG_PFLUX__ALFIMFPAPE__1997_ONLY__HIGHALTS
   ENDFOR
 
 END
+
 

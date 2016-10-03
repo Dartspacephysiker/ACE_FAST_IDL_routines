@@ -15,8 +15,8 @@ PRO JOURNAL__20160801__ZHANG_2014__LOGAVG__AACGM_COORDS
 
   ;;DB stuff
   do_despun                      = 1
-  use_AACGM                      = 0
-  use_MAG                        = 1
+  use_AACGM                      = 1
+  use_MAG                        = 0
 
   ;; plotPref                       = 
 
@@ -85,7 +85,7 @@ PRO JOURNAL__20160801__ZHANG_2014__LOGAVG__AACGM_COORDS
   IPlotRange                     = [0,1.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.2]
+  probOccurrenceRange            = [0,0.05]
 
   summed_eFlux_pFluxplotRange    = [0,8]
   
@@ -115,9 +115,9 @@ PRO JOURNAL__20160801__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[300,4180]]
+  altRange                       = [[1000,4200]]
 
-  orbRange                       = [500,10600]
+  orbRange                       = [500,9936]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -136,7 +136,7 @@ PRO JOURNAL__20160801__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
-  maxILAT                        = 88
+  maxILAT                        = 90
   ;; maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
@@ -150,12 +150,12 @@ PRO JOURNAL__20160801__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.5
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18

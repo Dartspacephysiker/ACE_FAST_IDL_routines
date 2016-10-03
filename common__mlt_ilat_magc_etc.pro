@@ -6,6 +6,7 @@
      MIMC__DO_lShell,MIMC__minLSHELL,MIMC__maxLSHELL,MIMC__binLSHELL, $
      MIMC__minMC,MIMC__maxNegMC, $
      MIMC__sample_t_restriction, $
+     MIMC__include_32Hz, $
      MIMC__hemi, $
      MIMC__orbRange, $
      MIMC__altitudeRange, $
