@@ -8,7 +8,10 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   nonstorm                       = 1
   DSTcutoff                      = -20
 
-  include_32Hz                   = 0
+  include_32Hz                   = 1
+
+  minMC                          = 5
+  maxNegMC                       = -5
 
   do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 1
@@ -16,7 +19,7 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   divide_by_width_x              = 1
 
   ;;DB stuff
-  do_despun                      = 1
+  do_despun                      = 0
   use_AACGM                      = 1
   use_MAG                        = 0
 
@@ -48,9 +51,9 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   eNumFlPlots                    = 1
   pPlots                         = 1
   ionPlots                       = 1
-  probOccurrencePlot             = 1
+  probOccurrencePlot             = 0
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
+  nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,1.0]
 
@@ -68,7 +71,7 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
   ENumFlPlotRange                = [[0,5.0], $
-                                    [0,4.0e9]]
+                                    [0,1.0e10]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -77,17 +80,17 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.0]
+  PPlotRange                     = [0,2.0]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.0e8]
+  IPlotRange                     = [0,3.0e8]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.05]
+  probOccurrenceRange            = [0,0.1]
 
   summed_eFlux_pFluxplotRange    = [0,8]
   
@@ -117,9 +120,9 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1000,4200]]
+  altRange                       = [[500,4200]]
 
-  orbRange                       = [500,9936]
+  orbRange                       = [1000,108000]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -136,23 +139,23 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 89
   ;; maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -88
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -89
+  maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 1.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

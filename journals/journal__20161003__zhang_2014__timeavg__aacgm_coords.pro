@@ -11,7 +11,7 @@ PRO JOURNAL__20161003__ZHANG_2014__TIMEAVG__AACGM_COORDS
   minMC                          = 5
   maxNegMC                       = -5
 
-  include_32Hz                   = 1
+  include_32Hz                   = 0
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -19,8 +19,8 @@ PRO JOURNAL__20161003__ZHANG_2014__TIMEAVG__AACGM_COORDS
   divide_by_width_x              = 1
 
   ;;DB stuff
-  do_despun                      = 0
-  use_AACGM                      = 0
+  do_despun                      = 1
+  use_AACGM                      = 1
   use_MAG                        = 0
 
   ;; plotPref                       = 
