@@ -26,6 +26,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    MINILAT=minI, $
    MAXILAT=maxI, $
    BINI=binI, $
+   EQUAL_AREA_BINNING=equal_area_binning, $
    DO_LSHELL=do_lshell, $
    MINLSHELL=minL, $
    MAXLSHELL=maxL, $
@@ -112,6 +113,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     MINILAT=minI, $
                                     MAXILAT=maxI, $
                                     BINILAT=binI, $
+                                    EQUAL_AREA_BINNING=equal_area_binning, $
                                     ;; DO_LSHELL=do_lshell, $
                                     ;; MINLSHELL=minL, $
                                     ;; MAXLSHELL=maxL, $

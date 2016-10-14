@@ -207,6 +207,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SHIFTMLT=shiftM, $
                                     MINILAT=minI,MAXILAT=maxI, $
                                     BINILAT=binI, $
+                                    EQUAL_AREA_BINNING=equal_area_binning, $
                                     DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                     MIN_MAGCURRENT=minMC, $
@@ -477,6 +478,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 BINMLT=binM, $
                                 SHIFTMLT=shiftM, $
                                 MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                                EQUAL_AREA_BINNING=equal_area_binning, $
                                 DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                 MIN_MAGCURRENT=minMC, $
                                 MAX_NEGMAGCURRENT=maxNegMC, $
@@ -953,6 +955,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              MINILAT=minI, $
                              MAXILAT=maxI, $
                              BINILAT=binI, $
+                             EQUAL_AREA_BINNING=equal_area_binning, $
                              ;; DO_LSHELL=do_lshell, $
                              ;; MINLSHELL=minL, $
                              ;; MAXLSHELL=maxL, $
@@ -1137,6 +1140,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    MIN1=minM,MIN2=(KEYWORD_SET(DO_LSHELL) ? minL : minI),$
                                    MAX1=maxM,MAX2=(KEYWORD_SET(DO_LSHELL) ? maxL : maxI), $
                                    SHIFT1=shiftM,SHIFT2=shiftI, $
+                                   EQUAL_AREA_BINNING=equal_area_binning, $
                                    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                    ;; DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                    BOTH_HEMIS=STRUPCASE(hemi) EQ 'BOTH', $
@@ -1151,6 +1155,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
      
      IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
+        IF KEYWORD_SET(equal_area_binning) THEN BEGIN
+           PRINT,'Not equipped!'
+           STOP
+        ENDIF
         GET_H2D_BIN_AREAS,h2dAreas, $
                           CENTERS1=centersMLT,CENTERS2=centersILAT, $
                           BINSIZE1=binM*15., BINSIZE2=binI, $
@@ -1160,6 +1168,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      END
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
+        IF KEYWORD_SET(equal_area_binning) THEN BEGIN
+           PRINT,'Not equipped!'
+           STOP
+        ENDIF
         GET_H2D_BIN_LENGTHS,h2dLongWidths, $
                             /LONGITUDINAL, $
                             CENTERS1=centersMLT,CENTERS2=centersILAT, $
@@ -1219,6 +1231,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            MINILAT=minI, $
                            MAXILAT=maxI, $
                            BINILAT=binI, $
+                           EQUAL_AREA_BINNING=equal_area_binning, $
                            DO_LSHELL=do_lShell, $
                            MINLSHELL=minL, $
                            MAXLSHELL=maxL, $
