@@ -3,6 +3,7 @@
   COMMON MLT_ILAT_MAGC_ETC,MIMC__RECALCULATE, $
      MIMC__minMLT,MIMC__maxMLT, $
      MIMC__minILAT,MIMC__maxILAT,MIMC__binILAT, $
+     MIMC__EA_binning, $
      MIMC__DO_lShell,MIMC__minLSHELL,MIMC__maxLSHELL,MIMC__binLSHELL, $
      MIMC__minMC,MIMC__maxNegMC, $
      MIMC__sample_t_restriction, $
