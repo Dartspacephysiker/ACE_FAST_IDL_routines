@@ -1,5 +1,5 @@
 ;;2016/10/15 And now with equal-area binning
-PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
+PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_REQ
 
   COMPILE_OPT IDL2
 
@@ -21,8 +21,8 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   minMC                          = 5
   maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 0
-  logAvgPlot                     = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -30,6 +30,8 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   do_despun                      = 0
   use_AACGM                      = 1
   use_MAG                        = 0
+
+  ;; plotPref                       = 
 
   autoscale_fluxPlots            = 0
   
@@ -57,16 +59,16 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   eNumFlPlots                    = 1
   pPlots                         = 1
   ionPlots                       = 1
-  probOccurrencePlot             = 0
+  probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
+  nOrbsWithEventsPerContribOrbsPlot = 3
 
   nowepco_range                  = [0,1.0]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,5.0]
+  ePlotRange                     = [0,0.15]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -76,8 +78,8 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,5.0], $
-                                    [0,1.0e10]]
+  ENumFlPlotRange                = [[0,0.15], $
+                                    [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -86,19 +88,19 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.1]
+  PPlotRange                     = [0,0.15]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,3.0e8]
+  IPlotRange                     = [0,2.0e7]
   
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.1]
 
-  summed_eFlux_pFluxplotRange    = [0,8]
+  summed_eFlux_pFluxplotRange    = [0,0.1]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
@@ -126,7 +128,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1500,4300]]
+  altRange                       = [[1000,4300]]
 
   orbRange                       = [1000,10800]
 
@@ -148,7 +150,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  ;; maskMin                        = 1
+  ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
@@ -161,7 +163,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff

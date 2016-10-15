@@ -18,8 +18,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
 
   EA_binning                     = 1
 
-  ;; minMC                          = 5
-  ;; maxNegMC                       = -5
+  minMC                          = 5
+  maxNegMC                       = -5
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
