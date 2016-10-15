@@ -6,7 +6,13 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -25
+  DSTcutoff                      = -30
+  smooth_dst                     = 1
+
+  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  IF KEYWORD_SET(smooth_dst) THEN BEGIN
+     plotPref += 'smDst--'
+  ENDIF
 
   include_32Hz                   = 0
 
@@ -62,7 +68,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.05]
+  ePlotRange                     = [0,0.08]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -72,8 +78,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.05], $
-                                    [0,2.0e8]]
+  ENumFlPlotRange                = [[0,0.08], $
+                                    [0,3.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -82,7 +88,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.05]
+  PPlotRange                     = [0,0.08]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -122,9 +128,9 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4300]]
+  altRange                       = [[500,4300]]
 
-  orbRange                       = [500,10800]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -144,12 +150,12 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  ;; maskMin                        = 1
+  ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
   ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -88
+  ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
@@ -263,6 +269,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
         DSTCUTOFF=dstCutoff, $
+        SMOOTH_DST=smooth_dst, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       

@@ -262,6 +262,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
                                     DSTCUTOFF=dstCutoff, $
+                                    SMOOTH_DST=smooth_dst, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
                                     EPLOTRANGE=ePlotRange, $                                       
@@ -609,6 +610,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
+           SMOOTH_DST=smooth_dst, $
            NONSTORM_I=ns_i, $
            MAINPHASE_I=mp_i, $
            RECOVERYPHASE_I=rp_i, $
@@ -674,6 +676,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
+           SMOOTH_DST=smooth_dst, $
            NONSTORM_I=ns_OMNI_i, $
            MAINPHASE_I=mp_OMNI_i, $
            RECOVERYPHASE_I=rp_OMNI_i, $
@@ -723,6 +726,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
+              SMOOTH_DST=smooth_dst, $
               NONSTORM_I=ns_FL_i, $
               MAINPHASE_I=mp_FL_i, $
               RECOVERYPHASE_I=rp_FL_i, $
