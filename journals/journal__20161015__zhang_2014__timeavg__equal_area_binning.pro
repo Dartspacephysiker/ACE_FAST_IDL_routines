@@ -1,4 +1,4 @@
-;;2016/01/15
+;;2016/10/15 And now with equal-area binning
 PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
 
   COMPILE_OPT IDL2
@@ -6,7 +6,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -20
+  DSTcutoff                      = -25
 
   include_32Hz                   = 0
 
@@ -73,7 +73,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
   ENumFlPlotRange                = [[0,0.05], $
-                                    [0,1.5e8]]
+                                    [0,2.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -89,7 +89,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.5e7]
+  IPlotRange                     = [0,2.0e7]
   
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.05]
@@ -122,9 +122,9 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[500,4200]]
+  altRange                       = [[340,4300]]
 
-  orbRange                       = [500,10600]
+  orbRange                       = [500,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
