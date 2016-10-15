@@ -1,28 +1,29 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
-PRO JOURNAL__20161015__VANILLA_TAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
+PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
-  medianPlot                     = 0
-  divide_by_width_x              = 1
+  do_timeAvg_fluxQuantities  = 1
+  logAvgPlot                 = 0
+  medianPlot                 = 0
+  divide_by_width_x          = 1
 
-  include_32Hz                   = 0
+  include_32Hz               = 0
+  use_AACGM                  = 1
 
-  EA_binning             = 1
-  ;; minMC                          = 5
-  ;; maxnegMC                       = -5
+  EA_binning                 = 1
+  ;; minMC                   = 5
+  ;; maxnegMC                = -5
 
   ;;DB stuff
-  do_despun                      = 0
+  do_despun                  = 0
 
-  plotPref                       = 'just_1997'
-  suppress_ILAT_labels           = 1
+  plotPref                   = 'just_1997'
+  suppress_ILAT_labels       = 0
 
-  autoscale_fluxPlots            = 0
+  autoscale_fluxPlots        = 0
 
-  do_not_consider_IMF            = 1
+  do_not_consider_IMF        = 1
 
-  cb_force_oobHigh               = 0
+  cb_force_oobHigh           = 0
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -60,8 +61,18 @@ PRO JOURNAL__20161015__VANILLA_TAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
 
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [0.05,50.0]
-  logPfPlot                      = 0
-  PPlotRange                     = [0.00,0.11]
+  CASE 1 OF
+     KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
+        logPfPlot   = 0
+        PPlotRange  = [0.00,0.11]
+     END
+     KEYWORD_SET(logAvgPlot): BEGIN
+        logPfPlot   = 0
+        PPlotRange  = [0.00,1.1]
+     END
+     ELSE: BEGIN
+     END
+  ENDCASE
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -93,7 +104,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[1000,4180]]
+  altRange                       = [[340,4180]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -104,7 +115,10 @@ PRO JOURNAL__20161015__VANILLA_TAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
   t2                       = STR_TO_TIME(t2Str)
 
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
+                           DO_DESPUNDB=do_despun, $
+                           USE_AACGM=use_AACGM, $
+                           USE_MAG=use_mag
   orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
   ;; orbRange                    = [1000,10800]
 
@@ -276,7 +290,11 @@ PRO JOURNAL__20161015__VANILLA_TAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
         DATADIR=dataDir, $
         DO_CHASTDB=do_chastDB, $
         DO_DESPUNDB=do_despun, $
-        NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+        COORDINATE_SYSTEM=coordinate_system, $
+        USE_AACGM_COORDS=use_AACGM, $
+        USE_MAG_COORDS=use_MAG, $
+        NEVENTSPLOTRANGE=nEventsPlotRange, $
+        LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
