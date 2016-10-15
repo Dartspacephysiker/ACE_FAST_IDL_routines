@@ -1,5 +1,5 @@
-;;2016/08/01 But what happens if we use AACGM coordinates?
-PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
+;;2016/10/15 And now with equal-area binning
+PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
 
   COMPILE_OPT IDL2
 
@@ -10,8 +10,10 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
 
   include_32Hz                   = 1
 
-  minMC                          = 5
-  maxNegMC                       = -5
+  EA_binning                     = 1
+
+  ;; minMC                          = 5
+  ;; maxNegMC                       = -5
 
   do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 1
@@ -20,7 +22,7 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   ;; plotPref                       = 
@@ -139,16 +141,16 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 89
-  ;; maskMin                        = 1
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 89
+  maskMin                        = 1
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -89
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -89
+  ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
 
@@ -220,6 +222,7 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
+        EQUAL_AREA_BINNING=EA_binning, $
         MIN_MAGCURRENT=minMC, $
         MAX_NEGMAGCURRENT=maxNegMC, $
         HWMAUROVAL=HwMAurOval, $
@@ -393,4 +396,3 @@ PRO JOURNAL__20161003__ZHANG_2014__LOGAVG__AACGM_COORDS
 END
 
 
-JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING

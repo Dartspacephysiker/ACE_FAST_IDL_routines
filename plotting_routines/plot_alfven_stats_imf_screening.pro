@@ -595,6 +595,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         lun=-1                  ;-1 is lun for STDOUT
      ENDELSE
      
+     ;;Handle hemisphere issues up front if we're doing equal-area binning
+     IF KEYWORD_SET(EA_binning) THEN BEGIN
+        LOAD_EQUAL_AREA_BINNING_STRUCT,HEMI=hemi
+     ENDIF
+
      ;;********************************************************
      ;;Now clean and tap the databases and interpolate satellite data
      IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
