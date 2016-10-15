@@ -146,6 +146,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                INCLUDE_32HZ=include_32Hz, $
                                MINMLT=minM,MAXMLT=maxM,BINM=binM, $
                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                               EQUAL_AREA_BINNING=EA_binning, $
                                DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                                HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd,$

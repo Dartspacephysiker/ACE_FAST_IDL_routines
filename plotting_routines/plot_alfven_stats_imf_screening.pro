@@ -770,6 +770,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     BINM=binM, $
                     SHIFTM=shiftM, $
                     MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                    EQUAL_AREA_BINNING=EA_binning, $
                     DO_LSHELL=do_lshell, $
                     MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                     MIN_MAGCURRENT=minMC, $
@@ -852,6 +853,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     BINM=binM, $
                                     SHIFTM=shiftM, $
                                     MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                    EQUAL_AREA_BINNING=EA_binning, $
                                     DO_LSHELL=do_lshell, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                     MIN_MAGCURRENT=minMC, $
@@ -1030,6 +1032,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              BINMLT=binM, $
                              SHIFTMLT=shiftM, $
                              MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+                             EQUAL_AREA_BINNING=EA_binning, $
                              DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                              MIN_MAGCURRENT=minMC,MAX_NEGMAGCURRENT=maxNegMC, $
                              HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
@@ -1091,6 +1094,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            MINILAT=minI, $
                            MAXILAT=maxI, $
                            BINILAT=binI, $
+                           EQUAL_AREA_BINNING=EA_binning, $
                            DO_LSHELL=do_lShell, $
                            MINLSHELL=minL, $
                            MAXLSHELL=maxL, $
@@ -1155,30 +1159,25 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
      
      IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
-        IF KEYWORD_SET(EA_binning) THEN BEGIN
-           PRINT,'Not equipped!'
-           STOP
-        ENDIF
         GET_H2D_BIN_AREAS,h2dAreas, $
                           CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                          BINSIZE1=binM*15., BINSIZE2=binI, $
-                          MAX1=maxM*15., MAX2=maxI, $
-                          MIN1=minM*15., MIN2=minI, $
-                          SHIFT1=shiftM*15., SHIFT2=shiftI
+                          BINSIZE1=binM*15.,BINSIZE2=binI, $
+                          MAX1=maxM*15.,MAX2=maxI, $
+                          MIN1=minM*15.,MIN2=minI, $
+                          SHIFT1=shiftM*15.,SHIFT2=shiftI, $
+                          EQUAL_AREA_BINNING=EA_binning
+
      END
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
-        IF KEYWORD_SET(EA_binning) THEN BEGIN
-           PRINT,'Not equipped!'
-           STOP
-        ENDIF
         GET_H2D_BIN_LENGTHS,h2dLongWidths, $
                             /LONGITUDINAL, $
                             CENTERS1=centersMLT,CENTERS2=centersILAT, $
                             BINSIZE1=binM*15., BINSIZE2=binI, $
-                            MAX1=maxM*15., MAX2=maxI, $
-                            MIN1=minM*15., MIN2=minI, $
-                            SHIFT1=shiftM*15., SHIFT2=shiftI
+                            MAX1=maxM*15.,MAX2=maxI, $
+                            MIN1=minM*15.,MIN2=minI, $
+                            SHIFT1=shiftM*15.,SHIFT2=shiftI, $
+                            EQUAL_AREA_BINNING=EA_binning
      ENDIF
   ENDIF
 
@@ -1443,13 +1442,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ;;Now plots
      IF ~KEYWORD_SET(justData) THEN BEGIN
-        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr, $
+        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr, $
+                               DATANAMEARR=dataNameArr, $
                                H2DMASKARR=h2dMaskArr, $
                                TEMPFILE=out_tempFile, $
-                               SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
-                               JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                               PLOTDIR=plotDir, PLOTMEDORAVG=plotMedOrAvg, $
-                               PARAMSTR=paramString, DEL_PS=del_PS, $
+                               EQUAL_AREA_BINNING=equal_area_binning, $
+                               SQUAREPLOT=squarePlot, $
+                               POLARCONTOUR=polarContour, $ 
+                               JUSTDATA=justData, $
+                               SHOWPLOTSNOSAVE=showPlotsNoSave, $
+                               PLOTDIR=plotDir, $
+                               PLOTMEDORAVG=plotMedOrAvg, $
+                               PARAMSTR=paramString, $
+                               DEL_PS=del_PS, $
                                HEMI=hemi, $
                                CLOCKSTR=clockStr, $
                                SUPPRESS_THICKGRID=suppress_thickGrid, $
