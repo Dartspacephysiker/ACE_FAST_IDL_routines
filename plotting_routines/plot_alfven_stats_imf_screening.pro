@@ -1451,7 +1451,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                DATANAMEARR=dataNameArr, $
                                H2DMASKARR=h2dMaskArr, $
                                TEMPFILE=out_tempFile, $
-                               EQUAL_AREA_BINNING=equal_area_binning, $
+                               EQUAL_AREA_BINNING=EA_binning, $
                                SQUAREPLOT=squarePlot, $
                                POLARCONTOUR=polarContour, $ 
                                JUSTDATA=justData, $
