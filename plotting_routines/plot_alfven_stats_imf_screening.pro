@@ -357,6 +357,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                     WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
                                     WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+                                    WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                     MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $
@@ -1227,6 +1228,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      GET_ALFVENDB_2DHISTOS,maximus,plot_i_list[iMulti],fastLocInterped_i, $
+                           CDBTIME=cdbTime, $
                            H2DSTRARR=h2dStrArr, $
                            KEEPME=keepMe, $
                            DATARAWPTRARR=dataRawPtrArr, $
@@ -1354,6 +1356,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
                            GROSSLUN=grossLun, $
                            WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+                           WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
                            DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                            MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                            MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $

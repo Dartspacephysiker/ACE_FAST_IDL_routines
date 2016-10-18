@@ -1,14 +1,22 @@
 ;;2016/06/27 Try new text output
 PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;;The reason we're gathered
-  pFluxMin               = 5
+  pFluxMin               = 0.5
 
   ;;DB stuff
-  do_despun              = 1
+  do_despun              = 0
+
+  EA_binning             = 1
+
+  use_aacgm_coords       = 1
+
+  minMC                  = 5
+  maxNegMC               = -5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
   write_obsArr_textFile  = 1
+  write_obsArr__inc_IMF  = 1
   justData               = 1
 
   altRange               = [[340,4180]]
@@ -20,11 +28,11 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                  = 2
+  btMin                  = 1
 
   ;;Delay stuff
   nDelays                = 1
-  delayDeltaSec          = 1800
+  delayDeltaSec          = 900
   delayArr               = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   reset_omni_inds        = 1
@@ -40,11 +48,13 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;; minILAT                = -90
   ;; maxILAT                = -60
 
-  binILAT                = 2.5
+  binILAT                = 5.0
+
+  ;; hemi                   = 'BOTH'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                 = 1.0
+  binMLT                 = 1.5
   shiftMLT               = 0.0
 
   minMLT                 = 6.0
@@ -53,7 +63,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;;Bonus
   maskMin                = 1
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun,USE_AACGM_COORDS=use_aacgm_coords
 
   restrict_with_these_i  = WHERE(maximus.pFluxEst GE pFluxMin)
 
@@ -106,6 +116,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
+        EQUAL_AREA_BINNING=EA_binning, $
         MIN_MAGCURRENT=minMC, $
         MAX_NEGMAGCURRENT=maxNegMC, $
         HWMAUROVAL=HwMAurOval, $
@@ -200,6 +211,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
         WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+        WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
