@@ -9,7 +9,12 @@ FUNCTION GET_STABLE_IMF_INDS, $
    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
    STABLEIMF=stableIMF, $
    SMOOTH_IMF=smooth_IMF, $
-   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   EARLIEST_UTC=earliest_UTC, $
+   LATEST_UTC=latest_UTC, $
+   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   EARLIEST_JULDAY=earliest_julDay, $
+   LATEST_JULDAY=latest_julDay, $
    BYMIN=byMin, $
    BYMAX=byMax, $
    BZMIN=bzMin, $
@@ -178,7 +183,12 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF
 
      C_OMNI__time_i = GET_OMNI_TIME_I(C_OMNI__mag_UTC, $
-                                      RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                      ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                      EARLIEST_UTC=earliest_UTC, $
+                                      LATEST_UTC=latest_UTC, $
+                                      USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                      EARLIEST_JULDAY=earliest_julDay, $
+                                      LATEST_JULDAY=latest_julDay, $
                                       LUN=lun)
 
      IF KEYWORD_SET(clockStr) THEN BEGIN

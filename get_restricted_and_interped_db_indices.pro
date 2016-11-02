@@ -79,6 +79,11 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
    GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $   ;NOTE: DON'T CONFUSE THIS WITH FOR_ESPEC_OR_ION_DB
+   EARLIEST_UTC=earliest_UTC, $
+   LATEST_UTC=latest_UTC, $
+   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   EARLIEST_JULDAY=earliest_julDay, $
+   LATEST_JULDAY=latest_julDay, $
    DONT_LOAD_IN_MEMORY=nonMem
 
   
@@ -191,7 +196,12 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                            BINOFFSET_DELAY=binOffset_delay, $
                            STABLEIMF=stableIMF, $
                            SMOOTH_IMF=smooth_IMF, $
-                           /RESTRICT_TO_ALFVENDB_TIMES, $
+                           ;; /RESTRICT_TO_ALFVENDB_TIMES, $
+                           EARLIEST_UTC=earliest_UTC, $
+                           LATEST_UTC=latest_UTC, $
+                           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                           EARLIEST_JULDAY=earliest_julDay, $
+                           LATEST_JULDAY=latest_julDay, $
                            BYMIN=byMin, $
                            BYMAX=byMax, $
                            BZMIN=bzMin, $
@@ -233,7 +243,12 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                           BINOFFSET_DELAY=binOffset_delay, $
                                           STABLEIMF=stableIMF, $
                                           SMOOTH_IMF=smooth_IMF, $
-                                          /RESTRICT_TO_ALFVENDB_TIMES, $
+                                          ;; /RESTRICT_TO_ALFVENDB_TIMES, $
+                                          EARLIEST_UTC=earliest_UTC, $
+                                          LATEST_UTC=latest_UTC, $
+                                          USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                          EARLIEST_JULDAY=earliest_julDay, $
+                                          LATEST_JULDAY=latest_julDay, $
                                           BYMIN=byMin, $
                                           BYMAX=byMax, $
                                           BZMIN=bzMin, $

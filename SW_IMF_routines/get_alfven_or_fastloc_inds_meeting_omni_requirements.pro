@@ -9,7 +9,12 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
    STABLEIMF=stableIMF, $
    SMOOTH_IMF=smooth_IMF, $
-   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   EARLIEST_UTC=earliest_UTC, $
+   LATEST_UTC=latest_UTC, $
+   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   EARLIEST_JULDAY=earliest_julDay, $
+   LATEST_JULDAY=latest_julDay, $
    BYMIN=byMin, $
    BYMAX=byMax, $
    BZMIN=bzMin, $
@@ -49,7 +54,12 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             ANGLELIM2=angleLim2, $
                                             STABLEIMF=stableIMF, $
                                             SMOOTH_IMF=smooth_IMF, $
-                                            RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                            ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                            EARLIEST_UTC=earliest_UTC, $
+                                            LATEST_UTC=latest_UTC, $
+                                            USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                            EARLIEST_JULDAY=earliest_julDay, $
+                                            LATEST_JULDAY=latest_julDay, $
                                             BYMIN=byMin, $
                                             BYMAX=byMax, $
                                             BZMIN=bzMin, $

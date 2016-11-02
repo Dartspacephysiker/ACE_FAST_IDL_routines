@@ -267,6 +267,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     USE_AU=use_au, $
                                     USE_AL=use_al, $
                                     USE_AO=use_ao, $
+                                    AECUTOFF=AEcutoff, $
+                                    SMOOTH_AE=smooth_AE, $
+                                    AE_HIGH=AE_high, $
+                                    AE_LOW=AE_low, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
                                     EPLOTRANGE=ePlotRange, $
@@ -587,6 +591,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                      STABLEIMF=stableIMF, $
                                      SMOOTHWINDOW=smoothWindow, $
                                      INCLUDENOCONSECDATA=includeNoConsecData, $
+                                     EARLIEST_UTC=earliest_UTC, $
+                                     LATEST_UTC=latest_UTC, $
+                                     EARLIEST_JULDAY=earliest_julDay, $
+                                     LATEST_JULDAY=latest_julDay, $
                                      LUN=lun
 
 
@@ -608,13 +616,33 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ;;********************************************************
      ;;Now clean and tap the databases and interpolate satellite data
-     use_storm_stuff = KEYWORD_SET(nonStorm) $
-                       + KEYWORD_SET(mainPhase) $
-                       + KEYWORD_SET(recoveryPhase)
+     use_storm_stuff = KEYWORD_SET(nonStorm     ) + $
+                       KEYWORD_SET(mainPhase    ) + $
+                       KEYWORD_SET(recoveryPhase)
+
+     use_ae_stuff    = KEYWORD_SET(use_AE) + $
+                       KEYWORD_SET(use_AO) + $
+                       KEYWORD_SET(use_AU) + $
+                       KEYWORD_SET(use_AL)
+
+     ;;Does it all "hang together"?
      IF use_storm_stuff GT 1 THEN BEGIN
         PRINT,"Can't set more than one of the storm keywords simultaneously!"
         STOP
      ENDIF
+     IF use_ae_stuff GT 1 THEN BEGIN
+        PRINT,"only select one of (AE,AU,AL,AO)!"
+        STOP
+     ENDIF
+     IF use_ae_stuff AND use_storm_stuff THEN BEGIN
+        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
+        STOP
+     ENDIF
+     ;; IF use_ae_stuff OR use_storm_stuff THEN BEGIN
+     ;;    earliest_UTC = STR_TO_TIME('1996-10-06/16:26:02.417')
+     ;;    latest_UTC   = STR_TO_TIME('1999-11-03/03:20:59.853')
+     ;; ENDIF
+
      IF KEYWORD_SET(use_storm_stuff) THEN BEGIN
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            DO_DESPUNDB=do_despunDB, $
@@ -636,7 +664,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            N_RECOVERYPHASE=n_rp, $
            NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
            NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
-
         
         CASE 1 OF
            KEYWORD_SET(nonStorm): BEGIN
@@ -683,10 +710,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ;;Now OMNI, if desired
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
            OMNI_COORDS=OMNI_coords, $
-           /RESTRICT_TO_ALFVENDB_TIMES, $
-           COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_AACGM, $
-           USE_MAG_COORDS=use_MAG, $
+           ;; /RESTRICT_TO_ALFVENDB_TIMES, $
+           EARLIEST_UTC=earliest_UTC, $
+           LATEST_UTC=latest_UTC, $
+           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+           EARLIEST_JULDAY=earliest_julDay, $
+           LATEST_JULDAY=latest_julDay, $
+           ;; COORDINATE_SYSTEM=coordinate_system, $
+           ;; USE_AACGM_COORDS=use_AACGM, $
+           ;; USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
            SMOOTH_DST=smooth_dst, $
            NONSTORM_I=ns_OMNI_i, $
@@ -739,6 +771,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
+              EARLIEST_UTC=earliest_UTC, $
+              LATEST_UTC=latest_UTC, $
+              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+              EARLIEST_JULDAY=earliest_julDay, $
+              LATEST_JULDAY=latest_julDay, $
               NONSTORM_I=ns_FL_i, $
               MAINPHASE_I=mp_FL_i, $
               RECOVERYPHASE_I=rp_FL_i, $
@@ -769,30 +806,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
      ENDIF
 
-     use_ae_stuff = KEYWORD_SET(use_AE) + $
-                    KEYWORD_SET(use_AO) + $
-                    KEYWORD_SET(use_AU) + $
-                    KEYWORD_SET(use_AL)
-
-     IF use_ae_stuff GT 1 THEN BEGIN
-        PRINT,"only select one of (AE,AU,AL,AO)!"
-        STOP
-     ENDIF
-     IF use_ae_stuff AND use_storm_stuff THEN BEGIN
-        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
-        STOP
-     ENDIF
      IF KEYWORD_SET(use_ae_stuff) THEN BEGIN
 
         GET_AE_FASTDB_INDICES, $
-           AE_HIGH=AE_high, $
-           AE_LOW=AE_low, $
            DO_DESPUNDB=do_despunDB, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $
            GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
-           AECUTOFF=AeCutoff, $
+           AECUTOFF=AEcutoff, $
            SMOOTH_AE=smooth_AE, $
            EARLIEST_UTC=earliest_UTC, $
            LATEST_UTC=latest_UTC, $
@@ -842,11 +864,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ;;Now OMNI, if desired
         GET_AE_OMNIDB_INDICES, $
            OMNI_COORDS=OMNI_coords, $
-           RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-           COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_AACGM, $
-           USE_MAG_COORDS=use_MAG, $
-           AECUTOFF=AeCutoff, $
+           ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+           ;; COORDINATE_SYSTEM=coordinate_system, $
+           ;; USE_AACGM_COORDS=use_AACGM, $
+           ;; USE_MAG_COORDS=use_MAG, $
+           AECUTOFF=AEcutoff, $
+           SMOOTH_AE=smooth_AE, $
            EARLIEST_UTC=earliest_UTC, $
            LATEST_UTC=latest_UTC, $
            USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -899,13 +922,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
            GET_AE_FASTDB_INDICES, $
               /GET_TIME_I_NOT_ALFDB_I, $
-              AE_HIGH=AE_high, $
-              AE_LOW=AE_low, $
               DO_DESPUNDB=do_despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
-              AECUTOFF=AeCutoff, $
+              AECUTOFF=AEcutoff, $
+              SMOOTH_AE=smooth_AE, $
               EARLIEST_UTC=earliest_UTC, $
               LATEST_UTC=latest_UTC, $
               USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -1161,6 +1183,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                     RESET_GOOD_INDS=reset_good_inds, $
                     NO_BURSTDATA=no_burstData, $
+                    EARLIEST_UTC=earliest_UTC, $
+                    LATEST_UTC=latest_UTC, $
+                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                    EARLIEST_JULDAY=earliest_julDay, $
+                    LATEST_JULDAY=latest_julDay, $
                     DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
     
 
@@ -1245,6 +1272,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RESET_GOOD_INDS=reset_good_inds, $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
+                                    EARLIEST_UTC=earliest_UTC, $
+                                    LATEST_UTC=latest_UTC, $
+                                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                    EARLIEST_JULDAY=earliest_julDay, $
+                                    LATEST_JULDAY=latest_julDay, $
                                     DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
      ENDIF
 
