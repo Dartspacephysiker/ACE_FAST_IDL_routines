@@ -263,9 +263,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MAINPHASE=mainPhase, $
                                     DSTCUTOFF=dstCutoff, $
                                     SMOOTH_DST=smooth_dst, $
+                                    USE_AE=use_ae, $
+                                    USE_AU=use_au, $
+                                    USE_AL=use_al, $
+                                    USE_AO=use_ao, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
-                                    EPLOTRANGE=ePlotRange, $                                       
+                                    EPLOTRANGE=ePlotRange, $
                                     EFLUXPLOTTYPE=eFluxPlotType, $
                                     LOGEFPLOT=logEfPlot, $
                                     ABSEFLUX=abseflux, $
@@ -604,7 +608,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ;;********************************************************
      ;;Now clean and tap the databases and interpolate satellite data
-     IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+     use_storm_stuff = KEYWORD_SET(nonStorm) $
+                       + KEYWORD_SET(mainPhase) $
+                       + KEYWORD_SET(recoveryPhase)
+     IF use_storm_stuff GT 1 THEN BEGIN
+        PRINT,"Can't set more than one of the storm keywords simultaneously!"
+        STOP
+     ENDIF
+     IF KEYWORD_SET(use_storm_stuff) THEN BEGIN
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            DO_DESPUNDB=do_despunDB, $
            COORDINATE_SYSTEM=coordinate_system, $
@@ -758,7 +769,330 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
      ENDIF
 
+     use_ae_stuff = KEYWORD_SET(use_AE) + $
+                    KEYWORD_SET(use_AO) + $
+                    KEYWORD_SET(use_AU) + $
+                    KEYWORD_SET(use_AL)
 
+     IF use_ae_stuff GT 1 THEN BEGIN
+        PRINT,"only select one of (AE,AU,AL,AO)!"
+        STOP
+     ENDIF
+     IF use_ae_stuff AND use_storm_stuff THEN BEGIN
+        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
+        STOP
+     ENDIF
+     IF KEYWORD_SET(use_ae_stuff) THEN BEGIN
+
+        GET_AE_FASTDB_INDICES, $
+           AE_HIGH=AE_high, $
+           AE_LOW=AE_low, $
+           DO_DESPUNDB=do_despunDB, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
+           AECUTOFF=AeCutoff, $
+           SMOOTH_AE=smooth_AE, $
+           EARLIEST_UTC=earliest_UTC, $
+           LATEST_UTC=latest_UTC, $
+           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+           EARLIEST_JULDAY=earliest_julDay, $
+           LATEST_JULDAY=latest_julDay, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_i, $
+           LOW_I=low_i, $
+           N_HIGH=n_high, $
+           N_LOW=n_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2
+
+        
+        CASE 1 OF
+           KEYWORD_SET(AE_high): BEGIN
+              PRINTF,lun,'Restricting with high ' + navn + ' indices ...'
+              restrict_with_these_i = high_i
+              t1_arr                = high_ae_t1
+              t2_arr                = high_ae_t2
+              AEstring              = 'high_' + navn
+           END
+           ELSE: BEGIN
+              PRINTF,lun,'Restricting with low ' + navn + ' indices ...'
+              restrict_with_these_i = low_i
+              t1_arr                = low_ae_t1
+              t2_arr                = low_ae_t2
+              AEstring              = 'low_' + navn
+           END
+        ENDCASE
+
+        paramString          += '--' + AEstring
+        IF KEYWORD_SET(executing_multiples) THEN BEGIN
+           FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+              paramString_list[iMult] += '--' + AEString
+           ENDFOR
+        ENDIF
+
+        ;;Now OMNI, if desired
+        GET_AE_OMNIDB_INDICES, $
+           OMNI_COORDS=OMNI_coords, $
+           RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           AECUTOFF=AeCutoff, $
+           EARLIEST_UTC=earliest_UTC, $
+           LATEST_UTC=latest_UTC, $
+           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+           EARLIEST_JULDAY=earliest_julDay, $
+           LATEST_JULDAY=latest_julDay, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_i, $
+           LOW_I=low_i, $
+           N_HIGH=n_high, $
+           N_LOW=n_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2, $
+           LUN=lun
+
+
+        CASE 1 OF
+           KEYWORD_SET(AE_high): BEGIN
+              PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
+              restrict_with_these_i = high_i
+              t1_OMNI_arr           = high_ae_t1
+              t2_arr                = high_ae_t2
+              AEstring              = 'high_' + navn
+           END
+           ELSE: BEGIN
+              PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
+              restrict_with_these_i = low_i
+              t1_arr                = low_ae_t1
+              t2_arr                = low_ae_t2
+              AEstring              = 'low_' + navn
+           END
+        ENDCASE
+
+        ;;Now fastLoc
+        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
+           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+           OR KEYWORD_SET(nEventPerOrbPlot) $
+           OR KEYWORD_SET(tHistDenominatorPlot) $
+           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+           OR KEYWORD_SET(numOrbLim) $
+        THEN BEGIN 
+
+           GET_AE_FASTDB_INDICES, $
+              /GET_TIME_I_NOT_ALFDB_I, $
+              AE_HIGH=AE_high, $
+              AE_LOW=AE_low, $
+              DO_DESPUNDB=do_despunDB, $
+              COORDINATE_SYSTEM=coordinate_system, $
+              USE_AACGM_COORDS=use_AACGM, $
+              USE_MAG_COORDS=use_MAG, $
+              AECUTOFF=AeCutoff, $
+              EARLIEST_UTC=earliest_UTC, $
+              LATEST_UTC=latest_UTC, $
+              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+              EARLIEST_JULDAY=earliest_julDay, $
+              LATEST_JULDAY=latest_julDay, $
+              USE_AU=use_au, $
+              USE_AL=use_al, $
+              USE_AO=use_ao, $
+              HIGH_AE_I=high_ae_i, $
+              LOW_AE_I=low_ae_i, $
+              HIGH_I=high_FL_i, $
+              LOW_I=low_FL_i, $
+              N_HIGH=n_FL_high, $
+              N_LOW=n_FL_low, $
+              OUT_NAME=navn, $
+              HIGH_AE_T1=high_ae_t1, $
+              LOW_AE_T1=low_ae_t1, $
+              HIGH_AE_T2=high_ae_t2, $
+              LOW_AE_T2=low_ae_t2
+           
+           CASE 1 OF
+              KEYWORD_SET(AE_high): BEGIN
+                 restrict_with_these_FL_i = high_FL_i
+              END
+              ELSE: BEGIN
+                 restrict_with_these_FL_i = low_FL_i
+              END
+           ENDCASE
+
+
+        ENDIF
+
+     ENDIF
+
+     IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           DO_DESPUNDB=do_despunDB, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           DSTCUTOFF=dstCutoff, $
+           SMOOTH_DST=smooth_dst, $
+           NONSTORM_I=ns_i, $
+           MAINPHASE_I=mp_i, $
+           RECOVERYPHASE_I=rp_i, $
+           STORM_DST_I=s_dst_i, $
+           NONSTORM_DST_I=ns_dst_i, $
+           MAINPHASE_DST_I=mp_dst_i, $
+           RECOVERYPHASE_DST_I=rp_dst_i, $
+           N_STORM=n_s, $
+           N_NONSTORM=n_ns, $
+           N_MAINPHASE=n_mp, $
+           N_RECOVERYPHASE=n_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+
+        
+        CASE 1 OF
+           KEYWORD_SET(nonStorm): BEGIN
+              PRINTF,lun,'Restricting with non-storm indices ...'
+              restrict_with_these_i = ns_i
+              t1_arr                = ns_t1
+              t2_arr                = ns_t2
+              stormString           = 'non-storm'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF
+           END
+           KEYWORD_SET(mainPhase): BEGIN
+              PRINTF,lun,'Restricting with main-phase indices ...'
+              restrict_with_these_i = mp_i
+              t1_arr                = mp_t1
+              t2_arr                = mp_t2
+              stormString           = 'mainPhase'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF         
+           END
+           KEYWORD_SET(recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting with recovery-phase indices ...'
+              restrict_with_these_i = rp_i
+              t1_arr                = rp_t1
+              t2_arr                = rp_t2
+              stormString           = 'recoveryPhase'
+              paramString          += '--' + stormString
+              IF KEYWORD_SET(executing_multiples) THEN BEGIN
+                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                    paramString_list[iMult] += '--' + stormString
+                 ENDFOR
+              ENDIF
+           END
+        ENDCASE
+
+        ;;Now OMNI, if desired
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
+           OMNI_COORDS=OMNI_coords, $
+           /RESTRICT_TO_ALFVENDB_TIMES, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           DSTCUTOFF=dstCutoff, $
+           SMOOTH_DST=smooth_dst, $
+           NONSTORM_I=ns_OMNI_i, $
+           MAINPHASE_I=mp_OMNI_i, $
+           RECOVERYPHASE_I=rp_OMNI_i, $
+           STORM_DST_I=s_dst_OMNI_i, $
+           NONSTORM_DST_I=ns_dst_OMNI_i, $
+           MAINPHASE_DST_I=mp_dst_OMNI_i, $
+           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
+           N_STORM=n_OMNI_s, $
+           N_NONSTORM=n_OMNI_ns, $
+           N_MAINPHASE=n_OMNI_mp, $
+           N_RECOVERYPHASE=n_OMNI_rp, $
+           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
+           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
+
+        CASE 1 OF
+           KEYWORD_SET(nonStorm): BEGIN
+              PRINTF,lun,'Restricting OMNI with non-storm indices ...'
+              restrict_OMNI_with_these_i = ns_OMNI_i
+              t1_OMNI_arr                = ns_OMNI_t1
+              t2_OMNI_arr                = ns_OMNI_t2
+           END
+           KEYWORD_SET(mainPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with main-phase indices ...'
+              restrict_OMNI_with_these_i = mp_OMNI_i
+              t1_OMNI_arr                = mp_OMNI_t1
+              t2_OMNI_arr                = mp_OMNI_t2         
+           END
+           KEYWORD_SET(recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
+              restrict_OMNI_with_these_i = rp_OMNI_i
+              t1_OMNI_arr                = rp_OMNI_t1
+              t2_OMNI_arr                = rp_OMNI_t2
+           END
+        ENDCASE
+
+        ;;Now fastLoc
+        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
+           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+           OR KEYWORD_SET(nEventPerOrbPlot) $
+           OR KEYWORD_SET(tHistDenominatorPlot) $
+           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+           OR KEYWORD_SET(numOrbLim) $
+        THEN BEGIN 
+
+           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+              /GET_TIME_I_NOT_ALFDB_I, $
+              DSTCUTOFF=dstCutoff, $
+              SMOOTH_DST=smooth_dst, $
+              NONSTORM_I=ns_FL_i, $
+              MAINPHASE_I=mp_FL_i, $
+              RECOVERYPHASE_I=rp_FL_i, $
+              STORM_DST_I=s_dst_FL_i, $
+              NONSTORM_DST_I=ns_dst_FL_i, $
+              MAINPHASE_DST_I=mp_dst_FL_i, $
+              RECOVERYPHASE_DST_I=rp_dst_FL_i, $
+              N_STORM=n_FL_s, $
+              N_NONSTORM=n_FL_ns, $
+              N_MAINPHASE=n_FL_mp, $
+              N_RECOVERYPHASE=n_FL_rp, $
+              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           
+           CASE 1 OF
+              KEYWORD_SET(nonStorm): BEGIN
+                 restrict_with_these_FL_i = ns_FL_i
+              END
+              KEYWORD_SET(mainPhase): BEGIN
+                 restrict_with_these_FL_i = mp_FL_i
+              END
+              KEYWORD_SET(recoveryPhase): BEGIN
+                 restrict_with_these_FL_i = rp_FL_i
+              END
+           ENDCASE
+
+
+        ENDIF
+     ENDIF
 
      plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                     maximus,satellite,delay, $
