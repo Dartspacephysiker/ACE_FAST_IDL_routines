@@ -8,6 +8,12 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
   EA_binning                     = 1
   use_AACGM                      = 1
 
+  include_NORTH                  = 0
+  include_SOUTH                  = 0
+
+  minMC                          = 5
+  maxNegMC                       = -5
+
   use_AL                         = 1
   AEcutoff                       = -80
   smooth_AE                      = 0
@@ -114,7 +120,7 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[320,4200]]
+  altRange                       = [[2000,4200]]
 
   orbRange                       = [1000,10800]
 
@@ -125,8 +131,8 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
-  angleLim1                      = 0.
-  angleLim2                      = 180.
+  ;; angleLim1                      = 0.
+  ;; angleLim2                      = 180.
 
   ;;Delay stuff
   nDelays                        = 1
@@ -159,7 +165,17 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
      END
   ENDCASE
 
-  FOR bx_i=0,5 DO BEGIN
+  ;;Which hemispheres to do?
+  loopInds                                    = !NULL
+  
+  IF N_ELEMENTS(include_BOTH) EQ 0 THEN include_BOTH = 1
+  IF KEYWORD_SET(include_BOTH ) THEN loopInds = [loopInds,0,1]
+  IF KEYWORD_SET(include_NORTH) THEN loopInds = [loopInds,2,3]
+  IF KEYWORD_SET(include_SOUTH) THEN loopInds = [loopInds,4,5]
+
+  FOR jj=0,N_ELEMENTS(loopInds)-1 DO BEGIN
+
+     bx_i = loopInds[jj]
 
      CASE 1 OF
         bx_i LE 1: BEGIN

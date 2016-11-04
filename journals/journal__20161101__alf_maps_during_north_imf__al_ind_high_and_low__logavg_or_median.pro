@@ -8,6 +8,12 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
   EA_binning                     = 1
   use_AACGM                      = 1
 
+  include_NORTH                  = 0
+  include_SOUTH                  = 0
+
+  minMC                          = 5
+  maxNegMC                       = -5
+
   use_AL                         = 1
   AEcutoff                       = -80
   smooth_AE                      = 0
@@ -41,12 +47,12 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                         = 1
-  eNumFlPlots                    = 1
+  ePlots                         = 0
+  eNumFlPlots                    = 0
   pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,0.64]
@@ -74,7 +80,8 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.5]
+  ;; PPlotRange                     = [0,1.5]
+  PPlotRange                     = [0,0.75] ;For lower current thresh
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -114,7 +121,7 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[330,4200]]
+  altRange                       = [[1000,4200]]
 
   orbRange                       = [1000,10800]
 
@@ -125,8 +132,8 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
-  angleLim1                      = 0.
-  angleLim2                      = 180.
+  ;; angleLim1                      = 0.
+  ;; angleLim2                      = 180.
 
   ;;Delay stuff
   nDelays                        = 1
@@ -159,10 +166,25 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
      END
   ENDCASE
 
-  FOR bx_i=0,3 DO BEGIN
+  ;;Which hemispheres to do?
+  loopInds                                    = !NULL
+  
+  IF N_ELEMENTS(include_BOTH) EQ 0 THEN include_BOTH = 1
+  IF KEYWORD_SET(include_BOTH ) THEN loopInds = [loopInds,0,1]
+  IF KEYWORD_SET(include_NORTH) THEN loopInds = [loopInds,2,3]
+  IF KEYWORD_SET(include_SOUTH) THEN loopInds = [loopInds,4,5]
+
+  FOR jj=0,N_ELEMENTS(loopInds)-1 DO BEGIN
+
+     bx_i = loopInds[jj]
 
      CASE 1 OF
         bx_i LE 1: BEGIN
+           hemi                           = 'BOTH'
+           minILAT                        = 60
+           maxILAT                        = 90
+        END
+        bx_i LE 3: BEGIN
            hemi                           = 'NORTH'
            minILAT                        = 60
            maxILAT                        = 90

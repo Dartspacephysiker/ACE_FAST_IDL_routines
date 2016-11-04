@@ -412,6 +412,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SUFFIX_PLOTDIR=suffix_plotDir, $
                                     PLOTPREFIX=plotPrefix, $
                                     PLOTSUFFIX=plotSuffix, $
+                                    ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
                                     SAVE_ALF_INDICES=save_alf_indices, $
                                     TXTOUTPUTDIR=txtOutputDir, $
                                     SUFFIX_TXTDIR=suffix_txtDir, $
@@ -804,6 +805,47 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
 
         ENDIF
+
+        ;;Now eSpecDB
+        IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN 
+
+           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+              /GET_ESPECDB_I_NOT_ALFDB_I, $
+              DSTCUTOFF=dstCutoff, $
+              SMOOTH_DST=smooth_dst, $
+              EARLIEST_UTC=earliest_UTC, $
+              LATEST_UTC=latest_UTC, $
+              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+              EARLIEST_JULDAY=earliest_julDay, $
+              LATEST_JULDAY=latest_julDay, $
+              NONSTORM_I=ns_eSpec_i, $
+              MAINPHASE_I=mp_eSpec_i, $
+              RECOVERYPHASE_I=rp_eSpec_i, $
+              STORM_DST_I=s_dst_eSpec_i, $
+              NONSTORM_DST_I=ns_dst_eSpec_i, $
+              MAINPHASE_DST_I=mp_dst_eSpec_i, $
+              RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
+              N_STORM=n_eSpec_s, $
+              N_NONSTORM=n_eSpec_ns, $
+              N_MAINPHASE=n_eSpec_mp, $
+              N_RECOVERYPHASE=n_eSpec_rp, $
+              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           
+           CASE 1 OF
+              KEYWORD_SET(nonStorm): BEGIN
+                 restrict_with_these_eSpec_i = ns_eSpec_i
+              END
+              KEYWORD_SET(mainPhase): BEGIN
+                 restrict_with_these_eSpec_i = mp_eSpec_i
+              END
+              KEYWORD_SET(recoveryPhase): BEGIN
+                 restrict_with_these_eSpec_i = rp_eSpec_i
+              END
+           ENDCASE
+
+
+        ENDIF
      ENDIF
 
      IF KEYWORD_SET(use_ae_stuff) THEN BEGIN
@@ -962,159 +1004,159 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ENDIF
 
-     IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
-        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-           DO_DESPUNDB=do_despunDB, $
-           COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_AACGM, $
-           USE_MAG_COORDS=use_MAG, $
-           DSTCUTOFF=dstCutoff, $
-           SMOOTH_DST=smooth_dst, $
-           NONSTORM_I=ns_i, $
-           MAINPHASE_I=mp_i, $
-           RECOVERYPHASE_I=rp_i, $
-           STORM_DST_I=s_dst_i, $
-           NONSTORM_DST_I=ns_dst_i, $
-           MAINPHASE_DST_I=mp_dst_i, $
-           RECOVERYPHASE_DST_I=rp_dst_i, $
-           N_STORM=n_s, $
-           N_NONSTORM=n_ns, $
-           N_MAINPHASE=n_mp, $
-           N_RECOVERYPHASE=n_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+     ;; IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
+     ;;    GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+     ;;       DO_DESPUNDB=do_despunDB, $
+     ;;       COORDINATE_SYSTEM=coordinate_system, $
+     ;;       USE_AACGM_COORDS=use_AACGM, $
+     ;;       USE_MAG_COORDS=use_MAG, $
+     ;;       DSTCUTOFF=dstCutoff, $
+     ;;       SMOOTH_DST=smooth_dst, $
+     ;;       NONSTORM_I=ns_i, $
+     ;;       MAINPHASE_I=mp_i, $
+     ;;       RECOVERYPHASE_I=rp_i, $
+     ;;       STORM_DST_I=s_dst_i, $
+     ;;       NONSTORM_DST_I=ns_dst_i, $
+     ;;       MAINPHASE_DST_I=mp_dst_i, $
+     ;;       RECOVERYPHASE_DST_I=rp_dst_i, $
+     ;;       N_STORM=n_s, $
+     ;;       N_NONSTORM=n_ns, $
+     ;;       N_MAINPHASE=n_mp, $
+     ;;       N_RECOVERYPHASE=n_rp, $
+     ;;       NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+     ;;       NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
 
         
-        CASE 1 OF
-           KEYWORD_SET(nonStorm): BEGIN
-              PRINTF,lun,'Restricting with non-storm indices ...'
-              restrict_with_these_i = ns_i
-              t1_arr                = ns_t1
-              t2_arr                = ns_t2
-              stormString           = 'non-storm'
-              paramString          += '--' + stormString
-              IF KEYWORD_SET(executing_multiples) THEN BEGIN
-                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                    paramString_list[iMult] += '--' + stormString
-                 ENDFOR
-              ENDIF
-           END
-           KEYWORD_SET(mainPhase): BEGIN
-              PRINTF,lun,'Restricting with main-phase indices ...'
-              restrict_with_these_i = mp_i
-              t1_arr                = mp_t1
-              t2_arr                = mp_t2
-              stormString           = 'mainPhase'
-              paramString          += '--' + stormString
-              IF KEYWORD_SET(executing_multiples) THEN BEGIN
-                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                    paramString_list[iMult] += '--' + stormString
-                 ENDFOR
-              ENDIF         
-           END
-           KEYWORD_SET(recoveryPhase): BEGIN
-              PRINTF,lun,'Restricting with recovery-phase indices ...'
-              restrict_with_these_i = rp_i
-              t1_arr                = rp_t1
-              t2_arr                = rp_t2
-              stormString           = 'recoveryPhase'
-              paramString          += '--' + stormString
-              IF KEYWORD_SET(executing_multiples) THEN BEGIN
-                 FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                    paramString_list[iMult] += '--' + stormString
-                 ENDFOR
-              ENDIF
-           END
-        ENDCASE
+     ;;    CASE 1 OF
+     ;;       KEYWORD_SET(nonStorm): BEGIN
+     ;;          PRINTF,lun,'Restricting with non-storm indices ...'
+     ;;          restrict_with_these_i = ns_i
+     ;;          t1_arr                = ns_t1
+     ;;          t2_arr                = ns_t2
+     ;;          stormString           = 'non-storm'
+     ;;          paramString          += '--' + stormString
+     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
+     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+     ;;                paramString_list[iMult] += '--' + stormString
+     ;;             ENDFOR
+     ;;          ENDIF
+     ;;       END
+     ;;       KEYWORD_SET(mainPhase): BEGIN
+     ;;          PRINTF,lun,'Restricting with main-phase indices ...'
+     ;;          restrict_with_these_i = mp_i
+     ;;          t1_arr                = mp_t1
+     ;;          t2_arr                = mp_t2
+     ;;          stormString           = 'mainPhase'
+     ;;          paramString          += '--' + stormString
+     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
+     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+     ;;                paramString_list[iMult] += '--' + stormString
+     ;;             ENDFOR
+     ;;          ENDIF         
+     ;;       END
+     ;;       KEYWORD_SET(recoveryPhase): BEGIN
+     ;;          PRINTF,lun,'Restricting with recovery-phase indices ...'
+     ;;          restrict_with_these_i = rp_i
+     ;;          t1_arr                = rp_t1
+     ;;          t2_arr                = rp_t2
+     ;;          stormString           = 'recoveryPhase'
+     ;;          paramString          += '--' + stormString
+     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
+     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+     ;;                paramString_list[iMult] += '--' + stormString
+     ;;             ENDFOR
+     ;;          ENDIF
+     ;;       END
+     ;;    ENDCASE
 
-        ;;Now OMNI, if desired
-        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-           OMNI_COORDS=OMNI_coords, $
-           /RESTRICT_TO_ALFVENDB_TIMES, $
-           COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_AACGM, $
-           USE_MAG_COORDS=use_MAG, $
-           DSTCUTOFF=dstCutoff, $
-           SMOOTH_DST=smooth_dst, $
-           NONSTORM_I=ns_OMNI_i, $
-           MAINPHASE_I=mp_OMNI_i, $
-           RECOVERYPHASE_I=rp_OMNI_i, $
-           STORM_DST_I=s_dst_OMNI_i, $
-           NONSTORM_DST_I=ns_dst_OMNI_i, $
-           MAINPHASE_DST_I=mp_dst_OMNI_i, $
-           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
-           N_STORM=n_OMNI_s, $
-           N_NONSTORM=n_OMNI_ns, $
-           N_MAINPHASE=n_OMNI_mp, $
-           N_RECOVERYPHASE=n_OMNI_rp, $
-           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
-           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
+     ;;    ;;Now OMNI, if desired
+     ;;    GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
+     ;;       OMNI_COORDS=OMNI_coords, $
+     ;;       ;; /RESTRICT_TO_ALFVENDB_TIMES, $
+     ;;       ;; COORDINATE_SYSTEM=coordinate_system, $
+     ;;       ;; USE_AACGM_COORDS=use_AACGM, $
+     ;;       ;; USE_MAG_COORDS=use_MAG, $
+     ;;       DSTCUTOFF=dstCutoff, $
+     ;;       SMOOTH_DST=smooth_dst, $
+     ;;       NONSTORM_I=ns_OMNI_i, $
+     ;;       MAINPHASE_I=mp_OMNI_i, $
+     ;;       RECOVERYPHASE_I=rp_OMNI_i, $
+     ;;       STORM_DST_I=s_dst_OMNI_i, $
+     ;;       NONSTORM_DST_I=ns_dst_OMNI_i, $
+     ;;       MAINPHASE_DST_I=mp_dst_OMNI_i, $
+     ;;       RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
+     ;;       N_STORM=n_OMNI_s, $
+     ;;       N_NONSTORM=n_OMNI_ns, $
+     ;;       N_MAINPHASE=n_OMNI_mp, $
+     ;;       N_RECOVERYPHASE=n_OMNI_rp, $
+     ;;       NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
+     ;;       NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
 
-        CASE 1 OF
-           KEYWORD_SET(nonStorm): BEGIN
-              PRINTF,lun,'Restricting OMNI with non-storm indices ...'
-              restrict_OMNI_with_these_i = ns_OMNI_i
-              t1_OMNI_arr                = ns_OMNI_t1
-              t2_OMNI_arr                = ns_OMNI_t2
-           END
-           KEYWORD_SET(mainPhase): BEGIN
-              PRINTF,lun,'Restricting OMNI with main-phase indices ...'
-              restrict_OMNI_with_these_i = mp_OMNI_i
-              t1_OMNI_arr                = mp_OMNI_t1
-              t2_OMNI_arr                = mp_OMNI_t2         
-           END
-           KEYWORD_SET(recoveryPhase): BEGIN
-              PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
-              restrict_OMNI_with_these_i = rp_OMNI_i
-              t1_OMNI_arr                = rp_OMNI_t1
-              t2_OMNI_arr                = rp_OMNI_t2
-           END
-        ENDCASE
+     ;;    CASE 1 OF
+     ;;       KEYWORD_SET(nonStorm): BEGIN
+     ;;          PRINTF,lun,'Restricting OMNI with non-storm indices ...'
+     ;;          restrict_OMNI_with_these_i = ns_OMNI_i
+     ;;          t1_OMNI_arr                = ns_OMNI_t1
+     ;;          t2_OMNI_arr                = ns_OMNI_t2
+     ;;       END
+     ;;       KEYWORD_SET(mainPhase): BEGIN
+     ;;          PRINTF,lun,'Restricting OMNI with main-phase indices ...'
+     ;;          restrict_OMNI_with_these_i = mp_OMNI_i
+     ;;          t1_OMNI_arr                = mp_OMNI_t1
+     ;;          t2_OMNI_arr                = mp_OMNI_t2         
+     ;;       END
+     ;;       KEYWORD_SET(recoveryPhase): BEGIN
+     ;;          PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
+     ;;          restrict_OMNI_with_these_i = rp_OMNI_i
+     ;;          t1_OMNI_arr                = rp_OMNI_t1
+     ;;          t2_OMNI_arr                = rp_OMNI_t2
+     ;;       END
+     ;;    ENDCASE
 
-        ;;Now fastLoc
-        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
-           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
-           OR KEYWORD_SET(nEventPerOrbPlot) $
-           OR KEYWORD_SET(tHistDenominatorPlot) $
-           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
-           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
-           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-           OR KEYWORD_SET(numOrbLim) $
-        THEN BEGIN 
+     ;;    ;;Now fastLoc
+     ;;    IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
+     ;;       OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+     ;;       OR KEYWORD_SET(nEventPerOrbPlot) $
+     ;;       OR KEYWORD_SET(tHistDenominatorPlot) $
+     ;;       OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+     ;;       OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+     ;;       OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+     ;;       OR KEYWORD_SET(numOrbLim) $
+     ;;    THEN BEGIN 
 
-           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              /GET_TIME_I_NOT_ALFDB_I, $
-              DSTCUTOFF=dstCutoff, $
-              SMOOTH_DST=smooth_dst, $
-              NONSTORM_I=ns_FL_i, $
-              MAINPHASE_I=mp_FL_i, $
-              RECOVERYPHASE_I=rp_FL_i, $
-              STORM_DST_I=s_dst_FL_i, $
-              NONSTORM_DST_I=ns_dst_FL_i, $
-              MAINPHASE_DST_I=mp_dst_FL_i, $
-              RECOVERYPHASE_DST_I=rp_dst_FL_i, $
-              N_STORM=n_FL_s, $
-              N_NONSTORM=n_FL_ns, $
-              N_MAINPHASE=n_FL_mp, $
-              N_RECOVERYPHASE=n_FL_rp, $
-              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+     ;;       GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+     ;;          /GET_TIME_I_NOT_ALFDB_I, $
+     ;;          DSTCUTOFF=dstCutoff, $
+     ;;          SMOOTH_DST=smooth_dst, $
+     ;;          NONSTORM_I=ns_FL_i, $
+     ;;          MAINPHASE_I=mp_FL_i, $
+     ;;          RECOVERYPHASE_I=rp_FL_i, $
+     ;;          STORM_DST_I=s_dst_FL_i, $
+     ;;          NONSTORM_DST_I=ns_dst_FL_i, $
+     ;;          MAINPHASE_DST_I=mp_dst_FL_i, $
+     ;;          RECOVERYPHASE_DST_I=rp_dst_FL_i, $
+     ;;          N_STORM=n_FL_s, $
+     ;;          N_NONSTORM=n_FL_ns, $
+     ;;          N_MAINPHASE=n_FL_mp, $
+     ;;          N_RECOVERYPHASE=n_FL_rp, $
+     ;;          NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+     ;;          NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
            
-           CASE 1 OF
-              KEYWORD_SET(nonStorm): BEGIN
-                 restrict_with_these_FL_i = ns_FL_i
-              END
-              KEYWORD_SET(mainPhase): BEGIN
-                 restrict_with_these_FL_i = mp_FL_i
-              END
-              KEYWORD_SET(recoveryPhase): BEGIN
-                 restrict_with_these_FL_i = rp_FL_i
-              END
-           ENDCASE
+     ;;       CASE 1 OF
+     ;;          KEYWORD_SET(nonStorm): BEGIN
+     ;;             restrict_with_these_FL_i = ns_FL_i
+     ;;          END
+     ;;          KEYWORD_SET(mainPhase): BEGIN
+     ;;             restrict_with_these_FL_i = mp_FL_i
+     ;;          END
+     ;;          KEYWORD_SET(recoveryPhase): BEGIN
+     ;;             restrict_with_these_FL_i = rp_FL_i
+     ;;          END
+     ;;       ENDCASE
 
 
-        ENDIF
-     ENDIF
+     ;;    ENDIF
+     ;; ENDIF
 
      plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                     maximus,satellite,delay, $
@@ -1287,9 +1329,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN
 
      GET_NONALFVEN_FLUX_DATA,plot_i_list, $
-                             FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
+                             ;; FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
                              /FOR_IMF_SCREENING, $
-                             ;; FOR_IMF_SCREENING=for_IMF_screening, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
@@ -1363,7 +1404,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              RESET_OMNI_INDS=reset_omni_inds, $
                              CLOCKSTR=clockStr, $
                              DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                             RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                             RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
+                             RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
                              /DO_NOT_SET_DEFAULTS, $
                              BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                              DELAY=delay, $
@@ -1832,6 +1874,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                PLOTDIR=plotDir, $
                                PLOTMEDORAVG=plotMedOrAvg, $
                                PARAMSTR=paramString, $
+                               ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
                                DEL_PS=del_PS, $
                                HEMI=hemi, $
                                CLOCKSTR=clockStr, $
