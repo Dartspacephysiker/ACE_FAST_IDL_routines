@@ -28,7 +28,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   ;; plotPref                       = 
@@ -56,12 +56,13 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   nonAlfven_flux_plots           = 1
+  Newell_analyze_eFlux           = 1
 
   ePlots                         = 1
   eNumFlPlots                    = 1
-  pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
+  pPlots                         = 0
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
   sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
 
