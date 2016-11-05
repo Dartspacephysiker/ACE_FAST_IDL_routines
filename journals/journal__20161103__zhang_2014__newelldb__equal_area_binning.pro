@@ -6,17 +6,19 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -20
+  DSTcutoff                      = -25
   smooth_dst                     = 1
 
-  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
-  IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     plotPref += 'smDst--'
-  ENDIF
+  ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  ;; IF KEYWORD_SET(smooth_dst) THEN BEGIN
+  ;;    plotPref += 'smDst--'
+  ;; ENDIF
 
-  include_32Hz                   = 0
+  include_32Hz                   = 1
+  sample_t_restriction           = 10.
 
-  EA_binning                     = 1
+
+  EA_binning                     = 0
 
   minMC                          = 5
   maxNegMC                       = -5
@@ -57,6 +59,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;The plots
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
+  nonalfven__all_fluxes          = 1
 
   ePlots                         = 1
   eNumFlPlots                    = 1
@@ -71,40 +74,26 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.15]
+  ePlotRange                     = [0,5.0]
   logEfPlot                      = 0
   noNegEflux                     = 0
+  ;; ePlotRange                     = [1e-1,1e1]
+  ;; logEfPlot                      = 1
+  ;; noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
+  ;; noNegENumFl                    = [1,1]
   ;; logENumFlPlot               = [1,1]
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.15], $
+  ENumFlPlotRange                = [[0,5.0], $
                                     [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
   ;; ENumFlPlotRange                = [0,2e9]
 
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [1e-1,1e1]
-  logPfPlot                      = 0
-  PPlotRange                     = [0,0.10]
-
-  ifluxPlotType                  = 'Integ_Up'
-  noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,2.0e7]
-  
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.1]
-
-  summed_eFlux_pFluxplotRange    = [0,0.1]
-  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
   ;; ePlotRange                     = [0,0.25]
@@ -113,13 +102,6 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; logENumFlPlot                  = [0,0]
   ;; ENumFlPlotRange                = [[0,0.25], $
   ;;                                   [0,8.0e8]]
-
-  ;; PPlotRange                     = [0,0.25]
-
-  ;; IPlotRange                     = [0,7.0e7]
-
-  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
-
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -131,14 +113,16 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[2000,4300]]
+  altRange                       = [[340,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.5
+  btMin                          = 2.0
   ;; btMax                       = 5
+
+  smoothWindow                   = 5
 
   ;;Delay stuff
   nDelays                        = 1
@@ -166,7 +150,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
