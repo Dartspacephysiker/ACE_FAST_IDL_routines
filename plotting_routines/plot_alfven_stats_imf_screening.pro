@@ -1335,7 +1335,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                              DESPUN_ALF_DB=do_despunDB, $
-                             COORDINATE_SYSTEM=coordinate_system, $
+                             ;; COORDINATE_SYSTEM=coordinate_system, $
                              USE_AACGM=use_AACGM, $
                              USE_MAG_COORDS=use_MAG, $
                              T1_ARR=t1_arr,T2_ARR=t2_arr, $
