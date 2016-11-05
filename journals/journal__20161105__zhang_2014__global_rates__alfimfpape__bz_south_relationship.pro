@@ -1,85 +1,7 @@
-;;2016/10/15 And now with equal-area binning
-;;2016/11/05
-;;Trying to be a little more methodical.
-
-;;Trial 1 
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1000,4300], [1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : 0.75/2.0 (NOT equal-area bins)
-;;Coords           : MLT/ILAT
-;;minMC/|maxNegMC  : 1
-;;orbRange         : [1000,10600]
-;;
-;;STORMNESS
-;;Dstcutoff        : -25 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : 2.0 nT (smoothed over 5 min)
-;;Delay            : 1800
-;;
-;;Conclusion       : 1500 looks way better than 1000. Drop 1000.
-
-;;Trial 2
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : 3
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 1500 and 2000 look better than 2500, both show Zhang effects. Drop 2500.
-
-;;Trial 3
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : AACGM LAT/MLT
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : AACGM seems to reduce noise in e{,Num}Flux plots, so keep
-
-;;Trial 4
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : -20 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 
-
-
-PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_REQ
+;2016/07/08 Jim pointed out that these steps need to be fined
+PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSHIP
 
   COMPILE_OPT IDL2
-
-  restore_last_session           = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -25
@@ -90,175 +12,88 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
      plotPref += 'smDst--'
   ENDIF
 
-  include_32Hz                   = 0
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
+  divide_by_width_x              = 1
 
   EA_binning                     = 1
 
   minMC                          = 3
   maxNegMC                       = -3
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
-  medianPlot                     = 0
-  divide_by_width_x              = 1
-  org_plots_by_folder            = 1
-
+  ;;grossrate stuff
+  do_grossRate_fluxQuantities    = 1
+  grossRate_info_file_pref       = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
+                                   '--grossRates--alfIMFpaper--'
+  make_integral_file             = 1
+  
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
-  use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
   
-  group_like_plots_for_tiling    = 1
-  scale_like_plots_for_tiling    = 0
-  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
-  adj_lower_plotlim_thresh       = 2 ;;Check minima
-
-  tile__include_IMF_arrows       = 0
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
-
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
-
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
-
+  print_avg_imf_components       = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;The plots
-  ePlots                         = 1
-  eNumFlPlots                    = 1
+  ;;The plot
+
   pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
-
-  nowepco_range                  = [0,1.0]
-
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
-  eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.2]
-  logEfPlot                      = 0
-  noNegEflux                     = 0
-
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.2], $
-                                    [0,6.0e8]]
-  ;; eNumFlPlotType                 = 'ESA_Number_flux'
-  ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
-  ;; ENumFlPlotRange                = [0,2e9]
 
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.2]
-
-  ifluxPlotType                  = 'Integ_Up'
-  noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,5.0e7]
-  
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.1]
-
-  summed_eFlux_pFluxplotRange    = [0,0.1]
-  
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Southern hemi ranges
-  ;; ePlotRange                     = [0,0.25]
-
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,0.25], $
-  ;;                                   [0,8.0e8]]
-
-  ;; PPlotRange                     = [0,0.25]
-
-  ;; IPlotRange                     = [0,7.0e7]
-
-  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
-
+  PPlotRange                     = [0,1e8]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
   reset_good_inds                = 1
+  reset_OMNI_inds                = 1
 
-  ;; altRange                    = [[340,1180], $
-  ;;                             [1180,2180], $
-  ;;                             [2180,3180], $
-  ;;                             [3180,4180]]
+  ;; altRange                       = [[340,4180]]
+  altitudeRange                  = [[1500,4180]]
 
-  ;;Stage 1
-  ;; altRange                       = [[1000,4300], $
-  ;;                                   [1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  ;;Stage 2
-  ;; altRange                       = [[1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  altRange                       = [[1500,4300], $
-                                    [2000,4300]]
-
-  ;; altRange                       = [[1500,4300]]
-
-  orbRange                       = [1000,10600]
+  orbRange                       = [500,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.5
-  ;; btMax                       = 5
+  start_bz                       = 10
+  stepWidth                      = 2.5
+  nSteps                         = 8
+  stepDelta                      = 2.5
+  bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta+start_bz
+  bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)+start_bz
+
+  clockStrings                   = 'all_Bz'
+
+  angleLim1                      = 67.5
+  angleLim2                      = 112.5  
 
   ;;Delay stuff
   nDelays                        = 1
   delayDeltaSec                  = 1800
-  binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 5
-
-  reset_omni_inds                = 1
-  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 1
-  ;; numOrbLim                      = 5
+  maskMin                        = 10
+  tHist_mask_bins_below_thresh   = 5
 
   ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
+  ;; minILAT                        = -85
   ;; maxILAT                        = -60
-  ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 5
-
-  ;; numOrbLim                      = 10
+  ;; maskMin                        =  10.0
+  ;; tHist_mask_bins_below_thresh   =  10.0
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 2.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -266,42 +101,45 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   ;;Bonus
 
-  FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-     altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
+  IF N_ELEMENTS(minMLT) EQ 0 THEN minMLT = 0
+  IF N_ELEMENTS(maxMLT) EQ 0 THEN maxMLT = 24
+
+  FOR i=0,N_ELEMENTS(bzMinArr)-1 DO BEGIN
+     IMFStr                      = clockStrings
+     IMFTitle                    = ''
+     bzMin                       = bzMinArr[i]
+     bzMax                       = bzMaxArr[i]
+
+     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbits_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
                                           orbRange[1])
-     plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
-     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                   angleLim1,angleLim2, $
-                                   IMFStr,IMFTitle, $
-                                   BYMIN=byMin, $
-                                   BYMAX=byMax, $
-                                   BZMIN=bzMin, $
-                                   BZMAX=bzMax, $
-                                   BTMIN=btMin, $
-                                   BTMAX=btMax, $
-                                   BXMIN=bxMin, $
-                                   BXMAX=bxMax, $
-                                   /AND_TILING_OPTIONS, $
-                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                   TILE_IMAGES=tile_images, $
-                                   TILING_ORDER=tiling_order, $
-                                   N_TILE_COLUMNS=n_tile_columns, $
-                                   N_TILE_ROWS=n_tile_rows, $
-                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                   TILEPLOTSUFF=plotSuff
+     plotPrefix                  = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
+     IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
+        IMFStr += '--bzMax_' + STRCOMPRESS(bzMax,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Max: ' + STRCOMPRESS(bzMax,/REMOVE_ALL) + 'nT'
+     ENDIF
+     IF N_ELEMENTS(bzMin) GT 0 THEN BEGIN
+        IMFStr += '--bzMin_' + STRCOMPRESS(bzMin,/REMOVE_ALL)
+        IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(bzMin,/REMOVE_ALL) + 'nT'
+     ENDIF
+
+     grossRate_info_file            = STRING(FORMAT='(A0,A0,I0,"-",I0,"_MLT.txt")', $
+                                             grossRate_info_file_pref, $
+                                             IMFStr, $
+                                             minMLT, $
+                                             maxMLT)
+
+     suffix_plotDir                 = '/' + IMFStr
+     suffix_txtDir                  = '/' + IMFStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
         MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
-        INCLUDE_32HZ=include_32Hz, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
         ALTITUDERANGE=altitudeRange, $
@@ -349,8 +187,6 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
         PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-        PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-        SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
@@ -360,7 +196,6 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
         DSTCUTOFF=dstCutoff, $
-        SMOOTH_DST=smooth_dst, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       
@@ -421,6 +256,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -434,23 +271,19 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         DATADIR=dataDir, $
         DO_CHASTDB=do_chastDB, $
         DO_DESPUNDB=do_despun, $
-        COORDINATE_SYSTEM=coordinate_system, $
-        USE_AACGM_COORDS=use_AACGM, $
-        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
-        JUSTDATA=justData, $
-        SHOWPLOTSNOSAVE=showPlotsNoSave, $
+        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIX=plotSuff, $
-        ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
+        PLOTSUFFIXES=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
+        SUFFIX_PLOTDIR=suffix_plotDir, $
+        SUFFIX_TXTDIR=suffix_txtDir, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
@@ -466,9 +299,6 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         OUT_PLOT_I_LIST=out_plot_i_list, $
         OUT_PARAMSTRING_LIST=out_paramString_list, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-        SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-        ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-        ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
@@ -483,7 +313,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        RESTORE_LAST_SESSION=restore_last_session, $
+        MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $

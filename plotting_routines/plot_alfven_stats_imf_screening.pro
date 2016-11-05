@@ -1585,6 +1585,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                           SHIFT1=shiftM*15.,SHIFT2=shiftI, $
                           EQUAL_AREA_BINNING=EA_binning
 
+        IF KEYWORD_SET(EA_binning) THEN h2dAreas[*] = MEDIAN(h2dAreas)
+
      END
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN

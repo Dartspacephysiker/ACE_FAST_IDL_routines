@@ -6,7 +6,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -30
+  DSTcutoff                      = -25
   smooth_dst                     = 1
 
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -25,6 +25,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   logAvgPlot                     = 1
   medianPlot                     = 0
   divide_by_width_x              = 1
+  org_plots_by_folder            = 1
 
   ;;DB stuff
   do_despun                      = 0
@@ -58,7 +59,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   pPlots                         = 1
   ionPlots                       = 1
   probOccurrencePlot             = 0
-  sum_electron_and_poyntingflux  = 1
+  sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,1.0]
@@ -126,13 +127,15 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1500,4300]]
+  altRange                       = [[500,4300]]
 
-  orbRange                       = [1000,10800]
+
+  orbRange                       = [1000,12760]
+  ;; orbRange                       = [7750,10000] ;culprit?
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1
+  btMin                          = 2.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -140,6 +143,8 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   delayDeltaSec                  = 1800
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+
+  ;; smoothWindow                   = 5
 
   reset_omni_inds                = 1
   
@@ -161,11 +166,11 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.5
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.5
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -354,7 +359,8 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
+        ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
