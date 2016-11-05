@@ -9,10 +9,10 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   include_32Hz               = 0
   use_AACGM                  = 1
 
-  EA_binning                 = 1
+  EA_binning                 = 0
 
-  minMC                   = 5
-  maxnegMC                = -5
+  minMC                   = 3
+  maxnegMC                = -3
 
   ;;DB stuff
   do_despun                  = 0
@@ -64,7 +64,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   CASE 1 OF
      KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
         logPfPlot   = 0
-        PPlotRange  = [0.00,0.11]
+        PPlotRange  = [0.00,0.15]
      END
      KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
@@ -104,7 +104,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[1000,4180]]
+  altRange                       = [[2000,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -114,9 +114,9 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   t1Str                    = jahr + '-01-01/00:00:00.000'
   t2Str                    = jahr + '-12-31/23:59:59.999'
 
-  jahr                     = '1999'
-  t1Str                    = jahr + '-01-01/00:00:00.000'
-  t2Str                    = jahr + '-11-02/23:59:59.999'
+  ;; jahr                     = '1999'
+  ;; t1Str                    = jahr + '-01-01/00:00:00.000'
+  ;; t2Str                    = jahr + '-11-02/23:59:59.999'
 
   t1                       = STR_TO_TIME(t1Str)
   t2                       = STR_TO_TIME(t2Str)
@@ -145,7 +145,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.75
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
