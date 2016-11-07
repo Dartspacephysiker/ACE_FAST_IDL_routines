@@ -245,6 +245,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                     PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                                     HEMI=hemi, $
                                     NORTH=north, $
                                     SOUTH=south, $
@@ -447,6 +448,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
+                                    SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_FILE=make_integral_file, $
                                     OUT_TEMPFILE_LIST=out_tempFile_list, $
                                     OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
@@ -1004,160 +1006,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ENDIF
 
-     ;; IF KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) THEN BEGIN
-     ;;    GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-     ;;       DO_DESPUNDB=do_despunDB, $
-     ;;       COORDINATE_SYSTEM=coordinate_system, $
-     ;;       USE_AACGM_COORDS=use_AACGM, $
-     ;;       USE_MAG_COORDS=use_MAG, $
-     ;;       DSTCUTOFF=dstCutoff, $
-     ;;       SMOOTH_DST=smooth_dst, $
-     ;;       NONSTORM_I=ns_i, $
-     ;;       MAINPHASE_I=mp_i, $
-     ;;       RECOVERYPHASE_I=rp_i, $
-     ;;       STORM_DST_I=s_dst_i, $
-     ;;       NONSTORM_DST_I=ns_dst_i, $
-     ;;       MAINPHASE_DST_I=mp_dst_i, $
-     ;;       RECOVERYPHASE_DST_I=rp_dst_i, $
-     ;;       N_STORM=n_s, $
-     ;;       N_NONSTORM=n_ns, $
-     ;;       N_MAINPHASE=n_mp, $
-     ;;       N_RECOVERYPHASE=n_rp, $
-     ;;       NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-     ;;       NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
-
-        
-     ;;    CASE 1 OF
-     ;;       KEYWORD_SET(nonStorm): BEGIN
-     ;;          PRINTF,lun,'Restricting with non-storm indices ...'
-     ;;          restrict_with_these_i = ns_i
-     ;;          t1_arr                = ns_t1
-     ;;          t2_arr                = ns_t2
-     ;;          stormString           = 'non-storm'
-     ;;          paramString          += '--' + stormString
-     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
-     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-     ;;                paramString_list[iMult] += '--' + stormString
-     ;;             ENDFOR
-     ;;          ENDIF
-     ;;       END
-     ;;       KEYWORD_SET(mainPhase): BEGIN
-     ;;          PRINTF,lun,'Restricting with main-phase indices ...'
-     ;;          restrict_with_these_i = mp_i
-     ;;          t1_arr                = mp_t1
-     ;;          t2_arr                = mp_t2
-     ;;          stormString           = 'mainPhase'
-     ;;          paramString          += '--' + stormString
-     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
-     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-     ;;                paramString_list[iMult] += '--' + stormString
-     ;;             ENDFOR
-     ;;          ENDIF         
-     ;;       END
-     ;;       KEYWORD_SET(recoveryPhase): BEGIN
-     ;;          PRINTF,lun,'Restricting with recovery-phase indices ...'
-     ;;          restrict_with_these_i = rp_i
-     ;;          t1_arr                = rp_t1
-     ;;          t2_arr                = rp_t2
-     ;;          stormString           = 'recoveryPhase'
-     ;;          paramString          += '--' + stormString
-     ;;          IF KEYWORD_SET(executing_multiples) THEN BEGIN
-     ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-     ;;                paramString_list[iMult] += '--' + stormString
-     ;;             ENDFOR
-     ;;          ENDIF
-     ;;       END
-     ;;    ENDCASE
-
-     ;;    ;;Now OMNI, if desired
-     ;;    GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-     ;;       OMNI_COORDS=OMNI_coords, $
-     ;;       ;; /RESTRICT_TO_ALFVENDB_TIMES, $
-     ;;       ;; COORDINATE_SYSTEM=coordinate_system, $
-     ;;       ;; USE_AACGM_COORDS=use_AACGM, $
-     ;;       ;; USE_MAG_COORDS=use_MAG, $
-     ;;       DSTCUTOFF=dstCutoff, $
-     ;;       SMOOTH_DST=smooth_dst, $
-     ;;       NONSTORM_I=ns_OMNI_i, $
-     ;;       MAINPHASE_I=mp_OMNI_i, $
-     ;;       RECOVERYPHASE_I=rp_OMNI_i, $
-     ;;       STORM_DST_I=s_dst_OMNI_i, $
-     ;;       NONSTORM_DST_I=ns_dst_OMNI_i, $
-     ;;       MAINPHASE_DST_I=mp_dst_OMNI_i, $
-     ;;       RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
-     ;;       N_STORM=n_OMNI_s, $
-     ;;       N_NONSTORM=n_OMNI_ns, $
-     ;;       N_MAINPHASE=n_OMNI_mp, $
-     ;;       N_RECOVERYPHASE=n_OMNI_rp, $
-     ;;       NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
-     ;;       NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
-
-     ;;    CASE 1 OF
-     ;;       KEYWORD_SET(nonStorm): BEGIN
-     ;;          PRINTF,lun,'Restricting OMNI with non-storm indices ...'
-     ;;          restrict_OMNI_with_these_i = ns_OMNI_i
-     ;;          t1_OMNI_arr                = ns_OMNI_t1
-     ;;          t2_OMNI_arr                = ns_OMNI_t2
-     ;;       END
-     ;;       KEYWORD_SET(mainPhase): BEGIN
-     ;;          PRINTF,lun,'Restricting OMNI with main-phase indices ...'
-     ;;          restrict_OMNI_with_these_i = mp_OMNI_i
-     ;;          t1_OMNI_arr                = mp_OMNI_t1
-     ;;          t2_OMNI_arr                = mp_OMNI_t2         
-     ;;       END
-     ;;       KEYWORD_SET(recoveryPhase): BEGIN
-     ;;          PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
-     ;;          restrict_OMNI_with_these_i = rp_OMNI_i
-     ;;          t1_OMNI_arr                = rp_OMNI_t1
-     ;;          t2_OMNI_arr                = rp_OMNI_t2
-     ;;       END
-     ;;    ENDCASE
-
-     ;;    ;;Now fastLoc
-     ;;    IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
-     ;;       OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
-     ;;       OR KEYWORD_SET(nEventPerOrbPlot) $
-     ;;       OR KEYWORD_SET(tHistDenominatorPlot) $
-     ;;       OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
-     ;;       OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
-     ;;       OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-     ;;       OR KEYWORD_SET(numOrbLim) $
-     ;;    THEN BEGIN 
-
-     ;;       GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-     ;;          /GET_TIME_I_NOT_ALFDB_I, $
-     ;;          DSTCUTOFF=dstCutoff, $
-     ;;          SMOOTH_DST=smooth_dst, $
-     ;;          NONSTORM_I=ns_FL_i, $
-     ;;          MAINPHASE_I=mp_FL_i, $
-     ;;          RECOVERYPHASE_I=rp_FL_i, $
-     ;;          STORM_DST_I=s_dst_FL_i, $
-     ;;          NONSTORM_DST_I=ns_dst_FL_i, $
-     ;;          MAINPHASE_DST_I=mp_dst_FL_i, $
-     ;;          RECOVERYPHASE_DST_I=rp_dst_FL_i, $
-     ;;          N_STORM=n_FL_s, $
-     ;;          N_NONSTORM=n_FL_ns, $
-     ;;          N_MAINPHASE=n_FL_mp, $
-     ;;          N_RECOVERYPHASE=n_FL_rp, $
-     ;;          NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-     ;;          NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
-           
-     ;;       CASE 1 OF
-     ;;          KEYWORD_SET(nonStorm): BEGIN
-     ;;             restrict_with_these_FL_i = ns_FL_i
-     ;;          END
-     ;;          KEYWORD_SET(mainPhase): BEGIN
-     ;;             restrict_with_these_FL_i = mp_FL_i
-     ;;          END
-     ;;          KEYWORD_SET(recoveryPhase): BEGIN
-     ;;             restrict_with_these_FL_i = rp_FL_i
-     ;;          END
-     ;;       ENDCASE
-
-
-     ;;    ENDIF
-     ;; ENDIF
-
      plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                     maximus,satellite,delay, $
                     DBTIMES=cdbTime, $
@@ -1223,6 +1071,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                     PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                     RESET_GOOD_INDS=reset_good_inds, $
                     NO_BURSTDATA=no_burstData, $
                     EARLIEST_UTC=earliest_UTC, $
@@ -1311,6 +1160,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                     PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                                     RESET_GOOD_INDS=reset_good_inds, $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
@@ -1900,6 +1750,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
+                               SHOW_INTEGRALS=show_integrals, $
                                MAKE_INTEGRAL_FILE=make_integral_file, $
                                TXTOUTPUTDIR=txtOutputDir, $
                                _EXTRA = e

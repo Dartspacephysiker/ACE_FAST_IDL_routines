@@ -3,20 +3,23 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
 
   COMPILE_OPT IDL2
 
-  nonstorm                       = 1
-  DSTcutoff                      = -25
-  smooth_dst                     = 1
+  ;; nonstorm                       = 1
+  ;; DSTcutoff                      = -25
+  ;; smooth_dst                     = 1
 
-  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
-  IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     plotPref += 'smDst--'
-  ENDIF
+  ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  ;; IF KEYWORD_SET(smooth_dst) THEN BEGIN
+  ;;    plotPref += 'smDst--'
+  ;; ENDIF
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
   divide_by_width_x              = 1
 
+  show_integrals                 = 1
+
   EA_binning                     = 1
+  use_AACGM                      = 1
 
   minMC                          = 3
   maxNegMC                       = -3
@@ -34,6 +37,7 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
   
   ;;bonus
   print_avg_imf_components       = 1
+  calc_KL_sw_coupling_func       = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plot
 
@@ -42,7 +46,7 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1e8]
+  PPlotRange                     = [0,5e7]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -51,16 +55,21 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
   reset_OMNI_inds                = 1
 
   ;; altRange                       = [[340,4180]]
-  altitudeRange                  = [[1500,4180]]
+  altitudeRange                  = [[500,4180]]
 
-  orbRange                       = [500,10600]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
+  ;; start_bz                       = 10
+  ;; stepWidth                      = 2.5
+  ;; nSteps                         = 8
+  ;; stepDelta                      = 2.5
   start_bz                       = 10
-  stepWidth                      = 2.5
-  nSteps                         = 8
-  stepDelta                      = 2.5
+  stepWidth                      = 2.0
+  nSteps                         = 10
+  stepDelta                      = 2.0
+
   bzMaxArr                       = (-1)*INDGEN(nSteps)*stepDelta+start_bz
   bzMinArr                       = (-1)*(INDGEN(nSteps)*stepDelta+stepWidth)+start_bz
 
@@ -79,8 +88,10 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  maskMin                        = 10
-  tHist_mask_bins_below_thresh   = 5
+  ;; maskMin                        = 10
+  ;; tHist_mask_bins_below_thresh   = 5
+  ;; maskMin                        = 5
+  
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -85
@@ -187,6 +198,7 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
         PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+        CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
@@ -271,6 +283,9 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
         DATADIR=dataDir, $
         DO_CHASTDB=do_chastDB, $
         DO_DESPUNDB=do_despun, $
+        COORDINATE_SYSTEM=coordinate_system, $
+        USE_AACGM_COORDS=use_AACGM, $
+        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -313,6 +328,7 @@ PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSH
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
+        SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $

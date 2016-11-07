@@ -56,6 +56,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+   CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
    LUN=lun
   
   COMPILE_OPT idl2
@@ -119,19 +120,21 @@ FUNCTION GET_STABLE_IMF_INDS, $
   IF calculate THEN BEGIN
      PRINTF,lun,"****BEGIN GET_STABLE_IMF_INDS****"
      PRINTF,lun,"Calculating stable IMF inds for this run..."
-     C_OMNI__paramStr               = 'OMNI_params'
-     C_OMNI__stableStr              = 'OMNI_stability'
+     C_OMNI__paramStr  = 'OMNI_params'
+     C_OMNI__stableStr = 'OMNI_stability'
      
      ;;********************************************************
      ;;Restore ACE/OMNI data
      ;; IF N_ELEMENTS(mag_utc) EQ 0 THEN BEGIN
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
-     dataDir                        = "/SPENCEdata/Research/database/"
-     RESTORE,dataDir + "/OMNI/culled_OMNI_magdata.dat"
+     dataDir           = "/SPENCEdata/Research/database/OMNI/"
+     culledDataStr     = "culled_OMNI_magdata.dat"
+
+     RESTORE,dataDir + culledDataStr
      ;; RESTORE,dataDir + "/OMNI/culled_OMNI_magdata__20160702.dat"
      ;; ENDIF
 
-     C_OMNI__mag_UTC                = TEMPORARY(mag_UTC)
+     C_OMNI__mag_UTC   = TEMPORARY(mag_UTC)
 
      OMNI__SELECT_COORDS,Bx, $
                          By_GSE,Bz_GSE,Bt_GSE, $
@@ -277,36 +280,46 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   ENDIF
 
-  stable_OMNI_inds                  = C_OMNI__stable_i
-  mag_utc                           = C_OMNI__mag_utc
+  stable_OMNI_inds          = C_OMNI__stable_i
+  mag_utc                   = C_OMNI__mag_utc
 
   PRINTF,lun,C_OMNI__paramStr
   IF KEYWORD_SET(print_avg_imf_components) OR $
      KEYWORD_SET(print_master_file) THEN BEGIN
 
-     nPoints                        = N_ELEMENTS(stable_omni_inds)
-     nTime                          = N_ELEMENTS(C_OMNI__time_i)
+     nPoints                = N_ELEMENTS(stable_omni_inds)
+     nTime                  = N_ELEMENTS(C_OMNI__time_i)
 
-     Bx_Avg                         = MEAN(C_OMNI__Bx[stable_omni_Inds])
-     Bx_StdDev                      = STDDEV(C_OMNI__Bx[stable_omni_Inds])
+     Bx_Avg                 = MEAN(C_OMNI__Bx[stable_omni_Inds])
+     Bx_StdDev              = STDDEV(C_OMNI__Bx[stable_omni_Inds])
 
-     By_avg                         = MEAN(C_OMNI__By[stable_omni_inds])
-     By_stdDev                      = STDDEV(C_OMNI__By[stable_omni_inds])
+     By_avg                 = MEAN(C_OMNI__By[stable_omni_inds])
+     By_stdDev              = STDDEV(C_OMNI__By[stable_omni_inds])
 
-     Bz_avg                         = MEAN(C_OMNI__Bz[stable_omni_inds])
-     Bz_stdDev                      = STDDEV(C_OMNI__Bz[stable_omni_inds])
+     Bz_avg                 = MEAN(C_OMNI__Bz[stable_omni_inds])
+     Bz_stdDev              = STDDEV(C_OMNI__Bz[stable_omni_inds])
 
-     Bt_Avg                         = MEAN(C_OMNI__Bt[stable_omni_Inds])
-     Bt_StdDev                      = STDDEV(C_OMNI__Bt[Stable_omni_Inds])
+     Bt_Avg                 = MEAN(C_OMNI__Bt[stable_omni_Inds])
+     Bt_StdDev              = STDDEV(C_OMNI__Bt[Stable_omni_Inds])
 
-     cone_overClock_avg             = MEAN(C_OMNI__cone_overClock[stable_omni_inds])
-     cone_overClock_stdDev          = STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
+     cone_overClock_avg     = MEAN(C_OMNI__cone_overClock[stable_omni_inds])
+     cone_overClock_stdDev  = STDDEV(C_OMNI__cone_overClock[stable_omni_inds])
 
-     phiClock_avg                   = MEAN(C_OMNI__phiClock[stable_omni_inds])
-     phiClock_stdDev                = STDDEV(C_OMNI__phiClock[stable_omni_inds])
+     phiClock_avg           = MEAN(C_OMNI__phiClock[stable_omni_inds])
+     phiClock_stdDev        = STDDEV(C_OMNI__phiClock[stable_omni_inds])
 
-     thetaCone_avg                  = MEAN(C_OMNI__thetaCone[stable_omni_inds])
-     thetaCone_stdDev               = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
+     thetaCone_avg          = MEAN(C_OMNI__thetaCone[stable_omni_inds])
+     thetaCone_stdDev       = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
+
+     ;;And swSpeed stuff
+     IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
+        epsilon_KanLee      = CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION(/INC_STDDEV, $
+                                                                     /CALC_FROM_COMMON_VARS, $
+                                                                     OUT_SW_SPEED=sw_speed)
+
+
+     ENDIF
+
 
      ;;Get cusp predictions
      PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
@@ -346,6 +359,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',thetaCone_avg
      PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',phiClock_avg
      PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',cone_overClock_avg
+     IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
+        PRINTF,outLun,FORMAT='("Average SW speed",T35,": ",F10.3)',sw_speed[0]
+        PRINTF,outLun,FORMAT='("Average KL EField",T35,": ",F10.3)',epsilon_KanLee[0]
+     END
      PRINTF,outLun,''
      PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',Bx_stdDev
@@ -356,6 +373,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',thetaCone_stdDev
      PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',phiClock_stdDev
      PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',cone_overClock_stdDev
+     IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
+        PRINTF,outLun,FORMAT='(" SW speed stdDev",T35,": ",F10.3)',sw_speed[1]
+        PRINTF,outLun,FORMAT='("KL EField stdDev",T35,": ",F10.3)',epsilon_KanLee[1]
+     END
      PRINTF,outLun,''
      PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
      PRINTF,outLun,"From Newell et al. [1989]"

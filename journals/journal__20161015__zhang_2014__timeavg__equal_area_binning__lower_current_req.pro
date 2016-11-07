@@ -217,13 +217,13 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  ;; altRange                       = [[1500,4300]]
+  altRange                       = [[1400,4300]]
 
   orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.5
+  btMin                          = 2.0
   ;; btMax                       = 5
 
   ;;Delay stuff

@@ -9,7 +9,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   include_32Hz               = 0
   use_AACGM                  = 1
 
-  EA_binning                 = 0
+  EA_binning                 = 1
 
   minMC                   = 3
   maxnegMC                = -3
@@ -104,7 +104,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[2000,4300]]
+  altRange                       = [[1000,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
