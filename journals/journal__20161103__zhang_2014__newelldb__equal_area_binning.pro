@@ -8,7 +8,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonstorm                       = 1
   DSTcutoff                      = -25
   smooth_dst                     = 1
-
+  use_mostRecent_Dst_files       = 1
   ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   ;; IF KEYWORD_SET(smooth_dst) THEN BEGIN
   ;;    plotPref += 'smDst--'
@@ -60,6 +60,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
+  nonAlfven__newell_2009_interpretation = 1
 
   ePlots                         = 1
   eNumFlPlots                    = 1
@@ -113,7 +114,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4300]]
+  altRange                       = [[300,2000]]
 
   orbRange                       = [1000,10600]
 
@@ -257,6 +258,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         MAINPHASE=mainPhase, $
         DSTCUTOFF=dstCutoff, $
         SMOOTH_DST=smooth_dst, $
+        USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       
@@ -270,6 +272,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+        NONALFVEN__NEWELL_2009_INTERPRETATION=nonAlfven__newell_2009_interpretation, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $

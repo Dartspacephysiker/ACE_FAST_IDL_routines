@@ -264,6 +264,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MAINPHASE=mainPhase, $
                                     DSTCUTOFF=dstCutoff, $
                                     SMOOTH_DST=smooth_dst, $
+                                    USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
                                     USE_AE=use_ae, $
                                     USE_AU=use_au, $
                                     USE_AL=use_al, $
@@ -294,6 +295,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                                     NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+                                    NONALFVEN__NEWELL_2009_INTERPRETATION=nonAlfven__newell_2009_interpretation, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
                                     ABSPFLUX=absPflux, $
@@ -654,6 +656,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
            SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
            NONSTORM_I=ns_i, $
            MAINPHASE_I=mp_i, $
            RECOVERYPHASE_I=rp_i, $
@@ -724,6 +727,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ;; USE_MAG_COORDS=use_MAG, $
            DSTCUTOFF=dstCutoff, $
            SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
            NONSTORM_I=ns_OMNI_i, $
            MAINPHASE_I=mp_OMNI_i, $
            RECOVERYPHASE_I=rp_OMNI_i, $
@@ -774,6 +778,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
+              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
               EARLIEST_UTC=earliest_UTC, $
               LATEST_UTC=latest_UTC, $
               USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -815,6 +820,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               /GET_ESPECDB_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
+              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
               EARLIEST_UTC=earliest_UTC, $
               LATEST_UTC=latest_UTC, $
               USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -1183,6 +1189,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              /FOR_IMF_SCREENING, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+                             NONALFVEN__NEWELL_2009_INTERPRETATION=nonAlfven__newell_2009_interpretation, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                              DESPUN_ALF_DB=do_despunDB, $
                              ;; COORDINATE_SYSTEM=coordinate_system, $
