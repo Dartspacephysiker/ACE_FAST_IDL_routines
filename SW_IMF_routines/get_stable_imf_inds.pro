@@ -56,6 +56,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+   MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
    LUN=lun
   
@@ -285,7 +286,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   PRINTF,lun,C_OMNI__paramStr
   IF KEYWORD_SET(print_avg_imf_components) OR $
-     KEYWORD_SET(print_master_file) THEN BEGIN
+     KEYWORD_SET(print_master_file) OR $
+     KEYWORD_SET(make_OMNI_stats_savFile) $
+  THEN BEGIN
 
      nPoints                = N_ELEMENTS(stable_omni_inds)
      nTime                  = N_ELEMENTS(C_OMNI__time_i)
@@ -312,7 +315,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      thetaCone_stdDev       = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
 
      ;;And swSpeed stuff
-     IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
+     IF KEYWORD_SET(calc_KL_sw_coupling_func) OR $
+        KEYWORD_SET(make_OMNI_stats_savFile) $
+     THEN BEGIN
         epsilon_KanLee      = CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION(/INC_STDDEV, $
                                                                      /CALC_FROM_COMMON_VARS, $
                                                                      OUT_SW_SPEED=sw_speed)
@@ -440,6 +445,59 @@ FUNCTION GET_STABLE_IMF_INDS, $
      CLOSE,outLun
      FREE_LUN,outLun
 
+  ENDIF
+
+  IF KEYWORD_SET(make_OMNI_stats_savFile) THEN BEGIN
+     IF FILE_TEST(make_OMNI_stats_savFile) THEN BEGIN
+        PRINT,'Restoring ' + make_OMNI_stats_savFile + ' ...'
+        RESTORE,make_OMNI_stats_savFile
+
+        stats = {nPoints:[stats.nPoints,nPoints], $
+                 nTime:[stats.nTime,nTime], $
+                 clockStr:[stats.clockStr,C_OMNI__clockStr], $
+                 avg:{Bx:[stats.avg.Bx,Bx_avg], $
+                      By:[stats.avg.By,By_avg], $
+                      Bz:[stats.avg.Bz,Bz_avg], $
+                      Bt:[stats.avg.Bt,Bt_avg], $
+                      phiClock:[stats.avg.phiClock,phiClock_avg], $
+                      thetaCone:[stats.avg.thetaCone,thetaCone_avg], $
+                      cone_overClock:[stats.avg.cone_overClock,cone_overClock_avg], $
+                      KL_Efield:[stats.avg.KL_EField,epsilon_KanLee[0]]}, $
+                 stdDev:{Bx:[stats.stdDev.Bx,Bx_StdDev], $
+                      By:[stats.stdDev.By,By_StdDev], $
+                      Bz:[stats.stdDev.Bz,Bz_StdDev], $
+                      Bt:[stats.stdDev.Bt,Bt_StdDev], $
+                      phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
+                      thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
+                      cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
+                      KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]]}}
+
+     ENDIF ELSE BEGIN
+        PRINT,'Making ' + make_OMNI_stats_savFile + ' ...'
+        stats = {nPoints:nPoints, $
+                 nTime:nTime, $
+                 clockStr:C_OMNI__clockStr, $
+                 avg:{Bx:Bx_avg, $
+                      By:By_avg, $
+                      Bz:Bz_avg, $
+                      Bt:Bt_avg, $
+                      phiClock:phiClock_avg, $
+                      thetaCone:thetaCone_avg, $
+                      cone_overClock:cone_overClock_avg, $
+                      KL_Efield:epsilon_KanLee[0]}, $
+                 stdDev:{Bx:Bx_StdDev, $
+                      By:By_StdDev, $
+                      Bz:Bz_StdDev, $
+                      Bt:Bt_StdDev, $
+                      phiClock:phiClock_StdDev, $
+                      thetaCone:thetaCone_StdDev, $
+                      cone_overClock:cone_overClock_StdDev, $
+                      KL_Efield:epsilon_KanLee[1]}}
+
+     ENDELSE
+
+     PRINT,'Saving OMNI stats to ' + make_OMNI_stats_savFile + ' ...'
+     SAVE,stats,FILENAME=make_OMNI_stats_savFile
   ENDIF
 
   IF KEYWORD_SET(save_master_OMNI_inds) THEN BEGIN

@@ -71,6 +71,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+   MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
@@ -230,6 +231,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                            PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                            PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                            SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                           MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                            CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                            LUN=lun)     
 
@@ -278,6 +280,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                           PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                                           SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                          MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                                           CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                                           LUN=lun)     
         

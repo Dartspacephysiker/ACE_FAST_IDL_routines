@@ -84,6 +84,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   nonstorm                       = 1
   DSTcutoff                      = -25
   smooth_dst                     = 1
+  use_mostRecent_Dst_files       = 1
 
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
@@ -127,7 +128,9 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   print_avg_imf_components       = 0
   print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
-
+  make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
+  calc_KL_sw_coupling_func       = 1
+  make_integral_savfiles         = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   ePlots                         = 1
@@ -217,7 +220,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[1400,4300]]
+  altRange                       = [[1500,4300]]
 
   orbRange                       = [1000,10600]
 
@@ -351,6 +354,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
         PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
         SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+        MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+        CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
         HEMI=hemi, $
         STABLEIMF=stableIMF, $
         SMOOTHWINDOW=smoothWindow, $
@@ -361,6 +366,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         MAINPHASE=mainPhase, $
         DSTCUTOFF=dstCutoff, $
         SMOOTH_DST=smooth_dst, $
+        USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       
@@ -461,6 +467,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         SUPPRESS_MLT_NAME=suppress_MLT_name, $
         SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
         SUPPRESS_TITLES=suppress_titles, $
+        MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+        MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
