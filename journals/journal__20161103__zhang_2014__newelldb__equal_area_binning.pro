@@ -14,11 +14,11 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;    plotPref += 'smDst--'
   ;; ENDIF
 
-  include_32Hz                   = 1
+  include_32Hz                   = 0
   sample_t_restriction           = 10.
 
 
-  EA_binning                     = 0
+  EA_binning                     = 1
 
   minMC                          = 5
   maxNegMC                       = -5
@@ -75,21 +75,21 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,5.0]
-  logEfPlot                      = 0
-  noNegEflux                     = 0
-  ;; ePlotRange                     = [1e-1,1e1]
-  ;; logEfPlot                      = 1
-  ;; noNegEflux                     = 1
+  ;; ePlotRange                     = [0,5.0]
+  ;; logEfPlot                      = 0
+  ;; noNegEflux                     = 0
+  ePlotRange                     = [1e-1,1e2]
+  logEfPlot                      = 1
+  noNegEflux                     = 1
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
   ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,5.0], $
-                                    [0,5.0e8]]
+  logENumFlPlot               = [1,1]
+  ENumFlPlotRange             = [[1e-1,1e2], $
+                              [1e8,1e11]]
+  ;; logENumFlPlot                  = [0,0]
+  ;; ENumFlPlotRange                = [[0,5.0], $
+  ;;                                   [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -114,13 +114,13 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[300,2000]]
+  altRange                       = [[1000,4000]]
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [5800,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2.0
+  btMin                          = 1.0
   ;; btMax                       = 5
 
   smoothWindow                   = 5
