@@ -669,7 +669,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            N_MAINPHASE=n_mp, $
            N_RECOVERYPHASE=n_rp, $
            NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+           INCLUDE_32HZ=include_32Hz
         
         CASE 1 OF
            KEYWORD_SET(nonStorm): BEGIN
@@ -796,7 +797,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               N_MAINPHASE=n_FL_mp, $
               N_RECOVERYPHASE=n_FL_rp, $
               NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+              GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence), $
+              INCLUDE_32HZ=include_32Hz
+           
            
            CASE 1 OF
               KEYWORD_SET(nonStorm): BEGIN
@@ -1170,6 +1174,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RESET_GOOD_INDS=reset_good_inds, $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
+                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence), $
                                     EARLIEST_UTC=earliest_UTC, $
                                     LATEST_UTC=latest_UTC, $
                                     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $

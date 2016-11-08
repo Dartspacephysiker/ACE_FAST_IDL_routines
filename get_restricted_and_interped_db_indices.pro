@@ -76,6 +76,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    FOR_ESPEC_OR_ION_DB=for_eSpec_or_ion_db, $
+   ESPEC__NEWELL_2009_INTERPRETATION=newell_2009_interpretation, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
@@ -132,6 +133,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
                                     ;; /DONT_LOAD_IN_MEMORY, $
                                     DONT_LOAD_IN_MEMORY=nonMem, $
+                                    NEWELL_2009_INTERPRETATION=newell_2009_interpretation, $
                                     /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN
