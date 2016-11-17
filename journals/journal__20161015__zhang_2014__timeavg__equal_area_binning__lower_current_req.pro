@@ -93,10 +93,10 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   include_32Hz                   = 0
 
-  EA_binning                     = 1
+  EA_binning                     = 0
 
-  minMC                          = 3
-  maxNegMC                       = -3
+  minMC                          = 1
+  maxNegMC                       = -1
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -128,9 +128,15 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   print_avg_imf_components       = 0
   print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
-  make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
+  ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
   calc_KL_sw_coupling_func       = 1
   make_integral_savfiles         = 1
+
+  grossRate_info_file_pref       = 'hammertimes_new_thing'
+  ;; grossRate_info_file_suff       = '--timeAvg'
+  grossRate_info_file_suff       = '--timeAvg--things'
+
+  show_integrals                 = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   ePlots                         = 1
@@ -220,9 +226,9 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[1500,4300]]
+  altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -257,7 +263,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -277,6 +283,24 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
                                           orbRange[0], $
                                           orbRange[1])
      plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
+
+     IF KEYWORD_SET(grossRate_info_file_pref) THEN BEGIN
+        CASE 1 OF
+           N_ELEMENTS(btMin) GT 0: BEGIN
+              grossRate_infos  = STRING(FORMAT='("-btMin",F0.1)',btMin)
+           END
+           N_ELEMENTS(btMax) GT 0: BEGIN
+              grossRate_infos  = STRING(FORMAT='("-btMax",F0.1)',btMax)
+           END
+           ELSE: BEGIN
+              grossRate_infos  = ''
+           END
+        ENDCASE
+
+        grossRate_infos       += '_' + '--' + hemi 
+        grossRate_info_file    = grossRate_info_file_pref + grossRate_infos + $
+                                 grossRate_info_file_suff + '.txt'
+     ENDIF
 
      SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                    angleLim1,angleLim2, $
@@ -427,6 +451,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+        WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -467,8 +493,6 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         SUPPRESS_MLT_NAME=suppress_MLT_name, $
         SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
         SUPPRESS_TITLES=suppress_titles, $
-        MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-        MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
@@ -491,6 +515,9 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
+        SHOW_INTEGRALS=show_integrals, $
+        MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+        MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
         RESTORE_LAST_SESSION=restore_last_session, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
