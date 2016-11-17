@@ -1437,13 +1437,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
   ;;Need area or length of each bin for gross rates
-  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
+  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
+     KEYWORD_SET(do_grossRate_with_long_width) OR $
+     KEYWORD_SET(grossRate_info_file) $
+  THEN BEGIN
      IF KEYWORD_SET(do_grossRate_fluxQuantities) AND KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         PRINTF,lun,"Can't do both types of gross rates simultaneously!!!"
         STOP
      ENDIF
      
-     IF KEYWORD_SET(do_grossRate_fluxQuantities) THEN BEGIN
+     IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
+        KEYWORD_SET(grossRate_info_file) THEN BEGIN
         GET_H2D_BIN_AREAS,h2dAreas, $
                           CENTERS1=centersMLT,CENTERS2=centersILAT, $
                           BINSIZE1=binM*15.,BINSIZE2=binI, $
