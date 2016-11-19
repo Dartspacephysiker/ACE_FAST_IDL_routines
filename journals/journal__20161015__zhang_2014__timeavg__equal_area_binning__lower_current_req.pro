@@ -82,8 +82,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -30
-  smooth_dst                     = 0
+  DSTcutoff                      = -40
+  smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
 
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -116,7 +116,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   adj_lower_plotlim_thresh       = 2 ;;Check minima
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -125,8 +125,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
+  print_avg_imf_components       = 1
+  print_master_OMNI_file         = 1
   save_master_OMNI_inds          = 0
   ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
   calc_KL_sw_coupling_func       = 1
@@ -144,7 +144,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   pPlots                         = 1
   ionPlots                       = 1
   probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
+  sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 3
 
   nowepco_range                  = [0,1.0]
@@ -232,7 +232,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 0.5
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -241,7 +241,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 5
+  smoothWindow                   = 10
 
   reset_omni_inds                = 1
   
@@ -259,7 +259,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; maxILAT                        = -60
   ;; maskMin                        =  10
 
-  tHist_mask_bins_below_thresh   = 1
+  tHist_mask_bins_below_thresh   = 2
 
   stableIMF                      = 5
 
