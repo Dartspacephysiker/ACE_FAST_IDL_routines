@@ -1436,29 +1436,32 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                    CB_FORCE_OOBLOW=cb_force_oobLow)
 
-  ;;Need area or length of each bin for gross rates
+  ;;Doing grossrates?
   IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
      KEYWORD_SET(do_grossRate_with_long_width) OR $
-     KEYWORD_SET(grossRate_info_file) $
-  THEN BEGIN
-     IF KEYWORD_SET(do_grossRate_fluxQuantities) AND KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
+     KEYWORD_SET(grossRate_info_file) OR $
+     KEYWORD_SET(show_integrals) OR $
+     KEYWORD_SET(make_integral_txtfile) OR $
+     KEYWORD_SET(make_integral_savfiles) $
+  THEN grossRateMe = 1
+
+  ;;Need area or length of each bin for gross rates
+  IF KEYWORD_SET(grossRateMe) THEN BEGIN
+     IF KEYWORD_SET(do_grossRate_fluxQuantities) AND $
+        KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         PRINTF,lun,"Can't do both types of gross rates simultaneously!!!"
         STOP
      ENDIF
      
-     IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
-        KEYWORD_SET(grossRate_info_file) THEN BEGIN
-        GET_H2D_BIN_AREAS,h2dAreas, $
-                          CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                          BINSIZE1=binM*15.,BINSIZE2=binI, $
-                          MAX1=maxM*15.,MAX2=maxI, $
-                          MIN1=minM*15.,MIN2=minI, $
-                          SHIFT1=shiftM*15.,SHIFT2=shiftI, $
-                          EQUAL_AREA_BINNING=EA_binning
+     GET_H2D_BIN_AREAS,h2dAreas, $
+                       CENTERS1=centersMLT,CENTERS2=centersILAT, $
+                       BINSIZE1=binM*15.,BINSIZE2=binI, $
+                       MAX1=maxM*15.,MAX2=maxI, $
+                       MIN1=minM*15.,MIN2=minI, $
+                       SHIFT1=shiftM*15.,SHIFT2=shiftI, $
+                       EQUAL_AREA_BINNING=EA_binning
 
-        IF KEYWORD_SET(EA_binning) THEN h2dAreas[*] = MEDIAN(h2dAreas)
-
-     END
+     IF KEYWORD_SET(EA_binning) THEN h2dAreas[*] = MEDIAN(h2dAreas)
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         GET_H2D_BIN_LENGTHS,h2dLongWidths, $
