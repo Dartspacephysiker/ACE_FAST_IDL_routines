@@ -106,7 +106,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 0
+  use_AACGM                      = 1
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -228,11 +228,11 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10000]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 3.0
+  btMin                          = 2.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -241,7 +241,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  ;; smoothWindow                   = 10
+  smoothWindow                   = 5
 
   reset_omni_inds                = 1
   
