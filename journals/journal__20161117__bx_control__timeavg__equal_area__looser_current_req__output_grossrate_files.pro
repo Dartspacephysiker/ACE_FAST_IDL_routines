@@ -48,6 +48,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;bonus
   print_avg_imf_components       = 1
   print_master_OMNI_file         = 1
+  print_OMNI_covariances         = 1
   save_master_OMNI_inds          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
