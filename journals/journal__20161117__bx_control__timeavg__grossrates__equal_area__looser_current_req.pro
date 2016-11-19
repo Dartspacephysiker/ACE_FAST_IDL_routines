@@ -21,8 +21,8 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__GROSSRATES__EQUAL_AREA__LOOSER_CURRE
 
   EA_binning                     = 1
 
-  minMC                          = 5
-  maxNegMC                       = -5
+  minMC                          = 1
+  maxNegMC                       = -1
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -123,9 +123,9 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__GROSSRATES__EQUAL_AREA__LOOSER_CURRE
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1500,4180]]
+  altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,11000]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!

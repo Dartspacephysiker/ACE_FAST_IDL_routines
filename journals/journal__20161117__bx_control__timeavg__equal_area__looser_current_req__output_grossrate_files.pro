@@ -19,7 +19,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   include_32Hz               = 0
 
-  EA_binning                 = 0
+  EA_binning                 = 1
 
   minMC                      = 3
   maxNegMC                   = -3
@@ -32,7 +32,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;;DB stuff
   do_despun                  = 0
-  use_AACGM                  = 1
+  use_AACGM                  = 0
   use_MAG                    = 0
 
   autoscale_fluxPlots            = 0
@@ -52,12 +52,12 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
   pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,0.64]
@@ -125,7 +125,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[1000,4180]]
+  altRange                       = [[1000,4300]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -133,7 +133,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
   clockStr                       = 'bzSouth'
-  btMinArr                       = [0.0]
+  btMinArr                       = [0.5]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
@@ -174,7 +174,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;    probOccurrenceRange            = [0,0.1]
   ;; ENDIF
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 10
+  tHist_mask_bins_below_thresh   = 1
 
   ;; numOrbLim                      = 10
 
@@ -183,7 +183,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6

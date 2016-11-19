@@ -83,7 +83,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   nonstorm                       = 1
   DSTcutoff                      = -25
-  smooth_dst                     = 1
+  smooth_dst                     = 0
   use_mostRecent_Dst_files       = 1
 
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -93,7 +93,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   include_32Hz                   = 0
 
-  EA_binning                     = 0
+  EA_binning                     = 1
 
   minMC                          = 1
   maxNegMC                       = -1
@@ -106,7 +106,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -232,7 +232,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2.0
+  btMin                          = 3.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -241,7 +241,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 5
+  ;; smoothWindow                   = 10
 
   reset_omni_inds                = 1
   
@@ -251,14 +251,15 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   minILAT                        = 60
   maxILAT                        = 90
   ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 1
+  ;; tHist_mask_bins_below_thresh   = 5
   ;; numOrbLim                      = 5
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
-  ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 5
+  ;; maskMin                        =  10
+
+  tHist_mask_bins_below_thresh   = 1
 
   ;; numOrbLim                      = 10
 

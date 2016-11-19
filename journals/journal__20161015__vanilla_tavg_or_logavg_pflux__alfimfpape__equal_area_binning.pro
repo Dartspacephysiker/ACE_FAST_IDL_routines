@@ -9,10 +9,10 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   include_32Hz               = 0
   use_AACGM                  = 1
 
-  EA_binning                 = 1
+  EA_binning                 = 0
 
-  minMC                   = 3
-  maxnegMC                = -3
+  minMC                      = 1
+  maxnegMC                   = -1
 
   ;;DB stuff
   do_despun                  = 0
@@ -141,7 +141,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
