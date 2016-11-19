@@ -8,7 +8,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   restore_last_session       = 0
 
   nonstorm                   = 1
-  DSTcutoff                  = -25
+  DSTcutoff                  = -40
   smooth_dst                 = 0
   use_mostRecent_Dst_files   = 1
 

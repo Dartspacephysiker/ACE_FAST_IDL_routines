@@ -17,7 +17,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   ;;DB stuff
   do_despun                  = 0
 
-  suppress_ILAT_labels       = 0
+  suppress_ILAT_labels       = 1
 
   autoscale_fluxPlots        = 0
 

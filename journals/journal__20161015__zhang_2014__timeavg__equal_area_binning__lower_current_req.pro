@@ -82,7 +82,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -25
+  DSTcutoff                      = -30
   smooth_dst                     = 0
   use_mostRecent_Dst_files       = 1
 
@@ -152,7 +152,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.2]
+  ePlotRange                     = [0,0.25]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -162,8 +162,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.2], $
-                                    [0,6.0e8]]
+  ENumFlPlotRange                = [[0,0.25], $
+                                    [0,1.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -172,7 +172,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.2]
+  PPlotRange                     = [0,0.25]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -182,7 +182,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   IPlotRange                     = [0,5.0e7]
   
   logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.1]
+  probOccurrenceRange            = [0,0.15]
 
   summed_eFlux_pFluxplotRange    = [0,0.1]
   
@@ -228,11 +228,11 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10000]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 2.0
+  btMin                          = 0.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -260,6 +260,8 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; maskMin                        =  10
 
   tHist_mask_bins_below_thresh   = 1
+
+  stableIMF                      = 5
 
   ;; numOrbLim                      = 10
 

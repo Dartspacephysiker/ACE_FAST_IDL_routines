@@ -232,12 +232,22 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      IF KEYWORD_SET(stableIMF) THEN BEGIN
         C_OMNI__stableIMF           = stableIMF
-        C_OMNI__paramStr                      += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
+        C_OMNI__paramStr           += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all
                              USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS, $
                              RECALCULATE_OMNI_IND_STREAKS=calculate                
         C_OMNI__stable_i            = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
+
+        SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF='/IMF_streakHistos'
+        histFile = plotDir+C_OMNI__paramStr+'--histo.png'
+        IF ~FILE_TEST(plotDir+histFile) THEN BEGIN
+           CGHISTOPLOT,C_OMNI__StreakDurArr, $
+                       MININPUT=C_OMNI__stableIMF/2, $
+                       MAXINPUT=100, $
+                       BINSIZE=1, $
+                       OUTPUT=plotDir+histFile
+        ENDIF
 
      ENDIF ELSE BEGIN
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i,USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all

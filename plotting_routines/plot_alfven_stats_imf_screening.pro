@@ -779,6 +779,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         THEN BEGIN 
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+              COORDINATE_SYSTEM=coordinate_system, $
+              USE_AACGM_COORDS=use_AACGM, $
+              USE_MAG_COORDS=use_MAG, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
@@ -824,6 +827,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN 
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+              COORDINATE_SYSTEM=coordinate_system, $
+              USE_AACGM_COORDS=use_AACGM, $
+              USE_MAG_COORDS=use_MAG, $
               /GET_ESPECDB_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
