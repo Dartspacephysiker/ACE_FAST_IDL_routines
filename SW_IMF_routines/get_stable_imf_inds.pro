@@ -241,12 +241,12 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
         SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF='/IMF_streakHistos'
         histFile = plotDir+C_OMNI__paramStr+'--histo.png'
-        IF ~FILE_TEST(plotDir+histFile) THEN BEGIN
+        IF ~FILE_TEST(histFile) THEN BEGIN
            CGHISTOPLOT,C_OMNI__StreakDurArr, $
                        MININPUT=C_OMNI__stableIMF/2, $
                        MAXINPUT=100, $
                        BINSIZE=1, $
-                       OUTPUT=plotDir+histFile
+                       OUTPUT=histFile
         ENDIF
 
      ENDIF ELSE BEGIN
