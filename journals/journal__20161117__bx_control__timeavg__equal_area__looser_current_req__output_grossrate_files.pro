@@ -21,8 +21,8 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   EA_binning                 = 1
 
-  minMC                      = 3
-  maxNegMC                   = -3
+  minMC                      = 1
+  maxNegMC                   = -1
 
   do_timeAvg_fluxQuantities  = 1
   logAvgPlot                 = 0
@@ -32,7 +32,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;;DB stuff
   do_despun                  = 0
-  use_AACGM                  = 0
+  use_AACGM                  = 1
   use_MAG                    = 0
 
   autoscale_fluxPlots            = 0
@@ -191,6 +191,8 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;;Bonus
 
+  maxOrb                         = 10800
+
   FOR bx_i=0,3 DO BEGIN
 
      CASE 1 OF
@@ -198,13 +200,13 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
            hemi        = 'NORTH'
            minILAT     = 60
            maxILAT     = 90
-           orbRange    = [1000,10800]
+           orbRange    = [1000,maxOrb]
         END
         ELSE: BEGIN
            hemi        = 'SOUTH'
            minILAT     = -90
            maxILAT     = -60
-           orbRange    = [2000,10800]
+           orbRange    = [2000,maxOrb]
         END
      ENDCASE
 

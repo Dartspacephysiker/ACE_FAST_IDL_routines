@@ -6,7 +6,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -25
+  DSTcutoff                      = -20
   smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
   ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -14,14 +14,14 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;    plotPref += 'smDst--'
   ;; ENDIF
 
-  include_32Hz                   = 0
-  sample_t_restriction           = 10.
+  ;; include_32Hz                   = 
+  sample_t_restriction           = 10
 
 
   EA_binning                     = 1
 
-  minMC                          = 5
-  maxNegMC                       = -5
+  ;; minMC                          = 5
+  ;; maxNegMC                       = -5
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -116,7 +116,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   altRange                       = [[1000,4000]]
 
-  orbRange                       = [5800,10600]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
