@@ -244,6 +244,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OMNI_COORDS=omni_Coords, $
                                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                     PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                    PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                     MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                                     CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
@@ -1082,6 +1083,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     HWMKPIND=HwMKpInd, $
                     PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                     PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                    PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                     MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                     CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
@@ -1174,6 +1176,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ;;effort
                                     ;; PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                     ;; PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                    ;; PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                     ;; SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                     ;; CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                                     RESET_GOOD_INDS=reset_good_inds, $

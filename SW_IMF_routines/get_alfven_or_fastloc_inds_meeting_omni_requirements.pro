@@ -39,6 +39,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+   PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
@@ -86,6 +87,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             OMNI_PARAMSTR=omni_paramStr, $
                                             PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                             PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                            PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                             SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                             MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                                             CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $

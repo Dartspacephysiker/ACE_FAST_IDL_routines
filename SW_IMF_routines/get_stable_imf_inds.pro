@@ -55,6 +55,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    OMNI_PARAMSTR=omni_paramStr, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+   PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
@@ -325,6 +326,22 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      ENDIF
 
+     ;; IF KEYWORD_SET(print_OMNI_covariances) THEN BEGIN
+     BxBy_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                     C_OMNI__By[stable_omni_Inds], $
+                                     /COVARIANCE)
+     BxBz_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                     C_OMNI__Bz[stable_omni_Inds], $
+                                     /COVARIANCE)
+     ByBz_covar          = CORRELATE(C_OMNI__By[stable_omni_Inds], $
+                                     C_OMNI__Bz[stable_omni_Inds], $
+                                     /COVARIANCE)
+
+     BxBt_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                     C_OMNI__Bt[stable_omni_Inds], $
+                                     /COVARIANCE)
+     ;; ENDIF
+
 
      ;;Get cusp predictions
      PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By_avg,Bz_avg, $
@@ -361,24 +378,30 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("Average Bz",T35,": ",F10.3)',Bz_avg
      PRINTF,outLun,FORMAT='("Average Bt",T35,": ",F10.3)',Bt_avg
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',thetaCone_avg
-     PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',phiClock_avg
-     PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',cone_overClock_avg
-     IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
-        PRINTF,outLun,FORMAT='("Average SW speed",T35,": ",F10.3)',sw_speed[0]
-        PRINTF,outLun,FORMAT='("Average KL EField",T35,": ",F10.3)',epsilon_KanLee[0]
-     END
-     PRINTF,outLun,''
-     PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("Bx stdDev",T35,": ",F10.3)',Bx_stdDev
      PRINTF,outLun,FORMAT='("By stdDev",T35,": ",F10.3)',By_stdDev
      PRINTF,outLun,FORMAT='("Bz stdDev",T35,": ",F10.3)',Bz_stdDev
      PRINTF,outLun,FORMAT='("Bt stdDev",T35,": ",F10.3)',Bt_stdDev
      PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("BxBt covar",T35,": ",F10.3)',BxBt_covar
+     PRINTF,outLun,FORMAT='("BxBy covar",T35,": ",F10.3)',BxBy_covar
+     PRINTF,outLun,FORMAT='("BxBz covar",T35,": ",F10.3)',BxBz_covar
+     PRINTF,outLun,FORMAT='("ByBz covar",T35,": ",F10.3)',ByBz_covar
+     PRINTF,outLun,''
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("Average thetaCone",T35,": ",F10.3)',thetaCone_avg
+     PRINTF,outLun,FORMAT='("Average phiClock",T35,": ",F10.3)',phiClock_avg
+     PRINTF,outLun,FORMAT='("Average cone_overClock",T35,": ",F10.3)',cone_overClock_avg
+     PRINTF,outLun,''
      PRINTF,outLun,FORMAT='("thetaCone stdDev",T35,": ",F10.3)',thetaCone_stdDev
      PRINTF,outLun,FORMAT='("phiClock stdDev",T35,": ",F10.3)',phiClock_stdDev
      PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',cone_overClock_stdDev
      IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
+        PRINTF,outLun,''
+        PRINTF,outLun,''
+        PRINTF,outLun,FORMAT='("Average SW speed",T35,": ",F10.3)',sw_speed[0]
+        PRINTF,outLun,FORMAT='("Average KL EField",T35,": ",F10.3)',epsilon_KanLee[0]
+        PRINTF,outLun,''
         PRINTF,outLun,FORMAT='(" SW speed stdDev",T35,": ",F10.3)',sw_speed[1]
         PRINTF,outLun,FORMAT='("KL EField stdDev",T35,": ",F10.3)',epsilon_KanLee[1]
      END
@@ -415,18 +438,18 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
   IF KEYWORD_SET(print_master_OMNI_file) THEN BEGIN
      
-     file                           = '~/Desktop/master_OMNI_file.txt'
-     file_exist                     = FILE_TEST(file)
+     file        = '~/Desktop/master_OMNI_file.txt'
+     file_exist  = FILE_TEST(file)
      PRINT,"Opening " + file + ' ...'
      OPENW,outLun,file,/GET_LUN,/APPEND
 
      IF ~file_exist THEN BEGIN
         PRINTF,outLun, $
-               FORMAT='("Clock",T10,"Bx_avg",T20,"By_avg",T30,"Bz_avg",T40,"Bt_avg",T50,"Bx_stddev",T60,"By_stddev",T70,"Bz_stddev",T80,"Bt_stddev",T90,"Tfrac",T100,"days",A0)', $
+               FORMAT='("Clock",T10,"Bx_avg",T20,"By_avg",T30,"Bz_avg",T40,"Bt_avg",T50,"Bx_stddev",T60,"By_stddev",T70,"Bz_stddev",T80,"Bt_stddev",T90,"BxBt_CV",T100,"BxBy_CV",T110,"BxBz_CV",T120,"ByBz_CV",T130,"Tfrac",T140,"days",A0)', $
                ''
      ENDIF
 
-     mFormat                        = '(A0,T10,F-8.3,T20,F-8.3,T30,F-8.3,T40,F-8.3,T50,F-8.3,T60,F-8.3,T70,F-8.3,T80,F-8.3,T90,F-8.3,T100,F-8.3)'
+     mFormat     = '(A0,T10,F-8.3,T20,F-8.3,T30,F-8.3,T40,F-8.3,T50,F-8.3,T60,F-8.3,T70,F-8.3,T80,F-8.3,T90,F-8.3,T100,F-8.3,T110,F-8.3,T120,F-8.3,T130,F-8.3,T140,F-8.3)'
 
      PRINTF,outLun, $
             FORMAT=mFormat, $
@@ -439,11 +462,45 @@ FUNCTION GET_STABLE_IMF_INDS, $
             By_stdDev, $
             Bz_stdDev, $
             Bt_stdDev, $
+            BxBt_covar, $
+            BxBy_covar, $
+            BxBz_covar, $
+            ByBz_covar, $
             nPoints/FLOAT(nTime), $
             FLOAT(nPoints)/60./24.
 
      CLOSE,outLun
      FREE_LUN,outLun
+
+     ;; IF KEYWORD_SET(print_OMNI_covariances) THEN BEGIN
+     ;;    file        = '~/Desktop/master_OMNI_file__covars.txt'
+     ;;    file_exist  = FILE_TEST(file)
+     ;;    PRINT,"Opening " + file + ' ...'
+     ;;    OPENW,outLun,file,/GET_LUN,/APPEND
+
+     ;;    IF ~file_exist THEN BEGIN
+     ;;       PRINTF,outLun, $
+     ;;              FORMAT='("Clock",T10,"BxBt_CV",T20,"BxBy_CV",T30,"BxBz_CV",T40,"ByBz_CV",T90,"Tfrac",T100,"days",A0)', $
+     ;;              ''
+     ;;    ENDIF
+
+     ;;    mFormat     = '(A0,T10,F-8.3,T20,F-8.3,T30,F-8.3,T40,F-8.3,T90,F-8.3,T100,F-8.3)'
+
+     ;;    PRINTF,outLun, $
+     ;;           FORMAT=mFormat, $
+     ;;           C_OMNI__clockStr, $
+     ;;           BxBt_covar, $
+     ;;           BxBy_covar, $
+     ;;           BxBz_covar, $
+     ;;           ByBz_covar, $
+     ;;           nPoints/FLOAT(nTime), $
+     ;;           FLOAT(nPoints)/60./24.
+
+     ;;    CLOSE,outLun
+     ;;    FREE_LUN,outLun
+
+     ;; ENDIF
+
 
   ENDIF
 
@@ -470,7 +527,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
                       thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
                       cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
-                      KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]]}}
+                      KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]]}, $
+                 covar:{BxBt:[stats.covar.BxBt,BxBt_covar], $
+                        BxBy:[stats.covar.BxBy,BxBy_covar], $
+                        BxBz:[stats.covar.BxBz,BxBz_covar], $
+                        ByBz:[stats.covar.ByBz,ByBz_covar]}}
 
      ENDIF ELSE BEGIN
         PRINT,'Making ' + make_OMNI_stats_savFile + ' ...'
@@ -492,7 +553,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:phiClock_StdDev, $
                       thetaCone:thetaCone_StdDev, $
                       cone_overClock:cone_overClock_StdDev, $
-                      KL_Efield:epsilon_KanLee[1]}}
+                      KL_Efield:epsilon_KanLee[1]}, $
+                 covar:{BxBt:BxBt_covar, $
+                        BxBy:BxBy_covar, $
+                        BxBz:BxBz_covar, $
+                        ByBz:ByBz_covar}}
 
      ENDELSE
 
