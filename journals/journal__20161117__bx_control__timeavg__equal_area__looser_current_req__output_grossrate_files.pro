@@ -9,7 +9,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   nonstorm                   = 1
   DSTcutoff                  = -40
-  smooth_dst                 = 0
+  smooth_dst                 = 1
   use_mostRecent_Dst_files   = 1
 
   plotPref                   = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -66,7 +66,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0.0,0.15]
+  ePlotRange                     = [0.0,0.25]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -76,7 +76,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.15], $
+  ENumFlPlotRange                = [[0,0.25], $
                                     [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
@@ -86,7 +86,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
+  PPlotRange                     = [0,0.25]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -134,11 +134,13 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
   clockStr                       = 'bzSouth'
-  btMinArr                       = [0.5]
+  btMinArr                       = [0.0]
   ;; btMinArr                       = [1.5,2.0]
   ;; btMax                       = 5
 
-  smoothWindow                   = 5
+  ;; stableIMF                      = 
+
+  smoothWindow                   = 10
 
   bxMagnitude                    = 0.0
   bx_over_by_ratio_min           = 0.5
@@ -175,7 +177,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;    probOccurrenceRange            = [0,0.1]
   ;; ENDIF
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 1
+  tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
