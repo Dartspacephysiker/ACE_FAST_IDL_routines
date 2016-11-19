@@ -317,6 +317,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
               OMNI_COORDS=omni_Coords, $
               PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
               PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+              PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
               SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
               HEMI=hemi, $
               STABLEIMF=stableIMF, $
