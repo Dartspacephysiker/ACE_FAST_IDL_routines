@@ -64,7 +64,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   CASE 1 OF
      KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
         logPfPlot   = 0
-        PPlotRange  = [0.00,0.15]
+        PPlotRange  = [0.00,0.25]
      END
      KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
