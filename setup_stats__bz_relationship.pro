@@ -15,7 +15,8 @@ FUNCTION SETUP_STATS__BZ_RELATIONSHIP, $
                  stddev:stats.stddev.bz}, $
              KL:{avg:stats.avg.kl_efield, $
                  stddev:stats.stddev.kl_efield}, $
-             integs:hemiintegs.integrals}
+             integs:hemiintegs.integrals, $
+             areas:hemiintegs.area}
 
   RETURN,BzStats
 END
