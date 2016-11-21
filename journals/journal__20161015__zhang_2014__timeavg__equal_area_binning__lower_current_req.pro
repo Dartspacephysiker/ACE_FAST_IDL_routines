@@ -93,7 +93,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
 
   include_32Hz                   = 0
 
-  EA_binning                     = 1
+  EA_binning                     = 0
 
   minMC                          = 1
   maxNegMC                       = -1
@@ -241,7 +241,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 10
+  smoothWindow                   = 11
 
   reset_omni_inds                = 1
   
@@ -266,11 +266,11 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 3.0
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6

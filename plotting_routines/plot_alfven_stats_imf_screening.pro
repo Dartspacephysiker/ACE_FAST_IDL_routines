@@ -247,6 +247,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                     MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                                    OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                                     CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                                     HEMI=hemi, $
                                     NORTH=north, $
@@ -455,6 +456,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
                                     MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
+                                    INTEGRALSAVFILEPREF=integralSavFilePref, $
                                     OUT_TEMPFILE_LIST=out_tempFile_list, $
                                     OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
                                     OUT_PARAMSTRING_LIST=out_paramString_list, $
@@ -1092,6 +1094,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                     SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                     MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                    OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                     CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                     RESET_GOOD_INDS=reset_good_inds, $
                     NO_BURSTDATA=no_burstData, $
@@ -1100,7 +1103,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
                     EARLIEST_JULDAY=earliest_julDay, $
                     LATEST_JULDAY=latest_julDay, $
-                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
+                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem), $
+                    TXTOUTPUTDIR=txtOutputDir)
+                    
     
 
 
@@ -1786,6 +1791,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                SHOW_INTEGRALS=show_integrals, $
                                MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
                                MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
+                               INTEGRALSAVFILEPREF=integralSavFilePref, $
                                TXTOUTPUTDIR=txtOutputDir, $
                                _EXTRA = e
      ENDIF

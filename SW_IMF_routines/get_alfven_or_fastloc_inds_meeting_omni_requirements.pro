@@ -42,8 +42,10 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
    PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+   OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-   LUN=lun
+   LUN=lun, $
+   TXTOUTPUTDIR=txtOutputDir
   
   COMPILE_OPT idl2
 
@@ -90,8 +92,10 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                                             PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                             SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                             MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                                            OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                                             CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                                            LUN=lun)
+                                            LUN=lun, $
+                                            TXTOUTPUTDIR=txtOutputDir)
   
   
   ;;Handle delay stuff

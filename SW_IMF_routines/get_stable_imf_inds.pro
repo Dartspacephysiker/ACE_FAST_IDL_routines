@@ -58,8 +58,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
    PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+   OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-   LUN=lun
+   LUN=lun, $
+   TXTOUTPUTDIR=txtOutputDir
   
   COMPILE_OPT idl2
 
@@ -515,9 +517,12 @@ FUNCTION GET_STABLE_IMF_INDS, $
   ENDIF
 
   IF KEYWORD_SET(make_OMNI_stats_savFile) THEN BEGIN
-     IF FILE_TEST(make_OMNI_stats_savFile) THEN BEGIN
-        PRINT,'Restoring ' + make_OMNI_stats_savFile + ' ...'
-        RESTORE,make_OMNI_stats_savFile
+     OMNI_stats_savFile = txtOutputDir + "OMNI_stats--" + $
+                          (KEYWORD_SET(OMNI_statsSavFilePref) ? OMNI_statsSavFilePref : C_OMNI__paramStr) + '.sav'
+
+     IF FILE_TEST(OMNI_stats_savFile) THEN BEGIN
+        PRINT,'Restoring ' + OMNI_stats_savFile + ' ...'
+        RESTORE,OMNI_stats_savFile
 
         stats = {nPoints:[stats.nPoints,nPoints], $
                  nTime:[stats.nTime,nTime], $
@@ -544,7 +549,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                         ByBz:[stats.covar.ByBz,ByBz_covar]}}
 
      ENDIF ELSE BEGIN
-        PRINT,'Making ' + make_OMNI_stats_savFile + ' ...'
+        PRINT,'Making ' + OMNI_stats_savFile + ' ...'
         stats = {nPoints:nPoints, $
                  nTime:nTime, $
                  clockStr:C_OMNI__clockStr, $
@@ -571,8 +576,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      ENDELSE
 
-     PRINT,'Saving OMNI stats to ' + make_OMNI_stats_savFile + ' ...'
-     SAVE,stats,FILENAME=make_OMNI_stats_savFile
+     PRINT,'Saving OMNI stats to ' + OMNI_stats_savFile + ' ...'
+     SAVE,stats,FILENAME=OMNI_stats_savFile
   ENDIF
 
   IF KEYWORD_SET(save_master_OMNI_inds) THEN BEGIN

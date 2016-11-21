@@ -73,6 +73,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
    SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+   OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
@@ -88,7 +89,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
    EARLIEST_JULDAY=earliest_julDay, $
    LATEST_JULDAY=latest_julDay, $
-   DONT_LOAD_IN_MEMORY=nonMem
+   DONT_LOAD_IN_MEMORY=nonMem, $
+   TXTOUTPUTDIR=txtOutputDir
 
   
   COMPILE_OPT idl2
@@ -234,8 +236,10 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                            PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                            SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                            MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                           OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                            CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                           LUN=lun)     
+                           LUN=lun, $
+                           TXTOUTPUTDIR=txtOutputDir)
 
            restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here
         ENDFOR
@@ -284,8 +288,10 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                           PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                           SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                           MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                                          OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                                           CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                                          LUN=lun)     
+                                          LUN=lun, $
+                                          TXTOUTPUTDIR=txtOutputDir)
         
      ENDELSE
   ENDELSE

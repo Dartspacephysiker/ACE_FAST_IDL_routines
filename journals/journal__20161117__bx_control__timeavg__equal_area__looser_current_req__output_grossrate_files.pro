@@ -19,7 +19,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   include_32Hz               = 0
 
-  EA_binning                 = 1
+  EA_binning                 = 0
 
   minMC                      = 1
   maxNegMC                   = -1
@@ -140,7 +140,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
 
   ;; stableIMF                      = 
 
-  smoothWindow                   = 10
+  smoothWindow                   = 11
 
   bxMagnitude                    = 0.0
   bx_over_by_ratio_min           = 0.5
@@ -177,12 +177,12 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
   ;;    probOccurrenceRange            = [0,0.1]
   ;; ENDIF
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 2
+  tHist_mask_bins_below_thresh   = 1.5
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 3.0
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
