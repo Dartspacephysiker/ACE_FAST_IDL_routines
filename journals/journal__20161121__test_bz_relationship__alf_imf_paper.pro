@@ -1,7 +1,7 @@
 ;Here's how I've been running it:
 ;; JOURNAL__20161121__TEST_BZ_RELATIONSHIP__ALF_IMF_PAPER, $
 ;;    FILESDIR='/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/txtOutput/20161121/', $
-;;    OMNI_FILE='OMNI_stats--bzSouthIntegs--AlfIMF--.sav', $
+;;    OMNI_FILE='20161121--OMNI_stats--bzSouthIntegs--AlfIMF--.sav', $
 ;;    INTEG_FILE='integrals--bzSouth_paper--timeAvgd_NoNegs--LogpFlux--integrals.sav', $
 ;;    NH_INDS=[0:7], $
 ;;    SH_INDS=[8:15], $
@@ -81,7 +81,7 @@ PRO JOURNAL__20161121__TEST_BZ_RELATIONSHIP__ALF_IMF_PAPER, $
      NHIntegs  = NHIntegs / NHAreas
      SHIntegs  = SHIntegs / SHAreas
 
-     yTitle    = 'Hemispheric Average ' + ANSI_VALUE('Alfvénic') + ' Flux (mW/m!U2!N)' 
+     yTitle    = 'Hemispheric Average!C' + ANSI_VALUE('Alfvénic') + ' Poynting Flux (mW/m!U2!N)' 
 
      yRange    = [0,MAX([NHIntegs,SHIntegs])*1.05] ; [0,4.2]
   ENDIF
