@@ -8,6 +8,7 @@
      MIMC__minMC,MIMC__maxNegMC, $
      MIMC__sample_t_restriction, $
      MIMC__include_32Hz, $
+     MIMC__disregard_sample_t, $
      MIMC__hemi, $
      MIMC__orbRange, $
      MIMC__altitudeRange, $

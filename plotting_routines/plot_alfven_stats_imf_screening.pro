@@ -201,6 +201,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     INCLUDE_32HZ=include_32Hz, $
+                                    DISREGARD_SAMPLE_T=disregard_sample_t, $
                                     NUMORBLIM=numOrbLim, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINMLT=binM, $
@@ -494,6 +495,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 POYNTRANGE=poyntRange, $
                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                 INCLUDE_32HZ=include_32Hz, $
+                                DISREGARD_SAMPLE_T=disregard_sample_t, $
                                 MINMLT=minM,MAXMLT=maxM, $
                                 BINMLT=binM, $
                                 SHIFTMLT=shiftM, $
@@ -659,6 +661,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $
+           SAMPLE_T_RESTRICTION=sample_t_restriction, $
+           INCLUDE_32Hz=include_32Hz, $
+           DISREGARD_SAMPLE_T=disregard_sample_t, $
            DSTCUTOFF=dstCutoff, $
            SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
@@ -674,8 +679,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            N_MAINPHASE=n_mp, $
            N_RECOVERYPHASE=n_rp, $
            NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
-           INCLUDE_32HZ=include_32Hz
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
         
         CASE 1 OF
            KEYWORD_SET(nonStorm): BEGIN
@@ -747,7 +751,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            N_RECOVERYPHASE=n_OMNI_rp, $
            NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
            NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
-
+p
         CASE 1 OF
            KEYWORD_SET(nonStorm): BEGIN
               PRINTF,lun,'Restricting OMNI with non-storm indices ...'
@@ -784,6 +788,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
+              SAMPLE_T_RESTRICTION=sample_t_restriction, $
+              INCLUDE_32Hz=include_32Hz, $
+              DISREGARD_SAMPLE_T=disregard_sample_t, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
@@ -806,8 +813,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               N_RECOVERYPHASE=n_FL_rp, $
               NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
               NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
-              GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence), $
-              INCLUDE_32HZ=include_32Hz
+              GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence)
            
            
            CASE 1 OF
@@ -832,6 +838,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
+              SAMPLE_T_RESTRICTION=sample_t_restriction, $
+              INCLUDE_32Hz=include_32Hz, $
+              DISREGARD_SAMPLE_T=disregard_sample_t, $
               /GET_ESPECDB_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
@@ -878,6 +887,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $
+           SAMPLE_T_RESTRICTION=sample_t_restriction, $
+           INCLUDE_32Hz=include_32Hz, $
+           DISREGARD_SAMPLE_T=disregard_sample_t, $
            GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
            AECUTOFF=AEcutoff, $
            SMOOTH_AE=smooth_AE, $
@@ -991,6 +1003,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
+              SAMPLE_T_RESTRICTION=sample_t_restriction, $
+              INCLUDE_32Hz=include_32Hz, $
+              DISREGARD_SAMPLE_T=disregard_sample_t, $
               AECUTOFF=AEcutoff, $
               SMOOTH_AE=smooth_AE, $
               EARLIEST_UTC=earliest_UTC, $
@@ -1043,6 +1058,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                     POYNTRANGE=poyntRange, $
                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                     INCLUDE_32HZ=include_32Hz, $
+                    DISREGARD_SAMPLE_T=disregard_sample_t, $
                     MINMLT=minM,MAXMLT=maxM, $
                     BINM=binM, $
                     SHIFTM=shiftM, $
@@ -1137,6 +1153,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     INCLUDE_32HZ=include_32Hz, $
+                                    DISREGARD_SAMPLE_T=disregard_sample_t, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINM=binM, $
                                     SHIFTM=shiftM, $
@@ -1243,6 +1260,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              ALTITUDERANGE=altitudeRange, $
                              CHARERANGE=charERange, $
                              CHARIERANGE=charIERange, $
+                             SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                             INCLUDE_32HZ=include_32Hz, $
+                             DISREGARD_SAMPLE_T=disregard_sample_t, $
                              BOTH_HEMIS=both_hemis, $
                              NORTH=north, $
                              SOUTH=south, $
@@ -1549,6 +1569,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            CHARERANGE=charERange, $
                            POYNTRANGE=poyntRange, $
                            SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                           DISREGARD_SAMPLE_T=disregard_sample_t, $
                            NUMORBLIM=numOrbLim, $
                            MASKMIN=maskMin, $
                            THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
