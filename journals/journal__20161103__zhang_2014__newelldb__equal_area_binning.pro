@@ -63,7 +63,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
-  Newell_2009_interpretation     = 0
+  Newell_2009_interp     = 0
   newellplots                    = 1
   newellPlot_autoscale           = 1
 
@@ -292,7 +292,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-        NONALFVEN__NEWELL_2009_INTERPRETATION=Newell_2009_interpretation, $
+        NONALFVEN__NEWELL_2009_INTERP=Newell_2009_interp, $
         NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
         NONALFVEN__NEWELL_PLOTRANGE=nonalfven__newell_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $

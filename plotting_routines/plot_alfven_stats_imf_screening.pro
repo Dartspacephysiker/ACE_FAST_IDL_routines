@@ -300,7 +300,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                                     NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-                                    NONALFVEN__NEWELL_2009_INTERPRETATION=nonAlfven__newell_2009_interpretation, $
+                                    NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
                                     ABSPFLUX=absPflux, $
@@ -1245,7 +1245,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              /FOR_IMF_SCREENING, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-                             NONALFVEN__NEWELL_2009_INTERPRETATION=nonAlfven__newell_2009_interpretation, $
+                             NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                              DESPUN_ALF_DB=do_despunDB, $
                              ;; COORDINATE_SYSTEM=coordinate_system, $
@@ -1634,6 +1634,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NONALFVEN__NO_MAXIMUS=no_maximus, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+        NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=eSpec__mlts, $
         ESPEC__ILATS=eSpec__ilats, $
@@ -1786,7 +1787,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   FOR iList=0,N_ELEMENTS(h2dStrArr_list)-1 DO BEGIN
      h2dStrArr            = h2dStrArr_list[iList]
      dataNameArr          = dataNameArr_list[iList]
-     dataRawPtrArr        = dataRawPtrArr_list[iList]
+     dataRawPtrArr        = (N_ELEMENTS(dataRawPtrArr_list)-1) GE iList ? $
+                            dataRawPtrArr_list[iList] : $
+                            !NULL
      plot_i               = N_ELEMENTS(plot_i_list) GT 0 ? plot_i_list[iList] : !NULL
      paramString          = paramString_list[iList]
 
