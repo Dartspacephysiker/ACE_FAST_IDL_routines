@@ -20,13 +20,13 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   show_integrals                 = 1
 
-  EA_binning                     = 0
+  EA_binning                     = 1
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
   do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 1
+  logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -63,7 +63,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
-  Newell_2009_interpretation     = 1
+  Newell_2009_interpretation     = 0
   newellplots                    = 1
   newellPlot_autoscale           = 1
 
@@ -92,15 +92,15 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; ePlotRange                     = [0,5.0]
   ;; logEfPlot                      = 0
   ;; noNegEflux                     = 0
-  ePlotRange                     = [1e-1,1e2]
+  ePlotRange                     = [5e-2,5e1]
   logEfPlot                      = 1
   noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
   ;; noNegENumFl                    = [1,1]
   logENumFlPlot               = [1,1]
-  ENumFlPlotRange             = [[1e-1,1e2], $
-                              [1e8,1e11]]
+  ENumFlPlotRange             = [[5e-2,5e1], $
+                              [1e7,1e10]]
   ;; logENumFlPlot                  = [0,0]
   ;; ENumFlPlotRange                = [[0,5.0], $
   ;;                                   [0,5.0e8]]
@@ -135,10 +135,12 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.5
+  btMin                          = 0.0
   ;; btMax                       = 5
 
   smoothWindow                   = 11
+
+  stableIMF                      = 5
 
   ;;Delay stuff
   nDelays                        = 1
