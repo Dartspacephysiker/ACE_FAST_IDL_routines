@@ -300,7 +300,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                                     NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-                                    NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
+                                    ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+                                    ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
                                     ABSPFLUX=absPflux, $
@@ -821,7 +822,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               INCLUDE_32Hz=include_32Hz, $
               DISREGARD_SAMPLE_T=disregard_sample_t, $
               /GET_ESPECDB_I_NOT_ALFDB_I, $
-              ;; ESPEC__USE_2000KM_FILE=use_2000km_file, $
+              ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+              ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
               ;; ESPEC__REDUCED_DB=reduce_dbSize, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
@@ -1245,7 +1247,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                              /FOR_IMF_SCREENING, $
                              NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                              NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-                             NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
+                             ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+                             ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
                              NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                              DESPUN_ALF_DB=do_despunDB, $
                              ;; COORDINATE_SYSTEM=coordinate_system, $
@@ -1634,7 +1637,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NONALFVEN__NO_MAXIMUS=no_maximus, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-        NONALFVEN__NEWELL_2009_INTERP=nonAlfven__newell_2009_interp, $
+        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=eSpec__mlts, $
         ESPEC__ILATS=eSpec__ilats, $

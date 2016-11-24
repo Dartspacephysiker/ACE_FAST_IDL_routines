@@ -63,7 +63,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
-  Newell_2009_interp     = 0
+  Newell_2009_interp             = 0
   newellplots                    = 1
   newellPlot_autoscale           = 1
 
