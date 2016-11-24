@@ -15,7 +15,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; ENDIF
 
   ;; include_32Hz                   = 
-  sample_t_restriction           = 10
+  ;; sample_t_restriction           = 10
+  disregard_sample_t             = 1
 
   show_integrals                 = 1
 
@@ -24,14 +25,14 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 0
+  do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 1
   medianPlot                     = 0
   divide_by_width_x              = 1
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   ;; plotPref                       = 
@@ -58,6 +59,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
+  no_maximus                     = 1
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
@@ -70,10 +72,17 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   pPlots                         = 0
   ionPlots                       = 0
   probOccurrencePlot             = 0
+
+  tHistDenominatorPlot           = 1
+   ;; tHistDenomPlotRange  = 
+  ;; tHistDenomPlotNormalize        = 0
+  tHistDenomPlotAutoscale        = 1
+  tHistDenomPlot_noMask          = 1
+
   sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
   nonAlfven__newellPlot_probOccurrence = 1
-  nonalfven__newell_plotRange    = [0,0.2]
+  nonalfven__newell_plotRange    = [[0,0.2],[0,0.15],[0,1.0]]
 
   nowepco_range                  = [0,1.0]
 
@@ -119,8 +128,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  ;; altRange                       = [[1000,4300]]
-  altRange                       = [[300,2000]]
+  altRange                       = [[1000,4300]]
+  ;; altRange                       = [[300,2000]]
 
   orbRange                       = [1000,10800]
 
@@ -157,7 +166,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 1.5
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -205,6 +214,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         INCLUDE_32HZ=include_32Hz, $
+        DISREGARD_SAMPLE_T=disregard_sample_t, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
         ORBRANGE=orbRange, $
         ALTITUDERANGE=altitudeRange, $
@@ -270,11 +280,13 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         EPLOTRANGE=ePlotRange, $                                       
         EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
         ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-        ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
+        ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, $
+        LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
         NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NONALFVEN__NO_MAXIMUS=no_maximus, $
         NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
@@ -283,7 +295,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NONALFVEN__NEWELL_PLOTRANGE=nonalfven__newell_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-        IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+        IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, $
+        LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
         NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
         OXYPLOTS=oxyPlots, $
         OXYFLUXPLOTTYPE=oxyFluxPlotType, $
@@ -292,7 +305,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NONEGOXYFLUX=noNegOxyFlux, $
         NOPOSOXYFLUX=noPosOxyFlux, $
         OXYPLOTRANGE=oxyPlotRange, $
-        CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+        CHAREPLOTS=charEPlots, CHARETYPE=charEType, $
+        LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
         NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $

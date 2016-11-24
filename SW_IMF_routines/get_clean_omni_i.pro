@@ -9,7 +9,7 @@ FUNCTION GET_CLEAN_OMNI_I,Bx,By,Bz, $
                                          NCOMPLEMENT=nNotClean)
   
   PRINTF,lun,"Losing " + STRCOMPRESS(nNotClean,/REMOVE_ALL) + $
-         " OMNI entries because they are bad news"     
+         " OMNI entries because corresponding B{x,y,z} aren't within King/Papitashvili bounds"
 
   RETURN,clean_i
 END
