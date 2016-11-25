@@ -82,7 +82,7 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -30
   smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
 
@@ -93,7 +93,7 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
 
   include_32Hz                   = 0
 
-  EA_binning                     = 0
+  EA_binning                     = 1
 
   minMC                          = 1
   maxNegMC                       = -1
