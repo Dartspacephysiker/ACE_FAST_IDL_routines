@@ -91,6 +91,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
      plotPref += 'smDst--'
   ENDIF
 
+  justInds                       = 1
+  justInds_saveToFile            = 'ALF_IMF--zhang2014__just_inds.sav'
+
   include_32Hz                   = 0
 
   EA_binning                     = 1
@@ -226,9 +229,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!

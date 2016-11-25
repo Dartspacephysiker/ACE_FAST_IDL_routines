@@ -5,7 +5,6 @@ PRO JOURNAL__20161125__ZHANG_2014__JUST_INDS
   restore_last_session           = 0
 
   justInds                       = 1
-
   justInds_saveToFile            = 'ALF_IMF--zhang2014__just_inds.sav'
 
   nonstorm                       = 1
