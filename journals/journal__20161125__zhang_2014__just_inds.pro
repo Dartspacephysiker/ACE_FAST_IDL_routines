@@ -1,85 +1,12 @@
-;;2016/10/15 And now with equal-area binning
-;;2016/11/05
-;;Trying to be a little more methodical.
-
-;;Trial 1 
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1000,4300], [1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : 0.75/2.0 (NOT equal-area bins)
-;;Coords           : MLT/ILAT
-;;minMC/|maxNegMC  : 1
-;;orbRange         : [1000,10600]
-;;
-;;STORMNESS
-;;Dstcutoff        : -25 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : 2.0 nT (smoothed over 5 min)
-;;Delay            : 1800
-;;
-;;Conclusion       : 1500 looks way better than 1000. Drop 1000.
-
-;;Trial 2
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : 3
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 1500 and 2000 look better than 2500, both show Zhang effects. Drop 2500.
-
-;;Trial 3
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : AACGM LAT/MLT
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : AACGM seems to reduce noise in e{,Num}Flux plots, so keep
-
-;;Trial 4
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : -20 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 
-
-
-PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
+PRO JOURNAL__20161125__ZHANG_2014__JUST_INDS
 
   COMPILE_OPT IDL2
 
   restore_last_session           = 0
+
+  justInds                       = 1
+
+  justInds_saveToFile            = 'ALF_IMF--zhang2014__just_inds.sav'
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -98,31 +25,15 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   minMC                          = 1
   maxNegMC                       = -1
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
-  medianPlot                     = 0
-  divide_by_width_x              = 1
-  org_plots_by_folder            = 1
-
   ;;DB stuff
   do_despun                      = 0
   use_AACGM                      = 1
   use_MAG                        = 0
 
-  autoscale_fluxPlots            = 0
-  
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   adj_lower_plotlim_thresh       = 2 ;;Check minima
-
-  tile__include_IMF_arrows       = 0
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
-
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
 
   ;;bonus
   print_avg_imf_components       = 1
@@ -130,76 +41,6 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   save_master_OMNI_inds          = 1
   ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
   calc_KL_sw_coupling_func       = 1
-  make_integral_savfiles         = 1
-
-  grossRate_info_file_pref       = 'hammertimes_new_thing'
-  ;; grossRate_info_file_suff       = '--timeAvg'
-  grossRate_info_file_suff       = '--timeAvg--things'
-
-  show_integrals                 = 1
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;The plots
-  ePlots                         = 1
-  eNumFlPlots                    = 1
-  pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
-
-  nowepco_range                  = [0,1.0]
-
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
-  eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.25]
-  logEfPlot                      = 0
-  noNegEflux                     = 0
-
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.25], $
-                                    [0,1.0e9]]
-  ;; eNumFlPlotType                 = 'ESA_Number_flux'
-  ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
-  ;; ENumFlPlotRange                = [0,2e9]
-
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [1e-1,1e1]
-  logPfPlot                      = 0
-  PPlotRange                     = [0,0.25]
-
-  ifluxPlotType                  = 'Integ_Up'
-  noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,5.0e7]
-  
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.15]
-
-  summed_eFlux_pFluxplotRange    = [0,0.1]
-  
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Southern hemi ranges
-  ;; ePlotRange                     = [0,0.25]
-
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,0.25], $
-  ;;                                   [0,8.0e8]]
-
-  ;; PPlotRange                     = [0,0.25]
-
-  ;; IPlotRange                     = [0,7.0e7]
-
-  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -207,24 +48,6 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
 
   reset_good_inds                = 1
 
-  ;; altRange                    = [[340,1180], $
-  ;;                             [1180,2180], $
-  ;;                             [2180,3180], $
-  ;;                             [3180,4180]]
-
-  ;;Stage 1
-  ;; altRange                       = [[1000,4300], $
-  ;;                                   [1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  ;;Stage 2
-  ;; altRange                       = [[1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  altRange                       = [[1500,4300], $
-                                    [2000,4300]]
 
   altRange                       = [[300,4300]]
 
@@ -533,5 +356,6 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   ENDFOR
 
 END
+
 
 

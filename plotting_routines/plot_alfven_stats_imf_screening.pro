@@ -1404,16 +1404,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         PRINT,'Saving indices/paramStrings in directory ' + saveDir
         PRINT,'indsFile: ' + justIndsFile
 
-        SAVE,out_paramstring_list, $
-             out_plot_i_list, $
-             out_fastLoc_i_list, $        
-             out_i_nonAlfven_eSpec_list, $
-             out_i_nonAlfven_ion_list, $  
-             FILENAME=saveDir+justIndsFile
+        this = EXECUTE(saveStr)
+        ;; SAVE,out_paramstring_list, $
+        ;;      out_plot_i_list, $
+        ;;      out_fastLoc_i_list, $        
+        ;;      out_i_nonAlfven_eSpec_list, $
+        ;;      out_i_nonAlfven_ion_list, $  
+        ;;      FILENAME=saveDir+justIndsFile
 
         ;;Let others know
         PRINT,'DONE! Updating latest_OMNI_inds.txt ...'
-        SPAWN,'echo ' + saveDir + saveIndsFile + ' > ' + saveDir + 'latest_OMNI_inds.txt'
+        SPAWN,'echo ' + saveDir + justIndsFile + ' > ' + saveDir + 'latest_OMNI_inds.txt'
 
      ENDIF
 
