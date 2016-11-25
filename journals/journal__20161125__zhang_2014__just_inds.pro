@@ -5,7 +5,7 @@ PRO JOURNAL__20161125__ZHANG_2014__JUST_INDS
   restore_last_session           = 0
 
   justInds                       = 1
-  justInds_saveToFile            = 'ALF_IMF--zhang2014__just_inds.sav'
+  justInds_saveToFile            = 'ALF_IMF--zhang2014__just_inds--to_12670.sav'
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -48,9 +48,9 @@ PRO JOURNAL__20161125__ZHANG_2014__JUST_INDS
   reset_good_inds                = 1
 
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[1000,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
