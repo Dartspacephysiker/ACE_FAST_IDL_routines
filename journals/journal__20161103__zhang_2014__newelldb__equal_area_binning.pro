@@ -127,7 +127,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  altRange                       = [[340,4300]]
+  altRange                       = [[300,4300]]
   ;; altRange                       = [[300,2000]]
 
   IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN

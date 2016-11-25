@@ -1372,21 +1372,40 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      out_paramString_list        = TEMPORARY(paramString_list)
      saveStr = 'SAVE,out_paramString_list,'
+
+     indsInfoStr = 'indsInfo'
+     infoStr     = indsInfoStr + ' = CREATE_STRUCT('
+     nInfo       = 0
+
      IF N_ELEMENTS(plot_i_list) GT 0 THEN BEGIN
         out_plot_i_list             = TEMPORARY(plot_i_list)
         saveStr += 'out_plot_i_list,'
+        nInfo++
+        infoStr += '"alfDB",maximus.info'
      ENDIF
      IF N_ELEMENTS(fastLocInterped_i_list) GT 0 THEN BEGIN
         out_fastLoc_i_list          = TEMPORARY(fastLocInterped_i_list)
         saveStr += 'out_fastLoc_i_list,'
+        nInfo++
+        infoStr += '"fastLoc",fastLoc.info'
      ENDIF
      IF N_ELEMENTS(indices__nonAlfven_eSpec_list) GT 0 THEN BEGIN
         out_i_nonAlfven_eSpec_list  = indices__nonAlfven_eSpec_list
         saveStr += 'out_i_nonAlfven_eSpec_list,'
+        nInfo++
+        infoStr += '"eSpec",eSpec_info'
      ENDIF
      IF N_ELEMENTS(indices__nonAlfven_ion_list) GT 0 THEN BEGIN
         out_i_nonAlfven_ion_list    = indices__nonAlfven_ion_list
         saveStr += 'out_i_nonAlfven_ion_list,'
+        nInfo++
+        infoStr += '"ion",ion_info'
+     ENDIF
+
+     IF nInfo GT 0 THEN BEGIN
+        infoStr += ')'
+        bro = EXECUTE(infoStr)
+        saveStr += indsInfoStr + ',indsInfoStr,'
      ENDIF
 
      IF KEYWORD_SET(justInds_saveToFile) THEN BEGIN
