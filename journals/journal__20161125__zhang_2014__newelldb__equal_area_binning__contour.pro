@@ -20,8 +20,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   show_integrals                 = 1
 
-  EA_binning                     = 1
-
+  EA_binning                     = 0
   plotH2D_contour                = 1
 
   ;; minMC                          = 5
@@ -106,7 +105,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;                             [1e7,1e10]]
   logENumFlPlot                  = [0,0]
   ENumFlPlotRange                = [[0,0.6], $
-                                    [0,2.0e8]]
+                                    [0,1.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -140,7 +139,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 1.0
   ;; btMax                       = 5
 
   smoothWindow                   = 11
@@ -158,16 +157,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -90
+  ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 5
 
