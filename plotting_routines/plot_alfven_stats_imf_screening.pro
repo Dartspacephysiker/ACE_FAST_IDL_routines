@@ -587,6 +587,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 PARAMSTRING=paramString, $
                                 PARAMSTRPREFIX=plotPrefix, $
                                 PARAMSTRSUFFIX=plotSuffix,$
+                                PLOTH2D_CONTOUR=plotH2D_contour, $
                                 HOYDIA=hoyDia,LUN=lun,_EXTRA=e
      
      SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $

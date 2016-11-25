@@ -75,11 +75,13 @@
 ;;Conclusion       : 
 
 
-PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
+PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   COMPILE_OPT IDL2
 
   restore_last_session           = 0
+
+  plotH2D_contour                = 1
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -521,6 +523,7 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
+        PLOTH2D_CONTOUR=plotH2D_contour, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
@@ -536,5 +539,4 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   ENDFOR
 
 END
-
 
