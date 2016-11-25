@@ -1389,19 +1389,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         out_fastLoc_i_list          = TEMPORARY(fastLocInterped_i_list)
         saveStr += 'out_fastLoc_i_list,'
         nInfo++
-        infoStr += '"fastLoc",fastLoc.info'
+        infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",fastLoc.info'
      ENDIF
      IF N_ELEMENTS(indices__nonAlfven_eSpec_list) GT 0 THEN BEGIN
         out_i_nonAlfven_eSpec_list  = indices__nonAlfven_eSpec_list
         saveStr += 'out_i_nonAlfven_eSpec_list,'
         nInfo++
-        infoStr += '"eSpec",eSpec_info'
+        infoStr += (nInfo GT 1 ? ',' : '') + '"eSpec",eSpec_info'
      ENDIF
      IF N_ELEMENTS(indices__nonAlfven_ion_list) GT 0 THEN BEGIN
         out_i_nonAlfven_ion_list    = indices__nonAlfven_ion_list
         saveStr += 'out_i_nonAlfven_ion_list,'
         nInfo++
-        infoStr += '"ion",ion_info'
+        infoStr += (nInfo GT 1 ? ',' : '') + '"ion",ion_info'
      ENDIF
 
      IF nInfo GT 0 THEN BEGIN
