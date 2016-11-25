@@ -11,7 +11,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   plotH2D_contour            = 1
 
-  EA_binning                 = 0
+  EA_binning                 = 1
 
   minMC                      = 1
   maxnegMC                   = -1

@@ -1616,7 +1616,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   THEN grossRateMe = 1
 
   ;;Need area or length of each bin for gross rates
-  IF KEYWORD_SET(grossRateMe) THEN BEGIN
+  IF KEYWORD_SET(grossRateMe) OR KEYWORD_SET(plotH2D_contour) THEN BEGIN
      IF KEYWORD_SET(do_grossRate_fluxQuantities) AND $
         KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         PRINTF,lun,"Can't do both types of gross rates simultaneously!!!"
@@ -1969,6 +1969,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
                                PLOTH2D_CONTOUR=plotH2D_contour, $
+                               CENTERS_MLT=centersMLT, $
+                               CENTERS_ILAT=centersILAT, $
                                SHOW_INTEGRALS=show_integrals, $
                                MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
                                MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
