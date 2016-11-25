@@ -6,7 +6,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -30
   smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
   ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -63,7 +63,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
-  Newell_2009_interp             = 0
+  eSpec__Newell_2009_interp      = 1
+  eSpec__use_2000km_file         = 0
   newellplots                    = 1
   newellPlot_autoscale           = 1
 
@@ -82,28 +83,28 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
   sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
   nonAlfven__newellPlot_probOccurrence = 1
-  nonalfven__newell_plotRange    = [[0,0.2],[0,0.15],[0,1.0]]
+  nonalfven__newell_plotRange    = [[0,0.25],[0,0.15],[0.6,1.0]]
 
   nowepco_range                  = [0,1.0]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ;; ePlotRange                     = [0,5.0]
-  ;; logEfPlot                      = 0
+  ePlotRange                     = [0,1.5]
+  logEfPlot                      = 0
   ;; noNegEflux                     = 0
-  ePlotRange                     = [5e-2,5e1]
-  logEfPlot                      = 1
+  ;; ePlotRange                     = [1e-3,1e1]
+  ;; logEfPlot                      = 1
   noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
   ;; noNegENumFl                    = [1,1]
-  logENumFlPlot               = [1,1]
-  ENumFlPlotRange             = [[5e-2,5e1], $
-                              [1e7,1e10]]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,5.0], $
-  ;;                                   [0,5.0e8]]
+  ;; logENumFlPlot               = [1,1]
+  ;; ENumFlPlotRange             = [[5e-2,5e1], $
+  ;;                             [1e7,1e10]]
+  logENumFlPlot                  = [0,0]
+  ENumFlPlotRange                = [[0,5.0], $
+                                    [0,1.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -130,6 +131,10 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
 
   altRange                       = [[1000,4300]]
   ;; altRange                       = [[300,2000]]
+
+  IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
+     altRange                    = [300,2000]
+  ENDIF
 
   orbRange                       = [1000,10800]
 
@@ -292,7 +297,8 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
         NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
-        NONALFVEN__NEWELL_2009_INTERP=Newell_2009_interp, $
+        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
         NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
         NONALFVEN__NEWELL_PLOTRANGE=nonalfven__newell_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $

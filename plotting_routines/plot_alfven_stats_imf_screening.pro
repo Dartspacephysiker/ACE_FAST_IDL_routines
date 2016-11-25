@@ -1560,6 +1560,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
 
+     PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: ',paramString_list[iMulti]
+
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
         PRINTF,grossLun,""
         PRINTF,grossLun,paramString_list[iMulti]
