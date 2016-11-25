@@ -1293,8 +1293,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 INDICES__NONALFVEN_ION=indices__nonAlfven_ion_list, $
                                 ESPEC__MLTS=eSpec__mlts, $
                                 ESPEC__ILATS=eSpec__ilats, $
+                                ESPEC__INFO=eSpec_info, $
                                 ION__MLTS=ion__mlts, $
                                 ION__ILATS=ion__ilats, $
+                                ION__INFO=ion_info, $
                                 ORBRANGE=orbRange, $
                                 ALTITUDERANGE=altitudeRange, $
                                 CHARERANGE=charERange, $
