@@ -457,6 +457,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NO_COLORBAR=no_colorbar, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
+                                    PLOTH2D_CONTOUR=plotH2D_contour, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
                                     SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
@@ -1965,6 +1966,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                TILEPLOTTITLE=tilePlotTitle, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
+                               PLOTH2D_CONTOUR=plotH2D_contour, $
                                SHOW_INTEGRALS=show_integrals, $
                                MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
                                MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
