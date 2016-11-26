@@ -1,80 +1,3 @@
-;;2016/10/15 And now with equal-area binning
-;;2016/11/05
-;;Trying to be a little more methodical.
-
-;;Trial 1 
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1000,4300], [1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : 0.75/2.0 (NOT equal-area bins)
-;;Coords           : MLT/ILAT
-;;minMC/|maxNegMC  : 1
-;;orbRange         : [1000,10600]
-;;
-;;STORMNESS
-;;Dstcutoff        : -25 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : 2.0 nT (smoothed over 5 min)
-;;Delay            : 1800
-;;
-;;Conclusion       : 1500 looks way better than 1000. Drop 1000.
-
-;;Trial 2
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : 3
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 1500 and 2000 look better than 2500, both show Zhang effects. Drop 2500.
-
-;;Trial 3
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : AACGM LAT/MLT
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : AACGM seems to reduce noise in e{,Num}Flux plots, so keep
-
-;;Trial 4
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : -20 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 
-
-
 PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   COMPILE_OPT IDL2
@@ -111,7 +34,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -157,7 +80,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.25]
+  ePlotRange                     = [0,0.15]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -167,8 +90,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.25], $
-                                    [0,1.0e9]]
+  ENumFlPlotRange                = [[0,0.15], $
+                                    [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -177,7 +100,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.25]
+  PPlotRange                     = [0,0.15]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -231,13 +154,13 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[1000,4300]]
+  altRange                       = [[300,4300]]
 
   orbRange                       = [1000,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.0
+  btMin                          = 0.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -264,9 +187,9 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;; maxILAT                        = -60
   ;; maskMin                        =  10
 
-  tHist_mask_bins_below_thresh   = 1
+  tHist_mask_bins_below_thresh   = 2
 
-  ;; stableIMF                      = 5
+  stableIMF                      = 5
 
   ;; numOrbLim                      = 10
 
