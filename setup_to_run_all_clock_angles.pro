@@ -74,7 +74,7 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                       1,1,1, $
                                       1,1,1]
         ENDIF
-        tilePlotSuff                = "--a_la_Zhang_2014"
+        tilePlotSuff                = "--Zhang14"
      ENDIF
   ENDIF
 END

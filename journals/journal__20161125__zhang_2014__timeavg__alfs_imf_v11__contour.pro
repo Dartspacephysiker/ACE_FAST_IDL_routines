@@ -7,7 +7,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   plotH2D_contour                = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -30
   smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
 
@@ -23,8 +23,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   EA_binning                     = 1
 
-  minMC                          = 1
-  maxNegMC                       = -1
+  minMC                          = 3
+  maxNegMC                       = -3
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -34,11 +34,12 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 0
+  use_AACGM                      = 1
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
-  fluxPlots__remove_log_outliers = 1  
+  fluxPlots__remove_outliers     = 0
+  fluxPlots__remove_log_outliers = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -74,7 +75,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ionPlots                       = 1
   probOccurrencePlot             = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
+  ;; nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,1.0]
 
@@ -155,7 +156,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[1500,4300]]
 
   orbRange                       = [1000,10800]
 
@@ -190,7 +191,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   tHist_mask_bins_below_thresh   = 2
 
-  stableIMF                      = 5
+  stableIMF                      = 2
 
   ;; numOrbLim                      = 10
 
