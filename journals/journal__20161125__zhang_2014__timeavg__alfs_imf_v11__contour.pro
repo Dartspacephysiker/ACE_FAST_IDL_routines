@@ -4,7 +4,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   restore_last_session           = 0
 
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -38,7 +38,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
-  
+  fluxPlots__remove_log_outliers = 1  
+
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
@@ -156,7 +157,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   altRange                       = [[300,4300]]
 
-  orbRange                       = [1000,12670]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -345,6 +346,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $

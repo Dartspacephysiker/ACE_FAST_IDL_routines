@@ -557,6 +557,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 CHARETYPE=charEType, $
                                 CHARIEPLOTS=chariEPlots, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                                ;; FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+                                ;; FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $
@@ -1771,6 +1773,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
         DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
         ORBCONTRIBPLOT=orbContribPlot, $
