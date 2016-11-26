@@ -1,5 +1,5 @@
 ;;2016/11/03 And now the Newell DB!
-PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
+PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
 
   COMPILE_OPT IDL2
 
@@ -26,9 +26,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 1
+  do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0
-  medianPlot                     = 0
+  medianPlot                     = 1
   divide_by_width_x              = 1
 
   ;;DB stuff
@@ -54,8 +54,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -76,17 +76,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   eNumFlPlots                    = 1
   pPlots                         = 0
   ionPlots                       = 0
-  probOccurrencePlot             = 0
 
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
    ;; tHistDenomPlotRange  = 
   ;; tHistDenomPlotNormalize        = 0
-  tHistDenomPlotAutoscale        = 1
-  tHistDenomPlot_noMask          = 1
+  ;; tHistDenomPlotAutoscale        = 1
+  ;; tHistDenomPlot_noMask          = 1
 
   sum_electron_and_poyntingflux  = 0
-  nOrbsWithEventsPerContribOrbsPlot = 0
-  nonAlfven__newellPlot_probOccurrence = 1
+
+  nonAlfven__newellPlot_probOccurrence = 0
   nonalfven__newell_plotRange    = [[0,0.25],[0,0.15],[0.6,1.0]]
 
   nowepco_range                  = [0,1.0]
@@ -94,21 +93,21 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.6]
+  ePlotRange                     = [0,3.0]
   logEfPlot                      = 0
-  ;; noNegEflux                     = 0
+  noNegEflux                     = 0
   ;; ePlotRange                     = [1e-3,1e1]
   ;; logEfPlot                      = 1
-  noNegEflux                     = 1
+  ;; noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
   ;; noNegENumFl                    = [1,1]
   ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[5e-2,5e1], $
-  ;;                             [1e7,1e10]]
+  ;; ENumFlPlotRange             = [[5e-1,5e0], $
+  ;;                             [1e8,1e10]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.6], $
-                                    [0,1.0e9]]
+  ENumFlPlotRange                = [[0,5.0], $
+                                    [0,5.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -142,7 +141,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 0.5
   ;; btMax                       = 5
 
   smoothWindow                   = 11
@@ -163,7 +162,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  ;; maskMin                        = 5
+  ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
@@ -171,7 +170,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 2
+  ;; tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
@@ -439,4 +438,5 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ENDFOR
 
 END
+
 

@@ -82,6 +82,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    FOR_ESPEC_OR_ION_DB=for_eSpec_or_ion_db, $
    ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
    ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+   ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
@@ -141,6 +142,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     DONT_LOAD_IN_MEMORY=nonMem, $
                                     ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                     ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                    ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                     /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN

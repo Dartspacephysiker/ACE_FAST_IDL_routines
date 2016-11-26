@@ -302,6 +302,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                                     ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                     ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                    ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
                                     ABSPFLUX=absPflux, $
@@ -1272,6 +1273,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
                                 ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                 ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                 NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
                                 DESPUN_ALF_DB=do_despunDB, $
                                 ;; COORDINATE_SYSTEM=coordinate_system, $
