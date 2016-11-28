@@ -6,13 +6,13 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
-  smooth_dst                     = 1
+  DSTcutoff                      = -30
+  smooth_dst                     = 0
   use_mostRecent_Dst_files       = 1
-  ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
-  ;; IF KEYWORD_SET(smooth_dst) THEN BEGIN
-  ;;    plotPref += 'smDst--'
-  ;; ENDIF
+  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  IF KEYWORD_SET(smooth_dst) THEN BEGIN
+     plotPref += 'smDst--'
+  ENDIF
 
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
@@ -21,7 +21,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   show_integrals                 = 1
 
   EA_binning                     = 1
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -69,7 +69,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
-  eSpec__remove_outliers         = 1
+  eSpec__remove_outliers         = 0
 
   newellplots                    = 1
   newellPlot_autoscale           = 1
@@ -96,7 +96,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.4]
+  ePlotRange                     = [0,0.20]
   logEfPlot                      = 0
   ;; noNegEflux                     = 0
   ;; ePlotRange                     = [1e-3,1e1]
@@ -109,8 +109,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; ENumFlPlotRange             = [[5e-2,5e1], $
   ;;                             [1e7,1e10]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.4], $
-                                    [0,3.0e8]]
+  ENumFlPlotRange                = [[0,0.20], $
+                                    [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -144,12 +144,12 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 0.1
   ;; btMax                       = 5
 
-  smoothWindow                   = 11
+  ;; smoothWindow                   = 11
 
-  stableIMF                      = 5
+  ;; stableIMF                      = 1
 
   ;;Delay stuff
   nDelays                        = 1
@@ -173,7 +173,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 2
+  tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
@@ -182,7 +182,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
