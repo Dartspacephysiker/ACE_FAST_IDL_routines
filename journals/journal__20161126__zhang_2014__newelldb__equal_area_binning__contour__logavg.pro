@@ -6,7 +6,7 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -30
   smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
   ;; plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -39,6 +39,8 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
   ;; plotPref                       = 
 
   autoscale_fluxPlots            = 0
+  fluxPlots__remove_outliers     = 0
+  fluxPlots__remove_log_outliers = 0
   
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -170,7 +172,7 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 2
+  tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
@@ -322,6 +324,8 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $

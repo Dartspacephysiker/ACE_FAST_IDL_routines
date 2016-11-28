@@ -21,7 +21,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   show_integrals                 = 1
 
   EA_binning                     = 1
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -39,6 +39,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; plotPref                       = 
 
   autoscale_fluxPlots            = 0
+  fluxPlots__remove_outliers     = 0
+  fluxPlots__remove_log_outliers = 0
   
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -54,8 +56,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
   save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,7 +96,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.6]
+  ePlotRange                     = [0,0.4]
   logEfPlot                      = 0
   ;; noNegEflux                     = 0
   ;; ePlotRange                     = [1e-3,1e1]
@@ -107,8 +109,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; ENumFlPlotRange             = [[5e-2,5e1], $
   ;;                             [1e7,1e10]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.6], $
-                                    [0,1.0e9]]
+  ENumFlPlotRange                = [[0,0.4], $
+                                    [0,3.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -160,9 +162,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
@@ -171,7 +173,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 2
+  ;; tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
@@ -323,6 +325,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $  
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
