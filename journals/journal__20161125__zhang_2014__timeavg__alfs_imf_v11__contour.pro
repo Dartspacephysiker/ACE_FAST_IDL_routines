@@ -8,7 +8,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   nonstorm                       = 1
   DSTcutoff                      = -30
-  smooth_dst                     = 1
+  ;; smooth_dst                     = 1
   use_mostRecent_Dst_files       = 1
 
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
@@ -23,8 +23,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   EA_binning                     = 1
 
-  minMC                          = 3
-  maxNegMC                       = -3
+  minMC                          = 1
+  maxNegMC                       = -1
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
@@ -39,7 +39,10 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   autoscale_fluxPlots            = 0
   fluxPlots__remove_outliers     = 0
-  fluxPlots__remove_log_outliers = 1
+  fluxPlots__remove_log_outliers = 0
+
+  dont_blackball_maximus         = 1
+  dont_blackball_fastloc         = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -55,12 +58,12 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
-  save_master_OMNI_inds          = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
+  save_master_OMNI_inds          = 0
   ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
   calc_KL_sw_coupling_func       = 1
-  make_integral_savfiles         = 1
+  make_integral_savfiles         = 0
 
   grossRate_info_file_pref       = 'hammertimes_new_thing'
   ;; grossRate_info_file_suff       = '--timeAvg'
@@ -82,7 +85,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.15]
+  ePlotRange                     = [0,0.20]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -92,7 +95,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.15], $
+  ENumFlPlotRange                = [[0,0.20], $
                                     [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
@@ -102,7 +105,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
+  PPlotRange                     = [0,0.20]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -153,16 +156,16 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   ;;                                   [2000,4300], $
   ;;                                   [2500,4300]]
 
-  altRange                       = [[1500,4300], $
+  altRange                       = [[300,4300], $
                                     [2000,4300]]
 
   altRange                       = [[1500,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10000]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 0.1
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -171,7 +174,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 11
+  smoothWindow                   = 5
 
   reset_omni_inds                = 1
   
@@ -191,7 +194,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
 
   tHist_mask_bins_below_thresh   = 2
 
-  stableIMF                      = 2
+  ;; stableIMF                      = 1
 
   ;; numOrbLim                      = 10
 
@@ -349,6 +352,8 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $

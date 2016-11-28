@@ -325,6 +325,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                     FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                     FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                    DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                                    DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                     DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
                                     DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
                                     ORBCONTRIBPLOT=orbContribPlot, $
@@ -1110,6 +1112,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                        SAMPLE_T_RESTRICTION=sample_t_restriction, $
                        INCLUDE_32HZ=include_32Hz, $
                        DISREGARD_SAMPLE_T=disregard_sample_t, $
+                       DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                       DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                        MINMLT=minM,MAXMLT=maxM, $
                        BINM=binM, $
                        SHIFTM=shiftM, $
@@ -1203,6 +1207,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     INCLUDE_32HZ=include_32Hz, $
                                     DISREGARD_SAMPLE_T=disregard_sample_t, $
+                                    DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                                    DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINM=binM, $
                                     SHIFTM=shiftM, $

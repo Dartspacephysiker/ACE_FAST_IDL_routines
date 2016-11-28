@@ -1,5 +1,17 @@
 ;;2016/06/27 Try new text output
 PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
+
+  nonStorm                  = 1
+  DSTcutoff                 = -30
+  smooth_dst                = 1
+  use_mostRecent_Dst_files  = 1
+
+  plotPref                  = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  IF KEYWORD_SET(smooth_dst) THEN BEGIN
+     plotPref += 'smDst--'
+  ENDIF
+
+
   ;;The reason we're gathered
   pFluxMin               = 0.5
 
@@ -8,10 +20,14 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   EA_binning             = 1
 
-  use_aacgm_coords       = 1
+  USE_AACGM_COORDS       = 1
 
-  minMC                  = 5
-  maxNegMC               = -5
+  autoscale_fluxPlots            = 0
+  fluxPlots__remove_outliers     = 0
+  fluxPlots__remove_log_outliers = 1
+
+  minMC                  = 3
+  maxNegMC               = -3
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
@@ -19,8 +35,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   write_obsArr__inc_IMF  = 1
   justData               = 1
 
-  altRange               = [[340,4180]]
-  orbRange               = [500,12670]
+  altRange               = [[300,4300]]
+  orbRange               = [1000,10800]
 
   pPlots                 = 1
   PPlotRange             = [pFluxMin,1e2]
@@ -32,15 +48,19 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   ;;Delay stuff
   nDelays                = 1
-  delayDeltaSec          = 900
+  delayDeltaSec          = 1800
   delayArr               = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
   reset_omni_inds        = 1
   reset_good_inds        = 1
-                                                                                                           
+
+  smoothWindow           = 11
+  stableIMF              = 3
+  
+           
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                = 'NORTH'
+  hemi                = 'BOTH'
   minILAT             = 60
   maxILAT             = 90
 
@@ -151,6 +171,9 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
+        DSTCUTOFF=dstCutoff, $
+        SMOOTH_DST=smooth_dst, $
+        USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
         EPLOTRANGE=ePlotRange, $                                       
@@ -173,6 +196,9 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+        AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $

@@ -20,6 +20,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
    INCLUDE_32HZ=include_32Hz, $
    DISREGARD_SAMPLE_T=disregard_sample_t, $
+   DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+   DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
    MINMLT=minM, $
    MAXMLT=maxM, $
    BINM=binM, $
@@ -162,6 +164,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                INCLUDE_32HZ=include_32Hz, $
                                DISREGARD_SAMPLE_T=disregard_sample_t, $
+                               DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                               DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                MINMLT=minM,MAXMLT=maxM,BINM=binM, $
                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                EQUAL_AREA_BINNING=EA_binning, $
