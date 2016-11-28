@@ -7,8 +7,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   nonstorm                       = 1
   DSTcutoff                      = -30
-  smooth_dst                     = 0
-  use_mostRecent_Dst_files       = 1
+  smooth_dst                     = 1
+  use_mostRecent_Dst_files       = 0
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
      plotPref += 'smDst--'
@@ -140,7 +140,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10000]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!

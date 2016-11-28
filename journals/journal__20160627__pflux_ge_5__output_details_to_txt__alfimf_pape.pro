@@ -24,10 +24,12 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   autoscale_fluxPlots            = 0
   fluxPlots__remove_outliers     = 0
-  fluxPlots__remove_log_outliers = 1
-
-  minMC                  = 3
-  maxNegMC               = -3
+  fluxPlots__remove_log_outliers = 0
+  dont_blackball_maximus         = 1
+  dont_blackball_fastLoc         = 1
+ 
+  minMC                  = 1
+  maxNegMC               = -1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;orbit txt file?
@@ -35,8 +37,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   write_obsArr__inc_IMF  = 1
   justData               = 1
 
-  altRange               = [[300,4300]]
-  orbRange               = [1000,10800]
+  altRange               = [[1500,4300]]
+  orbRange               = [1000,10000]
 
   pPlots                 = 1
   PPlotRange             = [pFluxMin,1e2]
@@ -44,7 +46,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                  = 1
+  btMin                  = 0.1
 
   ;;Delay stuff
   nDelays                = 1
@@ -54,8 +56,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   reset_omni_inds        = 1
   reset_good_inds        = 1
 
-  smoothWindow           = 11
-  stableIMF              = 3
+  smoothWindow           = 5
+  ;; stableIMF              = 3
   
            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -199,6 +201,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
