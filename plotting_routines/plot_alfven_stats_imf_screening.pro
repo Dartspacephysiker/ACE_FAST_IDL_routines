@@ -296,6 +296,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
                                     NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
                                     NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+                                    NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
                                     NONALFVEN__NO_MAXIMUS=no_maximus, $
                                     NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                     NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
@@ -1744,6 +1745,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         EFLUX_NONALFVEN_DATA=eFlux_nonAlfven_data, $
         ENUMFLUX_NONALFVEN_DATA=eNumFlux_nonAlfven_data, $
         IFLUX_NONALFVEN_DATA=iFlux_nonAlfven_data, $

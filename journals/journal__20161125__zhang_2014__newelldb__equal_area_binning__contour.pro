@@ -6,12 +6,15 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -30
+  DSTcutoff                      = -40
   smooth_dst                     = 1
-  use_mostRecent_Dst_files       = 0
+  use_mostRecent_Dst_files       = 1
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     plotPref += 'smDst--'
+     CASE smooth_dst OF
+        1: plotPref += 'smDst--'
+        ELSE: plotPref += 'smDst_' + STRCOMPRESS(smDst,/REMOVE_ALL)+'hr--'
+     ENDCASE
   ENDIF
 
   ;; include_32Hz                   = 
@@ -66,6 +69,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   nonAlfven_flux_plots           = 1
   Newell_analyze_eFlux           = 1
   nonalfven__all_fluxes          = 1
+  Newell__comb_accelerated       = 1
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
@@ -140,16 +144,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10000]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.1
+  btMin                          = 0.0
   ;; btMax                       = 5
 
-  ;; smoothWindow                   = 11
+  smoothWindow                   = 11
 
-  ;; stableIMF                      = 1
+  stableIMF                      = 5
 
   ;;Delay stuff
   nDelays                        = 1
@@ -162,9 +166,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
@@ -298,6 +302,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         NONALFVEN__NO_MAXIMUS=no_maximus, $
         NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
         NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
