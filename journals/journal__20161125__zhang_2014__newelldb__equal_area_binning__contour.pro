@@ -6,14 +6,14 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
-  smooth_dst                     = 1
+  DSTcutoff                      = -30
+  smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
   plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
      CASE smooth_dst OF
         1: plotPref += 'smDst--'
-        ELSE: plotPref += 'smDst_' + STRCOMPRESS(smDst,/REMOVE_ALL)+'hr--'
+        ELSE: plotPref += 'smDst_' + STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr--'
      ENDCASE
   ENDIF
 
@@ -22,6 +22,10 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   disregard_sample_t             = 1
 
   show_integrals                 = 1
+
+  write_obsArr_textFile          = 1
+  write_obsArr__inc_IMF          = 1
+  write_obsArr__orb_avg_obs      = 1
 
   EA_binning                     = 1
   plotH2D_contour                = 0
@@ -144,16 +148,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
   btMin                          = 0.0
   ;; btMax                       = 5
 
-  smoothWindow                   = 11
+  smoothWindow                   = 7
 
-  stableIMF                      = 5
+  stableIMF                      = 2
 
   ;;Delay stuff
   nDelays                        = 1
@@ -375,6 +379,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+        WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $

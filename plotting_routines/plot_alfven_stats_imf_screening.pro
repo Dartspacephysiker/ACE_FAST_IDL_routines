@@ -381,6 +381,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
                                     WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
                                     WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+                                    WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
                                     DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                     MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                     MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $
@@ -1845,6 +1846,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         SHOW_INTEGRALS=show_integrals, $
         WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         MULTIPLY_FLUXES_BY_PROBOCCURRENCE=multiply_fluxes_by_probOccurrence, $

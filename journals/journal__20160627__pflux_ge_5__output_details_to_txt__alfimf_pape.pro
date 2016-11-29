@@ -3,12 +3,15 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   nonStorm                  = 1
   DSTcutoff                 = -30
-  smooth_dst                = 1
+  smooth_dst                = 5
   use_mostRecent_Dst_files  = 1
 
-  plotPref                  = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     plotPref += 'smDst--'
+     CASE smooth_dst OF
+        1: plotPref += 'smDst--'
+        ELSE: plotPref += 'smDst_' + STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr--'
+     ENDCASE
   ENDIF
 
 
@@ -18,7 +21,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;;DB stuff
   do_despun              = 0
 
-  EA_binning             = 1
+  EA_binning             = 0
 
   USE_AACGM_COORDS       = 1
 
@@ -35,9 +38,10 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;;orbit txt file?
   write_obsArr_textFile  = 1
   write_obsArr__inc_IMF  = 1
+  write_obsArr__orb_avg_obs = 1
   justData               = 1
 
-  altRange               = [[1500,4300]]
+  altRange               = [[1000,4300]]
   orbRange               = [1000,10000]
 
   pPlots                 = 1
@@ -46,7 +50,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                  = 0.1
+  btMin                  = 0.0
 
   ;;Delay stuff
   nDelays                = 1
@@ -56,8 +60,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   reset_omni_inds        = 1
   reset_good_inds        = 1
 
-  smoothWindow           = 5
-  ;; stableIMF              = 3
+  smoothWindow           = 7
+  stableIMF              = 2
   
            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -83,7 +87,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   maxMLT                 = 18.0
 
   ;;Bonus
-  maskMin                = 1
+  ;; maskMin                = 1
 
   LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun,USE_AACGM_COORDS=use_aacgm_coords
 
@@ -242,6 +246,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
         WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
         WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
