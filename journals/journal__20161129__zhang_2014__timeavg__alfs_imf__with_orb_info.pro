@@ -1,94 +1,21 @@
-;;2016/10/15 And now with equal-area binning
-;;2016/11/05
-;;Trying to be a little more methodical.
-
-;;Trial 1 
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1000,4300], [1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : 0.75/2.0 (NOT equal-area bins)
-;;Coords           : MLT/ILAT
-;;minMC/|maxNegMC  : 1
-;;orbRange         : [1000,10600]
-;;
-;;STORMNESS
-;;Dstcutoff        : -25 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : 2.0 nT (smoothed over 5 min)
-;;Delay            : 1800
-;;
-;;Conclusion       : 1500 looks way better than 1000. Drop 1000.
-
-;;Trial 2
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300], [2500,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : 3
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 1500 and 2000 look better than 2500, both show Zhang effects. Drop 2500.
-
-;;Trial 3
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : AACGM LAT/MLT
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : ''
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : AACGM seems to reduce noise in e{,Num}Flux plots, so keep
-
-;;Trial 4
-;;--------
-;;COORD/BINNING/DATA CHOICES
-;;altRanges        : [[1500,4300], [2000,4300]]
-;;binMLT/ILAT      : ''
-;;Coords           : ''
-;;minMC/|maxNegMC  : ''
-;;orbRange         : ''
-;;
-;;STORMNESS
-;;Dstcutoff        : -20 (smoothed)
-;;
-;;OMNI CONDITIONS
-;;btMin            : ''
-;;Delay            : ''
-;;
-;;Conclusion       : 
-
-
-PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
+PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   COMPILE_OPT IDL2
 
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
-  smooth_dst                     = 1
+  DSTcutoff                      = -50
+  smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
 
-  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) 
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     plotPref += 'smDst--'
+     CASE smooth_dst OF
+        1   : plotPref += 'sm--'
+        ELSE: plotPref += 'sm_'+STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr--'
+     ENDCASE
+     
   ENDIF
 
   include_32Hz                   = 0
@@ -103,6 +30,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   medianPlot                     = 0
   divide_by_width_x              = 1
   org_plots_by_folder            = 1
+
+  dont_blackball_maximus         = 1
+  dont_blackball_fastLoc         = 1
 
   ;;DB stuff
   do_despun                      = 0
@@ -125,18 +55,23 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
                                     1,1,1]
 
   ;;bonus
-  print_avg_imf_components       = 1
-  print_master_OMNI_file         = 1
-  save_master_OMNI_inds          = 1
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
+  save_master_OMNI_inds          = 0
   ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
   calc_KL_sw_coupling_func       = 1
-  make_integral_savfiles         = 1
+  make_integral_savfiles         = 0
 
-  grossRate_info_file_pref       = 'hammertimes_new_thing'
-  ;; grossRate_info_file_suff       = '--timeAvg'
-  grossRate_info_file_suff       = '--timeAvg--things'
+  ;; grossRate_info_file_pref       = 'hammertimes_new_thing'
+  ;; ;; grossRate_info_file_suff       = '--timeAvg'
+  ;; grossRate_info_file_suff       = '--timeAvg--things'
 
   show_integrals                 = 1
+  write_obsArr_textFile          = 1
+  write_obsArr__inc_IMF          = 1
+  write_obsArr__orb_avg_obs      = 1
+  justData                       = 1
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   ePlots                         = 1
@@ -226,9 +161,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[1000,4300]]
+  altRange                       = [[1500,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -241,13 +176,13 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 11
+  smoothWindow                   = 7
 
   reset_omni_inds                = 1
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'BOTH'
+  hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
   ;; maskMin                        = 5
@@ -259,14 +194,14 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
   ;; maxILAT                        = -60
   ;; maskMin                        =  10
 
-  tHist_mask_bins_below_thresh   = 2
+  ;; tHist_mask_bins_below_thresh   = 2
 
-  stableIMF                      = 5
+  stableIMF                      = 2
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -280,7 +215,7 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
+     altStr                      = STRING(FORMAT='(I0,"-",I0,"km-orb_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
@@ -290,7 +225,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
      IF KEYWORD_SET(grossRate_info_file_pref) THEN BEGIN
         CASE 1 OF
            N_ELEMENTS(btMin) GT 0: BEGIN
-              grossRate_infos  = STRING(FORMAT='("-btMin",F0.1)',btMin)
+              IF btMin GT 0 THEN BEGIN
+                 grossRate_infos  = STRING(FORMAT='("-btMin",F0.1)',btMin)
+              ENDIF
            END
            N_ELEMENTS(btMax) GT 0: BEGIN
               grossRate_infos  = STRING(FORMAT='("-btMax",F0.1)',btMax)
@@ -417,6 +354,8 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
@@ -456,6 +395,9 @@ PRO JOURNAL__20161119__ZHANG_2014__TIMEAVG__ALFS_IMF_V11
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
         DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
         WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+        WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
