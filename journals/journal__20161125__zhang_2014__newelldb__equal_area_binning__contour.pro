@@ -6,7 +6,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -25
+  DSTcutoff                      = -50
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
   plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '_'
@@ -25,13 +25,13 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   show_integrals                 = 1
 
-  write_obsArr_textFile          = 1
-  write_obsArr__inc_IMF          = 1
-  write_obsArr__orb_avg_obs      = 1
+  write_obsArr_textFile          = 0
+  write_obsArr__inc_IMF          = 0
+  write_obsArr__orb_avg_obs      = 0
   justData                       = 0
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -115,7 +115,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   noNegEflux                     = 1
 
   eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
-  ;; noNegENumFl                    = [1,1]
+  noNegENumFl                    = [1,1]
   ;; logENumFlPlot               = [1,1]
   ;; ENumFlPlotRange             = [[5e-2,5e1], $
   ;;                             [1e7,1e10]]
@@ -167,12 +167,12 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.5
+  btMin                          = 0.5
   ;; btMax                       = 5
 
   smoothWindow                   = 7
 
-  stableIMF                      = 2
+  stableIMF                      = 4
 
   ;;Delay stuff
   nDelays                        = 1

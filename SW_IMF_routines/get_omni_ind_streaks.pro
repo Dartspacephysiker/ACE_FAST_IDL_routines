@@ -45,7 +45,7 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
   IF (~KEYWORD_SET(C_OMNI__DONE_FIRST_STREAK_CALC) OR KEYWORD_SET(recalculate)) THEN BEGIN
 
 
-     C_OMNI__StreakDurArr    = MAKE_ARRAY(MAX(goodmag_goodtimes_i),/LONG) 
+     C_OMNI__StreakDurArr    = MAKE_ARRAY(MAX(goodmag_goodtimes_i)+1,/LONG) 
 
      IF KEYWORD_SET(use_combined_OMNI_IMF_inds) THEN BEGIN
         PRINTF,lun,"Getting streaks of OMNI IMF inds which involve the following params: "

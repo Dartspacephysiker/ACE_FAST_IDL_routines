@@ -44,6 +44,8 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
      PRINT,'Restoring ' + savFile + ' ...'
      RESTORE,savFile
 
+     newell__comb_accelerated         = 0
+
      junk = GET_STABLE_IMF_INDS( $
             MAG_UTC=mag_utc, $
             CLOCKSTR=clockStr, $
