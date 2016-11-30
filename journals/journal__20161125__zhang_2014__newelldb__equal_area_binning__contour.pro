@@ -17,8 +17,6 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
      ENDCASE
   ENDIF
 
-  FOR_BUFF_BTMIN                 = 1
-
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
@@ -100,28 +98,27 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
   nonAlfven__newellPlot_probOccurrence = 1
-  nonalfven__newell_plotRange    = [[0,0.25],[0,0.15],[0.6,1.0]]
+  nonalfven__newell_plotRange    = [[0.00,0.25],[0.00,0.25],[0.60,1.00],[0.00,0.30]]
 
   nowepco_range                  = [0,1.0]
 
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.20]
+  ePlotRange                     = [[0,0.15],[0,0.50],[0,0.25],[0,0.30]]
   logEfPlot                      = 0
   ;; noNegEflux                     = 0
   ;; ePlotRange                     = [1e-3,1e1]
   ;; logEfPlot                      = 1
   noNegEflux                     = 1
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ','ESA_Number_flux']
-  noNegENumFl                    = [1,1]
+  eNumFlPlotType                 = ['ESA_Number_flux']
+  noNegENumFl                    = 1
   ;; logENumFlPlot               = [1,1]
   ;; ENumFlPlotRange             = [[5e-2,5e1], $
   ;;                             [1e7,1e10]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.20], $
-                                    [0,5.0e8]]
+  logENumFlPlot                  = [0]
+  ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -135,18 +132,6 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; logENumFlPlot                  = [0,0]
   ;; ENumFlPlotRange                = [[0,0.25], $
   ;;                                   [0,8.0e8]]
-
-  IF KEYWORD_SET(FOR_BUFF_BTMIN) THEN BEGIN
-  ePlotRange                     = [0,0.40]
-  logEfPlot                      = 0
-
-  noNegEflux                     = 1
-
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.20], $
-                                    [0,5.0e8]]
-     
-  ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -167,12 +152,12 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.5
+  btMin                          = 1.0
   ;; btMax                       = 5
 
   smoothWindow                   = 7
 
-  stableIMF                      = 4
+  stableIMF                      = 6
 
   ;;Delay stuff
   nDelays                        = 1
