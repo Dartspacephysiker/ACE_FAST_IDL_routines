@@ -239,7 +239,18 @@ FUNCTION GET_STABLE_IMF_INDS, $
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all
                              USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS, $
                              RECALCULATE_OMNI_IND_STREAKS=calculate                
-        C_OMNI__stable_i            = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
+        ;; C_OMNI__stable_i            = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
+
+        ;;Indexes into THE ORIGINAL, UNTAMED OMNI DB
+        ;;This is because C_OMNI__StreakDurArr is as large as the original
+        tmpStable        = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
+
+        tmpJunk          = CGSETINTERSECTION(goodmag_goodtimes_i, $
+                                             TEMPORARY(tmpStable), $
+                                             POSITIONS=realStable_i, $
+                                             NORESULT=-1)
+        C_OMNI__stable_i = TEMPORARY(realStable_i)
+        ;; C_OMNI__stable_i = CGSETINTERSECTION(goodmag_goodtimes_i
 
         ;; SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF='/IMF_streakHistos'
         ;; histFile = plotDir+C_OMNI__paramStr+'--histo.png'
@@ -252,14 +263,17 @@ FUNCTION GET_STABLE_IMF_INDS, $
         ;; ENDIF
 
      ENDIF ELSE BEGIN
-        GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $
-                             USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all
+        ;; GET_OMNI_IND_STREAKS, $
+        ;;    C_OMNI__mag_UTC, $
+        ;;    goodmag_goodtimes_i, $
+        ;;    USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the DB, first of all
+
         IF KEYWORD_SET(USE_COMBINED_INDS) THEN BEGIN
            ;; C_OMNI__stable_i      = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
            C_OMNI__stable_i         = C_OMNI__combined_i
         ENDIF ELSE BEGIN
            C_OMNI__stable_i         = INDGEN(N_ELEMENTS(C_OMNI__mag_UTC),/LONG)
-           PRINTF,lun,"Wait, how did you get here? You have no restrictions whatsoever on IMF?"
+           PRINTF,lun,"Wait, how did you get here? You have no restrictions whatsoever on IMF!"
            STOP
         ENDELSE
      ENDELSE

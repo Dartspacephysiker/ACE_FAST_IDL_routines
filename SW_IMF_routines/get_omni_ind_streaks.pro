@@ -44,11 +44,17 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
   
   IF (~KEYWORD_SET(C_OMNI__DONE_FIRST_STREAK_CALC) OR KEYWORD_SET(recalculate)) THEN BEGIN
 
+
+     C_OMNI__StreakDurArr    = MAKE_ARRAY(MAX(goodmag_goodtimes_i),/LONG) 
+
      IF KEYWORD_SET(use_combined_OMNI_IMF_inds) THEN BEGIN
         PRINTF,lun,"Getting streaks of OMNI IMF inds which involve the following params: "
         PRINTF,lun,C_OMNI__paramStr
-        goodmag_goodtimes_i                       = CGSETINTERSECTION(goodmag_goodtimes_i,C_OMNI__combined_i)
-     ENDIF
+        ;; goodmag_goodtimes_i   = CGSETINTERSECTION(goodmag_goodtimes_i,C_OMNI__combined_i)
+        ;; goodmag_combined_i   = CGSETINTERSECTION(goodmag_goodtimes_i,C_OMNI__combined_i)
+     ENDIF ELSE BEGIN
+        STOP
+     ENDELSE
 
      ;;Check if it's sorted
      CHECK_SORTED,mag_utc,is_sorted
@@ -57,26 +63,28 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
         STOP
      ENDIF
 
-     C_OMNI__StreakDurArr                         = MAKE_ARRAY(N_ELEMENTS(mag_utc),/LONG) 
+     ;; C_OMNI__StreakDurArr  = MAKE_ARRAY(N_ELEMENTS(mag_utc),/LONG) 
 
-     GET_STREAKS,goodmag_goodtimes_i, $
-                 START_I=C_OMNI__streakstart_ii, $
-                 STOP_I=C_OMNI__streakstop_ii, $
+     GET_STREAKS,goodmag_goodtimes_i[C_OMNI__combined_i], $
+                 START_I=C_OMNI__TOTDB_streakstart_ii, $
+                 STOP_I=C_OMNI__TOTDB_streakstop_ii, $
                  OUT_STREAKLENS=C_OMNI__streakLens, $
                  SINGLE_I=C_OMNI__single_i
-     C_OMNI__streakstart_i                        = goodmag_goodtimes_i[C_OMNI__streakstart_ii]
-     C_OMNI__streakstop_i                         = goodmag_goodtimes_i[C_OMNI__streakstop_ii]
+     ;; C_OMNI__streakstart_i    = goodmag_goodtimes_i[C_OMNI__streakstart_ii]
+     ;; C_OMNI__streakstop_i     = goodmag_goodtimes_i[C_OMNI__streakstop_ii]
+     C_OMNI__TOTDB_streakstart_i    = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii]]
+     C_OMNI__TOTDB_streakstop_i     = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii]]
 
-     C_OMNI__nStreaks                             = N_ELEMENTS(C_OMNI__streakLens)
-     C_OMNI__gapLengths                           = goodmag_goodtimes_i[C_OMNI__streakstart_ii[1:-1]]-goodmag_goodtimes_i[C_OMNI__streakstop_ii[0:-2]]
+     C_OMNI__nStreaks         = N_ELEMENTS(C_OMNI__streakLens)
+     C_OMNI__gapLengths       = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[1:-1]]]-goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[0:-2]]]
 
      FOR streakNum=0,C_OMNI__nStreaks-1 DO BEGIN
-        curLen                                    = C_OMNI__streakLens[streakNum]+1
-        ;; curStart                                  = goodmag_goodtimes_i[C_OMNI__streakstart_ii[streakNum]]
-        ;; curStop                                   = goodmag_goodtimes_i[C_OMNI__streakstop_ii[streakNum]]
-        curStart                                  = C_OMNI__streakstart_ii[streakNum]
-        curStop                                   = C_OMNI__streakstop_ii[streakNum]
-        C_OMNI__StreakDurArr[curStart:curStop]    = INDGEN(curLen)
+        curLen             = C_OMNI__streakLens[streakNum]+1
+        curStart           = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[streakNum]]]
+        curStop            = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[streakNum]]]
+        ;; curStart              = C_OMNI__streakstart_ii[streakNum]
+        ;; curStop               = C_OMNI__streakstop_ii[streakNum]
+        C_OMNI__StreakDurArr[curStart:curStop]  = INDGEN(curLen)
      ENDFOR
      
      ;; IF KEYWORD_SET(saveStreakFile) THEN BEGIN
