@@ -5,7 +5,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -50
+  DSTcutoff                      = -25
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
 
@@ -67,10 +67,10 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   ;; grossRate_info_file_suff       = '--timeAvg--things'
 
   show_integrals                 = 1
-  write_obsArr_textFile          = 1
-  write_obsArr__inc_IMF          = 1
-  write_obsArr__orb_avg_obs      = 1
-  justData                       = 1
+  write_obsArr_textFile          = 0
+  write_obsArr__inc_IMF          = 0
+  write_obsArr__orb_avg_obs      = 0
+  justData                       = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -161,13 +161,13 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   altRange                       = [[1500,4300], $
                                     [2000,4300]]
 
-  altRange                       = [[1500,4300]]
+  altRange                       = [[2000,4300]]
 
   orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 1.5
   ;; btMax                       = 5
 
   ;;Delay stuff
