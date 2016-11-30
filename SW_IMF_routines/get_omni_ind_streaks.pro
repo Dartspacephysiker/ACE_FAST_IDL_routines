@@ -72,8 +72,10 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
 
      FOR streakNum=0,C_OMNI__nStreaks-1 DO BEGIN
         curLen                                    = C_OMNI__streakLens[streakNum]+1
-        curStart                                  = goodmag_goodtimes_i[C_OMNI__streakstart_ii[streakNum]]
-        curStop                                   = goodmag_goodtimes_i[C_OMNI__streakstop_ii[streakNum]]
+        ;; curStart                                  = goodmag_goodtimes_i[C_OMNI__streakstart_ii[streakNum]]
+        ;; curStop                                   = goodmag_goodtimes_i[C_OMNI__streakstop_ii[streakNum]]
+        curStart                                  = C_OMNI__streakstart_ii[streakNum]
+        curStop                                   = C_OMNI__streakstop_ii[streakNum]
         C_OMNI__StreakDurArr[curStart:curStop]    = INDGEN(curLen)
      ENDFOR
      

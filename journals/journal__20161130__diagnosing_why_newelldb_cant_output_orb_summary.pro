@@ -9,6 +9,7 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
 
   IF ~KEYWORD_SET(create_indices) THEN BEGIN
 
+     reset_omni_inds = 1
      stableIMF = 2
      smoothWindow = 5
 

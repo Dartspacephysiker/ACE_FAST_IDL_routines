@@ -252,7 +252,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
         ;; ENDIF
 
      ENDIF ELSE BEGIN
-        GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i,USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all
+        GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $
+                             USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the database first of all
         IF KEYWORD_SET(USE_COMBINED_INDS) THEN BEGIN
            ;; C_OMNI__stable_i      = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
            C_OMNI__stable_i         = C_OMNI__combined_i
