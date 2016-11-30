@@ -255,7 +255,10 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
         ENDFOR
      ENDIF ELSE BEGIN
         restricted_and_interped_i_list  = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS($
-                                          dbTimes,good_i,delay, $
+                                          KEYWORD_SET(for_eSpec_or_ion_db) ? $
+                                          dbStruct.x : $
+                                          dbTimes, $
+                                          good_i,delay, $
                                           CLOCKSTR=clockStr, $
                                           DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                           ANGLELIM1=angleLim1, $

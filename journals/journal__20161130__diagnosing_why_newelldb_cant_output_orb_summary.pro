@@ -1,5 +1,8 @@
-;;2016/11/03 And now the Newell DB!
-PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
+;;11/30/16
+;SAVE,fastLocInterped_i,keepme,minM,maxM,binM,shiftM,minI,maxI,binI,EA_binning,orbRange,altitudeRange,charERange,disregard_sample_t,maskMin,tHist_mask_bins_below_thresh,hemi,ePlots,nonegeflux,eplotrange,enumflplots,logenumflplot,nonegenumfl,enumflplotrange,newell_analyze_eFlux,newell__comb_accelerated,eflux_nonalfven_data,enumflux_nonalfven_data,indices__nonAlfven_eSpec,no_maximus,nonAlfven__all_fluxes,eSpec__Newell_2009_interp,eSpec__mlts,eSpec__ilats,eSpec_delta_t,tHistDenominatorPlot,tHIstDenomPlotRange,tHistDenomPlotAutoscale,tHistDenomPlot_noMask,newellPlots,nonAlfven__newellPlot_probOccurrence,nonAlfven__newell_plotRange,do_timeAvg_fluxQuantities,h2dAreas,show_integrals,write_obsArr_textFile,write_obsArr__inc_IMF,write_obsArr__orb_avg_obs,tmplt_h2dStr,reset_good_inds,reset_OMNI_inds,plotDir,txtOutputDir,FILENAME='/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/TEMP--newellDB--duskwardIMF.sav'
+PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
+
+  COMPILE_OPT IDL2
 
   COMPILE_OPT IDL2
 
@@ -222,28 +225,35 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
                                           orbRange[1])
      plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
-     SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
-                                   angleLim1,angleLim2, $
-                                   IMFStr,IMFTitle, $
-                                   BYMIN=byMin, $
-                                   BYMAX=byMax, $
-                                   BZMIN=bzMin, $
-                                   BZMAX=bzMax, $
-                                   BTMIN=btMin, $
-                                   BTMAX=btMax, $
-                                   BXMIN=bxMin, $
-                                   BXMAX=bxMax, $
-                                   /AND_TILING_OPTIONS, $
-                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
-                                   TILE_IMAGES=tile_images, $
-                                   TILING_ORDER=tiling_order, $
-                                   N_TILE_COLUMNS=n_tile_columns, $
-                                   N_TILE_ROWS=n_tile_rows, $
-                                   TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                                   TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                                   TILEPLOTSUFF=plotSuff
+     ;; SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
+     ;;                               angleLim1,angleLim2, $
+     ;;                               IMFStr,IMFTitle, $
+     ;;                               BYMIN=byMin, $
+     ;;                               BYMAX=byMax, $
+     ;;                               BZMIN=bzMin, $
+     ;;                               BZMAX=bzMax, $
+     ;;                               BTMIN=btMin, $
+     ;;                               BTMAX=btMax, $
+     ;;                               BXMIN=bxMin, $
+     ;;                               BXMAX=bxMax, $
+     ;;                               /AND_TILING_OPTIONS, $
+     ;;                               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
+     ;;                               TILE_IMAGES=tile_images, $
+     ;;                               TILING_ORDER=tiling_order, $
+     ;;                               N_TILE_COLUMNS=n_tile_columns, $
+     ;;                               N_TILE_ROWS=n_tile_rows, $
+     ;;                               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+     ;;                               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
+     ;;                               TILEPLOTSUFF=plotSuff
 
 
+     multiple_IMF_clockAngles = 0
+     clockStrings             = ['duskward']
+     angleLim1       = 67.5
+     angleLim2       = 112.5  
+     IMFStr          = '3--duskward'
+     IMFTitle        = 'Duskward'
+     
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         CLOCKSTR=clockStrings, $
         MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
@@ -462,12 +472,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         SHOW_INTEGRALS=show_integrals, $
         RESTORE_LAST_SESSION=restore_last_session, $
         _EXTRA=e
-     ;; /GET_PLOT_I_LIST_LIST, $
-     ;; /GET_PARAMSTR_LIST_LIST, $
-     ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-     ;; PARAMSTR_LIST_LIST=paramStr_list_list
      
   ENDFOR
 
 END
-
