@@ -490,6 +490,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   @common__fastloc_vars.pro
   @common__fastloc_espec_vars.pro
 
+  for_eSpec_DBs = KEYWORD_SET(nonAlfven_flux_plots) OR $
+     KEYWORD_SET(nonAlfven__newellPlot_probOccurrence)
+
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
         SET_PLOT_DIR,plotDir, $
@@ -830,7 +833,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               N_RECOVERYPHASE=n_FL_rp, $
               NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
               NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
-              GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence)
+              GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
            
            
            CASE 1 OF
@@ -851,7 +854,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
 
         ;;Now eSpecDB
-        IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN 
+        IF for_eSpec_DBs THEN BEGIN 
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
               COORDINATE_SYSTEM=coordinate_system, $
@@ -1196,7 +1199,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         do_fastLoc_i              = 1
      ENDIF
 
-     for_eSpec_DBs = KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence)
      IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
         fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                                     KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $

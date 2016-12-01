@@ -26,6 +26,9 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   do_not_consider_IMF        = 1
 
   cb_force_oobHigh           = 0
+
+  dont_blackball_maximus     = 1
+  dont_blackball_fastloc     = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -106,7 +109,17 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[1000,4300]]
+  altRange                       = [[300,4300]]
+
+  ;; altRange                    = [[300,4300], $
+  ;;                                [500,4300], $
+  ;;                                [1000,4300], $
+  ;;                                [1500,4300], $
+  ;;                                [2000,4300], $
+  ;;                                [2500,4300], $
+  ;;                                [3000,4300], $
+  ;;                                [3500,4300], $
+  ;;                                [4000,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -247,6 +260,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $

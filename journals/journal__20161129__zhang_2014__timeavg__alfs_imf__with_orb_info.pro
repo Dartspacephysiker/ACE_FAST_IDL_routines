@@ -5,7 +5,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -60
+  DSTcutoff                      = -50
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
 
@@ -18,12 +18,12 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
      
   ENDIF
 
-  ;; plotPref += '-newDim'
+  plotPref += '-newDim'
   ;; plotPref += '-keilDim_'
 
   include_32Hz                   = 0
 
-  EA_binning                     = 1
+  EA_binning                     = 0
 
   minMC                          = 1
   maxNegMC                       = -1
@@ -162,7 +162,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.3
+  btMin                          = 1.0
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -171,7 +171,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 9
+  smoothWindow                   = 5
 
   reset_omni_inds                = 1
   
@@ -191,16 +191,16 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   ;; tHist_mask_bins_below_thresh   = 2
 
-  stableIMF                      = 11
+  stableIMF                      = 9
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
