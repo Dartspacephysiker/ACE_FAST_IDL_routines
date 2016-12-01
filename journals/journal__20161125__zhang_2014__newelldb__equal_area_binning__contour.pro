@@ -6,7 +6,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -50
+  DSTcutoff                      = -40
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
   plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '_'
@@ -29,7 +29,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   justData                       = 0
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -183,16 +183,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 2
+  ;; tHist_mask_bins_below_thresh   = 2
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.5
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6

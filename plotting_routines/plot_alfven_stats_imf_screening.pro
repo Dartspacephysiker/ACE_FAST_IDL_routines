@@ -487,6 +487,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   lastSessionFile = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/last_session.sav'
 
+  @common__fastloc_vars.pro
+  @common__fastloc_espec_vars.pro
+
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
         SET_PLOT_DIR,plotDir, $
@@ -1193,11 +1196,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         do_fastLoc_i              = 1
      ENDIF
 
+     for_eSpec_DBs = KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence)
      IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
         fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                                    fastLoc,satellite,delay,LUN=lun, $
-                                    DBTIMES=fastLoc_times, $
-                                    DBFILE=fastLocDBFile, $
+                                    KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
+                                    satellite, $
+                                    delay, $
+                                    LUN=lun, $
+                                    DBTIMES=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times, $
+                                    DBFILE=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
                                     COORDINATE_SYSTEM=coordinate_system, $
                                     USE_AACGM=use_AACGM, $
                                     USE_MAG_COORDS=use_MAG, $
@@ -1267,7 +1274,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RESET_GOOD_INDS=reset_good_inds, $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
-                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence), $
+                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
                                     EARLIEST_UTC=earliest_UTC, $
                                     LATEST_UTC=latest_UTC, $
                                     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -1276,7 +1283,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonMem))
      ENDIF
 
-     IF KEYWORD_SET(nonAlfven_flux_plots) OR KEYWORD_SET(nonAlfven__newellPlot_probOccurrence) THEN BEGIN
+     IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
 
         GET_NONALFVEN_FLUX_DATA,plot_i_list, $
                                 ;; FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
