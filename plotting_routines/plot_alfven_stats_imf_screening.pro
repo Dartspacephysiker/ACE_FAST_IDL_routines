@@ -1676,7 +1676,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
 
-     PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: ',paramString_list[iMulti]
+     PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: '+paramString_list[iMulti]
 
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
         PRINTF,grossLun,""
@@ -1716,6 +1716,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         MAXILAT=maxI, $
         BINILAT=binI, $
         EQUAL_AREA_BINNING=EA_binning, $
+        USE_AACGM_COORDS=use_AACGM, $
         DO_LSHELL=do_lShell, $
         MINLSHELL=minL, $
         MAXLSHELL=maxL, $

@@ -5,22 +5,25 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   restore_last_session           = 0
 
   nonstorm                       = 1
-  DSTcutoff                      = -50
+  DSTcutoff                      = -60
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
 
   plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) 
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
      CASE smooth_dst OF
-        1   : plotPref += 'sm--'
-        ELSE: plotPref += 'sm_'+STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr--'
+        1   : plotPref += 'sm-'
+        ELSE: plotPref += 'sm_'+STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr-'
      ENDCASE
      
   ENDIF
 
+  ;; plotPref += '-newDim'
+  ;; plotPref += '-keilDim_'
+
   include_32Hz                   = 0
 
-  EA_binning                     = 0
+  EA_binning                     = 1
 
   minMC                          = 1
   maxNegMC                       = -1
@@ -40,7 +43,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
-  
+ 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
@@ -63,24 +66,25 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   make_integral_savfiles         = 0
 
   ;; grossRate_info_file_pref       = 'hammertimes_new_thing'
-  ;; ;; grossRate_info_file_suff       = '--timeAvg'
-  ;; grossRate_info_file_suff       = '--timeAvg--things'
+  ;; ;; grossRate_info_file_suff       = '-timeAvg'
+  ;; grossRate_info_file_suff       = '-timeAvg-things'
 
-  show_integrals                 = 1
-  write_obsArr_textFile          = 1
-  write_obsArr__inc_IMF          = 1
-  write_obsArr__orb_avg_obs      = 1
-  justData                       = 0
+  show_integrals             = 1
+  write_obsArr_textFile      = 1
+  write_obsArr__inc_IMF      = 1
+  write_obsArr__orb_avg_obs  = 1
+  justData                   = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                         = 1
-  eNumFlPlots                    = 1
-  pPlots                         = 1
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
+  ePlots                     = 1
+  eNumFlPlots                = 1
+  pPlots                     = 1
+  ionPlots                   = 1
+  probOccurrencePlot         = 1
+  tHistDenominatorPlot       = 1
   sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 3
+  nOrbsWithEventsPerContribOrbsPlot = 0
 
   nowepco_range                  = [0,1.0]
 
@@ -121,6 +125,11 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   summed_eFlux_pFluxplotRange    = [0,0.1]
   
+  tHistDenomPlotRange            = [5,150]
+  ;; tHistDenomPlotNormalize        = 
+  ;; tHistDenomPlotAutoscale        =      
+  tHistDenomPlot_noMask          = 1
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
   ;; ePlotRange                     = [0,0.25]
@@ -147,27 +156,13 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   ;;                             [2180,3180], $
   ;;                             [3180,4180]]
 
-  ;;Stage 1
-  ;; altRange                       = [[1000,4300], $
-  ;;                                   [1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  ;;Stage 2
-  ;; altRange                       = [[1500,4300], $
-  ;;                                   [2000,4300], $
-  ;;                                   [2500,4300]]
-
-  altRange                       = [[1500,4300], $
-                                    [2000,4300]]
-
   altRange                       = [[300,4300]]
 
   orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.5
+  btMin                          = 0.3
   ;; btMax                       = 5
 
   ;;Delay stuff
@@ -176,7 +171,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
-  smoothWindow                   = 7
+  smoothWindow                   = 9
 
   reset_omni_inds                = 1
   
@@ -196,16 +191,16 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   ;; tHist_mask_bins_below_thresh   = 2
 
-  stableIMF                      = 4
+  stableIMF                      = 11
 
   ;; numOrbLim                      = 10
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 1.5
   shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
@@ -237,7 +232,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
            END
         ENDCASE
 
-        grossRate_infos       += '_' + '--' + hemi 
+        grossRate_infos       += '_' + hemi 
         grossRate_info_file    = grossRate_info_file_pref + grossRate_infos + $
                                  grossRate_info_file_suff + '.txt'
      ENDIF

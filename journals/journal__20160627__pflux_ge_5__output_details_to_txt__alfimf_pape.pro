@@ -2,15 +2,15 @@
 PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   nonStorm                  = 1
-  DSTcutoff                 = -30
+  DSTcutoff                 = -50
   smooth_dst                = 5
   use_mostRecent_Dst_files  = 1
 
-  plotPref                       = 'Dstcut_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '--'
+  plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '-'
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
      CASE smooth_dst OF
-        1: plotPref += 'smDst--'
-        ELSE: plotPref += 'smDst_' + STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr--'
+        1: plotPref += 'sm-'
+        ELSE: plotPref += 'sm_' + STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'-'
      ENDCASE
   ENDIF
 
@@ -41,16 +41,16 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   write_obsArr__orb_avg_obs = 1
   justData               = 1
 
-  altRange               = [[1000,4300]]
-  orbRange               = [1000,10000]
+  altRange               = [[300,4300]]
+  orbRange               = [1000,10600]
 
   pPlots                 = 1
-  PPlotRange             = [pFluxMin,1e2]
+  PPlotRange             = [pFluxMin,1e4]
   logPfPlot              = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                  = 0.0
+  btMin                  = 1.0
 
   ;;Delay stuff
   nDelays                = 1
@@ -60,8 +60,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   reset_omni_inds        = 1
   reset_good_inds        = 1
 
-  smoothWindow           = 7
-  stableIMF              = 2
+  smoothWindow           = 9
+  stableIMF              = 9
   
            
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -95,7 +95,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      ;; altitudeRange    = altRange[*,i]
-     ;; altStr           = STRING(FORMAT='("/",I0,"-",I0,"--pFlux_GE_",I0)', $
+     ;; altStr           = STRING(FORMAT='("/",I0,"-",I0,"-pFlux_GE_",I0)', $
      ;;                        altitudeRange[0], $
      ;;                        altitudeRange[1], $
      ;;                        pFluxMin)
