@@ -584,7 +584,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                 ;; FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                 ;; FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-                                FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+                                ;; FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $

@@ -4,7 +4,7 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   do_what_everyone_does              = 1
 
-  fluxPlots__Newell_the_cusp         = 1
+  charE__Newell_the_cusp             = 1
 
   ;;NOTE: Bx-specific stuff on other side of IF
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
@@ -277,6 +277,7 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         ORBRANGE=orbRange, $
         ALTITUDERANGE=altitudeRange, $
         CHARERANGE=charERange, $
+        CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
         POYNTRANGE=poyntRange, $
         DELAY=delayArr, $
         ;; /MULTIPLE_DELAYS, $

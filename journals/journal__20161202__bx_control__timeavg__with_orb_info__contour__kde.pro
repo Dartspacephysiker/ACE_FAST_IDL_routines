@@ -44,7 +44,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      autoscale_fluxPlots                = 0
      fluxPlots__remove_outliers         = 0
      fluxPlots__remove_log_outliers     = 0
-     fluxPlots__Newell_the_cusp         = 1
+     fluxPlots__Newell_the_cusp         = 0
 
      
      write_obsArr_textFile              = 1
@@ -276,6 +276,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               ORBRANGE=orbRange, $
               ALTITUDERANGE=altitudeRange, $
               CHARERANGE=charERange, $
+              CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
               POYNTRANGE=poyntRange, $
               DELAY=delayArr, $
               ;; /MULTIPLE_DELAYS, $
