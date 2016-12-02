@@ -10,10 +10,11 @@
 
   include_32Hz                       = 0
 
-  plotH2D_contour                    = 0
-  plotH2D__kde                       = 1
+  plotH2D_contour                    = 1
+  ;; plotH2D__kde                       = 1
+  plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                         = 1
+  EA_binning                         = 0
 
   minMC                              = 1
   maxNegMC                           = -1
@@ -62,7 +63,7 @@
 
   altRange                       = [[300,4300]]
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -70,7 +71,7 @@
 
   smoothWindow                   = 9
 
-  stableIMF                      = 4
+  stableIMF                      = 9
 
   ;;Delay stuff
   nDelays                        = 1
@@ -98,10 +99,10 @@
 
   ;; numOrbLim                      = 10
 
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 

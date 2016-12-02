@@ -71,9 +71,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  nonAlfven_flux_plots           = 1
+  espec_flux_plots           = 1
   Newell_analyze_eFlux           = 1
-  nonalfven__all_fluxes          = 1
+  espec__all_fluxes          = 1
   Newell__comb_accelerated       = 1
 
   eSpec__Newell_2009_interp      = 1
@@ -97,8 +97,8 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   sum_electron_and_poyntingflux  = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
-  nonAlfven__newellPlot_probOccurrence = 1
-  nonalfven__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+  espec__newellPlot_probOccurrence = 1
+  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
   nowepco_range                  = [0,1.0]
 
@@ -309,15 +309,15 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
-        NONALFVEN__NO_MAXIMUS=no_maximus, $
-        NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
-        NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
-        NONALFVEN__ALL_FLUXES=nonalfven__all_fluxes, $
+        ESPEC__NO_MAXIMUS=no_maximus, $
+        ESPEC_FLUX_PLOTS=espec_flux_plots, $
+        ESPEC__JUNK_ALFVEN_CANDIDATES=espec__junk_alfven_candidates, $
+        ESPEC__ALL_FLUXES=espec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
         ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
         ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-        NONALFVEN__NEWELLPLOT_PROBOCCURRENCE=nonAlfven__newellPlot_probOccurrence, $
-        NONALFVEN__NEWELL_PLOTRANGE=nonalfven__newell_plotRange, $
+        ESPEC__NEWELLPLOT_PROBOCCURRENCE=espec__newellPlot_probOccurrence, $
+        ESPEC__NEWELL_PLOTRANGE=espec__newell_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, $

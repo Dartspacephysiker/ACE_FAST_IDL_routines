@@ -55,6 +55,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    DO_ABS_BXMAX=abs_bxMax, $
    BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
    BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   MIMC_STRUCT=MIMC_struct, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   IMF_STRUCT=IMF_struct, $
    RESET_OMNI_INDS=reset_omni_inds, $
    CLOCKSTR=clockStr, $
    DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
@@ -132,6 +135,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     MAXILAT=maxI, $
                                     BINILAT=binI, $
                                     EQUAL_AREA_BINNING=equal_area_binning, $
+                                    MIMC_STRUCT=MIMC_struct, $
+                                    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                     ;; DO_LSHELL=do_lshell, $
                                     ;; MINLSHELL=minL, $
                                     ;; MAXLSHELL=maxL, $
@@ -240,6 +245,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                            DO_ABS_BXMAX=abs_bxMax, $
                            BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                            BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                           MIMC_STRUCT=MIMC_struct, $
+                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                           IMF_STRUCT=IMF_struct, $
                            RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                            /RESET_OMNI_INDS, $
                            OMNI_COORDS=OMNI_coords, $
@@ -295,6 +303,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                           DO_ABS_BXMAX=abs_bxMax, $
                                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                          MIMC_STRUCT=MIMC_struct, $
+                                          ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                                          IMF_STRUCT=IMF_struct, $
                                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                           RESET_OMNI_INDS=reset_omni_inds, $
                                           OMNI_COORDS=OMNI_coords, $
