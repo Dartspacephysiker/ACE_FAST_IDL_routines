@@ -9,7 +9,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   include_32Hz               = 0
   use_AACGM                  = 1
 
-  plotH2D_contour            = 1
+  plotH2D_contour            = 0
+  plotH2D__kde               = 1
 
   EA_binning                 = 1
 
@@ -352,6 +353,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
+        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e

@@ -23,6 +23,9 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
 
   include_32Hz                   = 0
 
+  plotH2D_contour                = 0
+  plotH2D__kde                   = 1
+
   EA_binning                     = 0
 
   minMC                          = 1
@@ -453,6 +456,8 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
+        PLOTH2D_CONTOUR=plotH2D_contour, $
+        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
