@@ -326,6 +326,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                     FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                     FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                    FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                     DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
                                     DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                     DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
@@ -572,6 +573,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                 ;; FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                 ;; FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                ;; FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $
@@ -1801,6 +1803,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
         DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
         DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
         ORBCONTRIBPLOT=orbContribPlot, $
