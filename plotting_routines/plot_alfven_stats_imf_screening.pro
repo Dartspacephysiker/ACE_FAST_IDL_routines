@@ -477,6 +477,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     PLOTH2D_CONTOUR=plotH2D_contour, $
                                     PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
+                                    OVERPLOT_FILE=overplot_file, $
+                                    OVERPLOT_ARR=overplot_arr, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
                                     SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
@@ -1177,44 +1179,44 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                           MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                           MIN_MAGCURRENT=minMC, $
                           MAX_NEGMAGCURRENT=maxNegMC, $
-                          SMOOTH_IMF=smoothWindow, $
-                          BYMIN=byMin, $
-                          BYMAX=byMax, $
-                          BZMIN=bzMin, $
-                          BZMAX=bzMax, $
-                          BTMIN=btMin, $
-                          BTMAX=btMax, $
-                          BXMIN=bxMin, $
-                          BXMAX=bxMax, $
-                          DO_ABS_BYMIN=abs_byMin, $
-                          DO_ABS_BYMAX=abs_byMax, $
-                          DO_ABS_BZMIN=abs_bzMin, $
-                          DO_ABS_BZMAX=abs_bzMax, $
-                          DO_ABS_BTMIN=abs_btMin, $
-                          DO_ABS_BTMAX=abs_btMax, $
-                          DO_ABS_BXMIN=abs_bxMin, $
-                          DO_ABS_BXMAX=abs_bxMax, $
-                          BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                          BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                          ;; SMOOTH_IMF=smoothWindow, $
+                          ;; BYMIN=byMin, $
+                          ;; BYMAX=byMax, $
+                          ;; BZMIN=bzMin, $
+                          ;; BZMAX=bzMax, $
+                          ;; BTMIN=btMin, $
+                          ;; BTMAX=btMax, $
+                          ;; BXMIN=bxMin, $
+                          ;; BXMAX=bxMax, $
+                          ;; DO_ABS_BYMIN=abs_byMin, $
+                          ;; DO_ABS_BYMAX=abs_byMax, $
+                          ;; DO_ABS_BZMIN=abs_bzMin, $
+                          ;; DO_ABS_BZMAX=abs_bzMax, $
+                          ;; DO_ABS_BTMIN=abs_btMin, $
+                          ;; DO_ABS_BTMAX=abs_btMax, $
+                          ;; DO_ABS_BXMIN=abs_bxMin, $
+                          ;; DO_ABS_BXMAX=abs_bxMax, $
+                          ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                          ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                           MIMC_STRUCT=MIMC_struct, $
                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                           IMF_STRUCT=IMF_struct, $
                           RESET_OMNI_INDS=reset_omni_inds, $
-                          CLOCKSTR=clockStr, $
-                          DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                          ;; CLOCKSTR=clockStr, $
+                          ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                           /DO_NOT_SET_DEFAULTS, $
-                          BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                          ;; BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                           MULTIPLE_DELAYS=multiple_delays, $
                           RESOLUTION_DELAY=delay_res, $
                           BINOFFSET_DELAY=binOffset_delay, $
-                          MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                          STABLEIMF=stableIMF, $
-                          DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                          OMNI_COORDS=omni_Coords, $
-                          ANGLELIM1=angleLim1, $
-                          ANGLELIM2=angleLim2, $
+                          ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                          ;; STABLEIMF=stableIMF, $
+                          ;; DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+                          ;; OMNI_COORDS=omni_Coords, $
+                          ;; ANGLELIM1=angleLim1, $
+                          ;; ANGLELIM2=angleLim2, $
                           HWMAUROVAL=HwMAurOval, $
                           HWMKPIND=HwMKpInd, $
                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
@@ -1226,11 +1228,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                           CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
                           RESET_GOOD_INDS=reset_good_inds, $
                           NO_BURSTDATA=no_burstData, $
-                          EARLIEST_UTC=earliest_UTC, $
-                          LATEST_UTC=latest_UTC, $
-                          USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                          EARLIEST_JULDAY=earliest_julDay, $
-                          LATEST_JULDAY=latest_julDay, $
+                          ;; EARLIEST_UTC=earliest_UTC, $
+                          ;; LATEST_UTC=latest_UTC, $
+                          ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                          ;; EARLIEST_JULDAY=earliest_julDay, $
+                          ;; LATEST_JULDAY=latest_julDay, $
                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(eSpec_flux_plots) OR KEYWORD_SET(nonMem), $
                           TXTOUTPUTDIR=txtOutputDir)
 
@@ -1298,26 +1300,26 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                        MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                        MIN_MAGCURRENT=minMC, $
                                        MAX_NEGMAGCURRENT=maxNegMC, $
-                                       SMOOTH_IMF=smoothWindow, $
-                                       BYMIN=byMin, $
-                                       BYMAX=byMax, $
-                                       BZMIN=bzMin, $
-                                       BZMAX=bzMax, $
-                                       BTMIN=btMin, $
-                                       BTMAX=btMax, $
-                                       BXMIN=bxMin, $
-                                       BXMAX=bxMax, $
-                                       DO_ABS_BYMIN=abs_byMin, $
-                                       DO_ABS_BYMAX=abs_byMax, $
-                                       DO_ABS_BZMIN=abs_bzMin, $
-                                       DO_ABS_BZMAX=abs_bzMax, $
-                                       DO_ABS_BTMIN=abs_btMin, $
-                                       DO_ABS_BTMAX=abs_btMax, $
-                                       DO_ABS_BXMIN=abs_bxMin, $
-                                       DO_ABS_BXMAX=abs_bxMax, $
-                                       BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                       BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                       MIMC_STRUCT=MIMC_struct, $
+                                       ;; SMOOTH_IMF=smoothWindow, $
+                                       ;; BYMIN=byMin, $
+                                       ;; BYMAX=byMax, $
+                                       ;; BZMIN=bzMin, $
+                                       ;; BZMAX=bzMax, $
+                                       ;; BTMIN=btMin, $
+                                       ;; BTMAX=btMax, $
+                                       ;; BXMIN=bxMin, $
+                                       ;; BXMAX=bxMax, $
+                                       ;; DO_ABS_BYMIN=abs_byMin, $
+                                       ;; DO_ABS_BYMAX=abs_byMax, $
+                                       ;; DO_ABS_BZMIN=abs_bzMin, $
+                                       ;; DO_ABS_BZMAX=abs_bzMax, $
+                                       ;; DO_ABS_BTMIN=abs_btMin, $
+                                       ;; DO_ABS_BTMAX=abs_btMax, $
+                                       ;; DO_ABS_BXMIN=abs_bxMin, $
+                                       ;; DO_ABS_BXMAX=abs_bxMax, $
+                                       ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                       ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                       ;; MIMC_STRUCT=MIMC_struct, $
                                        ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                        IMF_STRUCT=IMF_struct, $
                                        RESET_OMNI_INDS=reset_omni_inds, $
@@ -1334,8 +1336,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                        STABLEIMF=stableIMF, $
                                        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
                                        OMNI_COORDS=omni_Coords, $
-                                       ANGLELIM1=angleLim1, $
-                                       ANGLELIM2=angleLim2, $
+                                       ;; ANGLELIM1=angleLim1, $
+                                       ;; ANGLELIM2=angleLim2, $
                                        HWMAUROVAL=HwMAurOval, $
                                        HWMKPIND=HwMKpInd, $
                                        ;;Don't do these for fastLoc, since it amounts to duplicated
@@ -1349,11 +1351,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                        NO_BURSTDATA=no_burstData, $
                                        /GET_TIME_I_NOT_ALFVENDB_I, $
                                        GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
-                                       EARLIEST_UTC=earliest_UTC, $
-                                       LATEST_UTC=latest_UTC, $
-                                       USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                       EARLIEST_JULDAY=earliest_julDay, $
-                                       LATEST_JULDAY=latest_julDay, $
+                                       ;; EARLIEST_UTC=earliest_UTC, $
+                                       ;; LATEST_UTC=latest_UTC, $
+                                       ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                       ;; EARLIEST_JULDAY=earliest_julDay, $
+                                       ;; LATEST_JULDAY=latest_julDay, $
                                        DONT_LOAD_IN_MEMORY=KEYWORD_SET(eSpec_flux_plots) OR KEYWORD_SET(nonMem))
 
            ;;These can be reloaded, if we like
@@ -1366,7 +1368,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
 
         IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-           IF N_ELEMENTS(PASIS__indices__eSpec_list) GT 0 THEN BEGIN
+           IF (N_ELEMENTS(PASIS__indices__eSpec_list) GT 0) AND 0 THEN BEGIN
               indices__eSpec_list = PASIS__indices__eSpec_list
               get_eSpec_i  = 0
            ENDIF ELSE BEGIN
@@ -1436,36 +1438,36 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                EQUAL_AREA_BINNING=EA_binning, $
                                DAYSIDE=dayside, $
                                NIGHTSIDE=nightside, $
-                               SATELLITE=satellite, $
-                               SMOOTH_IMF=smoothWindow, $
-                               BYMIN=byMin, $
-                               BYMAX=byMax, $
-                               BZMIN=bzMin, $
-                               BZMAX=bzMax, $
-                               BTMIN=btMin, $
-                               BTMAX=btMax, $
-                               BXMIN=bxMin, $
-                               BXMAX=bxMax, $
-                               DO_ABS_BYMIN=abs_byMin, $
-                               DO_ABS_BYMAX=abs_byMax, $
-                               DO_ABS_BZMIN=abs_bzMin, $
-                               DO_ABS_BZMAX=abs_bzMax, $
-                               DO_ABS_BTMIN=abs_btMin, $
-                               DO_ABS_BTMAX=abs_btMax, $
-                               DO_ABS_BXMIN=abs_bxMin, $
-                               DO_ABS_BXMAX=abs_bxMax, $
-                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                               ;; SATELLITE=satellite, $
+                               ;; SMOOTH_IMF=smoothWindow, $
+                               ;; BYMIN=byMin, $
+                               ;; BYMAX=byMax, $
+                               ;; BZMIN=bzMin, $
+                               ;; BZMAX=bzMax, $
+                               ;; BTMIN=btMin, $
+                               ;; BTMAX=btMax, $
+                               ;; BXMIN=bxMin, $
+                               ;; BXMAX=bxMax, $
+                               ;; DO_ABS_BYMIN=abs_byMin, $
+                               ;; DO_ABS_BYMAX=abs_byMax, $
+                               ;; DO_ABS_BZMIN=abs_bzMin, $
+                               ;; DO_ABS_BZMAX=abs_bzMax, $
+                               ;; DO_ABS_BTMIN=abs_btMin, $
+                               ;; DO_ABS_BTMAX=abs_btMax, $
+                               ;; DO_ABS_BXMIN=abs_bxMin, $
+                               ;; DO_ABS_BXMAX=abs_bxMax, $
+                               ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                               ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                MIMC_STRUCT=MIMC_struct, $
                                ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                IMF_STRUCT=IMF_struct, $
                                RESET_OMNI_INDS=reset_omni_inds, $
-                               CLOCKSTR=clockStr, $
+                               ;; CLOCKSTR=clockStr, $
                                ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
                                RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
                                RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
                                /DO_NOT_SET_DEFAULTS, $
-                               BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
+                               ;; BX_OVER_BYBZ=Bx_over_ByBz_Lim, $
                                DELAY=delay, $
                                MULTIPLE_DELAYS=multiple_delays, $
                                RESOLUTION_DELAY=delay_res, $
@@ -2053,7 +2055,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
         SAVE_ALFVENDB_TEMPDATA, $
-           H2DSTRARR=h2dStrArr,DATANAMEARR=dataNameArr,$
+           H2DSTRARR=h2dStrArr, $
+           DATANAMEARR=dataNameArr,$
+           H2DMASKARR=h2dMaskArr, $
            MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
            BINM=binM, $
            SHIFTM=shiftM, $
@@ -2068,6 +2072,28 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ;;Now plots
      IF ~KEYWORD_SET(justData) THEN BEGIN
+
+        ;;Do we have any candidates for overplotting?
+        IF KEYWORD_SET(overplot_file) AND KEYWORD_SET(overplot_arr) THEN BEGIN
+           PRINT,'Checking for overplot stuff ...'
+
+           IF N_ELEMENTS(oplotStr) EQ 0 THEN BEGIN
+              oplotStr = GET_OVERPLOT_VARS_FROM_FILE(overplot_file)
+           ENDIF
+
+           match = 0
+           FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
+              match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
+                         STRMATCH(STRUPCASE(oplotStr.dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
+           ENDFOR 
+
+           CASE match OF
+              0: sendit = 0
+              1: sendit = 1
+              ELSE: STOP
+           ENDCASE
+        ENDIF
+
         PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr, $
                                DATANAMEARR=dataNameArr, $
                                H2DMASKARR=h2dMaskArr, $
@@ -2106,6 +2132,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                EPS_OUTPUT=eps_output, $
                                PLOTH2D_CONTOUR=plotH2D_contour, $
                                PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
+                               OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
                                CENTERS_MLT=centersMLT, $
                                CENTERS_ILAT=centersILAT, $
                                SHOW_INTEGRALS=show_integrals, $

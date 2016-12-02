@@ -1,14 +1,15 @@
 PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
-                           DO_ABS_BYMIN=abs_byMin, $
-                           DO_ABS_BYMAX=abs_byMax, $
-                           DO_ABS_BZMIN=abs_bzMin, $
-                           DO_ABS_BZMAX=abs_bzMax, $
-                           DO_ABS_BTMIN=abs_btMin, $
-                           DO_ABS_BTMAX=abs_btMax, $
-                           DO_ABS_BXMIN=abs_bxMin, $
-                           DO_ABS_BXMAX=abs_bxMax, $
-                           BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                           BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                           IMF_STRUCT=IMF_struct, $
+                           ;; DO_ABS_BYMIN=abs_byMin, $
+                           ;; DO_ABS_BYMAX=abs_byMax, $
+                           ;; DO_ABS_BZMIN=abs_bzMin, $
+                           ;; DO_ABS_BZMAX=abs_bzMax, $
+                           ;; DO_ABS_BTMIN=abs_btMin, $
+                           ;; DO_ABS_BTMAX=abs_btMax, $
+                           ;; DO_ABS_BXMIN=abs_bxMin, $
+                           ;; DO_ABS_BXMAX=abs_bxMax, $
+                           ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                           ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                            LUN=lun
 
   COMPILE_OPT idl2
@@ -18,8 +19,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
 
   IF ~KEYWORD_SET(lun) THEN lun = -1
 
-  IF N_ELEMENTS(byMin) GT 0 THEN BEGIN 
-     C_OMNI__byMin          = byMin
+  IF TAG_EXIST(IMF_struct,'byMin') THEN BEGIN 
+     C_OMNI__byMin          = IMF_struct.byMin
      C_OMNI__abs_byMin      = KEYWORD_SET(abs_byMin)
      IF C_OMNI__abs_byMin THEN BEGIN
         absStr              = 'ABS_'
@@ -33,9 +34,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"byMin_",F0.2)',absStr,C_OMNI__byMin)
   ENDIF
 
-  IF N_ELEMENTS(byMax) GT 0 THEN BEGIN 
-     C_OMNI__byMax          = byMax
-     C_OMNI__abs_byMax      = KEYWORD_SET(abs_byMax)
+  IF TAG_EXIST(IMF_struct,'byMax') THEN BEGIN 
+     C_OMNI__byMax          = IMF_struct.byMax
+     C_OMNI__abs_byMax      = KEYWORD_SET(IMF_struct.abs_byMax)
      IF C_OMNI__abs_byMax THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__byMax_i     = WHERE(ABS(By) LE ABS(C_OMNI__byMax),NCOMPLEMENT=byMaxLost)
@@ -49,9 +50,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"byMax_",F0.2)',absStr,C_OMNI__byMax)
   ENDIF
 
-  IF N_ELEMENTS(bzMin) GT 0 THEN BEGIN 
-     C_OMNI__bzMin          = bzMin
-     C_OMNI__abs_bzMin      = KEYWORD_SET(abs_bzMin)
+  IF TAG_EXIST(IMF_struct,'bzMin') THEN BEGIN 
+     C_OMNI__bzMin          = IMF_struct.bzMin
+     C_OMNI__abs_bzMin      = KEYWORD_SET(IMF_struct.abs_bzMin)
      IF C_OMNI__abs_bzMin THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__bzMin_i     = WHERE(Bz LE -ABS(C_OMNI__bzMin) OR Bz GE ABS(C_OMNI__bzMin),NCOMPLEMENT=bzMinLost)
@@ -64,9 +65,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bzMin_",F0.2)',absStr,C_OMNI__bzMin)
   ENDIF
 
-  IF N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
-     C_OMNI__bzMax          = bzMax
-     C_OMNI__abs_bzMax      = KEYWORD_SET(abs_bzMax)
+  IF TAG_EXIST(IMF_struct,'bzMax') THEN BEGIN 
+     C_OMNI__bzMax          = IMF_struct.bzMax
+     C_OMNI__abs_bzMax      = KEYWORD_SET(IMF_struct.abs_bzMax)
      IF C_OMNI__abs_bzMax THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__bzMax_i     = WHERE(ABS(Bz) LE ABS(C_OMNI__bzMax),NCOMPLEMENT=bzMaxLost)
@@ -80,9 +81,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bzMax_",F0.2)',absStr,C_OMNI__bzMax)
   ENDIF  
 
-  IF N_ELEMENTS(btMin) GT 0 THEN BEGIN 
-     C_OMNI__btMin          = btMin
-     C_OMNI__abs_btMin      = KEYWORD_SET(abs_btMin)
+  IF TAG_EXIST(IMF_struct,'btMin') THEN BEGIN 
+     C_OMNI__btMin          = IMF_struct.btMin
+     C_OMNI__abs_btMin      = KEYWORD_SET(IMF_struct.abs_btMin)
      IF C_OMNI__abs_btMin THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__btMin_i     = WHERE(Bt LE -ABS(C_OMNI__btMin) OR Bt GE ABS(C_OMNI__btMin),NCOMPLEMENT=btMinLost)
@@ -95,9 +96,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"btMin_",F0.2)',absStr,C_OMNI__btMin)
   ENDIF
 
-  IF N_ELEMENTS(btMax) GT 0 THEN BEGIN 
-     C_OMNI__btMax          = btMax
-     C_OMNI__abs_btMax      = KEYWORD_SET(abs_btMax)
+  IF TAG_EXIST(IMF_struct,'btMax') THEN BEGIN 
+     C_OMNI__btMax          = IMF_struct.btMax
+     C_OMNI__abs_btMax      = KEYWORD_SET(IMF_struct.abs_btMax)
      IF C_OMNI__abs_btMax THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__btMax_i     = WHERE(ABS(Bt) LE ABS(C_OMNI__btMax),NCOMPLEMENT=btMaxLost)
@@ -111,9 +112,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"btMax_",F0.2)',absStr,C_OMNI__btMax)
   ENDIF
 
-  IF N_ELEMENTS(bxMin) GT 0 THEN BEGIN 
-     C_OMNI__bxMin          = bxMin
-     C_OMNI__abs_bxMin      = KEYWORD_SET(abs_bxMin)
+  IF TAG_EXIST(IMF_struct,'bxMin') THEN BEGIN 
+     C_OMNI__bxMin          = IMF_struct.bxMin
+     C_OMNI__abs_bxMin      = KEYWORD_SET(IMF_struct.abs_bxMin)
      IF C_OMNI__abs_bxMin THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__bxMin_i     = WHERE(Bx LE -ABS(C_OMNI__bxMin) OR Bx GE ABS(C_OMNI__bxMin),NCOMPLEMENT=bxMinLost)
@@ -126,9 +127,9 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxMin_",F0.2)',absStr,C_OMNI__bxMin)
   ENDIF
 
-  IF N_ELEMENTS(bxMax) GT 0 THEN BEGIN 
-     C_OMNI__bxMax          = bxMax
-     C_OMNI__abs_bxMax      = KEYWORD_SET(abs_bxMax)
+  IF TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN 
+     C_OMNI__bxMax          = IMF_struct.bxMax
+     C_OMNI__abs_bxMax      = KEYWORD_SET(IMF_struct.abs_bxMax)
      IF C_OMNI__abs_bxMax THEN BEGIN
         absStr              = 'ABS_'
         C_OMNI__bxMax_i     = WHERE(ABS(Bx) LE ABS(C_OMNI__bxMax),NCOMPLEMENT=bxMaxLost)
@@ -142,8 +143,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxMax_",F0.2)',absStr,C_OMNI__bxMax)
   ENDIF
 
-  IF N_ELEMENTS(bx_over_by_ratio_min) GT 0 THEN BEGIN 
-     C_OMNI__bx_over_by_ratio_min          = bx_over_by_ratio_min
+  IF TAG_EXIST(IMF_struct,'bx_over_by_ratio_min') THEN BEGIN 
+     C_OMNI__bx_over_by_ratio_min          = IMF_struct.bx_over_by_ratio_min
      ;; C_OMNI__abs_bx_over_by_ratio_min      = KEYWORD_SET(abs_bx_over_by_ratio_min)
      ;; IF C_OMNI__abs_bx_over_by_ratio_min THEN BEGIN
      ;;    absStr              = 'ABS_'
@@ -159,8 +160,8 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxy_ratioMin_",F0.2)',absStr,C_OMNI__bx_over_by_ratio_min)
   ENDIF
 
-  IF N_ELEMENTS(bx_over_by_ratio_max) GT 0 THEN BEGIN 
-     C_OMNI__bx_over_by_ratio_max          = bx_over_by_ratio_max
+  IF TAG_EXIST(IMF_struct,'bx_over_by_ratio_max') THEN BEGIN 
+     C_OMNI__bx_over_by_ratio_max          = IMF_struct.bx_over_by_ratio_max
      ;; C_OMNI__abs_bx_over_by_ratio_max      = KEYWORD_SET(abs_bx_over_by_ratio_max)
      ;; IF C_OMNI__abs_bx_over_by_ratio_max THEN BEGIN
      ;;    absStr              = 'ABS_'

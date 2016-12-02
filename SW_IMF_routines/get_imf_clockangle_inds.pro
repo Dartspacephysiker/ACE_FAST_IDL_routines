@@ -1,8 +1,9 @@
 ;;2016/02/18 This thing's whole purpose is to give us info on the stability of the IMF clock angle
 PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
-                            CLOCKSTR=clockStr, $
-                            ANGLELIM1=angleLim1, $
-                            ANGLELIM2=angleLim2, $
+                            ;; IMF_STRUCT=IMF_struct, $
+                            ;; CLOCKSTR=clockStr, $
+                            ;; ANGLELIM1=angleLim1, $
+                            ;; ANGLELIM2=angleLim2, $
                             LUN=lun
 
   COMPILE_OPT idl2
@@ -33,9 +34,9 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
                                                              C_OMNI__clockStr,C_OMNI__negAngle,C_OMNI__posAngle)
      END
      2: BEGIN
-        PRINTF,lun,'Two sets of IMF clock angles: ' + clockStr
-        IF ( STRUPCASE(clockStr) NE STRUPCASE('all_Bz') ) AND $
-           ( STRUPCASE(clockStr) NE STRUPCASE('all_By') ) THEN BEGIN
+        PRINTF,lun,'Two sets of IMF clock angles: ' + C_OMNI__clockStr
+        IF ( STRUPCASE(C_OMNI__clockStr) NE STRUPCASE('all_Bz') ) AND $
+           ( STRUPCASE(C_OMNI__clockStr) NE STRUPCASE('all_By') ) THEN BEGIN
            PRINTF,lun,"Shouldn't be able to get here! Only applies for all_Bz and all_By!"
            STOP
         ENDIF

@@ -1,6 +1,8 @@
 ;2016/02/18 Only purpose is to set a clock angle
-PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
-                        DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
+PRO SET_IMF_CLOCK_ANGLE, $
+   IMF_STRUCT=IMF_struct        ;, $
+   ;; CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
+   ;;                      DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY
@@ -16,11 +18,11 @@ PRO SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim
      C_OMNI__posAngle                             = 0
   ENDIF ELSE BEGIN
 
-     C_OMNI__clockStr                             = clockStr
-
+     C_OMNI__clockStr                             = IMF_struct.clockStr[IMF_struct.clock_i]
+     PRINT,"IMF clock_i: ",IMF_struct.clock_i
      ;;Convert stupid angleLim1 and angleLim2
-     tempAngle1                                   = angleLim1-90.
-     tempAngle2                                   = angleLim2-90.
+     tempAngle1                                   = IMF_struct.angleLim1-90.
+     tempAngle2                                   = IMF_struct.angleLim2-90.
 
      ;;Set up to check correct region: negAngle<phi<posAngle
      ;; CASE STRUPCASE(C_OMNI__clockStr) OF 

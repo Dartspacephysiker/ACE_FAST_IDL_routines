@@ -1,44 +1,44 @@
 FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay, $
-   CLOCKSTR=clockStr, $
-   DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-   ANGLELIM1=angleLim1, $
-   ANGLELIM2=angleLim2, $
+   ;; CLOCKSTR=clockStr, $
+   ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+   ;; ANGLELIM1=angleLim1, $
+   ;; ANGLELIM2=angleLim2, $
    MULTIPLE_DELAYS=multiple_delays, $
    RESOLUTION_DELAY=delay_res, $
    BINOFFSET_DELAY=binOffset_delay, $
    ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-   STABLEIMF=stableIMF, $
-   SMOOTH_IMF=smooth_IMF, $
-   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   EARLIEST_UTC=earliest_UTC, $
-   LATEST_UTC=latest_UTC, $
-   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   EARLIEST_JULDAY=earliest_julDay, $
-   LATEST_JULDAY=latest_julDay, $
-   BYMIN=byMin, $
-   BYMAX=byMax, $
-   BZMIN=bzMin, $
-   BZMAX=bzMax, $
-   BTMIN=btMin, $
-   BTMAX=btMax, $
-   BXMIN=bxMin, $
-   BXMAX=bxMax, $
-   DO_ABS_BYMIN=abs_byMin, $
-   DO_ABS_BYMAX=abs_byMax, $
-   DO_ABS_BZMIN=abs_bzMin, $
-   DO_ABS_BZMAX=abs_bzMax, $
-   DO_ABS_BTMIN=abs_btMin, $
-   DO_ABS_BTMAX=abs_btMax, $
-   DO_ABS_BXMIN=abs_bxMin, $
-   DO_ABS_BXMAX=abs_bxMax, $
-   BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-   BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   ;; STABLEIMF=stableIMF, $
+   ;; SMOOTH_IMF=smooth_IMF, $
+   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; EARLIEST_UTC=earliest_UTC, $
+   ;; LATEST_UTC=latest_UTC, $
+   ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   ;; EARLIEST_JULDAY=earliest_julDay, $
+   ;; LATEST_JULDAY=latest_julDay, $
+   ;; BYMIN=byMin, $
+   ;; BYMAX=byMax, $
+   ;; BZMIN=bzMin, $
+   ;; BZMAX=bzMax, $
+   ;; BTMIN=btMin, $
+   ;; BTMAX=btMax, $
+   ;; BXMIN=bxMin, $
+   ;; BXMAX=bxMax, $
+   ;; DO_ABS_BYMIN=abs_byMin, $
+   ;; DO_ABS_BYMAX=abs_byMax, $
+   ;; DO_ABS_BZMIN=abs_bzMin, $
+   ;; DO_ABS_BZMAX=abs_bzMax, $
+   ;; DO_ABS_BTMIN=abs_btMin, $
+   ;; DO_ABS_BTMAX=abs_btMax, $
+   ;; DO_ABS_BXMIN=abs_bxMin, $
+   ;; DO_ABS_BXMAX=abs_bxMax, $
+   ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+   ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
    MIMC_STRUCT=MIMC_struct, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
-   OMNI_COORDS=OMNI_coords, $
+   ;; OMNI_COORDS=OMNI_coords, $
    OUT_OMNI_PARAMSTR=out_omni_paramStr, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
@@ -56,42 +56,42 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
 
   ;;First, get all the OMNI inds that qualify
   stable_OMNI_i       = GET_STABLE_IMF_INDS(MAG_UTC=mag_utc, $
-                                            CLOCKSTR=clockStr, $
-                                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                            ANGLELIM1=angleLim1, $
-                                            ANGLELIM2=angleLim2, $
-                                            STABLEIMF=stableIMF, $
-                                            SMOOTH_IMF=smooth_IMF, $
-                                            ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                                            EARLIEST_UTC=earliest_UTC, $
-                                            LATEST_UTC=latest_UTC, $
-                                            USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                            EARLIEST_JULDAY=earliest_julDay, $
-                                            LATEST_JULDAY=latest_julDay, $
-                                            BYMIN=byMin, $
-                                            BYMAX=byMax, $
-                                            BZMIN=bzMin, $
-                                            BZMAX=bzMax, $
-                                            BTMIN=btMin, $
-                                            BTMAX=btMax, $
-                                            BXMIN=bxMin, $
-                                            BXMAX=bxMax, $
-                                            DO_ABS_BYMIN=abs_byMin, $
-                                            DO_ABS_BYMAX=abs_byMax, $
-                                            DO_ABS_BZMIN=abs_bzMin, $
-                                            DO_ABS_BZMAX=abs_bzMax, $
-                                            DO_ABS_BTMIN=abs_btMin, $
-                                            DO_ABS_BTMAX=abs_btMax, $
-                                            DO_ABS_BXMIN=abs_bxMin, $
-                                            DO_ABS_BXMAX=abs_bxMax, $
-                                            BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                            BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                            ;; CLOCKSTR=clockStr, $
+                                            ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                            ;; ANGLELIM1=angleLim1, $
+                                            ;; ANGLELIM2=angleLim2, $
+                                            ;; STABLEIMF=stableIMF, $
+                                            ;; SMOOTH_IMF=smooth_IMF, $
+                                            RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                            ;; EARLIEST_UTC=earliest_UTC, $
+                                            ;; LATEST_UTC=latest_UTC, $
+                                            ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                            ;; EARLIEST_JULDAY=earliest_julDay, $
+                                            ;; LATEST_JULDAY=latest_julDay, $
+                                            ;; BYMIN=byMin, $
+                                            ;; BYMAX=byMax, $
+                                            ;; BZMIN=bzMin, $
+                                            ;; BZMAX=bzMax, $
+                                            ;; BTMIN=btMin, $
+                                            ;; BTMAX=btMax, $
+                                            ;; BXMIN=bxMin, $
+                                            ;; BXMAX=bxMax, $
+                                            ;; DO_ABS_BYMIN=abs_byMin, $
+                                            ;; DO_ABS_BYMAX=abs_byMax, $
+                                            ;; DO_ABS_BZMIN=abs_bzMin, $
+                                            ;; DO_ABS_BZMAX=abs_bzMax, $
+                                            ;; DO_ABS_BTMIN=abs_btMin, $
+                                            ;; DO_ABS_BTMAX=abs_btMax, $
+                                            ;; DO_ABS_BXMIN=abs_bxMin, $
+                                            ;; DO_ABS_BXMAX=abs_bxMax, $
+                                            ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                            ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                             MIMC_STRUCT=MIMC_struct, $
                                             ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                             IMF_STRUCT=IMF_struct, $
                                             RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                             RESET_OMNI_INDS=reset_omni_inds, $
-                                            OMNI_COORDS=OMNI_coords, $
+                                            ;; OMNI_COORDS=OMNI_coords, $
                                             OMNI_PARAMSTR=omni_paramStr, $
                                             PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                                             PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
@@ -105,11 +105,11 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   
   
   ;;Handle delay stuff
-  IF KEYWORD_SET(multiple_delays)           THEN NIter            = N_ELEMENTS(delay)    ELSE NIter = 1
-  IF ~KEYWORD_SET(delay_res)                THEN delay_res        = 120
-  IF N_ELEMENTS(binOffset_delay) EQ 0       THEN binOffset_delay  = 0 
+  IF KEYWORD_SET(IMF_struct.multiple_delays)           THEN NIter = N_ELEMENTS(IMF_struct.delay) ELSE NIter = 1
+  IF ~KEYWORD_SET(IMF_struct.delay_res)                THEN IMF_struct.delay_res = 120
+  ;; IF N_ELEMENTS(IMF_struct.binOffset_delay) EQ 0       THEN binOffset_delay  = 0 
 
-  IF binOffset_delay GT delay_res/2. THEN BEGIN
+  IF IMF_struct.binOffset_delay GT IMF_struct.delay_res/2. THEN BEGIN
      PRINT,'You know that your bin offset actually places the center of the delay bin outside the bin width, right?'
      STOP
   ENDIF
@@ -128,8 +128,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      ;; before_timeOK       = ABS(beforeTimes) LE 30
      ;; after_timeOK        = ABS(afterTimes) LE 30
 
-     before_timeOK       = ABS(beforeTimes) LE ABS(delay_res/2.-binOffset_delay)
-     after_timeOK        = ABS(afterTimes) LE ABS(delay_res/2.+binOffset_delay)
+     before_timeOK       = ABS(beforeTimes) LE ABS(IMF_struct.delay_res/2.-IMF_struct.binOffset_delay)
+     after_timeOK        = ABS(afterTimes ) LE ABS(IMF_struct.delay_res/2.+IMF_struct.binOffset_delay)
 
      ;;So which are the winners?
      qualifying_db_ii    = WHERE(before_timeOK OR after_timeOK)
@@ -141,7 +141,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      qual_db_i_list.add,qualifying_db_i
   ENDFOR
      
-  ;; IF ~KEYWORD_SET(multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
+  ;; IF ~KEYWORD_SET(IMF_struct.multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
 
   out_omni_paramStr      = omni_paramStr
 
