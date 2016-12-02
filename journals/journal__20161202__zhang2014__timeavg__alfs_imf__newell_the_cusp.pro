@@ -2,78 +2,151 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
 
-  restore_last_session           = 0
+  do_what_everyone_does              = 1
 
-  nonstorm                       = 1
-  DSTcutoff                      = -50
-  smooth_dst                     = 5
-  use_mostRecent_Dst_files       = 1
+  fluxPlots__Newell_the_cusp         = 1
 
-  @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
+  ;;NOTE: Bx-specific stuff on other side of IF
+  IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
+     @journal__20161202__zhang2014__params_for_every_child.pro
 
-  plotPref += '-newDim'
-  ;; plotPref += '-keilDim_'
+  ENDIF ELSE BEGIN
 
-  include_32Hz                   = 0
 
-  plotH2D_contour                = 0
-  plotH2D__kde                   = 1
+     restore_last_session           = 0
 
-  EA_binning                     = 0
+     nonstorm                       = 1
+     DSTcutoff                      = -50
+     smooth_dst                     = 5
+     use_mostRecent_Dst_files       = 1
 
-  minMC                          = 1
-  maxNegMC                       = -1
+     @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
-  medianPlot                     = 0
-  divide_by_width_x              = 1
-  org_plots_by_folder            = 1
+     plotPref += '-newDim'
+     ;; plotPref += '-keilDim_'
 
-  dont_blackball_maximus         = 1
-  dont_blackball_fastLoc         = 1
+     include_32Hz                   = 0
 
-  ;;DB stuff
-  do_despun                      = 0
-  use_AACGM                      = 1
-  use_MAG                        = 0
+     plotH2D_contour                = 0
+     plotH2D__kde                   = 1
 
-  autoscale_fluxPlots            = 0
-  fluxPlots__remove_outliers     = 0
-  fluxPlots__remove_log_outliers = 0
-  fluxPlots__Newell_the_cusp     = 1
+     EA_binning                     = 0
 
-  group_like_plots_for_tiling    = 1
-  scale_like_plots_for_tiling    = 0
-  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
-  adj_lower_plotlim_thresh       = 2 ;;Check minima
+     minMC                          = 1
+     maxNegMC                       = -1
 
-  tile__include_IMF_arrows       = 0
-  tile__cb_in_center_panel       = 1
-  cb_force_oobHigh               = 1
+     do_timeAvg_fluxQuantities      = 1
+     logAvgPlot                     = 0
+     medianPlot                     = 0
+     divide_by_width_x              = 1
+     org_plots_by_folder            = 1
 
-  suppress_gridLabels            = [0,1,1, $
-                                    1,1,1, $
-                                    1,1,1]
+     dont_blackball_maximus         = 1
+     dont_blackball_fastLoc         = 1
 
-  ;;bonus
-  print_avg_imf_components       = 0
-  print_master_OMNI_file         = 0
-  save_master_OMNI_inds          = 0
-  ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
-  calc_KL_sw_coupling_func       = 1
-  make_integral_savfiles         = 0
+     ;;DB stuff
+     do_despun                      = 0
+     use_AACGM                      = 1
+     use_MAG                        = 0
 
-  ;; grossRate_info_file_pref       = 'hammertimes_new_thing'
-  ;; ;; grossRate_info_file_suff       = '-timeAvg'
-  ;; grossRate_info_file_suff       = '-timeAvg-things'
+     autoscale_fluxPlots            = 0
+     fluxPlots__remove_outliers     = 0
+     fluxPlots__remove_log_outliers = 0
 
-  show_integrals             = 1
-  write_obsArr_textFile      = 1
-  write_obsArr__inc_IMF      = 1
-  write_obsArr__orb_avg_obs  = 1
-  justData                   = 0
+     group_like_plots_for_tiling    = 1
+     scale_like_plots_for_tiling    = 0
+     adj_upper_plotlim_thresh       = 3 ;;Check third maxima
+     adj_lower_plotlim_thresh       = 2 ;;Check minima
 
+     tile__include_IMF_arrows       = 0
+     tile__cb_in_center_panel       = 1
+     cb_force_oobHigh               = 1
+
+     suppress_gridLabels            = [0,1,1, $
+                                       1,1,1, $
+                                       1,1,1]
+
+     ;;bonus
+     print_avg_imf_components       = 0
+     print_master_OMNI_file         = 0
+     save_master_OMNI_inds          = 0
+     ;; make_OMNI_stats_savFile        = '~/Desktop/OMNI_stats.sav'
+     calc_KL_sw_coupling_func       = 1
+     make_integral_savfiles         = 0
+
+     ;; grossRate_info_file_pref       = 'hammertimes_new_thing'
+     ;; ;; grossRate_info_file_suff       = '-timeAvg'
+     ;; grossRate_info_file_suff       = '-timeAvg-things'
+
+     show_integrals             = 1
+     write_obsArr_textFile      = 1
+     write_obsArr__inc_IMF      = 1
+     write_obsArr__orb_avg_obs  = 1
+     justData                   = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;Tiled plot options
+
+     reset_good_inds                = 1
+
+     ;; altRange                    = [[340,1180], $
+     ;;                             [1180,2180], $
+     ;;                             [2180,3180], $
+     ;;                             [3180,4180]]
+
+     altRange                       = [[300,4300]]
+
+     orbRange                       = [1000,10600]
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;IMF condition stuff--run the ring!
+     btMin                          = 1.0
+     ;; btMax                       = 5
+
+     ;;Delay stuff
+     nDelays                        = 1
+     delayDeltaSec                  = 1800
+     binOffset_delay                = 0
+     delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+
+     smoothWindow                   = 5
+
+     reset_omni_inds                = 1
+     
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;ILAT stuff
+     hemi                           = 'NORTH'
+     minILAT                        = 60
+     maxILAT                        = 90
+     ;; maskMin                        = 5
+     ;; tHist_mask_bins_below_thresh   = 5
+     ;; numOrbLim                      = 5
+
+     ;; hemi                           = 'SOUTH'
+     ;; minILAT                        = -90
+     ;; maxILAT                        = -60
+     ;; maskMin                        =  10
+
+     ;; tHist_mask_bins_below_thresh   = 2
+
+     stableIMF                      = 9
+
+     ;; numOrbLim                      = 10
+
+     ;; binILAT                     = 2.0
+     binILAT                        = 2.5
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;MLT stuff
+     binMLT                         = 1.0
+     shiftMLT                       = 0.0
+
+     ;; minMLT                      = 6
+     ;; maxMLT                      = 18
+
+     ;;Bonus
+
+  ENDELSE
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   ePlots                     = 1
@@ -143,69 +216,6 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; IPlotRange                     = [0,7.0e7]
 
   ;; summed_eFlux_pFluxplotRange    = [0,0.8]
-
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Tiled plot options
-
-  reset_good_inds                = 1
-
-  ;; altRange                    = [[340,1180], $
-  ;;                             [1180,2180], $
-  ;;                             [2180,3180], $
-  ;;                             [3180,4180]]
-
-  altRange                       = [[300,4300]]
-
-  orbRange                       = [1000,10600]
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;IMF condition stuff--run the ring!
-  btMin                          = 1.0
-  ;; btMax                       = 5
-
-  ;;Delay stuff
-  nDelays                        = 1
-  delayDeltaSec                  = 1800
-  binOffset_delay                = 0
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-
-  smoothWindow                   = 5
-
-  reset_omni_inds                = 1
-  
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
-  ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 5
-  ;; numOrbLim                      = 5
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
-  ;; maskMin                        =  10
-
-  ;; tHist_mask_bins_below_thresh   = 2
-
-  stableIMF                      = 9
-
-  ;; numOrbLim                      = 10
-
-  ;; binILAT                     = 2.0
-  binILAT                        = 2.5
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.0
-
-  ;; minMLT                      = 6
-  ;; maxMLT                      = 18
-
-  ;;Bonus
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]

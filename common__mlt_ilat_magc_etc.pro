@@ -13,6 +13,7 @@
      MIMC__orbRange, $
      MIMC__altitudeRange, $
      MIMC__charERange, $
+     MIMC__charE__Newell_the_cusp, $
      MIMC__poyntRange, $
      MIMC__despunDB,MIMC__chastDB, $
      MIMC__north,MIMC__south,MIMC__both_hemis, $

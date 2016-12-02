@@ -198,6 +198,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ALTITUDERANGE=altitudeRange, $
                                     CHARERANGE=charERange, $
                                     CHARIERANGE=charIERange, $ ;;Only applicable for non-Alfvén stuff
+                                    CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                     POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     INCLUDE_32HZ=include_32Hz, $
@@ -319,10 +320,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONEGOXYFLUX=noNegOxyFlux, $
                                     NOPOSOXYFLUX=noPosOxyFlux, $
                                     OXYPLOTRANGE=oxyPlotRange, $
-                                    CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
-                                    NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
-                                    CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
-                                    NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+                                    CHAREPLOTS=charEPlots, $
+                                    CHARETYPE=charEType, $
+                                    LOGCHAREPLOT=logCharEPlot, $
+                                    ABSCHARE=absCharE, $
+                                    NONEGCHARE=noNegCharE, $
+                                    NOPOSCHARE=noPosCharE, $
+                                    CHAREPLOTRANGE=CharEPlotRange, $
+                                    CHARIEPLOTS=chariePlots, $
+                                    LOGCHARIEPLOT=logChariePlot, $
+                                    ABSCHARIE=absCharie, $
+                                    NONEGCHARIE=noNegCharie, $
+                                    NOPOSCHARIE=noPosCharie, $
+                                    CHARIEPLOTRANGE=ChariePlotRange, $
                                     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                     FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                     FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
@@ -535,6 +545,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
                                 ALTITUDERANGE=altitudeRange, $
                                 CHARERANGE=charERange, $
+                                CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                 POYNTRANGE=poyntRange, $
                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                 INCLUDE_32HZ=include_32Hz, $
@@ -573,7 +584,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                 ;; FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                 ;; FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-                                ;; FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+                                FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $
@@ -1120,6 +1131,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                        ORBRANGE=orbRange, $
                        ALTITUDERANGE=altitudeRange, $
                        CHARERANGE=charERange, $
+                       CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                        POYNTRANGE=poyntRange, $
                        SAMPLE_T_RESTRICTION=sample_t_restriction, $
                        INCLUDE_32HZ=include_32Hz, $
@@ -1217,12 +1229,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     HEMI=hemi, $
                                     ORBRANGE=orbRange, $
                                     ALTITUDERANGE=altitudeRange, $
-                                    CHARERANGE=charERange, $
-                                    POYNTRANGE=poyntRange, $
+                                    ;; CHARERANGE=charERange, $
+                                    ;; CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
+                                    ;; POYNTRANGE=poyntRange, $
                                     SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                     INCLUDE_32HZ=include_32Hz, $
                                     DISREGARD_SAMPLE_T=disregard_sample_t, $
-                                    DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                                    ;; DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
                                     DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                     MINMLT=minM,MAXMLT=maxM, $
                                     BINM=binM, $
@@ -1330,6 +1343,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ALTITUDERANGE=altitudeRange, $
                                 CHARERANGE=charERange, $
                                 CHARIERANGE=charIERange, $
+                                CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                 INCLUDE_32HZ=include_32Hz, $
                                 DISREGARD_SAMPLE_T=disregard_sample_t, $
@@ -1501,6 +1515,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ORBRANGE=orbRange, $
                                 ALTITUDERANGE=altitudeRange, $
                                 CHARERANGE=charERange, $
+                                CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                 minMLT=minM, $
                                 maxMLT=maxM, $
                                 BINMLT=binM, $
@@ -1570,6 +1585,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                            ORBRANGE=orbRange, $
                            ALTITUDERANGE=altitudeRange, $
                            CHARERANGE=charERange, $
+                           CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                            minMLT=minM, $
                            maxMLT=maxM, $
                            BINMLT=binM, $

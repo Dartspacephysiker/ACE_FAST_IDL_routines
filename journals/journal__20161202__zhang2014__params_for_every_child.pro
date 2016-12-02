@@ -35,7 +35,6 @@
   autoscale_fluxPlots                = 0
   fluxPlots__remove_outliers         = 0
   fluxPlots__remove_log_outliers     = 0
-  fluxPlots__Newell_the_cusp         = 1
 
   show_integrals                     = 1
   write_obsArr_textFile              = 1

@@ -16,6 +16,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    ALTITUDERANGE=altitudeRange, $
    CHARERANGE=charERange, $
    CHARIERANGE=charIERange, $ ;Only for non-Alfvén ions
+   CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
    POYNTRANGE=poyntRange, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
    INCLUDE_32HZ=include_32Hz, $
@@ -119,6 +120,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     ALTITUDERANGE=altitudeRange, $
                                     CHARERANGE=charERange, $
                                     CHARIERANGE=charIERange, $
+                                    CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                     BOTH_HEMIS=both_hemis, $
                                     HEMI=hemi, $
                                     HWMAUROVAL=HwMAurOval, $
@@ -160,6 +162,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                ORBRANGE=orbRange, $
                                ALTITUDERANGE=altitudeRange, $
                                CHARERANGE=charERange, $
+                               CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
                                POYNTRANGE=poyntRange, $
                                SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                INCLUDE_32HZ=include_32Hz, $
