@@ -70,7 +70,7 @@
 
   smoothWindow                   = 9
 
-  stableIMF                      = 4
+  stableIMF                      = 9
 
   ;;Delay stuff
   nDelays                        = 1

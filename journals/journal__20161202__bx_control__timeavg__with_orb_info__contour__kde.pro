@@ -4,7 +4,8 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   COMPILE_OPT IDL2
 
 
-  do_what_everyone_does              = 1
+  do_what_everyone_does              = 0
+  KDE_for_Bx                         = 0
 
   ;;NOTE: Bx-specific stuff on other side of IF
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
@@ -23,9 +24,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      include_32Hz                       = 0
 
      plotH2D_contour                    = 0
-     plotH2D__kde                       = 1
+     plotH2D__kde                       = 0
 
-     EA_binning                         = 1
+     EA_binning                         = 0
 
      minMC                              = 1
      maxNegMC                           = -1
@@ -35,6 +36,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      medianPlot                         = 0
      divide_by_width_x                  = 1
      org_plots_by_folder                = 1
+
+     dont_blackball_maximus             = 1
+     dont_blackball_fastloc             = 1
 
      ;;DB stuff
      do_despun                          = 0
@@ -66,9 +70,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      ;;                             [2180,3180], $
      ;;                             [3180,4180]]
 
-     altRange                       = [[1000,4300]]
+     altRange                       = [[300,4300]]
 
-     orbRange                       = [1000,11000]
+     orbRange                       = [1000,10800]
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;IMF condition stuff--run the ring!
@@ -78,6 +82,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      delayDeltaSec                  = 1800
      binOffset_delay                = 0
      delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+
+     stableIMF                      = 4
+     smoothWindow                   = 9
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;ILAT stuff
@@ -105,10 +112,12 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;MLT stuff
-     binMLT                         = 1.5
+     binMLT                         = 1.0
      shiftMLT                       = 0.0
 
   ENDELSE
+
+  plotH2D__kde                       = KDE_for_Bx
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bx-specific
@@ -149,7 +158,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   ;;e- energy flux
   ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0.0,1.5e7]
+  ePlotRange                     = [0.0,0.25]
   logEfPlot                      = 0
   noNegEflux                     = 0
 
@@ -159,8 +168,8 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,1.5e7], $
-                                    [0,3.0e23]]
+  ENumFlPlotRange                = [[0,0.25], $
+                                    [0,5.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -169,19 +178,19 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,1.5e7]
+  PPlotRange                     = [0,0.15]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
   ;; logIfPlot                   = 1
   ;; IPlotRange                  = [1e6,1e8]
   logIfPlot                      = 0
-  IPlotRange                     = [0,1.5e22]
+  IPlotRange                     = [0,5.0e7]
   
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.1]
 
-  summed_eFlux_pFluxplotRange    = [0,8e7]
+  summed_eFlux_pFluxplotRange    = [0,0.5]
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Southern hemi ranges
