@@ -646,9 +646,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 CHARETYPE=charEType, $
                                 CHARIEPLOTS=chariEPlots, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-                                ;; FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
-                                ;; FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-                                ;; FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+                                FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+                                FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+                                DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $
@@ -683,6 +684,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 PLOTH2D_CONTOUR=plotH2D_contour, $
                                 PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
                                 HOYDIA=hoyDia,LUN=lun, $
+                                FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
+                                ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
+                                ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+                                ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
+                                ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
                                 MIMC_STRUCT=MIMC_struct, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                 RESET_STRUCT=reset, $
@@ -1362,12 +1370,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                USE_AACGM=use_AACGM, $
                                USE_MAG_COORDS=use_MAG, $
                                T1_ARR=t1_arr,T2_ARR=t2_arr, $
-                               EPLOTS=ePlots, $
-                               EFLUXPLOTTYPE=eFluxPlotType, $
-                               ENUMFLPLOTS=eNumFlPlots, $
-                               ENUMFLPLOTTYPE=eNumFlPlotType, $
-                               IONPLOTS=ionPlots, $
-                               IFLUXPLOTTYPE=iFluxPlotType, $
                                DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                ESPEC_DELTA_T=eSpec_delta_t, $
                                ION_DELTA_T=ion_delta_t, $
@@ -1673,6 +1675,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         fastLocInterped_i  = PASIS__fastLocInterped_i_list[iMulti]
      ENDIF
 
+     IF KEYWORD_SET(PASIS__paramString_list) THEN BEGIN 
+        paramString = PASIS__paramString_list[iMulti] 
+     ENDIF
+
      GET_ALFVENDB_2DHISTOS, $
         MAXIMUS__maximus, $
         plot_i, $
@@ -1847,7 +1853,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
         LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots,$
-        PARAMSTRING=PASIS__paramString_list[iMulti], $
+        PARAMSTRING=paramString, $
         PARAMSTRPREFIX=plotPrefix, $
         PARAMSTRSUFFIX=plotSuffix, $
         TMPLT_H2DSTR=tmplt_h2dStr, $
@@ -1873,13 +1879,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         h2dStrArr_list, $
         dataNameArr_list, $
         dataRawPtrArr_list, $
-        paramString_list, $
+        PASIS__paramString_list, $
         HAS_NPLOTS=nplots, $
         NEW_PARAMSTR_FOR_LIKE_PLOTARRS=multiString, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         DO_REARRANGE_DATARAWPTRARR_LIST=do_rearrange_dataRawPtrArr_list, $
         ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
         ADJ_LOWER_PLOTLIM_IF_NTH_MIN_IS_GREATER=adj_lower_plotlim_thresh, $
+        DONT_ADJUST_PARAMSTRING_LIST=dont_adjust_paramString_list, $
+        OUT_NEW_PARAMSTRING_LIST=new_paramString_list, $
         OUT_MASK_H2DSTRARR=h2dMaskArr
   ENDIF
 
@@ -1895,7 +1903,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                             dataRawPtrArr_list[iList] : $
                             !NULL
      plot_i               = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
-     paramString          = PASIS__paramString_list[iList]
+     paramString          = new_paramString_list[iList]
 
      IF ~KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
         ;;Shift the way we historically have

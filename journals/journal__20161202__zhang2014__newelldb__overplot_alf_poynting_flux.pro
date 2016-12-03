@@ -229,7 +229,6 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         CHARERANGE=charERange, $
         POYNTRANGE=poyntRange, $
         DELAY=delayArr, $
-        ;; /MULTIPLE_DELAYS, $
         RESOLUTION_DELAY=delayDeltaSec, $
         BINOFFSET_DELAY=binOffset_delay, $
         NUMORBLIM=numOrbLim, $
