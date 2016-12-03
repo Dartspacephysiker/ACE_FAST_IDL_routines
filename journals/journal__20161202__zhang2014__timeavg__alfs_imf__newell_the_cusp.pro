@@ -37,12 +37,13 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
      plotPref += '-newDim'
+     plotPref += '-special'
      ;; plotPref += '-keilDim_'
 
      include_32Hz                    = 0
 
      plotH2D_contour                 = 0
-     plotH2D__kde                    = 1
+     plotH2D__kde                    = 0
 
      EA_binning                      = 0
 
@@ -146,12 +147,19 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                     = 1
-  eNumFlPlots                = 1
+  ;; ePlots                     = 1
+  ;; eNumFlPlots                = 1
+  ;; pPlots                     = 1
+  ;; ionPlots                   = 1
+  ;; probOccurrencePlot         = 1
+  ;; tHistDenominatorPlot       = 1
+  ;; sum_electron_and_poyntingflux  = 1
+  ePlots                     = 0
+  eNumFlPlots                = 0
   pPlots                     = 1
-  ionPlots                   = 1
-  probOccurrencePlot         = 1
-  tHistDenominatorPlot       = 1
+  ionPlots                   = 0
+  probOccurrencePlot         = 0
+  tHistDenominatorPlot       = 0
   sum_electron_and_poyntingflux  = 1
   nOrbsWithEventsPerContribOrbsPlot = 0
 
@@ -180,7 +188,7 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
+  PPlotRange                     = [0,0.10]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
