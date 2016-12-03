@@ -551,6 +551,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      get_eSpec_i    = 1
   ENDELSE
 
+  get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
+               KEYWORD_SET(get_fastLoc_i) OR $
+               KEYWORD_SET(get_plot_i)
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
@@ -815,54 +818,57 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
 
         ;;Now OMNI, if desired
-        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-           OMNI_COORDS=OMNI_coords, $
-           ;; /RESTRICT_TO_ALFVENDB_TIMES, $
-           EARLIEST_UTC=earliest_UTC, $
-           LATEST_UTC=latest_UTC, $
-           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-           EARLIEST_JULDAY=earliest_julDay, $
-           LATEST_JULDAY=latest_julDay, $
-           ;; COORDINATE_SYSTEM=coordinate_system, $
-           ;; USE_AACGM_COORDS=use_AACGM, $
-           ;; USE_MAG_COORDS=use_MAG, $
-           DSTCUTOFF=dstCutoff, $
-           SMOOTH_DST=smooth_dst, $
-           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           NONSTORM_I=ns_OMNI_i, $
-           MAINPHASE_I=mp_OMNI_i, $
-           RECOVERYPHASE_I=rp_OMNI_i, $
-           STORM_DST_I=s_dst_OMNI_i, $
-           NONSTORM_DST_I=ns_dst_OMNI_i, $
-           MAINPHASE_DST_I=mp_dst_OMNI_i, $
-           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
-           N_STORM=n_OMNI_s, $
-           N_NONSTORM=n_OMNI_ns, $
-           N_MAINPHASE=n_OMNI_mp, $
-           N_RECOVERYPHASE=n_OMNI_rp, $
-           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
-           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
+        IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
+           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
+              OMNI_COORDS=OMNI_coords, $
+              ;; /RESTRICT_TO_ALFVENDB_TIMES, $
+              EARLIEST_UTC=earliest_UTC, $
+              LATEST_UTC=latest_UTC, $
+              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+              EARLIEST_JULDAY=earliest_julDay, $
+              LATEST_JULDAY=latest_julDay, $
+              ;; COORDINATE_SYSTEM=coordinate_system, $
+              ;; USE_AACGM_COORDS=use_AACGM, $
+              ;; USE_MAG_COORDS=use_MAG, $
+              DSTCUTOFF=dstCutoff, $
+              SMOOTH_DST=smooth_dst, $
+              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+              NONSTORM_I=ns_OMNI_i, $
+              MAINPHASE_I=mp_OMNI_i, $
+              RECOVERYPHASE_I=rp_OMNI_i, $
+              STORM_DST_I=s_dst_OMNI_i, $
+              NONSTORM_DST_I=ns_dst_OMNI_i, $
+              MAINPHASE_DST_I=mp_dst_OMNI_i, $
+              RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
+              N_STORM=n_OMNI_s, $
+              N_NONSTORM=n_OMNI_ns, $
+              N_MAINPHASE=n_OMNI_mp, $
+              N_RECOVERYPHASE=n_OMNI_rp, $
+              NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
+              NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
 
-        CASE 1 OF
-           KEYWORD_SET(nonStorm): BEGIN
-              PRINTF,lun,'Restricting OMNI with non-storm indices ...'
-              restrict_OMNI_with_these_i = ns_OMNI_i
-              t1_OMNI_arr                = ns_OMNI_t1
-              t2_OMNI_arr                = ns_OMNI_t2
-           END
-           KEYWORD_SET(mainPhase): BEGIN
-              PRINTF,lun,'Restricting OMNI with main-phase indices ...'
-              restrict_OMNI_with_these_i = mp_OMNI_i
-              t1_OMNI_arr                = mp_OMNI_t1
-              t2_OMNI_arr                = mp_OMNI_t2         
-           END
-           KEYWORD_SET(recoveryPhase): BEGIN
-              PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
-              restrict_OMNI_with_these_i = rp_OMNI_i
-              t1_OMNI_arr                = rp_OMNI_t1
-              t2_OMNI_arr                = rp_OMNI_t2
-           END
-        ENDCASE
+           CASE 1 OF
+              KEYWORD_SET(nonStorm): BEGIN
+                 PRINTF,lun,'Restricting OMNI with non-storm indices ...'
+                 restrict_OMNI_with_these_i = ns_OMNI_i
+                 t1_OMNI_arr                = ns_OMNI_t1
+                 t2_OMNI_arr                = ns_OMNI_t2
+              END
+              KEYWORD_SET(mainPhase): BEGIN
+                 PRINTF,lun,'Restricting OMNI with main-phase indices ...'
+                 restrict_OMNI_with_these_i = mp_OMNI_i
+                 t1_OMNI_arr                = mp_OMNI_t1
+                 t2_OMNI_arr                = mp_OMNI_t2         
+              END
+              KEYWORD_SET(recoveryPhase): BEGIN
+                 PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
+                 restrict_OMNI_with_these_i = rp_OMNI_i
+                 t1_OMNI_arr                = rp_OMNI_t1
+                 t2_OMNI_arr                = rp_OMNI_t2
+              END
+           ENDCASE
+
+        ENDIF
 
         ;;Now fastLoc
         IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
@@ -1058,47 +1064,51 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ENDCASE
         ENDIF
 
-        ;;Now OMNI, if desired
-        GET_AE_OMNIDB_INDICES, $
-           OMNI_COORDS=OMNI_coords, $
-           ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-           ;; COORDINATE_SYSTEM=coordinate_system, $
-           ;; USE_AACGM_COORDS=use_AACGM, $
-           ;; USE_MAG_COORDS=use_MAG, $
-           AECUTOFF=AEcutoff, $
-           SMOOTH_AE=smooth_AE, $
-           EARLIEST_UTC=earliest_UTC, $
-           LATEST_UTC=latest_UTC, $
-           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-           EARLIEST_JULDAY=earliest_julDay, $
-           LATEST_JULDAY=latest_julDay, $
-           USE_AU=use_au, $
-           USE_AL=use_al, $
-           USE_AO=use_ao, $
-           HIGH_AE_I=high_ae_i, $
-           LOW_AE_I=low_ae_i, $
-           HIGH_I=high_i, $
-           LOW_I=low_i, $
-           N_HIGH=n_high, $
-           N_LOW=n_low, $
-           OUT_NAME=navn, $
-           HIGH_AE_T1=high_ae_t1, $
-           LOW_AE_T1=low_ae_t1, $
-           HIGH_AE_T2=high_ae_t2, $
-           LOW_AE_T2=low_ae_t2, $
-           LUN=lun
+        IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
+
+           ;;Now OMNI, if we need dat
+           GET_AE_OMNIDB_INDICES, $
+              OMNI_COORDS=OMNI_coords, $
+              ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+              ;; COORDINATE_SYSTEM=coordinate_system, $
+              ;; USE_AACGM_COORDS=use_AACGM, $
+              ;; USE_MAG_COORDS=use_MAG, $
+              AECUTOFF=AEcutoff, $
+              SMOOTH_AE=smooth_AE, $
+              EARLIEST_UTC=earliest_UTC, $
+              LATEST_UTC=latest_UTC, $
+              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+              EARLIEST_JULDAY=earliest_julDay, $
+              LATEST_JULDAY=latest_julDay, $
+              USE_AU=use_au, $
+              USE_AL=use_al, $
+              USE_AO=use_ao, $
+              HIGH_AE_I=high_ae_i, $
+              LOW_AE_I=low_ae_i, $
+              HIGH_I=high_i, $
+              LOW_I=low_i, $
+              N_HIGH=n_high, $
+              N_LOW=n_low, $
+              OUT_NAME=navn, $
+              HIGH_AE_T1=high_ae_t1, $
+              LOW_AE_T1=low_ae_t1, $
+              HIGH_AE_T2=high_ae_t2, $
+              LOW_AE_T2=low_ae_t2, $
+              LUN=lun
 
 
-        CASE 1 OF
-           KEYWORD_SET(AE_high): BEGIN
-              PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
-              restrict_with_these_i = high_i
-           END
-           ELSE: BEGIN
-              PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
-              restrict_with_these_i = low_i
-           END
-        ENDCASE
+           CASE 1 OF
+              KEYWORD_SET(AE_high): BEGIN
+                 PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
+                 restrict_with_these_i = high_i
+              END
+              ELSE: BEGIN
+                 PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
+                 restrict_with_these_i = low_i
+              END
+           ENDCASE
+
+        ENDIF
 
         ;;Now fastLoc
         IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
