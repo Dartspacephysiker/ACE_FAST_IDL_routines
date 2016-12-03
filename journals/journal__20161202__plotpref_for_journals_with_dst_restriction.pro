@@ -1,4 +1,7 @@
-  plotPref                       = (N_ELEMENTS(plotPref GT 0) ? plotPref : '' ) + 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) 
+
+  plotPref = (N_ELEMENTS(plotPref) GT 0 ? plotPref : '' ) + $
+             'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) 
+
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
      CASE smooth_dst OF
         1   : plotPref += 'sm-'

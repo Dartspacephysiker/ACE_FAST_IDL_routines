@@ -2,7 +2,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
 
-  add_to_plotPref                = '-special'
+  ;; plotPref = '-special'
 
   do_what_everyone_does          = 1
 
@@ -62,7 +62,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      ;;DB stuff
      do_despun                       = 0
-     use_AACGM                       = 1
+     use_AACGM                       = 0
      use_MAG                         = 0
 
      autoscale_fluxPlots             = 0
@@ -96,7 +96,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;IMF condition stuff--run the ring!
-     btMin                            = 1.0
+     btMin                            = 0.5
      ;; btMax                         = 5
 
      ;;Delay stuff
@@ -123,7 +123,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      ;; tHist_mask_bins_below_thresh  = 2
 
-     stableIMF                        = 9
+     stableIMF                        = 4
 
      ;; numOrbLim                     = 10
 
@@ -142,10 +142,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ENDELSE
 
-  IF KEYWORD_SET(add_to_plotpref) THEN BEGIN
-     plotPref += add_to_plotPref
-  ENDIF
-
   ;;In any case
   reset_good_inds                     = 1
   reset_OMNI_inds                     = 1
@@ -160,14 +156,14 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; probOccurrencePlot         = 1
   ;; tHistDenominatorPlot       = 1
   ;; sum_electron_and_poyntingflux  = 1
-  ePlots                     = 0
-  eNumFlPlots                = 0
-  pPlots                     = 1
-  ionPlots                   = 0
-  probOccurrencePlot         = 0
-  tHistDenominatorPlot       = 0
-  sum_electron_and_poyntingflux  = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
+  ePlots                             = 1
+  eNumFlPlots                        = 1
+  pPlots                             = 1
+  ionPlots                           = 1
+  probOccurrencePlot                 = 1
+  tHistDenominatorPlot               = 1
+  sum_electron_and_poyntingflux      = 0
+  nOrbsWithEventsPerContribOrbsPlot  = 0
 
   nowepco_range                  = [0,1.0]
 

@@ -30,7 +30,7 @@
 
   ;;DB stuff
   do_despun                          = 0
-  use_AACGM                          = 1
+  use_AACGM                          = 0
   use_MAG                            = 0
 
   autoscale_fluxPlots                = 0
@@ -38,9 +38,9 @@
   fluxPlots__remove_log_outliers     = 0
 
   show_integrals                     = 1
-  write_obsArr_textFile              = 1
-  write_obsArr__inc_IMF              = 1
-  write_obsArr__orb_avg_obs          = 1
+  write_obsArr_textFile              = 0
+  write_obsArr__inc_IMF              = 0
+  write_obsArr__orb_avg_obs          = 0
   justData                           = 0
 
   ;;bonus
