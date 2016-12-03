@@ -2,13 +2,13 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
 
-  ;; plotPref = '-special'
+  plotPref = '-smeared'
 
   do_what_everyone_does          = 1
 
   charE__Newell_the_cusp         = 1
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0

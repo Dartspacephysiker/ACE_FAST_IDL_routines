@@ -244,7 +244,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;;Now combine all of these
      COMBINE_OMNI_IMF_INDS
 
-     IF TAG_EXIST(IMF_struct,'stableIMF') THEN BEGIN
+     test = 0
+     STR_ELEMENT,IMF_struct,'stableIMF',test
+     IF KEYWORD_SET(test) THEN BEGIN
         C_OMNI__stableIMF           = IMF_struct.stableIMF
         C_OMNI__paramStr           += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 

@@ -10,7 +10,7 @@
 
   include_32Hz                       = 0
 
-  plotH2D_contour                    = 0
+  plotH2D_contour                    = 1
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
 
@@ -62,11 +62,11 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.0
+  btMin                          = 0.0
 
   smoothWindow                   = 9
 
-  stableIMF                      = 9
+  stableIMF                      = 0
 
   ;;Delay stuff
   nDelays                        = 1
@@ -94,10 +94,10 @@
 
   ;; numOrbLim                      = 10
 
-  binILAT                        = 2.5
+  binILAT                        = 3.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 1.5
   shiftMLT                       = 0.0
 
