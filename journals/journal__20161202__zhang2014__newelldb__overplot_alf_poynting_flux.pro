@@ -1,10 +1,13 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
-PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
+PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   COMPILE_OPT IDL2
 
+  plotPref = 'test_op_contour' 
+
+
   restore_last_session           = 0
-  use_prev_plot_i                = 0
+  use_prev_plot_i                = 1
 
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -36,8 +39,6 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   use_AACGM                      = 0
   use_MAG                        = 0
 
-  ;; plotPref                       = 
-
   autoscale_fluxPlots            = 0
   fluxPlots__remove_outliers     = 0
   fluxPlots__remove_log_outliers = 0
@@ -51,7 +52,11 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   adj_lower_plotlim_thresh       = 2 ;;Check minima
 
   overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
-  overplot_arr                   = ['*enumflux_espec*broad*','*timeavgd_pflux*']
+  overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+                                    ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+                                    ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  op_contour__levels             = [50,80]
+  op_contour__percent            = 1
 
   tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
@@ -78,13 +83,11 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__use_2000km_file         = 0
   eSpec__remove_outliers         = 0
 
-  newellplots                    = 1
-  newellPlot_autoscale           = 1
+  newellplots                    = 0
+  newellPlot_autoscale           = 0
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
-  pPlots                         = 0
-  ionPlots                       = 0
 
   tHistDenominatorPlot           = 0
    ;; tHistDenomPlotRange  = 
@@ -92,35 +95,19 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; tHistDenomPlotAutoscale        = 1
   ;; tHistDenomPlot_noMask          = 1
 
-  sum_electron_and_poyntingflux  = 0
-
-  eSpec__newellPlot_probOccurrence = 0
-  eSpec__newell_plotRange    = [[0,0.25],[0,0.15],[0.6,1.0]]
-
-  nowepco_range                  = [0,1.0]
-
   espec__newellPlot_probOccurrence = 1
   espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
-  nowepco_range                  = [0,1.0]
-
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
   eFluxPlotType                  = 'Max'
-  ;; ePlotRange                     = [[0,0.10],[0,0.50],[0,0.20],[0,0.30]]
   ePlotRange                     = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
   logEfPlot                      = 0
-  ;; noNegEflux                     = 0
+  noNegEflux                     = 1
   ;; ePlotRange                     = [1e-3,1e1]
   ;; logEfPlot                      = 1
   noNegEflux                     = 1
 
   eNumFlPlotType                 = ['ESA_Number_flux']
   noNegENumFl                    = 1
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[5e-2,5e1], $
-  ;;                             [1e7,1e10]]
-  logENumFlPlot                  = [0]
   ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
   ENumFlPlotRange                = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
@@ -429,9 +416,13 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
+        CONTOUR__LEVELS=contour__levels, $
+        CONTOUR__PERCENT=contour__percent, $
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         OVERPLOT_FILE=overplot_file, $
         OVERPLOT_ARR=overplot_arr, $
+        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $

@@ -478,9 +478,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                     CB_FORCE_OOBLOW=cb_force_oobLow, $
                                     PLOTH2D_CONTOUR=plotH2D_contour, $
+                                    CONTOUR__LEVELS=contour__levels, $
+                                    CONTOUR__PERCENT=contour__percent, $
                                     PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
                                     OVERPLOT_FILE=overplot_file, $
                                     OVERPLOT_ARR=overplot_arr, $
+                                    OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+                                    OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
                                     SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
@@ -1600,8 +1604,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   ;;Need area or length of each bin for gross rates
   IF KEYWORD_SET(grossRateMe) OR $
-     KEYWORD_SET(plotH2D_contour) OR $
-     KEYWORD_SET(plotH2D__kernel_density_unmask) $
+     KEYWORD_SET(alfDB_plot_struct.plotH2D_contour) OR $
+     KEYWORD_SET(alfDB_plot_struct.plotH2D__kernel_density_unmask) $
   THEN BEGIN
      IF KEYWORD_SET(do_grossRate_fluxQuantities) AND $
         KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
@@ -2003,9 +2007,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                NO_COLORBAR=no_colorbar, $
                                EPS_OUTPUT=eps_output, $
                                PLOTH2D_CONTOUR=plotH2D_contour, $
+                               CONTOUR__LEVELS=contour__levels, $
+                               CONTOUR__PERCENT=contour__percent, $
                                PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
                                ;; OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
                                OVERPLOTSTR=KEYWORD_SET(sendit), $
+                               OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+                               OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
                                CENTERS_MLT=centersMLT, $
                                CENTERS_ILAT=centersILAT, $
                                SHOW_INTEGRALS=show_integrals, $
