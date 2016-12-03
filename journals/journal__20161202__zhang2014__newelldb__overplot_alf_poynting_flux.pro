@@ -4,7 +4,7 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   COMPILE_OPT IDL2
 
   restore_last_session           = 0
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -72,10 +72,11 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
   eSpec__all_fluxes              = 1
+  Newell__comb_accelerated       = 1
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
-  eSpec__remove_outliers         = 1
+  eSpec__remove_outliers         = 0
 
   newellplots                    = 1
   newellPlot_autoscale           = 1
@@ -293,6 +294,7 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         ESPEC__NO_MAXIMUS=no_maximus, $
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
         ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $

@@ -17,6 +17,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
      ENDCASE
   ENDIF
 
+  use_prev_plot_i                = 1
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
@@ -71,9 +72,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  espec_flux_plots           = 1
+  espec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
-  espec__all_fluxes          = 1
+  espec__all_fluxes              = 1
   Newell__comb_accelerated       = 1
 
   eSpec__Newell_2009_interp      = 1
@@ -447,6 +448,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         RESTORE_LAST_SESSION=restore_last_session, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $

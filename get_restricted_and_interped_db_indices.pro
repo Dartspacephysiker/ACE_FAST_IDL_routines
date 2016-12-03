@@ -186,6 +186,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                NO_BURSTDATA=no_burstData, $
                                GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
                                FOR_ESPEC_DBS=for_eSpec_DBs, $
+                               MIMC_STRUCT=MIMC_struct, $
+                               ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                               IMF_STRUCT=IMF_struct, $
                                DONT_LOAD_IN_MEMORY=nonMem)
 
   ENDELSE

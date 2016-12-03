@@ -1730,7 +1730,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         EFLUX_ESPEC_DATA=PASIS__eFlux_eSpec_data, $
-        ENUMFLUX_ESPEC_DATA=eNumFlux_eSpec_data, $
+        ENUMFLUX_ESPEC_DATA=PASIS__eNumFlux_eSpec_data, $
         IFLUX_ESPEC_DATA=PASIS__iFlux_eSpec_data, $
         INUMFLUX_ESPEC_DATA=PASIS__iNumFlux_eSpec_data, $
         INDICES__ESPEC=indices__eSpec, $
