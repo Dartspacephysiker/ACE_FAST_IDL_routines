@@ -1886,7 +1886,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         DO_REARRANGE_DATARAWPTRARR_LIST=do_rearrange_dataRawPtrArr_list, $
         ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
         ADJ_LOWER_PLOTLIM_IF_NTH_MIN_IS_GREATER=adj_lower_plotlim_thresh, $
-        DONT_ADJUST_PARAMSTRING_LIST=dont_adjust_paramString_list, $
+        /DONT_ADJUST_PARAMSTRING_LIST, $
         OUT_NEW_PARAMSTRING_LIST=new_paramString_list, $
         OUT_MASK_H2DSTRARR=h2dMaskArr
   ENDIF
