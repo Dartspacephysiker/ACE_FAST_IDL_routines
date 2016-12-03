@@ -105,9 +105,11 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   
   
   ;;Handle delay stuff
-  IF KEYWORD_SET(IMF_struct.multiple_delays)           THEN NIter = N_ELEMENTS(IMF_struct.delay) ELSE NIter = 1
-  IF ~KEYWORD_SET(IMF_struct.delay_res)                THEN IMF_struct.delay_res = 120
-  ;; IF N_ELEMENTS(IMF_struct.binOffset_delay) EQ 0       THEN binOffset_delay  = 0 
+  IF KEYWORD_SET(IMF_struct.multiple_delays) THEN BEGIN
+     NIter = N_ELEMENTS(IMF_struct.delay) 
+  ENDIF ELSE BEGIN
+     NIter = 1
+  ENDELSE
 
   IF IMF_struct.binOffset_delay GT IMF_struct.delay_res/2. THEN BEGIN
      PRINT,'You know that your bin offset actually places the center of the delay bin outside the bin width, right?'
