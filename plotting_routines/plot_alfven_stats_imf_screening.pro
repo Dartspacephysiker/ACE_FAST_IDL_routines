@@ -1554,8 +1554,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                 PARAMSTRING=paramString, $
                                 PARAMSTR_LIST=paramString_list, $
-                                PARAMSTRPREFIX=plotPrefix, $
-                                PARAMSTRSUFFIX=plotSuffix,$
                                 LUN=lun
   ;; ENDIF
 
