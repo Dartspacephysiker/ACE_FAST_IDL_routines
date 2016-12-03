@@ -1,10 +1,11 @@
 FUNCTION GET_OMNI_TIME_I,mag_UTC, $
+                         IMF_STRUCT=IMF_struct, $
                          ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                         EARLIEST_UTC=earliest_UTC, $
-                         LATEST_UTC=latest_UTC, $
-                         USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                         EARLIEST_JULDAY=earliest_julDay, $
-                         LATEST_JULDAY=latest_julDay, $
+                         ;; EARLIEST_UTC=earliest_UTC, $
+                         ;; LATEST_UTC=latest_UTC, $
+                         ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                         ;; EARLIEST_JULDAY=earliest_julDay, $
+                         ;; LATEST_JULDAY=latest_julDay, $
                          LUN=lun
 
   COMPILE_OPT idl2
@@ -27,8 +28,8 @@ FUNCTION GET_OMNI_TIME_I,mag_UTC, $
         n_time       = N_ELEMENTS(mag_UTC)
         time_i       = LINDGEN(N_ELEMENTS(mag_UTC))
 
-        IF KEYWORD_SET(earliest_julDay) THEN BEGIN
-           early_i   = WHERE(UTC_TO_JULDAY(mag_UTC) GE earliest_julDay,n_early)
+        IF TAG_EXIST(IMF_struct,'earliest_julDay') THEN BEGIN
+           early_i   = WHERE(UTC_TO_JULDAY(mag_UTC) GE IMF_struct.earliest_julDay,n_early)
            WHERECHECK,early_i
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to early julDay",' + $
@@ -37,8 +38,8 @@ FUNCTION GET_OMNI_TIME_I,mag_UTC, $
            time_i   = CGSETINTERSECTION(time_i,early_i,COUNT=n_time)
         ENDIF
 
-        IF KEYWORD_SET(latest_julDay) THEN BEGIN
-           late_i   = WHERE(UTC_TO_JULDAY(mag_UTC) LE latest_julDay,n_late)
+        IF TAG_EXIST(IMF_struct,'latest_julDay') THEN BEGIN
+           late_i   = WHERE(UTC_TO_JULDAY(mag_UTC) LE IMF_struct.latest_julDay,n_late)
            WHERECHECK,late_i
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to latest julDay",' + $
@@ -51,8 +52,8 @@ FUNCTION GET_OMNI_TIME_I,mag_UTC, $
         n_time       = N_ELEMENTS(mag_UTC)
         time_i       = LINDGEN(N_ELEMENTS(mag_UTC))
 
-        IF KEYWORD_SET(earliest_UTC) THEN BEGIN
-           early_i   = WHERE(mag_UTC GE earliest_UTC,n_early)
+        IF TAG_EXIST(IMF_struct,'earliest_UTC') THEN BEGIN
+           early_i   = WHERE(mag_UTC GE IMF_struct.earliest_UTC,n_early)
            WHERECHECK,early_i
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to early julDay",' + $
@@ -61,8 +62,8 @@ FUNCTION GET_OMNI_TIME_I,mag_UTC, $
            time_i   = CGSETINTERSECTION(time_i,early_i,COUNT=n_time)
         ENDIF
 
-        IF KEYWORD_SET(latest_UTC) THEN BEGIN
-           late_i    = WHERE(mag_UTC LE latest_UTC,n_late)
+        IF TAG_EXIST(IMF_struct,'latest_UTC') THEN BEGIN
+           late_i    = WHERE(mag_UTC LE IMF_struct.latest_UTC,n_late)
            WHERECHECK,late_i
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to latest julDay",' + $

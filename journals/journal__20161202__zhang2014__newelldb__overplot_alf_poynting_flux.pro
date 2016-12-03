@@ -1,21 +1,17 @@
-;;2016/11/03 And now the Newell DB!
-PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
+;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
+PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   COMPILE_OPT IDL2
 
   restore_last_session           = 0
+  use_prev_plot_i                = 1
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -50
   smooth_dst                     = 5
   use_mostRecent_Dst_files       = 1
-  plotPref                       = 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL) + '_'
-  IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     CASE smooth_dst OF
-        1: plotPref += 'sm--'
-        ELSE: plotPref += 'sm_' + STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr-'
-     ENDCASE
-  ENDIF
+
+  @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
@@ -23,13 +19,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   show_integrals                 = 1
 
-  write_obsArr_textFile          = 0
-  write_obsArr__inc_IMF          = 0
-  write_obsArr__orb_avg_obs      = 0
-  justData                       = 0
-
   EA_binning                     = 0
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
+  plotH2D__kde                   = 1
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -50,10 +42,16 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   fluxPlots__remove_outliers     = 0
   fluxPlots__remove_log_outliers = 0
   
+  ;; dont_blackball_maximus         = 
+  dont_blackball_fastloc         = 1
+
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   adj_lower_plotlim_thresh       = 2 ;;Check minima
+
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
+  overplot_arr                   = ['*enumflux_espec*broad*','*timeavgd_pflux*']
 
   tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
@@ -71,32 +69,35 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  espec_flux_plots           = 1
+  eSpec_flux_plots           = 1
   Newell_analyze_eFlux           = 1
-  espec__all_fluxes          = 1
-  Newell__comb_accelerated       = 1
+  eSpec__all_fluxes          = 1
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
-  eSpec__remove_outliers         = 0
+  eSpec__remove_outliers         = 1
 
   newellplots                    = 1
-  newellPlot_autoscale           = 0
+  newellPlot_autoscale           = 1
 
   ePlots                         = 1
   eNumFlPlots                    = 1
   pPlots                         = 0
   ionPlots                       = 0
-  probOccurrencePlot             = 0
 
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
    ;; tHistDenomPlotRange  = 
   ;; tHistDenomPlotNormalize        = 0
-  tHistDenomPlotAutoscale        = 1
-  tHistDenomPlot_noMask          = 1
+  ;; tHistDenomPlotAutoscale        = 1
+  ;; tHistDenomPlot_noMask          = 1
 
   sum_electron_and_poyntingflux  = 0
-  nOrbsWithEventsPerContribOrbsPlot = 0
+
+  eSpec__newellPlot_probOccurrence = 0
+  eSpec__newell_plotRange    = [[0,0.25],[0,0.15],[0.6,1.0]]
+
+  nowepco_range                  = [0,1.0]
+
   espec__newellPlot_probOccurrence = 1
   espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
@@ -126,36 +127,21 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   ;; logENumFlPlot                  = 0
   ;; ENumFlPlotRange                = [0,2e9]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Southern hemi ranges
-  ;; ePlotRange                     = [0,0.25]
-
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,0.25], $
-  ;;                                   [0,8.0e8]]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  ;; altRange                    = [[340,1180], $
-  ;;                             [1180,2180], $
-  ;;                             [2180,3180], $
-  ;;                             [3180,4180]]
-
   altRange                       = [[300,4300]]
-  ;; altRange                       = [[300,2000]]
 
   IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
   btMin                          = 1.0
-  ;; btMax                       = 5
 
   smoothWindow                   = 9
 
@@ -175,7 +161,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
   hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
-  ;; maskMin                        = 5
+  ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
@@ -202,7 +188,7 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
-     altStr                      = STRING(FORMAT='(I0,"-",I0,"km-orbs_",I0,"-",I0)', $
+     altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
@@ -308,16 +294,15 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
-        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         ESPEC__NO_MAXIMUS=no_maximus, $
-        ESPEC_FLUX_PLOTS=espec_flux_plots, $
-        ESPEC__JUNK_ALFVEN_CANDIDATES=espec__junk_alfven_candidates, $
-        ESPEC__ALL_FLUXES=espec__all_fluxes, $
+        ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
+        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
+        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
         ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
         ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-        ESPEC__NEWELLPLOT_PROBOCCURRENCE=espec__newellPlot_probOccurrence, $
-        ESPEC__NEWELL_PLOTRANGE=espec__newell_plotRange, $
+        ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
+        ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, $
@@ -337,7 +322,9 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
-        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $  
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
@@ -381,9 +368,6 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
-        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
-        WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
-        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
@@ -444,11 +428,15 @@ PRO JOURNAL__20161125__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
+        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
+        OVERPLOT_FILE=overplot_file, $
+        OVERPLOT_ARR=overplot_arr, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         RESTORE_LAST_SESSION=restore_last_session, $
-        _EXTRA=e
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i
+        ;; _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $
      ;; PLOT_I_LIST_LIST=plot_i_list_list, $

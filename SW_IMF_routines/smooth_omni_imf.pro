@@ -1,12 +1,14 @@
-PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
-                           BYMIN=byMin, $
-                           BYMAX=byMax, $
-                           BZMIN=bzMin, $
-                           BZMAX=bzMax, $
-                           BTMIN=btMin, $
-                           BTMAX=btMax, $
-                           BXMIN=bxMin, $
-                           BXMAX=bxMax                    
+PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
+                    IMF_STRUCT=IMF_struct;, $
+                    ;; smooth_IMF, $
+                    ;;        BYMIN=byMin, $
+                    ;;        BYMAX=byMax, $
+                    ;;        BZMIN=bzMin, $
+                    ;;        BZMAX=bzMax, $
+                    ;;        BTMIN=btMin, $
+                    ;;        BTMAX=btMax, $
+                    ;;        BXMIN=bxMin, $
+                    ;;        BXMAX=bxMax                    
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY
@@ -15,7 +17,7 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
   def_maxSmoothGap           = 3
   def_minStreakForSmooth     = 15 ;30 min
 
-  C_OMNI__smoothLen          = smooth_IMF
+  C_OMNI__smoothLen          = IMF_struct.smooth_IMF
 
   IF ~KEYWORD_SET(C_OMNI__is_smoothed) OR KEYWORD_SET(C_OMNI__RECALCULATE) THEN BEGIN
 
@@ -45,19 +47,19 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
         ;; curStop                       = goodmag_goodtimes_i[C_OMNI__streakstop_ii[streakNum]]
         curStart                         = C_OMNI__streakstart_ii[streakNum]
         curStop                          = C_OMNI__streakstop_ii[streakNum]
-        IF N_ELEMENTS(byMin) GT 0 OR N_ELEMENTS(byMax) GT 0 THEN BEGIN 
+        IF TAG_EXIST(IMF_struct,'byMin') OR TAG_EXIST(IMF_struct,'byMax') THEN BEGIN 
            C_OMNI__By[curStart:curStop]  = SMOOTH(C_OMNI__By[curStart:curStop],smooth_IMF, $
                                                   /EDGE_TRUNCATE)
         ENDIF
-        IF N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 THEN BEGIN 
+        IF TAG_EXIST(IMF_struct,'bzMin') OR TAG_EXIST(IMF_struct,'bzMax') THEN BEGIN 
            C_OMNI__Bz[curStart:curStop]  = SMOOTH(C_OMNI__Bz[curStart:curStop],smooth_IMF, $
                                                   /EDGE_TRUNCATE)
         ENDIF
-        IF N_ELEMENTS(btMin) GT 0 OR N_ELEMENTS(btMax) GT 0 THEN BEGIN 
+        IF TAG_EXIST(IMF_struct,'btMin') OR TAG_EXIST(IMF_struct,'btMax') THEN BEGIN 
            C_OMNI__Bt[curStart:curStop]  = SMOOTH(C_OMNI__Bt[curStart:curStop],smooth_IMF, $
                                                   /EDGE_TRUNCATE)
         ENDIF
-        IF N_ELEMENTS(bxMin) GT 0 OR N_ELEMENTS(bxMax) GT 0 THEN BEGIN 
+        IF TAG_EXIST(IMF_struct,'bxMin') OR TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN 
            C_OMNI__Bx[curStart:curStop]  = SMOOTH(C_OMNI__Bx[curStart:curStop],smooth_IMF, $
                                                   /EDGE_TRUNCATE)
         ENDIF

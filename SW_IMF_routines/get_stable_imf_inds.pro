@@ -3,36 +3,39 @@
 ;; "Stable" is defined here as a period of time over which the specified conditions/params remain met
 FUNCTION GET_STABLE_IMF_INDS, $
    MAG_UTC=mag_utc, $
-   CLOCKSTR=clockStr, $
-   ANGLELIM1=angleLim1, $
-   ANGLELIM2=angleLim2, $
-   DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-   STABLEIMF=stableIMF, $
-   SMOOTH_IMF=smooth_IMF, $
-   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   EARLIEST_UTC=earliest_UTC, $
-   LATEST_UTC=latest_UTC, $
-   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   EARLIEST_JULDAY=earliest_julDay, $
-   LATEST_JULDAY=latest_julDay, $
-   BYMIN=byMin, $
-   BYMAX=byMax, $
-   BZMIN=bzMin, $
-   BZMAX=bzMax, $
-   BTMIN=btMin, $
-   BTMAX=btMax, $
-   BXMIN=bxMin, $
-   BXMAX=bxMax, $
-   DO_ABS_BYMIN=abs_byMin, $
-   DO_ABS_BYMAX=abs_byMax, $
-   DO_ABS_BZMIN=abs_bzMin, $
-   DO_ABS_BZMAX=abs_bzMax, $
-   DO_ABS_BTMIN=abs_btMin, $
-   DO_ABS_BTMAX=abs_btMax, $
-   DO_ABS_BXMIN=abs_bxMin, $
-   DO_ABS_BXMAX=abs_bxMax, $
-   BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-   BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   ;; CLOCKSTR=clockStr, $
+   ;; ANGLELIM1=angleLim1, $
+   ;; ANGLELIM2=angleLim2, $
+   ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+   ;; STABLEIMF=stableIMF, $
+   ;; SMOOTH_IMF=smooth_IMF, $
+   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; EARLIEST_UTC=earliest_UTC, $
+   ;; LATEST_UTC=latest_UTC, $
+   ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   ;; EARLIEST_JULDAY=earliest_julDay, $
+   ;; LATEST_JULDAY=latest_julDay, $
+   ;; BYMIN=byMin, $
+   ;; BYMAX=byMax, $
+   ;; BZMIN=bzMin, $
+   ;; BZMAX=bzMax, $
+   ;; BTMIN=btMin, $
+   ;; BTMAX=btMax, $
+   ;; BXMIN=bxMin, $
+   ;; BXMAX=bxMax, $
+   ;; DO_ABS_BYMIN=abs_byMin, $
+   ;; DO_ABS_BYMAX=abs_byMax, $
+   ;; DO_ABS_BZMIN=abs_bzMin, $
+   ;; DO_ABS_BZMAX=abs_bzMax, $
+   ;; DO_ABS_BTMIN=abs_btMin, $
+   ;; DO_ABS_BTMAX=abs_btMax, $
+   ;; DO_ABS_BXMIN=abs_bxMin, $
+   ;; DO_ABS_BXMAX=abs_bxMax, $
+   ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+   ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   MIMC_STRUCT=MIMC_struct, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   IMF_STRUCT=IMF_struct, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
    GET_BX=get_Bx, $
@@ -83,32 +86,33 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
         ;;Do we need to recalculate anyway?
         CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
-                                 CLOCKSTR=clockStr, $
-                                 ANGLELIM1=angleLim1, $
-                                 ANGLELIM2=angleLim2, $
-                                 DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                 STABLEIMF=stableIMF, $
+                                 IMF_STRUCT=IMF_struct, $
+                                 ;; CLOCKSTR=clockStr, $
+                                 ;; ANGLELIM1=angleLim1, $
+                                 ;; ANGLELIM2=angleLim2, $
+                                 ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+                                 ;; STABLEIMF=stableIMF, $
                                  RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                                 BYMIN=byMin, $
-                                 BYMAX=byMax, $
-                                 BZMIN=bzMin, $
-                                 BZMAX=bzMax, $
-                                 BTMIN=btMin, $
-                                 BTMAX=btMax, $
-                                 BXMIN=bxMin, $
-                                 BXMAX=bxMax, $
-                                 DO_ABS_BYMIN=abs_byMin, $
-                                 DO_ABS_BYMAX=abs_byMax, $
-                                 DO_ABS_BZMIN=abs_bzMin, $
-                                 DO_ABS_BZMAX=abs_bzMax, $
-                                 DO_ABS_BTMIN=abs_btMin, $
-                                 DO_ABS_BTMAX=abs_btMax, $
-                                 DO_ABS_BXMIN=abs_bxMin, $
-                                 DO_ABS_BXMAX=abs_bxMax, $
+                                 ;; BYMIN=byMin, $
+                                 ;; BYMAX=byMax, $
+                                 ;; BZMIN=bzMin, $
+                                 ;; BZMAX=bzMax, $
+                                 ;; BTMIN=btMin, $
+                                 ;; BTMAX=btMax, $
+                                 ;; BXMIN=bxMin, $
+                                 ;; BXMAX=bxMax, $
+                                 ;; DO_ABS_BYMIN=abs_byMin, $
+                                 ;; DO_ABS_BYMAX=abs_byMax, $
+                                 ;; DO_ABS_BZMIN=abs_bzMin, $
+                                 ;; DO_ABS_BZMAX=abs_bzMax, $
+                                 ;; DO_ABS_BTMIN=abs_btMin, $
+                                 ;; DO_ABS_BTMAX=abs_btMax, $
+                                 ;; DO_ABS_BXMIN=abs_bxMin, $
+                                 ;; DO_ABS_BXMAX=abs_bxMax, $
                                  RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                 BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                 BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                 OMNI_COORDS=OMNI_coords, $
+                                 ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                                 ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                                 ;; OMNI_COORDS=OMNI_coords, $
                                  LUN=lun
         
         calculate                   = C_OMNI__RECALCULATE
@@ -145,7 +149,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          thetaCone_GSE,phiClock_GSE,cone_overClock_GSE,Bxy_over_Bz_GSE, $
                          By_GSM,Bz_GSM,Bt_GSM, $
                          thetaCone_GSM,phiClock_GSM,cone_overClock_GSM,Bxy_over_Bz_GSM, $
-                         OMNI_COORDS=OMNI_coords, $
+                         OMNI_COORDS=IMF_struct.OMNI_coords, $
                          LUN=lun
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -177,54 +181,62 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;; goodmag_goodtimes_i            = goodmag_goodtimes_i[C_OMNI__clean_i]
 
      ;;Any smoothing to be done?
-     IF KEYWORD_SET(smooth_IMF) THEN BEGIN
-        SMOOTH_OMNI_IMF,goodmag_goodtimes_i,smooth_IMF, $
-                        BYMIN=byMin, $
-                        BYMAX=byMax, $
-                        BZMIN=bzMin, $
-                        BZMAX=bzMax, $
-                        BTMIN=btMin, $
-                        BTMAX=btMax, $
-                        BXMIN=bxMin, $
-                        BXMAX=bxMax
+     ;; IF KEYWORD_SET(smooth_IMF) THEN BEGIN
+     IF TAG_EXIST(IMF_struct,'smooth_IMF') THEN BEGIN
+        SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
+                        IMF_STRUCT=IMF_struct;, $
+                        ;; IMF_struct.smooth_IMF, $
+                        ;; BYMIN=byMin, $
+                        ;; BYMAX=byMax, $
+                        ;; BZMIN=bzMin, $
+                        ;; BZMAX=bzMax, $
+                        ;; BTMIN=btMin, $
+                        ;; BTMAX=btMax, $
+                        ;; BXMIN=bxMin, $
+                        ;; BXMAX=bxMax
      ENDIF
 
      C_OMNI__time_i = GET_OMNI_TIME_I(C_OMNI__mag_UTC, $
+                                      IMF_STRUCT=IMF_struct, $
                                       ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                                      EARLIEST_UTC=earliest_UTC, $
-                                      LATEST_UTC=latest_UTC, $
-                                      USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                      EARLIEST_JULDAY=earliest_julDay, $
-                                      LATEST_JULDAY=latest_julDay, $
+                                      ;; EARLIEST_UTC=earliest_UTC, $
+                                      ;; LATEST_UTC=latest_UTC, $
+                                      ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                      ;; EARLIEST_JULDAY=earliest_julDay, $
+                                      ;; LATEST_JULDAY=latest_julDay, $
                                       LUN=lun)
 
-     IF KEYWORD_SET(clockStr) THEN BEGIN
-        SET_IMF_CLOCK_ANGLE,CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
-                            DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
+     IF TAG_EXIST(IMF_struct,'clockStr') THEN BEGIN
+        SET_IMF_CLOCK_ANGLE, $
+           IMF_STRUCT=IMF_struct;, $
+           ;; CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
+           ;;                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
 
         GET_IMF_CLOCKANGLE_INDS,C_OMNI__phiClock, $
-                                CLOCKSTR=clockStr, $
-                                ANGLELIM1=angleLim1, $
-                                ANGLELIM2=angleLim2, $
+                                ;; IMF_STRUCT=IMF_struct, $
+                                ;; CLOCKSTR=clockStr, $
+                                ;; ANGLELIM1=angleLim1, $
+                                ;; ANGLELIM2=angleLim2, $
                                 LUN=lun
         USE_COMBINED_INDS           = 1
      ENDIF
 
-     IF N_ELEMENTS(byMin) GT 0 OR N_ELEMENTS(byMax) GT 0 $
-        OR N_ELEMENTS(bzMin) GT 0 OR N_ELEMENTS(bzMax) GT 0 $
-        OR N_ELEMENTS(btMin) GT 0 OR N_ELEMENTS(btMax) GT 0 $
-        OR N_ELEMENTS(bxMin) GT 0 OR N_ELEMENTS(bxMax) GT 0 THEN BEGIN
+     IF TAG_EXIST(IMF_struct,'byMin') OR TAG_EXIST(IMF_struct,'byMax') $
+        OR TAG_EXIST(IMF_struct,'bzMin') OR TAG_EXIST(IMF_struct,'bzMax') $
+        OR TAG_EXIST(IMF_struct,'btMin') OR TAG_EXIST(IMF_struct,'btMax') $
+        OR TAG_EXIST(IMF_struct,'bxMin') OR TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN
         GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,C_OMNI__Bt,C_OMNI__Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
-                               DO_ABS_BYMIN=abs_byMin, $
-                               DO_ABS_BYMAX=abs_byMax, $
-                               DO_ABS_BZMIN=abs_bzMin, $
-                               DO_ABS_BZMAX=abs_bzMax, $
-                               DO_ABS_BTMIN=abs_btMin, $
-                               DO_ABS_BTMAX=abs_btMax, $
-                               DO_ABS_BXMIN=abs_bxMin, $
-                               DO_ABS_BXMAX=abs_bxMax, $
-                               BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                               BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                               IMF_STRUCT=IMF_struct, $
+                               ;; DO_ABS_BYMIN=abs_byMin, $
+                               ;; DO_ABS_BYMAX=abs_byMax, $
+                               ;; DO_ABS_BZMIN=abs_bzMin, $
+                               ;; DO_ABS_BZMAX=abs_bzMax, $
+                               ;; DO_ABS_BTMIN=abs_btMin, $
+                               ;; DO_ABS_BTMAX=abs_btMax, $
+                               ;; DO_ABS_BXMIN=abs_bxMin, $
+                               ;; DO_ABS_BXMAX=abs_bxMax, $
+                               ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+                               ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                                LUN=lun
         USE_COMBINED_INDS           = 1
      END
@@ -232,14 +244,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;;Now combine all of these
      COMBINE_OMNI_IMF_INDS
 
-     IF KEYWORD_SET(stableIMF) THEN BEGIN
-        C_OMNI__stableIMF           = stableIMF
+     IF TAG_EXIST(IMF_struct,'stableIMF') THEN BEGIN
+        C_OMNI__stableIMF           = IMF_struct.stableIMF
         C_OMNI__paramStr           += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all
                              USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS, $
                              RECALCULATE_OMNI_IND_STREAKS=calculate                
-        ;; C_OMNI__stable_i            = WHERE(C_OMNI__StreakDurArr GE C_OMNI__stableIMF) ;This works because the gap between OMNI data is 1 minute
 
         ;;Indexes into THE ORIGINAL, UNTAMED OMNI DB
         ;;This is because C_OMNI__StreakDurArr is as large as the original
@@ -250,7 +261,6 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                              POSITIONS=realStable_i, $
                                              NORESULT=-1)
         C_OMNI__stable_i = TEMPORARY(realStable_i)
-        ;; C_OMNI__stable_i = CGSETINTERSECTION(goodmag_goodtimes_i
 
         ;; SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY,ADD_SUFF='/IMF_streakHistos'
         ;; histFile = plotDir+C_OMNI__paramStr+'--histo.png'
@@ -263,10 +273,6 @@ FUNCTION GET_STABLE_IMF_INDS, $
         ;; ENDIF
 
      ENDIF ELSE BEGIN
-        ;; GET_OMNI_IND_STREAKS, $
-        ;;    C_OMNI__mag_UTC, $
-        ;;    goodmag_goodtimes_i, $
-        ;;    USE_COMBINED_OMNI_IMF_INDS=USE_COMBINED_INDS ; Get streaks in the DB, first of all
 
         IF KEYWORD_SET(USE_COMBINED_INDS) THEN BEGIN
            ;; C_OMNI__stable_i      = INDGEN(N_ELEMENTS(C_OMNI__StreakDurArr))
@@ -282,21 +288,21 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;;Day may come when we only require stability of certain conditions
      ;;CODE HERE IF THAT DAY EVER COMES
 
-     ;; IF KEYWORD_SET(stable_clockAngles) OR KEYWORD_SET(stable_IMF_By) OR KEYWORD_SET(stable_IMF_Bz) THEN BEGIN
+     ;; IF TAG_EXIST(IMF_struct,'stable_clockAngles') OR TAG_EXIST(IMF_struct,'stable_IMF_By') OR TAG_EXIST(IMF_struct,'stable_IMF_Bz') THEN BEGIN
      ;;    GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC
      ;; ENDIF
 
-     ;; IF KEYWORD_SET(stable_clockAngles) THEN BEGIN
+     ;; IF TAG_EXIST(IMF_struct,'stable_clockAngles') THEN BEGIN
      ;;    C_OMNI__stableStr                           += STRING(FORMAT='("--stable_",A0,"--negAngle_",I0,"__posAngle_",I0,)', $
      ;;                                                          C_OMNI__clockStr,C_OMNI__negAngle,C_OMNI__posAngle)
 
      ;; ENDIF
 
-     ;; IF KEYWORD_SET(stable_IMF_By) THEN BEGIN
+     ;; IF TAG_EXIST(IMF_struct,'stable_IMF_By') THEN BEGIN
 
      ;; ENDIF
 
-     ;; IF KEYWORD_SET(stable_IMF_Bz) THEN BEGIN
+     ;; IF TAG_EXIST(IMF_struct,'stable_IMF_Bz') THEN BEGIN
 
      ;; ENDIF
 
