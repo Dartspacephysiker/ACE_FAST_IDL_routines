@@ -1,13 +1,13 @@
 ;2015/12/31 Added RESTRICT_WITH_THESE_I keyword so that I can do non-storm 
-;2016/01/07 Added DO_DESPUNDB keyword
+;2016/01/07 Added DESPUNDB keyword
 ;2016/02/10 Added DO_NOT_CONSIDER_IMF keyword
 ;2016/02/20 Making restricted_and_interped_i a LIST!
 FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
    LUN=lun, $
    DBTIMES=dbTimes, $
    DBFILE=dbfile, $
-   DO_CHASTDB=do_chastdb, $
-   DO_DESPUNDB=do_despunDB, $
+   CHASTDB=chastDB, $
+   DESPUNDB=despunDB, $
    COORDINATE_SYSTEM=coordinate_system, $
    USE_AACGM_COORDS=use_aacgm, $
    USE_MAG_COORDS=use_mag, $
@@ -135,6 +135,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     MAXILAT=maxI, $
                                     BINILAT=binI, $
                                     EQUAL_AREA_BINNING=equal_area_binning, $
+                                    IMF_STRUCT=IMF_struct, $
                                     MIMC_STRUCT=MIMC_struct, $
                                     ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                     ;; DO_LSHELL=do_lshell, $
@@ -158,9 +159,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
      good_i  = GET_CHASTON_IND(dbStruct,satellite,lun, $
                                DBTIMES=dbTimes, $
                                DBFILE=dbfile, $
-                               CHASTDB=do_chastdb, $
+                               CHASTDB=chastDB, $
                                HEMI=hemi, $
-                               DESPUNDB=do_despunDB, $
+                               DESPUNDB=despunDB, $
                                COORDINATE_SYSTEM=coordinate_system, $
                                USE_AACGM_COORDS=use_aacgm, $
                                USE_MAG_COORDS=use_mag, $
@@ -246,9 +247,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                            ;; DO_ABS_BXMAX=abs_bxMax, $
                            ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
                            ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+                           IMF_STRUCT=IMF_struct, $
                            MIMC_STRUCT=MIMC_struct, $
                            ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-                           IMF_STRUCT=IMF_struct, $
                            RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                            /RESET_OMNI_INDS, $
                            ;; OMNI_COORDS=OMNI_coords, $

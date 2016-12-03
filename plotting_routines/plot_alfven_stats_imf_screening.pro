@@ -138,7 +138,7 @@
 ;		     DBFILE            :  Which database file to use?
 ;                    NO_BURSTDATA      :  Exclude data from burst runs of Alfven_stats_5 (burst data were produced 2015/08/10)
 ;		     DATADIR           :     
-;		     DO_CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
+;		     CHASTDB        :  Use Chaston's original ALFVEN_STATS_3 database. 
 ;                                            (He used it for a few papers, I think, so it's good).
 ;
 ;                  *VARIOUS OUTPUT OPTIONS
@@ -175,7 +175,7 @@
 ;
 ; EXAMPLE: 
 ;     Use Chaston's original (ALFVEN_STATS_3) database, only including orbits falling in the range 1000-4230
-;     plot_alfven_stats_imf_screening,clockstr="duskward",/do_chastdb,$
+;     plot_alfven_stats_imf_screening,clockstr="duskward",/chastDB,$
 ;                                          plotpref='NESSF2014_reproduction_Jan2015--orbs1000-4230',ORBRANGE=[1000,4230]
 ;
 ;
@@ -187,7 +187,7 @@
 ;                       Jan 2015  :  Finally turned interp_plots_str into a procedure! Here you have
 ;                                    the result.
 ;                       Dec 2015   : ... And now added stormtime keywords as well as RESTRICT_WITH_THESE_I keyword
-;                       Jan 2016   : Added DO_DESPUNDB keyword for our new despun database with TEAMS data!
+;                       Jan 2016   : Added DESPUNDB keyword for our new despun database with TEAMS data!
 ;                     2016/02/10   : Added DO_NOT_CONSIDER_IMF keyword
 ;                     2016/02/20   : Big changes. Added multiple_delays keyword, which shakes up the whole system.
 ;-
@@ -420,8 +420,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     RESET_GOOD_INDS=reset_good_inds, $
                                     NO_BURSTDATA=no_burstData, $
                                     DATADIR=dataDir, $
-                                    DO_CHASTDB=do_chastDB, $
-                                    DO_DESPUNDB=do_despunDB, $
+                                    CHASTDB=chastDB, $
+                                    DESPUNDB=despunDB, $
                                     COORDINATE_SYSTEM=coordinate_system, $
                                     USE_AACGM_COORDS=use_AACGM, $
                                     USE_MAG_COORDS=use_MAG, $
@@ -554,6 +554,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                 INCLUDE_32HZ=include_32Hz, $
                                 DISREGARD_SAMPLE_T=disregard_sample_t, $
+                                DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+                                DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
                                 MINMLT=minM,MAXMLT=maxM, $
                                 BINMLT=binM, $
                                 SHIFTMLT=shiftM, $
@@ -567,7 +569,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ;; MIN_NEVENTS=min_nEvents, $
                                 MASKMIN=maskMin, $
                                 THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
-                                DO_DESPUNDB=do_despunDB, $
+                                DESPUNDB=despunDB, $
                                 USE_AACGM_COORDS=use_AACGM, $
                                 USE_MAG_COORDS=use_MAG, $
                                 HEMI=hemi, $
@@ -729,7 +731,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
         IF ~KEYWORD_SET(no_maximus) THEN BEGIN
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              DO_DESPUNDB=do_despunDB, $
+              DESPUNDB=despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
@@ -965,7 +967,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
         IF ~KEYWORD_SET(no_maximus) THEN BEGIN
            GET_AE_FASTDB_INDICES, $
-              DO_DESPUNDB=do_despunDB, $
+              DESPUNDB=despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
@@ -1063,7 +1065,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
            GET_AE_FASTDB_INDICES, $
               /GET_TIME_I_NOT_ALFDB_I, $
-              DO_DESPUNDB=do_despunDB, $
+              DESPUNDB=despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
               USE_AACGM_COORDS=use_AACGM, $
               USE_MAG_COORDS=use_MAG, $
@@ -1155,8 +1157,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                           DBTIMES=cdbTime, $
                           DBFILE=dbfile, $
                           LUN=lun, $
-                          DO_CHASTDB=do_chastdb, $
-                          DO_DESPUNDB=do_despunDB, $
+                          CHASTDB=chastDB, $
+                          DESPUNDB=despunDB, $
                           COORDINATE_SYSTEM=coordinate_system, $
                           USE_AACGM_COORDS=use_AACGM, $
                           HEMI=hemi, $
@@ -1389,7 +1391,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
                                ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
-                               DESPUN_ALF_DB=do_despunDB, $
+                               DESPUN_ALF_DB=despunDB, $
                                ;; COORDINATE_SYSTEM=coordinate_system, $
                                USE_AACGM=use_AACGM, $
                                USE_MAG_COORDS=use_MAG, $
@@ -1594,60 +1596,62 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   IF ~KEYWORD_SET(no_maximus) THEN BEGIN
      PRINT_ALFVENDB_PLOTSUMMARY,maximus, $
                                 plot_i_list, $
-                                CLOCKSTR=clockStr, $
-                                ANGLELIM1=angleLim1, $
-                                ANGLELIM2=angleLim2, $
-                                ORBRANGE=orbRange, $
-                                ALTITUDERANGE=altitudeRange, $
-                                CHARERANGE=charERange, $
-                                CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
-                                minMLT=minM, $
-                                maxMLT=maxM, $
-                                BINMLT=binM, $
-                                SHIFTMLT=shiftM, $
-                                MINILAT=minI, $
-                                MAXILAT=maxI, $
-                                BINILAT=binI, $
-                                EQUAL_AREA_BINNING=EA_binning, $
-                                DO_LSHELL=do_lShell, $
-                                MINLSHELL=minL, $
-                                MAXLSHELL=maxL, $
-                                BINLSHELL=binL, $
-                                MIN_MAGCURRENT=minMC, $
-                                MAX_NEGMAGCURRENT=maxNegMC, $
+                                ;; CLOCKSTR=clockStr, $
+                                ;; ANGLELIM1=angleLim1, $
+                                ;; ANGLELIM2=angleLim2, $
+                                ;; ORBRANGE=orbRange, $
+                                ;; ALTITUDERANGE=altitudeRange, $
+                                ;; CHARERANGE=charERange, $
+                                ;; CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
+                                ;; minMLT=minM, $
+                                ;; maxMLT=maxM, $
+                                ;; BINMLT=binM, $
+                                ;; SHIFTMLT=shiftM, $
+                                ;; MINILAT=minI, $
+                                ;; MAXILAT=maxI, $
+                                ;; BINILAT=binI, $
+                                ;; EQUAL_AREA_BINNING=EA_binning, $
+                                ;; DO_LSHELL=do_lShell, $
+                                ;; MINLSHELL=minL, $
+                                ;; MAXLSHELL=maxL, $
+                                ;; BINLSHELL=binL, $
+                                ;; MIN_MAGCURRENT=minMC, $
+                                ;; MAX_NEGMAGCURRENT=maxNegMC, $
                                 HWMAUROVAL=HwMAurOval, $
                                 HWMKPIND=HwMKpInd, $
-                                BYMIN=byMin, $
-                                BYMAX=byMax, $
-                                BZMIN=bzMin, $
-                                BZMAX=bzMax, $
-                                BTMIN=btMin, $
-                                BTMAX=btMax, $
-                                BXMIN=bxMin, $
-                                BXMAX=bxMax, $
-                                DO_ABS_BYMIN=abs_byMin, $
-                                DO_ABS_BYMAX=abs_byMax, $
-                                DO_ABS_BZMIN=abs_bzMin, $
-                                DO_ABS_BZMAX=abs_bzMax, $
-                                DO_ABS_BTMIN=abs_btMin, $
-                                DO_ABS_BTMAX=abs_btMax, $
-                                DO_ABS_BXMIN=abs_bxMin, $
-                                DO_ABS_BXMAX=abs_bxMax, $
-                                BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+                                ;; BYMIN=byMin, $
+                                ;; BYMAX=byMax, $
+                                ;; BZMIN=bzMin, $
+                                ;; BZMAX=bzMax, $
+                                ;; BTMIN=btMin, $
+                                ;; BTMAX=btMax, $
+                                ;; BXMIN=bxMin, $
+                                ;; BXMAX=bxMax, $
+                                ;; DO_ABS_BYMIN=abs_byMin, $
+                                ;; DO_ABS_BYMAX=abs_byMax, $
+                                ;; DO_ABS_BZMIN=abs_bzMin, $
+                                ;; DO_ABS_BZMAX=abs_bzMax, $
+                                ;; DO_ABS_BTMIN=abs_btMin, $
+                                ;; DO_ABS_BTMAX=abs_btMax, $
+                                ;; DO_ABS_BXMIN=abs_bxMin, $
+                                ;; DO_ABS_BXMAX=abs_bxMax, $
+                                MIMC_STRUCT=MIMC_struct, $
+                                IMF_STRUCT=IMF_struct, $
+                                ;; BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
                                 PARAMSTRING=paramString, $
                                 PARAMSTR_LIST=paramString_list, $
                                 PARAMSTRPREFIX=plotPrefix, $
                                 PARAMSTRSUFFIX=plotSuffix,$
-                                SATELLITE=satellite, $
-                                OMNI_COORDS=omni_Coords, $
-                                HEMI=hemi, $
-                                DELAY=delay, $
-                                MULTIPLE_DELAYS=multiple_delays, $
-                                MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                STABLEIMF=stableIMF, $
-                                SMOOTHWINDOW=smoothWindow, $
-                                INCLUDENOCONSECDATA=includeNoConsecData, $
-                                HOYDIA=hoyDia, $
+                                ;; SATELLITE=satellite, $
+                                ;; OMNI_COORDS=omni_Coords, $
+                                ;; HEMI=hemi, $
+                                ;; DELAY=delay, $
+                                ;; MULTIPLE_DELAYS=multiple_delays, $
+                                ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+                                ;; STABLEIMF=stableIMF, $
+                                ;; SMOOTHWINDOW=smoothWindow, $
+                                ;; INCLUDENOCONSECDATA=includeNoConsecData, $
+                                ;; HOYDIA=hoyDia, $
                                 MASKMIN=maskMin, $
                                 LUN=lun
   ENDIF
@@ -2077,14 +2081,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         IF KEYWORD_SET(overplot_file) AND KEYWORD_SET(overplot_arr) THEN BEGIN
            PRINT,'Checking for overplot stuff ...'
 
-           IF N_ELEMENTS(oplotStr) EQ 0 THEN BEGIN
-              oplotStr = GET_OVERPLOT_VARS_FROM_FILE(overplot_file)
+           ;; IF N_ELEMENTS(oplotStr) EQ 0 THEN BEGIN
+           ;;    oplotStr = GET_OVERPLOT_VARS_FROM_FILE(overplot_file)
+           ;; ENDIF
+           IF ~KEYWORD_SET(OP__HAVE_VARS) THEN BEGIN
+              SET_OVERPLOT_COMMON_VARS_FROM_FILE,overplot_file
            ENDIF
 
            match = 0
+           ;; FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
+           ;;    match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
+           ;;               STRMATCH(STRUPCASE(oplotStr.dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
+           ;; ENDFOR 
            FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
               match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
-                         STRMATCH(STRUPCASE(oplotStr.dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
+                         STRMATCH(STRUPCASE(OP__dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
            ENDFOR 
 
            CASE match OF
@@ -2132,7 +2143,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                EPS_OUTPUT=eps_output, $
                                PLOTH2D_CONTOUR=plotH2D_contour, $
                                PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
-                               OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
+                               ;; OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
+                               OVERPLOTSTR=KEYWORD_SET(sendit), $
                                CENTERS_MLT=centersMLT, $
                                CENTERS_ILAT=centersILAT, $
                                SHOW_INTEGRALS=show_integrals, $
