@@ -1,6 +1,8 @@
-PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
+PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
+
+  add_to_plotPref                = '-special'
 
   do_what_everyone_does          = 1
 
@@ -23,7 +25,7 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;NOTE: Bx-specific stuff on other side of IF statement
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-     @journal__20161202__zhang2014__params_for_every_child.pro
+     @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF ELSE BEGIN
 
 
@@ -37,7 +39,6 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
      plotPref += '-newDim'
-     plotPref += '-special'
      ;; plotPref += '-keilDim_'
 
      include_32Hz                    = 0
@@ -140,6 +141,11 @@ PRO JOURNAL__20161202__ZHANG2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      ;;Bonus
 
   ENDELSE
+
+  IF KEYWORD_SET(add_to_plotpref) THEN BEGIN
+     plotPref += add_to_plotPref
+  ENDIF
+
   ;;In any case
   reset_good_inds                     = 1
   reset_OMNI_inds                     = 1
