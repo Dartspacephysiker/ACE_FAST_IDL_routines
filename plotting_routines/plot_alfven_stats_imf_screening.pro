@@ -509,6 +509,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   @common__fastloc_espec_vars.pro
   @common__newell_espec.pro
   @common__pasis_lists.pro
+  @common__overplot_vars.pro
 
   for_eSpec_DBs = KEYWORD_SET(eSpec_flux_plots) OR $
      KEYWORD_SET(eSpec__newellPlot_probOccurrence)
@@ -522,11 +523,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         get_plot_i              = 1
      ENDELSE
 
-     IF (N_ELEMENTS(PASIS__indices__eSpec_list) GT 0) AND 0 THEN BEGIN
+     IF (N_ELEMENTS(PASIS__indices__eSpec_list) GT 0) THEN BEGIN
         ;; indices__eSpec_list     = PASIS__indices__eSpec_list
         get_eSpec_i             = 0
      ENDIF ELSE BEGIN
         get_eSpec_i             = 1
+     ENDELSE
+
+     IF (N_ELEMENTS(PASIS__indices__ion_list) GT 0) THEN BEGIN
+        ;; indices__ion_list     = PASIS__indices__ion_list
+        get_ion_i             = 0
+     ENDIF ELSE BEGIN
+        get_ion_i             = 1
      ENDELSE
 
      IF N_ELEMENTS(PASIS__fastLocInterped_i_list) GT 0 THEN BEGIN
@@ -550,6 +558,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      get_plot_i     = 1
      get_fastLoc_i  = 1
      get_eSpec_i    = 1
+     ;; get_ion_i      = 1 ;not implemented
   ENDELSE
 
   get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
@@ -1637,6 +1646,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   dataRawPtrArr_List               = LIST()
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
+
      PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: '+PASIS__paramString_list[iMulti]
 
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
@@ -1850,6 +1860,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      h2dStrArr_List.add,h2dStrArr
      dataNameArr_list.add,dataNameArr
      dataRawPtrArr_list.add,dataRawPtrArr
+
   ENDFOR
 
   IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
@@ -2020,9 +2031,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      tempFile_list.add,out_tempFile
   ENDFOR
 
-  out_tempFile_list      = tempFile_list
-  out_dataNameArr_list   = dataNameArr_list
-  out_paramString_list   = paramString_list
-  out_plot_i_list        = N_ELEMENTS(plot_i_list) GT 0 ? plot_i_list : !NULL
+  ;; out_tempFile_list      = tempFile_list
+  ;; out_dataNameArr_list   = dataNameArr_list
+  ;; out_paramString_list   = paramString_list
+  ;; out_plot_i_list        = N_ELEMENTS(plot_i_list) GT 0 ? plot_i_list : !NULL
 
 END
