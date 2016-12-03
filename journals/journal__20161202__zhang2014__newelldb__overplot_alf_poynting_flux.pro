@@ -69,9 +69,9 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  eSpec_flux_plots           = 1
+  eSpec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
-  eSpec__all_fluxes          = 1
+  eSpec__all_fluxes              = 1
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0

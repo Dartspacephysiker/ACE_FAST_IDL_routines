@@ -119,10 +119,10 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   qual_db_i_list         = LIST()
   FOR iDel=0,NIter-1 DO BEGIN
      ;;Now line up the databases (either fastLoc or maximus, as the case may be)
-     aligned_db_ii       = VALUE_LOCATE(C_OMNI__mag_UTC[stable_omni_i]+delay[iDel],dbTimes[db_i])
+     aligned_db_ii       = VALUE_LOCATE(C_OMNI__mag_UTC[stable_omni_i]+IMF_struct.delay[iDel],dbTimes[db_i])
 
-     mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]]+delay[iDel]
-     mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]+1]+delay[iDel]
+     mag_utc_muffed      = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]]+IMF_struct.delay[iDel]
+     mag_utc_muffedAft   = C_OMNI__mag_UTC[stable_omni_i[aligned_db_ii]+1]+IMF_struct.delay[iDel]
 
      beforeTimes         = mag_utc_muffed-dbTimes[db_i]
      afterTimes          = mag_utc_muffedAft-dbTimes[db_i]
@@ -138,14 +138,14 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
 
      qualifying_db_i     = db_i[qualifying_db_ii]
 
-     PRINT,FORMAT='("N qualifying db i for delay =",F10.2," min: ",I0)',delay[iDel]/60.,N_ELEMENTS(qualifying_db_i)
+     PRINT,FORMAT='("N qualifying db i for delay =",F10.2," min: ",I0)',IMF_struct.delay[iDel]/60.,N_ELEMENTS(qualifying_db_i)
 
      qual_db_i_list.add,qualifying_db_i
   ENDFOR
      
   ;; IF ~KEYWORD_SET(IMF_struct.multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
 
-  out_omni_paramStr      = omni_paramStr
+  out_OMNI_paramStr      = OMNI_paramStr
 
   RETURN,qual_db_i_list
 

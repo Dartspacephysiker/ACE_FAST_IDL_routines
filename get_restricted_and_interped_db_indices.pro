@@ -152,8 +152,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct,satellite,delay, $
                                     DONT_LOAD_IN_MEMORY=nonMem, $
                                     ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                     ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-                                    ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-                                    /PRINT_PARAM_SUMMARY)
+                                    ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers);, $
+                                    ;; /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN
      good_i  = GET_CHASTON_IND(dbStruct,satellite,lun, $

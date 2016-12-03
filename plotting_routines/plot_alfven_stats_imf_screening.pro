@@ -507,6 +507,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   @common__maximus_vars.pro
   @common__fastloc_vars.pro
   @common__fastloc_espec_vars.pro
+  @common__newell_espec.pro
   @common__pasis_lists.pro
 
   for_eSpec_DBs = KEYWORD_SET(eSpec_flux_plots) OR $
@@ -1192,11 +1193,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      IF KEYWORD_SET(paramString_list) THEN BEGIN
-        PASIS__paramString_list = paramString_list
+        PASIS__paramString_list = TEMPORARY(paramString_list)
      ENDIF
 
      IF KEYWORD_SET(paramString) THEN BEGIN
-        PASIS__paramString      = paramString
+        PASIS__paramString      = TEMPORARY(paramString)
      ENDIF
 
      IF ~KEYWORD_SET(no_maximus) THEN BEGIN
@@ -1253,7 +1254,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                           TXTOUTPUTDIR=txtOutputDir)
 
            ;;These can be reloaded, if we like
-           PASIS__plot_i_list = plot_i_list
+           PASIS__plot_i_list = TEMPORARY(plot_i_list)
         ENDIF
 
      ENDIF                    
@@ -1328,7 +1329,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                        DONT_LOAD_IN_MEMORY=KEYWORD_SET(eSpec_flux_plots) OR KEYWORD_SET(nonMem))
 
            ;;These can be reloaded, if we like
-           PASIS__fastLocInterped_i_list = fastLocInterped_i_list
+           PASIS__fastLocInterped_i_list = TEMPORARY(fastLocInterped_i_list)
 
         ENDIF
 
@@ -1442,26 +1443,33 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      infoStr     = indsInfoStr + ' = CREATE_STRUCT('
      nInfo       = 0
 
-     IF N_ELEMENTS(plot_i_list) GT 0 THEN BEGIN
-        out_plot_i_list             = TEMPORARY(plot_i_list)
+     IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
+        ;; out_plot_i_list             = TEMPORARY(plot_i_list)
+        out_plot_i_list             = PASIS__plot_i_list
         saveStr += 'out_plot_i_list,'
         nInfo++
         infoStr += '"alfDB",MAXIMUS__maximus.info'
      ENDIF
-     IF N_ELEMENTS(fastLocInterped_i_list) GT 0 THEN BEGIN
-        out_fastLoc_i_list          = TEMPORARY(fastLocInterped_i_list)
+     ;; IF N_ELEMENTS(fastLocInterped_i_list) GT 0 THEN BEGIN
+     IF N_ELEMENTS(PASIS__fastLocInterped_i_list) GT 0 THEN BEGIN
+        ;; out_fastLoc_i_list          = TEMPORARY(fastLocInterped_i_list)
+        out_fastLoc_i_list          = PASIS__fastLocInterped_i_list
         saveStr += 'out_fastLoc_i_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",fastLoc.info'
      ENDIF
-     IF N_ELEMENTS(indices__eSpec_list) GT 0 THEN BEGIN
-        out_i_eSpec_list  = indices__eSpec_list
+     ;; IF N_ELEMENTS(indices__eSpec_list) GT 0 THEN BEGIN
+     ;;    out_i_eSpec_list  = indices__eSpec_list
+     IF N_ELEMENTS(PASIS__indices__eSpec_list) GT 0 THEN BEGIN
+        out_i_eSpec_list  = PASIS__indices__eSpec_list
         saveStr += 'out_i_eSpec_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"eSpec",eSpec_info'
      ENDIF
-     IF N_ELEMENTS(indices__ion_list) GT 0 THEN BEGIN
-        out_i_ion_list    = indices__ion_list
+     ;; IF N_ELEMENTS(indices__ion_list) GT 0 THEN BEGIN
+     ;;    out_i_ion_list    = indices__ion_list
+     IF N_ELEMENTS(PASIS__indices__ion_list) GT 0 THEN BEGIN
+        out_i_ion_list    = PASIS__indices__ion_list
         saveStr += 'out_i_ion_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"ion",ion_info'
@@ -1527,9 +1535,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;********************************************
   ;;Now time for data summary
 
-  IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-     PRINT_ALFVENDB_PLOTSUMMARY,MAXIMUS__maximus, $
-                                plot_i_list, $
+  ;; IF ~KEYWORD_SET(no_maximus) THEN BEGIN
+     PRINT_ALFVENDB_PLOTSUMMARY,KEYWORD_SET(no_maximus) ? NEWELL__eSpec : MAXIMUS__maximus, $
+                                KEYWORD_SET(no_maximus) ? PASIS__indices__eSpec_list : PASIS__plot_i_list, $
                                 IMF_STRUCT=IMF_struct, $
                                 MIMC_STRUCT=MIMC_struct, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
@@ -1538,7 +1546,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 PARAMSTRPREFIX=plotPrefix, $
                                 PARAMSTRSUFFIX=plotSuffix,$
                                 LUN=lun
-  ENDIF
+  ;; ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Saving indices?
@@ -1629,22 +1637,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   dataRawPtrArr_List               = LIST()
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
-
-     PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: '+paramString_list[iMulti]
+     PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: '+PASIS__paramString_list[iMulti]
 
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
         PRINTF,grossLun,""
-        PRINTF,grossLun,paramString_list[iMulti]
+        PRINTF,grossLun,PASIS__paramString_list[iMulti]
      ENDIF
 
      h2dStrArr             = !NULL
      dataNameArr           = !NULL
      dataRawPtrArr         = !NULL
 
-     IF KEYWORD_SET(indices__ion_list) THEN BEGIN
+     IF KEYWORD_SET(PASIS__indices__ion_list) THEN BEGIN
         indices__ion       = PASIS__indices__ion_list[iMulti]
      ENDIF
-     IF KEYWORD_SET(indices__eSpec_list) THEN BEGIN
+     IF KEYWORD_SET(PASIS__indices__eSpec_list) THEN BEGIN
         indices__eSpec     = PASIS__indices__eSpec_list[iMulti]
      ENDIF
 
@@ -1830,7 +1837,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         MEDIANPLOT=medianPlot, MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
         LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots,$
-        PARAMSTRING=paramString_list[iMulti], $
+        PARAMSTRING=PASIS__paramString_list[iMulti], $
         PARAMSTRPREFIX=plotPrefix, $
         PARAMSTRSUFFIX=plotSuffix, $
         TMPLT_H2DSTR=tmplt_h2dStr, $
@@ -1876,8 +1883,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      dataRawPtrArr        = (N_ELEMENTS(dataRawPtrArr_list)-1) GE iList ? $
                             dataRawPtrArr_list[iList] : $
                             !NULL
-     plot_i               = N_ELEMENTS(plot_i_list) GT 0 ? plot_i_list[iList] : !NULL
-     paramString          = paramString_list[iList]
+     plot_i               = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
+     paramString          = PASIS__paramString_list[iList]
 
      IF ~KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
         ;;Shift the way we historically have
