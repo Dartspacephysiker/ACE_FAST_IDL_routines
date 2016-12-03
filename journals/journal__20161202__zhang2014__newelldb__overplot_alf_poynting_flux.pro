@@ -43,7 +43,7 @@ PRO JOURNAL__20161202__ZHANG2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   fluxPlots__remove_log_outliers = 0
   
   ;; dont_blackball_maximus         = 
-  dont_blackball_fastloc         = 1
+  ;; dont_blackball_fastloc         = 0
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
