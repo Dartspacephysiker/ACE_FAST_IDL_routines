@@ -3,7 +3,7 @@
 
    nonstorm                           = 1
    DSTcutoff                          = -50
-   smooth_dst                         = 5
+   smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
@@ -58,19 +58,19 @@
 
   altRange                       = [[300,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [1000,10600]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.0
+  btMin                          = 1.0
 
-  smoothWindow                   = 9
+  smoothWindow                   = 0
 
-  stableIMF                      = 0
+  stableIMF                      = 4
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1800
+  delayDeltaSec                  = 1200
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
@@ -78,9 +78,9 @@
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
@@ -94,10 +94,10 @@
 
   ;; numOrbLim                      = 10
 
-  binILAT                        = 3.0
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.5
+  binMLT                         = 1.0
   shiftMLT                       = 0.0
 

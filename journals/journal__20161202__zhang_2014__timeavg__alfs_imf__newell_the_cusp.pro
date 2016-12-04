@@ -2,13 +2,16 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
 
-  plotPref = '-smeared'
+  ;; plotPref = '-smeared'
+  ;; plotPref += '-fattest'
+  plotPref = '-keilbin'
+  plotPref += 'NEWELLED_DONE'
 
   do_what_everyone_does          = 1
 
   charE__Newell_the_cusp         = 1
 
-  use_prev_plot_i                = 0
+  use_prev_plot_i                = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -33,7 +36,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      nonstorm                        = 1
      DSTcutoff                       = -50
-     smooth_dst                      = 5
+     smooth_dst                      = 0
      use_mostRecent_Dst_files        = 1
 
      @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
@@ -43,7 +46,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      include_32Hz                    = 0
 
-     plotH2D_contour                 = 0
+     plotH2D_contour                 = 1
      plotH2D__kde                    = 0
 
      EA_binning                      = 0
@@ -96,7 +99,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;IMF condition stuff--run the ring!
-     btMin                            = 0.5
+     btMin                            = 0.0
      ;; btMax                         = 5
 
      ;;Delay stuff
@@ -123,7 +126,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      ;; tHist_mask_bins_below_thresh  = 2
 
-     stableIMF                        = 4
+     stableIMF                        = 9
 
      ;; numOrbLim                     = 10
 
@@ -133,7 +136,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;MLT stuff
      binMLT                           = 1.0
-     shiftMLT                         = 0.0
+     shiftMLT                         = 1.0
 
      ;; minMLT                        = 6
      ;; maxMLT                        = 18
@@ -142,6 +145,10 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ENDELSE
 
+  IF shiftMLT GT 0. THEN BEGIN
+     plotPref += '-rotated'
+  ENDIF
+
   ;;In any case
   reset_good_inds                     = 1
   reset_OMNI_inds                     = 1
@@ -149,13 +156,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ;; ePlots                     = 1
-  ;; eNumFlPlots                = 1
-  ;; pPlots                     = 1
-  ;; ionPlots                   = 1
-  ;; probOccurrencePlot         = 1
-  ;; tHistDenominatorPlot       = 1
-  ;; sum_electron_and_poyntingflux  = 1
   ePlots                             = 1
   eNumFlPlots                        = 1
   pPlots                             = 1
