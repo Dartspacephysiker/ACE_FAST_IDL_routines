@@ -12,7 +12,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   do_what_everyone_does          = 1
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
   use_prev_plot_i                = 1
 
