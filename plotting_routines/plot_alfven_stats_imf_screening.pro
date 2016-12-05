@@ -389,6 +389,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
                                     LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
                                     DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                                    DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
                                     DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                     DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                     WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
@@ -665,6 +666,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
                                 FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                 DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                                DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
                                 ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                 ORBTOTPLOT=orbTotPlot, $
@@ -945,7 +947,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         THEN BEGIN 
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              COORDINATE_SYSTEM=coordinate_system, $
               ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
               IMF_STRUCT=IMF_struct, $
               MIMC_STRUCT=MIMC_struct, $
@@ -1050,7 +1051,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
            ;;Now OMNI, if we need dat
            GET_AE_OMNIDB_INDICES, $
-              OMNI_COORDS=OMNI_coords, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               AECUTOFF=AEcutoff, $
               SMOOTH_AE=smooth_AE, $
               USE_AU=use_au, $
@@ -1543,18 +1546,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
         IMF_STRUCT=IMF_struct, $
         MIMC_STRUCT=MIMC_struct, $
-        MINMLT=minM, $
-        MAXMLT=maxM, $
-        BINMLT=binM, $
-        SHIFTMLT=shiftM, $
-        MINILAT=minI, $
-        MAXILAT=maxI, $
-        BINILAT=binI, $
-        EQUAL_AREA_BINNING=EA_binning, $
-        DO_LSHELL=do_lShell, $
-        MINLSHELL=minL, $
-        MAXLSHELL=maxL, $
-        BINLSHELL=binL, $
         NUMORBLIM=numOrbLim, $
         MASKMIN=maskMin, $
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
@@ -1582,10 +1573,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
         ESPEC__NO_MAXIMUS=no_maximus, $
-        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=PASIS__eSpec__mlts, $
         ESPEC__ILATS=PASIS__eSpec__ilats, $
