@@ -10,7 +10,7 @@
 
   include_32Hz                       = 0
 
-  plotH2D_contour                    = 1
+  plotH2D_contour                    = 0
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
 
@@ -99,5 +99,5 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.5
 

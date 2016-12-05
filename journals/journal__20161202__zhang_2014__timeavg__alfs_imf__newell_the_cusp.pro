@@ -5,7 +5,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref = '-smeared'
   ;; plotPref += '-fattest'
   plotPref = '-keilbin'
-  plotPref += 'NEWELLED_DONE'
+  ;; plotPref += 'NEWELLED_DONE'
+  plotPref += 'NEWELLED_AFTROTFIX'
 
   do_what_everyone_does          = 1
 
