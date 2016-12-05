@@ -1536,7 +1536,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      GET_ALFVENDB_2DHISTOS, $
-        MAXIMUS__maximus, $
+        ;; MAXIMUS__maximus, $
         plot_i, $
         fastLocInterped_i, $
         CDBTIME=MAXIMUS__times, $
@@ -1724,7 +1724,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         /DONT_ADJUST_PARAMSTRING_LIST, $
         OUT_NEW_PARAMSTRING_LIST=new_paramString_list, $
         OUT_MASK_H2DSTRARR=h2dMaskArr
-  ENDIF
+  ENDIF ELSE new_paramString_list = PASIS__paramString_list
 
   ;;********************************************************
   ;;Handle Plots all at once

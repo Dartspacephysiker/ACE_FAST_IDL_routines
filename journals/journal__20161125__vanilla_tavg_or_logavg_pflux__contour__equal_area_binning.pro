@@ -1,24 +1,26 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
 PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
+  use_prev_plot_i            = 1
+
   do_timeAvg_fluxQuantities  = 1
   logAvgPlot                 = 0
   medianPlot                 = 0
   divide_by_width_x          = 1
 
   include_32Hz               = 0
-  use_AACGM                  = 1
+  use_AACGM                  = 0
 
-  plotH2D_contour            = 0
-  plotH2D__kde               = 1
+  plotH2D_contour            = 1
+  plotH2D__kde               = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                 = 1
+  EA_binning                 = 0
 
   minMC                      = 1
   maxnegMC                   = -1
 
   ;;DB stuff
-  do_despun                  = 0
+  despun                     = 0
 
   suppress_ILAT_labels       = 1
 
@@ -36,11 +38,11 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; ePlots                         = 0
   ;; eNumFlPlots                    = 0
   pPlots                         = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
+  nOrbsWithEventsPerContribOrbsPlot = 1
   ;; ionPlots                       = 0
-  probOccurrencePlot             = 0
+  probOccurrencePlot             = 1
   ;; sum_electron_and_poyntingflux  = 0
-  ;; tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
 
   nowepco_range                  = [0,0.5]
   nowepco_autoscale              = 0
@@ -140,7 +142,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   plotPref                   = 'just_' + jahr
 
   LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                           DO_DESPUNDB=do_despun, $
+                           DESPUNDB=despun, $
                            USE_AACGM=use_AACGM, $
                            USE_MAG=use_mag
   orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
@@ -161,8 +163,13 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
-  shiftMLT                       = 0.0
+  binMLT                         = 1.0
+  shiftMLT                       = 0.5
+
+  IF KEYWORD_SET(shiftMLT) THEN BEGIN
+     ;; plotPref += '-rotFICK' ;was using this to diagnose what was wrong with rotating when doing a contour plot
+     plotPref += '-rot'
+  ENDIF
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
@@ -356,6 +363,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
         ;; /GET_PARAMSTR_LIST_LIST, $
