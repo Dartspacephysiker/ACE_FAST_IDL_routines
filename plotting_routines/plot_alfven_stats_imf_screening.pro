@@ -1551,17 +1551,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         MAXILAT=maxI, $
         BINILAT=binI, $
         EQUAL_AREA_BINNING=EA_binning, $
-        USE_AACGM_COORDS=use_AACGM, $
         DO_LSHELL=do_lShell, $
         MINLSHELL=minL, $
         MAXLSHELL=maxL, $
         BINLSHELL=binL, $
-        ORBRANGE=orbRange, $
-        ALTITUDERANGE=altitudeRange, $
-        CHARERANGE=charERange, $
-        POYNTRANGE=poyntRange, $
-        SAMPLE_T_RESTRICTION=sample_t_restriction, $
-        DISREGARD_SAMPLE_T=disregard_sample_t, $
         NUMORBLIM=numOrbLim, $
         MASKMIN=maskMin, $
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
