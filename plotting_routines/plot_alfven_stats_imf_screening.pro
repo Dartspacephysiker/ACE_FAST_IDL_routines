@@ -210,7 +210,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MINILAT=minI,MAXILAT=maxI, $
                                     BINILAT=binI, $
                                     EQUAL_AREA_BINNING=EA_binning, $
-                                    DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
+                                    DO_LSHELL=do_lShell, $
+                                    REVERSE_LSHELL=reverse_lShell, $
                                     MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
                                     MIN_MAGCURRENT=minMC, $
                                     MAX_NEGMAGCURRENT=maxNegMC, $
@@ -633,6 +634,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
                                 EQUAL_AREA_BINNING=EA_binning, $
                                 DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                                REVERSE_LSHELL=reverse_lShell, $
                                 MIN_MAGCURRENT=minMC, $
                                 MAX_NEGMAGCURRENT=maxNegMC, $
                                 HWMAUROVAL=HwMAurOval, $
@@ -1464,7 +1466,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                        MAX2=MIMC_struct.maxI, $
                        MIN1=MIMC_struct.minM*15., $
                        MIN2=MIMC_struct.minI, $
-                       SHIFT1=shiftM*15., $
+                       SHIFT1=MIMC_struct.shiftM*15., $
                        SHIFT2=shiftI, $
                        EQUAL_AREA_BINNING=alfDB_plot_struct.EA_binning
 
@@ -1481,7 +1483,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                             MAX2=MIMC_struct.maxI, $
                             MIN1=MIMC_struct.minM*15., $
                             MIN2=MIMC_struct.minI, $
-                            SHIFT1=shiftM*15., $
+                            SHIFT1=MIMC_struct.shiftM*15., $
                             SHIFT2=shiftI, $
                             EQUAL_AREA_BINNING=alfDB_plot_struct.EA_binning
      ENDIF
@@ -1758,15 +1760,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            H2DSTRARR=h2dStrArr, $
            DATANAMEARR=dataNameArr,$
            H2DMASKARR=h2dMaskArr, $
-           MAXM=maxM,MINM=minM,MAXI=maxI,MINI=minI, $
-           BINM=binM, $
-           SHIFTM=shiftM, $
-           BINI=binI, $
-           DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell,$
-           MINL=minL,MAXL=maxL,BINL=binL,$
-           RAWDIR=rawDir,PARAMSTR=paramString,$
-           CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg, $
-           STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi, $
+           MAXM=MIMC_struct.maxM, $
+           MINM=MIMC_struct.minM, $
+           MAXI=MIMC_struct.maxI, $
+           MINI=MIMC_struct.minI, $
+           BINM=MIMC_struct.binM, $
+           SHIFTM=MIMC_struct.shiftM, $
+           BINI=MIMC_struct.binI, $
+           DO_LSHELL=MIMC_struct.do_lShell, $
+           REVERSE_LSHELL=MIMC_struct.reverse_lShell,$
+           MINL=MIMC_struct.minL, $
+           MAXL=MIMC_struct.maxL, $
+           BINL=MIMC_struct.binL,$
+           RAWDIR=rawDir, $
+           PARAMSTR=paramString,$
+           CLOCKSTR=clockStr, $
+           PLOTMEDORAVG=plotMedOrAvg, $
+           STABLEIMF=IMF_struct.stableIMF, $
+           HOYDIA=hoyDia,HEMI=hemi, $
            OUT_TEMPFILE=out_tempFile
      ENDIF
 

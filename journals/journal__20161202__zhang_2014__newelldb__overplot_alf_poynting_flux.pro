@@ -5,7 +5,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   plotPref = 'originalsk--' 
   plotPref = 'keilbin--originalsk--40' 
   plotPref = '-afinal_finale' 
-  plotPref = '-atest_teste' 
+  plotPref = '-atest_teste-' 
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -26,14 +26,15 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   EA_binning                     = 0
   plotH2D_contour                = 1
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
-  ;; plotPref = 'NEWELLDONNNNE--10_50_75' 
+
   ;; contour__levels                = [20,40,60,80,95]
-  ;; plotPref = 'NEWELLDONNNNE--1_30_60_90' 
   ;; contour__levels                = [1,30,60,90]
-  plotPref = 'NEWELLDONNNNE--20_50_80' 
-  contour__levels                = [0,20,50,80]
-  ;; plotPref = 'NEWELLDONNNNE--20_40_60_80_95' 
+  ;; contour__levels                = [0,20,50,80]
   ;; contour__levels                = [0,20,40,60,80,95]
+
+  ;; contour__levels                = [10,30,40,60,70,90]
+  contour__levels                = [20,30,50,60,80,90]
+  plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = 1
 
   ;; minMC                          = 5
@@ -63,11 +64,15 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-40sm-300-4300km-NC-avg-cont30.0Res_0.0Offset_btMin0.5--Ring_timeAvgd_pFlux.dat'
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
+  plotPref += '-rot_pFlux'
   overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
                                     ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
                                     ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; op_contour__levels             = [20,50,80]
   op_contour__levels             = [10,40,70]
+  plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
 
   tile__include_IMF_arrows       = 0
@@ -101,7 +106,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ePlots                         = 0
   eNumFlPlots                    = 1
 
-  tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
    ;; tHistDenomPlotRange  = 
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
@@ -179,7 +184,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.5
+
+  IF shiftMLT GT 0. THEN BEGIN
+     plotPref += '-rotated'
+  ENDIF
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
