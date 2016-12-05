@@ -1558,7 +1558,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NUMORBLIM=numOrbLim, $
         MASKMIN=maskMin, $
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
-        HEMI=hemi, $
         NPLOTS=nPlots, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         LOGNEVENTSPLOT=logNEventsPlot, $
