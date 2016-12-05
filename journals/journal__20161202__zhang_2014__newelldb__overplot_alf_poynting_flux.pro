@@ -2,10 +2,7 @@
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   COMPILE_OPT IDL2
 
-  plotPref = 'originalsk--' 
-  plotPref = 'keilbin--originalsk--40' 
-  plotPref = '-afinal_finale' 
-  plotPref = '-atest_teste-' 
+  plotPref = '-atest_teste-MAPPE-' 
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -24,7 +21,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -44,6 +41,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
+
+  ;; write_obsArr_textFile          = 1
+  ;; write_obsArr__inc_IMF          = 1
+  ;; write_obsArr__orb_avg_obs      = 1
+  ;; justData                       = 1
 
   ;;DB stuff
   do_despun                      = 0
@@ -96,11 +98,12 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
   eSpec__all_fluxes              = 1
-  Newell__comb_accelerated       = 1
+  Newell__comb_accelerated       = 0
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
   eSpec__remove_outliers         = 0
+  ;; eSpec__noMap                   = 1
 
   newellplots                    = 0
   newellPlot_autoscale           = 0
@@ -108,17 +111,24 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ePlots                         = 0
   eNumFlPlots                    = 1
 
-  tHistDenominatorPlot           = 1
-   ;; tHistDenomPlotRange  = 
+  tHistDenominatorPlot           = 0
+   tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
-  ;; tHistDenomPlot_noMask          = 1
+  tHistDenomPlot_noMask          = 1
 
   espec__newellPlot_probOccurrence = 1
   espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+     END
+     ELSE: BEGIN
+        ePlotRange               = [[0,0.2],[0,1.0],[0,0.30],[0,0.5]]
+     END
+  ENDCASE
   logEfPlot                      = 0
   noNegEflux                     = 1
   ;; ePlotRange                     = [1e-3,1e1]
@@ -128,7 +138,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eNumFlPlotType                 = ['ESA_Number_flux']
   noNegENumFl                    = 1
   ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
-  ENumFlPlotRange                = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+     END
+     ELSE: BEGIN
+        ENumFlPlotRange          = [[0,5.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+     END
+  ENDCASE
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -186,7 +203,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.5
 
   IF shiftMLT GT 0. THEN BEGIN
      plotPref += '-rot'
@@ -311,6 +328,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
         ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+        ESPEC__NOMAPTO100KM=eSpec__noMap, $
         ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
@@ -380,6 +398,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+        WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
+        WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
+        WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
         MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
         SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $

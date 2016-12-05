@@ -306,6 +306,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
                                     ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                     ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                    ESPEC__NOMAPTO100KM=eSpec__noMap, $
                                     ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                     PPLOTS=pPlots, $
                                     LOGPFPLOT=logPfPlot, $
@@ -708,6 +709,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
                                 ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
                                 ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+                                ESPEC__NOMAPTO100KM=eSpec__noMap, $
                                 ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                 ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
@@ -1811,8 +1813,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               ELSE: STOP
            ENDCASE
         ENDIF
-
-        IF KEYWORD_SET(sendit) THEN STOP
 
         PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr, $
                                DATANAMEARR=dataNameArr, $
