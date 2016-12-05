@@ -1812,6 +1812,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ENDCASE
         ENDIF
 
+        IF KEYWORD_SET(sendit) THEN STOP
+
         PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr, $
                                DATANAMEARR=dataNameArr, $
                                H2DMASKARR=h2dMaskArr, $

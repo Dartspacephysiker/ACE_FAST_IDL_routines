@@ -65,10 +65,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-40sm-300-4300km-NC-avg-cont30.0Res_0.0Offset_btMin0.5--Ring_timeAvgd_pFlux.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
-  ;; plotPref += '-rot_pFlux'
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
-  plotPref += '-notRot_pFlux'
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
+  plotPref += '-rot_pFlux-t'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
+  ;; plotPref += '-notRot_pFlux-t'
   overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
                                     ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
                                     ['*enumflux_espec*accel*','*timeavgd_pflux*']]
@@ -186,7 +186,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
 
   IF shiftMLT GT 0. THEN BEGIN
      plotPref += '-rot'
