@@ -323,6 +323,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
         DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
         DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $

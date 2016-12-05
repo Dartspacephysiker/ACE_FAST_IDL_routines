@@ -216,7 +216,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     MAX_NEGMAGCURRENT=maxNegMC, $
                                     HWMAUROVAL=HwMAurOval, $
                                     HWMKPIND=HwMKpInd, $
-                                    ;; MIN_NEVENTS=min_nEvents, $
                                     MASKMIN=maskMin, $
                                     THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                                     CLOCKSTR=clockStr, $
@@ -338,6 +337,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                     FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                     FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                    FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
                                     FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                     DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
                                     DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
@@ -515,9 +515,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   @common__pasis_lists.pro
   @common__overplot_vars.pro
 
-  for_eSpec_DBs = KEYWORD_SET(eSpec_flux_plots) OR $
-     KEYWORD_SET(eSpec__newellPlot_probOccurrence)
+  need_fastLoc_i = KEYWORD_SET(nEventPerMinPlot) $
+                   OR KEYWORD_SET(probOccurrencePlot) $
+                   OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
+                   OR KEYWORD_SET(nEventPerOrbPlot) $
+                   OR KEYWORD_SET(tHistDenominatorPlot) $
+                   OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
+                   OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
+                   OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
+                   OR KEYWORD_SET(numOrbLim)
 
+  for_eSpec_DBs  = KEYWORD_SET(eSpec_flux_plots) OR $
+                   KEYWORD_SET(eSpec__newellPlot_probOccurrence)
+  
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
 
      IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
@@ -626,10 +636,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 MAX_NEGMAGCURRENT=maxNegMC, $
                                 HWMAUROVAL=HwMAurOval, $
                                 HWMKPIND=HwMKpInd, $
-                                ;; MIN_NEVENTS=min_nEvents, $
                                 MASKMIN=maskMin, $
                                 THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
                                 DESPUNDB=despunDB, $
+                                COORDINATE_SYSTEM=coordinate_system, $
                                 USE_AACGM_COORDS=use_AACGM, $
                                 USE_MAG_COORDS=use_MAG, $
                                 HEMI=hemi, $
@@ -652,6 +662,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
                                 FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
                                 FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+                                FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
                                 FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
                                 DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                 ORBCONTRIBPLOT=orbContribPlot, $
@@ -695,58 +706,59 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
                                 ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
                                 ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
-                                MIMC_STRUCT=MIMC_struct, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                                MIMC_STRUCT=MIMC_struct, $
                                 RESET_STRUCT=reset, $
                                 _EXTRA=e
 
      
-     SET_IMF_PARAMS_AND_IND_DEFAULTS,CLOCKSTR=clockStr, $
-                                     ANGLELIM1=angleLim1, $
-                                     ANGLELIM2=angleLim2, $
-                                     BYMIN=byMin, $
-                                     BYMAX=byMax, $
-                                     BZMIN=bzMin, $
-                                     BZMAX=bzMax, $
-                                     BTMIN=btMin, $
-                                     BTMAX=btMax, $
-                                     BXMIN=bxMin, $
-                                     BXMAX=bxMax, $
-                                     DO_ABS_BYMIN=abs_byMin, $
-                                     DO_ABS_BYMAX=abs_byMax, $
-                                     DO_ABS_BZMIN=abs_bzMin, $
-                                     DO_ABS_BZMAX=abs_bzMax, $
-                                     DO_ABS_BTMIN=abs_btMin, $
-                                     DO_ABS_BTMAX=abs_btMax, $
-                                     DO_ABS_BXMIN=abs_bxMin, $
-                                     DO_ABS_BXMAX=abs_bxMax, $
-                                     BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                                     BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
-                                     BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
-                                     DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                                     DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-                                     PARAMSTRING=paramString, $
-                                     PARAMSTR_LIST=paramString_list, $
-                                     SATELLITE=satellite, $
-                                     OMNI_COORDS=omni_Coords, $
-                                     DELAY=delay, $
-                                     MULTIPLE_DELAYS=multiple_delays, $
-                                     MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-                                     OUT_EXECUTING_MULTIPLES=executing_multiples, $
-                                     OUT_MULTIPLES=multiples, $
-                                     OUT_MULTISTRING=multiString, $
-                                     RESOLUTION_DELAY=delay_res, $
-                                     BINOFFSET_DELAY=binOffset_delay, $
-                                     STABLEIMF=stableIMF, $
-                                     SMOOTHWINDOW=smoothWindow, $
-                                     INCLUDENOCONSECDATA=includeNoConsecData, $
-                                     EARLIEST_UTC=earliest_UTC, $
-                                     LATEST_UTC=latest_UTC, $
-                                     EARLIEST_JULDAY=earliest_julDay, $
-                                     LATEST_JULDAY=latest_julDay, $
-                                     IMF_STRUCT=IMF_struct, $
-                                     RESET_STRUCT=reset, $
-                                     LUN=lun
+     SET_IMF_PARAMS_AND_IND_DEFAULTS, $
+        CLOCKSTR=clockStr, $
+        ANGLELIM1=angleLim1, $
+        ANGLELIM2=angleLim2, $
+        BYMIN=byMin, $
+        BYMAX=byMax, $
+        BZMIN=bzMin, $
+        BZMAX=bzMax, $
+        BTMIN=btMin, $
+        BTMAX=btMax, $
+        BXMIN=bxMin, $
+        BXMAX=bxMax, $
+        DO_ABS_BYMIN=abs_byMin, $
+        DO_ABS_BYMAX=abs_byMax, $
+        DO_ABS_BZMIN=abs_bzMin, $
+        DO_ABS_BZMAX=abs_bzMax, $
+        DO_ABS_BTMIN=abs_btMin, $
+        DO_ABS_BTMAX=abs_btMax, $
+        DO_ABS_BXMIN=abs_bxMin, $
+        DO_ABS_BXMAX=abs_bxMax, $
+        BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
+        BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+        BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
+        DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
+        DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+        PARAMSTRING=paramString, $
+        PARAMSTR_LIST=paramString_list, $
+        SATELLITE=satellite, $
+        OMNI_COORDS=omni_Coords, $
+        DELAY=delay, $
+        MULTIPLE_DELAYS=multiple_delays, $
+        MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
+        OUT_EXECUTING_MULTIPLES=executing_multiples, $
+        OUT_MULTIPLES=multiples, $
+        OUT_MULTISTRING=multiString, $
+        RESOLUTION_DELAY=delay_res, $
+        BINOFFSET_DELAY=binOffset_delay, $
+        STABLEIMF=stableIMF, $
+        SMOOTHWINDOW=smoothWindow, $
+        INCLUDENOCONSECDATA=includeNoConsecData, $
+        EARLIEST_UTC=earliest_UTC, $
+        LATEST_UTC=latest_UTC, $
+        EARLIEST_JULDAY=earliest_julDay, $
+        LATEST_JULDAY=latest_julDay, $
+        IMF_STRUCT=IMF_struct, $
+        RESET_STRUCT=reset, $
+        LUN=lun
 
 
      ;;Open file for text summary, if desired
@@ -789,23 +801,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         PRINT,"Currently not possible to use AE stuff together with storm stuff!"
         STOP
      ENDIF
-     ;; IF use_ae_stuff OR use_storm_stuff THEN BEGIN
-     ;;    earliest_UTC = STR_TO_TIME('1996-10-06/16:26:02.417')
-     ;;    latest_UTC   = STR_TO_TIME('1999-11-03/03:20:59.853')
-     ;; ENDIF
 
      IF KEYWORD_SET(use_storm_stuff) THEN BEGIN
 
         IF ~KEYWORD_SET(no_maximus) AND KEYWORD_SET(get_plot_i) $
         THEN BEGIN
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              DESPUNDB=despunDB, $
-              COORDINATE_SYSTEM=coordinate_system, $
-              USE_AACGM_COORDS=use_AACGM, $
-              USE_MAG_COORDS=use_MAG, $
-              SAMPLE_T_RESTRICTION=sample_t_restriction, $
-              INCLUDE_32Hz=include_32Hz, $
-              DISREGARD_SAMPLE_T=disregard_sample_t, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
@@ -842,19 +846,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ;;Now OMNI, if desired
         IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-              OMNI_COORDS=OMNI_coords, $
-              ;; /RESTRICT_TO_ALFVENDB_TIMES, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
-              ;; COORDINATE_SYSTEM=coordinate_system, $
-              ;; USE_AACGM_COORDS=use_AACGM, $
-              ;; USE_MAG_COORDS=use_MAG, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+              EARLIEST_UTC=IMF_struct.earliest_UTC, $
+              LATEST_UTC=IMF_struct.latest_UTC, $
+              USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
+              EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
+              LATEST_JULDAY=IMF_struct.latest_julDay, $
               NONSTORM_I=ns_OMNI_i, $
               MAINPHASE_I=mp_OMNI_i, $
               RECOVERYPHASE_I=rp_OMNI_i, $
@@ -893,33 +895,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
 
         ;;Now fastLoc
-        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
-           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
-           OR KEYWORD_SET(nEventPerOrbPlot) $
-           OR KEYWORD_SET(tHistDenominatorPlot) $
-           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
-           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
-           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-           OR KEYWORD_SET(numOrbLim) $
+        IF KEYWORD_SET(need_fastLoc_i) $
            AND KEYWORD_SET(get_fastLoc_i) $
         THEN BEGIN 
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              COORDINATE_SYSTEM=coordinate_system, $
-              USE_AACGM_COORDS=use_AACGM, $
-              USE_MAG_COORDS=use_MAG, $
-              SAMPLE_T_RESTRICTION=sample_t_restriction, $
-              INCLUDE_32Hz=include_32Hz, $
-              DISREGARD_SAMPLE_T=disregard_sample_t, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               /GET_TIME_I_NOT_ALFDB_I, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
               NONSTORM_I=ns_FL_i, $
               MAINPHASE_I=mp_FL_i, $
               RECOVERYPHASE_I=rp_FL_i, $
@@ -959,23 +946,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
            GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
               COORDINATE_SYSTEM=coordinate_system, $
-              USE_AACGM_COORDS=use_AACGM, $
-              USE_MAG_COORDS=use_MAG, $
-              SAMPLE_T_RESTRICTION=sample_t_restriction, $
-              INCLUDE_32Hz=include_32Hz, $
-              DISREGARD_SAMPLE_T=disregard_sample_t, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               /GET_ESPECDB_I_NOT_ALFDB_I, $
-              ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-              ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-              ;; ESPEC__REDUCED_DB=reduce_dbSize, $
               DSTCUTOFF=dstCutoff, $
               SMOOTH_DST=smooth_dst, $
               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
               NONSTORM_I=ns_eSpec_i, $
               MAINPHASE_I=mp_eSpec_i, $
               RECOVERYPHASE_I=rp_eSpec_i, $
@@ -1007,22 +984,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
         CASE 1 OF
            KEYWORD_SET(nonStorm): BEGIN
-              ;; PRINTF,lun,'Restricting with non-storm indices ...'
               stormString           = 'non-storm'
-              ;; t1_arr                = ns_t1
-              ;; t2_arr                = ns_t2
            END
            KEYWORD_SET(mainPhase): BEGIN
-              ;; PRINTF,lun,'Restricting with main-phase indices ...'
               stormString           = 'mainPhase'
-              ;; t1_arr                = mp_t1
-              ;; t2_arr                = mp_t2
            END
            KEYWORD_SET(recoveryPhase): BEGIN
-              ;; PRINTF,lun,'Restricting with recovery-phase indices ...'
               stormString           = 'recoveryPhase'
-              ;; t1_arr                = rp_t1
-              ;; t2_arr                = rp_t2
            END
         ENDCASE
 
@@ -1043,21 +1011,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
         IF ~KEYWORD_SET(no_maximus) THEN BEGIN
            GET_AE_FASTDB_INDICES, $
-              DESPUNDB=despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
-              USE_AACGM_COORDS=use_AACGM, $
-              USE_MAG_COORDS=use_MAG, $
-              SAMPLE_T_RESTRICTION=sample_t_restriction, $
-              INCLUDE_32Hz=include_32Hz, $
-              DISREGARD_SAMPLE_T=disregard_sample_t, $
+              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+              IMF_STRUCT=IMF_struct, $
+              MIMC_STRUCT=MIMC_struct, $
               GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
               AECUTOFF=AEcutoff, $
               SMOOTH_AE=smooth_AE, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
               USE_AU=use_au, $
               USE_AL=use_al, $
               USE_AO=use_ao, $
@@ -1091,17 +1051,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ;;Now OMNI, if we need dat
            GET_AE_OMNIDB_INDICES, $
               OMNI_COORDS=OMNI_coords, $
-              ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-              ;; COORDINATE_SYSTEM=coordinate_system, $
-              ;; USE_AACGM_COORDS=use_AACGM, $
-              ;; USE_MAG_COORDS=use_MAG, $
               AECUTOFF=AEcutoff, $
               SMOOTH_AE=smooth_AE, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
               USE_AU=use_au, $
               USE_AL=use_al, $
               USE_AO=use_ao, $
@@ -1133,32 +1084,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
 
         ;;Now fastLoc
-        IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
-           OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
-           OR KEYWORD_SET(nEventPerOrbPlot) $
-           OR KEYWORD_SET(tHistDenominatorPlot) $
-           OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
-           OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
-           OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-           OR KEYWORD_SET(numOrbLim) $
-        THEN BEGIN 
+        IF KEYWORD_SET(need_fastLoc_i) AND $
+           KEYWORD_SET(get_fastLoc_i) $
+        THEN BEGIN
 
            GET_AE_FASTDB_INDICES, $
               /GET_TIME_I_NOT_ALFDB_I, $
-              DESPUNDB=despunDB, $
               COORDINATE_SYSTEM=coordinate_system, $
-              USE_AACGM_COORDS=use_AACGM, $
-              USE_MAG_COORDS=use_MAG, $
-              SAMPLE_T_RESTRICTION=sample_t_restriction, $
-              INCLUDE_32Hz=include_32Hz, $
-              DISREGARD_SAMPLE_T=disregard_sample_t, $
               AECUTOFF=AEcutoff, $
               SMOOTH_AE=smooth_AE, $
-              EARLIEST_UTC=earliest_UTC, $
-              LATEST_UTC=latest_UTC, $
-              USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-              EARLIEST_JULDAY=earliest_julDay, $
-              LATEST_JULDAY=latest_julDay, $
               USE_AU=use_au, $
               USE_AL=use_al, $
               USE_AO=use_ao, $
@@ -1225,43 +1159,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         
         IF KEYWORD_SET(get_plot_i) THEN BEGIN
            plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                          maximus,satellite,delay, $
+                          maximus, $
                           DBTIMES=cdbTime, $
                           DBFILE=dbfile, $
                           LUN=lun, $
-                          CHASTDB=chastDB, $
-                          DESPUNDB=despunDB, $
-                          COORDINATE_SYSTEM=coordinate_system, $
-                          USE_AACGM_COORDS=use_AACGM, $
-                          HEMI=hemi, $
-                          ORBRANGE=orbRange, $
-                          ALTITUDERANGE=altitudeRange, $
-                          CHARERANGE=charERange, $
-                          CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
-                          POYNTRANGE=poyntRange, $
-                          SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                          INCLUDE_32HZ=include_32Hz, $
-                          DISREGARD_SAMPLE_T=disregard_sample_t, $
-                          DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
-                          DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
-                          MINMLT=minM,MAXMLT=maxM, $
-                          BINM=binM, $
-                          SHIFTM=shiftM, $
-                          MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                          EQUAL_AREA_BINNING=EA_binning, $
-                          DO_LSHELL=do_lshell, $
-                          MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                          MIN_MAGCURRENT=minMC, $
-                          MAX_NEGMAGCURRENT=maxNegMC, $
-                          MIMC_STRUCT=MIMC_struct, $
                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                           IMF_STRUCT=IMF_struct, $
+                          MIMC_STRUCT=MIMC_struct, $
                           RESET_OMNI_INDS=reset_omni_inds, $
                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                           /DO_NOT_SET_DEFAULTS, $
-                          HWMAUROVAL=HwMAurOval, $
-                          HWMKPIND=HwMKpInd, $
                           PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
                           PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
                           PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
@@ -1280,57 +1188,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ENDIF                    
     
-     IF KEYWORD_SET(nEventPerMinPlot) OR KEYWORD_SET(probOccurrencePlot) $
-        ;; OR KEYWORD_SET(timeAvgd_pfluxPlot) OR KEYWORD_SET(timeAvgd_eFluxMaxPlot) $
-        OR KEYWORD_SET(do_timeAvg_fluxQuantities) $
-        OR KEYWORD_SET(nEventPerOrbPlot) $
-        OR KEYWORD_SET(tHistDenominatorPlot) $
-        OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
-        OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
-        OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-        OR KEYWORD_SET(numOrbLim) $
-     THEN BEGIN 
-        do_fastLoc_i              = 1
-     ENDIF
-
-     IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
+     IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
 
         IF KEYWORD_SET(get_fastLoc_i) THEN BEGIN
 
            fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                                        KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
-                                       satellite, $
-                                       delay, $
                                        LUN=lun, $
                                        DBTIMES=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times, $
                                        DBFILE=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
-                                       COORDINATE_SYSTEM=coordinate_system, $
-                                       USE_AACGM=use_AACGM, $
-                                       USE_MAG_COORDS=use_MAG, $
-                                       HEMI=hemi, $
-                                       ORBRANGE=orbRange, $
-                                       ALTITUDERANGE=altitudeRange, $
-                                       SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                       INCLUDE_32HZ=include_32Hz, $
-                                       DISREGARD_SAMPLE_T=disregard_sample_t, $
-                                       DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
-                                       MINMLT=minM,MAXMLT=maxM, $
-                                       BINM=binM, $
-                                       SHIFTM=shiftM, $
-                                       MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                       EQUAL_AREA_BINNING=EA_binning, $
-                                       DO_LSHELL=do_lshell, $
-                                       MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                       MIN_MAGCURRENT=minMC, $
-                                       MAX_NEGMAGCURRENT=maxNegMC, $
                                        ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                        IMF_STRUCT=IMF_struct, $
+                                       MIMC_STRUCT=MIMC_struct, $
                                        RESET_OMNI_INDS=reset_omni_inds, $
                                        RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
                                        RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                        /DO_NOT_SET_DEFAULTS, $
-                                       HWMAUROVAL=HwMAurOval, $
-                                       HWMKPIND=HwMKpInd, $
                                        ;;Don't do these for fastLoc, since it amounts to duplicated
                                        ;;effort
                                        ;; PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
@@ -1342,11 +1215,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                        NO_BURSTDATA=no_burstData, $
                                        /GET_TIME_I_NOT_ALFVENDB_I, $
                                        GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
-                                       ;; EARLIEST_UTC=earliest_UTC, $
-                                       ;; LATEST_UTC=latest_UTC, $
-                                       ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                       ;; EARLIEST_JULDAY=earliest_julDay, $
-                                       ;; LATEST_JULDAY=latest_julDay, $
                                        DONT_LOAD_IN_MEMORY=KEYWORD_SET(eSpec_flux_plots) OR KEYWORD_SET(nonMem))
 
            ;;These can be reloaded, if we like
@@ -1361,20 +1229,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         IF KEYWORD_SET(get_eSpec_i) THEN BEGIN
 
            GET_ESPEC_FLUX_DATA,plot_i_list, $
-                               ;; FOR_STORMS=KEYWORD_SET(nonStorm) OR KEYWORD_SET(mainPhase) OR KEYWORD_SET(recoveryPhase) ? stormString : !NULL, $
                                /FOR_IMF_SCREENING, $
-                               ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-                               ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-                               ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-                               ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-                               ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-                               ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
-                               DESPUN_ALF_DB=despunDB, $
-                               ;; COORDINATE_SYSTEM=coordinate_system, $
-                               USE_AACGM=use_AACGM, $
-                               USE_MAG_COORDS=use_MAG, $
+                               ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                               IMF_STRUCT=IMF_struct, $
+                               MIMC_STRUCT=MIMC_struct, $
                                T1_ARR=t1_arr,T2_ARR=t2_arr, $
-                               DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                ESPEC_DELTA_T=eSpec_delta_t, $
                                ION_DELTA_T=ion_delta_t, $
                                OUT_EFLUX_DATA=eFlux_eSpec_data, $
@@ -1389,38 +1248,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                ION__MLTS=ion__mlts, $
                                ION__ILATS=ion__ilats, $
                                ION__INFO=ion_info, $
-                               ORBRANGE=orbRange, $
-                               ALTITUDERANGE=altitudeRange, $
-                               CHARERANGE=charERange, $
                                CHARIERANGE=charIERange, $
-                               CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
-                               SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                               INCLUDE_32HZ=include_32Hz, $
-                               DISREGARD_SAMPLE_T=disregard_sample_t, $
-                               BOTH_HEMIS=both_hemis, $
-                               NORTH=north, $
-                               SOUTH=south, $
-                               HEMI=hemi, $
-                               HWMAUROVAL=HwMAurOval, $
-                               HWMKPIND=HwMKpInd, $
-                               MINMLT=minM, $
-                               MAXMLT=maxM, $
-                               BINM=binM, $
-                               MINILAT=minI, $
-                               MAXILAT=maxI, $
-                               BINILAT=binI, $
-                               EQUAL_AREA_BINNING=EA_binning, $
-                               DAYSIDE=dayside, $
-                               NIGHTSIDE=nightside, $
-                               MIMC_STRUCT=MIMC_struct, $
-                               ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-                               IMF_STRUCT=IMF_struct, $
                                RESET_OMNI_INDS=reset_omni_inds, $
                                RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
                                RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
                                /DO_NOT_SET_DEFAULTS, $
                                RESET_GOOD_INDS=reset_good_inds, $
-                               DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR KEYWORD_SET(nonMem)
+                               DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR $
+                               KEYWORD_SET(nonMem)
 
            IF KEYWORD_SET(indices__eSpec_list) THEN BEGIN
               PASIS__eFlux_eSpec_data     = KEYWORD_SET(eFlux_eSpec_data)
@@ -1444,8 +1279,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ENDIF
 
      ENDIF
-     ;; PRINT,'Saving this session''s vars...'
-     ;; SAVE,/VARIABLES,FILENAME=lastSessionFile
+
   ENDELSE   
 
   IF KEYWORD_SET(justInds) THEN BEGIN
@@ -1459,30 +1293,28 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      nInfo       = 0
 
      IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
-        ;; out_plot_i_list             = TEMPORARY(plot_i_list)
         out_plot_i_list             = PASIS__plot_i_list
         saveStr += 'out_plot_i_list,'
         nInfo++
         infoStr += '"alfDB",MAXIMUS__maximus.info'
      ENDIF
-     ;; IF N_ELEMENTS(fastLocInterped_i_list) GT 0 THEN BEGIN
+
      IF N_ELEMENTS(PASIS__fastLocInterped_i_list) GT 0 THEN BEGIN
-        ;; out_fastLoc_i_list          = TEMPORARY(fastLocInterped_i_list)
         out_fastLoc_i_list          = PASIS__fastLocInterped_i_list
         saveStr += 'out_fastLoc_i_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",fastLoc.info'
      ENDIF
-     ;; IF N_ELEMENTS(indices__eSpec_list) GT 0 THEN BEGIN
-     ;;    out_i_eSpec_list  = indices__eSpec_list
+
+
      IF N_ELEMENTS(PASIS__indices__eSpec_list) GT 0 THEN BEGIN
         out_i_eSpec_list  = PASIS__indices__eSpec_list
         saveStr += 'out_i_eSpec_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"eSpec",eSpec_info'
      ENDIF
-     ;; IF N_ELEMENTS(indices__ion_list) GT 0 THEN BEGIN
-     ;;    out_i_ion_list    = indices__ion_list
+
+
      IF N_ELEMENTS(PASIS__indices__ion_list) GT 0 THEN BEGIN
         out_i_ion_list    = PASIS__indices__ion_list
         saveStr += 'out_i_ion_list,'
@@ -1573,25 +1405,32 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      SAVE_ALFVENDB_INDICES,alfDB_ind_filename, $
                            alfDB_ind_fileDir, $
                            plot_i_list, $
-                           IMF_STRUCT=IMF_struct, $
-                           MIMC_STRUCT=MIMC_struct, $
                            ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-                           ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct
+                           ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
+                           IMF_STRUCT=IMF_struct, $
+                           MIMC_STRUCT=MIMC_struct
   ENDIF
 
   ;;********************************************************
   ;;HISTOS
 
-  tmplt_h2dStr = MAKE_H2DSTR_TMPLT(BIN1=binM,BIN2=(KEYWORD_SET(do_lShell) ? binL : binI),$
-                                   MIN1=minM,MIN2=(KEYWORD_SET(DO_LSHELL) ? minL : minI),$
-                                   MAX1=maxM,MAX2=(KEYWORD_SET(DO_LSHELL) ? maxL : maxI), $
-                                   SHIFT1=shiftM,SHIFT2=shiftI, $
-                                   EQUAL_AREA_BINNING=EA_binning, $
-                                   DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
-                                   ;; DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
-                                   BOTH_HEMIS=STRUPCASE(hemi) EQ 'BOTH', $
-                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
-                                   CB_FORCE_OOBLOW=cb_force_oobLow)
+  tmplt_h2dStr = MAKE_H2DSTR_TMPLT( $
+                 BIN1=MIMC_struct.binM, $
+                 BIN2=(KEYWORD_SET(MIMC_struct.do_lShell) ? $
+                       MIMC_struct.binL : MIMC_struct.binI),$
+                 MIN1=MIMC_struct.minM, $
+                 MIN2=(KEYWORD_SET(MIMC_struct.do_Lshell) ? $
+                       MIMC_struct.minL : MIMC_struct.minI),$
+                 MAX1=MIMC_struct.maxM, $
+                 MAX2=(KEYWORD_SET(do_Lshell) ? $
+                       MIMC_struct.maxL : MIMC_struct.maxI), $
+                 SHIFT1=MIMC_struct.shiftM, $
+                 SHIFT2=shiftI, $
+                 EQUAL_AREA_BINNING=alfDB_plot_struct.EA_binning, $
+                 DO_TIMEAVG_FLUXQUANTITIES=alfDB_plot_struct.do_timeAvg_fluxQuantities, $
+                 BOTH_HEMIS=STRUPCASE(MIMC_struct.hemi) EQ 'BOTH', $
+                 CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                 CB_FORCE_OOBLOW=cb_force_oobLow)
 
   ;;Doing grossrates?
   IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
@@ -1614,30 +1453,40 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
      
      GET_H2D_BIN_AREAS,h2dAreas, $
-                       CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                       BINSIZE1=binM*15.,BINSIZE2=binI, $
-                       MAX1=maxM*15.,MAX2=maxI, $
-                       MIN1=minM*15.,MIN2=minI, $
-                       SHIFT1=shiftM*15.,SHIFT2=shiftI, $
-                       EQUAL_AREA_BINNING=EA_binning
+                       CENTERS1=centersMLT, $
+                       CENTERS2=centersILAT, $
+                       BINSIZE1=MIMC_struct.binM*15., $
+                       BINSIZE2=MIMC_struct.binI, $
+                       MAX1=MIMC_struct.maxM*15., $
+                       MAX2=MIMC_struct.maxI, $
+                       MIN1=MIMC_struct.minM*15., $
+                       MIN2=MIMC_struct.minI, $
+                       SHIFT1=shiftM*15., $
+                       SHIFT2=shiftI, $
+                       EQUAL_AREA_BINNING=alfDB_plot_struct.EA_binning
 
      IF KEYWORD_SET(EA_binning) THEN h2dAreas[*] = MEDIAN(h2dAreas)
 
      IF KEYWORD_SET(do_grossRate_with_long_width) THEN BEGIN
         GET_H2D_BIN_LENGTHS,h2dLongWidths, $
                             /LONGITUDINAL, $
-                            CENTERS1=centersMLT,CENTERS2=centersILAT, $
-                            BINSIZE1=binM*15., BINSIZE2=binI, $
-                            MAX1=maxM*15.,MAX2=maxI, $
-                            MIN1=minM*15.,MIN2=minI, $
-                            SHIFT1=shiftM*15.,SHIFT2=shiftI, $
-                            EQUAL_AREA_BINNING=EA_binning
+                            CENTERS1=centersMLT, $
+                            CENTERS2=centersILAT, $
+                            BINSIZE1=MIMC_struct.binM*15., $
+                            BINSIZE2=MIMC_struct.binI, $
+                            MAX1=MIMC_struct.maxM*15., $
+                            MAX2=MIMC_struct.maxI, $
+                            MIN1=MIMC_struct.minM*15., $
+                            MIN2=MIMC_struct.minI, $
+                            SHIFT1=shiftM*15., $
+                            SHIFT2=shiftI, $
+                            EQUAL_AREA_BINNING=alfDB_plot_struct.EA_binning
      ENDIF
   ENDIF
 
   IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
      SETUP_GROSSRATE_INFO_FILE,grossRate_info_file, $
-                               PARAMSTRING=paramString, $
+                               PARAMSTRING=PASIS__paramString, $
                                TXTOUTPUTDIR=txtOutputDir, $
                                GROSSLUN=grossLun, $
                                LUN=lun
@@ -1673,7 +1522,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         plot_i             = PASIS__plot_i_list[iMulti]
      ENDIF
 
-     IF KEYWORD_SET(do_fastLoc_i) THEN BEGIN
+     IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
         fastLocInterped_i  = PASIS__fastLocInterped_i_list[iMulti]
      ENDIF
 
@@ -1691,6 +1540,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         DATARAWPTRARR=dataRawPtrArr, $
         DATANAMEARR=dataNameArr, $
         /DO_NOT_SET_DEFAULTS, $
+        ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+        IMF_STRUCT=IMF_struct, $
+        MIMC_STRUCT=MIMC_struct, $
         MINMLT=minM, $
         MAXMLT=maxM, $
         BINMLT=binM, $
@@ -1699,17 +1551,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         MAXILAT=maxI, $
         BINILAT=binI, $
         EQUAL_AREA_BINNING=EA_binning, $
-        USE_AACGM_COORDS=use_AACGM, $
         DO_LSHELL=do_lShell, $
         MINLSHELL=minL, $
         MAXLSHELL=maxL, $
         BINLSHELL=binL, $
-        ORBRANGE=orbRange, $
-        ALTITUDERANGE=altitudeRange, $
-        CHARERANGE=charERange, $
-        POYNTRANGE=poyntRange, $
-        SAMPLE_T_RESTRICTION=sample_t_restriction, $
-        DISREGARD_SAMPLE_T=disregard_sample_t, $
         NUMORBLIM=numOrbLim, $
         MASKMIN=maskMin, $
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $

@@ -15,6 +15,9 @@
      MIMC__charERange, $
      MIMC__charE__Newell_the_cusp, $
      MIMC__poyntRange, $
+     MIMC__fluxplots__remove_outliers, $
+     MIMC__fluxplots__remove_log_outliers, $
+     MIMC__fluxplots__add_suspect_outliers, $
      MIMC__despunDB,MIMC__chastDB, $
      MIMC__north,MIMC__south,MIMC__both_hemis, $
      MIMC__HwMAurOval, $
