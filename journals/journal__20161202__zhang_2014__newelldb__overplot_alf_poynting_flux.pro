@@ -1,11 +1,11 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
-
   COMPILE_OPT IDL2
 
   plotPref = 'originalsk--' 
   plotPref = 'keilbin--originalsk--40' 
   plotPref = '-afinal_finale' 
+  plotPref = '-atest_teste' 
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -31,7 +31,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; plotPref = 'NEWELLDONNNNE--1_30_60_90' 
   ;; contour__levels                = [1,30,60,90]
   plotPref = 'NEWELLDONNNNE--20_50_80' 
-  contour__levels                = [20,50,80]
+  contour__levels                = [0,20,50,80]
   ;; plotPref = 'NEWELLDONNNNE--20_40_60_80_95' 
   ;; contour__levels                = [0,20,40,60,80,95]
   contour__percent               = 1
