@@ -43,6 +43,7 @@ FUNCTION BLANK_IMF_STRUCT
                   includeNoConsecData        : 0B      , $
                   earliest_UTC               : 0.D     , $
                   latest_UTC                 : 0.D     , $
+                  use_julDay_not_UTC         : 0B      , $
                   earliest_julDay            : 0.D     , $
                   latest_julDay              : 0.D}
 
