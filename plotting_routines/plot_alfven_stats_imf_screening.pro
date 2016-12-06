@@ -1301,7 +1301,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         
         IF KEYWORD_SET(get_plot_i) THEN BEGIN
            plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                          maximus, $
+                          MAXIMUS__maximus, $
                           DBTIMES=cdbTime, $
                           DBFILE=dbfile, $
                           LUN=lun, $
