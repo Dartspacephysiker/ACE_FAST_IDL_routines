@@ -387,6 +387,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
                                     ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
                                     ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
+                                    ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
+                                    ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
                                     TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -530,10 +532,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                    OR KEYWORD_SET(nOrbsWithEventsPerContribOrbsPlot) $
                    OR KEYWORD_SET(div_fluxPlots_by_applicable_orbs) $
                    OR KEYWORD_SET(tHist_mask_bins_below_thresh) $
-                   OR KEYWORD_SET(numOrbLim)
+                   OR KEYWORD_SET(numOrbLim) $
+                   OR KEYWORD_SET(eSpec__t_probOccurrence)
 
-  for_eSpec_DBs  = KEYWORD_SET(eSpec_flux_plots) OR $
-                   KEYWORD_SET(eSpec__newellPlot_probOccurrence)
+  for_eSpec_DBs  = KEYWORD_SET(eSpec_flux_plots                ) OR $
+                   KEYWORD_SET(eSpec__newellPlot_probOccurrence) OR $
+                   KEYWORD_SET(eSpec__t_probOccurrence         )
   
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
 
@@ -742,6 +746,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ESPEC__NOMAPTO100KM=eSpec__noMap, $
         ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
+        ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
+        ;; ESPEC__T_PROBOCC_PLOTRANGE=t_probOcc_plotRange, $
         USE_STORM_STUFF=use_storm_stuff, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
@@ -1783,6 +1789,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
         ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
+        ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
+        ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
         TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
         TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
         LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $

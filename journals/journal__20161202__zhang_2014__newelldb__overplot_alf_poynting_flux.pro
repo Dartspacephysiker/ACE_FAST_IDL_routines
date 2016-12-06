@@ -21,7 +21,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -108,9 +108,6 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  newellplots                    = 0
-  newellPlot_autoscale           = 0
-
   ePlots                         = 0
   eNumFlPlots                    = 1
 
@@ -120,7 +117,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; tHistDenomPlotAutoscale        = 1
   tHistDenomPlot_noMask          = 1
 
-  espec__newellPlot_probOccurrence = 1
+  espec__newellPlot_probOccurrence = 0
+
+  eSpec__t_ProbOccurrence    = 1
+  eSpec__t_probOcc_plotRange = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+
   espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
   eFluxPlotType                  = 'Max'
@@ -335,6 +336,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
+        ESPEC__T_PROBOCCURRENCE=eSpec__t_ProbOccurrence, $
+        ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, $
