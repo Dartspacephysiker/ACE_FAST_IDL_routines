@@ -269,6 +269,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     NONSTORM=nonStorm, $
                                     RECOVERYPHASE=recoveryPhase, $
                                     MAINPHASE=mainPhase, $
+                                    ALL_STORM_PHASES=all_storm_phases, $
                                     DSTCUTOFF=dstCutoff, $
                                     SMOOTH_DST=smooth_dst, $
                                     USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
@@ -280,6 +281,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     SMOOTH_AE=smooth_AE, $
                                     AE_HIGH=AE_high, $
                                     AE_LOW=AE_low, $
+                                    AE_BOTH=AE_both, $
+                                    USE_MOSTRECENT_AE_FILES=use_mostRecent_AE_files, $
                                     NPLOTS=nPlots, $
                                     EPLOTS=ePlots, $
                                     EPLOTRANGE=ePlotRange, $
@@ -614,110 +617,154 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;;    SPAWN,'cat '
   ENDIF ELSE BEGIN
 
-     IF KEYWORD_SET(multiple_delays) AND KEYWORD_SET(multiple_IMF_clockAngles) THEN BEGIN
-        PRINT,"Not set up to handle multiples of both conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
+     use_storm_stuff = KEYWORD_SET(nonStorm        ) + $
+                       KEYWORD_SET(mainPhase       ) + $
+                       KEYWORD_SET(recoveryPhase   ) + $
+                       KEYWORD_SET(all_storm_phases)
+
+     ae_stuff    = KEYWORD_SET(use_AE) + $
+                       KEYWORD_SET(use_AO) + $
+                       KEYWORD_SET(use_AU) + $
+                       KEYWORD_SET(use_AL)
+
+     ;;Does it all "hang together"?
+     IF use_storm_stuff GT 1 THEN BEGIN
+        PRINT,"Can't set more than one of the storm keywords simultaneously!"
+        STOP
+     ENDIF
+     IF ae_stuff GT 1 THEN BEGIN
+        PRINT,"only select one of (AE,AU,AL,AO)!"
+        STOP
+     ENDIF
+     IF ae_stuff AND use_storm_stuff THEN BEGIN
+        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
         STOP
      ENDIF
 
-     SET_ALFVENDB_PLOT_DEFAULTS,ORBRANGE=orbRange, $
-                                ALTITUDERANGE=altitudeRange, $
-                                CHARERANGE=charERange, $
-                                CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
-                                POYNTRANGE=poyntRange, $
-                                SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                INCLUDE_32HZ=include_32Hz, $
-                                DISREGARD_SAMPLE_T=disregard_sample_t, $
-                                DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
-                                DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
-                                MINMLT=minM,MAXMLT=maxM, $
-                                BINMLT=binM, $
-                                SHIFTMLT=shiftM, $
-                                MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                                EQUAL_AREA_BINNING=EA_binning, $
-                                DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-                                REVERSE_LSHELL=reverse_lShell, $
-                                MIN_MAGCURRENT=minMC, $
-                                MAX_NEGMAGCURRENT=maxNegMC, $
-                                HWMAUROVAL=HwMAurOval, $
-                                HWMKPIND=HwMKpInd, $
-                                MASKMIN=maskMin, $
-                                THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
-                                DESPUNDB=despunDB, $
-                                COORDINATE_SYSTEM=coordinate_system, $
-                                USE_AACGM_COORDS=use_AACGM, $
-                                USE_MAG_COORDS=use_MAG, $
-                                HEMI=hemi, $
-                                NORTH=north, $
-                                SOUTH=south, $
-                                BOTH_HEMIS=both_hemis, $
-                                DAYSIDE=dayside, $
-                                NIGHTSIDE=nightside, $
-                                NPLOTS=nPlots, $
-                                EPLOTS=ePlots, $
-                                EFLUXPLOTTYPE=eFluxPlotType, $
-                                ENUMFLPLOTS=eNumFlPlots, $
-                                ENUMFLPLOTTYPE=eNumFlPlotType, $
-                                PPLOTS=pPlots, $
-                                IONPLOTS=ionPlots, $
-                                IFLUXPLOTTYPE=ifluxPlotType, $
-                                CHAREPLOTS=charEPlots, $
-                                CHARETYPE=charEType, $
-                                CHARIEPLOTS=chariEPlots, $
-                                AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-                                FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
-                                FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-                                FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
-                                FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
-                                DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
-                                DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
-                                ORBCONTRIBPLOT=orbContribPlot, $
-                                ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
-                                ORBTOTPLOT=orbTotPlot, $
-                                ORBFREQPLOT=orbFreqPlot, $
-                                NEVENTPERORBPLOT=nEventPerOrbPlot, $
-                                NEVENTPERMINPLOT=nEventPerMinPlot, $
-                                ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
-                                PROBOCCURRENCEPLOT=probOccurrencePlot, $
-                                SQUAREPLOT=squarePlot, $
-                                POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
-                                MEDIANPLOT=medianPlot, $
-                                LOGAVGPLOT=logAvgPlot, $
-                                PLOTMEDORAVG=plotMedOrAvg, $
-                                DATADIR=dataDir, $
-                                NO_BURSTDATA=no_burstData, $
-                                WRITEASCII=writeASCII, $
-                                WRITEHDF5=writeHDF5, $
-                                WRITEPROCESSEDH2D=writeProcessedH2d, $
-                                SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                                ;; PLOTDIR=plotDir, $
-                                MEDHISTOUTDATA=medHistOutData, $
-                                MEDHISTOUTTXT=medHistOutTxt, $
-                                OUTPUTPLOTSUMMARY=outputPlotSummary, $
-                                ;; OUT_TEMPFILE=out_tempFile, $
-                                ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
-                                DEL_PS=del_PS, $
-                                KEEPME=keepMe, $
-                                PARAMSTRING=paramString, $
-                                PARAMSTRPREFIX=plotPrefix, $
-                                PARAMSTRSUFFIX=plotSuffix,$
-                                PLOTH2D_CONTOUR=plotH2D_contour, $
-                                PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
-                                HOYDIA=hoyDia,LUN=lun, $
-                                FOR_ESPEC_DBS=for_eSpec_DBs, $
-                                ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-                                ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-                                ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-                                ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-                                ESPEC__NOMAPTO100KM=eSpec__noMap, $
-                                ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-                                ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
-                                ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-                                MIMC_STRUCT=MIMC_struct, $
-                                RESET_STRUCT=reset, $
-                                _EXTRA=e
+     too_many = KEYWORD_SET(multiple_delays) + KEYWORD_SET(multiple_IMF_clockAngles) + KEYWORD_SET(all_storm_phases) + KEYWORD_SET(AE_both)
+     IF too_many GT 1 THEN BEGIN
+        PRINT,"Not set up to handle multiples of several conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
+        STOP
+     ENDIF
 
-     
+     SET_ALFVENDB_PLOT_DEFAULTS, $
+        ORBRANGE=orbRange, $
+        ALTITUDERANGE=altitudeRange, $
+        CHARERANGE=charERange, $
+        CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
+        POYNTRANGE=poyntRange, $
+        SAMPLE_T_RESTRICTION=sample_t_restriction, $
+        INCLUDE_32HZ=include_32Hz, $
+        DISREGARD_SAMPLE_T=disregard_sample_t, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
+        MINMLT=minM,MAXMLT=maxM, $
+        BINMLT=binM, $
+        SHIFTMLT=shiftM, $
+        MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+        EQUAL_AREA_BINNING=EA_binning, $
+        DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+        REVERSE_LSHELL=reverse_lShell, $
+        MIN_MAGCURRENT=minMC, $
+        MAX_NEGMAGCURRENT=maxNegMC, $
+        HWMAUROVAL=HwMAurOval, $
+        HWMKPIND=HwMKpInd, $
+        MASKMIN=maskMin, $
+        THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
+        DESPUNDB=despunDB, $
+        COORDINATE_SYSTEM=coordinate_system, $
+        USE_AACGM_COORDS=use_AACGM, $
+        USE_MAG_COORDS=use_MAG, $
+        HEMI=hemi, $
+        NORTH=north, $
+        SOUTH=south, $
+        BOTH_HEMIS=both_hemis, $
+        DAYSIDE=dayside, $
+        NIGHTSIDE=nightside, $
+        NPLOTS=nPlots, $
+        EPLOTS=ePlots, $
+        EFLUXPLOTTYPE=eFluxPlotType, $
+        ENUMFLPLOTS=eNumFlPlots, $
+        ENUMFLPLOTTYPE=eNumFlPlotType, $
+        PPLOTS=pPlots, $
+        IONPLOTS=ionPlots, $
+        IFLUXPLOTTYPE=ifluxPlotType, $
+        CHAREPLOTS=charEPlots, $
+        CHARETYPE=charEType, $
+        CHARIEPLOTS=chariEPlots, $
+        AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
+        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
+        FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
+        FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+        DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+        DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
+        ORBCONTRIBPLOT=orbContribPlot, $
+        ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
+        ORBTOTPLOT=orbTotPlot, $
+        ORBFREQPLOT=orbFreqPlot, $
+        NEVENTPERORBPLOT=nEventPerOrbPlot, $
+        NEVENTPERMINPLOT=nEventPerMinPlot, $
+        ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+        PROBOCCURRENCEPLOT=probOccurrencePlot, $
+        SQUAREPLOT=squarePlot, $
+        POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+        MEDIANPLOT=medianPlot, $
+        LOGAVGPLOT=logAvgPlot, $
+        PLOTMEDORAVG=plotMedOrAvg, $
+        DATADIR=dataDir, $
+        NO_BURSTDATA=no_burstData, $
+        WRITEASCII=writeASCII, $
+        WRITEHDF5=writeHDF5, $
+        WRITEPROCESSEDH2D=writeProcessedH2d, $
+        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SHOWPLOTSNOSAVE=showPlotsNoSave, $
+        ;; PLOTDIR=plotDir, $
+        MEDHISTOUTDATA=medHistOutData, $
+        MEDHISTOUTTXT=medHistOutTxt, $
+        OUTPUTPLOTSUMMARY=outputPlotSummary, $
+        ;; OUT_TEMPFILE=out_tempFile, $
+        ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
+        DEL_PS=del_PS, $
+        KEEPME=keepMe, $
+        PARAMSTRING=paramString, $
+        PARAMSTRPREFIX=plotPrefix, $
+        PARAMSTRSUFFIX=plotSuffix,$
+        PLOTH2D_CONTOUR=plotH2D_contour, $
+        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
+        HOYDIA=hoyDia,LUN=lun, $
+        FOR_ESPEC_DBS=for_eSpec_DBs, $
+        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
+        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
+        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+        ESPEC__NOMAPTO100KM=eSpec__noMap, $
+        ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
+        ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
+        USE_STORM_STUFF=use_storm_stuff, $
+        NONSTORM=nonStorm, $
+        RECOVERYPHASE=recoveryPhase, $
+        MAINPHASE=mainPhase, $
+        ALL_STORM_PHASES=all_storm_phases, $
+        DSTCUTOFF=dstCutoff, $
+        SMOOTH_DST=smooth_dst, $
+        USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+        AE_STUFF=ae_stuff, $
+        USE_AE=use_ae, $
+        USE_AU=use_au, $
+        USE_AL=use_al, $
+        USE_AO=use_ao, $
+        AECUTOFF=AEcutoff, $
+        SMOOTH_AE=smooth_AE, $
+        AE_HIGH=AE_high, $
+        AE_LOW=AE_low, $
+        AE_BOTH=AE_both, $
+        USE_MOSTRECENT_AE_FILES=use_mostRecent_AE_files, $
+        ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+        MIMC_STRUCT=MIMC_struct, $
+        RESET_STRUCT=reset, $
+        _EXTRA=e
+
      SET_IMF_PARAMS_AND_IND_DEFAULTS, $
         CLOCKSTR=clockStr, $
         ANGLELIM1=angleLim1, $
@@ -785,28 +832,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
      ;;********************************************************
      ;;Now clean and tap the databases and interpolate satellite data
-     use_storm_stuff = KEYWORD_SET(nonStorm     ) + $
-                       KEYWORD_SET(mainPhase    ) + $
-                       KEYWORD_SET(recoveryPhase)
-
-     use_ae_stuff    = KEYWORD_SET(use_AE) + $
-                       KEYWORD_SET(use_AO) + $
-                       KEYWORD_SET(use_AU) + $
-                       KEYWORD_SET(use_AL)
-
-     ;;Does it all "hang together"?
-     IF use_storm_stuff GT 1 THEN BEGIN
-        PRINT,"Can't set more than one of the storm keywords simultaneously!"
-        STOP
-     ENDIF
-     IF use_ae_stuff GT 1 THEN BEGIN
-        PRINT,"only select one of (AE,AU,AL,AO)!"
-        STOP
-     ENDIF
-     IF use_ae_stuff AND use_storm_stuff THEN BEGIN
-        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
-        STOP
-     ENDIF
 
      IF KEYWORD_SET(use_storm_stuff) THEN BEGIN
 
@@ -845,6 +870,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               KEYWORD_SET(recoveryPhase): BEGIN
                  PRINTF,lun,'Restricting maximus with recovery-phase indices ...'
                  restrict_with_these_i = rp_i
+              END
+              KEYWORD_SET(all_storm_phases): BEGIN
+                 PRINTF,lun,'Restricting maximus with each storm phase in turn ...'
+                 restrict_with_these_i = LIST(ns_i,mp_i,rp_i)
               END
            ENDCASE
         ENDIF
@@ -896,6 +925,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                  t1_OMNI_arr                = rp_OMNI_t1
                  t2_OMNI_arr                = rp_OMNI_t2
               END
+              KEYWORD_SET(all_storm_phases): BEGIN
+                 PRINTF,lun,'Restricting OMNI with each storm phase in turn ...'
+                 restrict_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
+              END
            ENDCASE
 
         ENDIF
@@ -942,6 +975,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                  PRINTF,lun,'Restricting fastLoc with recovery-phase indices ...'
                  restrict_with_these_FL_i = rp_FL_i
               END
+              KEYWORD_SET(all_storm_phases): BEGIN
+                 PRINTF,lun,'Restricting fastLoc with each storm phase in turn ...'
+                 restrict_with_these_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
+              END
            ENDCASE
 
         ENDIF
@@ -982,6 +1019,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               KEYWORD_SET(recoveryPhase): BEGIN
                  restrict_with_these_eSpec_i = rp_eSpec_i
               END
+              KEYWORD_SET(all_storm_phases): BEGIN
+                 PRINTF,lun,'Restricting eSpec with each storm phase in turn ...'
+                 restrict_with_these_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+              END
            ENDCASE
 
 
@@ -997,22 +1038,40 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            KEYWORD_SET(recoveryPhase): BEGIN
               stormString           = 'recoveryPhase'
            END
+           KEYWORD_SET(all_storm_phases): BEGIN
+              stormString           = ["nonstorm","mainphase","recoveryphase"]
+              alfDB_plot_struct.executing_multiples = 1
+           END
         ENDCASE
 
         IF KEYWORD_SET(get_paramString) THEN BEGIN
            paramString          += '--' + stormString
         ENDIF
         IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(executing_multiples) THEN BEGIN
-              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                 paramString_list[iMult] += '--' + stormString
-              ENDFOR
+           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) OR $
+              KEYWORD_SET(IMF_struct.executing_multiples) $
+           THEN BEGIN
+              CASE 1 OF
+                 KEYWORD_SET(IMF_struct.multiple_IMF_clockAngles) OR $
+                    KEYWORD_SET(IMF_struct.multiple_delays): BEGIN
+                    FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                       paramString_list[iMult] += '--' + stormString
+                    ENDFOR
+                 END
+                 KEYWORD_SET(all_storm_phases): BEGIN
+                    paramString_list = LIST(paramString+'--'+stormString[0])
+                    FOR k=1,N_ELEMENTS(stormString)-1 DO BEGIN
+                       paramString_list.Add,paramString+'--'+stormString[k]
+                    ENDFOR
+                 END
+              ENDCASE
+
            ENDIF
         ENDIF
 
      ENDIF
 
-     IF KEYWORD_SET(use_ae_stuff) THEN BEGIN
+     IF KEYWORD_SET(ae_stuff) THEN BEGIN
 
         IF ~KEYWORD_SET(no_maximus) THEN BEGIN
            GET_AE_FASTDB_INDICES, $
@@ -1044,9 +1103,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                  PRINTF,lun,'Restricting maximus with high ' + navn + ' indices ...'
                  restrict_with_these_i = high_i
               END
-              ELSE: BEGIN
+              KEYWORD_SET(AE_low): BEGIN
                  PRINTF,lun,'Restricting maximus with low ' + navn + ' indices ...'
                  restrict_with_these_i = low_i
+              END
+              KEYWORD_SET(AE_both): BEGIN
+                 PRINTF,lun,'Restricting maximus with low and high ' + navn + ' indices in turn ...'
+                 restrict_with_these_i = LIST(high_i,low_i)
               END
            ENDCASE
         ENDIF
@@ -1065,8 +1128,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               USE_AO=use_ao, $
               HIGH_AE_I=high_ae_i, $
               LOW_AE_I=low_ae_i, $
-              HIGH_I=high_i, $
-              LOW_I=low_i, $
+              HIGH_I=high_OMNI_i, $
+              LOW_I=low_OMNI_i, $
               N_HIGH=n_high, $
               N_LOW=n_low, $
               OUT_NAME=navn, $
@@ -1080,11 +1143,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            CASE 1 OF
               KEYWORD_SET(AE_high): BEGIN
                  PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
-                 restrict_with_these_i = high_i
+                 restrict_with_these_i = high_OMNI_i
               END
-              ELSE: BEGIN
+              KEYWORD_SET(AE_low): BEGIN
                  PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
-                 restrict_with_these_i = low_i
+                 restrict_with_these_i = low_OMNI_i
+              END
+              KEYWORD_SET(AE_both): BEGIN
+                 PRINTF,lun,'Restricting OMNI with low and high ' + navn + ' indices in turn ...'
+                 restrict_with_these_i = LIST(high_OMNI_i,low_OMNI_i)
               END
            ENDCASE
 
@@ -1113,16 +1180,63 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               HIGH_AE_T1=high_ae_t1, $
               LOW_AE_T1=low_ae_t1, $
               HIGH_AE_T2=high_ae_t2, $
-              LOW_AE_T2=low_ae_t2
+              LOW_AE_T2=low_ae_t2, $
+              GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
+
            
            CASE 1 OF
               KEYWORD_SET(AE_high): BEGIN
                  PRINTF,lun,'Restricting fastLoc with high ' + navn + ' indices ...'
                  restrict_with_these_FL_i = high_FL_i
               END
-              ELSE: BEGIN
+              KEYWORD_SET(AE_low): BEGIN
                  PRINTF,lun,'Restricting fastLoc with low ' + navn + ' indices ...'
                  restrict_with_these_FL_i = low_FL_i
+              END
+              KEYWORD_SET(AE_both): BEGIN
+                 PRINTF,lun,'Restricting fastLoc with low and high ' + navn + ' indices in turn ...'
+                 restrict_with_these_i = LIST(high_FL_i,low_FL_i)
+              END
+           ENDCASE
+
+        ENDIF
+
+        ;;Now eSpecDB
+        IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
+        THEN BEGIN 
+
+           GET_AE_FASTDB_INDICES, $
+              /GET_ESPECDB_I_NOT_ALFDB_I, $
+              COORDINATE_SYSTEM=coordinate_system, $
+              AECUTOFF=AEcutoff, $
+              SMOOTH_AE=smooth_AE, $
+              USE_AU=use_au, $
+              USE_AL=use_al, $
+              USE_AO=use_ao, $
+              HIGH_AE_I=high_ae_i, $
+              LOW_AE_I=low_ae_i, $
+              HIGH_I=high_eSpec_i, $
+              LOW_I=low_eSpec_i, $
+              N_HIGH=n_eSpec_high, $
+              N_LOW=n_eSpec_low, $
+              OUT_NAME=navn, $
+              HIGH_AE_T1=high_ae_t1, $
+              LOW_AE_T1=low_ae_t1, $
+              HIGH_AE_T2=high_ae_t2, $
+              LOW_AE_T2=low_ae_t2
+           
+           CASE 1 OF
+              KEYWORD_SET(AE_high): BEGIN
+                 PRINTF,lun,'Restricting eSpec with high ' + navn + ' indices ...'
+                 restrict_with_these_eSpec_i = high_eSpec_i
+              END
+              KEYWORD_SET(AE_low): BEGIN
+                 PRINTF,lun,'Restricting eSpec with low ' + navn + ' indices ...'
+                 restrict_with_these_eSpec_i = low_eSpec_i
+              END
+              KEYWORD_SET(AE_both): BEGIN
+                 PRINTF,lun,'Restricting eSpec with low and high ' + navn + ' indices in turn ...'
+                 restrict_with_these_i = LIST(high_eSpec_i,low_eSpec_i)
               END
            ENDCASE
 
@@ -1134,10 +1248,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               t2_arr                = high_ae_t2
               AEstring              = 'high_' + navn
            END
-           ELSE: BEGIN
+           KEYWORD_SET(AE_low): BEGIN
               t1_arr                = low_ae_t1
               t2_arr                = low_ae_t2
               AEstring              = 'low_' + navn
+           END
+           KEYWORD_SET(AE_both): BEGIN
+              t1_arr                = LIST(high_ae_t1,low_ae_t1)
+              t2_arr                = LIST(high_ae_t2,low_ae_t2)
+              AEstring              = ['high_','low_'] + navn
+              alfDB_plot_struct.executing_multiples   = 1
            END
         ENDCASE
 
@@ -1145,10 +1265,23 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            paramString          += '--' + AEstring
         ENDIF
         IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(executing_multiples) THEN BEGIN
-              FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                 paramString_list[iMult] += '--' + AEString
-              ENDFOR
+           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) OR $
+              KEYWORD_SET(IMF_struct.executing_multiples) $
+           THEN BEGIN
+              CASE 1 OF
+                 KEYWORD_SET(IMF_struct.multiple_IMF_clockAngles) OR $
+                    KEYWORD_SET(IMF_struct.multiple_delays): BEGIN
+                    FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+                       paramString_list[iMult] += '--' + AEString
+                    ENDFOR
+                 END
+                 KEYWORD_SET(alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+                    paramString_list = LIST(paramString+'--'+AEString[0])
+                    FOR k=1,N_ELEMENTS(AEString)-1 DO BEGIN
+                       paramString_list.Add,paramString+'--'+AEString[k]
+                    ENDFOR
+                 END
+              ENDCASE
            ENDIF
         ENDIF
 
