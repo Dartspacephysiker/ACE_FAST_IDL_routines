@@ -118,11 +118,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   tHistDenomPlot_noMask          = 1
 
   espec__newellPlot_probOccurrence = 0
+  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
-  eSpec__t_ProbOccurrence    = 1
+  eSpec__t_ProbOccurrence    = 0
   eSpec__t_probOcc_plotRange = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
-  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
   eFluxPlotType                  = 'Max'
   CASE 1 OF
