@@ -810,6 +810,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         EARLIEST_JULDAY=earliest_julDay, $
         LATEST_JULDAY=latest_julDay, $
         IMF_STRUCT=IMF_struct, $
+        ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
         RESET_STRUCT=reset, $
         LUN=lun
 
@@ -1039,7 +1040,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
               stormString           = 'recoveryPhase'
            END
            KEYWORD_SET(all_storm_phases): BEGIN
-              stormString           = ["nonstorm","mainphase","recoveryphase"]
+              stormString           = ["all_storm_phases"]
+              multiples             = ["nonstorm","mainphase","recoveryphase"]
               alfDB_plot_struct.executing_multiples = 1
            END
         ENDCASE
@@ -1048,12 +1050,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            paramString          += '--' + stormString
         ENDIF
         IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) OR $
-              KEYWORD_SET(IMF_struct.executing_multiples) $
+           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) $
            THEN BEGIN
               CASE 1 OF
-                 KEYWORD_SET(IMF_struct.multiple_IMF_clockAngles) OR $
-                    KEYWORD_SET(IMF_struct.multiple_delays): BEGIN
+                 KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) OR $
+                    KEYWORD_SET(alfDB_plot_struct.multiple_delays): BEGIN
                     FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
                        paramString_list[iMult] += '--' + stormString
                     ENDFOR
@@ -1143,15 +1144,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            CASE 1 OF
               KEYWORD_SET(AE_high): BEGIN
                  PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
-                 restrict_with_these_i = high_OMNI_i
+                 restrict_OMNI_with_these_i = high_OMNI_i
               END
               KEYWORD_SET(AE_low): BEGIN
                  PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
-                 restrict_with_these_i = low_OMNI_i
+                 restrict_OMNI_with_these_i = low_OMNI_i
               END
               KEYWORD_SET(AE_both): BEGIN
                  PRINTF,lun,'Restricting OMNI with low and high ' + navn + ' indices in turn ...'
-                 restrict_with_these_i = LIST(high_OMNI_i,low_OMNI_i)
+                 restrict_OMNI_with_these_i = LIST(high_OMNI_i,low_OMNI_i)
               END
            ENDCASE
 
@@ -1256,7 +1257,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            KEYWORD_SET(AE_both): BEGIN
               t1_arr                = LIST(high_ae_t1,low_ae_t1)
               t2_arr                = LIST(high_ae_t2,low_ae_t2)
-              AEstring              = ['high_','low_'] + navn
+              AEstring              = navn+'_both'
+              multiples             = ['high_','low_'] + navn
               alfDB_plot_struct.executing_multiples   = 1
            END
         ENDCASE
@@ -1265,12 +1267,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            paramString          += '--' + AEstring
         ENDIF
         IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) OR $
-              KEYWORD_SET(IMF_struct.executing_multiples) $
+           IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) $
+              ;; KEYWORD_SET(IMF_struct.executing_multiples) $
            THEN BEGIN
               CASE 1 OF
-                 KEYWORD_SET(IMF_struct.multiple_IMF_clockAngles) OR $
-                    KEYWORD_SET(IMF_struct.multiple_delays): BEGIN
+                 KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) OR $
+                    KEYWORD_SET(alfDB_plot_struct.multiple_delays): BEGIN
                     FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
                        paramString_list[iMult] += '--' + AEString
                     ENDFOR
@@ -1425,7 +1427,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   IF KEYWORD_SET(justInds) THEN BEGIN
      PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: Finished! Returning indices ...'
 
-     out_paramString_list        = TEMPORARY(paramString_list)
+     out_paramString_list        = PASIS__paramString_list
      saveStr = 'SAVE,out_paramString_list,'
 
      indsInfoStr = 'indsInfo'
@@ -1528,18 +1530,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                 IMF_STRUCT=IMF_struct, $
                                 MIMC_STRUCT=MIMC_struct, $
                                 ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-                                PARAMSTRING=paramString, $
-                                PARAMSTR_LIST=paramString_list, $
+                                PARAMSTRING=PASIS__paramString, $
+                                PARAMSTR_LIST=PASIS__paramString_list, $
                                 LUN=lun
   ;; ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Saving indices?
   IF KEYWORD_SET(save_alf_indices) AND ~KEYWORD_SET(no_maximus) THEN BEGIN
-     IF N_ELEMENTS(paramString_list) GT 0 THEN BEGIN
-        alfDB_ind_filename    = paramString_list.toArray() + '--' + 'alfDB_indices.sav'
+     IF N_ELEMENTS(PASIS__paramString_list) GT 0 THEN BEGIN
+        alfDB_ind_filename    = PASIS__paramString_list.toArray() + '--' + 'alfDB_indices.sav'
      ENDIF ELSE BEGIN
-        alfDB_ind_filename    = paramString + '--' + 'alfDB_indices.sav'
+        alfDB_ind_filename    = PASIS__paramString + '--' + 'alfDB_indices.sav'
      ENDELSE
      alfDB_ind_fileDir     = plotDir + '../../saves_output_etc/'
      SAVE_ALFVENDB_INDICES,alfDB_ind_filename, $

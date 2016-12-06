@@ -1,41 +1,8 @@
 FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay, $
-   ;; CLOCKSTR=clockStr, $
-   ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-   ;; ANGLELIM1=angleLim1, $
-   ;; ANGLELIM2=angleLim2, $
-   ;; MULTIPLE_DELAYS=multiple_delays, $
-   ;; RESOLUTION_DELAY=delay_res, $
-   ;; BINOFFSET_DELAY=binOffset_delay, $
-   ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-   ;; STABLEIMF=stableIMF, $
-   ;; SMOOTH_IMF=smooth_IMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   ;; EARLIEST_UTC=earliest_UTC, $
-   ;; LATEST_UTC=latest_UTC, $
-   ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   ;; EARLIEST_JULDAY=earliest_julDay, $
-   ;; LATEST_JULDAY=latest_julDay, $
-   ;; BYMIN=byMin, $
-   ;; BYMAX=byMax, $
-   ;; BZMIN=bzMin, $
-   ;; BZMAX=bzMax, $
-   ;; BTMIN=btMin, $
-   ;; BTMAX=btMax, $
-   ;; BXMIN=bxMin, $
-   ;; BXMAX=bxMax, $
-   ;; DO_ABS_BYMIN=abs_byMin, $
-   ;; DO_ABS_BYMAX=abs_byMax, $
-   ;; DO_ABS_BZMIN=abs_bzMin, $
-   ;; DO_ABS_BZMAX=abs_bzMax, $
-   ;; DO_ABS_BTMIN=abs_btMin, $
-   ;; DO_ABS_BTMAX=abs_btMax, $
-   ;; DO_ABS_BXMIN=abs_bxMin, $
-   ;; DO_ABS_BXMAX=abs_bxMax, $
-   ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-   ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $
-   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
    ;; OMNI_COORDS=OMNI_coords, $
@@ -105,7 +72,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
   
   
   ;;Handle delay stuff
-  IF KEYWORD_SET(IMF_struct.multiple_delays) THEN BEGIN
+  IF KEYWORD_SET(alfDB_plot_struct.multiple_delays) THEN BEGIN
      NIter = N_ELEMENTS(IMF_struct.delay) 
   ENDIF ELSE BEGIN
      NIter = 1
