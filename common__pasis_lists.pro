@@ -7,7 +7,7 @@ COMMON PASIS, $
    PASIS__indices__ion_list, $
    PASIS__eFlux_eSpec_data, $   
    PASIS__eNumFlux_eSpec_data, $
-   PASIS__eSpec_delta_t, $
+   ;; PASIS__eSpec_delta_t, $
    PASIS__eSpec__MLTs, $        
    PASIS__eSpec__ILATs, $       
    PASIS__iFlux_eSpec_data, $   

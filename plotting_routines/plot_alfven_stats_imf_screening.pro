@@ -1241,7 +1241,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                IMF_STRUCT=IMF_struct, $
                                MIMC_STRUCT=MIMC_struct, $
                                T1_ARR=t1_arr,T2_ARR=t2_arr, $
-                               ESPEC_DELTA_T=eSpec_delta_t, $
+                               ;; ESPEC_DELTA_T=eSpec_delta_t, $
                                ION_DELTA_T=ion_delta_t, $
                                OUT_EFLUX_DATA=eFlux_eSpec_data, $
                                OUT_ENUMFLUX_DATA=eNumFlux_eSpec_data, $
@@ -1267,8 +1267,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            IF KEYWORD_SET(indices__eSpec_list) THEN BEGIN
               PASIS__eFlux_eSpec_data     = KEYWORD_SET(eFlux_eSpec_data)
               PASIS__eNumFlux_eSpec_data  = KEYWORD_SET(eNumFlux_eSpec_data)
-              PASIS__eSpec_delta_t        = KEYWORD_SET(eSpec_delta_t) ? $
-                                            TEMPORARY(eSpec_delta_t) : !NULL
+              ;; PASIS__eSpec_delta_t        = KEYWORD_SET(eSpec_delta_t) ? $
+              ;;                               TEMPORARY(eSpec_delta_t) : !NULL
               PASIS__eSpec__MLTs          = KEYWORD_SET(eSpec__MLTs)
               PASIS__eSpec__ILATs         = KEYWORD_SET(eSpec__ILATs)
               PASIS__indices__eSpec_list  = TEMPORARY(indices__eSpec_list)
@@ -1583,7 +1583,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         ;; FOR_ION_DB=for_ion_DB, $
         ION__MLTS=PASIS__ion__mlts, $
         ION__ILATS=PASIS__ion__ilats, $
-        ESPEC_DELTA_T=PASIS__eSpec_delta_t, $
         ION_DELTA_T=PASIS__ion_delta_t, $
         PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
         NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
