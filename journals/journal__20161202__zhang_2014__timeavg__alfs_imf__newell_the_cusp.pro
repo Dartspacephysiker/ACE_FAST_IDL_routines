@@ -4,15 +4,15 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;; plotPref = '-smeared'
   ;; plotPref += '-fattest'
-  plotPref = '-keilbin'
+  ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref += 'NEWELLED_DONE--MAPPED_TIMES--MAPPED_WIDTH_X'
+  plotPref = 'NEWELLED_altRange--MAPPED_TIMES--MAPPED_WIDTH_X'
 
 
   do_what_everyone_does          = 1
 
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 0
 
@@ -159,13 +159,13 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 1
-  eNumFlPlots                        = 1
+  ePlots                             = 0
+  eNumFlPlots                        = 0
   pPlots                             = 1
-  ionPlots                           = 1
-  probOccurrencePlot                 = 1
-  tHistDenominatorPlot               = 1
-  sum_electron_and_poyntingflux      = 1
+  ionPlots                           = 0
+  probOccurrencePlot                 = 0
+  tHistDenominatorPlot               = 0
+  sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
   nowepco_range                  = [0,1.0]
@@ -193,7 +193,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.20]
+  PPlotRange                     = [0,0.10]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
