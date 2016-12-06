@@ -21,7 +21,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -108,10 +108,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   newellplots                    = 0
   newellPlot_autoscale           = 0
 
-  ePlots                         = 0
+  ePlots                         = 1
   eNumFlPlots                    = 1
 
-  tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
    tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
@@ -143,7 +143,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
      END
      ELSE: BEGIN
-        ENumFlPlotRange          = [[0,5.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+        ENumFlPlotRange          = [[0,4.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
      END
   ENDCASE
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
