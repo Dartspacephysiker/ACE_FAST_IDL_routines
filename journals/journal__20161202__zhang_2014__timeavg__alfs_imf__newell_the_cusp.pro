@@ -7,14 +7,14 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref += 'NEWELLED_DONE--MAPPED_TIMES'
+  plotPref += 'NEWELLED_DONE--MAPPED_TIMES--MAPPED_WIDTH_X'
 
 
   do_what_everyone_does          = 1
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -159,13 +159,13 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 0
-  eNumFlPlots                        = 0
+  ePlots                             = 1
+  eNumFlPlots                        = 1
   pPlots                             = 1
-  ionPlots                           = 0
-  probOccurrencePlot                 = 0
-  tHistDenominatorPlot               = 0
-  sum_electron_and_poyntingflux      = 0
+  ionPlots                           = 1
+  probOccurrencePlot                 = 1
+  tHistDenominatorPlot               = 1
+  sum_electron_and_poyntingflux      = 1
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
   nowepco_range                  = [0,1.0]

@@ -7,7 +7,6 @@ FUNCTION BLANK_IMF_STRUCT
                   clockStr                   : ''      , $
                   angleLim1                  : 0.      , $
                   angleLim2                  : 0.      , $
-                  multiple_IMF_clockAngles   : 0B      , $
                   clock_i                    : 0       , $
                   dont_consider_clockAngles  : 0B      , $
                   ;; byMin                   : 0.      , $
@@ -27,13 +26,10 @@ FUNCTION BLANK_IMF_STRUCT
                   abs_bxMin                  : 0B      , $
                   abs_bxMax                  : 0B      , $
                   do_not_consider_IMF        : 0B      , $
-                  paramString                : ''      , $
-                  paramString_list           : LIST()  , $
                   satellite                  : 'OMNI'  , $
                   omni_Coords                : 'GSM'   , $
                   delay                      : 900     , $
-                  multiple_delays            : 0B      , $
-                  executing_multiples        : 0B      , $
+                  ;; multiple_delays            : 0B      , $
                   ;; multiples               : 0       , $
                   ;; multiString             : ''      , $
                   delay_res                  : 120.    , $
