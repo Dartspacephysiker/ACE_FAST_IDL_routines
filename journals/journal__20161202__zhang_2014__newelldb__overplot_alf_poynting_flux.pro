@@ -2,7 +2,7 @@
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   COMPILE_OPT IDL2
 
-  plotPref = '-atest_teste-MAPPE-' 
+  plotPref = '-atest_teste-MAPPE-cb' 
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -67,8 +67,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-40sm-300-4300km-NC-avg-cont30.0Res_0.0Offset_btMin0.5--Ring_timeAvgd_pFlux.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
-  plotPref += '-rot_pFlux-t'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
+  ;; plotPref += '-rot_pFlux-t'
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161206/pFlux-mappedAll-rot.dat'
+  plotPref += '-allMapped'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
   ;; plotPref += '-notRot_pFlux-t'
   overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
@@ -78,6 +80,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   op_contour__levels             = [10,40,70]
   plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
+  op_plotRange                   = [0.00,0.10]
 
   tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
@@ -108,10 +111,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   newellplots                    = 0
   newellPlot_autoscale           = 0
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
@@ -468,6 +471,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         OVERPLOT_ARR=overplot_arr, $
         OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
         OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+        OVERPLOT_PLOTRANGE=op_plotRange, $
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $

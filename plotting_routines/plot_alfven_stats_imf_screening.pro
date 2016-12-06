@@ -491,6 +491,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OVERPLOT_ARR=overplot_arr, $
                                     OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
                                     OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+                                    OVERPLOT_PLOTRANGE=op_plotRange, $
                                     FANCY_PLOTNAMES=fancy_plotNames, $
                                     SHOW_INTEGRALS=show_integrals, $
                                     MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
@@ -1992,6 +1993,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                OVERPLOTSTR=KEYWORD_SET(sendit), $
                                OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
                                OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+                               OVERPLOT_PLOTRANGE=op_plotRange, $
                                CENTERS_MLT=centersMLT, $
                                CENTERS_ILAT=centersILAT, $
                                SHOW_INTEGRALS=show_integrals, $
