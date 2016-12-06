@@ -10,11 +10,11 @@
 
   include_32Hz                       = 0
 
-  plotH2D_contour                    = 1
+  plotH2D_contour                    = 0
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                         = 0
+  EA_binning                         = 1
 
   minMC                              = 1
   maxNegMC                           = -1
@@ -30,7 +30,7 @@
 
   ;;DB stuff
   do_despun                          = 0
-  use_AACGM                          = 0
+  use_AACGM                          = 1
   use_MAG                            = 0
 
   autoscale_fluxPlots                = 0
@@ -38,18 +38,10 @@
   fluxPlots__remove_log_outliers     = 0
 
   show_integrals                     = 1
-  write_obsArr_textFile              = 0
-  write_obsArr__inc_IMF              = 0
-  write_obsArr__orb_avg_obs          = 0
-  justData                           = 0
-
-  ;;bonus
-  make_OMNI_stuff                    = 0
-  print_avg_imf_components           = KEYWORD_SET(make_OMNI_stuff)
-  print_master_OMNI_file             = KEYWORD_SET(make_OMNI_stuff)
-  save_master_OMNI_inds              = KEYWORD_SET(make_OMNI_stuff)
-  calc_KL_sw_coupling_func           = 1
-  make_integral_savfiles             = 0
+  ;; write_obsArr_textFile              = 0
+  ;; write_obsArr__inc_IMF              = 0
+  ;; write_obsArr__orb_avg_obs          = 0
+  ;; justData                           = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
@@ -94,10 +86,10 @@
 
   ;; numOrbLim                      = 10
 
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
 

@@ -7,14 +7,14 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref = 'NEWELLED_altRange--MAPPED_TIMES--MAPPED_WIDTH_X'
+  plotPref = 'FINALE'
 
 
   do_what_everyone_does          = 1
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
-  use_prev_plot_i                = 0
+  use_prev_plot_i                = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -74,19 +74,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      autoscale_fluxPlots             = 0
      fluxPlots__remove_outliers      = 0
      fluxPlots__remove_log_outliers  = 0
-
-     ;;bonus
-     print_avg_imf_components        = 0
-     print_master_OMNI_file          = 0
-     save_master_OMNI_inds           = 0
-     calc_KL_sw_coupling_func        = 1
-     make_integral_savfiles          = 0
-
-     show_integrals                  = 1
-     write_obsArr_textFile           = 1
-     write_obsArr__inc_IMF           = 1
-     write_obsArr__orb_avg_obs       = 1
-     justData                        = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;Tiled plot options
@@ -153,9 +140,22 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ENDIF
 
   ;;In any case
-  reset_good_inds                     = 1
-  reset_OMNI_inds                     = 1
+  reset_good_inds                 = 1
+  reset_OMNI_inds                 = 1
      
+  ;;bonus
+  make_OMNI_stuff                 = 0
+  print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
+  print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
+  save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
+  calc_KL_sw_coupling_func        = 1
+  make_integral_savfiles          = 0
+
+  show_integrals                  = 1
+  write_obsArr_textFile           = 1
+  write_obsArr__inc_IMF           = 1
+  write_obsArr__orb_avg_obs       = 1
+  justData                        = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -193,7 +193,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.10]
+  PPlotRange                     = [0,0.20]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -207,7 +207,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   summed_eFlux_pFluxplotRange    = [0,0.1]
 
-  tHistDenomPlotRange            = [5,150]
+  tHistDenomPlotRange            = [5,80]
   ;; tHistDenomPlotNormalize        = 
   ;; tHistDenomPlotAutoscale        =      
   tHistDenomPlot_noMask          = 1
