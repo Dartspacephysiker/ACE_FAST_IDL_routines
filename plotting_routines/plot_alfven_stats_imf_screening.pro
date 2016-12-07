@@ -537,8 +537,104 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   for_eSpec_DBs  = KEYWORD_SET(eSpec_flux_plots                ) OR $
                    KEYWORD_SET(eSpec__newellPlot_probOccurrence) OR $
-                   KEYWORD_SET(eSpec__t_probOccurrence         )
+                   KEYWORD_SET(eSpec__t_probOccurrence         ) OR $
+                   KEYWORD_SET(no_maximus                      )
   
+
+
+  ;;Load DBs we need
+  IF ~KEYWORD_SET(no_maximus) THEN BEGIN
+
+     IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+        LOAD_MAXIMUS_AND_CDBTIME, $
+           INCLUDE_32HZ=include_32Hz, $
+           DBFile=DBFile, $
+           CORRECT_FLUXES=correct_fluxes, $
+           DO_NOT_MAP_ESA_CURRENT=do_not_map_esa_current, $
+           DO_NOT_MAP_PFLUX=do_not_map_pflux, $
+           DO_NOT_MAP_IONFLUX=do_not_map_ionflux, $
+           DO_NOT_MAP_HEAVIES=do_not_map_heavies, $
+           DO_NOT_MAP_WIDTH_X=do_not_map_width_x, $
+           DO_NOT_MAP_WIDTH_T=do_not_map_width_t, $
+           DO_NOT_MAP_ANYTHING=no_mapping, $
+           CHASTDB=chastDB, $
+           DESPUNDB=despunDB, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_aacgm, $
+           USE_GEO_COORDS=use_geo, $
+           USE_MAG_COORDS=use_mag, $
+           USE_SDT_COORDS=use_SDT, $
+           USING_HEAVIES=using_heavies, $
+           FORCE_LOAD_MAXIMUS=force_load_maximus, $
+           FORCE_LOAD_CDBTIME=force_load_cdbTime, $
+           FORCE_LOAD_BOTH=force_load_BOTH, $
+           QUIET=quiet, $
+           CLEAR_MEMORY=clear_memory, $
+           NO_MEMORY_LOAD=noMem, $
+           LUN=lun
+     ENDIF
+
+     ;;Maximus pointers
+     pAlfDB = PTR_NEW(MAXIMUS__maximus)
+     pAlfT  = PTR_NEW(MAXIMUS__times  )
+
+  ENDIF
+
+  IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
+
+     IF ( KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
+        (~KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0))    $
+     THEN BEGIN
+        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
+           FORCE_LOAD_FASTLOC=force_load_fastLoc, $
+           FORCE_LOAD_TIMES=force_load_times, $
+           FORCE_LOAD_ALL=force_load_all, $
+           INCLUDE_32Hz=include_32Hz, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_aacgm, $
+           USE_GEO_COORDS=use_geo, $
+           USE_MAG_COORDS=use_mag, $
+           FOR_ESPEC_DBS=for_eSpec_DBs, $
+           ;; CHECK_DB=check_DB, $
+           JUST_FASTLOC=just_fastLoc, $
+           JUST_TIMES=just_times, $
+           DO_NOT_MAP_DELTA_T=do_not_map_delta_t, $
+           NO_MEMORY_LOAD=noMem, $
+           CLEAR_MEMORY=clear_memory, $
+           LUN=lun     
+
+     ENDIF
+  ENDIF 
+
+  ;;Will be handled by GET_ESPEC_EFLUX_DATA
+  ;; IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+  ;;    LOAD_NEWELL_ESPEC_DB, $
+  ;;       FAILCODES=failCode, $
+  ;;       USE_UNSORTED_FILE=use_unsorted_file, $
+  ;;       NEWELLDBDIR=NewellDBDir, $
+  ;;       NEWELLDBFILE=NewellDBFile, $
+  ;;       FORCE_LOAD_DB=force_load_db, $
+  ;;       DONT_LOAD_IN_MEMORY=nonMem, $
+  ;;       DONT_PERFORM_CORRECTION=dont_perform_SH_correction, $
+  ;;       DONT_CONVERT_TO_STRICT_NEWELL=dont_convert_to_strict_newell, $
+  ;;       DONT_MAP_TO_100KM=dont_map, $
+  ;;       LOAD_DELTA_T=load_delta_t, $
+  ;;       COORDINATE_SYSTEM=coordinate_system, $
+  ;;       USE_AACGM_COORDS=use_aacgm, $
+  ;;       USE_GEO_COORDS=use_geo, $
+  ;;       USE_MAG_COORDS=use_mag, $
+  ;;       ;; JUST_TIMES=just_times, $
+  ;;       ;; OUT_TIMES=out_times, $
+  ;;       ;; OUT_GOOD_I=good_i, $
+  ;;       USE_2000KM_FILE=use_2000km_file, $
+  ;;       CLEAR_MEMORY=clear_memory, $
+  ;;       NO_MEMORY_LOAD=noMem, $
+  ;;       REDUCED_DB=reduce_dbSize, $
+  ;;       LUN=lun, $
+  ;;       QUIET=quiet
+
+  ;; ENDIF
+
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
 
      IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
@@ -1309,7 +1405,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         IF KEYWORD_SET(get_plot_i) THEN BEGIN
            plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
                           MAXIMUS__maximus, $
-                          DBTIMES=cdbTime, $
+                          DBTIMES=MAXIMUS__times, $
                           DBFILE=dbfile, $
                           LUN=lun, $
                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
@@ -1680,10 +1776,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ENDIF
 
      GET_ALFVENDB_2DHISTOS, $
-        ;; MAXIMUS__maximus, $
         plot_i, $
         fastLocInterped_i, $
-        CDBTIME=MAXIMUS__times, $
         H2DSTRARR=h2dStrArr, $
         KEEPME=keepMe, $
         DATARAWPTRARR=dataRawPtrArr, $
@@ -2037,5 +2131,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
   ;; out_dataNameArr_list   = dataNameArr_list
   ;; out_paramString_list   = paramString_list
   ;; out_plot_i_list        = N_ELEMENTS(plot_i_list) GT 0 ? plot_i_list : !NULL
+
+  ;;Collect garbage
+  HEAP_GC
 
 END

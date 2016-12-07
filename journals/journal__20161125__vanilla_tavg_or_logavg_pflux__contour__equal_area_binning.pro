@@ -11,7 +11,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   include_32Hz               = 0
   use_AACGM                  = 0
 
-  plotH2D_contour            = 1
+  plotH2D_contour            = 0
   plotH2D__kde               = KEYWORD_SET(plotH2D_contour)
 
   EA_binning                 = 0
@@ -38,7 +38,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; ePlots                         = 0
   ;; eNumFlPlots                    = 0
   pPlots                         = 1
-  nOrbsWithEventsPerContribOrbsPlot = 1
+  nOrbsWithEventsPerContribOrbsPlot = 0
   ;; ionPlots                       = 0
   probOccurrencePlot             = 1
   ;; sum_electron_and_poyntingflux  = 0
@@ -72,7 +72,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   CASE 1 OF
      KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
         logPfPlot   = 0
-        PPlotRange  = [0.00,0.25]
+        PPlotRange  = [0.00,0.20]
      END
      KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
@@ -112,7 +112,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[500,4300]]
 
   ;; altRange                    = [[300,4300], $
   ;;                                [500,4300], $
@@ -141,11 +141,14 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   plotPref                   = 'just_' + jahr
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                           DESPUNDB=despun, $
-                           USE_AACGM=use_AACGM, $
-                           USE_MAG=use_mag
-  orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
+  @common__maximus_vars.pro
+  CLEAR_M_COMMON_VARS
+  LOAD_MAXIMUS_AND_CDBTIME, $
+     DESPUNDB=despun, $
+     USE_AACGM=use_AACGM, $
+     USE_MAG=use_mag
+  orbRange                 = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
+                              MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
   ;; orbRange                    = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -159,12 +162,12 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binILAT                        = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   IF KEYWORD_SET(shiftMLT) THEN BEGIN
      ;; plotPref += '-rotFICK' ;was using this to diagnose what was wrong with rotating when doing a contour plot
@@ -176,7 +179,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;;Bonus
   ;; maskMin                        = 10
-  ;; tHist_mask_bins_below_thresh   = 5
+  ;; tHist_mask_bins_below_thresh   = 3
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]

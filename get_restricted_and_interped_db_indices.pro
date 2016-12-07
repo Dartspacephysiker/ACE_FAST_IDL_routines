@@ -119,13 +119,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
               END
         ENDCASE
         END
+        ELSE:
      ENDCASE
      restricted_and_interped_i_list     = LIST(good_i)
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) THEN BEGIN
         
         nIter = N_ELEMENTS(IMF_struct.clockStr)-1
-        restricted_and_interped_i_list  = LIST()
+        ;; restricted_and_interped_i_list  = LIST()
         FOR iClock=0,nIter DO BEGIN
            ;; tempClockStr  = IMF_struct.clockStr[iClock]
            IMF_struct.clock_i = iClock

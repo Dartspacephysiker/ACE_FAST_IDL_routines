@@ -152,19 +152,19 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   make_integral_savfiles          = 0
 
   show_integrals                  = 1
-  write_obsArr_textFile           = 1
-  write_obsArr__inc_IMF           = 1
-  write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
+  ;; write_obsArr_textFile           = 1
+  ;; write_obsArr__inc_IMF           = 1
+  ;; write_obsArr__orb_avg_obs       = 1
+  ;; justData                        = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 0
-  eNumFlPlots                        = 0
+  ePlots                             = 1
+  eNumFlPlots                        = 1
   pPlots                             = 1
-  ionPlots                           = 0
-  probOccurrencePlot                 = 0
-  tHistDenominatorPlot               = 0
+  ionPlots                           = 1
+  probOccurrencePlot                 = 1
+  tHistDenominatorPlot               = 1
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 

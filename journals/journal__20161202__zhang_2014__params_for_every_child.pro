@@ -14,7 +14,7 @@
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                         = 1
+  EA_binning                         = 0
 
   minMC                              = 1
   maxNegMC                           = -1
@@ -30,7 +30,7 @@
 
   ;;DB stuff
   do_despun                          = 0
-  use_AACGM                          = 1
+  use_AACGM                          = 0
   use_MAG                            = 0
 
   autoscale_fluxPlots                = 0
@@ -38,17 +38,13 @@
   fluxPlots__remove_log_outliers     = 0
 
   show_integrals                     = 1
-  ;; write_obsArr_textFile              = 0
-  ;; write_obsArr__inc_IMF              = 0
-  ;; write_obsArr__orb_avg_obs          = 0
-  ;; justData                           = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
   reset_good_inds                = 1
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[500,4300]]
 
   orbRange                       = [1000,10600]
 
@@ -82,7 +78,7 @@
   ;; maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 10
+  ;; tHist_mask_bins_below_thresh   = 3
 
   ;; numOrbLim                      = 10
 
