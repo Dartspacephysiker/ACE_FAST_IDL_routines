@@ -9,7 +9,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'NEWELLED_AFTROTFIX'
   plotPref = 'FINALE'
 
-
   do_what_everyone_does          = 1
 
   charE__Newell_the_cusp         = 0
@@ -152,10 +151,10 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   make_integral_savfiles          = 0
 
   show_integrals                  = 1
-  ;; write_obsArr_textFile           = 1
-  ;; write_obsArr__inc_IMF           = 1
-  ;; write_obsArr__orb_avg_obs       = 1
-  ;; justData                        = 0
+  write_obsArr_textFile           = 1
+  write_obsArr__inc_IMF           = 1
+  write_obsArr__orb_avg_obs       = 1
+  justData                        = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots

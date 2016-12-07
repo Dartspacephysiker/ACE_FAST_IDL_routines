@@ -78,7 +78,7 @@
   ;; maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; maskMin                        =  1
-  ;; tHist_mask_bins_below_thresh   = 3
+  tHist_mask_bins_below_thresh   = 4
 
   ;; numOrbLim                      = 10
 
