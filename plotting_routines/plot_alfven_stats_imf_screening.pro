@@ -435,6 +435,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     COORDINATE_SYSTEM=coordinate_system, $
                                     USE_AACGM_COORDS=use_AACGM, $
                                     USE_MAG_COORDS=use_MAG, $
+                                    LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
                                     NEVENTSPLOTRANGE=nEventsPlotRange, $
                                     LOGNEVENTSPLOT=logNEventsPlot, $
                                     NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -509,7 +510,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
                                     OUT_I_ION_LIST=out_i_ion_list, $
                                     RESTORE_LAST_SESSION=restore_last_session, $
                                     DONT_LOAD_IN_MEMORY=nonMem, $
-                                    _EXTRA = e
+                                    _EXTRA=e
   
 ;;  COMPILE_OPT idl2
 
@@ -570,6 +571,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      COORDINATE_SYSTEM=coordinate_system, $
      USE_AACGM_COORDS=use_AACGM, $
      USE_MAG_COORDS=use_MAG, $
+     LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
      HEMI=hemi, $
      NORTH=north, $
      SOUTH=south, $
@@ -595,15 +597,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
      DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
      ORBCONTRIBPLOT=orbContribPlot, $
-     ;; ORBCONTRIB_NOMASK=orbContrib_noMask, $
      ORBTOTPLOT=orbTotPlot, $
      ORBFREQPLOT=orbFreqPlot, $
      NEVENTPERORBPLOT=nEventPerOrbPlot, $
      NEVENTPERMINPLOT=nEventPerMinPlot, $
-     ;; NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
      PROBOCCURRENCEPLOT=probOccurrencePlot, $
      SQUAREPLOT=squarePlot, $
-     POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+     POLARCONTOUR=polarContour, $ 
      MEDIANPLOT=medianPlot, $
      LOGAVGPLOT=logAvgPlot, $
      PLOTMEDORAVG=plotMedOrAvg, $
@@ -614,12 +614,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      WRITEPROCESSEDH2D=writeProcessedH2d, $
      SAVERAW=saveRaw, RAWDIR=rawDir, $
      SHOWPLOTSNOSAVE=showPlotsNoSave, $
-     ;; PLOTDIR=plotDir, $
      MEDHISTOUTDATA=medHistOutData, $
      MEDHISTOUTTXT=medHistOutTxt, $
      OUTPUTPLOTSUMMARY=outputPlotSummary, $
-     ;; OUT_TEMPFILE=out_tempFile, $
-     ;; PRINT_ALFVENDB_2DHISTOS=print_alfvendb_2dhistos, $
      DEL_PS=del_PS, $
      KEEPME=keepMe, $
      PARAMSTRING=paramString, $
@@ -637,7 +634,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
      ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
      ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
-     ;; ESPEC__T_PROBOCC_PLOTRANGE=t_probOcc_plotRange, $
      USE_STORM_STUFF=use_storm_stuff, $
      NONSTORM=nonStorm, $
      RECOVERYPHASE=recoveryPhase, $
@@ -740,6 +736,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
 
   ENDELSE
 
+  ;;In any case
+  PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
+  PASIS__IMF_struct        = TEMPORARY(IMF_struct)
+  PASIS__MIMC_struct       = TEMPORARY(MIMC_struct)
+
   get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
                KEYWORD_SET(get_fastLoc_i) OR $
                KEYWORD_SET(get_plot_i)
@@ -766,11 +767,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            USE_AACGM_COORDS=use_aacgm, $
            USE_GEO_COORDS=use_geo, $
            USE_MAG_COORDS=use_mag, $
+           LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
            USE_SDT_COORDS=use_SDT, $
            USING_HEAVIES=using_heavies, $
            FORCE_LOAD_MAXIMUS=force_load_maximus, $
            FORCE_LOAD_CDBTIME=force_load_cdbTime, $
-           FORCE_LOAD_BOTH=force_load_BOTH, $
+           FORCE_LOAD_BOTH=KEYWORD_SET(force_load_both) OR KEYWORD_SET(reset), $
            QUIET=quiet, $
            CLEAR_MEMORY=clear_memory, $
            NO_MEMORY_LOAD=noMem, $
@@ -791,7 +793,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
            FORCE_LOAD_FASTLOC=force_load_fastLoc, $
            FORCE_LOAD_TIMES=force_load_times, $
-           FORCE_LOAD_ALL=force_load_all, $
+           FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(reset), $
            INCLUDE_32Hz=include_32Hz, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_aacgm, $
@@ -801,6 +803,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
            ;; CHECK_DB=check_DB, $
            JUST_FASTLOC=just_fastLoc, $
            JUST_TIMES=just_times, $
+           LOAD_DELTA_ILAT_NOT_DELTA_T=load_dILAT, $
            DO_NOT_MAP_DELTA_T=do_not_map_delta_t, $
            NO_MEMORY_LOAD=noMem, $
            CLEAR_MEMORY=clear_memory, $

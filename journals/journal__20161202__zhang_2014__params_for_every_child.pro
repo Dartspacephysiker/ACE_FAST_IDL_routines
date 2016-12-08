@@ -44,7 +44,7 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[500,4300]]
+  altRange                       = [[300,4300]]
 
   orbRange                       = [1000,10600]
 

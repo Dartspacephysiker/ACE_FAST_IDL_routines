@@ -56,13 +56,8 @@ PRO CHECK_PASIS_VARS, $
   ;; ENDELSE
 
   IF KEYWORD_SET(reset) THEN BEGIN
-     STOP
      CLEAR_PASIS_VARS
   ENDIF
-
-  PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
-  PASIS__IMF_struct        = TEMPORARY(IMF_struct)
-  PASIS__MIMC_struct       = TEMPORARY(MIMC_struct)
 
   IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
      ;; plot_i_list             = PASIS__plot_i_list
