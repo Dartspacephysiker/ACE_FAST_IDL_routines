@@ -2,16 +2,19 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   COMPILE_OPT IDL2
 
-  ;; plotPref = '-smeared'
+  do_what_everyone_does          = 1
+  IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
+     @journal__20161202__zhang_2014__params_for_every_child.pro
+  ENDIF
+
+  ;; plotPref += '-smeared'
   ;; plotPref += '-fattest'
   ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref = 'FINALE'
+  plotPref += 'FINALE'
 
-  do_what_everyone_does          = 1
-
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 1
 
@@ -29,10 +32,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
                                     1,1,1]
 
   ;;NOTE: Bx-specific stuff on other side of IF statement
-  IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-     @journal__20161202__zhang_2014__params_for_every_child.pro
-  ENDIF ELSE BEGIN
-
+  IF ~KEYWORD_SET(do_what_everyone_does) THEN BEGIN
 
      restore_last_session            = 0
 
@@ -132,7 +132,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
      ;;Bonus
 
-  ENDELSE
+  ENDIF
 
   IF shiftMLT GT 0. THEN BEGIN
      plotPref += '-rotated'
@@ -151,10 +151,12 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   make_integral_savfiles          = 0
 
   show_integrals                  = 1
-  write_obsArr_textFile           = 1
+  write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
   justData                        = 0
+  justInds                        = 1
+  justInds_saveToFile             = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -438,6 +440,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         SAVERAW=saveRaw, $
         RAWDIR=rawDir, $
         JUSTDATA=justData, $
+        JUSTINDS_THENQUIT=justInds, $
+        JUSTINDS_SAVETOFILE=justInds_saveToFile, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

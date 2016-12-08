@@ -1530,7 +1530,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         out_fastLoc_i_list          = PASIS__fastLocInterped_i_list
         saveStr += 'out_fastLoc_i_list,'
         nInfo++
-        infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",fastLoc.info'
+        infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",' + $
+                   (KEYWORD_SET(for_eSpec_DBs) ? "FL_eSpec__fastLoc" : "FL__fastLoc" ) + '.info'
      ENDIF
 
 
@@ -1552,6 +1553,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
      IF nInfo GT 0 THEN BEGIN
         infoStr += ')'
         bro = EXECUTE(infoStr)
+        IF ~bro THEN STOP
         saveStr += indsInfoStr + ',indsInfoStr,'
      ENDIF
 
@@ -1570,7 +1572,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING,maximus, $
         PRINT,'Saving indices/paramStrings in directory ' + saveDir
         PRINT,'indsFile: ' + justIndsFile
 
-        this = EXECUTE(saveStr)
+        bro = EXECUTE(saveStr)
+        IF ~bro THEN STOP
+
         ;; SAVE,out_paramstring_list, $
         ;;      out_plot_i_list, $
         ;;      out_fastLoc_i_list, $        

@@ -2,7 +2,8 @@
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   COMPILE_OPT IDL2
 
-  plotPref = '-atest_teste-MAPPE-cb' 
+  ;; plotPref = '-atest_teste-MAPPE-cb' 
+  plotPref = 'rightnow-' 
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -20,7 +21,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   show_integrals                 = 1
 
-  EA_binning                     = 1
+  EA_binning                     = 0
   plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
@@ -69,7 +70,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
   ;; plotPref += '-rot_pFlux-t'
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161206/pFlux-mappedAll-rot.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161206/pFlux-mappedAll-rot.dat'
+  ;; plotPref += '-allMapped'
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161207/rightnow.dat'
   plotPref += '-allMapped'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
   ;; plotPref += '-notRot_pFlux-t'

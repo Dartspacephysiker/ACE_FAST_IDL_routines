@@ -78,14 +78,14 @@
   ;; maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; maskMin                        =  1
-  tHist_mask_bins_below_thresh   = 4
+  ;; tHist_mask_bins_below_thresh   = 0
 
   ;; numOrbLim                      = 10
 
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.0
+  shiftMLT                       = 0.5
 

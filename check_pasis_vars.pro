@@ -38,14 +38,14 @@ PRO CHECK_PASIS_VARS, $
      COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct,RESET=resetTmp
      reset += TEMPORARY(resetTmp)
   ENDIF;; ELSE BEGIN
-     PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
+     ;; PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
   ;; ENDELSE
 
   IF compare_IMF_struct THEN BEGIN
      IF (COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])).nDiff GT 0 THEN resetTmp = 1 ELSE resetTmp = 0
      reset += TEMPORARY(resetTmp)
   ENDIF;; ELSE BEGIN
-     PASIS__IMF_struct = TEMPORARY(IMF_struct)
+     ;; PASIS__IMF_struct = TEMPORARY(IMF_struct)
   ;; ENDELSE
 
   IF compare_MIMC_struct THEN BEGIN
@@ -53,13 +53,16 @@ PRO CHECK_PASIS_VARS, $
      reset += TEMPORARY(resetTmp)
      ;; PASIS__MIMC_struct = MIMC_struct
   ENDIF;; ELSE BEGIN
-  PASIS__MIMC_struct = TEMPORARY(MIMC_struct)
   ;; ENDELSE
 
   IF KEYWORD_SET(reset) THEN BEGIN
-     PRINT,'Resetting PASIS vars ...'
+     STOP
      CLEAR_PASIS_VARS
   ENDIF
+
+  PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
+  PASIS__IMF_struct        = TEMPORARY(IMF_struct)
+  PASIS__MIMC_struct       = TEMPORARY(MIMC_struct)
 
   IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
      ;; plot_i_list             = PASIS__plot_i_list
