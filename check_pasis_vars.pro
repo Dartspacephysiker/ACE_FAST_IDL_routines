@@ -1,6 +1,7 @@
 ;;12/07/16
 PRO CHECK_PASIS_VARS, $
    RESET=reset, $
+   ;; DBS_RESET=DBs_reset, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $

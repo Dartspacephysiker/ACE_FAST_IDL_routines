@@ -3,7 +3,7 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   COMPILE_OPT IDL2
 
   ;; plotPref = '-atest_teste-MAPPE-cb' 
-  plotPref = 'rightnow-' 
+  plotPref = 'MAPFLUX-' 
 
   use_prev_plot_i                = 1
 
@@ -20,6 +20,8 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   load_dAngle                    = 1
   plotPref += 'ANGLE_AVGS'
 
+
+  ;; dont_map = KEYWORD_SET(load_dAngle) OR KEYWORD_SET(load_dILAT) OR KEYWORD_SET(load_dx)
 
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
@@ -78,18 +80,19 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   ;; plotPref += '-rot_pFlux-t'
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161206/pFlux-mappedAll-rot.dat'
   ;; plotPref += '-allMapped'
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161207/rightnow.dat'
-  plotPref += '-allMapped'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
-  ;; plotPref += '-notRot_pFlux-t'
-  overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*accel*','*timeavgd_pflux*']]
-  ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [10,40,70]
-  plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
-  op_contour__percent            = 1
-  op_plotRange                   = [0.00,0.10]
+
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161207/rightnow.dat'
+  ;; plotPref += '-allMapped'
+  ;; ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
+  ;; ;; plotPref += '-notRot_pFlux-t'
+  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  ;; op_contour__percent            = 1
+  ;; op_plotRange                   = [0.00,0.10]
 
   tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
@@ -135,7 +138,7 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
 
   eFluxPlotType                  = 'Max'
   CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
+     KEYWORD_SET(dont_map): BEGIN
         ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
      END
      ELSE: BEGIN
@@ -152,7 +155,7 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   noNegENumFl                    = 1
   ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
   CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
+     KEYWORD_SET(dont_map): BEGIN
         ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
      END
      ELSE: BEGIN
