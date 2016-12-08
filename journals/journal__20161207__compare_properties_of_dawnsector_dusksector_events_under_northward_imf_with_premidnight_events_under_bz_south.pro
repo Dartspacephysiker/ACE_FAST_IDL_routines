@@ -103,11 +103,27 @@ PRO JOURNAL__20161207__COMPARE_PROPERTIES_OF_DAWNSECTOR_DUSKSECTOR_EVENTS_UNDER_
   plotType                         = 'window'
   IF KEYWORD_SET(PS) THEN plotType = 'PS'
 
-  maxInd      = [3:24]
+  maxInd      = [[3:24],49,50]
   maxInd      = REFORM(maxInd,2,N_ELEMENTS(maxInd)/2)
+
   tmp         = maxInd[0,8]
   maxInd[0,8] = maxInd[0,4]
   maxInd[0,4] = tmp
+
+  ;;swap width_x and delta_e
+  tmp          = maxInd[0,10]
+  maxInd[0,10] = maxInd[0,9]
+  maxInd[0,9]  = tmp
+
+  ;;swap ilat and pfluxest
+  tmp          = maxInd[0, 1]
+  maxInd[0,1]  = maxInd[0,11]
+  maxInd[0,11] = tmp
+
+  ;;swap elec_energy_flux and lshell
+  tmp           = maxInd[1,1]
+  maxInd[1,1]   = maxInd[1,2]
+  maxInd[1,2]   = tmp
 
   doubleLoop = (TAG_NAMES(maximus))[maxInd]
   nDouble    = (plotType EQ 'PS' ? N_ELEMENTS(maxInd)/2 : 1)
@@ -116,7 +132,7 @@ PRO JOURNAL__20161207__COMPARE_PROPERTIES_OF_DAWNSECTOR_DUSKSECTOR_EVENTS_UNDER_
   logMe[*] = 0B
 
                                 ;   0 ALT MLT
-  logMe[1, 1] = 1B              ;   1 ILAT MAG_CURRENT
+  logMe[*, 1] = 1B              ;   1 ILAT MAG_CURRENT
   logMe[*, 2] = 1B              ;   2 ESA_CURRENT ELEC_ENERGY_FLUX
   logMe[*, 3] = 1B              ;   3 INTEG_ELEC_ENERGY_FLUX EFLUX_LOSSCONE_INTEG
   logMe[*, 4] = 1B              ;   4 TOTAL_EFLUX_INTEG MAX_CHARE_LOSSCONE
