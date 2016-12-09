@@ -92,7 +92,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
                  FOR k=0,nIter DO BEGIN
                     restricted_and_interped_i_list.Add, $
                        CGSETINTERSECTION(restrict_with_these_i[k],good_i,COUNT=count)
-                    PRINT,"N " + alfDB_plot_struct.multiple[k] + ' inds: ' + $
+                    PRINT,"N " + alfDB_plot_struct.multiples[k] + ' inds: ' + $
                           STRCOMPRESS(count,/REMOVE_ALL)
                  ENDFOR
               END
@@ -119,9 +119,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
               END
         ENDCASE
         END
-        ELSE:
+        ELSE: restricted_and_interped_i_list.Add,good_i
      ENDCASE
-     restricted_and_interped_i_list     = LIST(good_i)
+
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) THEN BEGIN
         

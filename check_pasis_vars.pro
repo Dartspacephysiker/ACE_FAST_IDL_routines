@@ -1,7 +1,8 @@
 ;;12/07/16
 PRO CHECK_PASIS_VARS, $
-   RESET=reset, $
-   ;; DBS_RESET=DBs_reset, $
+   INDS_RESET=inds_reset, $
+   PLOTS_RESET=plots_reset, $
+   DBS_RESET=DBs_reset, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $
@@ -34,31 +35,39 @@ PRO CHECK_PASIS_VARS, $
   compare_IMF_struct        = KEYWORD_SET(PASIS__IMF_struct)
   ;; ENDIF
 
-  reset = 0B
+  inds_reset = 0B
   IF compare_alfDB_plot_struct THEN BEGIN
-     COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct,RESET=resetTmp
-     reset += TEMPORARY(resetTmp)
+     COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct,INDS_RESET=inds_resetTmp
+     inds_reset += TEMPORARY(inds_resetTmp)
   ENDIF;; ELSE BEGIN
      ;; PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
   ;; ENDELSE
 
   IF compare_IMF_struct THEN BEGIN
-     IF (COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])).nDiff GT 0 THEN resetTmp = 1 ELSE resetTmp = 0
-     reset += TEMPORARY(resetTmp)
+     ;; IF (COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])).nDiff GT 0 THEN inds_resetTmp = 1 ELSE inds_resetTmp = 0
+     ;; inds_reset += TEMPORARY(inds_resetTmp)
+
+     comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])
+     IF comp.nDiff GT 0 THEN BEGIN
+
+        STOP
+
+     ENDIF
   ENDIF;; ELSE BEGIN
      ;; PASIS__IMF_struct = TEMPORARY(IMF_struct)
   ;; ENDELSE
 
   IF compare_MIMC_struct THEN BEGIN
-     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct,RESET=resetTmp
-     reset += TEMPORARY(resetTmp)
+     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct,INDS_RESET=inds_resetTmp
+     
+     inds_reset += TEMPORARY(inds_resetTmp)
      ;; PASIS__MIMC_struct = MIMC_struct
   ENDIF;; ELSE BEGIN
   ;; ENDELSE
 
-  IF KEYWORD_SET(reset) THEN BEGIN
-     CLEAR_PASIS_VARS
-  ENDIF
+  CLEAR_PASIS_VARS,INDS_RESET=inds_reset, $
+                   PLOTS_RESET=plots_reset, $
+                   DBS_RESET=DBs_reset
 
   IF N_ELEMENTS(PASIS__plot_i_list) GT 0 THEN BEGIN
      ;; plot_i_list             = PASIS__plot_i_list

@@ -1,11 +1,11 @@
 ;;Try new stuff
-PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
+PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__EXPLORE_ALTITUDE_DEPENDENCE
   COMPILE_OPT IDL2
 
   ;; plotPref = '-atest_teste-MAPPE-cb' 
   plotPref = 'MAPFLUX-' 
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -14,11 +14,11 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  load_dILAT                     = 0
-  plotPref += 'ILAT_AVGS'
+  ;; load_dILAT                     = 0
+  ;; plotPref += 'ILAT_AVGS'
 
-  ;; load_dAngle                    = 1
-  ;; plotPref += 'ANGLE_AVGS'
+  load_dAngle                    = 1
+  plotPref += 'ANGLE_AVGS'
 
 
   ;; dont_map = KEYWORD_SET(load_dAngle) OR KEYWORD_SET(load_dILAT) OR KEYWORD_SET(load_dx)
@@ -171,11 +171,22 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  altRange                       = [[300,4300]]
+  ;; altRange                       = [[300,4300]]
+  altRange                       = [[300,4300], $
+                                   [300,1000], $
+                                   [300,2000], $
+                                   [300,3000], $
+                                   [300,4300], $
+                                   [1000,2000], $
+                                   [1000,3000], $
+                                   [1000,4300], $
+                                   [2000,3000], $
+                                   [2000,4300], $
+                                   [3000,4300]]
 
-  IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
-     altRange                    = [300,2000]
-  ENDIF
+  ;; IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
+  ;;    altRange                    = [300,2000]
+  ;; ENDIF
 
   orbRange                       = [1000,10600]
 
@@ -232,11 +243,15 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
+     ;; altDirStr                   = STRING(FORMAT='("/",I0,"-",I0,"km/")', $
+     ;;                                      altitudeRange[0], $
+     ;;                                      altitudeRange[1])
      altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
                                           altitudeRange[0], $
                                           altitudeRange[1], $
                                           orbRange[0], $
                                           orbRange[1])
+     ;; plotPrefix = altDirStr + (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
      plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
      SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
@@ -502,5 +517,4 @@ PRO JOURNAL__20161208__ZHANG_2014__NEWELLDB__ALTAVGS__APPEASE_KRISTINA
   ENDFOR
 
 END
-
 
