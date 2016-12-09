@@ -7,11 +7,11 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
      @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF
 
-  ;; load_dILAT                     = 0
-  ;; plotPref += 'ILAT_AVGS'
+  load_dILAT                     = 1
+  plotPref += 'ILAT_AVGS'
 
-  load_dAngle                    = 1
-  plotPref += 'ANGLE_AVGS'
+  ;; load_dAngle                    = 1
+  ;; plotPref += 'ANGLE_AVGS'
 
   charE__Newell_the_cusp         = 0
 
@@ -32,8 +32,6 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
 
   ;;NOTE: Bx-specific stuff on other side of IF statement
   IF ~KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-
-     restore_last_session            = 0
 
      nonstorm                        = 1
      DSTcutoff                       = -50
@@ -193,7 +191,7 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.10]
+  PPlotRange                     = [0,0.20]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -468,8 +466,8 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-        ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-        ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
+        ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
+        ADJ_LOWER_PLOTLIM=adj_lower_plotlim_thresh, $
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
@@ -478,18 +476,16 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
         TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
         TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-        TILEPLOTTITLES=tilePlotTitle, $
+        TILEPLOTTITLE=tilePlotTitle, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
-        /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
         MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-        RESTORE_LAST_SESSION=restore_last_session, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $
