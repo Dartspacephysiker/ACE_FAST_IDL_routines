@@ -1506,6 +1506,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
                                IMF_STRUCT=PASIS__IMF_struct, $
                                MIMC_STRUCT=PASIS__MIMC_struct, $
+                               DBS_RESET=DBs_reset, $
                                T1_ARR=t1_arr,T2_ARR=t2_arr, $
                                ;; ESPEC_DELTA_T=eSpec_delta_t, $
                                ION_DELTA_T=ion_delta_t, $

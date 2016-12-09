@@ -36,6 +36,8 @@ PRO CHECK_PASIS_VARS, $
   ;; ENDIF
 
   inds_reset = 0B
+  DBs_reset  = 0B
+
   IF compare_alfDB_plot_struct THEN BEGIN
      COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct,INDS_RESET=inds_resetTmp
      inds_reset += TEMPORARY(inds_resetTmp)
@@ -58,9 +60,10 @@ PRO CHECK_PASIS_VARS, $
   ;; ENDELSE
 
   IF compare_MIMC_struct THEN BEGIN
-     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct,INDS_RESET=inds_resetTmp
+     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct,INDS_RESET=inds_resetTmp,DBS_RESET=DBs_resetTmp
      
      inds_reset += TEMPORARY(inds_resetTmp)
+     DBs_reset  += TEMPORARY(DBs_resetTmp )
      ;; PASIS__MIMC_struct = MIMC_struct
   ENDIF;; ELSE BEGIN
   ;; ENDELSE
