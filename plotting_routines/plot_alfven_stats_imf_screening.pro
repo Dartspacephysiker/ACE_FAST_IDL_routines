@@ -147,7 +147,7 @@
 ;                    WRITEPROCESSEDH2D :  Use this to output processed, histogrammed data. That way you
 ;                                            can share with others!
 ;		     SAVERAW           :  Save all raw data
-;		     RAWDIR            :  Directory in which to store raw data
+;		     SAVEDIR           :  Directory in which to save things
 ;                    JUSTDATA          :  No plots whatsoever; just give me the dataz.
 ;                    SHOWPLOTSNOSAVE   :  Don't save plots, just show them immediately
 ;		     PLOTDIR           :     
@@ -197,7 +197,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    ORBRANGE=orbRange, $
    ALTITUDERANGE=altitudeRange, $
    CHARERANGE=charERange, $
-   CHARIERANGE=charIERange, $ ;;Only applicable for non-Alfvén stuff
+   CHARIERANGE=charIERange, $
    CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
    POYNTRANGE=poyntRange, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
@@ -317,8 +317,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    NONEGPFLUX=noNegPflux, $
    NOPOSPFLUX=noPosPflux, $
    PPLOTRANGE=PPlotRange, $
-   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
-   NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+   IONPLOTS=ionPlots, $
+   IFLUXPLOTTYPE=ifluxPlotType, $
+   LOGIFPLOT=logIfPlot, $
+   ABSIFLUX=absIflux, $
+   NONEGIFLUX=noNegIflux, $
+   NOPOSIFLUX=noPosIflux, $
+   IPLOTRANGE=IPlotRange, $
    OXYPLOTS=oxyPlots, $
    OXYFLUXPLOTTYPE=oxyFluxPlotType, $
    LOGOXYFPLOT=logOxyfPlot, $
@@ -358,7 +363,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    ORBTOTRANGE=orbTotRange, $
    ORBFREQRANGE=orbFreqRange, $
    ORBCONTRIB_NOMASK=orbContrib_noMask, $
-   NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, $
+   NEVENTPERORBPLOT=nEventPerOrbPlot, $
+   LOGNEVENTPERORB=logNEventPerOrb, $
    NEVENTPERORBRANGE=nEventPerOrbRange, $
    NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
    DIVNEVBYTOTAL=divNEvByTotal, $
@@ -423,9 +429,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    SUM_ELECTRON_AND_POYNTINGFLUX=sum_electron_and_poyntingflux, $
    SUMMED_EFLUX_PFLUXPLOTRANGE=summed_eFlux_pFluxplotRange, $
    SUMMED_EFLUX_PFLUX_LOGPLOT=summed_eFlux_pFlux_logPlot, $
-   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
+   MEDIANPLOT=medianPlot, $
+   LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
-   SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+   SQUAREPLOT=squarePlot, $
+   POLARCONTOUR=polarContour, $
    DBFILE=dbfile, $
    RESET_GOOD_INDS=reset_good_inds, $
    NO_BURSTDATA=no_burstData, $
@@ -445,7 +453,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    WRITEASCII=writeASCII, $
    WRITEHDF5=writeHDF5, $
    WRITEPROCESSEDH2D=writeProcessedH2d, $
-   SAVERAW=saveRaw, RAWDIR=rawDir, $
+   SAVERAW=saveRaw, $
+   SAVEDIR=saveDir, $
    JUSTDATA=justData, $
    JUSTINDS_THENQUIT=justInds, $
    JUSTINDS_SAVETOFILE=justInds_saveToFile, $
@@ -470,6 +479,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    SUPPRESS_MLT_NAME=suppress_MLT_name, $
    SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
    SUPPRESS_TITLES=suppress_titles, $
+   LABELS_FOR_PRESENTATION=labels_for_presentation, $
    TILE_IMAGES=tile_images, $
    N_TILE_ROWS=n_tile_rows, $
    N_TILE_COLUMNS=n_tile_columns, $
@@ -482,7 +492,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
    ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
    ADJ_LOWER_PLOTLIM_IF_NTH_MIN_IS_GREATER=adj_lower_plotlim_thresh, $
-   ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
    TILEPLOTSUFF=tilePlotSuff, $
    TILEPLOTTITLE=tilePlotTitle, $
    NO_COLORBAR=no_colorbar, $
@@ -511,12 +520,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    OUT_I_ESPEC_LIST=out_i_eSpec_list, $
    OUT_I_ION_LIST=out_i_ion_list, $
    ;; RESTORE_LAST_SESSION=restore_last_session, $
-   DONT_LOAD_IN_MEMORY=nonMem ;, $
+   DONT_LOAD_IN_MEMORY=nonMem   ;, $
 ;   _EXTRA=e
   
-;;  COMPILE_OPT idl2
+ COMPILE_OPT idl2
 
   !EXCEPT=0                                                      ;Do report errors, please
+
+  saveDir = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/'
 
   ;; lastSessionFile = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/last_session.sav'
 
@@ -543,6 +554,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                    KEYWORD_SET(eSpec__t_probOccurrence         ) OR $
                    KEYWORD_SET(no_maximus                      )
   
+  use_storm_stuff = KEYWORD_SET(nonStorm        ) + $
+                    KEYWORD_SET(mainPhase       ) + $
+                    KEYWORD_SET(recoveryPhase   ) + $
+                    KEYWORD_SET(all_storm_phases)
+
+  ae_stuff    = KEYWORD_SET(use_AE) + $
+                KEYWORD_SET(use_AO) + $
+                KEYWORD_SET(use_AU) + $
+                KEYWORD_SET(use_AL)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;DEFAULTS, DEFAULT STRUCTS
   SET_ALFVENDB_PLOT_DEFAULTS, $
@@ -616,7 +637,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      WRITEASCII=writeASCII, $
      WRITEHDF5=writeHDF5, $
      WRITEPROCESSEDH2D=writeProcessedH2d, $
-     SAVERAW=saveRaw, RAWDIR=rawDir, $
+     SAVERAW=saveRaw, $
+     SAVEDIR=saveDir, $
      SHOWPLOTSNOSAVE=showPlotsNoSave, $
      MEDHISTOUTDATA=medHistOutData, $
      MEDHISTOUTTXT=medHistOutTxt, $
@@ -628,7 +650,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      PARAMSTRSUFFIX=plotSuffix,$
      PLOTH2D_CONTOUR=plotH2D_contour, $
      PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
-     HOYDIA=hoyDia,LUN=lun, $
+     HOYDIA=hoyDia, $
+     LUN=lun, $
      FOR_ESPEC_DBS=for_eSpec_DBs, $
      ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
      ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
@@ -687,6 +710,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      BX_OVER_BYBZ_LIM=Bx_over_ByBz_Lim, $
      DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
      DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
+     SKIP_IMF_STRING=KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_STUFF), $
      PARAMSTRING=paramString, $
      PARAMSTR_LIST=paramString_list, $
      SATELLITE=satellite, $
@@ -714,8 +738,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
 
      CHECK_PASIS_VARS, $
-        RESET=reset, $
-        ;; DBS_RESET=DBs_reset, $
+        INDS_RESET=inds_reset, $
+        DBS_RESET=DBs_reset, $
         ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
         IMF_STRUCT=IMF_struct, $
         MIMC_STRUCT=MIMC_struct, $
@@ -733,10 +757,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         COMPARE_IMF_STRUCT=compare_IMF_struct       
 
   ENDIF ELSE BEGIN
-     get_plot_i     = 1
-     get_fastLoc_i  = 1
-     get_eSpec_i    = 1
-
+     get_plot_i           = 1
+     get_fastLoc_i        = 1
+     get_eSpec_i          = 1
+     get_paramString      = 1
+     get_paramString_list = 1
      ;; get_ion_i      = 1 ;not implemented
 
   ENDELSE
@@ -779,7 +804,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            USING_HEAVIES=using_heavies, $
            FORCE_LOAD_MAXIMUS=force_load_maximus, $
            FORCE_LOAD_CDBTIME=force_load_cdbTime, $
-           FORCE_LOAD_BOTH=KEYWORD_SET(force_load_both) OR KEYWORD_SET(reset), $
+           FORCE_LOAD_BOTH=KEYWORD_SET(force_load_both) OR KEYWORD_SET(DBs_reset), $
            QUIET=quiet, $
            CLEAR_MEMORY=clear_memory, $
            NO_MEMORY_LOAD=noMem, $
@@ -800,7 +825,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
            FORCE_LOAD_FASTLOC=force_load_fastLoc, $
            FORCE_LOAD_TIMES=force_load_times, $
-           FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(reset), $
+           FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
            INCLUDE_32Hz=include_32Hz, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_aacgm, $
@@ -858,26 +883,32 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
-        SET_PLOT_DIR,plotDir, $
-                     /FOR_ALFVENDB, $
-                     /ADD_TODAY, $
-                     ADD_SUFF=suffix_plotDir
+        SET_PLOT_DIR, $
+        plotDir, $
+        FOR_ALFVENDB=~(KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_stuff)), $
+        FOR_STORMS=(KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_stuff)), $
+        /ADD_TODAY, $
+        ADD_SUFF=suffix_plotDir
      IF ~KEYWORD_SET(txtOutputDir) THEN $
-        SET_TXTOUTPUT_DIR,txtOutputDir, $
-                          /FOR_ALFVENDB, $
-                          /ADD_TODAY, $
-                          ADD_SUFF=suffix_txtDir
+        SET_TXTOUTPUT_DIR, $
+        txtOutputDir, $
+        FOR_ALFVENDB=~(KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_stuff)), $
+        FOR_STORMS=(KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_stuff)), $
+        /ADD_TODAY, $
+        ADD_SUFF=suffix_txtDir
   ENDIF ELSE BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
-        SET_PLOT_DIR,plotDir, $
-                     /FOR_SW_IMF, $
-                     /ADD_TODAY, $
-                     ADD_SUFF=suffix_plotDir
+        SET_PLOT_DIR, $
+        plotDir, $
+        /FOR_SW_IMF, $
+        /ADD_TODAY, $
+        ADD_SUFF=suffix_plotDir
      IF ~KEYWORD_SET(txtOutputDir) THEN $
-        SET_TXTOUTPUT_DIR,txtOutputDir, $
-                          /FOR_SW_IMF, $
-                          /ADD_TODAY, $
-                          ADD_SUFF=suffix_txtDir
+        SET_TXTOUTPUT_DIR, $
+        txtOutputDir, $
+        /FOR_SW_IMF, $
+        /ADD_TODAY, $
+        ADD_SUFF=suffix_txtDir
   ENDELSE
 
 
@@ -887,16 +918,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;; ;;    ;; RESTORE,lastSessionFile
   ;; ;;    SPAWN,'cat '
   ;; ENDIF ELSE BEGIN
-
-     use_storm_stuff = KEYWORD_SET(nonStorm        ) + $
-                       KEYWORD_SET(mainPhase       ) + $
-                       KEYWORD_SET(recoveryPhase   ) + $
-                       KEYWORD_SET(all_storm_phases)
-
-     ae_stuff    = KEYWORD_SET(use_AE) + $
-                       KEYWORD_SET(use_AO) + $
-                       KEYWORD_SET(use_AU) + $
-                       KEYWORD_SET(use_AL)
 
      ;;Does it all "hang together"?
      IF use_storm_stuff GT 1 THEN BEGIN
@@ -1031,7 +1052,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               END
               KEYWORD_SET(all_storm_phases): BEGIN
                  PRINTF,lun,'Restricting OMNI with each storm phase in turn ...'
-                 restrict_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
+                 restrict_OMNI_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
               END
            ENDCASE
 
@@ -1081,7 +1102,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               END
               KEYWORD_SET(all_storm_phases): BEGIN
                  PRINTF,lun,'Restricting fastLoc with each storm phase in turn ...'
-                 restrict_with_these_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
+                 restrict_with_these_FL_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
               END
            ENDCASE
 
@@ -1125,7 +1146,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               END
               KEYWORD_SET(all_storm_phases): BEGIN
                  PRINTF,lun,'Restricting eSpec with each storm phase in turn ...'
-                 restrict_with_these_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+                 restrict_with_these_eSpec_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
               END
            ENDCASE
 
@@ -1143,15 +1164,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               stormString           = 'recoveryPhase'
            END
            KEYWORD_SET(all_storm_phases): BEGIN
-              stormString           = ["all_storm_phases"]
-              multiples             = ["nonstorm","mainphase","recoveryphase"]
-              PASIS__alfDB_plot_struct.executing_multiples = 1
+              stormString         = ["all_storm_phases"]
+              multiples           = ["quiescent","mainphase","recoveryphase"]
+              executing_multiples = 1
+              multiString         = paramString + stormString
+              STR_ELEMENT,PASIS__alfDB_plot_struct,'multiples',multiples,/ADD_REPLACE
+              STR_ELEMENT,PASIS__alfDB_plot_struct,'executing_multiples',executing_multiples,/ADD_REPLACE
            END
         ENDCASE
 
         IF KEYWORD_SET(get_paramString) THEN BEGIN
-           paramString          += '--' + stormString
+           paramString          += stormString
         ENDIF
+
         IF KEYWORD_SET(get_paramString_list) THEN BEGIN
            IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
            THEN BEGIN
@@ -1163,9 +1188,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                     ENDFOR
                  END
                  KEYWORD_SET(all_storm_phases): BEGIN
-                    paramString_list = LIST(paramString+'--'+stormString[0])
-                    FOR k=1,N_ELEMENTS(stormString)-1 DO BEGIN
-                       paramString_list.Add,paramString+'--'+stormString[k]
+                    paramString_list = LIST(paramString+'--'+multiples[0])
+                    FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
+                       paramString_list.Add,paramString+'--'+multiples[k]
                     ENDFOR
                  END
               ENDCASE
@@ -1362,7 +1387,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               t2_arr                = LIST(high_ae_t2,low_ae_t2)
               AEstring              = navn+'_both'
               multiples             = ['high_','low_'] + navn
-              PASIS__alfDB_plot_struct.executing_multiples   = 1
+              executing_multiples   = 1
+              multiString           = paramString + '--' + AEstring
+              STR_ELEMENT,PASIS__alfDB_plot_struct,'multiples',multiples,/ADD_REPLACE
+              STR_ELEMENT,PASIS__alfDB_plot_struct,'executing_multiples',executing_multiples,/ADD_REPLACE
            END
         ENDCASE
 
@@ -1381,9 +1409,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                     ENDFOR
                  END
                  KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                    paramString_list = LIST(paramString+'--'+AEString[0])
-                    FOR k=1,N_ELEMENTS(AEString)-1 DO BEGIN
-                       paramString_list.Add,paramString+'--'+AEString[k]
+                    paramString_list = LIST(paramString+'--'+multiples[0])
+                    FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
+                       paramString_list.Add,paramString+'--'+multiples[k]
                     ENDFOR
                  END
               ENDCASE
@@ -1585,7 +1613,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF
 
      IF KEYWORD_SET(justInds_saveToFile) THEN BEGIN
-        saveDir = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/'
 
         IF SIZE(justInds_saveToFile,/TYPE) EQ 7 THEN BEGIN
            justIndsFile = justInds_saveToFile
@@ -1659,9 +1686,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF ELSE BEGIN
         alfDB_ind_filename    = PASIS__paramString + '--' + 'alfDB_indices.sav'
      ENDELSE
-     alfDB_ind_fileDir     = plotDir + '../../saves_output_etc/'
      SAVE_ALFVENDB_INDICES,alfDB_ind_filename, $
-                           alfDB_ind_fileDir, $
+                           saveDir, $
                            plot_i_list, $
                            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
                            ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
@@ -1750,7 +1776,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                LUN=lun
   ENDIF
 
-  IF KEYWORD_SET(executing_multiples) THEN NIter = N_ELEMENTS(multiples) ELSE NIter = 1
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN NIter = N_ELEMENTS(multiples) ELSE NIter = 1
 
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
@@ -1807,13 +1833,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
-        EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+        EPLOTS=ePlots, $
+        EFLUXPLOTTYPE=eFluxPlotType, $
+        LOGEFPLOT=logEfPlot, $
         ABSEFLUX=abseflux, $
         NOPOSEFLUX=noPosEFlux, $
-        NONEGEFLUX=noNegEflux, EPLOTRANGE=EPlotRange, $
-        ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, $
-        LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-        NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+        NONEGEFLUX=noNegEflux, $
+        EPLOTRANGE=EPlotRange, $
+        ENUMFLPLOTS=eNumFlPlots, $
+        ENUMFLPLOTTYPE=eNumFlPlotType, $
+        LOGENUMFLPLOT=logENumFlPlot, $
+        ABSENUMFL=absENumFl, $
+        NONEGENUMFL=noNegENumFl, $
+        NOPOSENUMFL=noPosENumFl, $
+        ENUMFLPLOTRANGE=ENumFlPlotRange, $
         AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
@@ -1961,7 +1994,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDIF
 
 
-  IF KEYWORD_SET(executing_multiples) AND KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) AND KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
      REARRANGE_H2DSTRARR_LIST_INTO_LIKE_PLOTS, $
         h2dStrArr_list, $
         dataNameArr_list, $
@@ -1989,12 +2022,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      dataRawPtrArr        = (N_ELEMENTS(dataRawPtrArr_list)-1) GE iList ? $
                             dataRawPtrArr_list[iList] : $
                             !NULL
-     plot_i               = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
      paramString          = new_paramString_list[iList]
 
      IF ~KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
         ;;Shift the way we historically have
         h2dStrArr         = SHIFT(h2dStrArr,-1-(nPlots))
+
+        plot_i            = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
         IF keepMe THEN BEGIN 
            dataNameArr    = SHIFT(dataNameArr,-1-(nPlots)) 
            dataRawPtrArr  = SHIFT(dataRawPtrArr,-1-(nPlots)) 
@@ -2005,7 +2039,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;;    dataNameArr_list[iList]    = SHIFT(dataNameArr_list[iList],-2) 
         ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
         ;; ENDIF
-     ENDIF
+     ENDIF ELSE BEGIN
+        plot_i            = PASIS__plot_i_list
+     ENDELSE
 
      IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
         SAVE_ALFVENDB_TEMPDATA, $
@@ -2024,7 +2060,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            MINL=PASIS__MIMC_struct.minL, $
            MAXL=PASIS__MIMC_struct.maxL, $
            BINL=PASIS__MIMC_struct.binL,$
-           RAWDIR=rawDir, $
+           SAVEDIR=saveDir, $
            PARAMSTR=paramString,$
            CLOCKSTR=clockStr, $
            PLOTMEDORAVG=plotMedOrAvg, $
@@ -2087,6 +2123,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                SUPPRESS_MLT_NAME=suppress_MLT_name, $
                                SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
                                SUPPRESS_TITLES=suppress_titles, $
+                               LABELS_FOR_PRESENTATION=labels_for_presentation, $
                                TILE_IMAGES=tile_images, $
                                N_TILE_ROWS=n_tile_rows, $
                                N_TILE_COLUMNS=n_tile_columns, $
@@ -2126,7 +2163,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ;;Save raw data, if desired
      IF KEYWORD_SET(saveRaw) THEN BEGIN
-        SAVE, /ALL, filename=rawDir+'fluxplots_'+paramString+".dat"
+        SAVE, /ALL, filename=saveDir+'fluxplots_'+paramString+".dat"
 
      ENDIF
 
