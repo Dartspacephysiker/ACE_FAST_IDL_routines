@@ -463,7 +463,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__GROSSRATES__EQUAL_AREA__LOOSER_CURRE
               /MIDNIGHT, $
               FANCY_PLOTNAMES=fancy_plotNames, $
               MAKE_INTEGRAL_FILE=make_integral_file, $
-              RESTORE_LAST_SESSION=restore_last_session, $
+              
               _EXTRA=e
            ;; /GET_PLOT_I_LIST_LIST, $
            ;; /GET_PARAMSTR_LIST_LIST, $

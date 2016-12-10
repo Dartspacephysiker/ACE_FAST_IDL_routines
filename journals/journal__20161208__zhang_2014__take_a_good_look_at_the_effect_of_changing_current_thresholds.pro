@@ -376,7 +376,7 @@ PRO JOURNAL__20161208__ZHANG_2014__TAKE_A_GOOD_LOOK_AT_THE_EFFECT_OF_CHANGING_CU
            SHOW_INTEGRALS=show_integrals, $
            MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
            MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-           RESTORE_LAST_SESSION=restore_last_session, $
+           
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
         ;; /GET_PARAMSTR_LIST_LIST, $

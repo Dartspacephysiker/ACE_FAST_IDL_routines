@@ -427,7 +427,7 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
               /MIDNIGHT, $
               FANCY_PLOTNAMES=fancy_plotNames, $
               MAKE_INTEGRAL_FILE=make_integral_file, $
-              RESTORE_LAST_SESSION=restore_last_session, $
+              
               _EXTRA=e
            ;; /GET_PLOT_I_LIST_LIST, $
            ;; /GET_PARAMSTR_LIST_LIST, $

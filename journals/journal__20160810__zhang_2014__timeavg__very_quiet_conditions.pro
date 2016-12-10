@@ -391,7 +391,7 @@ PRO JOURNAL__20160810__ZHANG_2014__TIMEAVG__VERY_QUIET_CONDITIONS
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
-           RESTORE_LAST_SESSION=restore_last_session, $
+           
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
         ;; /GET_PARAMSTR_LIST_LIST, $

@@ -395,7 +395,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
            MAKE_INTEGRAL_FILE=make_integral_file, $
-           RESTORE_LAST_SESSION=restore_last_session, $
+           
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
         ;; /GET_PARAMSTR_LIST_LIST, $

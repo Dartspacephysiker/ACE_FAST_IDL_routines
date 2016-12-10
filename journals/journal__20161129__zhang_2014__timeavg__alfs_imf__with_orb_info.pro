@@ -463,7 +463,7 @@ PRO JOURNAL__20161129__ZHANG_2014__TIMEAVG__ALFS_IMF__WITH_ORB_INFO
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
         MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-        RESTORE_LAST_SESSION=restore_last_session, $
+        
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $

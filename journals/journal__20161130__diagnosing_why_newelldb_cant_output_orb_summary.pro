@@ -755,7 +755,7 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
            SHOW_INTEGRALS=show_integrals, $
-           RESTORE_LAST_SESSION=restore_last_session, $
+           
            _EXTRA=e
         
      ENDFOR

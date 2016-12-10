@@ -432,7 +432,7 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
         /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
-        RESTORE_LAST_SESSION=restore_last_session, $
+        
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $

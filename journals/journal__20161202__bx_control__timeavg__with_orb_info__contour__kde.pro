@@ -487,7 +487,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               SHOW_INTEGRALS=show_integrals, $
               MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
               MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-              RESTORE_LAST_SESSION=restore_last_session, $
+              
               _EXTRA=e
            ;; /GET_PLOT_I_LIST_LIST, $
            ;; /GET_PARAMSTR_LIST_LIST, $

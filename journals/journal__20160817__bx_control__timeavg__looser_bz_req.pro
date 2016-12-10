@@ -406,7 +406,7 @@ PRO JOURNAL__20160817__BX_CONTROL__TIMEAVG__LOOSER_BZ_REQ
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            /MIDNIGHT, $
            FANCY_PLOTNAMES=fancy_plotNames, $
-           RESTORE_LAST_SESSION=restore_last_session, $
+           
            _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $
         ;; /GET_PARAMSTR_LIST_LIST, $
