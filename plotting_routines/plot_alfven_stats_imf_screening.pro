@@ -2017,7 +2017,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDIF
 
 
-  IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) AND KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
+  IF (KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) AND $
+      KEYWORD_SET(group_like_plots_for_tiling)) $
+  THEN BEGIN
      REARRANGE_H2DSTRARR_LIST_INTO_LIKE_PLOTS, $
         h2dStrArr_list, $
         dataNameArr_list, $
@@ -2032,7 +2034,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         /DONT_ADJUST_PARAMSTRING_LIST, $
         OUT_NEW_PARAMSTRING_LIST=new_paramString_list, $
         OUT_MASK_H2DSTRARR=h2dMaskArr
-  ENDIF ELSE new_paramString_list = PASIS__paramString_list
+  ENDIF ELSE BEGIN
+     new_paramString_list = PASIS__paramString_list
+  ENDELSE
 
   ;;********************************************************
   ;;Handle Plots all at once
