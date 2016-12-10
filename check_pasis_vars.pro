@@ -39,8 +39,11 @@ PRO CHECK_PASIS_VARS, $
   DBs_reset  = 0B
 
   IF compare_alfDB_plot_struct THEN BEGIN
-     COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct,INDS_RESET=inds_resetTmp
+     COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct, $
+                               INDS_RESET=inds_resetTmp, $
+                               DBS_RESET=DBS_resetTmp
      inds_reset += TEMPORARY(inds_resetTmp)
+     DBs_reset  += TEMPORARY(DBs_resetTmp )
   ENDIF;; ELSE BEGIN
      ;; PASIS__alfDB_plot_struct = TEMPORARY(alfDB_plot_struct)
   ;; ENDELSE

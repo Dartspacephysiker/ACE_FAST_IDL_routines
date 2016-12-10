@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -20
+   DSTcutoff                          = -40
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
@@ -44,7 +44,7 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[500,4300]]
 
   orbRange                       = [1000,10600]
 
@@ -87,5 +87,5 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
 
