@@ -12,7 +12,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref += 'FINALE'
+  ;; plotPref += 'FINALE'
+  plotPref += 'customKill_8276-'
 
   charE__Newell_the_cusp         = 0
 
