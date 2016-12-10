@@ -711,8 +711,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
      DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
      SKIP_IMF_STRING=KEYWORD_SET(use_storm_stuff) OR KEYWORD_SET(AE_STUFF), $
-     PARAMSTRING=paramString, $
-     PARAMSTR_LIST=paramString_list, $
+     OMNIPARAMSTR=OMNIparamStr, $
+     OMNI_PARAMSTR_LIST=OMNIparamStr_list, $
      SATELLITE=satellite, $
      OMNI_COORDS=omni_Coords, $
      DELAY=delay, $
@@ -771,6 +771,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   PASIS__IMF_struct        = TEMPORARY(IMF_struct)
   PASIS__MIMC_struct       = TEMPORARY(MIMC_struct)
 
+  ;; IF KEYWORD_SET(PASIS__alfDB_plot_struct.paramString_list) THEN BEGIN
+  PASIS__paramString_list  = PASIS__alfDB_plot_struct.paramString_list
+  ;; ENDIF
+
+  ;; IF KEYWORD_SET(PASIS__alfDB_plot_struct.paramString) THEN BEGIN
+  PASIS__paramString       = PASIS__alfDB_plot_struct.paramString
+  ;; ENDIF
+
+
   get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
                KEYWORD_SET(get_fastLoc_i) OR $
                KEYWORD_SET(get_plot_i)
@@ -779,7 +788,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Load DBs we need
   IF ~KEYWORD_SET(no_maximus) THEN BEGIN
 
-     IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+
+
+     IF N_ELEMENTS(MAXIMUS__maximus) GT 0 THEN BEGIN
+        IF (STRUPCASE(STRMID(MAXIMUS__maximus.info.coords,0,3)) NE       $
+            STRUPCASE(STRMID(PASIS__MIMC_struct.coordinate_system,0,3))) $
+        THEN BEGIN
+           DBs_reset = 1
+        ENDIF
+     ENDIF 
+
+     IF (N_ELEMENTS(MAXIMUS__maximus) EQ 0) OR $
+        KEYWORD_SET(DBs_reset)                 $
+     THEN BEGIN
         LOAD_MAXIMUS_AND_CDBTIME, $
            INCLUDE_32HZ=include_32Hz, $
            DBFile=DBFile, $
@@ -819,8 +840,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
 
+     IF N_ELEMENTS((KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
+        IF (STRUPCASE(STRMID((KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
+            STRUPCASE(STRMID(PASIS__MIMC_struct.coordinate_system,0,3))) $
+        THEN BEGIN
+           DBs_reset = 1
+        ENDIF
+     ENDIF 
+
      IF ( KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
-        (~KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0))    $
+        (~KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0)) OR $
+        KEYWORD_SET(DBs_reset)                                                    $
      THEN BEGIN
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
            FORCE_LOAD_FASTLOC=force_load_fastLoc, $
@@ -1153,50 +1183,48 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
         ENDIF
 
-        CASE 1 OF
-           KEYWORD_SET(nonStorm): BEGIN
-              stormString           = 'non-storm'
-           END
-           KEYWORD_SET(mainPhase): BEGIN
-              stormString           = 'mainPhase'
-           END
-           KEYWORD_SET(recoveryPhase): BEGIN
-              stormString           = 'recoveryPhase'
-           END
-           KEYWORD_SET(all_storm_phases): BEGIN
-              stormString         = ["all_storm_phases"]
-              multiples           = ["quiescent","mainphase","recoveryphase"]
-              executing_multiples = 1
-              multiString         = paramString + stormString
-              STR_ELEMENT,PASIS__alfDB_plot_struct,'multiples',multiples,/ADD_REPLACE
-              STR_ELEMENT,PASIS__alfDB_plot_struct,'executing_multiples',executing_multiples,/ADD_REPLACE
-           END
-        ENDCASE
+        ;; CASE 1 OF
+        ;;    KEYWORD_SET(nonStorm): BEGIN
+        ;;       stormString           = 'non-storm'
+        ;;    END
+        ;;    KEYWORD_SET(mainPhase): BEGIN
+        ;;       stormString           = 'mainPhase'
+        ;;    END
+        ;;    KEYWORD_SET(recoveryPhase): BEGIN
+        ;;       stormString           = 'recoveryPhase'
+        ;;    END
+        ;;    KEYWORD_SET(all_storm_phases): BEGIN
+        ;;       stormString         = ["all_storm_phases"]
+        ;;       ;; multiples           = ["quiescent","mainphase","recoveryphase"]
+        ;;       ;; executing_multiples = 1
+        ;;       multiString         = paramString + stormString
+        ;;    END
+        ;; ENDCASE
 
-        IF KEYWORD_SET(get_paramString) THEN BEGIN
-           paramString          += stormString
-        ENDIF
+        ;; IF KEYWORD_SET(get_paramString) THEN BEGIN
+        ;;    paramString          += stormString
+        ;; ENDIF
 
-        IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
-           THEN BEGIN
-              CASE 1 OF
-                 KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
-                    KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
-                    FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                       paramString_list[iMult] += '--' + stormString
-                    ENDFOR
-                 END
-                 KEYWORD_SET(all_storm_phases): BEGIN
-                    paramString_list = LIST(paramString+'--'+multiples[0])
-                    FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
-                       paramString_list.Add,paramString+'--'+multiples[k]
-                    ENDFOR
-                 END
-              ENDCASE
+        ;; IF KEYWORD_SET(get_paramString_list) THEN BEGIN
+        ;;    IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
+        ;;    THEN BEGIN
+        ;;       CASE 1 OF
+        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
+        ;;             KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
+        ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+        ;;                paramString_list[iMult] += '--' + stormString
+        ;;             ENDFOR
+        ;;          END
+        ;;          KEYWORD_SET(all_storm_phases): BEGIN
+        ;;             paramString_list = LIST(paramString+'--'+multiples[0])
+        ;;             FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
+        ;;                paramString_list.Add,paramString+'--'+multiples[k]
+        ;;             ENDFOR
+        ;;          END
+        ;;       ENDCASE
 
-           ENDIF
-        ENDIF
+        ;;    ENDIF
+        ;; ENDIF
 
      ENDIF
 
@@ -1375,57 +1403,47 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            KEYWORD_SET(AE_high): BEGIN
               t1_arr                = high_ae_t1
               t2_arr                = high_ae_t2
-              AEstring              = 'high_' + navn
+              ;; AEstring              = 'high_' + navn
            END
            KEYWORD_SET(AE_low): BEGIN
               t1_arr                = low_ae_t1
               t2_arr                = low_ae_t2
-              AEstring              = 'low_' + navn
+              ;; AEstring              = 'low_' + navn
            END
            KEYWORD_SET(AE_both): BEGIN
               t1_arr                = LIST(high_ae_t1,low_ae_t1)
               t2_arr                = LIST(high_ae_t2,low_ae_t2)
-              AEstring              = navn+'_both'
-              multiples             = ['high_','low_'] + navn
-              executing_multiples   = 1
-              multiString           = paramString + '--' + AEstring
-              STR_ELEMENT,PASIS__alfDB_plot_struct,'multiples',multiples,/ADD_REPLACE
-              STR_ELEMENT,PASIS__alfDB_plot_struct,'executing_multiples',executing_multiples,/ADD_REPLACE
+              ;; AEstring              = navn+'_both'
+              ;; multiples             = ['high_','low_'] + navn
+              ;; executing_multiples   = 1
+              ;; multiString           = paramString + '--' + AEstring
            END
         ENDCASE
 
-        IF KEYWORD_SET(get_paramString) THEN BEGIN
-           paramString          += '--' + AEstring
-        ENDIF
-        IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-           IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
-              ;; KEYWORD_SET(PASIS__IMF_struct.executing_multiples) $
-           THEN BEGIN
-              CASE 1 OF
-                 KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
-                    KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
-                    FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-                       paramString_list[iMult] += '--' + AEString
-                    ENDFOR
-                 END
-                 KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                    paramString_list = LIST(paramString+'--'+multiples[0])
-                    FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
-                       paramString_list.Add,paramString+'--'+multiples[k]
-                    ENDFOR
-                 END
-              ENDCASE
-           ENDIF
-        ENDIF
+        ;; IF KEYWORD_SET(get_paramString) THEN BEGIN
+        ;;    paramString          += '--' + AEstring
+        ;; ENDIF
+        ;; IF KEYWORD_SET(get_paramString_list) THEN BEGIN
+        ;;    IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
+        ;;       ;; KEYWORD_SET(PASIS__IMF_struct.executing_multiples) $
+        ;;    THEN BEGIN
+        ;;       CASE 1 OF
+        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
+        ;;             KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
+        ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
+        ;;                alfDB_plot_struct.paramString_list[iMult] += '--' + AEString
+        ;;             ENDFOR
+        ;;          END
+        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+        ;;             alfDB_plot_struct.paramString_list = LIST(alfDB_plot_struct.paramString+'--'+alfDB_plot_struct.multiples[0])
+        ;;             FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
+        ;;                alfDB_plot_struct.paramString_list.Add,alfDB_plot_struct.paramString+'--'+alfDB_plot_struct.multiples[k]
+        ;;             ENDFOR
+        ;;          END
+        ;;       ENDCASE
+        ;;    ENDIF
+        ;; ENDIF
 
-     ENDIF
-
-     IF KEYWORD_SET(paramString_list) THEN BEGIN
-        PASIS__paramString_list = TEMPORARY(paramString_list)
-     ENDIF
-
-     IF KEYWORD_SET(paramString) THEN BEGIN
-        PASIS__paramString      = TEMPORARY(paramString)
      ENDIF
 
      IF ~KEYWORD_SET(no_maximus) THEN BEGIN
@@ -1439,7 +1457,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
                           IMF_STRUCT=PASIS__IMF_struct, $
                           MIMC_STRUCT=PASIS__MIMC_struct, $
-                          RESET_OMNI_INDS=reset_omni_inds, $
+                          RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
                           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                           /DO_NOT_SET_DEFAULTS, $
@@ -1450,7 +1468,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                           MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
                           OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
                           CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                          RESET_GOOD_INDS=reset_good_inds, $
+                          RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
                           NO_BURSTDATA=no_burstData, $
                           DONT_LOAD_IN_MEMORY=KEYWORD_SET(eSpec_flux_plots) OR KEYWORD_SET(nonMem), $
                           TXTOUTPUTDIR=txtOutputDir)
@@ -1777,7 +1795,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                LUN=lun
   ENDIF
 
-  IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN NIter = N_ELEMENTS(multiples) ELSE NIter = 1
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN BEGIN
+     NIter = N_ELEMENTS(PASIS__alfDB_plot_struct.multiples) 
+  ENDIF ELSE BEGIN
+     NIter = 1
+  ENDELSE
 
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
@@ -2002,7 +2024,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         dataRawPtrArr_list, $
         PASIS__paramString_list, $
         HAS_NPLOTS=nplots, $
-        NEW_PARAMSTR_FOR_LIKE_PLOTARRS=multiString, $
+        NEW_PARAMSTR_FOR_LIKE_PLOTARRS=PASIS__alfDB_plot_struct.multiString, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         DO_REARRANGE_DATARAWPTRARR_LIST=do_rearrange_dataRawPtrArr_list, $
         ADJ_UPPER_PLOTLIM_IF_NTH_MAX_IS_GREATER=adj_upper_plotlim_thresh, $
