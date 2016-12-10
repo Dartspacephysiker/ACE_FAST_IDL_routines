@@ -92,7 +92,7 @@ PRO JOURNAL__20160323__AVERAGE_OVER_DELAYS__EFLUX_IFLUX_PROBOCCURRENCE_PFLUX,HEM
                          DO_LSHELL=do_lShell, $
                          REVERSE_LSHELL=reverse_lShell, $
                          MINL=minL,MAXL=maxL,BINL=binL,$
-                         RAWDIR=rawDir,PARAMSTR=paramStr,$
+                         SAVEDIR=saveDir,PARAMSTR=paramStr,$
                          CLOCKSTR=clockStr,PLOTMEDORAVG=plotMedOrAvg, $
                          STABLEIMF=stableIMF,HOYDIA=hoyDia,HEMI=hemi, $
                          /QUIET, $

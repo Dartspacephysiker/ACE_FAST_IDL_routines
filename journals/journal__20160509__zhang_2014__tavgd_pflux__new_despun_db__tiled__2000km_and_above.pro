@@ -299,7 +299,7 @@ PRO JOURNAL__20160509__ZHANG_2014__TAVGD_PFLUX__NEW_DESPUN_DB__TILED__2000KM_AND
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

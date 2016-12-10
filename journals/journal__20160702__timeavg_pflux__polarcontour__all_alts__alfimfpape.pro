@@ -247,7 +247,7 @@ PRO JOURNAL__20160702__TIMEAVG_PFLUX__POLARCONTOUR__ALL_ALTS__ALFIMFPAPE
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

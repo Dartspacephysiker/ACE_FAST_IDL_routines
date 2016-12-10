@@ -307,7 +307,7 @@ PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__D
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

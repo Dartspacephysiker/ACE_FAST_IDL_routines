@@ -428,8 +428,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $
@@ -438,7 +438,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         JUSTINDS_THENQUIT=justInds, $
         JUSTINDS_SAVETOFILE=justInds_saveToFile, $
@@ -466,8 +466,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-        ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-        ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
+        ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
+        ADJ_LOWER_PLOTLIM=adj_lower_plotlim_thresh, $
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
@@ -482,7 +482,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
-        /MIDNIGHT, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $

@@ -379,7 +379,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG__GROSSRATES__LOOSER_BZ
            NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
            WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
            SAVERAW=saveRaw, $
-           RAWDIR=rawDir, $
+           SAVEDIR=saveDir, $
            JUSTDATA=justData, $
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $

@@ -318,7 +318,7 @@ PRO JOURNAL__20161121__ZHANG_2014__BZ_SOUTH_RELATIONSHIP__LOOSER_CURRENT_RESTRIC
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

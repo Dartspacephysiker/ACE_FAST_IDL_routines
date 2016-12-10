@@ -321,7 +321,7 @@ PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE__WIDER_MLT
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $

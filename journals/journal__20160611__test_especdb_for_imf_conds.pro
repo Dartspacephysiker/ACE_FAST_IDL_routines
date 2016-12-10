@@ -335,7 +335,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
         NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

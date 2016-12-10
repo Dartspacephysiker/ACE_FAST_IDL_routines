@@ -351,7 +351,7 @@ PRO JOURNAL__20160816__ZHANG_2014__PROBOCC__BOTH_HEMIS_ALFIMFPAPE
            NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
            WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
            SAVERAW=saveRaw, $
-           RAWDIR=rawDir, $
+           SAVEDIR=saveDir, $
            JUSTDATA=justData, $
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $

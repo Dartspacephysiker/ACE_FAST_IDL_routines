@@ -386,7 +386,7 @@ PRO JOURNAL__20161102__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__TIMEAVG
               NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
               WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
               SAVERAW=saveRaw, $
-              RAWDIR=rawDir, $
+              SAVEDIR=saveDir, $
               JUSTDATA=justData, $
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $

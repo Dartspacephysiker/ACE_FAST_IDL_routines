@@ -309,7 +309,7 @@ PRO JOURNAL__20160628__BZ_SOUTH_STEPS__GET_AVG_STDDEV_FOR_OMNI_QUANTS__ALFIMFPAP
         WRITEASCII=writeASCII, $
         WRITEHDF5=writeHDF5, $
         WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

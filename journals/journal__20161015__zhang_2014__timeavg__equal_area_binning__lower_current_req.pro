@@ -477,7 +477,7 @@ PRO JOURNAL__20161015__ZHANG_2014__TIMEAVG__EQUAL_AREA_BINNING__LOWER_CURRENT_RE
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $

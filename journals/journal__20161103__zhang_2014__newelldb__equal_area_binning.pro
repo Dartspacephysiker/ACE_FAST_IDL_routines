@@ -382,7 +382,7 @@ PRO JOURNAL__20161103__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $

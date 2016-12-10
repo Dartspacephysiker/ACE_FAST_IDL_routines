@@ -309,7 +309,7 @@ PRO JOURNAL__20160613__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_5__TOP_500KM_OF
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         SUFFIX_PLOTDIR=suffix_plotDir, $

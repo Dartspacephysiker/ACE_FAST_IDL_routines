@@ -353,7 +353,7 @@ PRO JOURNAL__20160813__ZHANG_2014__TIMEAVG__BX_RESTRICTION
            NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
            WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
            SAVERAW=saveRaw, $
-           RAWDIR=rawDir, $
+           SAVEDIR=saveDir, $
            JUSTDATA=justData, $
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $

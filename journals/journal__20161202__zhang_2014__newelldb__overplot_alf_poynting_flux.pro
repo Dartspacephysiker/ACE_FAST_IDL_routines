@@ -431,7 +431,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $

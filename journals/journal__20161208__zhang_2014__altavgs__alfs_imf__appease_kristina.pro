@@ -438,7 +438,7 @@ PRO JOURNAL__20161208__ZHANG_2014__ALTAVGS__ALFS_IMF__APPEASE_KRISTINA
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         JUSTINDS_THENQUIT=justInds, $
         JUSTINDS_SAVETOFILE=justInds_saveToFile, $

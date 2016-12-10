@@ -265,7 +265,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         WRITEASCII=writeASCII, $
         WRITEHDF5=writeHDF5, $
         WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $

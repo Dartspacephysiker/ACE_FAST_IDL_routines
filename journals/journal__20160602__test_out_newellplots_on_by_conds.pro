@@ -313,7 +313,7 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELLPLOTS_ON_BY_CONDS
         NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
         NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-        SAVERAW=saveRaw, RAWDIR=rawDir, $
+        SAVERAW=saveRaw, SAVEDIR=saveDir, $
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $

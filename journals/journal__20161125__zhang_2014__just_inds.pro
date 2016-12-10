@@ -299,7 +299,7 @@ PRO JOURNAL__20161125__ZHANG_2014__JUST_INDS
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
         SAVERAW=saveRaw, $
-        RAWDIR=rawDir, $
+        SAVEDIR=saveDir, $
         JUSTDATA=justData, $
         JUSTINDS_THENQUIT=justInds, $
         JUSTINDS_SAVETOFILE=justInds_saveToFile, $

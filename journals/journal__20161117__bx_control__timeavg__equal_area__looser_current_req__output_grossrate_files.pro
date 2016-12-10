@@ -428,7 +428,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
               NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
               WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
               SAVERAW=saveRaw, $
-              RAWDIR=rawDir, $
+              SAVEDIR=saveDir, $
               JUSTDATA=justData, $
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $

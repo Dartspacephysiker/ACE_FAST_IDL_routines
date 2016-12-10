@@ -351,7 +351,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
            NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
            WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
            SAVERAW=saveRaw, $
-           RAWDIR=rawDir, $
+           SAVEDIR=saveDir, $
            JUSTDATA=justData, $
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
