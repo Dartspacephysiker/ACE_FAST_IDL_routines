@@ -43,7 +43,7 @@ PRO JOURNAL__20160123__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
                                   /MIDNIGHT, $
-                                  DO_DESPUNDB=do_despun, $
+                                  DESPUNDB=despun, $
                                   BYMIN=byMin, $
                                   /MEDIANPLOT, $
                                   /NPLOTS, $

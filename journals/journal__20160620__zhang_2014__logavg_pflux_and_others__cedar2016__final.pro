@@ -295,8 +295,8 @@ PRO JOURNAL__20160620__ZHANG_2014__LOGAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

@@ -79,7 +79,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      BINILAT=binILAT, $
      /MIDNIGHT, $
      DELAY=delay, $
-     DO_DESPUNDB=do_despun, $
+     DESPUNDB=despun, $
      BYMIN=byMin, $
      DO_ABS_BYMIN=do_abs_bymin, $
      BZMAX=bzMax, $
@@ -127,7 +127,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      BINILAT=binILAT, $
      /MIDNIGHT, $
      DELAY=delay, $
-     DO_DESPUNDB=do_despun, $
+     DESPUNDB=despun, $
      BYMIN=byMin, $
      DO_ABS_BYMIN=do_abs_bymin, $
      BZMAX=bzMax, $

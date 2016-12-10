@@ -125,7 +125,7 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_5__TOP_2500KM_O
   ;;Bonus
   maskMin                        = 1
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DESPUNDB=despun
 
   restrict_with_these_i          = WHERE(maximus.pFluxEst GE pFluxMin)
 
@@ -303,8 +303,8 @@ PRO JOURNAL__20160614__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_5__TOP_2500KM_O
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

@@ -102,7 +102,7 @@ PRO JOURNAL__20160223__PLOTS_OF_07_ESA_CURRENT__TIMEAVGD_QUANTITIES__MULTIPLE_DE
         /MIDNIGHT, $
         DELAY=delayArr, $
         /MULTIPLE_DELAYS, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $
         BZMAX=bzMax, $

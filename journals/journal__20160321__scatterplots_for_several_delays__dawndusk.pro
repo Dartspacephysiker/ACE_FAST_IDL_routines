@@ -56,7 +56,7 @@ PRO JOURNAL__20160321__SCATTERPLOTS_FOR_SEVERAL_DELAYS__DAWNDUSK
 
   plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delayArr,LUN=lun, $
                                                                           DBTIMES=cdbTime,dbfile=dbfile, $
-                                                                          DO_DESPUNDB=do_despun, $
+                                                                          DESPUNDB=despun, $
                                                                           HEMI=hemi, $
                                                                           ORBRANGE=orbRange, $
                                                                           ALTITUDERANGE=altitudeRange, $

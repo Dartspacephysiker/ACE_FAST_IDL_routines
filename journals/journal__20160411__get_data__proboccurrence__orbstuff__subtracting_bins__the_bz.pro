@@ -162,7 +162,7 @@ PRO JOURNAL__20160411__GET_DATA__PROBOCCURRENCE__ORBSTUFF__SUBTRACTING_BINS__THE
         /MULTIPLE_DELAYS, $
         RESOLUTION_DELAY=delay_res, $
         BINOFFSET_DELAY=binOffset_delay, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
         BYMIN=byMin, $

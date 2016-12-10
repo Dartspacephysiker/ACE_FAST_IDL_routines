@@ -51,7 +51,7 @@ PRO JOURNAL__20160506__SCATTERPLOTS_FOR_DAWN_AND_DUSK_BIG_PFLUX
      ENDFOR
 
      KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus, $
-                                DO_DESPUNDB=do_despunDB, $
+                                DESPUNDB=despunDB, $
                                 HEMI=hemi, $
                                 OVERLAYAURZONE=overlayAurZone, $
                                 /ADD_ORBIT_LEGEND, $

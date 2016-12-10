@@ -101,7 +101,7 @@ PRO JOURNAL__20160220__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
         /MIDNIGHT, $
         DELAY=delayArr, $
         /MULTIPLE_DELAYS, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $
         BZMAX=bzMax, $

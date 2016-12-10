@@ -98,7 +98,7 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
   t2                       = STR_TO_TIME(t2Str)
 
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DESPUNDB=despun
   orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -265,8 +265,8 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

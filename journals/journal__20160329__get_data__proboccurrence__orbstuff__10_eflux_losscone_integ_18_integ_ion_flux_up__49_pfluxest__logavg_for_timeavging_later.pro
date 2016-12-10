@@ -113,7 +113,7 @@ PRO JOURNAL__20160329__GET_DATA__PROBOCCURRENCE__ORBSTUFF__10_EFLUX_LOSSCONE_INT
         /MIDNIGHT, $
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $

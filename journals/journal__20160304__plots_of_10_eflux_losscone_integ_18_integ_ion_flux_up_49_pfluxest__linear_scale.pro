@@ -125,7 +125,7 @@ PRO JOURNAL__20160304__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP_49_
         /MIDNIGHT, $
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $

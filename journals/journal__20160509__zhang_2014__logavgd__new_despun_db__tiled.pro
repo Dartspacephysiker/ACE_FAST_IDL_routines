@@ -295,8 +295,8 @@ PRO JOURNAL__20160509__ZHANG_2014__LOGAVGD__NEW_DESPUN_DB__TILED
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

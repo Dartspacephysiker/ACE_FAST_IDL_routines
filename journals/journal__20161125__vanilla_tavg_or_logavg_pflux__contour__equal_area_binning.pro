@@ -324,8 +324,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $

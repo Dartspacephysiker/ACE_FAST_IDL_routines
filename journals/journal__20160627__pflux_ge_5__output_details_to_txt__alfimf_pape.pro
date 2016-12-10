@@ -89,7 +89,7 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
   ;;Bonus
   ;; maskMin                = 1
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun,USE_AACGM_COORDS=use_aacgm_coords
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DESPUNDB=despun,USE_AACGM_COORDS=use_aacgm_coords
 
   restrict_with_these_i  = WHERE(maximus.pFluxEst GE pFluxMin)
 
@@ -257,8 +257,8 @@ PRO JOURNAL__20160627__PFLUX_GE_5__OUTPUT_DETAILS_TO_TXT__ALFIMF_PAPE
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

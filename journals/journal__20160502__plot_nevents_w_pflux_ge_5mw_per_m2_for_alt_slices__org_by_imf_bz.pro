@@ -97,7 +97,7 @@ PRO JOURNAL__20160502__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
   ;;Bonus
   maskMin                        = 1
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DESPUNDB=despun
 
   restrict_with_these_i          = WHERE(maximus.pFluxEst GE pFluxMin)
 
@@ -230,8 +230,8 @@ PRO JOURNAL__20160502__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despunDB, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despunDB, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

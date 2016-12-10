@@ -149,7 +149,7 @@ PRO JOURNAL__20160428__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
      RESOLUTION_DELAY=delayDeltaSec, $
      BINOFFSET_DELAY=binOffset_delay, $
      DELAY=delayArr, $
-     DO_DESPUNDB=do_despun, $
+     DESPUNDB=despun, $
      STABLEIMF=stableIMF, $
      BYMIN=byMin, $
      DO_ABS_BYMIN=do_abs_bymin, $

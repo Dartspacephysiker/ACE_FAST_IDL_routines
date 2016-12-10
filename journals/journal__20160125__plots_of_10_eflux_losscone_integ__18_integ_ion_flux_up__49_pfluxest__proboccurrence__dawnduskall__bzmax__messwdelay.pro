@@ -54,7 +54,7 @@ PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
                                   MAXILAT=maxILAT, $
                                   /MIDNIGHT, $
                                   DELAY=delay, $
-                                  DO_DESPUNDB=do_despun, $
+                                  DESPUNDB=despun, $
                                   BYMIN=byMin, $
                                   BZMAX=bzMax, $
                                   SMOOTHWINDOW=smoothWindow, $

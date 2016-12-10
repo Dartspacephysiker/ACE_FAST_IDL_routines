@@ -108,7 +108,7 @@ PRO JOURNAL__20160628__SHOW_ME_THE_IMF_FOR_DAWNWARD_IMF_BIG_PFLUX__ORB_10832
      NOMAXPLOTS=noMaxPlots, $
      NOAVGPLOTS=noAvgPlots, $
      USE_DARTDB__BEF_NOV1999=use_dartDB__bef_nov1999, $
-     DO_DESPUNDB=do_despunDB, $
+     DESPUNDB=despunDB, $
      USING_HEAVIES=using_heavies, $
      SAVEFILE=saveFile, $
      OVERPLOT_HIST=overplot_hist, $

@@ -177,7 +177,7 @@ PRO JOURNAL__20160407__TEST_SEA_PLOTTER_WITH_BY_CONDS
                                          NOMAXPLOTS=noMaxPlots, $
                                          NOAVGPLOTS=noAvgPlots, $
                                          /USE_DARTDB_START_ENDDATE, $
-                                         DO_DESPUNDB=do_despunDB, $
+                                         DESPUNDB=despunDB, $
                                          USING_HEAVIES=using_heavies, $
                                          SAVEFILE=saveFile, $
                                          OVERPLOT_HIST=overplot_hist, $

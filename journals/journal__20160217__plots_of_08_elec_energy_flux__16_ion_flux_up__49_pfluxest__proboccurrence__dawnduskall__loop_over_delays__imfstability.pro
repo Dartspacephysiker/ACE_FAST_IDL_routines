@@ -94,7 +94,7 @@ PRO JOURNAL__20160217__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
         BINILAT=binILAT, $
         /MIDNIGHT, $
         DELAY=delayArr[i], $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $

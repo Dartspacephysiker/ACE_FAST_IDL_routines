@@ -154,7 +154,7 @@ PRO JOURNAL__20160409__GET_DATA__PROBOCCURRENCE__ORBSTUFF__HUGE_BINS
         /MULTIPLE_DELAYS, $
         RESOLUTION_DELAY=delay_res, $
         BINOFFSET_DELAY=binOffset_delay, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $

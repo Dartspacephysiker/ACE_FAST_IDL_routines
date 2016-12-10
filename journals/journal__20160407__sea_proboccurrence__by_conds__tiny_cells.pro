@@ -168,7 +168,7 @@ PRO JOURNAL__20160407__SEA_PROBOCCURRENCE__BY_CONDS__TINY_CELLS
                                          OMNI_QUANTITY_RANGES=OMNI_quantity_ranges, $
                                          LOG_OMNI_QUANTITIES=log_omni_quantities, $
                                          /USE_DARTDB_START_ENDDATE, $
-                                         DO_DESPUNDB=do_despun, $
+                                         DESPUNDB=despun, $
                                          REMOVE_DUPES=remove_dupes, $
                                          MINMLT=minMLT[i], $
                                          MAXMLT=maxMLT[i], $

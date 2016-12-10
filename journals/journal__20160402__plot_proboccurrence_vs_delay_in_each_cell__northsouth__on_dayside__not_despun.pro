@@ -89,7 +89,7 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__NORTHSOUTH__ON
                                    MIN_MAGCURRENT=minMC, $
                                    MAX_NEGMAGCURRENT=maxNegMC, $
                                    HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                   DO_DESPUNDB=do_despun, $
+                                   DESPUNDB=despun, $
                                    HEMI=hemi, $
                                    BOTH_HEMIS=both_hemis, $
                                    DATADIR=dataDir, $
@@ -126,7 +126,7 @@ PRO JOURNAL__20160402__PLOT_PROBOCCURRENCE_VS_DELAY_IN_EACH_CELL__NORTHSOUTH__ON
         
         plot_i_list                    = GET_RESTRICTED_AND_INTERPED_DB_INDICES(maximus,satellite,delayArr,LUN=lun, $
                                                                                 DBTIMES=cdbTime,dbfile=dbfile, $
-                                                                                DO_DESPUNDB=do_despun, $
+                                                                                DESPUNDB=despun, $
                                                                                 HEMI=hemi, $
                                                                                 ORBRANGE=orbRange, $
                                                                                 ALTITUDERANGE=altitudeRange, $

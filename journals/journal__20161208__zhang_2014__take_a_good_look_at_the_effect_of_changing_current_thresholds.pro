@@ -317,8 +317,8 @@ PRO JOURNAL__20161208__ZHANG_2014__TAKE_A_GOOD_LOOK_AT_THE_EFFECT_OF_CHANGING_CU
            NO_BURSTDATA=no_burstData, $
            RESET_GOOD_INDS=reset_good_inds, $
            DATADIR=dataDir, $
-           DO_CHASTDB=do_chastDB, $
-           DO_DESPUNDB=do_despun, $
+           CHASTDB=chastDB, $
+           DESPUNDB=despun, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=use_AACGM, $
            USE_MAG_COORDS=use_MAG, $

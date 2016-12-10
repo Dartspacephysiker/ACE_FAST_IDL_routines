@@ -124,7 +124,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   plotPref                   = 'just_' + jahr
 
   LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                           DO_DESPUNDB=do_despun, $
+                           DESPUNDB=despun, $
                            USE_AACGM=use_AACGM, $
                            USE_MAG=use_mag
   orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
@@ -296,8 +296,8 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $

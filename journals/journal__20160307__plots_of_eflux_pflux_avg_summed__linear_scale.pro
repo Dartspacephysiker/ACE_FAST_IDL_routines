@@ -127,7 +127,7 @@ PRO JOURNAL__20160307__PLOTS_OF_EFLUX_PFLUX_AVG_SUMMED__LINEAR_SCALE
         /MIDNIGHT, $
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
-        DO_DESPUNDB=do_despun, $
+        DESPUNDB=despun, $
         STABLEIMF=stableIMF, $
         BYMIN=byMin, $
         DO_ABS_BYMIN=do_abs_bymin, $

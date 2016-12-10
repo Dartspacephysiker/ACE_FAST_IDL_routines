@@ -87,7 +87,7 @@ PRO JOURNAL__20160615__VANILLA__LIMS_FOR_PFLUX_GE_1__TOP_500KM_OF_FAST_ORBIT__CE
   ;;Bonus
   maskMin                        = 1
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,DO_DESPUNDB=do_despun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,DESPUNDB=despun
 
   restrict_with_these_i          = WHERE(maximus.pFluxEst GE pFluxMin)
 
@@ -226,8 +226,8 @@ PRO JOURNAL__20160615__VANILLA__LIMS_FOR_PFLUX_GE_1__TOP_500KM_OF_FAST_ORBIT__CE
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        DO_CHASTDB=do_chastDB, $
-        DO_DESPUNDB=do_despun, $
+        CHASTDB=chastDB, $
+        DESPUNDB=despun, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
