@@ -476,7 +476,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-              TILEPLOTTITLES=tilePlotTitle, $
+              TILEPLOTTITLE=tilePlotTitle, $
               NO_COLORBAR=no_colorbar, $
               CB_FORCE_OOBHIGH=cb_force_oobHigh, $
               CB_FORCE_OOBLOW=cb_force_oobLow, $

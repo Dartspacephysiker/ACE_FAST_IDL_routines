@@ -14,7 +14,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'NEWELLED_AFTROTFIX'
   plotPref += 'FINALE'
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
   use_prev_plot_i                = 1
 
@@ -155,8 +155,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
   justData                        = 0
-  justInds                        = 1
-  justInds_saveToFile             = 1
+  justInds                        = 0
+  justInds_saveToFile             = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -476,7 +476,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
         TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
         TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-        TILEPLOTTITLES=tilePlotTitle, $
+        TILEPLOTTITLE=tilePlotTitle, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -485,9 +485,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-        MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-        RESTORE_LAST_SESSION=restore_last_session, $
-        _EXTRA=e
+        MAKE_INTEGRAL_SAVFILES=make_integral_savfiles
+
      ;; /GET_PLOT_I_LIST_LIST, $
      ;; /GET_PARAMSTR_LIST_LIST, $
      ;; PLOT_I_LIST_LIST=plot_i_list_list, $

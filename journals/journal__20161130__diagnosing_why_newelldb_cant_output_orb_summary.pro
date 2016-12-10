@@ -747,7 +747,7 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
            TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
            TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
            TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-           TILEPLOTTITLES=tilePlotTitle, $
+           TILEPLOTTITLE=tilePlotTitle, $
            NO_COLORBAR=no_colorbar, $
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $

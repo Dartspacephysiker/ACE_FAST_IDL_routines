@@ -332,7 +332,7 @@ PRO JOURNAL__20160506__MAKE_ZHANG_2014_ANALOG
         N_TILE_COLUMNS=n_tile_columns, $
         TILEPLOTSUFFS=tilePlotSuffs, $
         TILING_ORDER=tiling_order, $
-        TILEPLOTTITLES=tilePlotTitles, $
+        TILEPLOTTITLE=tilePlotTitles, $
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $

@@ -354,7 +354,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         N_TILE_COLUMNS=n_tile_columns, $
         TILEPLOTSUFF=tilePlotSuff, $
         TILING_ORDER=tiling_order, $
-        TILEPLOTTITLES=tilePlotTitles, $
+        TILEPLOTTITLE=tilePlotTitles, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         NO_COLORBAR=no_colorbar, $

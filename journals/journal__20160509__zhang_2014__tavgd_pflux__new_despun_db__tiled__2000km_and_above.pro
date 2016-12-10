@@ -318,7 +318,7 @@ PRO JOURNAL__20160509__ZHANG_2014__TAVGD_PFLUX__NEW_DESPUN_DB__TILED__2000KM_AND
         N_TILE_COLUMNS=n_tile_columns, $
         TILEPLOTSUFF=tilePlotSuff, $
         TILING_ORDER=tiling_order, $
-        TILEPLOTTITLES=tilePlotTitles, $
+        TILEPLOTTITLE=tilePlotTitles, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         NO_COLORBAR=no_colorbar, $
