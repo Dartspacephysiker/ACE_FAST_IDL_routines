@@ -355,8 +355,8 @@ PRO JOURNAL__20161208__ZHANG_2014__TAKE_A_GOOD_LOOK_AT_THE_EFFECT_OF_CHANGING_CU
            USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
            GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
            SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-           ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-           ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
+           ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
+           ADJ_LOWER_PLOTLIM=adj_lower_plotlim_thresh, $
            TILE_IMAGES=tile_images, $
            N_TILE_ROWS=n_tile_rows, $
            N_TILE_COLUMNS=n_tile_columns, $

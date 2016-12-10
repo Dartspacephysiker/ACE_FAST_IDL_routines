@@ -9,7 +9,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
   ;;NOTE: Bx-specific stuff on other side of IF
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-     @journal__20161202__zhang2014__params_for_every_child.pro
+     @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF ELSE BEGIN
 
      restore_last_session               = 0
@@ -466,8 +466,8 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               OUT_PARAMSTRING_LIST=out_paramString_list, $
               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
               SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-              ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-              ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
+              ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
+              ADJ_LOWER_PLOTLIM=adj_lower_plotlim_thresh, $
               TILE_IMAGES=tile_images, $
               N_TILE_ROWS=n_tile_rows, $
               N_TILE_COLUMNS=n_tile_columns, $

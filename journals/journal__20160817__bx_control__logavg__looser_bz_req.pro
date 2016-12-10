@@ -409,8 +409,8 @@ PRO JOURNAL__20160817__BX_CONTROL__LOGAVG__LOOSER_BZ_REQ
               OUT_PARAMSTRING_LIST=out_paramString_list, $
               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
               SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
-              ADJ_UPPER_PLOTLIM_THRESH=adj_upper_plotlim_thresh, $
-              ADJ_LOWER_PLOTLIM_THRESH=adj_lower_plotlim_thresh, $
+              ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
+              ADJ_LOWER_PLOTLIM=adj_lower_plotlim_thresh, $
               TILE_IMAGES=tile_images, $
               N_TILE_ROWS=n_tile_rows, $
               N_TILE_COLUMNS=n_tile_columns, $
