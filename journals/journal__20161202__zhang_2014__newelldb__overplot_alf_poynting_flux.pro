@@ -23,7 +23,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -86,7 +86,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
                                     ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
                                     ['*enumflux_espec*accel*','*timeavgd_pflux*']]
   ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [15,45,75]
+  op_contour__levels             = [10,40,70]
   plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
   op_plotRange                   = [0.00,0.10]
