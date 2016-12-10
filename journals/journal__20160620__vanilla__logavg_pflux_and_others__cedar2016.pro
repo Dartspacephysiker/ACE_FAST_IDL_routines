@@ -269,7 +269,7 @@ PRO JOURNAL__20160620__VANILLA__LOGAVG_PFLUX_AND_OTHERS__CEDAR2016
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

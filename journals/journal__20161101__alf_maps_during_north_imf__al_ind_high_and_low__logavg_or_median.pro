@@ -425,7 +425,7 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
               NO_COLORBAR=no_colorbar, $
               CB_FORCE_OOBHIGH=cb_force_oobHigh, $
               CB_FORCE_OOBLOW=cb_force_oobLow, $
-              /MIDNIGHT, $
+              
               FANCY_PLOTNAMES=fancy_plotNames, $
               MAKE_INTEGRAL_FILE=make_integral_file, $
               

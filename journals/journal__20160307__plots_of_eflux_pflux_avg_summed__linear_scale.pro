@@ -124,7 +124,7 @@ PRO JOURNAL__20160307__PLOTS_OF_EFLUX_PFLUX_AVG_SUMMED__LINEAR_SCALE
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
         DESPUNDB=despun, $

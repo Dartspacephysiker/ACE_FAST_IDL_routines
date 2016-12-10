@@ -456,7 +456,7 @@ PRO JOURNAL__20161125__ZHANG_2014__TIMEAVG__ALFS_IMF_V11__CONTOUR
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $

@@ -110,7 +110,7 @@ PRO JOURNAL__20160329__GET_DATA__PROBOCCURRENCE__ORBSTUFF__10_EFLUX_LOSSCONE_INT
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
         DESPUNDB=despun, $

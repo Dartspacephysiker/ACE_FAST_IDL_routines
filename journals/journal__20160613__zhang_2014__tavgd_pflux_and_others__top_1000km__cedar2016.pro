@@ -306,7 +306,7 @@ PRO JOURNAL__20160613__ZHANG_2014__TAVGD_PFLUX_AND_OTHERS__TOP_1000KM__CEDAR2016
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

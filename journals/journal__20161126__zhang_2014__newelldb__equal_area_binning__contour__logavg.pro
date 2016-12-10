@@ -429,7 +429,7 @@ PRO JOURNAL__20161126__ZHANG_2014__NEWELLDB__EQUAL_AREA_BINNING__CONTOUR__LOGAVG
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         PLOTH2D_CONTOUR=plotH2D_contour, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         

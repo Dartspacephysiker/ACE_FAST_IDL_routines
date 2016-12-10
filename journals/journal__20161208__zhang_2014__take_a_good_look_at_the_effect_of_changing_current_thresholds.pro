@@ -371,7 +371,7 @@ PRO JOURNAL__20161208__ZHANG_2014__TAKE_A_GOOD_LOOK_AT_THE_EFFECT_OF_CHANGING_CU
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            PLOTH2D_CONTOUR=plotH2D_contour, $
            PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
-           /MIDNIGHT, $
+           
            FANCY_PLOTNAMES=fancy_plotNames, $
            SHOW_INTEGRALS=show_integrals, $
            MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $

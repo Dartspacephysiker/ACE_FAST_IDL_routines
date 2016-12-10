@@ -46,7 +46,7 @@ PRO JOURNAL__20151231__N_EVENTS__NONSTORM__DAWN_AND_DUSK
                                   LOGIFPLOT=logIFPlot, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   /CB_FORCE_OOBHIGH, $
                                   /CB_FORCE_OOBLOW
                                 
@@ -72,7 +72,7 @@ PRO JOURNAL__20151231__N_EVENTS__NONSTORM__DAWN_AND_DUSK
                                   LOGIFPLOT=logIFPlot, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   /CB_FORCE_OOBHIGH, $
                                   /CB_FORCE_OOBLOW
 

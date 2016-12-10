@@ -74,7 +74,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      MINILAT=minILAT, $
      MAXILAT=maxILAT, $
      BINILAT=binILAT, $
-     /MIDNIGHT, $
+     
      DELAY=delay, $
      DESPUNDB=despun, $
      BYMIN=byMin, $
@@ -122,7 +122,7 @@ PRO JOURNAL__20160127__PLOTS_OF_08_ELEC_ENERGY_FLUX__10_EFLUX_LOSSCONE_INTEG__16
      MINILAT=minILAT, $
      MAXILAT=maxILAT, $
      BINILAT=binILAT, $
-     /MIDNIGHT, $
+     
      DELAY=delay, $
      DESPUNDB=despun, $
      BYMIN=byMin, $

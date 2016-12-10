@@ -387,7 +387,7 @@ PRO JOURNAL__20160810__ZHANG_2014__ALTERNATE_TIMEAVG__VERY_QUIET_CONDITIONS
            NO_COLORBAR=no_colorbar, $
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $
-           /MIDNIGHT, $
+           
            FANCY_PLOTNAMES=fancy_plotNames, $
            
            _EXTRA=e

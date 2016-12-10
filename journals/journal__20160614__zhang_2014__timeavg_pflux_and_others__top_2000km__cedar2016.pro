@@ -301,7 +301,7 @@ PRO JOURNAL__20160614__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2000KM__CEDAR20
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

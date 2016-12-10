@@ -149,7 +149,7 @@ PRO JOURNAL__20160409__GET_DATA__PROBOCCURRENCE__ORBSTUFF__HUGE_BINS
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         DELAY=delayArr, $
         /MULTIPLE_DELAYS, $
         RESOLUTION_DELAY=delay_res, $

@@ -379,7 +379,7 @@ PRO JOURNAL__20161003__ZHANG_2014__TIMEAVG__AACGM_COORDS
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         
         _EXTRA=e

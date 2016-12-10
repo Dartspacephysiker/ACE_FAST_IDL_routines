@@ -314,7 +314,7 @@ PRO JOURNAL__20160617__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__ALL_ALTS__CEDAR2016
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

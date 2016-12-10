@@ -329,7 +329,7 @@ PRO JOURNAL__20160505__PLOT_NEVENTS_W_PFLUX_GE_5MW_PER_M2_FOR_ALT_SLICES__ORG_BY
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
         OUT_PARAMSTRING_LIST=out_paramString_list, $

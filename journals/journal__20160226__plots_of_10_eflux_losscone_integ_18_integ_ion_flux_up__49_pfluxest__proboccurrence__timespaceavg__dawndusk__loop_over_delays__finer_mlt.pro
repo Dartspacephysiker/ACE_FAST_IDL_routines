@@ -116,7 +116,7 @@ PRO JOURNAL__20160226__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__49
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
         DESPUNDB=despun, $

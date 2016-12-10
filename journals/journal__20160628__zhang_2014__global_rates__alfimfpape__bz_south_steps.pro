@@ -353,7 +353,7 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_STEPS
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e

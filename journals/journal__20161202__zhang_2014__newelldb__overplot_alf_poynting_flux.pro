@@ -478,7 +478,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
         OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
         OVERPLOT_PLOTRANGE=op_plotRange, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         SHOW_INTEGRALS=show_integrals, $
         

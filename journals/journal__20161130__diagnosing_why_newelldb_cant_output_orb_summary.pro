@@ -752,7 +752,7 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $
            PLOTH2D_CONTOUR=plotH2D_contour, $
-           /MIDNIGHT, $
+           
            FANCY_PLOTNAMES=fancy_plotNames, $
            SHOW_INTEGRALS=show_integrals, $
            

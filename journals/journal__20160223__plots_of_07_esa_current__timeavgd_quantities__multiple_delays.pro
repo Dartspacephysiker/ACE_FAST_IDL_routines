@@ -99,7 +99,7 @@ PRO JOURNAL__20160223__PLOTS_OF_07_ESA_CURRENT__TIMEAVGD_QUANTITIES__MULTIPLE_DE
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         DELAY=delayArr, $
         /MULTIPLE_DELAYS, $
         DESPUNDB=despun, $

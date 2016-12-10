@@ -105,7 +105,7 @@ PRO JOURNAL__20160225__PLOTS_OF_49_PFLUXEST__PROBOCCURRENCE__TIMESPACEAVG__DAWND
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         DELAY=delayArr[i], $
         DESPUNDB=despun, $
         STABLEIMF=stableIMF, $

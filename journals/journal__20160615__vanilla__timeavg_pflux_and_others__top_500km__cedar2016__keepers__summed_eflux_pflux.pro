@@ -264,7 +264,7 @@ PRO JOURNAL__20160615__VANILLA__TIMEAVG_PFLUX_AND_OTHERS__TOP_500KM__CEDAR2016__
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

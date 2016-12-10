@@ -12,7 +12,7 @@ PRO JOURNAL__20151228__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
                                        ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $
                                        PROBOCCURRENCERANGE=[1e-4,1e0], $
                                        PLOTSUFFIX=plotSuff, $
-                                       /MIDNIGHT, $
+                                       
                                        HEMI='NORTH', $
                                        BINMLT=1.5, $
                                        MINILAT=54, $
@@ -28,7 +28,7 @@ PRO JOURNAL__20151228__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
   ;;                                      ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $
   ;;                                      PROBOCCURRENCERANGE=[10^(-3.2),10^(-1.0)], $
   ;;                                      PLOTSUFFIX=plotSuff, $
-  ;;                                      /MIDNIGHT, $
+  ;;                                      
   ;;                                      MINILAT=54, $
   ;;                                      /COMBINE_STORMPHASE_PLOTS, $
   ;;                                      /SAVE_COMBINED_WINDOW, $
@@ -41,7 +41,7 @@ PRO JOURNAL__20151228__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
   ;;                                      ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $
   ;;                                      PROBOCCURRENCERANGE=[10^(-3.2),10^(-0.2)], $
   ;;                                      PLOTSUFFIX=plotSuff, $
-  ;;                                      /MIDNIGHT, $
+  ;;                                      
   ;;                                      MINILAT=54, $
   ;;                                      /COMBINE_STORMPHASE_PLOTS, $
   ;;                                      /SAVE_COMBINED_WINDOW, $

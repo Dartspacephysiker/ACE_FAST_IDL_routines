@@ -392,7 +392,7 @@ PRO JOURNAL__20160816__BX_CONTROL__TIMEAVG
            NO_COLORBAR=no_colorbar, $
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $
-           /MIDNIGHT, $
+           
            FANCY_PLOTNAMES=fancy_plotNames, $
            MAKE_INTEGRAL_FILE=make_integral_file, $
            

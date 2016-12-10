@@ -393,7 +393,7 @@ PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         
         _EXTRA=e

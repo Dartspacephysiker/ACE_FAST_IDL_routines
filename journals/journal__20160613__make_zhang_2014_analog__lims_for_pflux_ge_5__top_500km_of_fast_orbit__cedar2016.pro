@@ -337,7 +337,7 @@ PRO JOURNAL__20160613__MAKE_ZHANG_2014_ANALOG__LIMS_FOR_PFLUX_GE_5__TOP_500KM_OF
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA = e  
      

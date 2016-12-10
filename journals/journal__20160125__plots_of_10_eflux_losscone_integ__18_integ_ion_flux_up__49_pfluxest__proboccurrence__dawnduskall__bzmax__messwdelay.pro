@@ -52,7 +52,7 @@ PRO JOURNAL__20160125__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
                                   MAXILAT=maxILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   DELAY=delay, $
                                   DESPUNDB=despun, $
                                   BYMIN=byMin, $

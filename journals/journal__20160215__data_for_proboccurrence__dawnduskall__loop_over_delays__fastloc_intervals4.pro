@@ -79,7 +79,7 @@ PRO JOURNAL__20160215__DATA_FOR_PROBOCCURRENCE__DAWNDUSKALL__LOOP_OVER_DELAYS__F
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         DELAY=delayArr[i], $
         DESPUNDB=despun, $
         BYMIN=byMin, $

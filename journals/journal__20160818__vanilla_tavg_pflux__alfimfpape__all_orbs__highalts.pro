@@ -304,7 +304,7 @@ PRO JOURNAL__20160818__VANILLA_TAVG_PFLUX__ALFIMFPAPE__ALL_ORBS__HIGHALTS
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

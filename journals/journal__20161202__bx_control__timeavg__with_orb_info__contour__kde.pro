@@ -482,7 +482,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               CB_FORCE_OOBLOW=cb_force_oobLow, $
               PLOTH2D_CONTOUR=plotH2D_contour, $
               PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
-              /MIDNIGHT, $
+              
               FANCY_PLOTNAMES=fancy_plotNames, $
               SHOW_INTEGRALS=show_integrals, $
               MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $

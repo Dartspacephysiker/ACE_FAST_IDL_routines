@@ -469,7 +469,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
               NO_COLORBAR=no_colorbar, $
               CB_FORCE_OOBHIGH=cb_force_oobHigh, $
               CB_FORCE_OOBLOW=cb_force_oobLow, $
-              /MIDNIGHT, $
+              
               FANCY_PLOTNAMES=fancy_plotNames, $
               
               _EXTRA=e

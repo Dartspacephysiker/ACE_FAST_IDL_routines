@@ -33,7 +33,7 @@ PRO JOURNAL__20160101__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__P
                                   BINMLT=binMLT, $
                                   MAXILAT=maxILAT, $
                                   MINILAT=minILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   CHARERANGE=charERange, $
                                   BYMIN=byMin, $
                                   /MEDIANPLOT, $
@@ -74,7 +74,7 @@ PRO JOURNAL__20160101__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__P
   ;;                                      BINMLT=1.5, $
   ;;                                      ;; /DO_LSHELL, $
   ;;                                      ;; /REVERSE_LSHELL, $
-  ;;                                      /MIDNIGHT, $
+  ;;                                      
   ;;                                      MINILAT=54, $
   ;;                                      /COMBINE_STORMPHASE_PLOTS, $
   ;;                                      /SAVE_COMBINED_WINDOW, $

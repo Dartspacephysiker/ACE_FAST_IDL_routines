@@ -433,7 +433,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
               NO_COLORBAR=no_colorbar, $
               CB_FORCE_OOBHIGH=cb_force_oobHigh, $
               CB_FORCE_OOBLOW=cb_force_oobLow, $
-              /MIDNIGHT, $
+              
               FANCY_PLOTNAMES=fancy_plotNames, $
               MAKE_INTEGRAL_FILE=make_integral_file, $
               

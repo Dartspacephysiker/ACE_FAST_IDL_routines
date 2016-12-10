@@ -243,7 +243,7 @@ PRO JOURNAL__20160715__CHASTON_2003__FIG_4B_REPRODUCTION__ALLEVIATE_BILLS_CONCER
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
         ;; /GET_PLOT_I_LIST_LIST, $

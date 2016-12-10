@@ -404,7 +404,7 @@ PRO JOURNAL__20160817__BX_CONTROL__TIMEAVG__LOOSER_BZ_REQ
            NO_COLORBAR=no_colorbar, $
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $
-           /MIDNIGHT, $
+           
            FANCY_PLOTNAMES=fancy_plotNames, $
            
            _EXTRA=e

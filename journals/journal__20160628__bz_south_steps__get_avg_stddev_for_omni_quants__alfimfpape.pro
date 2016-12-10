@@ -345,7 +345,7 @@ PRO JOURNAL__20160628__BZ_SOUTH_STEPS__GET_AVG_STDDEV_FOR_OMNI_QUANTS__ALFIMFPAP
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         MAKE_INTEGRAL_FILE=make_integral_file, $
         _EXTRA=e

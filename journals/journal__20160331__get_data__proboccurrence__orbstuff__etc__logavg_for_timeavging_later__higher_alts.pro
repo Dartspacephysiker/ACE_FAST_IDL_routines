@@ -116,7 +116,7 @@ PRO JOURNAL__20160331__GET_DATA__PROBOCCURRENCE__ORBSTUFF__ETC__LOGAVG_FOR_TIMEA
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
         DESPUNDB=despun, $

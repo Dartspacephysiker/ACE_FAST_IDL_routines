@@ -32,7 +32,7 @@ PRO JOURNAL__20160101__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__P
                                   HEMI=hemi, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   CHARERANGE=charERange, $
                                   BYMIN=byMin, $
                                   /MEDIANPLOT, $

@@ -44,7 +44,7 @@ PRO JOURNAL__20160123__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
                                   HEMI=hemi, $
                                   BINMLT=binMLT, $
                                   MINILAT=minILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   DESPUNDB=despun, $
                                   BYMIN=byMin, $
                                   BZMAX=bzMax, $

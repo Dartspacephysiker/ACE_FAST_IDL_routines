@@ -352,7 +352,7 @@ PRO JOURNAL__20160719__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BTMIN_2__ALFIM
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        /MIDNIGHT, $
+        
         FANCY_PLOTNAMES=fancy_plotNames, $
         _EXTRA=e
      ;; /GET_PLOT_I_LIST_LIST, $

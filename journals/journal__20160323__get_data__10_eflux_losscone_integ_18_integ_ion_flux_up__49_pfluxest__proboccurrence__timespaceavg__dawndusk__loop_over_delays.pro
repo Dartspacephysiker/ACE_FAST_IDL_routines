@@ -84,7 +84,7 @@ PRO JOURNAL__20160323__GET_DATA__10_EFLUX_LOSSCONE_INTEG_18_INTEG_ION_FLUX_UP__4
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         /MULTIPLE_DELAYS, $
         DELAY=delayArr, $
         DESPUNDB=despun, $

@@ -98,7 +98,7 @@ PRO JOURNAL__20160220__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
         MINILAT=minILAT, $
         MAXILAT=maxILAT, $
         BINILAT=binILAT, $
-        /MIDNIGHT, $
+        
         DELAY=delayArr, $
         /MULTIPLE_DELAYS, $
         DESPUNDB=despun, $

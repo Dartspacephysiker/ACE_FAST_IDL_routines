@@ -460,7 +460,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__GROSSRATES__EQUAL_AREA__LOOSER_CURRE
               NO_COLORBAR=no_colorbar, $
               CB_FORCE_OOBHIGH=cb_force_oobHigh, $
               CB_FORCE_OOBLOW=cb_force_oobLow, $
-              /MIDNIGHT, $
+              
               FANCY_PLOTNAMES=fancy_plotNames, $
               MAKE_INTEGRAL_FILE=make_integral_file, $
               

@@ -63,7 +63,7 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                   SHIFTMLT=shiftMLT, $
                                   MINILAT=minILAT, $
                                   MAXILAT=maxILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   DELAY=delay, $
                                   DESPUNDB=despun, $
                                   BYMIN=byMin, $
@@ -111,7 +111,7 @@ PRO JOURNAL__20160126__PLOTS_OF_08_ELEC_ENERGY_FLUX__16_ION_FLUX_UP__49_PFLUXEST
                                   SHIFTMLT=shiftMLT, $
                                   MINILAT=minILAT, $
                                   MAXILAT=maxILAT, $
-                                  /MIDNIGHT, $
+                                  
                                   DELAY=delay, $
                                   DESPUNDB=despun, $
                                   BYMIN=byMin, $

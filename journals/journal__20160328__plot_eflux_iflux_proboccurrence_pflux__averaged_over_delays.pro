@@ -45,7 +45,7 @@ PRO JOURNAL__20160328__PLOT_EFLUX_IFLUX_PROBOCCURRENCE_PFLUX__AVERAGED_OVER_DELA
 
   SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY
   PLOT_2DHISTO_FILE,fileDir+inFile, $
-                    /MIDNIGHT, $
+                    
                     PLOTDIR=plotDir, $
                     PLOTNAMEPREF=paramPref+omniPref+avgString+IMFCondStr, $
                     QUANTS_TO_PLOT=quants_to_plot
