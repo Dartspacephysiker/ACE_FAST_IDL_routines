@@ -718,7 +718,7 @@ PRO JOURNAL__20161130__DIAGNOSING_WHY_NEWELLDB_CANT_OUTPUT_ORB_SUMMARY
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
-           PLOTSUFFIXES=plotSuff, $
+           PLOTSUFFIX=plotSuff, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $

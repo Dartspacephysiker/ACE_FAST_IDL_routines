@@ -282,7 +282,7 @@ PRO JOURNAL__20160716__VANILLA_MEDIAN_PFLUX__ALFIMFPAPE__TRY_NONSTORMS
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $

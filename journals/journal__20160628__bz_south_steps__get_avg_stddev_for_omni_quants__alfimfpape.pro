@@ -313,7 +313,7 @@ PRO JOURNAL__20160628__BZ_SOUTH_STEPS__GET_AVG_STDDEV_FOR_OMNI_QUANTS__ALFIMFPAP
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         SUFFIX_PLOTDIR=suffix_plotDir, $

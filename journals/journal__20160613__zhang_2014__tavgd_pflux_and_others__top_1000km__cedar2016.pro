@@ -286,7 +286,7 @@ PRO JOURNAL__20160613__ZHANG_2014__TAVGD_PFLUX_AND_OTHERS__TOP_1000KM__CEDAR2016
         PLOTDIR=plotDir, $
         SUFFIX_PLOTDIR=suffix_plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $

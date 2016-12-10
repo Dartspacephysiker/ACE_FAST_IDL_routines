@@ -322,7 +322,7 @@ PRO JOURNAL__20161121__ZHANG_2014__BZ_SOUTH_RELATIONSHIP__LOOSER_CURRENT_RESTRIC
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         SUFFIX_PLOTDIR=suffix_plotDir, $

@@ -321,7 +321,7 @@ PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_STEPS
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         SUFFIX_PLOTDIR=suffix_plotDir, $

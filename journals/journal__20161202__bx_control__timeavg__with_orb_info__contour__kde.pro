@@ -447,7 +447,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $
               PLOTPREFIX=plotPrefix, $
-              PLOTSUFFIXES=plotSuff, $
+              PLOTSUFFIX=plotSuff, $
               MEDHISTOUTDATA=medHistOutData, $
               MEDHISTOUTTXT=medHistOutTxt, $
               OUTPUTPLOTSUMMARY=outputPlotSummary, $

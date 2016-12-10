@@ -356,7 +356,7 @@ PRO JOURNAL__20160802__ZHANG_2014__LOGAVG__VERY_QUIET_CONDITIONS
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
-           PLOTSUFFIXES=plotSuff, $
+           PLOTSUFFIX=plotSuff, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $

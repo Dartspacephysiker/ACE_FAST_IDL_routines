@@ -317,7 +317,7 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELLPLOTS_ON_BY_CONDS
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuffs, $
+        PLOTSUFFIX=plotSuffs, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $

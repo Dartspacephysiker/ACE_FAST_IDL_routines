@@ -339,7 +339,7 @@ PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
         JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuffs, $
+        PLOTSUFFIX=plotSuffs, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $

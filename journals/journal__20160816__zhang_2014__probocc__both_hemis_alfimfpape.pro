@@ -356,7 +356,7 @@ PRO JOURNAL__20160816__ZHANG_2014__PROBOCC__BOTH_HEMIS_ALFIMFPAPE
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
-           PLOTSUFFIXES=plotSuff, $
+           PLOTSUFFIX=plotSuff, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $

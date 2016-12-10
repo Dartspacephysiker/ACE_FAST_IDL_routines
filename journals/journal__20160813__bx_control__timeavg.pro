@@ -350,7 +350,7 @@ PRO JOURNAL__20160813__BX_CONTROL__TIMEAVG
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
-           PLOTSUFFIXES=plotSuff, $
+           PLOTSUFFIX=plotSuff, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $

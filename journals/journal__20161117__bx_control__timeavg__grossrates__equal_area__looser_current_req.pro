@@ -425,7 +425,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__GROSSRATES__EQUAL_AREA__LOOSER_CURRE
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $
               PLOTPREFIX=plotPrefix, $
-              PLOTSUFFIXES=plotSuff, $
+              PLOTSUFFIX=plotSuff, $
               MEDHISTOUTDATA=medHistOutData, $
               MEDHISTOUTTXT=medHistOutTxt, $
               OUTPUTPLOTSUMMARY=outputPlotSummary, $

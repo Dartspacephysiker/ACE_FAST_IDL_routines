@@ -359,7 +359,7 @@ PRO JOURNAL__20160813__ZHANG_2014__LOGAVG__BX_RESTRICTION
            SHOWPLOTSNOSAVE=showPlotsNoSave, $
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
-           PLOTSUFFIXES=plotSuff, $
+           PLOTSUFFIX=plotSuff, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $

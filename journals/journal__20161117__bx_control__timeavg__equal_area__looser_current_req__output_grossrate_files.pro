@@ -433,7 +433,7 @@ PRO JOURNAL__20161117__BX_CONTROL__TIMEAVG__EQUAL_AREA__LOOSER_CURRENT_REQ__OUTP
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $
               PLOTPREFIX=plotPrefix, $
-              PLOTSUFFIXES=plotSuff, $
+              PLOTSUFFIX=plotSuff, $
               MEDHISTOUTDATA=medHistOutData, $
               MEDHISTOUTTXT=medHistOutTxt, $
               OUTPUTPLOTSUMMARY=outputPlotSummary, $

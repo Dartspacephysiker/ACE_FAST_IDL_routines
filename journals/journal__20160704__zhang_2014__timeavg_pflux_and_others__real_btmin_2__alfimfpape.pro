@@ -318,7 +318,7 @@ PRO JOURNAL__20160704__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BTMIN_2__ALFIM
         SHOWPLOTSNOSAVE=showPlotsNoSave, $
         PLOTDIR=plotDir, $
         PLOTPREFIX=plotPrefix, $
-        PLOTSUFFIXES=plotSuff, $
+        PLOTSUFFIX=plotSuff, $
         MEDHISTOUTDATA=medHistOutData, $
         MEDHISTOUTTXT=medHistOutTxt, $
         OUTPUTPLOTSUMMARY=outputPlotSummary, $

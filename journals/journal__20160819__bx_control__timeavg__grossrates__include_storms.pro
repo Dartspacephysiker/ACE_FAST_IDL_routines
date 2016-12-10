@@ -400,7 +400,7 @@ PRO JOURNAL__20160819__BX_CONTROL__TIMEAVG__GROSSRATES__INCLUDE_STORMS
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $
               PLOTPREFIX=plotPrefix, $
-              PLOTSUFFIXES=plotSuff, $
+              PLOTSUFFIX=plotSuff, $
               MEDHISTOUTDATA=medHistOutData, $
               MEDHISTOUTTXT=medHistOutTxt, $
               OUTPUTPLOTSUMMARY=outputPlotSummary, $

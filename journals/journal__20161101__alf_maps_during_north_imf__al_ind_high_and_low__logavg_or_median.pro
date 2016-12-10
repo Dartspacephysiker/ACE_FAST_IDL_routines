@@ -392,7 +392,7 @@ PRO JOURNAL__20161101__ALF_MAPS_DURING_NORTH_IMF__AL_IND_HIGH_AND_LOW__LOGAVG_OR
               SHOWPLOTSNOSAVE=showPlotsNoSave, $
               PLOTDIR=plotDir, $
               PLOTPREFIX=plotPrefix, $
-              PLOTSUFFIXES=plotSuff, $
+              PLOTSUFFIX=plotSuff, $
               MEDHISTOUTDATA=medHistOutData, $
               MEDHISTOUTTXT=medHistOutTxt, $
               OUTPUTPLOTSUMMARY=outputPlotSummary, $
