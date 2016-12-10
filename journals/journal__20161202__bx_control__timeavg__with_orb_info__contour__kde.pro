@@ -245,37 +245,10 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
         FOR jow=0,N_ELEMENTS(btMinArr)-1 DO BEGIN
 
            btMin      = btMinArr[jow]
-           ;; btMinStr   = STRING(FORMAT='("/btMin_",F0.1)',btMin)
-           btMinSuff  = STRING(FORMAT='("btMin_",F0.1)',btMin)
-           ;; IF KEYWORD_SET(nonstorm) THEN BEGIN
-           ;;    btMinStr   = btMinStr + STRING(FORMAT='("/DstMin_",I0)',DstCutoff)
-           ;; ENDIF
-
-           ;; IF KEYWORD_SET(numOrbLim) THEN BEGIN
-           ;;    btMinStr += STRING(FORMAT='("/numOrbLim_",I0)',numOrbLim)
-           ;; ENDIF
 
            SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY;,ADD_SUFF=btMinStr
 
            plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
-
-           ;; IF KEYWORD_SET(grossRate_info_file_pref) THEN BEGIN
-           ;;    CASE 1 OF
-           ;;       N_ELEMENTS(bxMin) GT 0: BEGIN
-           ;;          grossRate_infos          = STRING(FORMAT='("-bxMin",F0.1)',bxMin)
-           ;;       END
-           ;;       N_ELEMENTS(bxMax) GT 0: BEGIN
-           ;;          grossRate_infos          = STRING(FORMAT='("-bxMax",F0.1)',bxMax)
-           ;;       END
-           ;;       ELSE: BEGIN
-           ;;          grossRate_infos          = ''
-           ;;       END
-           ;;    ENDCASE
-
-           ;;    grossRate_infos                += '_' +btMinSuff + '--' + hemi 
-           ;;    grossRate_info_file            = grossRate_info_file_pref + grossRate_infos + $
-           ;;                                     grossRate_info_file_suff + '.txt'
-           ;; ENDIF
 
            PLOT_ALFVEN_STATS_IMF_SCREENING, $
               CLOCKSTR=clockStr, $
