@@ -17,7 +17,7 @@ PRO CLEAR_PASIS_VARS,INDS_RESET=inds_reset, $
      PASIS__indices__ion_list      = !NULL
   ENDIF
 
-  IF KEYWORD_SET(plots_reset) THEN BEGIN
+  IF KEYWORD_SET(plots_reset) OR KEYWORD_SET(DBs_reset) THEN BEGIN
      PRINT,'Clearing PASIS plot vars ...'
      PASIS__eFlux_eSpec_data       = !NULL   
      PASIS__eNumFlux_eSpec_data    = !NULL

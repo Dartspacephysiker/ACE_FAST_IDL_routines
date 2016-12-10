@@ -102,16 +102,16 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;ILAT stuff
-     hemi                             = 'NORTH'
-     minILAT                          = 60
-     maxILAT                          = 90
+     ;; hemi                             = 'NORTH'
+     ;; minILAT                          = 60
+     ;; maxILAT                          = 90
      ;; maskMin                       = 5
      ;; tHist_mask_bins_below_thresh  = 5
      ;; numOrbLim                     = 5
 
-     ;; hemi                          = 'SOUTH'
-     ;; minILAT                       = -90
-     ;; maxILAT                       = -60
+     hemi                          = 'SOUTH'
+     minILAT                       = -90
+     maxILAT                       = -60
      ;; maskMin                       =  10
 
      ;; tHist_mask_bins_below_thresh  = 2
@@ -161,12 +161,12 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 1
-  eNumFlPlots                        = 1
+  ePlots                             = 0
+  eNumFlPlots                        = 0
   pPlots                             = 1
-  ionPlots                           = 1
-  probOccurrencePlot                 = 1
-  tHistDenominatorPlot               = 1
+  ionPlots                           = 0
+  probOccurrencePlot                 = 0
+  tHistDenominatorPlot               = 0
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
@@ -195,7 +195,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.20]
+  PPlotRange                     = [0,0.10]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
