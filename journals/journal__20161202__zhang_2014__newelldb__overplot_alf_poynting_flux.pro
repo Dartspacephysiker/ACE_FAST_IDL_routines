@@ -23,7 +23,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -81,16 +81,16 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161210/Dst_-40customKill_8276-500-4300km-orb_1000-10600-NORTH-cur_-1-1-NC__pFlux.dat'
 
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday.dat'
 
-  overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*accel*','*timeavgd_pflux*']]
-  ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [10,40,70]
-  plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
-  op_contour__percent            = 1
-  op_plotRange                   = [0.00,0.10]
+  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  ;; op_contour__percent            = 1
+  ;; op_plotRange                   = [0.00,0.10]
 
 
   tile__include_IMF_arrows       = 0
@@ -119,10 +119,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 0
-  eNumFlPlots                    = 1
+  ePlots                         = 1
+  eNumFlPlots                    = 0
 
-  tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
    tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1

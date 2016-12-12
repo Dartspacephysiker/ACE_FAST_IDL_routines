@@ -652,6 +652,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
      HOYDIA=hoyDia, $
      LUN=lun, $
+     NEWELL_ANALYZE_EFLUX=Newell_analyze_eFlux, $
      FOR_ESPEC_DBS=for_eSpec_DBs, $
      ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
      ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
@@ -892,6 +893,30 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
   ENDIF 
+
+  IF (KEYWORD_SET(PASIS__alfdb_plot_struct.eNumFlPlots)                   OR $
+     KEYWORD_SET(PASIS__alfdb_plot_struct.ePlots)                        OR $ 
+     KEYWORD_SET(PASIS__alfdb_plot_struct.eSpec__newellPlot_probOccurrence)) AND $
+     KEYWORD_SET(PASIS__alfdb_plot_struct.for_eSpec_DBs) $
+  THEN BEGIN
+
+     other_guys = PASIS__alfdb_plot_struct.load_dILAT OR PASIS__alfdb_plot_struct.load_dAngle OR PASIS__alfdb_plot_struct.load_dx
+     LOAD_NEWELL_ESPEC_DB, $
+        DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfdb_plot_struct.eSpec__Newell_2009_interp), $
+        USE_2000KM_FILE=PASIS__alfdb_plot_struct.eSpec__use_2000km_file, $
+        DONT_MAP_TO_100KM=PASIS__alfdb_plot_struct.eSpec__noMap, $
+        LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfdb_plot_struct.do_timeAvg_fluxQuantities) OR $
+                        KEYWORD_SET(PASIS__alfdb_plot_struct.t_probOccurrence) $
+                       ) $
+                       AND ~other_guys), $
+        LOAD_DELTA_ILAT_FOR_WIDTH_TIME=PASIS__alfdb_plot_struct.load_dILAT, $
+        LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__alfdb_plot_struct.load_dAngle, $
+        LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__alfdb_plot_struct.load_dx, $
+        FORCE_LOAD_DB=KEYWORD_SET(DBs_reset)
+
+     eSpec_info = NEWELL__eSpec.info
+
+  ENDIF
 
   ;;Will be handled by GET_ESPEC_EFLUX_DATA
   ;; IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
@@ -1526,7 +1551,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
-     IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+     IF KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) THEN BEGIN
 
         IF KEYWORD_SET(get_eSpec_i) THEN BEGIN
 
@@ -2078,7 +2103,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
         ;; ENDIF
      ENDIF ELSE BEGIN
-        plot_i            = PASIS__plot_i_list
+        plot_i            = KEYWORD_SET(FOR_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__plot_i_list
      ENDELSE
 
      IF N_ELEMENTS(squarePlot) EQ 0 THEN BEGIN
