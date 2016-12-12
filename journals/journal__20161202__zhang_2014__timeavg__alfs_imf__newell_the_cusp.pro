@@ -7,6 +7,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF
 
+  labels_for_presentation        = 1
+
   ;; plotPref += '-smeared'
   ;; plotPref += '-fattest'
   ;; plotPref = '-keilbin'
@@ -15,7 +17,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'FINALE'
   plotPref += 'customKill_8276-'
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
   use_prev_plot_i                = 1
 
@@ -161,12 +163,13 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 1
-  eNumFlPlots                        = 1
+  besides_pFlux                      = 1
+  ePlots                             = besides_pFlux
+  eNumFlPlots                        = besides_pFlux
   pPlots                             = 1
-  ionPlots                           = 1
-  probOccurrencePlot                 = 1
-  tHistDenominatorPlot               = 1
+  ionPlots                           = besides_pFlux
+  probOccurrencePlot                 = besides_pFlux
+  tHistDenominatorPlot               = besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
@@ -460,6 +463,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         SUPPRESS_MLT_NAME=suppress_MLT_name, $
         SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
         SUPPRESS_TITLES=suppress_titles, $
+        LABELS_FOR_PRESENTATION=labels_for_presentation, $
         OUT_TEMPFILE_LIST=out_tempFile_list, $
         OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
         OUT_PLOT_I_LIST=out_plot_i_list, $
