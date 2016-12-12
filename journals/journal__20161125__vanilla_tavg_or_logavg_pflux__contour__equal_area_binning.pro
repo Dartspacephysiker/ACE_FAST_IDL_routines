@@ -32,6 +32,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   dont_blackball_maximus     = 1
   dont_blackball_fastloc     = 1
+
+  show_integrals             = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -72,7 +74,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   CASE 1 OF
      KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
         logPfPlot   = 0
-        PPlotRange  = [0.00,0.20]
+        PPlotRange  = [0.00,0.25]
      END
      KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
@@ -112,7 +114,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[500,4300]]
+  altRange                       = [[800,4300]]
 
   ;; altRange                    = [[300,4300], $
   ;;                                [500,4300], $
@@ -142,13 +144,15 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   plotPref                   = 'just_' + jahr
 
   @common__maximus_vars.pro
-  CLEAR_M_COMMON_VARS
-  LOAD_MAXIMUS_AND_CDBTIME, $
-     DESPUNDB=despun, $
-     USE_AACGM=use_AACGM, $
-     USE_MAG=use_mag
-  orbRange                 = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
-                              MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
+  IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+     LOAD_MAXIMUS_AND_CDBTIME, $
+        DESPUNDB=despun, $
+        USE_AACGM=use_AACGM, $
+        USE_MAG=use_mag;; , $
+        ;; /NO_MEMORY_LOAD
+  ENDIF
+  orbRange     = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
+                  MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
   ;; orbRange                    = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -162,7 +166,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; maxILAT                     = -62
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.5
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
@@ -351,6 +355,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         OUT_PARAMSTRING_LIST=out_paramString_list, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         TILE_IMAGES=tile_images, $
+        SHOW_INTEGRALS=show_integrals, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
         ;; TILEPLOTSUFFS=tilePlotSuffs, $

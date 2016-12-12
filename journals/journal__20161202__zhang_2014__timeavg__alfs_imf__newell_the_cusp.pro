@@ -12,10 +12,10 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  plotPref += 'FINALE'
-  ;; plotPref += 'customKill_8276-'
+  ;; plotPref += 'FINALE'
+  plotPref += 'customKill_8276-'
 
-  charE__Newell_the_cusp         = 1
+  charE__Newell_the_cusp         = 0
 
   use_prev_plot_i                = 1
 
@@ -24,7 +24,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   adj_upper_plotlim_thresh       = 3    ;;Check third maxima
   adj_lower_plotlim_thresh       = 2    ;;Check minima
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 

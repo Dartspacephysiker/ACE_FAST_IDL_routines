@@ -1,8 +1,7 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
 PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
 
-  saveLoad_PASIS_vars        = 1
-  use_prev_plot_i            = saveLoad_PASIS_vars
+  use_prev_plot_i            = 1
 
   do_timeAvg_fluxQuantities  = 1
   logAvgPlot                 = 0

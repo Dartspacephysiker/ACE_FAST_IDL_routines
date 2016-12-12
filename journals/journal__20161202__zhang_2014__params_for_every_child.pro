@@ -86,6 +86,6 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.75
   shiftMLT                       = 0.0
 
