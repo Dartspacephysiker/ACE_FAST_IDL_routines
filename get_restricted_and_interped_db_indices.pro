@@ -77,9 +77,9 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
      PRINTF,lun,'Lost ' + STRCOMPRESS(n_final-n_after,/REMOVE_ALL) + ' events due to use-provided, restricted indices'
   ENDIF
 
-  IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) THEN BEGIN
+  ;; IF KEYWORD_SET(alfDB_plot_struct.executing_multiples) THEN BEGIN
      restricted_and_interped_i_list = LIST()
-  ENDIF
+  ;; ENDIF
 
   ;;Now handle the rest
   IF KEYWORD_SET(IMF_struct.do_not_consider_IMF) THEN BEGIN

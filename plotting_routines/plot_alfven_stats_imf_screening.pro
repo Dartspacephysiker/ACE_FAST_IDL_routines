@@ -779,6 +779,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   PASIS__paramString       = PASIS__alfDB_plot_struct.paramString
   ;; ENDIF
 
+  ;;See if we can just get 'em from elsewhere
+  ;; IF KEYWORD_SET(load_prev_i) THEN BEGIN
+  IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
+     IF LOAD_PASIS_VARS(/VERBOSE) THEN BEGIN
+        get_plot_i    = 0
+        get_fastLoc_i = 0
+     ENDIF ELSE BEGIN
+        ;; STOP
+     ENDELSE
+  ENDIF
+  ;; ENDIF
 
   get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
                KEYWORD_SET(get_fastLoc_i) OR $
@@ -2203,6 +2214,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      tempFile_list.add,out_tempFile
   ENDFOR
+
+  IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
+     SAVE_PASIS_VARS
+  ENDIF
 
   ;; out_tempFile_list      = tempFile_list
   ;; out_dataNameArr_list   = dataNameArr_list

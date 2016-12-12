@@ -1,13 +1,16 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
 PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINNING
 
+  saveLoad_PASIS_vars        = 1
+  use_prev_plot_i            = saveLoad_PASIS_vars
+
   do_timeAvg_fluxQuantities  = 1
   logAvgPlot                 = 0
   medianPlot                 = 0
   divide_by_width_x          = 1
 
   include_32Hz               = 0
-  use_AACGM                  = 1
+  use_AACGM                  = 0
 
   EA_binning                 = 0
 
@@ -24,6 +27,11 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   do_not_consider_IMF        = 1
 
   cb_force_oobHigh           = 0
+
+  dont_blackball_maximus     = 1
+  dont_blackball_fastloc     = 1
+
+  show_integrals             = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -64,7 +72,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   CASE 1 OF
      KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
         logPfPlot   = 0
-        PPlotRange  = [0.00,0.25]
+        PPlotRange  = [0.00,0.15]
      END
      KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
@@ -104,31 +112,43 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[1000,4300]]
+  altRange                       = [[500,4300], $
+                                    [600,4300], $
+                                    [700,4300], $
+                                    [800,4300], $
+                                    [900,4300], $
+                                    [1000,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
 
-  jahr                     = '1997'
-  ;; jahr                     = '1998'
-  t1Str                    = jahr + '-01-01/00:00:00.000'
-  t2Str                    = jahr + '-12-31/23:59:59.999'
+  jahr         = '1997'
+  ;; jahr      = '1998'
+  t1Str        = jahr + '-01-01/00:00:00.000'
+  t2Str        = jahr + '-12-31/23:59:59.999'
 
-  ;; jahr                     = '1999'
-  ;; t1Str                    = jahr + '-01-01/00:00:00.000'
-  ;; t2Str                    = jahr + '-11-02/23:59:59.999'
+  ;; jahr      = '1999'
+  ;; t1Str     = jahr + '-01-01/00:00:00.000'
+  ;; t2Str     = jahr + '-11-02/23:59:59.999'
 
-  t1                       = STR_TO_TIME(t1Str)
-  t2                       = STR_TO_TIME(t2Str)
+  t1           = STR_TO_TIME(t1Str)
+  t2           = STR_TO_TIME(t2Str)
 
-  plotPref                   = 'just_' + jahr
+  plotPref     = 'just_' + jahr
 
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                           DESPUNDB=despun, $
-                           USE_AACGM=use_AACGM, $
-                           USE_MAG=use_mag
-  orbRange                 = [MIN(maximus.orbit[WHERE(cdbTime GE t1)]),MAX(maximus.orbit[WHERE(cdbTime LE t2)])]
-  ;; orbRange                    = [1000,10800]
+  @common__maximus_vars.pro
+  IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+     LOAD_MAXIMUS_AND_CDBTIME, $
+        DESPUNDB=despun, $
+        USE_AACGM=use_AACGM, $
+        USE_MAG=use_mag;; , $
+        ;; /NO_MEMORY_LOAD
+  ENDIF
+  orbRange     = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
+                  MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
+  ;; maximus      = !NULL
+  ;; cdbTime      = !NULL
+  ;; orbRange  = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
@@ -137,8 +157,8 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
   maxILAT                        = 90
 
   ;; hemi                        = 'SOUTH'
-  ;; minILAT                     = -86
-  ;; maxILAT                     = -62
+  ;; minILAT                     = -90
+  ;; maxILAT                     = -60
 
   ;; binILAT                     = 2.0
   binILAT                        = 2.0
@@ -164,8 +184,6 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
      plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
-        ;; CLOCKSTR=clockStrings, $
-        ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         INCLUDE_32HZ=include_32Hz, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
@@ -245,6 +263,8 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
         CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
         NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+        DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
+        DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
         ORBCONTRIBPLOT=orbContribPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         ORBCONTRIBRANGE=orbContribRange, $
@@ -325,6 +345,7 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
         TILE_IMAGES=tile_images, $
         N_TILE_ROWS=n_tile_rows, $
         N_TILE_COLUMNS=n_tile_columns, $
+        SHOW_INTEGRALS=show_integrals, $
         ;; TILEPLOTSUFFS=tilePlotSuffs, $
         TILING_ORDER=tiling_order, $
         TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
@@ -334,13 +355,8 @@ PRO JOURNAL__20161015__VANILLA_TAVG_OR_LOGAVG_PFLUX__ALFIMFPAPE__EQUAL_AREA_BINN
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        
-        FANCY_PLOTNAMES=fancy_plotNames, $
-        _EXTRA=e
-        ;; /GET_PLOT_I_LIST_LIST, $
-        ;; /GET_PARAMSTR_LIST_LIST, $
-        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-        ;; PARAMSTR_LIST_LIST=paramStr_list_list
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $        
+        FANCY_PLOTNAMES=fancy_plotNames
   
   ENDFOR
 

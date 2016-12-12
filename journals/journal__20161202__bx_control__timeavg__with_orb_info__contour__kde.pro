@@ -4,19 +4,19 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   COMPILE_OPT IDL2
 
 
-  do_what_everyone_does              = 0
+  ;; do_what_everyone_does              = 0
   KDE_for_Bx                         = 0
 
   ;;NOTE: Bx-specific stuff on other side of IF
-  IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-     @journal__20161202__zhang_2014__params_for_every_child.pro
-  ENDIF ELSE BEGIN
+  ;; IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
+  ;;    @journal__20161202__zhang_2014__params_for_every_child.pro
+  ;; ENDIF ELSE BEGIN
 
      restore_last_session               = 0
 
      nonstorm                           = 1
-     DSTcutoff                          = -50
-     smooth_dst                         = 5
+     DSTcutoff                          = -45
+     smooth_dst                         = 0
      use_mostRecent_Dst_files           = 1
 
      @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
@@ -26,7 +26,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      plotH2D_contour                    = 0
      plotH2D__kde                       = 0
 
-     EA_binning                         = 0
+     EA_binning                         = 1
 
      minMC                              = 1
      maxNegMC                           = -1
@@ -42,7 +42,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
      ;;DB stuff
      do_despun                          = 0
-     use_AACGM                          = 1
+     use_AACGM                          = 0
      use_MAG                            = 0
 
      autoscale_fluxPlots                = 0
@@ -50,6 +50,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      fluxPlots__remove_log_outliers     = 0
      fluxPlots__Newell_the_cusp         = 0
 
+     show_integrals                     = 1
      
      write_obsArr_textFile              = 1
      write_obsArr__inc_IMF              = 1
@@ -70,9 +71,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      ;;                             [2180,3180], $
      ;;                             [3180,4180]]
 
-     altRange                       = [[300,4300]]
+     altRange                       = [[500,4300]]
 
-     orbRange                       = [1000,10800]
+     orbRange                       = [1000,10600]
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;IMF condition stuff--run the ring!
@@ -84,7 +85,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
      stableIMF                      = 4
-     smoothWindow                   = 9
+     smoothWindow                   = 0
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;ILAT stuff
@@ -115,7 +116,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      binMLT                         = 1.0
      shiftMLT                       = 0.0
 
-  ENDELSE
+  ;; ENDELSE
 
   plotH2D__kde                       = KDE_for_Bx
 
