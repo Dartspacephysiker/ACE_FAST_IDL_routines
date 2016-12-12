@@ -93,7 +93,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; op_plotRange                   = [0.00,0.10]
 
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -120,7 +120,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; eSpec__noMap                   = 1
 
   ePlots                         = 1
-  eNumFlPlots                    = 0
+  eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 1
    tHistDenomPlotRange           = [0.,150.]
@@ -217,7 +217,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
+  binMLT                         = 0.75
   shiftMLT                       = 0.0
 
   IF shiftMLT GT 0. THEN BEGIN
