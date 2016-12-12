@@ -15,7 +15,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'FINALE'
   plotPref += 'customKill_8276-'
 
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 1
 
