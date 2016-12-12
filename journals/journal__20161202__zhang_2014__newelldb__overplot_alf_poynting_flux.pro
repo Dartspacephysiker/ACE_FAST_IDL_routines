@@ -4,7 +4,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; plotPref = '-atest_teste-MAPPE-cb' 
   ;; plotPref = 'rightnow-' 
-  plotPref = 'latest-'
+  plotPref = 'NO_OP-'
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -79,8 +79,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
   ;; plotPref += '-notRot_pFlux-t'
 
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161210/Dst_-40customKill_8276-500-4300km-orb_1000-10600-NORTH-cur_-1-1-NC__pFlux.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161210/Dst_-40customKill_8276-500-4300km-orb_1000-10600-NORTH-cur_-1-1-NC__pFlux.dat'
 
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday.dat'
 
   overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
                                     ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
@@ -90,7 +91,6 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
   op_plotRange                   = [0.00,0.10]
-
 
 
   tile__include_IMF_arrows       = 0
@@ -170,7 +170,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  altRange                       = [[500,4300]]
+  altRange                       = [[800,4300]]
 
   IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
      altRange                    = [300,2000]

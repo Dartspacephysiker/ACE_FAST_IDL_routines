@@ -12,10 +12,10 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref = '-keilbin'
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
-  ;; plotPref += 'FINALE'
-  plotPref += 'customKill_8276-'
+  plotPref += 'FINALE'
+  ;; plotPref += 'customKill_8276-'
 
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 1
 
@@ -161,12 +161,12 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 0
-  eNumFlPlots                        = 0
+  ePlots                             = 1
+  eNumFlPlots                        = 1
   pPlots                             = 1
-  ionPlots                           = 0
-  probOccurrencePlot                 = 0
-  tHistDenominatorPlot               = 0
+  ionPlots                           = 1
+  probOccurrencePlot                 = 1
+  tHistDenominatorPlot               = 1
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
@@ -195,7 +195,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.10]
+  PPlotRange                     = [0,0.20]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
