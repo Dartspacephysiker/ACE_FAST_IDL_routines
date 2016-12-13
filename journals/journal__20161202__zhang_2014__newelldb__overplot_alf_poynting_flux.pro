@@ -5,6 +5,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; plotPref = '-atest_teste-MAPPE-cb' 
   ;; plotPref = 'rightnow-' 
   plotPref = 'NO_OP-'
+  ;; plotPref = 'NO_OP_2_NC-'
+  plotPref = 'MAITRE-'
 
   restore_last_session           = 0
   use_prev_plot_i                = 1
@@ -23,7 +25,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -83,17 +85,23 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday.dat'
 
-  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
-  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
-  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
-  ;; ;; op_contour__levels             = [20,50,80]
-  ;; op_contour__levels             = [10,40,70]
-  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
-  ;; op_contour__percent            = 1
-  ;; op_plotRange                   = [0.00,0.10]
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday2.dat'
+
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday2_NC.dat'
+
+  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
+
+  overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+                                    ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+                                    ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; op_contour__levels             = [20,50,80]
+  op_contour__levels             = [10,40,70]
+  plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  op_contour__percent            = 1
+  op_plotRange                   = [0.00,0.10]
 
 
-  tile__include_IMF_arrows       = 1
+  tile__include_IMF_arrows       = 0
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -119,10 +127,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
-  tHistDenominatorPlot           = 1
+  tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
@@ -217,8 +225,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
-  shiftMLT                       = 0.0
+  binMLT                         = 1.0
+  shiftMLT                       = 0.5
 
   IF shiftMLT GT 0. THEN BEGIN
      plotPref += '-rot'
