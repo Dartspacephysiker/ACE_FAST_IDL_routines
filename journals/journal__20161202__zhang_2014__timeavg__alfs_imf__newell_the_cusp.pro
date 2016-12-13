@@ -17,7 +17,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'FINALE'
   plotPref += 'customKill_8276-'
 
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 1
 
@@ -163,7 +163,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 1
+  besides_pFlux                      = 0
   ePlots                             = besides_pFlux
   eNumFlPlots                        = besides_pFlux
   pPlots                             = 1
@@ -198,7 +198,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.20]
+  PPlotRange                     = [0,0.10]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -210,7 +210,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   logProbOccurrence              = 0
   probOccurrenceRange            = [0,0.15]
 
-  summed_eFlux_pFluxplotRange    = [0,0.1]
+  summed_eFlux_pFluxplotRange    = [0,0.5]
 
   tHistDenomPlotRange            = [5,80]
   ;; tHistDenomPlotNormalize        = 
