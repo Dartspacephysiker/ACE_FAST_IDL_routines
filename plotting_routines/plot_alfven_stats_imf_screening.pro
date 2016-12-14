@@ -2127,7 +2127,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDFOR
 
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-     SAVE_PASIS_VARS
+     SAVE_PASIS_VARS,/VERBOSE
   ENDIF
 
   ;; out_tempFile_list      = tempFile_list

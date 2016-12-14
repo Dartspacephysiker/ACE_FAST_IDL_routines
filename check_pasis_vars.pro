@@ -58,6 +58,69 @@ PRO CHECK_PASIS_VARS, $
         STOP
 
      ENDIF
+
+     pIMFTags = (TAG_NAMES(PASIS__IMF_struct))[SORT(TAG_NAMES(PASIS__IMF_struct))]
+     IMFTags  =  (TAG_NAMES(IMF_struct))       [SORT(TAG_NAMES(IMF_struct))]
+     IF ~ARRAY_EQUAL(pIMFTags,IMFTags) THEN BEGIN
+        diffList  = !NULL
+
+        missingP  = INDGEN(N_ELEMENTS(pIMFTags))
+        FOR k=0,N_ELEMENTS(IMFTags)-1 DO BEGIN
+           tmpInd = WHERE(STRUPCASE(pIMFTags) EQ STRUPCASE(IMFTags[k]))
+           IF tmpInd[0] EQ -1 THEN BEGIN
+              diffList = [diffList,IMFTags[k]]
+           ENDIF ELSE BEGIN
+              ;; PRINT,"Match: ",IMFTags[k]
+              missingP = CGSETDIFFERENCE(missingP,tmpInd)
+              IF missingP[0] EQ -1 THEN STOP
+           ENDELSE
+        ENDFOR
+
+        PRINT,"Differing IMF tags ... "
+        FOR k=0,N_ELEMENTS(diffList)-1 DO BEGIN
+           PRINT,FORMAT='("DiffList: ",10(A0,:,", "))',diffList[k]
+        ENDFOR
+
+        IF N_ELEMENTS(missingP) GT 0 AND N_ELEMENTS(diffList) GT 0 THEN BEGIN
+           diffList = [diffList,pIMFTags[missingP]]
+        ENDIF
+        diffInds = INDGEN(N_ELEMENTS(diffList))
+
+        ;;Check Bx
+        tmp = WHERE((diffList EQ STRUPCASE("bxMin")) OR $
+                    (diffList EQ STRUPCASE("bxMax")))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+        ENDIF
+
+        ;;Check By
+        tmp = WHERE((diffList EQ STRUPCASE("byMin")) OR $
+                    (diffList EQ STRUPCASE("byMax")))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+        ENDIF
+
+        ;;Check Bz
+        tmp = WHERE((diffList EQ STRUPCASE("bzMin")) OR $
+                    (diffList EQ STRUPCASE("bzMax")))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+        ENDIF
+
+        ;;Check Bt
+        tmp = WHERE((diffList EQ STRUPCASE("btMin")) OR $
+                    (diffList EQ STRUPCASE("btMax")))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+        ENDIF
+
+        IF diffInds[0] NE -1 THEN STOP
+
+     ENDIF
   ENDIF;; ELSE BEGIN
      ;; PASIS__IMF_struct = TEMPORARY(IMF_struct)
   ;; ENDELSE
