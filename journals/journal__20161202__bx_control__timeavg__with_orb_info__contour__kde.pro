@@ -19,7 +19,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   plotH2D_contour                    = 0
   plotH2D__kde                       = 0
 
-  EA_binning                         = 0
+  EA_binning                         = 1
 
   minMC                              = 1
   maxNegMC                           = -1
