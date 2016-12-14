@@ -951,13 +951,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         STOP
      ENDIF
 
-     too_many = KEYWORD_SET(alfDB_plot_struct.multiple_delays) + $
-                KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) + $
-                KEYWORD_SET((TAG_EXIST(alfDB_plot_struct,'storm_opt')   ? $
-                             alfDB_plot_struct.AE_opt.all_storm_phases  : $
+     too_many = KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays) + $
+                KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) + $
+                KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'storm_opt')   ? $
+                             PASIS__alfDB_plot_struct.storm_opt.all_storm_phases  : $
                              0)                                         )  + $
-                KEYWORD_SET((TAG_EXIST(alfDB_plot_struct,'ae_opt') ?    $
-                             alfDB_plot_struct.AE_opt.AE_both      :    $
+                KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'ae_opt') ?    $
+                             PASIS__alfDB_plot_struct.AE_opt.AE_both      :    $
                              0)                                         )
      IF too_many GT 1 THEN BEGIN
         PRINT,"Not set up to handle multiples of several conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
