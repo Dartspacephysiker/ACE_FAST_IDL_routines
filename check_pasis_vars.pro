@@ -67,7 +67,6 @@ PRO CHECK_PASIS_VARS, $
      
      inds_reset += TEMPORARY(inds_resetTmp)
      DBs_reset  += TEMPORARY(DBs_resetTmp )
-     ;; PASIS__MIMC_struct = MIMC_struct
   ENDIF;; ELSE BEGIN
   ;; ENDELSE
 

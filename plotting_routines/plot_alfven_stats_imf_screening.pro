@@ -772,16 +772,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   PASIS__IMF_struct        = TEMPORARY(IMF_struct)
   PASIS__MIMC_struct       = TEMPORARY(MIMC_struct)
 
-  ;; IF KEYWORD_SET(PASIS__alfDB_plot_struct.paramString_list) THEN BEGIN
   PASIS__paramString_list  = PASIS__alfDB_plot_struct.paramString_list
-  ;; ENDIF
-
-  ;; IF KEYWORD_SET(PASIS__alfDB_plot_struct.paramString) THEN BEGIN
   PASIS__paramString       = PASIS__alfDB_plot_struct.paramString
-  ;; ENDIF
+
 
   ;;See if we can just get 'em from elsewhere
-  ;; IF KEYWORD_SET(load_prev_i) THEN BEGIN
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
      IF LOAD_PASIS_VARS(/VERBOSE) THEN BEGIN
         get_plot_i    = 0
@@ -790,7 +785,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;; STOP
      ENDELSE
   ENDIF
-  ;; ENDIF
 
   get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
                KEYWORD_SET(get_fastLoc_i) OR $
@@ -885,12 +879,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            CLEAR_MEMORY=clear_memory, $
            LUN=lun     
 
-        ;; CASE 1 OF
-        ;;    KEYWORD_SET(for_eSpec_DBs): BEGIN
-              
-        ;;    END
-        ;; ENDCASE
-
      ENDIF
   ENDIF 
 
@@ -917,35 +905,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      eSpec_info = NEWELL__eSpec.info
 
   ENDIF
-
-  ;;Will be handled by GET_ESPEC_EFLUX_DATA
-  ;; IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
-  ;;    LOAD_NEWELL_ESPEC_DB, $
-  ;;       FAILCODES=failCode, $
-  ;;       USE_UNSORTED_FILE=use_unsorted_file, $
-  ;;       NEWELLDBDIR=NewellDBDir, $
-  ;;       NEWELLDBFILE=NewellDBFile, $
-  ;;       FORCE_LOAD_DB=force_load_db, $
-  ;;       DONT_LOAD_IN_MEMORY=nonMem, $
-  ;;       DONT_PERFORM_CORRECTION=dont_perform_SH_correction, $
-  ;;       DONT_CONVERT_TO_STRICT_NEWELL=dont_convert_to_strict_newell, $
-  ;;       DONT_MAP_TO_100KM=dont_map, $
-  ;;       LOAD_DELTA_T=load_delta_t, $
-  ;;       COORDINATE_SYSTEM=coordinate_system, $
-  ;;       USE_AACGM_COORDS=use_aacgm, $
-  ;;       USE_GEO_COORDS=use_geo, $
-  ;;       USE_MAG_COORDS=use_mag, $
-  ;;       ;; JUST_TIMES=just_times, $
-  ;;       ;; OUT_TIMES=out_times, $
-  ;;       ;; OUT_GOOD_I=good_i, $
-  ;;       USE_2000KM_FILE=use_2000km_file, $
-  ;;       CLEAR_MEMORY=clear_memory, $
-  ;;       NO_MEMORY_LOAD=noMem, $
-  ;;       REDUCED_DB=reduce_dbSize, $
-  ;;       LUN=lun, $
-  ;;       QUIET=quiet
-
-  ;; ENDIF
 
   IF KEYWORD_SET(do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
@@ -978,13 +937,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDELSE
 
 
-  ;; IF KEYWORD_SET(restore_last_session) THEN BEGIN
-  ;;    RESTORE,lastSessionFile
-  ;; ;; IF KEYWORD_SET(restore_last_session) THEN BEGIN
-  ;; ;;    ;; RESTORE,lastSessionFile
-  ;; ;;    SPAWN,'cat '
-  ;; ENDIF ELSE BEGIN
-
      ;;Does it all "hang together"?
      IF use_storm_stuff GT 1 THEN BEGIN
         PRINT,"Can't set more than one of the storm keywords simultaneously!"
@@ -999,7 +951,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         STOP
      ENDIF
 
-     too_many = KEYWORD_SET(multiple_delays) + KEYWORD_SET(multiple_IMF_clockAngles) + KEYWORD_SET(all_storm_phases) + KEYWORD_SET(AE_both)
+     too_many = KEYWORD_SET(alfDB_plot_struct.multiple_delays) + $
+                KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) + $
+                KEYWORD_SET((TAG_EXIST(alfDB_plot_struct,'storm_opt')   ? $
+                             alfDB_plot_struct.AE_opt.all_storm_phases  : $
+                             0)                                         )  + $
+                KEYWORD_SET((TAG_EXIST(alfDB_plot_struct,'ae_opt') ?    $
+                             alfDB_plot_struct.AE_opt.AE_both      :    $
+                             0)                                         )
      IF too_many GT 1 THEN BEGIN
         PRINT,"Not set up to handle multiples of several conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
         STOP
@@ -1219,49 +1178,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
         ENDIF
 
-        ;; CASE 1 OF
-        ;;    KEYWORD_SET(nonStorm): BEGIN
-        ;;       stormString           = 'non-storm'
-        ;;    END
-        ;;    KEYWORD_SET(mainPhase): BEGIN
-        ;;       stormString           = 'mainPhase'
-        ;;    END
-        ;;    KEYWORD_SET(recoveryPhase): BEGIN
-        ;;       stormString           = 'recoveryPhase'
-        ;;    END
-        ;;    KEYWORD_SET(all_storm_phases): BEGIN
-        ;;       stormString         = ["all_storm_phases"]
-        ;;       ;; multiples           = ["quiescent","mainphase","recoveryphase"]
-        ;;       ;; executing_multiples = 1
-        ;;       multiString         = paramString + stormString
-        ;;    END
-        ;; ENDCASE
-
-        ;; IF KEYWORD_SET(get_paramString) THEN BEGIN
-        ;;    paramString          += stormString
-        ;; ENDIF
-
-        ;; IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-        ;;    IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
-        ;;    THEN BEGIN
-        ;;       CASE 1 OF
-        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
-        ;;             KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
-        ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-        ;;                paramString_list[iMult] += '--' + stormString
-        ;;             ENDFOR
-        ;;          END
-        ;;          KEYWORD_SET(all_storm_phases): BEGIN
-        ;;             paramString_list = LIST(paramString+'--'+multiples[0])
-        ;;             FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
-        ;;                paramString_list.Add,paramString+'--'+multiples[k]
-        ;;             ENDFOR
-        ;;          END
-        ;;       ENDCASE
-
-        ;;    ENDIF
-        ;; ENDIF
-
      ENDIF
 
      IF KEYWORD_SET(ae_stuff) THEN BEGIN
@@ -1439,46 +1355,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            KEYWORD_SET(AE_high): BEGIN
               t1_arr                = high_ae_t1
               t2_arr                = high_ae_t2
-              ;; AEstring              = 'high_' + navn
            END
            KEYWORD_SET(AE_low): BEGIN
               t1_arr                = low_ae_t1
               t2_arr                = low_ae_t2
-              ;; AEstring              = 'low_' + navn
            END
            KEYWORD_SET(AE_both): BEGIN
               t1_arr                = LIST(high_ae_t1,low_ae_t1)
               t2_arr                = LIST(high_ae_t2,low_ae_t2)
-              ;; AEstring              = navn+'_both'
-              ;; multiples             = ['high_','low_'] + navn
-              ;; executing_multiples   = 1
-              ;; multiString           = paramString + '--' + AEstring
            END
         ENDCASE
-
-        ;; IF KEYWORD_SET(get_paramString) THEN BEGIN
-        ;;    paramString          += '--' + AEstring
-        ;; ENDIF
-        ;; IF KEYWORD_SET(get_paramString_list) THEN BEGIN
-        ;;    IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) $
-        ;;       ;; KEYWORD_SET(PASIS__IMF_struct.executing_multiples) $
-        ;;    THEN BEGIN
-        ;;       CASE 1 OF
-        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) OR $
-        ;;             KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays): BEGIN
-        ;;             FOR iMult=0,N_ELEMENTS(multiples)-1 DO BEGIN
-        ;;                alfDB_plot_struct.paramString_list[iMult] += '--' + AEString
-        ;;             ENDFOR
-        ;;          END
-        ;;          KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-        ;;             alfDB_plot_struct.paramString_list = LIST(alfDB_plot_struct.paramString+'--'+alfDB_plot_struct.multiples[0])
-        ;;             FOR k=1,N_ELEMENTS(multiples)-1 DO BEGIN
-        ;;                alfDB_plot_struct.paramString_list.Add,alfDB_plot_struct.paramString+'--'+alfDB_plot_struct.multiples[k]
-        ;;             ENDFOR
-        ;;          END
-        ;;       ENDCASE
-        ;;    ENDIF
-        ;; ENDIF
 
      ENDIF
 

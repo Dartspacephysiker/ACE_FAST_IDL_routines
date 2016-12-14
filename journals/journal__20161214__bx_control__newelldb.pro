@@ -1,9 +1,17 @@
-;;2016/12/02 The updated version, all the bells and whistles
-PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
+;;2016/12/14 So, um, electrons
+PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
 
   COMPILE_OPT IDL2
 
   use_prev_plot_i                    = 1
+
+  ;; do_what_everyone_does              = 0
+  KDE_for_Bx                         = 0
+
+  ;;NOTE: Bx-specific stuff on other side of IF
+  ;; IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
+  ;;    @journal__20161202__zhang_2014__params_for_every_child.pro
+  ;; ENDIF ELSE BEGIN
 
   restore_last_session               = 0
 
@@ -19,7 +27,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   plotH2D_contour                    = 0
   plotH2D__kde                       = 0
 
-  EA_binning                         = 0
+  EA_binning                         = 1
 
   minMC                              = 1
   maxNegMC                           = -1
@@ -45,7 +53,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
   show_integrals                     = 1
   
-  write_obsArr_textFile              = 1
+  write_obsArr_textFile              = 0
   write_obsArr__inc_IMF              = 1
   write_obsArr__orb_avg_obs          = 1
   justData                           = 0
@@ -109,6 +117,10 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   binMLT                         = 1.0
   shiftMLT                       = 0.0
 
+  ;; ENDELSE
+
+  plotH2D__kde                       = KDE_for_Bx
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bx-specific
 
@@ -132,70 +144,62 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
   ;; reset_good_inds                    = 1
   ;; reset_omni_inds                    = 1
-     
+  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  ePlots                             = 1
-  eNumFlPlots                        = 1
-  pPlots                             = 1
-  ionPlots                           = 1
-  probOccurrencePlot                 = 1
-  sum_electron_and_poyntingflux      = 1
-  nOrbsWithEventsPerContribOrbsPlot  = 0
+  no_maximus                        = 1
+  eSpec_flux_plots                  = 1
+  Newell_analyze_eFlux              = 1
+  eSpec__all_fluxes                 = 1
+  Newell__comb_accelerated          = 0
 
-  nowepco_range                  = [0,0.64]
+  eSpec__Newell_2009_interp         = 1
+  eSpec__use_2000km_file            = 0
+  eSpec__remove_outliers            = 0
+  ;; eSpec__noMap                   = 1
 
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
-  eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0.0,0.25]
+  ePlots                            = 0
+  eNumFlPlots                       = 1
+
+  tHistDenominatorPlot              = 0
+   tHistDenomPlotRange              = [0.,150.]
+  ;; tHistDenomPlotNormalize        = 0
+  ;; tHistDenomPlotAutoscale        = 1
+  tHistDenomPlot_noMask             = 1
+
+  espec__newellPlot_probOccurrence  = 0
+  espec__newell_plotRange           = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+
+  eSpec__t_ProbOccurrence           = 0
+  eSpec__t_probOcc_plotRange        = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+
+
+  eFluxPlotType                     = 'Max'
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+     END
+     ELSE: BEGIN
+        ePlotRange               = [[0,0.2],[0,1.0],[0,0.30],[0,0.5]]
+     END
+  ENDCASE
   logEfPlot                      = 0
-  noNegEflux                     = 0
+  noNegEflux                     = 1
+  ;; ePlotRange                     = [1e-3,1e1]
+  ;; logEfPlot                      = 1
+  noNegEflux                     = 1
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,0]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.25], $
-                                    [0,5.0e8]]
-  ;; eNumFlPlotType                 = 'ESA_Number_flux'
-  ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
-  ;; ENumFlPlotRange                = [0,2e9]
-
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [1e-1,1e1]
-  logPfPlot                      = 0
-  PPlotRange                     = [0,0.15]
-
-  ifluxPlotType                  = 'Integ_Up'
-  noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,5.0e7]
-  
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.1]
-
-  summed_eFlux_pFluxplotRange    = [0,0.5]
-  
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Southern hemi ranges
-  ;; ePlotRange                     = [0,0.25]
-
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,0.25], $
-  ;;                                   [0,8.0e8]]
-
-  ;; PPlotRange                     = [0,0.25]
-
-  ;; IPlotRange                     = [0,7.0e7]
-
-  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
+  eNumFlPlotType                 = ['ESA_Number_flux']
+  noNegENumFl                    = 1
+  ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+     END
+     ELSE: BEGIN
+        ENumFlPlotRange          = [[0,4.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+     END
+  ENDCASE
 
   FOR bx_i=0,3 DO BEGIN
 
@@ -236,7 +240,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
            btMin      = btMinArr[jow]
 
-           SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY;,ADD_SUFF=btMinStr
+           SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY ;,ADD_SUFF=btMinStr
 
            plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
@@ -423,6 +427,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               SUPPRESS_MLT_NAME=suppress_MLT_name, $
               SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
               SUPPRESS_TITLES=suppress_titles, $
+              OUT_PARAMSTRING_LIST=out_paramString_list, $
               USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
               GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
               SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $

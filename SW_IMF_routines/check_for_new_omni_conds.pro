@@ -1,31 +1,7 @@
 PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              IMF_STRUCT=IMF_struct, $
-                             ;; CLOCKSTR=clockStr, $
-                             ;; ANGLELIM1=angleLim1, $
-                             ;; ANGLELIM2=angleLim2, $
-                             ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-                             ;; STABLEIMF=stableIMF, $
                              RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                             ;; BYMIN=byMin, $
-                             ;; BYMAX=byMax, $
-                             ;; BZMIN=bzMin, $
-                             ;; BZMAX=bzMax, $
-                             ;; BTMIN=btMin, $
-                             ;; BTMAX=btMax, $
-                             ;; BXMIN=bxMin, $
-                             ;; BXMAX=bxMax, $
-                             ;; DO_ABS_BYMIN=abs_byMin, $
-                             ;; DO_ABS_BYMAX=abs_byMax, $
-                             ;; DO_ABS_BZMIN=abs_bzMin, $
-                             ;; DO_ABS_BZMAX=abs_bzMax, $
-                             ;; DO_ABS_BTMIN=abs_btMin, $
-                             ;; DO_ABS_BTMAX=abs_btMax, $
-                             ;; DO_ABS_BXMIN=abs_bxMin, $
-                             ;; DO_ABS_BXMAX=abs_bxMax, $
-                             ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-                             ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                              RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                             ;; OMNI_COORDS=OMNI_coords, $
                              LUN=lun
 
   COMPILE_OPT idl2
