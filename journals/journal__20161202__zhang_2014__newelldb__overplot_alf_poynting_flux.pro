@@ -22,7 +22,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
 
-  show_integrals                 = 1
+  show_integrals                 = 0
 
   EA_binning                     = 0
   plotH2D_contour                = 1
@@ -101,7 +101,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   op_plotRange                   = [0.00,0.10]
 
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 

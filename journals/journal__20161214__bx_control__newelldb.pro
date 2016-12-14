@@ -117,10 +117,6 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
   binMLT                         = 1.0
   shiftMLT                       = 0.0
 
-  ;; ENDELSE
-
-  plotH2D__kde                       = KDE_for_Bx
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Bx-specific
 
@@ -147,6 +143,7 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
+  disregard_sample_t                = 1
   no_maximus                        = 1
   eSpec_flux_plots                  = 1
   Newell_analyze_eFlux              = 1
@@ -248,6 +245,7 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
               CLOCKSTR=clockStr, $
               MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
               SAMPLE_T_RESTRICTION=sample_t_restriction, $
+              DISREGARD_SAMPLE_T=disregard_sample_t, $
               RESTRICT_WITH_THESE_I=restrict_with_these_i, $
               ORBRANGE=orbRange, $
               ALTITUDERANGE=altitudeRange, $
@@ -350,6 +348,16 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
               FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
               DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
               DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
+              NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+              NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
+              ESPEC__NO_MAXIMUS=no_maximus, $
+              ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
+              ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
+              ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
+              ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+              ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+              ESPEC__NOMAPTO100KM=eSpec__noMap, $
+              ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
               ORBCONTRIBPLOT=orbContribPlot, $
               LOGORBCONTRIBPLOT=logOrbContribPlot, $
               ORBCONTRIBRANGE=orbContribRange, $

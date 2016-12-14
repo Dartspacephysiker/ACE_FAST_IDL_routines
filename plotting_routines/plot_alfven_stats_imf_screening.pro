@@ -778,9 +778,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ;;See if we can just get 'em from elsewhere
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-     IF LOAD_PASIS_VARS(/VERBOSE) THEN BEGIN
+     IF LOAD_PASIS_VARS(NEED_FASTLOC_I=need_fastLoc_i, $
+                        /VERBOSE) $
+     THEN BEGIN
         get_plot_i    = 0
         get_fastLoc_i = 0
+        get_eSpec_i   = 0
      ENDIF ELSE BEGIN
         ;; STOP
      ENDELSE
@@ -2127,7 +2130,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDFOR
 
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-     SAVE_PASIS_VARS,/VERBOSE
+     SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
+                     /VERBOSE
   ENDIF
 
   ;; out_tempFile_list      = tempFile_list
