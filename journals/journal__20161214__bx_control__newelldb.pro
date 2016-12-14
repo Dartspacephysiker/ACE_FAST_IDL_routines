@@ -3,7 +3,7 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
 
   COMPILE_OPT IDL2
 
-  use_prev_plot_i                    = 1
+  use_prev_plot_i                    = 0
 
   ;; do_what_everyone_does              = 0
   KDE_for_Bx                         = 0
@@ -138,8 +138,8 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
   ;; bxMax                          = 2.0
   ;; abs_bxMax                      = 1
 
-  ;; reset_good_inds                    = 1
-  ;; reset_omni_inds                    = 1
+  reset_good_inds                    = 1
+  reset_omni_inds                    = 1
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -155,7 +155,7 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
   eSpec__remove_outliers            = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                            = 0
+  ePlots                            = 1
   eNumFlPlots                       = 1
 
   tHistDenominatorPlot              = 0
@@ -198,7 +198,7 @@ PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
      END
   ENDCASE
 
-  FOR bx_i=0,3 DO BEGIN
+  FOR bx_i=1,3 DO BEGIN
 
      CASE 1 OF
         bx_i LE 1: BEGIN
