@@ -10,9 +10,11 @@
 
   include_32Hz                       = 0
 
-  plotH2D_contour                    = 0
+  plotH2D_contour                    = 1
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
+  contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  contour__percent                   = KEYWORD_SET(plotH2D_contour)
 
   EA_binning                         = 0
 
@@ -37,7 +39,7 @@
   fluxPlots__remove_outliers         = 0
   fluxPlots__remove_log_outliers     = 0
 
-  show_integrals                     = 1
+  show_integrals                     = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
