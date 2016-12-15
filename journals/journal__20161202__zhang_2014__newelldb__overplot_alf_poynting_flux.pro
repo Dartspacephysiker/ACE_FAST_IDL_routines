@@ -34,8 +34,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; contour__levels                = [0,20,40,60,80,95]
 
   ;; contour__levels                = [10,30,40,60,70,90]
-  contour__levels                = [20,30,50,60,80,90]
-  plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
+  ;; contour__levels                = [20,30,50,60,80,90]
+  contour__levels                = [20,40,60,80,100]
+  ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = 1
 
   ;; minMC                          = 5
@@ -89,16 +90,16 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday2_NC.dat'
 
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
 
-  overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
-                                    ['*enumflux_espec*accel*','*timeavgd_pflux*']]
-  ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [10,40,70]
-  plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
-  op_contour__percent            = 1
-  op_plotRange                   = [0.00,0.10]
+  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  ;; op_contour__percent            = 1
+  ;; op_plotRange                   = [0.00,0.10]
 
 
   tile__include_IMF_arrows       = 1
@@ -166,7 +167,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
      END
      ELSE: BEGIN
-        ENumFlPlotRange          = [[0,4.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+        ENumFlPlotRange          = [[0,5.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
      END
   ENDCASE
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
