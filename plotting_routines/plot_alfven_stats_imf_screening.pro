@@ -198,58 +198,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    NEED_FASTLOC_I=need_fastLoc_i, $
    USE_STORM_STUFF=use_storm_stuff, $
    AE_STUFF=ae_stuff, $    
-   ;; ORBRANGE=orbRange, $
-   ;; ALTITUDERANGE=altitudeRange, $
-   ;; CHARERANGE=charERange, $
-   ;; CHARIERANGE=charIERange, $
-   ;; CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
-   ;; POYNTRANGE=poyntRange, $
-   ;; SAMPLE_T_RESTRICTION=sample_t_restriction, $
-   ;; INCLUDE_32HZ=include_32Hz, $
-   ;; DISREGARD_SAMPLE_T=disregard_sample_t, $
-   ;; NUMORBLIM=numOrbLim, $
-   ;; MINMLT=minM,MAXMLT=maxM, $
-   ;; BINMLT=binM, $
-   ;; SHIFTMLT=shiftM, $
-   ;; MINILAT=minI,MAXILAT=maxI, $
-   ;; BINILAT=binI, $
-   ;; EQUAL_AREA_BINNING=EA_binning, $
-   ;; DO_LSHELL=do_lShell, $
-   ;; REVERSE_LSHELL=reverse_lShell, $
-   ;; MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
-   ;; MIN_MAGCURRENT=minMC, $
-   ;; MAX_NEGMAGCURRENT=maxNegMC, $
-   ;; HWMAUROVAL=HwMAurOval, $
-   ;; HWMKPIND=HwMKpInd, $
    MASKMIN=maskMin, $
    THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $
-   ;; CLOCKSTR=clockStr, $
-   ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-   ;; ANGLELIM1=angleLim1, $
-   ;; ANGLELIM2=angleLim2, $
-   ;; BYMIN=byMin, $
-   ;; BYMAX=byMax, $
-   ;; BZMIN=bzMin, $
-   ;; BZMAX=bzMax, $
-   ;; BTMIN=btMin, $
-   ;; BTMAX=btMax, $
-   ;; BXMIN=bxMin, $
-   ;; BXMAX=bxMax, $
-   ;; DO_ABS_BYMIN=abs_byMin, $
-   ;; DO_ABS_BYMAX=abs_byMax, $
-   ;; DO_ABS_BZMIN=abs_bzMin, $
-   ;; DO_ABS_BZMAX=abs_bzMax, $
-   ;; DO_ABS_BTMIN=abs_btMin, $
-   ;; DO_ABS_BTMAX=abs_btMax, $
-   ;; DO_ABS_BXMIN=abs_bxMin, $
-   ;; DO_ABS_BXMAX=abs_bxMax, $
-   ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-   ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
    RESET_OMNI_INDS=reset_omni_inds, $
-   ;; SATELLITE=satellite, $
    OMNI_COORDS=omni_Coords, $
    PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
    PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
@@ -258,38 +213,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
    OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
    CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-   ;; HEMI=hemi, $
-   ;; NORTH=north, $
-   ;; SOUTH=south, $
-   ;; BOTH_HEMIS=both_hemis, $
-   ;; DAYSIDE=dayside, $
-   ;; NIGHTSIDE=nightside, $
-   ;; DELAY=delay, $
-   ;; MULTIPLE_DELAYS=multiple_delays, $
-   ;; MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
-   ;; RESOLUTION_DELAY=delay_res, $
-   ;; BINOFFSET_DELAY=binOffset_delay, $
-   ;; STABLEIMF=stableIMF, $
-   ;; SMOOTHWINDOW=smoothWindow, $
    INCLUDENOCONSECDATA=includeNoConsecData, $
-   ;; DO_NOT_CONSIDER_IMF=do_not_consider_IMF, $
-   ;; NONSTORM=nonStorm, $
-   ;; RECOVERYPHASE=recoveryPhase, $
-   ;; MAINPHASE=mainPhase, $
-   ;; ALL_STORM_PHASES=all_storm_phases, $
-   ;; DSTCUTOFF=dstCutoff, $
-   ;; SMOOTH_DST=smooth_dst, $
-   ;; USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-   ;; USE_AE=use_ae, $
-   ;; USE_AU=use_au, $
-   ;; USE_AL=use_al, $
-   ;; USE_AO=use_ao, $
-   ;; AECUTOFF=AEcutoff, $
-   ;; SMOOTH_AE=smooth_AE, $
-   ;; AE_HIGH=AE_high, $
-   ;; AE_LOW=AE_low, $
-   ;; AE_BOTH=AE_both, $
-   ;; USE_MOSTRECENT_AE_FILES=use_mostRecent_AE_files, $
    NPLOTS=nPlots, $
    EPLOTS=ePlots, $
    EPLOTRANGE=ePlotRange, $
@@ -1599,67 +1523,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      RETURN
 
   ENDIF
-
-  ;;********************************************
-  ;;Variables for histos
-  ;;Bin sizes for 2d histos
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;Plot lims
-  SET_ALFVEN_STATS_PLOT_LIMS, $
-     NEVENTSPLOTRANGE=nEventsPlotRange, $
-     LOGNEVENTSPLOT=logNEventsPlot, $
-     NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
-     NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
-     EPLOTRANGE=EPlotRange, $
-     LOGEFPLOT=logEfPlot, $
-     ENUMFLPLOTRANGE=ENumFlPlotRange, $
-     LOGENUMFLPLOT=logENumFlPlot, $
-     AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
-     PPLOTRANGE=PPlotRange, $
-     LOGIFPLOT=logIfPlot, $
-     IPLOTRANGE=IPlotRange, $
-     LOGOXYFPLOT=logOxyfPlot, $
-     OXYPLOTRANGE=oxyPlotRange, $
-     LOGCHAREPLOT=logCharEPlot, $
-     CHAREPLOTRANGE=chareRange, $
-     LOGCHARIEPLOT=logChariePlot, $
-     CHARIEPLOTRANGE=chariEPlotRange, $
-     AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-     ORBCONTRIBRANGE=orbContribRange, $
-     ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
-     LOGORBCONTRIBPLOT=logOrbContribPlot, $
-     ORBCONTRIB_NOMASK=orbContrib_noMask, $
-     ORBTOTRANGE=orbTotRange, $
-     ORBFREQRANGE=orbFreqRange, $
-     LOGNEVENTPERORB=logNEventPerOrb, $
-     NEVENTPERORBRANGE=nEventPerOrbRange, $
-     NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
-     NEVENTPERMINRANGE=nEventPerMinRange, $
-     LOGNEVENTPERMIN=logNEventPerMin, $
-     NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
-     NOWEPCO_RANGE=nowepco_range, $
-     NOWEPCO_AUTOSCALE=nowepco_autoscale, $
-     LOG_NOWEPCOPLOT=log_nowepcoPlot, $
-     PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
-     PROBOCCURRENCERANGE=probOccurrenceRange, $
-     LOGPROBOCCURRENCE=logProbOccurrence, $
-     THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
-     THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
-     THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
-     THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
-     NEWELL_PLOTRANGE=newell_plotRange, $
-     LOG_NEWELLPLOT=log_newellPlot, $
-     NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
-     NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
-     ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
-     ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
-     TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
-     LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
-     TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
-     LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
-     ALL_LOGPLOTS=all_logPlots,$
-     ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct
 
   
   ;;********************************************
