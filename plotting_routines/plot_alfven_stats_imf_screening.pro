@@ -745,7 +745,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         KEYWORD_SET(DBs_reset)                 $
      THEN BEGIN
         LOAD_MAXIMUS_AND_CDBTIME, $
-           INCLUDE_32HZ=include_32Hz, $
+           INCLUDE_32HZ=PASIS__alfDB_plot_struct.include_32Hz, $
            DBFile=DBFile, $
            CORRECT_FLUXES=correct_fluxes, $
            DO_NOT_MAP_ESA_CURRENT=do_not_map_esa_current, $
@@ -755,15 +755,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            DO_NOT_MAP_WIDTH_X=do_not_map_width_x, $
            DO_NOT_MAP_WIDTH_T=do_not_map_width_t, $
            DO_NOT_MAP_ANYTHING=no_mapping, $
-           CHASTDB=chastDB, $
-           DESPUNDB=despunDB, $
+           CHASTDB=PASIS__alfDB_plot_struct.chastDB, $
+           DESPUNDB=PASIS__alfDB_plot_struct.despunDB, $
            COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_aacgm, $
-           USE_GEO_COORDS=use_geo, $
-           USE_MAG_COORDS=use_mag, $
-           LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
-           LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
-           LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
+           USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
+           USE_GEO_COORDS=PASIS__MIMC_struct.use_geo, $
+           USE_MAG_COORDS=PASIS__MIMC_struct.use_mag, $
+           LOAD_DELTA_ILAT_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dILAT, $
+           LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dAngle, $
+           LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dx, $
            USE_SDT_COORDS=use_SDT, $
            USING_HEAVIES=using_heavies, $
            FORCE_LOAD_MAXIMUS=force_load_maximus, $
