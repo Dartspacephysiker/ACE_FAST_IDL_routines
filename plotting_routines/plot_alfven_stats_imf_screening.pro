@@ -236,12 +236,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
    ESPEC__NO_MAXIMUS=no_maximus, $
    ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-   ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-   ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-   ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-   ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-   ESPEC__NOMAPTO100KM=eSpec__noMap, $
-   ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
    PPLOTS=pPlots, $
    LOGPFPLOT=logPfPlot, $
    ABSPFLUX=absPflux, $
@@ -1305,7 +1299,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
-     IF ~KEYWORD_SET(no_maximus) THEN BEGIN
+     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
         
         IF KEYWORD_SET(get_plot_i) THEN BEGIN
            plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
@@ -1667,7 +1661,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         indices__eSpec     = PASIS__indices__eSpec_list[iMulti]
      ENDIF
 
-     IF ~KEYWORD_SET(no_maximus) THEN BEGIN
+     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
         plot_i             = PASIS__plot_i_list[iMulti]
      ENDIF
 
@@ -1713,7 +1707,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         NOPOSENUMFL=noPosENumFl, $
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
         AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
-        NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+        NEWELL_ANALYZE_EFLUX=PASIS__alfDB_plot_struct.newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
@@ -1723,7 +1717,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         INUMFLUX_ESPEC_DATA=PASIS__iNumFlux_eSpec_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
-        ESPEC__NO_MAXIMUS=no_maximus, $
+        ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=PASIS__eSpec__mlts, $
         ESPEC__ILATS=PASIS__eSpec__ilats, $
