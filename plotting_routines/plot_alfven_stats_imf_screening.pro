@@ -582,7 +582,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            FORCE_LOAD_FASTLOC=force_load_fastLoc, $
            FORCE_LOAD_TIMES=force_load_times, $
            FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
-           INCLUDE_32Hz=include_32Hz, $
+           INCLUDE_32Hz=PASIS__alfDB_plot_struct.include_32Hz, $
            COORDINATE_SYSTEM=coordinate_system, $
            USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
            USE_GEO_COORDS=PASIS__MIMC_struct.use_geo, $
@@ -1473,7 +1473,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         plot_i, $
         fastLocInterped_i, $
         H2DSTRARR=h2dStrArr, $
-        /KEEPME, $
         DATARAWPTRARR=dataRawPtrArr, $
         DATANAMEARR=dataNameArr, $
         /DO_NOT_SET_DEFAULTS, $
@@ -1503,17 +1502,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         NOPOSENUMFL=noPosENumFl, $
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
         AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
-        NEWELL_ANALYZE_EFLUX=PASIS__alfDB_plot_struct.newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
-        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         EFLUX_ESPEC_DATA=PASIS__eFlux_eSpec_data, $
         ENUMFLUX_ESPEC_DATA=PASIS__eNumFlux_eSpec_data, $
         IFLUX_ESPEC_DATA=PASIS__iFlux_eSpec_data, $
         INUMFLUX_ESPEC_DATA=PASIS__iNumFlux_eSpec_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
-        ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
+        ;; ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=PASIS__eSpec__mlts, $
         ESPEC__ILATS=PASIS__eSpec__ilats, $
@@ -1704,7 +1701,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         h2dStrArr         = SHIFT(h2dStrArr,-1-(nPlots))
 
         plot_i            = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
-        IF keepMe THEN BEGIN 
+        IF PASIS__alfDB_plot_struct.keepMe THEN BEGIN 
            dataNameArr    = SHIFT(dataNameArr,-1-(nPlots)) 
            dataRawPtrArr  = SHIFT(dataRawPtrArr,-1-(nPlots)) 
         ENDIF
