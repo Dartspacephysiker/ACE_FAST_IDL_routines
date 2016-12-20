@@ -8,7 +8,7 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  include_32Hz                       = 0
+  include_32Hz                       = 1
 
   plotH2D_contour                    = 1
   ;; plotH2D__kde                       = 1
@@ -89,5 +89,5 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
   binMLT                         = 1.0
-  shiftMLT                       = 0.5
+  shiftMLT                       = 0.0
 

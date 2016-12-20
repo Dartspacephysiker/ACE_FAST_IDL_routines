@@ -49,7 +49,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      plotPref += '-newDim'
      ;; plotPref += '-keilDim_'
 
-     include_32Hz                    = 0
+     include_32Hz                    = 1
 
      plotH2D_contour                 = 1
      plotH2D__kde                    = 0

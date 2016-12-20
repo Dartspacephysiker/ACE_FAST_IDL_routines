@@ -506,10 +506,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDELSE
   ENDIF
 
-  get_OMNI_i = KEYWORD_SET(get_eSpec_i) OR $
-               KEYWORD_SET(get_fastLoc_i) OR $
-               KEYWORD_SET(get_plot_i)
-
+  get_OMNI_i = (KEYWORD_SET(get_eSpec_i  ) OR $
+                KEYWORD_SET(get_fastLoc_i) OR $
+                KEYWORD_SET(get_plot_i)       ) AND $
+               ~KEYWORD_SET(PASIS__IMF_struct.do_not_consider_IMF)
+  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs we need
   IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
@@ -1288,9 +1289,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ENDELSE
 
         ;;Final blow
-        saveStr += 'FILENAME="' + saveDir + justIndsFile + '"'
+        saveStr += 'FILENAME="' + PASIS__alfDB_plot_struct.saveDir + $
+                   justIndsFile + '"'
 
-        PRINT,'Saving indices/paramStrings in directory ' + saveDir
+        PRINT,'Saving indices/paramStrings in directory ' + PASIS__alfDB_plot_struct.saveDir
         PRINT,'indsFile: ' + justIndsFile
 
         bro = EXECUTE(saveStr)
@@ -1305,7 +1307,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
         ;;Let others know
         PRINT,'DONE! Updating latest_OMNI_inds.txt ...'
-        SPAWN,'echo ' + saveDir + justIndsFile + ' > ' + saveDir + 'latest_OMNI_inds.txt'
+        SPAWN,'echo ' + PASIS__alfDB_plot_struct.saveDir + justIndsFile + $
+              ' > ' + PASIS__alfDB_plot_struct.saveDir + $
+              'latest_OMNI_inds.txt'
 
      ENDIF
 
