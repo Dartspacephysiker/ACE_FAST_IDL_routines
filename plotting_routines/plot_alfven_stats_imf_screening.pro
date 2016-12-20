@@ -1852,7 +1852,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         H2DSTRARR=h2dStrArr, $
         DATARAWPTRARR=dataRawPtrArr, $
         DATANAMEARR=dataNameArr, $
-        PARAMSTR=paramString, $
+        PARAMSTR=KEYWORD_SET(group_like_plots_for_tiling) ? PASIS__paramString_list : paramString, $
         TXTOUTPUTDIR=txtOutputDir
 
      tempFile_list.add,out_tempFile
