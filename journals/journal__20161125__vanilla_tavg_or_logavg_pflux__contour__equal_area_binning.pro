@@ -1,7 +1,7 @@
 ;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
 PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
-  use_prev_plot_i            = 0
+  use_prev_plot_i            = 1
 
   do_timeAvg_fluxQuantities  = 1
   logAvgPlot                 = 0
@@ -14,7 +14,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   plotH2D_contour            = 0
   plotH2D__kde               = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                 = 0
+  EA_binning                 = 1
 
   minMC                      = 1
   maxnegMC                   = -1
@@ -34,6 +34,10 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   dont_blackball_fastloc     = 1
 
   show_integrals             = 1
+  write_obsArr_textFile      = 1
+  write_obsArr__inc_IMF      = 1
+  write_obsArr__orb_avg_obs  = 1
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
@@ -114,7 +118,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[800,4300]]
+  altRange                       = [[750,4300]]
 
   ;; altRange                    = [[300,4300], $
   ;;                                [500,4300], $

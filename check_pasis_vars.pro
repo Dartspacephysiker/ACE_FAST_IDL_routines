@@ -35,8 +35,9 @@ PRO CHECK_PASIS_VARS, $
   compare_IMF_struct        = KEYWORD_SET(PASIS__IMF_struct)
   ;; ENDIF
 
-  inds_reset = 0B
-  DBs_reset  = 0B
+  inds_reset  = 0B
+  DBs_reset   = 0B
+  plots_reset = 0B
 
   IF compare_alfDB_plot_struct THEN BEGIN
      COMPARE_ALFDB_PLOT_STRUCT,PASIS__alfDB_plot_struct,alfDB_plot_struct, $
@@ -52,7 +53,43 @@ PRO CHECK_PASIS_VARS, $
      ;; IF (COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])).nDiff GT 0 THEN inds_resetTmp = 1 ELSE inds_resetTmp = 0
      ;; inds_reset += TEMPORARY(inds_resetTmp)
 
-     comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.clockStr,IMF_struct.clockStr) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.angleLim1,IMF_struct.angleLim1) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.angleLim2,IMF_struct.angleLim2) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.do_not_consider_IMF,IMF_struct.do_not_consider_IMF) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.delay_res,IMF_struct.delay_res) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.stableIMF,IMF_struct.stableIMF) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
+
+
+     comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i','clockstr', $
+                                                                 'angleLim1','angleLim2', $
+                                                                 'do_not_consider_IMF', $
+                                                                 'delay_res','stableIMF'])
+
      IF comp.nDiff GT 0 THEN BEGIN
 
         STOP
@@ -91,7 +128,8 @@ PRO CHECK_PASIS_VARS, $
                     (diffList EQ STRUPCASE("bxMax")))
         IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
            inds_reset++
-           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
         ENDIF
 
         ;;Check By
@@ -99,7 +137,8 @@ PRO CHECK_PASIS_VARS, $
                     (diffList EQ STRUPCASE("byMax")))
         IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
            inds_reset++
-           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
         ENDIF
 
         ;;Check Bz
@@ -107,7 +146,8 @@ PRO CHECK_PASIS_VARS, $
                     (diffList EQ STRUPCASE("bzMax")))
         IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
            inds_reset++
-           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
         ENDIF
 
         ;;Check Bt
@@ -115,7 +155,38 @@ PRO CHECK_PASIS_VARS, $
                     (diffList EQ STRUPCASE("btMax")))
         IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
            inds_reset++
-           diffInds = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
+        ENDIF
+
+        tmp = WHERE((diffList EQ STRUPCASE("abs_bxMin")) OR $
+                    (diffList EQ STRUPCASE("abs_bxMax")) OR $
+                    (diffList EQ STRUPCASE("abs_byMin")) OR $
+                    (diffList EQ STRUPCASE("abs_byMax")) OR $
+                    (diffList EQ STRUPCASE("abs_bzMin")) OR $
+                    (diffList EQ STRUPCASE("abs_bzMax")) OR $
+                    (diffList EQ STRUPCASE("abs_btMin")) OR $
+                    (diffList EQ STRUPCASE("abs_btMax")))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
+        ENDIF
+
+        ;;Check smoothWindow
+        tmp = WHERE(diffList EQ STRUPCASE("smoothWindow"))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
+        ENDIF
+
+        ;;Check smoothWindow
+        tmp = WHERE(diffList EQ STRUPCASE("use_julDay_not_UTC"))
+        IF tmp[0] NE -1 AND diffInds[0] NE -1 THEN BEGIN
+           inds_reset++
+           diffInds      = CGSETDIFFERENCE(diffInds,tmp,NORESULT=-1)
+           diffList[tmp] = ''
         ENDIF
 
         IF diffInds[0] NE -1 THEN STOP

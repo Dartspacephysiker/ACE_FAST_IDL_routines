@@ -457,6 +457,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      CHECK_PASIS_VARS, $
         INDS_RESET=inds_reset, $
+        PLOTS_RESET=plots_reset, $
         DBS_RESET=DBs_reset, $
         ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
         IMF_STRUCT=IMF_struct, $
@@ -482,6 +483,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      get_paramString_list = 1
      ;; get_ion_i      = 1 ;not implemented
 
+     inds_reset           = 1
+     DBs_reset            = 1
+     plots_reset          = 1
   ENDELSE
 
   ;;In any case
@@ -1146,7 +1150,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                        ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
                                        IMF_STRUCT=PASIS__IMF_struct, $
                                        MIMC_STRUCT=PASIS__MIMC_struct, $
-                                       RESET_OMNI_INDS=reset_omni_inds, $
+                                       RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
                                        RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
                                        RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                        /DO_NOT_SET_DEFAULTS, $
@@ -1157,7 +1161,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                        ;; PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
                                        ;; SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
                                        ;; CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                                       RESET_GOOD_INDS=reset_good_inds, $
+                                       RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
                                        NO_BURSTDATA=no_burstData, $
                                        /GET_TIME_I_NOT_ALFVENDB_I, $
                                        GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
@@ -1196,11 +1200,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                ION__ILATS=ion__ilats, $
                                ION__INFO=ion_info, $
                                CHARIERANGE=charIERange, $
-                               RESET_OMNI_INDS=reset_omni_inds, $
+                               RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
                                RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
                                RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
                                /DO_NOT_SET_DEFAULTS, $
-                               RESET_GOOD_INDS=reset_good_inds, $
+                               RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
                                DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR $
                                KEYWORD_SET(nonMem)
 
@@ -1375,6 +1379,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                  BOTH_HEMIS=STRUPCASE(PASIS__MIMC_struct.hemi) EQ 'BOTH', $
                  CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                  CB_FORCE_OOBLOW=cb_force_oobLow)
+
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+     tmplt_h2dStr.is_alfDB   = 0B
+     tmplt_h2dStr.is_eSpecDB = 1B
+  ENDIF
 
   ;;Doing grossrates?
   IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $

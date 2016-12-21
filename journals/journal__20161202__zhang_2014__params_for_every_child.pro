@@ -16,7 +16,7 @@
   contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
   contour__percent                   = KEYWORD_SET(plotH2D_contour)
 
-  EA_binning                         = 1
+  EA_binning                         = 0
 
   minMC                              = 1
   maxNegMC                           = -1
