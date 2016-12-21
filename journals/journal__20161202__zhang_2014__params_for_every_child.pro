@@ -10,7 +10,7 @@
 
   include_32Hz                       = 1
 
-  plotH2D_contour                    = 1
+  plotH2D_contour                    = 0
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
   contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
@@ -46,7 +46,7 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[800,4300]]
+  altRange                       = [[750,4300]]
 
   orbRange                       = [1000,10600]
 
