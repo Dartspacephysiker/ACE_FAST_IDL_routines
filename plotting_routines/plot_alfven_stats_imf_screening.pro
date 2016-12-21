@@ -627,6 +627,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.EA_binning) THEN BEGIN
+     LOAD_EQUAL_AREA_BINNING_STRUCT,EA, $
+                               HEMI=PASIS__MIMC_struct.hemi, $
+                               FORCE_LOAD=KEYWORD_SET(DBs_reset)
+  ENDIF
+
   IF KEYWORD_SET(PASIS__IMF_struct.do_not_consider_IMF) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN $
         SET_PLOT_DIR, $
@@ -1776,60 +1782,62 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ENDCASE
         ENDIF
 
-        PLOT_ALFVENDB_2DHISTOS,H2DSTRARR=h2dStrArr, $
-                               DATANAMEARR=dataNameArr, $
-                               H2DMASKARR=h2dMaskArr, $
-                               TEMPFILE=out_tempFile, $
-                               EQUAL_AREA_BINNING=PASIS__alfDB_plot_struct.EA_binning, $
-                               SQUAREPLOT=PASIS__alfDB_plot_struct.squarePlot, $
-                               POLARCONTOUR=PASIS__alfDB_plot_struct.polarContour, $ 
-                               JUSTDATA=PASIS__alfDB_plot_struct.justData, $
-                               SHOWPLOTSNOSAVE=PASIS__alfDB_plot_struct.showPlotsNoSave, $
-                               PLOTDIR=plotDir, $
-                               PLOTMEDORAVG=PASIS__alfDB_plot_struct.plotMedOrAvg, $
-                               PARAMSTR=paramString, $
-                               ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
-                               DEL_PS=PASIS__alfDB_plot_struct.del_PS, $
-                               HEMI=PASIS__MIMC_struct.hemi, $
-                               CLOCKSTR=clockStr, $
-                               SUPPRESS_THICKGRID=suppress_thickGrid, $
-                               SUPPRESS_GRIDLABELS=suppress_gridLabels, $
-                               SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
-                               SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
-                               SUPPRESS_MLT_NAME=suppress_MLT_name, $
-                               SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
-                               SUPPRESS_TITLES=suppress_titles, $
-                               LABELS_FOR_PRESENTATION=labels_for_presentation, $
-                               TILE_IMAGES=tile_images, $
-                               N_TILE_ROWS=n_tile_rows, $
-                               N_TILE_COLUMNS=n_tile_columns, $
-                               TILING_ORDER=tiling_order, $
-                               TILE__FAVOR_ROWS=tile__favor_rows, $
-                               TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
-                               TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
-                               TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
-                               ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
-                               TILEPLOTSUFF=tilePlotSuff, $
-                               TILEPLOTTITLE=tilePlotTitle, $
-                               NO_COLORBAR=no_colorbar, $
-                               EPS_OUTPUT=eps_output, $
-                               PLOTH2D_CONTOUR=PASIS__alfDB_plot_struct.plotH2D_contour, $
-                               CONTOUR__LEVELS=PASIS__alfDB_plot_struct.contour__levels, $
-                               CONTOUR__PERCENT=PASIS__alfDB_plot_struct.contour__percent, $
-                               PLOTH2D__KERNEL_DENSITY_UNMASK=PASIS__alfDB_plot_struct.plotH2D__kernel_density_unmask, $
-                               ;; OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
-                               OVERPLOTSTR=KEYWORD_SET(sendit), $
-                               OVERPLOT_CONTOUR__LEVELS=PASIS__alfDB_plot_struct.op_contour__levels, $
-                               OVERPLOT_CONTOUR__PERCENT=PASIS__alfDB_plot_struct.op_contour__percent, $
-                               OVERPLOT_PLOTRANGE=PASIS__alfDB_plot_struct.op_plotRange, $
-                               CENTERS_MLT=centersMLT, $
-                               CENTERS_ILAT=centersILAT, $
-                               SHOW_INTEGRALS=show_integrals, $
-                               MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-                               MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
-                               INTEGRALSAVFILEPREF=integralSavFilePref, $
-                               TXTOUTPUTDIR=txtOutputDir, $
-                               _EXTRA = e
+        PLOT_ALFVENDB_2DHISTOS, $
+           H2DSTRARR=h2dStrArr, $
+           DATANAMEARR=dataNameArr, $
+           H2DMASKARR=h2dMaskArr, $
+           TEMPFILE=out_tempFile, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           SQUAREPLOT=PASIS__alfDB_plot_struct.squarePlot, $
+           POLARCONTOUR=PASIS__alfDB_plot_struct.polarContour, $ 
+           JUSTDATA=PASIS__alfDB_plot_struct.justData, $
+           SHOWPLOTSNOSAVE=PASIS__alfDB_plot_struct.showPlotsNoSave, $
+           PLOTDIR=plotDir, $
+           PLOTMEDORAVG=PASIS__alfDB_plot_struct.plotMedOrAvg, $
+           PARAMSTR=paramString, $
+           ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
+           DEL_PS=PASIS__alfDB_plot_struct.del_PS, $
+           HEMI=PASIS__MIMC_struct.hemi, $
+           CLOCKSTR=clockStr, $
+           SUPPRESS_THICKGRID=suppress_thickGrid, $
+           SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+           SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
+           SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
+           SUPPRESS_MLT_NAME=suppress_MLT_name, $
+           SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
+           SUPPRESS_TITLES=suppress_titles, $
+           LABELS_FOR_PRESENTATION=labels_for_presentation, $
+           TILE_IMAGES=tile_images, $
+           N_TILE_ROWS=n_tile_rows, $
+           N_TILE_COLUMNS=n_tile_columns, $
+           TILING_ORDER=tiling_order, $
+           TILE__FAVOR_ROWS=tile__favor_rows, $
+           TILE__INCLUDE_IMF_ARROWS=tile__include_IMF_arrows, $
+           TILE__CB_IN_CENTER_PANEL=tile__cb_in_center_panel, $
+           TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
+           ;; BLANK_TILE_POSITIONS=blank_tile_positions, $
+           TILEPLOTSUFF=tilePlotSuff, $
+           TILEPLOTTITLE=tilePlotTitle, $
+           NO_COLORBAR=no_colorbar, $
+           EPS_OUTPUT=eps_output, $
+           PLOTH2D_CONTOUR=PASIS__alfDB_plot_struct.plotH2D_contour, $
+           CONTOUR__LEVELS=PASIS__alfDB_plot_struct.contour__levels, $
+           CONTOUR__PERCENT=PASIS__alfDB_plot_struct.contour__percent, $
+           PLOTH2D__KERNEL_DENSITY_UNMASK=PASIS__alfDB_plot_struct.plotH2D__kernel_density_unmask, $
+           ;; OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
+           OVERPLOTSTR=KEYWORD_SET(sendit), $
+           OVERPLOT_CONTOUR__LEVELS=PASIS__alfDB_plot_struct.op_contour__levels, $
+           OVERPLOT_CONTOUR__PERCENT=PASIS__alfDB_plot_struct.op_contour__percent, $
+           OVERPLOT_PLOTRANGE=PASIS__alfDB_plot_struct.op_plotRange, $
+           CENTERS_MLT=centersMLT, $
+           CENTERS_ILAT=centersILAT, $
+           SHOW_INTEGRALS=show_integrals, $
+           MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+           MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
+           INTEGRALSAVFILEPREF=integralSavFilePref, $
+           TXTOUTPUTDIR=txtOutputDir, $
+           _EXTRA = e
      ENDIF
 
      IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
