@@ -432,6 +432,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
    OUT_PARAMSTRING_LIST=out_paramString_list, $
    USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+   REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
    OUT_PLOT_I_LIST=out_plot_i_list, $
    OUT_FASTLOC_I_LIST=out_fastLoc_i_list, $
    OUT_I_ESPEC_LIST=out_i_eSpec_list, $
@@ -499,7 +500,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ;;See if we can just get 'em from elsewhere
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
+
      IF LOAD_PASIS_VARS(NEED_FASTLOC_I=need_fastLoc_i, $
+                        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
                         /VERBOSE) $
      THEN BEGIN
         get_plot_i    = 0
