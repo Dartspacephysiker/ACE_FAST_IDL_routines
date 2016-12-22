@@ -200,13 +200,13 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
      CASE 1 OF
         bx_i LE 1: BEGIN
            hemi                           = 'NORTH'
-           minILAT                        = 60
-           maxILAT                        = 90
+           minI                           = 60
+           maxI                           = 90
         END
         ELSE: BEGIN
            hemi                           = 'SOUTH'
-           minILAT                        = -90
-           maxILAT                        = -60
+           minI                           = -90
+           maxI                           = -60
         END
      ENDCASE
 
@@ -232,11 +232,16 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
         FOR jow=0,N_ELEMENTS(btMinArr)-1 DO BEGIN
 
-           btMin      = btMinArr[jow]
+           ;; btMin      = btMinArr[jow]
+           btMin      = !NULL
 
            SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY ;,ADD_SUFF=btMinStr
 
            plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
+
+           paramString        = !NULL
+           OMNIparamStr       = !NULL
+           OMNI_paramStr_list = !NULL
 
            PLOT_ALFVEN_STATS__SETUP, $
               FOR_ESPEC_DBS=for_eSpec_DBs, $
@@ -260,7 +265,9 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
               MINMLT=minM,MAXMLT=maxM, $
               BINMLT=binM, $
               SHIFTMLT=shiftM, $
-              MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
+              MINILAT=minI, $
+              MAXILAT=maxI, $
+              BINILAT=binI, $
               EQUAL_AREA_BINNING=EA_binning, $
               DO_LSHELL=do_lShell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
               REVERSE_LSHELL=reverse_lShell, $

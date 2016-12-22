@@ -24,7 +24,7 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
         STOP
      ENDIF
      PRINTF,lun,"Losing " + STRCOMPRESS(nCombined-nCombinedRestr,/REMOVE_ALL) + $
-            " OMNI entries because they don't know how to listen in class"     
+            " OMNI entries en total"     
   ENDIF
 
   IF KEYWORD_SET(C_OMNI__phiIMF_i) THEN BEGIN
