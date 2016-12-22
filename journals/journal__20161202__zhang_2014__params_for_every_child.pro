@@ -48,7 +48,7 @@
 
   altRange                       = [[750,4300]]
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [1000,11950]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -59,25 +59,27 @@
   stableIMF                      = 4
 
   ;;Delay stuff
-  nDelays                        = 1
+  ;; nDelays                        = 1
   delayDeltaSec                  = 1200
   binOffset_delay                = 0
-  delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  ;; delayArr                       = 300
+  delayArr                       = 0
 
   reset_omni_inds                = 1
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; southern_hemi_plotScales          = 1
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 0

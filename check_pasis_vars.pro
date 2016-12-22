@@ -83,12 +83,16 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
      
-
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.delay,IMF_struct.delay) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
 
      comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i','clockstr', $
                                                                  'angleLim1','angleLim2', $
                                                                  'do_not_consider_IMF', $
-                                                                 'delay_res','stableIMF'])
+                                                                 'delay_res','stableIMF', $
+                                                                 'delay'])
 
      IF comp.nDiff GT 0 THEN BEGIN
 

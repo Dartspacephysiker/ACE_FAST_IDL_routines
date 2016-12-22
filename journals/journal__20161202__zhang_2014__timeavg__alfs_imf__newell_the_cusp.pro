@@ -15,7 +15,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
   ;; plotPref += 'FINALE'
-  plotPref += 'customKill_8276-and_others'
+  plotPref += 'customKill_8276--9585_in_SOUF'
 
   charE__Newell_the_cusp         = 0
 
@@ -169,7 +169,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   pPlots                             = 1
   ionPlots                           = besides_pFlux
   probOccurrencePlot                 = besides_pFlux
-  tHistDenominatorPlot               = besides_pFlux
+  tHistDenominatorPlot               = 0 ;besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 
@@ -436,7 +436,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         OMNI_PARAMSTR_LIST=OMNIparamStr_list, $
         SATELLITE=satellite, $
         OMNI_COORDS=omni_Coords, $
-        DELAY=delay, $
+        DELAY=delayArr, $
         MULTIPLE_DELAYS=multiple_delays, $
         MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
         OUT_EXECUTING_MULTIPLES=executing_multiples, $
