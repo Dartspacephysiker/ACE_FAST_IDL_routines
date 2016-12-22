@@ -195,7 +195,7 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
   ;; summed_eFlux_pFluxplotRange    = [0,0.8]
 
-  FOR bx_i=0,3 DO BEGIN
+  FOR bx_i=1,3 DO BEGIN
 
      CASE 1 OF
         bx_i LE 1: BEGIN
