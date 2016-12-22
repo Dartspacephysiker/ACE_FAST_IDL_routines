@@ -10,8 +10,9 @@ PRO SET_IMF_CLOCK_ANGLE, $
   ;;In any case, if we've made it here then ZERO this thing
   C_OMNI__treat_angles_like_bz_south              = 0
 
-
-  IF KEYWORD_SET(dont_consider_clockAngles) THEN BEGIN
+  val = 0
+  STR_ELEMENT,IMF_struct,'dont_consider_clockAngles',val
+  IF val THEN BEGIN
      C_OMNI__clockStr                             = ''
      C_OMNI__noClockAngles                        = 1
      C_OMNI__negAngle                             = 0

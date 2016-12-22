@@ -1,5 +1,5 @@
-;;2016/12/02 The updated version, all the bells and whistles
-PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
+;;2016/12/22 AND NOW THETA_CONE??
+PRO JOURNAL__20161222__BX_CONTROL__THETA_CONE
 
   COMPILE_OPT IDL2
 
@@ -114,16 +114,18 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   ;; btMinArr                       = [0.5,1.0,1.5,2.0,2.5,3.0,3.5]
   ;; btMinArr                       = [1.0,1.5,2.0]
   ;; clockStr                       = 'bzSouth'
-  clockStr                       = 'bzNorth'
-  btMinArr                       = [0.0]
-  ;; btMinArr                       = [1.5,2.0]
-  ;; btMax                       = 5
+  ;; clockStr                       = 'bzNorth'
+  ;; btMinArr                       = [0.0]
+
+  tConeMax                       = 30 ;thetaCone
+
+  dont_consider_clockAngles      = 1
 
   bxMagnitude                    = 0.0
-  bx_over_by_ratio_min           = 0.5
+  ;; bx_over_by_ratio_min           = 0.5
 
-  angleLim1                      = 0.
-  angleLim2                      = 180.
+  ;; angleLim1                      = 0.
+  ;; angleLim2                      = 180.
 
   ;;But what about the middle range? If you're interested ...
   ;; bxMax                          = 2.0
@@ -231,10 +233,10 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
                                              orbRange[0], $
                                              orbRange[1])
 
-        FOR jow=0,N_ELEMENTS(btMinArr)-1 DO BEGIN
+        FOR jow=0,N_ELEMENTS(tConeMax)-1 DO BEGIN
 
            ;; btMin      = btMinArr[jow]
-           btMin      = !NULL
+           ;; btMin      = !NULL
 
            SET_PLOT_DIR,plotDir,/FOR_SW_IMF,/ADD_TODAY ;,ADD_SUFF=btMinStr
 
@@ -573,5 +575,4 @@ PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
   ENDFOR
 
 END
-
 

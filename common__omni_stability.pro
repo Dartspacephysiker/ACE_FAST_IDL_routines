@@ -22,6 +22,10 @@
      C_OMNI__clean_i                    , $
      C_OMNI__restrict_i                 , $
      C_OMNI__phiIMF_i                   , $
+     C_OMNI__tConeMax_i                 , $
+     C_OMNI__tConeMax                   , $
+     C_OMNI__tConeMin_i                 , $
+     C_OMNI__tConeMin                   , $
      C_OMNI__negAngle                   , $
      C_OMNI__posAngle                   , $
      C_OMNI__N_angle_sets               , $

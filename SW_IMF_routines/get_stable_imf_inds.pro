@@ -3,36 +3,7 @@
 ;; "Stable" is defined here as a period of time over which the specified conditions/params remain met
 FUNCTION GET_STABLE_IMF_INDS, $
    MAG_UTC=mag_utc, $
-   ;; CLOCKSTR=clockStr, $
-   ;; ANGLELIM1=angleLim1, $
-   ;; ANGLELIM2=angleLim2, $
-   ;; DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles, $
-   ;; STABLEIMF=stableIMF, $
-   ;; SMOOTH_IMF=smooth_IMF, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   ;; EARLIEST_UTC=earliest_UTC, $
-   ;; LATEST_UTC=latest_UTC, $
-   ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   ;; EARLIEST_JULDAY=earliest_julDay, $
-   ;; LATEST_JULDAY=latest_julDay, $
-   ;; BYMIN=byMin, $
-   ;; BYMAX=byMax, $
-   ;; BZMIN=bzMin, $
-   ;; BZMAX=bzMax, $
-   ;; BTMIN=btMin, $
-   ;; BTMAX=btMax, $
-   ;; BXMIN=bxMin, $
-   ;; BXMAX=bxMax, $
-   ;; DO_ABS_BYMIN=abs_byMin, $
-   ;; DO_ABS_BYMAX=abs_byMax, $
-   ;; DO_ABS_BZMIN=abs_bzMin, $
-   ;; DO_ABS_BZMAX=abs_bzMax, $
-   ;; DO_ABS_BTMIN=abs_btMin, $
-   ;; DO_ABS_BTMAX=abs_btMax, $
-   ;; DO_ABS_BXMIN=abs_bxMin, $
-   ;; DO_ABS_BXMAX=abs_bxMax, $
-   ;; BX_OVER_BY_RATIO_MAX=bx_over_by_ratio_max, $
-   ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
    MIMC_STRUCT=MIMC_struct, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
@@ -182,7 +153,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                       ;; LATEST_JULDAY=latest_julDay, $
                                       LUN=lun)
 
-     IF TAG_EXIST(IMF_struct,'clockStr') THEN BEGIN
+     val = ''
+     STR_ELEMENT,IMF_struct,'clockStr',val
+     IF val[0] NE '' THEN BEGIN
         SET_IMF_CLOCK_ANGLE, $
            IMF_STRUCT=IMF_struct;, $
            ;; CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
@@ -197,11 +170,22 @@ FUNCTION GET_STABLE_IMF_INDS, $
         USE_COMBINED_INDS           = 1
      ENDIF
 
+     IF TAG_EXIST(IMF_struct,'tConeMin') OR TAG_EXIST(IMF_struct,'tConeMax') THEN BEGIN
+        GET_IMF_THETACONE_INDS,C_OMNI__thetaCone, $
+                               IMF_STRUCT=IMF_struct,LUN=lun
+
+        USE_COMBINED_INDS           = 1
+     ENDIF
+
      IF TAG_EXIST(IMF_struct,'byMin') OR TAG_EXIST(IMF_struct,'byMax') $
         OR TAG_EXIST(IMF_struct,'bzMin') OR TAG_EXIST(IMF_struct,'bzMax') $
         OR TAG_EXIST(IMF_struct,'btMin') OR TAG_EXIST(IMF_struct,'btMax') $
         OR TAG_EXIST(IMF_struct,'bxMin') OR TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN
-        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,C_OMNI__Bt,C_OMNI__Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin,bxMax, $
+        GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,C_OMNI__Bt,C_OMNI__Bx, $
+                               byMin,byMax, $
+                               bzMin,bzMax, $
+                               btMin,btMax, $
+                               bxMin,bxMax, $
                                IMF_STRUCT=IMF_struct, $
                                ;; DO_ABS_BYMIN=abs_byMin, $
                                ;; DO_ABS_BYMAX=abs_byMax, $

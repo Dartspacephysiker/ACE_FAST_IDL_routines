@@ -73,6 +73,11 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
      
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.dont_consider_clockAngles,IMF_struct.dont_consider_clockAngles) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+     
      IF ~ARRAY_EQUAL(PASIS__IMF_struct.delay_res,IMF_struct.delay_res) THEN BEGIN
         inds_reset++
         plots_reset++
@@ -91,6 +96,7 @@ PRO CHECK_PASIS_VARS, $
      comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i','clockstr', $
                                                                  'angleLim1','angleLim2', $
                                                                  'do_not_consider_IMF', $
+                                                                 'dont_consider_clockAngles', $
                                                                  'delay_res','stableIMF', $
                                                                  'delay'])
 
