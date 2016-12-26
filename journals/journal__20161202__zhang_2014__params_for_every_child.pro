@@ -8,15 +8,11 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  include_32Hz                       = 1
-
   plotH2D_contour                    = 0
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
   contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
   contour__percent                   = KEYWORD_SET(plotH2D_contour)
-
-  EA_binning                         = 0
 
   minMC                              = 1
   maxNegMC                           = -1
@@ -32,7 +28,6 @@
 
   ;;DB stuff
   do_despun                          = 0
-  use_AACGM                          = 0
   use_MAG                            = 0
 
   autoscale_fluxPlots                = 0
@@ -46,9 +41,9 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[750,4300]]
+  altRange                       = [[800,4300]]
 
-  orbRange                       = [1000,11950]
+  orbRange                       = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -70,26 +65,27 @@
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minI                           = 60
+  maxI                           = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -60
   ;; southern_hemi_plotScales          = 1
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 0
 
+  ;; hemi                           = 'BOTH'
+
   ;; numOrbLim                      = 10
 
-  binILAT                        = 2.0
+  binI                           = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 1.0
-  shiftMLT                       = 0.0
-
+  binM                           = 0.75
+  shiftM                         = 0.0

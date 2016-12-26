@@ -445,8 +445,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   !EXCEPT=0                                                      ;Do report errors, please
 
-  ;; lastSessionFile = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/last_session.sav'
-
   @common__maximus_vars.pro
   @common__fastloc_vars.pro
   @common__fastloc_espec_vars.pro
@@ -513,9 +511,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDELSE
   ENDIF
 
-  get_OMNI_i = (KEYWORD_SET(get_eSpec_i  ) OR $
-                KEYWORD_SET(get_fastLoc_i) OR $
-                KEYWORD_SET(get_plot_i)       ) AND $
+  get_OMNI_i = (KEYWORD_SET(get_eSpec_i  )            OR $
+                KEYWORD_SET(get_fastLoc_i)            OR $
+                KEYWORD_SET(get_plot_i)  )            AND $
+                ;; KEYWORD_SET(print_avg_IMF_components) OR $
+                ;; KEYWORD_SET(save_master_OMNI_inds   ) OR $
+                ;; KEYWORD_SET(make_OMNI_stats_savFile )    ) AND $
                ~KEYWORD_SET(PASIS__IMF_struct.do_not_consider_IMF)
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -611,8 +612,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDIF 
 
   IF (KEYWORD_SET(PASIS__alfDB_plot_struct.eNumFlPlots)                      OR $
-     KEYWORD_SET(PASIS__alfDB_plot_struct.ePlots)                            OR $ 
-     KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__newellPlot_probOccurrence)) AND $
+      KEYWORD_SET(PASIS__alfDB_plot_struct.ePlots)                            OR $ 
+      KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__newellPlot_probOccurrence)) AND $
      KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) $
   THEN BEGIN
 
@@ -634,10 +635,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
+  ;;Handle hemisphere issues up front if we're doing equal-area binning
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.EA_binning) THEN BEGIN
      LOAD_EQUAL_AREA_BINNING_STRUCT,EA, $
-                               HEMI=PASIS__MIMC_struct.hemi, $
-                               FORCE_LOAD=KEYWORD_SET(DBs_reset)
+                                    HEMI=PASIS__MIMC_struct.hemi, $
+                                    FORCE_LOAD=KEYWORD_SET(DBs_reset)
   ENDIF
 
   IF KEYWORD_SET(PASIS__IMF_struct.do_not_consider_IMF) THEN BEGIN
@@ -671,580 +673,570 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDELSE
 
 
-     ;;Does it all "hang together"?
-     IF PASIS__alfDB_plot_struct.use_storm_stuff GT 1 THEN BEGIN
-        PRINT,"Can't set more than one of the storm keywords simultaneously!"
+  ;;Does it all "hang together"?
+  IF PASIS__alfDB_plot_struct.use_storm_stuff GT 1 THEN BEGIN
+     PRINT,"Can't set more than one of the storm keywords simultaneously!"
+     STOP
+  ENDIF
+  IF PASIS__alfDB_plot_struct.ae_stuff GT 1 THEN BEGIN
+     PRINT,"only select one of (AE,AU,AL,AO)!"
+     STOP
+  ENDIF
+  IF PASIS__alfDB_plot_struct.ae_stuff AND PASIS__alfDB_plot_struct.use_storm_stuff THEN BEGIN
+     PRINT,"Currently not possible to use AE stuff together with storm stuff!"
+     STOP
+  ENDIF
+
+  too_many = KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays) + $
+             KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) + $
+             KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'storm_opt')   ? $
+                          PASIS__alfDB_plot_struct.storm_opt.all_storm_phases  : $
+                          0)                                         )  + $
+             KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'ae_opt') ?    $
+                          PASIS__alfDB_plot_struct.AE_opt.AE_both      :    $
+                          0)                                         )
+  IF too_many GT 1 THEN BEGIN
+     PRINT,"Not set up to handle multiples of several conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
+     STOP
+  ENDIF
+
+  ;;Open file for text summary, if desired
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.outputPlotSummary) THEN BEGIN
+     OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
+     IF KEYWORD_SET(executing_multiples) THEN BEGIN
+        PRINT,"What are you thinking? You're not setup to get multi-output..."
         STOP
      ENDIF
-     IF PASIS__alfDB_plot_struct.ae_stuff GT 1 THEN BEGIN
-        PRINT,"only select one of (AE,AU,AL,AO)!"
-        STOP
-     ENDIF
-     IF PASIS__alfDB_plot_struct.ae_stuff AND PASIS__alfDB_plot_struct.use_storm_stuff THEN BEGIN
-        PRINT,"Currently not possible to use AE stuff together with storm stuff!"
-        STOP
-     ENDIF
+  ENDIF ELSE BEGIN
+     lun=-1                     ;-1 is lun for STDOUT
+  ENDELSE
+  
+  ;;********************************************************
+  ;;Now clean and tap the databases and interpolate satellite data
 
-     too_many = KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_delays) + $
-                KEYWORD_SET(PASIS__alfDB_plot_struct.multiple_IMF_clockAngles) + $
-                KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'storm_opt')   ? $
-                             PASIS__alfDB_plot_struct.storm_opt.all_storm_phases  : $
-                             0)                                         )  + $
-                KEYWORD_SET((TAG_EXIST(PASIS__alfDB_plot_struct,'ae_opt') ?    $
-                             PASIS__alfDB_plot_struct.AE_opt.AE_both      :    $
-                             0)                                         )
-     IF too_many GT 1 THEN BEGIN
-        PRINT,"Not set up to handle multiples of several conditions right now! Sorry. You'll find trouble in GET_RESTRICTED_AND_INTERPED_DB_INDICES if you attempt this..."
-        STOP
-     ENDIF
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.use_storm_stuff) THEN BEGIN
 
-     ;;Open file for text summary, if desired
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.outputPlotSummary) THEN BEGIN
-        OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
-        IF KEYWORD_SET(executing_multiples) THEN BEGIN
-           PRINT,"What are you thinking? You're not setup to get multi-output..."
-           STOP
-        ENDIF
-     ENDIF ELSE BEGIN
-        lun=-1                  ;-1 is lun for STDOUT
-     ENDELSE
-     
-     ;;Handle hemisphere issues up front if we're doing equal-area binning
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.EA_binning) THEN BEGIN
-        LOAD_EQUAL_AREA_BINNING_STRUCT,HEMI=PASIS__MIMC_struct.hemi
-     ENDIF
-
-     ;;********************************************************
-     ;;Now clean and tap the databases and interpolate satellite data
-
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.use_storm_stuff) THEN BEGIN
-
-        IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) AND KEYWORD_SET(get_plot_i) $
-        THEN BEGIN
-           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              ;; DSTCUTOFF=dstCutoff, $
-              ;; SMOOTH_DST=smooth_dst, $
-              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              NONSTORM_I=ns_i, $
-              MAINPHASE_I=mp_i, $
-              RECOVERYPHASE_I=rp_i, $
-              STORM_DST_I=s_dst_i, $
-              NONSTORM_DST_I=ns_dst_i, $
-              MAINPHASE_DST_I=mp_dst_i, $
-              RECOVERYPHASE_DST_I=rp_dst_i, $
-              N_STORM=n_s, $
-              N_NONSTORM=n_ns, $
-              N_MAINPHASE=n_mp, $
-              N_RECOVERYPHASE=n_rp, $
-              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
-                 PRINTF,lun,'Restricting maximus with non-storm indices ...'
-                 restrict_with_these_i = ns_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
-                 PRINTF,lun,'Restricting maximus with main-phase indices ...'
-                 restrict_with_these_i = mp_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
-                 PRINTF,lun,'Restricting maximus with recovery-phase indices ...'
-                 restrict_with_these_i = rp_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                 PRINTF,lun,'Restricting maximus with each storm phase in turn ...'
-                 restrict_with_these_i = LIST(ns_i,mp_i,rp_i)
-              END
-           ENDCASE
-        ENDIF
-
-        ;;Now OMNI, if desired
-        IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
-           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              ;; DSTCUTOFF=dstCutoff, $
-              ;; SMOOTH_DST=smooth_dst, $
-              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              EARLIEST_UTC=PASIS__IMF_struct.earliest_UTC, $
-              LATEST_UTC=PASIS__IMF_struct.latest_UTC, $
-              USE_JULDAY_NOT_UTC=PASIS__IMF_struct.use_julDay_not_UTC, $
-              EARLIEST_JULDAY=PASIS__IMF_struct.earliest_julDay, $
-              LATEST_JULDAY=PASIS__IMF_struct.latest_julDay, $
-              NONSTORM_I=ns_OMNI_i, $
-              MAINPHASE_I=mp_OMNI_i, $
-              RECOVERYPHASE_I=rp_OMNI_i, $
-              STORM_DST_I=s_dst_OMNI_i, $
-              NONSTORM_DST_I=ns_dst_OMNI_i, $
-              MAINPHASE_DST_I=mp_dst_OMNI_i, $
-              RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
-              N_STORM=n_OMNI_s, $
-              N_NONSTORM=n_OMNI_ns, $
-              N_MAINPHASE=n_OMNI_mp, $
-              N_RECOVERYPHASE=n_OMNI_rp, $
-              NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
-              NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
-
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
-                 PRINTF,lun,'Restricting OMNI with non-storm indices ...'
-                 restrict_OMNI_with_these_i = ns_OMNI_i
-                 t1_OMNI_arr                = ns_OMNI_t1
-                 t2_OMNI_arr                = ns_OMNI_t2
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
-                 PRINTF,lun,'Restricting OMNI with main-phase indices ...'
-                 restrict_OMNI_with_these_i = mp_OMNI_i
-                 t1_OMNI_arr                = mp_OMNI_t1
-                 t2_OMNI_arr                = mp_OMNI_t2         
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
-                 PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
-                 restrict_OMNI_with_these_i = rp_OMNI_i
-                 t1_OMNI_arr                = rp_OMNI_t1
-                 t2_OMNI_arr                = rp_OMNI_t2
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                 PRINTF,lun,'Restricting OMNI with each storm phase in turn ...'
-                 restrict_OMNI_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
-              END
-           ENDCASE
-
-        ENDIF
-
-        ;;Now fastLoc
-        IF KEYWORD_SET(need_fastLoc_i) $
-           AND KEYWORD_SET(get_fastLoc_i) $
-        THEN BEGIN 
-
-           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              /GET_TIME_I_NOT_ALFDB_I, $
-              ;; DSTCUTOFF=dstCutoff, $
-              ;; SMOOTH_DST=smooth_dst, $
-              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              NONSTORM_I=ns_FL_i, $
-              MAINPHASE_I=mp_FL_i, $
-              RECOVERYPHASE_I=rp_FL_i, $
-              STORM_DST_I=s_dst_FL_i, $
-              NONSTORM_DST_I=ns_dst_FL_i, $
-              MAINPHASE_DST_I=mp_dst_FL_i, $
-              RECOVERYPHASE_DST_I=rp_dst_FL_i, $
-              N_STORM=n_FL_s, $
-              N_NONSTORM=n_FL_ns, $
-              N_MAINPHASE=n_FL_mp, $
-              N_RECOVERYPHASE=n_FL_rp, $
-              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
-              GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
-           
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with non-storm indices ...'
-                 restrict_with_these_FL_i = ns_FL_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with main-phase indices ...'
-                 restrict_with_these_FL_i = mp_FL_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with recovery-phase indices ...'
-                 restrict_with_these_FL_i = rp_FL_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with each storm phase in turn ...'
-                 restrict_with_these_FL_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
-              END
-           ENDCASE
-
-        ENDIF
-
-        ;;Now eSpecDB
-        IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
-        THEN BEGIN 
-
-           GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              /GET_ESPECDB_I_NOT_ALFDB_I, $
-              ;; DSTCUTOFF=dstCutoff, $
-              ;; SMOOTH_DST=smooth_dst, $
-              USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-              NONSTORM_I=ns_eSpec_i, $
-              MAINPHASE_I=mp_eSpec_i, $
-              RECOVERYPHASE_I=rp_eSpec_i, $
-              STORM_DST_I=s_dst_eSpec_i, $
-              NONSTORM_DST_I=ns_dst_eSpec_i, $
-              MAINPHASE_DST_I=mp_dst_eSpec_i, $
-              RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
-              N_STORM=n_eSpec_s, $
-              N_NONSTORM=n_eSpec_ns, $
-              N_MAINPHASE=n_eSpec_mp, $
-              N_RECOVERYPHASE=n_eSpec_rp, $
-              NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-              NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
-                 restrict_with_these_eSpec_i = ns_eSpec_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
-                 restrict_with_these_eSpec_i = mp_eSpec_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
-                 restrict_with_these_eSpec_i = rp_eSpec_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
-                 PRINTF,lun,'Restricting eSpec with each storm phase in turn ...'
-                 restrict_with_these_eSpec_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
-              END
-           ENDCASE
-
-
-        ENDIF
-
+     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) AND KEYWORD_SET(get_plot_i) $
+     THEN BEGIN
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           NONSTORM_I=ns_i, $
+           MAINPHASE_I=mp_i, $
+           RECOVERYPHASE_I=rp_i, $
+           STORM_DST_I=s_dst_i, $
+           NONSTORM_DST_I=ns_dst_i, $
+           MAINPHASE_DST_I=mp_dst_i, $
+           RECOVERYPHASE_DST_I=rp_dst_i, $
+           N_STORM=n_s, $
+           N_NONSTORM=n_ns, $
+           N_MAINPHASE=n_mp, $
+           N_RECOVERYPHASE=n_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              PRINTF,lun,'Restricting maximus with non-storm indices ...'
+              restrict_with_these_i = ns_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              PRINTF,lun,'Restricting maximus with main-phase indices ...'
+              restrict_with_these_i = mp_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting maximus with recovery-phase indices ...'
+              restrict_with_these_i = rp_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting maximus with each storm phase in turn ...'
+              restrict_with_these_i = LIST(ns_i,mp_i,rp_i)
+           END
+        ENDCASE
      ENDIF
 
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
-
-        IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
-           GET_AE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
-              COORDINATE_SYSTEM=coordinate_system, $
-              ;; AECUTOFF=AEcutoff, $
-              ;; SMOOTH_AE=smooth_AE, $
-              ;; USE_AU=use_au, $
-              ;; USE_AL=use_al, $
-              ;; USE_AO=use_ao, $
-              HIGH_AE_I=high_ae_i, $
-              LOW_AE_I=low_ae_i, $
-              HIGH_I=high_i, $
-              LOW_I=low_i, $
-              N_HIGH=n_high, $
-              N_LOW=n_low, $
-              OUT_NAME=navn, $
-              HIGH_AE_T1=high_ae_t1, $
-              LOW_AE_T1=low_ae_t1, $
-              HIGH_AE_T2=high_ae_t2, $
-              LOW_AE_T2=low_ae_t2
-
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
-                 PRINTF,lun,'Restricting maximus with high ' + navn + ' indices ...'
-                 restrict_with_these_i = high_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
-                 PRINTF,lun,'Restricting maximus with low ' + navn + ' indices ...'
-                 restrict_with_these_i = low_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
-                 PRINTF,lun,'Restricting maximus with low and high ' + navn + ' indices in turn ...'
-                 restrict_with_these_i = LIST(high_i,low_i)
-              END
-           ENDCASE
-        ENDIF
-
-        IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
-
-           ;;Now OMNI, if we need dat
-           GET_AE_OMNIDB_INDICES, $
-              ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-              IMF_STRUCT=PASIS__IMF_struct, $
-              MIMC_STRUCT=PASIS__MIMC_struct, $
-              ;; AECUTOFF=AEcutoff, $
-              ;; SMOOTH_AE=smooth_AE, $
-              ;; USE_AU=use_au, $
-              ;; USE_AL=use_al, $
-              ;; USE_AO=use_ao, $
-              HIGH_AE_I=high_ae_i, $
-              LOW_AE_I=low_ae_i, $
-              HIGH_I=high_OMNI_i, $
-              LOW_I=low_OMNI_i, $
-              N_HIGH=n_high, $
-              N_LOW=n_low, $
-              OUT_NAME=navn, $
-              HIGH_AE_T1=high_ae_t1, $
-              LOW_AE_T1=low_ae_t1, $
-              HIGH_AE_T2=high_ae_t2, $
-              LOW_AE_T2=low_ae_t2, $
-              LUN=lun
-
-
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
-                 PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
-                 restrict_OMNI_with_these_i = high_OMNI_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
-                 PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
-                 restrict_OMNI_with_these_i = low_OMNI_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
-                 PRINTF,lun,'Restricting OMNI with low and high ' + navn + ' indices in turn ...'
-                 restrict_OMNI_with_these_i = LIST(high_OMNI_i,low_OMNI_i)
-              END
-           ENDCASE
-
-        ENDIF
-
-        ;;Now fastLoc
-        IF KEYWORD_SET(need_fastLoc_i) AND $
-           KEYWORD_SET(get_fastLoc_i) $
-        THEN BEGIN
-
-           GET_AE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-              IMF_STRUCT=IMF_struct, $
-              MIMC_STRUCT=MIMC_struct, $
-              /GET_TIME_I_NOT_ALFDB_I, $
-              COORDINATE_SYSTEM=coordinate_system, $
-              ;; AECUTOFF=AEcutoff, $
-              ;; SMOOTH_AE=smooth_AE, $
-              ;; USE_AU=use_au, $
-              ;; USE_AL=use_al, $
-              ;; USE_AO=use_ao, $
-              HIGH_AE_I=high_ae_i, $
-              LOW_AE_I=low_ae_i, $
-              HIGH_I=high_FL_i, $
-              LOW_I=low_FL_i, $
-              N_HIGH=n_FL_high, $
-              N_LOW=n_FL_low, $
-              OUT_NAME=navn, $
-              HIGH_AE_T1=high_ae_t1, $
-              LOW_AE_T1=low_ae_t1, $
-              HIGH_AE_T2=high_ae_t2, $
-              LOW_AE_T2=low_ae_t2, $
-              GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
-
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with high ' + navn + ' indices ...'
-                 restrict_with_these_FL_i = high_FL_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with low ' + navn + ' indices ...'
-                 restrict_with_these_FL_i = low_FL_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
-                 PRINTF,lun,'Restricting fastLoc with low and high ' + navn + ' indices in turn ...'
-                 restrict_with_these_i = LIST(high_FL_i,low_FL_i)
-              END
-           ENDCASE
-
-        ENDIF
-
-        ;;Now eSpecDB
-        IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
-        THEN BEGIN 
-
-           GET_AE_FASTDB_INDICES, $
-              ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
-              IMF_STRUCT=IMF_struct, $
-              MIMC_STRUCT=MIMC_struct, $
-              /GET_ESPECDB_I_NOT_ALFDB_I, $
-              COORDINATE_SYSTEM=coordinate_system, $
-              ;; AECUTOFF=AEcutoff, $
-              ;; SMOOTH_AE=smooth_AE, $
-              USE_AU=use_au, $
-              USE_AL=use_al, $
-              USE_AO=use_ao, $
-              HIGH_AE_I=high_ae_i, $
-              LOW_AE_I=low_ae_i, $
-              HIGH_I=high_eSpec_i, $
-              LOW_I=low_eSpec_i, $
-              N_HIGH=n_eSpec_high, $
-              N_LOW=n_eSpec_low, $
-              OUT_NAME=navn, $
-              HIGH_AE_T1=high_ae_t1, $
-              LOW_AE_T1=low_ae_t1, $
-              HIGH_AE_T2=high_ae_t2, $
-              LOW_AE_T2=low_ae_t2
-           
-           CASE 1 OF
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
-                 PRINTF,lun,'Restricting eSpec with high ' + navn + ' indices ...'
-                 restrict_with_these_eSpec_i = high_eSpec_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
-                 PRINTF,lun,'Restricting eSpec with low ' + navn + ' indices ...'
-                 restrict_with_these_eSpec_i = low_eSpec_i
-              END
-              KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
-                 PRINTF,lun,'Restricting eSpec with low and high ' + navn + ' indices in turn ...'
-                 restrict_with_these_i = LIST(high_eSpec_i,low_eSpec_i)
-              END
-           ENDCASE
-
-        ENDIF
+     ;;Now OMNI, if desired
+     IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           EARLIEST_UTC=PASIS__IMF_struct.earliest_UTC, $
+           LATEST_UTC=PASIS__IMF_struct.latest_UTC, $
+           USE_JULDAY_NOT_UTC=PASIS__IMF_struct.use_julDay_not_UTC, $
+           EARLIEST_JULDAY=PASIS__IMF_struct.earliest_julDay, $
+           LATEST_JULDAY=PASIS__IMF_struct.latest_julDay, $
+           NONSTORM_I=ns_OMNI_i, $
+           MAINPHASE_I=mp_OMNI_i, $
+           RECOVERYPHASE_I=rp_OMNI_i, $
+           STORM_DST_I=s_dst_OMNI_i, $
+           NONSTORM_DST_I=ns_dst_OMNI_i, $
+           MAINPHASE_DST_I=mp_dst_OMNI_i, $
+           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
+           N_STORM=n_OMNI_s, $
+           N_NONSTORM=n_OMNI_ns, $
+           N_MAINPHASE=n_OMNI_mp, $
+           N_RECOVERYPHASE=n_OMNI_rp, $
+           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
+           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
 
         CASE 1 OF
-           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
-              t1_arr                = high_ae_t1
-              t2_arr                = high_ae_t2
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              PRINTF,lun,'Restricting OMNI with non-storm indices ...'
+              restrict_OMNI_with_these_i = ns_OMNI_i
+              t1_OMNI_arr                = ns_OMNI_t1
+              t2_OMNI_arr                = ns_OMNI_t2
            END
-           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
-              t1_arr                = low_ae_t1
-              t2_arr                = low_ae_t2
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with main-phase indices ...'
+              restrict_OMNI_with_these_i = mp_OMNI_i
+              t1_OMNI_arr                = mp_OMNI_t1
+              t2_OMNI_arr                = mp_OMNI_t2         
            END
-           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
-              t1_arr                = LIST(high_ae_t1,low_ae_t1)
-              t2_arr                = LIST(high_ae_t2,low_ae_t2)
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting OMNI with recovery-phase indices ...'
+              restrict_OMNI_with_these_i = rp_OMNI_i
+              t1_OMNI_arr                = rp_OMNI_t1
+              t2_OMNI_arr                = rp_OMNI_t2
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting OMNI with each storm phase in turn ...'
+              restrict_OMNI_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
            END
         ENDCASE
 
      ENDIF
 
-     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+     ;;Now fastLoc
+     IF KEYWORD_SET(need_fastLoc_i) $
+        AND KEYWORD_SET(get_fastLoc_i) $
+     THEN BEGIN 
+
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           /GET_TIME_I_NOT_ALFDB_I, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           NONSTORM_I=ns_FL_i, $
+           MAINPHASE_I=mp_FL_i, $
+           RECOVERYPHASE_I=rp_FL_i, $
+           STORM_DST_I=s_dst_FL_i, $
+           NONSTORM_DST_I=ns_dst_FL_i, $
+           MAINPHASE_DST_I=mp_dst_FL_i, $
+           RECOVERYPHASE_DST_I=rp_dst_FL_i, $
+           N_STORM=n_FL_s, $
+           N_NONSTORM=n_FL_ns, $
+           N_MAINPHASE=n_FL_mp, $
+           N_RECOVERYPHASE=n_FL_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+           GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
         
-        IF KEYWORD_SET(get_plot_i) THEN BEGIN
-           plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                          MAXIMUS__maximus, $
-                          DBTIMES=MAXIMUS__times, $
-                          DBFILE=dbfile, $
-                          LUN=lun, $
-                          ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-                          IMF_STRUCT=PASIS__IMF_struct, $
-                          MIMC_STRUCT=PASIS__MIMC_struct, $
-                          RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
-                          RESTRICT_WITH_THESE_I=restrict_with_these_i, $
-                          RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                          /DO_NOT_SET_DEFAULTS, $
-                          PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                          PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                          PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
-                          SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                          MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
-                          OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
-                          CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                          RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
-                          NO_BURSTDATA=no_burstData, $
-                          DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem), $
-                          TXTOUTPUTDIR=txtOutputDir)
-
-           ;;These can be reloaded, if we like
-           PASIS__plot_i_list = TEMPORARY(plot_i_list)
-        ENDIF
-
-     ENDIF                    
-    
-     IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
-
-        IF KEYWORD_SET(get_fastLoc_i) THEN BEGIN
-
-           fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                                       KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
-                                       LUN=lun, $
-                                       DBTIMES=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times, $
-                                       DBFILE=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
-                                       ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-                                       IMF_STRUCT=PASIS__IMF_struct, $
-                                       MIMC_STRUCT=PASIS__MIMC_struct, $
-                                       RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
-                                       RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
-                                       RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
-                                       /DO_NOT_SET_DEFAULTS, $
-                                       ;;Don't do these for fastLoc, since it amounts to duplicated
-                                       ;;effort
-                                       ;; PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
-                                       ;; PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
-                                       ;; PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
-                                       ;; SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-                                       ;; CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-                                       RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
-                                       NO_BURSTDATA=no_burstData, $
-                                       /GET_TIME_I_NOT_ALFVENDB_I, $
-                                       GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
-                                       DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem))
-
-           ;;These can be reloaded, if we like
-           PASIS__fastLocInterped_i_list = TEMPORARY(fastLocInterped_i_list)
-
-        ENDIF
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              PRINTF,lun,'Restricting fastLoc with non-storm indices ...'
+              restrict_with_these_FL_i = ns_FL_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              PRINTF,lun,'Restricting fastLoc with main-phase indices ...'
+              restrict_with_these_FL_i = mp_FL_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              PRINTF,lun,'Restricting fastLoc with recovery-phase indices ...'
+              restrict_with_these_FL_i = rp_FL_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting fastLoc with each storm phase in turn ...'
+              restrict_with_these_FL_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
+           END
+        ENDCASE
 
      ENDIF
 
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) THEN BEGIN
+     ;;Now eSpecDB
+     IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
+     THEN BEGIN 
 
-        IF KEYWORD_SET(get_eSpec_i) THEN BEGIN
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           /GET_ESPECDB_I_NOT_ALFDB_I, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           NONSTORM_I=ns_eSpec_i, $
+           MAINPHASE_I=mp_eSpec_i, $
+           RECOVERYPHASE_I=rp_eSpec_i, $
+           STORM_DST_I=s_dst_eSpec_i, $
+           NONSTORM_DST_I=ns_dst_eSpec_i, $
+           MAINPHASE_DST_I=mp_dst_eSpec_i, $
+           RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
+           N_STORM=n_eSpec_s, $
+           N_NONSTORM=n_eSpec_ns, $
+           N_MAINPHASE=n_eSpec_mp, $
+           N_RECOVERYPHASE=n_eSpec_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              restrict_with_these_eSpec_i = ns_eSpec_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              restrict_with_these_eSpec_i = mp_eSpec_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              restrict_with_these_eSpec_i = rp_eSpec_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting eSpec with each storm phase in turn ...'
+              restrict_with_these_eSpec_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+           END
+        ENDCASE
 
-           GET_ESPEC_FLUX_DATA,plot_i_list, $
-                               /FOR_IMF_SCREENING, $
-                               ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-                               IMF_STRUCT=PASIS__IMF_struct, $
-                               MIMC_STRUCT=PASIS__MIMC_struct, $
-                               DBS_RESET=DBs_reset, $
-                               T1_ARR=t1_arr,T2_ARR=t2_arr, $
-                               ;; ESPEC_DELTA_T=eSpec_delta_t, $
-                               ION_DELTA_T=ion_delta_t, $
-                               OUT_EFLUX_DATA=eFlux_eSpec_data, $
-                               OUT_ENUMFLUX_DATA=eNumFlux_eSpec_data, $
-                               OUT_IFLUX_DATA=iFlux_eSpec_data, $
-                               OUT_INUMFLUX_DATA=iNumFlux_eSpec_data, $
-                               INDICES__ESPEC=indices__eSpec_list, $
-                               INDICES__ION=indices__ion_list, $
-                               ESPEC__MLTS=eSpec__mlts, $
-                               ESPEC__ILATS=eSpec__ilats, $
-                               ESPEC__INFO=eSpec_info, $
-                               ION__MLTS=ion__mlts, $
-                               ION__ILATS=ion__ilats, $
-                               ION__INFO=ion_info, $
-                               CHARIERANGE=charIERange, $
-                               RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
-                               RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
-                               RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
-                               /DO_NOT_SET_DEFAULTS, $
-                               RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
-                               DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR $
-                               KEYWORD_SET(nonMem)
-
-           IF KEYWORD_SET(indices__eSpec_list) THEN BEGIN
-              PASIS__eFlux_eSpec_data     = KEYWORD_SET(eFlux_eSpec_data)
-              PASIS__eNumFlux_eSpec_data  = KEYWORD_SET(eNumFlux_eSpec_data)
-              ;; PASIS__eSpec_delta_t        = KEYWORD_SET(eSpec_delta_t) ? $
-              ;;                               TEMPORARY(eSpec_delta_t) : !NULL
-              PASIS__eSpec__MLTs          = KEYWORD_SET(eSpec__MLTs)
-              PASIS__eSpec__ILATs         = KEYWORD_SET(eSpec__ILATs)
-              PASIS__indices__eSpec_list  = TEMPORARY(indices__eSpec_list)
-           ENDIF
-
-           IF KEYWORD_SET(indices__ion_list) THEN BEGIN
-              PASIS__iFlux_eSpec_data     = KEYWORD_SET(iFlux_eSpec_data)
-              PASIS__iNumFlux_eSpec_data  = KEYWORD_SET(iNumFlux_eSpec_data)
-              PASIS__ion_delta_t          = KEYWORD_SET(ion_delta_t) ? $
-                                            TEMPORARY(ion_delta_t) : !NULL
-              PASIS__ion__MLTs            = KEYWORD_SET(ion__MLTs)
-              PASIS__ion__ILATs           = KEYWORD_SET(ion__ILATs)
-              PASIS__indices__ion_list    = TEMPORARY(indices__ion_list)
-           ENDIF
-        ENDIF
 
      ENDIF
 
-     IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
-        IF ~(COMPARE_DELTA_TYPES(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
-                                 (KEYWORD_SET(for_eSpec_DBs) ? NEWELL__eSpec     : MAXIMUS__maximus))) $
-        THEN BEGIN
-           PRINT,"Mismatch!!"
-           STOP
+  ENDIF
+
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
+
+     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+        GET_AE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           ;; USE_AU=use_au, $
+           ;; USE_AL=use_al, $
+           ;; USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_i, $
+           LOW_I=low_i, $
+           N_HIGH=n_high, $
+           N_LOW=n_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2
+
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting maximus with high ' + navn + ' indices ...'
+              restrict_with_these_i = high_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting maximus with low ' + navn + ' indices ...'
+              restrict_with_these_i = low_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting maximus with low and high ' + navn + ' indices in turn ...'
+              restrict_with_these_i = LIST(high_i,low_i)
+           END
+        ENDCASE
+     ENDIF
+
+     IF KEYWORD_SET(get_OMNI_i) THEN BEGIN
+
+        ;;Now OMNI, if we need dat
+        GET_AE_OMNIDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           ;; USE_AU=use_au, $
+           ;; USE_AL=use_al, $
+           ;; USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_OMNI_i, $
+           LOW_I=low_OMNI_i, $
+           N_HIGH=n_high, $
+           N_LOW=n_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2, $
+           LUN=lun
+
+
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting OMNI with high ' + navn + ' indices ...'
+              restrict_OMNI_with_these_i = high_OMNI_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting OMNI with low ' + navn + ' indices ...'
+              restrict_OMNI_with_these_i = low_OMNI_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting OMNI with low and high ' + navn + ' indices in turn ...'
+              restrict_OMNI_with_these_i = LIST(high_OMNI_i,low_OMNI_i)
+           END
+        ENDCASE
+
+     ENDIF
+
+     ;;Now fastLoc
+     IF KEYWORD_SET(need_fastLoc_i) AND $
+        KEYWORD_SET(get_fastLoc_i) $
+     THEN BEGIN
+
+        GET_AE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+           IMF_STRUCT=IMF_struct, $
+           MIMC_STRUCT=MIMC_struct, $
+           /GET_TIME_I_NOT_ALFDB_I, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           ;; USE_AU=use_au, $
+           ;; USE_AL=use_al, $
+           ;; USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_FL_i, $
+           LOW_I=low_FL_i, $
+           N_HIGH=n_FL_high, $
+           N_LOW=n_FL_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2, $
+           GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
+
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting fastLoc with high ' + navn + ' indices ...'
+              restrict_with_these_FL_i = high_FL_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting fastLoc with low ' + navn + ' indices ...'
+              restrict_with_these_FL_i = low_FL_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting fastLoc with low and high ' + navn + ' indices in turn ...'
+              restrict_with_these_i = LIST(high_FL_i,low_FL_i)
+           END
+        ENDCASE
+
+     ENDIF
+
+     ;;Now eSpecDB
+     IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
+     THEN BEGIN 
+
+        GET_AE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+           IMF_STRUCT=IMF_struct, $
+           MIMC_STRUCT=MIMC_struct, $
+           /GET_ESPECDB_I_NOT_ALFDB_I, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_eSpec_i, $
+           LOW_I=low_eSpec_i, $
+           N_HIGH=n_eSpec_high, $
+           N_LOW=n_eSpec_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting eSpec with high ' + navn + ' indices ...'
+              restrict_with_these_eSpec_i = high_eSpec_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting eSpec with low ' + navn + ' indices ...'
+              restrict_with_these_eSpec_i = low_eSpec_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting eSpec with low and high ' + navn + ' indices in turn ...'
+              restrict_with_these_i = LIST(high_eSpec_i,low_eSpec_i)
+           END
+        ENDCASE
+
+     ENDIF
+
+     CASE 1 OF
+        KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+           t1_arr                = high_ae_t1
+           t2_arr                = high_ae_t2
+        END
+        KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+           t1_arr                = low_ae_t1
+           t2_arr                = low_ae_t2
+        END
+        KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+           t1_arr                = LIST(high_ae_t1,low_ae_t1)
+           t2_arr                = LIST(high_ae_t2,low_ae_t2)
+        END
+     ENDCASE
+
+  ENDIF
+
+  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+     
+     IF KEYWORD_SET(get_plot_i) THEN BEGIN
+        plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
+                       MAXIMUS__maximus, $
+                       DBTIMES=MAXIMUS__times, $
+                       DBFILE=dbfile, $
+                       LUN=lun, $
+                       ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                       IMF_STRUCT=PASIS__IMF_struct, $
+                       MIMC_STRUCT=PASIS__MIMC_struct, $
+                       RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
+                       RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                       RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                       /DO_NOT_SET_DEFAULTS, $
+                       PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                       PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                       PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
+                       SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                       MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                       OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
+                       CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
+                       RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
+                       NO_BURSTDATA=no_burstData, $
+                       DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem), $
+                       TXTOUTPUTDIR=txtOutputDir)
+
+        ;;These can be reloaded, if we like
+        PASIS__plot_i_list = TEMPORARY(plot_i_list)
+     ENDIF
+
+  ENDIF                    
+  
+  IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
+
+     IF KEYWORD_SET(get_fastLoc_i) THEN BEGIN
+
+        fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
+                                    KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
+                                    LUN=lun, $
+                                    DBTIMES=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times, $
+                                    DBFILE=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
+                                    ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                                    IMF_STRUCT=PASIS__IMF_struct, $
+                                    MIMC_STRUCT=PASIS__MIMC_struct, $
+                                    RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
+                                    RESTRICT_WITH_THESE_I=restrict_with_these_FL_i, $
+                                    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                                    /DO_NOT_SET_DEFAULTS, $
+                                    ;;Don't do these for fastLoc, since it amounts to duplicated
+                                    ;;effort
+                                    ;; PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                                    ;; PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                                    ;; PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
+                                    ;; SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                                    ;; CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
+                                    RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
+                                    NO_BURSTDATA=no_burstData, $
+                                    /GET_TIME_I_NOT_ALFVENDB_I, $
+                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
+                                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem))
+
+        ;;These can be reloaded, if we like
+        PASIS__fastLocInterped_i_list = TEMPORARY(fastLocInterped_i_list)
+
+     ENDIF
+
+  ENDIF
+
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) THEN BEGIN
+
+     IF KEYWORD_SET(get_eSpec_i) THEN BEGIN
+
+        GET_ESPEC_FLUX_DATA,plot_i_list, $
+                            /FOR_IMF_SCREENING, $
+                            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                            IMF_STRUCT=PASIS__IMF_struct, $
+                            MIMC_STRUCT=PASIS__MIMC_struct, $
+                            DBS_RESET=DBs_reset, $
+                            T1_ARR=t1_arr,T2_ARR=t2_arr, $
+                            ;; ESPEC_DELTA_T=eSpec_delta_t, $
+                            ION_DELTA_T=ion_delta_t, $
+                            OUT_EFLUX_DATA=eFlux_eSpec_data, $
+                            OUT_ENUMFLUX_DATA=eNumFlux_eSpec_data, $
+                            OUT_IFLUX_DATA=iFlux_eSpec_data, $
+                            OUT_INUMFLUX_DATA=iNumFlux_eSpec_data, $
+                            INDICES__ESPEC=indices__eSpec_list, $
+                            INDICES__ION=indices__ion_list, $
+                            ESPEC__MLTS=eSpec__mlts, $
+                            ESPEC__ILATS=eSpec__ilats, $
+                            ESPEC__INFO=eSpec_info, $
+                            ION__MLTS=ion__mlts, $
+                            ION__ILATS=ion__ilats, $
+                            ION__INFO=ion_info, $
+                            CHARIERANGE=charIERange, $
+                            RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
+                            RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
+                            RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
+                            /DO_NOT_SET_DEFAULTS, $
+                            RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
+                            DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR $
+                            KEYWORD_SET(nonMem)
+
+        IF KEYWORD_SET(indices__eSpec_list) THEN BEGIN
+           PASIS__eFlux_eSpec_data     = KEYWORD_SET(eFlux_eSpec_data)
+           PASIS__eNumFlux_eSpec_data  = KEYWORD_SET(eNumFlux_eSpec_data)
+           ;; PASIS__eSpec_delta_t        = KEYWORD_SET(eSpec_delta_t) ? $
+           ;;                               TEMPORARY(eSpec_delta_t) : !NULL
+           PASIS__eSpec__MLTs          = KEYWORD_SET(eSpec__MLTs)
+           PASIS__eSpec__ILATs         = KEYWORD_SET(eSpec__ILATs)
+           PASIS__indices__eSpec_list  = TEMPORARY(indices__eSpec_list)
+        ENDIF
+
+        IF KEYWORD_SET(indices__ion_list) THEN BEGIN
+           PASIS__iFlux_eSpec_data     = KEYWORD_SET(iFlux_eSpec_data)
+           PASIS__iNumFlux_eSpec_data  = KEYWORD_SET(iNumFlux_eSpec_data)
+           PASIS__ion_delta_t          = KEYWORD_SET(ion_delta_t) ? $
+                                         TEMPORARY(ion_delta_t) : !NULL
+           PASIS__ion__MLTs            = KEYWORD_SET(ion__MLTs)
+           PASIS__ion__ILATs           = KEYWORD_SET(ion__ILATs)
+           PASIS__indices__ion_list    = TEMPORARY(indices__ion_list)
         ENDIF
      ENDIF
 
-  ;; ENDELSE   
+  ENDIF
 
+  IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
+     SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
+                     /VERBOSE
+  ENDIF
+
+  ;;Leave early if we yust (yust) need indices
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.justInds) THEN BEGIN
      PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: Finished! Returning indices ...'
 
@@ -1330,6 +1322,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
+
+  IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
+     IF ~(COMPARE_DELTA_TYPES(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
+                              (KEYWORD_SET(for_eSpec_DBs) ? NEWELL__eSpec     : MAXIMUS__maximus))) $
+     THEN BEGIN
+        PRINT,"Mismatch!!"
+        STOP
+     ENDIF
+  ENDIF
   
   ;;********************************************
   ;;Now time for data summary
@@ -1878,11 +1879,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      tempFile_list.add,out_tempFile
   ENDFOR
-
-  IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-     SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
-                     /VERBOSE
-  ENDIF
 
   ;; out_tempFile_list      = tempFile_list
   ;; out_dataNameArr_list   = dataNameArr_list

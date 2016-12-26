@@ -1,5 +1,6 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
+
   COMPILE_OPT IDL2
 
   ;; plotPref = '-atest_teste-MAPPE-cb' 
@@ -10,7 +11,6 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   labels_for_presentation        = 1
 
-  restore_last_session           = 0
   use_prev_plot_i                = 1
 
   nonstorm                       = 1
@@ -45,8 +45,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
+  do_timeAvg_fluxQuantities      = 0
+  logAvgPlot                     = 1
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -54,6 +54,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; write_obsArr__inc_IMF          = 1
   ;; write_obsArr__orb_avg_obs      = 1
   ;; justData                       = 1
+
+  
+  saveDir                        = '/home/spencerh/Desktop/'
+  justInds                       = 1
+  justInds_saveToFile            = 'newellZhang2014--inds.sav'
 
   ;;DB stuff
   do_despun                      = 0
@@ -188,7 +193,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10600]
+  orbRange                       = [1000,10800]
+
+  latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -209,16 +216,16 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -90
+  ;; maxILAT                        = -60
   ;; maskMin                        =  1
   ;; tHist_mask_bins_below_thresh   = 2
 
@@ -555,11 +562,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         NO_BURSTDATA=no_burstData, $
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
-        CHASTDB=chastDB, $
-        DESPUNDB=despun, $
         COORDINATE_SYSTEM=coordinate_system, $
-        USE_AACGM_COORDS=use_AACGM, $
-        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $

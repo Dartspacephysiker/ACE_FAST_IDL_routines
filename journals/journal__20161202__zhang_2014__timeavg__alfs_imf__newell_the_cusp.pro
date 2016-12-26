@@ -7,6 +7,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF
 
+  latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
+
   labels_for_presentation        = 1
 
   ;; plotPref += '-smeared'
@@ -15,11 +17,17 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
   ;; plotPref += 'FINALE'
-  plotPref += 'customKill_8276--9585_in_SOUF'
+  plotPref += 'customKill_8276--9585_in_SOUF--altbin'
+
+  include_32Hz                   = 0
+  EA_binning                     = 0
+  use_AACGM                      = 0
+
 
   charE__Newell_the_cusp         = 0
 
   use_prev_plot_i                = 1
+  remake_prev_plot_file          = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -123,21 +131,21 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      ;; numOrbLim                     = 10
 
      ;; binILAT                       = 2.0
-     binILAT                          = 2.5
+     binI                             = 2.5
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;MLT stuff
-     binMLT                           = 1.0
-     shiftMLT                         = 1.0
+     binM                             = 1.0
+     shiftM                           = 1.0
 
-     ;; minMLT                        = 6
-     ;; maxMLT                        = 18
+     ;; minM                          = 6
+     ;; maxM                          = 18
 
      ;;Bonus
 
   ENDIF
 
-  IF shiftMLT GT 0. THEN BEGIN
+  IF shiftM GT 0. THEN BEGIN
      plotPref += '-rotated'
   ENDIF
 
@@ -146,7 +154,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 0
+  make_OMNI_stuff                 = 1
   print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
@@ -154,13 +162,14 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   make_integral_savfiles          = 0
 
   show_integrals                  = 1
-  write_obsArr_textFile           = 0
+  write_obsArr_textFile           = 1
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
+  justData                        = 1
   justInds                        = 0
-  justInds_saveToFile             = 0
-
+  justInds_saveToFile             = 'Alfvens_IMF--inds--' + STRLOWCASE(hemi) + $
+                                    '_hemi--20161224.sav'
+  saveDir                         = '/home/spencerh/Desktop/'
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   besides_pFlux                      = 1
@@ -168,7 +177,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   eNumFlPlots                        = besides_pFlux
   pPlots                             = 1
   ionPlots                           = besides_pFlux
-  probOccurrencePlot                 = besides_pFlux
+  ;; probOccurrencePlot                 = besides_pFlux
   tHistDenominatorPlot               = 0 ;besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
@@ -188,7 +197,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; ENumFlPlotRange             = [[1e-1,1e1], $
   ;;                             [1e7,1e9]]
   logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,1.0], $
+  ENumFlPlotRange                = [[0,0.25], $
                                     [0,1.0e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
@@ -582,6 +591,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         OUT_PLOT_I_LIST=out_plot_i_list, $
         OUT_PARAMSTRING_LIST=out_paramString_list, $
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
         GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
         SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
         ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
