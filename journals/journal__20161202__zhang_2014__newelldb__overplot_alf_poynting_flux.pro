@@ -27,7 +27,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 0
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -45,8 +45,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 0
-  logAvgPlot                     = 1
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
 
@@ -57,8 +57,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   
   saveDir                        = '/home/spencerh/Desktop/'
-  justInds                       = 1
-  justInds_saveToFile            = 'newellZhang2014--inds.sav'
+  justInds                       = 0
+  justInds_saveToFile            = 'newellZhang2014--not_2009--inds.sav'
 
   ;;DB stuff
   do_despun                      = 0
@@ -131,12 +131,12 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__all_fluxes              = 1
   Newell__comb_accelerated       = 0
 
-  eSpec__Newell_2009_interp      = 1
+  eSpec__Newell_2009_interp      = 0
   eSpec__use_2000km_file         = 0
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 0
+  ePlots                         = 1
   eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0

@@ -24,7 +24,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   use_AACGM                      = 0
 
 
-  charE__Newell_the_cusp         = 0
+  charE__Newell_the_cusp         = 1
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 1
@@ -165,10 +165,11 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   write_obsArr_textFile           = 1
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 1
-  justInds                        = 0
+  justData                        = 0
+  justInds                        = 1
   justInds_saveToFile             = 'Alfvens_IMF--inds--' + STRLOWCASE(hemi) + $
-                                    '_hemi--20161224.sav'
+                                    '_hemi--newellthecusp--20161226.sav'
+                                    ;; '_hemi--20161224.sav'
   saveDir                         = '/home/spencerh/Desktop/'
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
