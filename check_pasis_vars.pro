@@ -93,12 +93,24 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
 
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.latest_UTC,IMF_struct.latest_UTC) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.latest_JulDay,IMF_struct.latest_JulDay) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+
      comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i','clockstr', $
                                                                  'angleLim1','angleLim2', $
                                                                  'do_not_consider_IMF', $
                                                                  'dont_consider_clockAngles', $
                                                                  'delay_res','stableIMF', $
-                                                                 'delay'])
+                                                                 'delay', $
+                                                                 'latest_UTC', $
+                                                                 'latest_JulDay'])
 
      IF comp.nDiff GT 0 THEN BEGIN
 
