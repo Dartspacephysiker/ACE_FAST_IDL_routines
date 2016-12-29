@@ -194,6 +194,7 @@
 
 PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+   FOR_ION_DBS=for_ion_DBs, $
    FOR_ESPEC_DBS=for_eSpec_DBs, $
    NEED_FASTLOC_I=need_fastLoc_i, $
    USE_STORM_STUFF=use_storm_stuff, $
@@ -449,6 +450,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   @common__fastloc_vars.pro
   @common__fastloc_espec_vars.pro
   @common__newell_espec.pro
+  @common__newell_ion.pro
   @common__pasis_lists.pro
   @common__overplot_vars.pro
 
@@ -575,16 +577,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
 
-     IF N_ELEMENTS((KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
-        IF (STRUPCASE(STRMID((KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
+     fl_elOrIon = KEYWORD_SET(for_eSpec_DBs) OR KEYWORD_SET(for_ion_DBs)
+
+     IF N_ELEMENTS((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
+        IF (STRUPCASE(STRMID((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
             STRUPCASE(STRMID(PASIS__MIMC_struct.coordinate_system,0,3))) $
         THEN BEGIN
            DBs_reset = 1
         ENDIF
      ENDIF 
 
-     IF ( KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
-        (~KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0)) OR $
+     IF ( KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
+        (~KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0)) OR $
         KEYWORD_SET(DBs_reset)                                                    $
      THEN BEGIN
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
@@ -596,7 +600,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
            USE_GEO_COORDS=PASIS__MIMC_struct.use_geo, $
            USE_MAG_COORDS=PASIS__MIMC_struct.use_mag, $
-           FOR_ESPEC_DBS=for_eSpec_DBs, $
+           FOR_ESPEC_DBS=fl_elOrIon, $
            ;; CHECK_DB=check_DB, $
            JUST_FASTLOC=just_fastLoc, $
            JUST_TIMES=just_times, $
@@ -619,6 +623,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      other_guys = PASIS__alfDB_plot_struct.load_dILAT OR PASIS__alfDB_plot_struct.load_dAngle OR PASIS__alfDB_plot_struct.load_dx
      LOAD_NEWELL_ESPEC_DB, $
+        UPGOING=PASIS__alfDB_plot_struct.eSpec__upgoing, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
@@ -632,6 +637,28 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         FORCE_LOAD_DB=KEYWORD_SET(DBs_reset)
 
      eSpec_info = NEWELL__eSpec.info
+
+  ENDIF
+
+  IF (KEYWORD_SET(PASIS__alfDB_plot_struct.iNumFlPlots) OR $
+      KEYWORD_SET(PASIS__alfDB_plot_struct.iPlots          )) AND $
+     KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) $
+  THEN BEGIN
+
+     other_guys = PASIS__alfDB_plot_struct.load_dILAT OR PASIS__alfDB_plot_struct.load_dAngle OR PASIS__alfDB_plot_struct.load_dx
+     LOAD_NEWELL_ION_DB, $
+        DOWNGOING=PASIS__alfDB_plot_struct.ion__downgoing, $
+        DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
+        LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
+                        KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
+                       ) $
+                       AND ~other_guys), $
+        LOAD_DELTA_ILAT_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dILAT, $
+        LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dAngle, $
+        LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dx, $
+        FORCE_LOAD_DB=KEYWORD_SET(DBs_reset)
+
+     ion_info = NEWELL_I__ion.info
 
   ENDIF
 
