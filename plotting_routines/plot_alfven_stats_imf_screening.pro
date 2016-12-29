@@ -450,9 +450,14 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   @common__fastloc_vars.pro
   @common__fastloc_espec_vars.pro
   @common__newell_espec.pro
-  @common__newell_ion.pro
+  @common__newell_ion_db.pro
   @common__pasis_lists.pro
   @common__overplot_vars.pro
+
+  IF KEYWORD_SET(for_eSpec_DBs) AND KEYWORD_SET(for_ion_DBs) THEN BEGIN
+     PRINT,"Just do one database at a time. It hurts me and you to do more, after all"
+     STOP
+  ENDIF
 
   IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
 
@@ -648,7 +653,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      other_guys = PASIS__alfDB_plot_struct.load_dILAT OR PASIS__alfDB_plot_struct.load_dAngle OR PASIS__alfDB_plot_struct.load_dx
      LOAD_NEWELL_ION_DB, $
         DOWNGOING=PASIS__alfDB_plot_struct.ion__downgoing, $
-        DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
+        DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.ion__noMap, $
         LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
                         KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
                        ) $
@@ -867,7 +872,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            N_RECOVERYPHASE=n_FL_rp, $
            NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
            NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
-           GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
+           GET_TIME_FOR_ESPEC_DBS=fl_elOrIon
         
         
         CASE 1 OF
@@ -892,7 +897,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF
 
      ;;Now eSpecDB
-     IF for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
+     IF PASIS__alfDB_plot_struct.for_eSpec_DBs AND KEYWORD_SET(get_eSpec_i) $
      THEN BEGIN 
 
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
@@ -936,11 +941,55 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
+     IF PASIS__alfDB_plot_struct.for_ion_DBs AND KEYWORD_SET(get_ion_i) $
+     THEN BEGIN 
+
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           /GET_IONDB_I_NOT_ALFDB_I, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           NONSTORM_I=ns_ion_i, $
+           MAINPHASE_I=mp_ion_i, $
+           RECOVERYPHASE_I=rp_ion_i, $
+           STORM_DST_I=s_dst_ion_i, $
+           NONSTORM_DST_I=ns_dst_ion_i, $
+           MAINPHASE_DST_I=mp_dst_ion_i, $
+           RECOVERYPHASE_DST_I=rp_dst_ion_i, $
+           N_STORM=n_ion_s, $
+           N_NONSTORM=n_ion_ns, $
+           N_MAINPHASE=n_ion_mp, $
+           N_RECOVERYPHASE=n_ion_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              restrict_with_these_ion_i = ns_ion_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              restrict_with_these_ion_i = mp_ion_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              restrict_with_these_ion_i = rp_ion_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting ionDB with each storm phase in turn ...'
+              restrict_with_these_ion_i = LIST(ns_ion_i,mp_ion_i,rp_ion_i)
+           END
+        ENDCASE
+
+
+     ENDIF
+
   ENDIF
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
 
-     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) OR KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
         GET_AE_FASTDB_INDICES, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
            IMF_STRUCT=PASIS__IMF_struct, $
@@ -1051,8 +1100,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            LOW_AE_T1=low_ae_t1, $
            HIGH_AE_T2=high_ae_t2, $
            LOW_AE_T2=low_ae_t2, $
-           GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs
-
+           GET_TIME_FOR_ESPEC_DBS=fl_elOrIon
         
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
@@ -1115,6 +1163,50 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
+     ;;Now eSpecDB
+     IF for_ion_DBs AND KEYWORD_SET(get_ion_i) $
+     THEN BEGIN 
+
+        GET_AE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+           IMF_STRUCT=IMF_struct, $
+           MIMC_STRUCT=MIMC_struct, $
+           /GET_IONDB_I_NOT_ALFDB_I, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_ion_i, $
+           LOW_I=low_ion_i, $
+           N_HIGH=n_ion_high, $
+           N_LOW=n_ion_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting ionDB with high ' + navn + ' indices ...'
+              restrict_with_these_ion_i = high_ion_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting ionDB with low ' + navn + ' indices ...'
+              restrict_with_these_ion_i = low_ion_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting ionDB with low and high ' + navn + ' indices in turn ...'
+              restrict_with_these_i = LIST(high_ion_i,low_ion_i)
+           END
+        ENDCASE
+
+     ENDIF
+
      CASE 1 OF
         KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
            t1_arr                = high_ae_t1
@@ -1170,10 +1262,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      IF KEYWORD_SET(get_fastLoc_i) THEN BEGIN
 
         fastLocInterped_i_list    = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
-                                    KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
+                                    KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc, $
                                     LUN=lun, $
-                                    DBTIMES=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times, $
-                                    DBFILE=KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
+                                    DBTIMES=KEYWORD_SET(fl_elOrIon) ? FASTLOC_E__times : FASTLOC__times, $
+                                    DBFILE=KEYWORD_SET(fl_elOrIon) ? FASTLOC_E__dbFile : FASTLOC__dbFile, $
                                     ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
                                     IMF_STRUCT=PASIS__IMF_struct, $
                                     MIMC_STRUCT=PASIS__MIMC_struct, $
@@ -1191,7 +1283,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                     RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
-                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(for_eSpec_DBs), $
+                                    GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(fl_elOrIon), $
                                     DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem))
 
         ;;These can be reloaded, if we like
@@ -1201,9 +1293,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) THEN BEGIN
+  IF (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs)) THEN BEGIN
 
-     IF KEYWORD_SET(get_eSpec_i) THEN BEGIN
+     IF KEYWORD_SET(get_eSpec_i) OR KEYWORD_SET(get_ion_i) THEN BEGIN
 
         GET_ESPEC_FLUX_DATA,plot_i_list, $
                             /FOR_IMF_SCREENING, $
@@ -1217,7 +1309,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                             OUT_EFLUX_DATA=eFlux_eSpec_data, $
                             OUT_ENUMFLUX_DATA=eNumFlux_eSpec_data, $
                             OUT_IFLUX_DATA=iFlux_eSpec_data, $
-                            OUT_INUMFLUX_DATA=iNumFlux_eSpec_data, $
+                            OUT_INUMFLUX_DATA=iNumFlux_ion_data, $
                             INDICES__ESPEC=indices__eSpec_list, $
                             INDICES__ION=indices__ion_list, $
                             ESPEC__MLTS=eSpec__mlts, $
@@ -1246,10 +1338,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ENDIF
 
         IF KEYWORD_SET(indices__ion_list) THEN BEGIN
-           PASIS__iFlux_eSpec_data     = KEYWORD_SET(iFlux_eSpec_data)
-           PASIS__iNumFlux_eSpec_data  = KEYWORD_SET(iNumFlux_eSpec_data)
-           PASIS__ion_delta_t          = KEYWORD_SET(ion_delta_t) ? $
-                                         TEMPORARY(ion_delta_t) : !NULL
+           PASIS__iFlux_ion_data       = KEYWORD_SET(iFlux_ion_data)
+           PASIS__iNumFlux_ion_data    = KEYWORD_SET(iNumFlux_ion_data)
+           ;; PASIS__ion_delta_t          = KEYWORD_SET(ion_delta_t) ? $
+           ;;                               TEMPORARY(ion_delta_t) : !NULL
            PASIS__ion__MLTs            = KEYWORD_SET(ion__MLTs)
            PASIS__ion__ILATs           = KEYWORD_SET(ion__ILATs)
            PASIS__indices__ion_list    = TEMPORARY(indices__ion_list)
@@ -1556,8 +1648,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         EFLUX_ESPEC_DATA=PASIS__eFlux_eSpec_data, $
         ENUMFLUX_ESPEC_DATA=PASIS__eNumFlux_eSpec_data, $
-        IFLUX_ESPEC_DATA=PASIS__iFlux_eSpec_data, $
-        INUMFLUX_ESPEC_DATA=PASIS__iNumFlux_eSpec_data, $
+        IFLUX_ION_DATA=PASIS__iFlux_ion_data, $
+        INUMFLUX_ION_DATA=PASIS__iNumFlux_ion_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
         ;; ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
