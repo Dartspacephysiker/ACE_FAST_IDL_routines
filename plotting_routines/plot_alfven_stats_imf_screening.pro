@@ -220,15 +220,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    EPLOTRANGE=ePlotRange, $
    EFLUXPLOTTYPE=eFluxPlotType, $
    LOGEFPLOT=logEfPlot, $
-   ABSEFLUX=abseflux, $
-   NOPOSEFLUX=noPosEFlux, $
-   NONEGEFLUX=noNegEflux, $
+
+
+
    ENUMFLPLOTS=eNumFlPlots, $
    ENUMFLPLOTTYPE=eNumFlPlotType, $
    LOGENUMFLPLOT=logENumFlPlot, $
-   ABSENUMFL=absENumFl, $
-   NONEGENUMFL=noNegENumFl, $
-   NOPOSENUMFL=noPosENumFl, $
+
+
+
    ENUMFLPLOTRANGE=ENumFlPlotRange, $
    AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
    NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
@@ -239,36 +239,36 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
    PPLOTS=pPlots, $
    LOGPFPLOT=logPfPlot, $
-   ABSPFLUX=absPflux, $
-   NONEGPFLUX=noNegPflux, $
-   NOPOSPFLUX=noPosPflux, $
+
+
+
    PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, $
    IFLUXPLOTTYPE=ifluxPlotType, $
    LOGIFPLOT=logIfPlot, $
-   ABSIFLUX=absIflux, $
-   NONEGIFLUX=noNegIflux, $
-   NOPOSIFLUX=noPosIflux, $
+
+
+
    IPLOTRANGE=IPlotRange, $
    OXYPLOTS=oxyPlots, $
    OXYFLUXPLOTTYPE=oxyFluxPlotType, $
    LOGOXYFPLOT=logOxyfPlot, $
-   ABSOXYFLUX=absOxyFlux, $
-   NONEGOXYFLUX=noNegOxyFlux, $
-   NOPOSOXYFLUX=noPosOxyFlux, $
+
+
+
    OXYPLOTRANGE=oxyPlotRange, $
    CHAREPLOTS=charEPlots, $
    CHARETYPE=charEType, $
    LOGCHAREPLOT=logCharEPlot, $
-   ABSCHARE=absCharE, $
-   NONEGCHARE=noNegCharE, $
-   NOPOSCHARE=noPosCharE, $
+
+
+
    CHAREPLOTRANGE=CharEPlotRange, $
    CHARIEPLOTS=chariePlots, $
    LOGCHARIEPLOT=logChariePlot, $
-   ABSCHARIE=absCharie, $
-   NONEGCHARIE=noNegCharie, $
-   NOPOSCHARIE=noPosCharie, $
+
+
+
    CHARIEPLOTRANGE=ChariePlotRange, $
    AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
    FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
@@ -645,8 +645,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF (KEYWORD_SET(PASIS__alfDB_plot_struct.iNumFlPlots) OR $
-      KEYWORD_SET(PASIS__alfDB_plot_struct.iPlots          )) AND $
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.ionPlots   ) AND $
      KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) $
   THEN BEGIN
 
@@ -1350,10 +1349,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
-     SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
-                     /VERBOSE
-  ENDIF
+  ;;Save in any case?
+  ;; IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
+  SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
+                  /VERBOSE
+  ;; ENDIF
 
   ;;Leave early if we yust (yust) need indices
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.justInds) THEN BEGIN
@@ -1529,6 +1529,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         STOP
      ENDIF
      
+     ;;In square kilometers
      GET_H2D_BIN_AREAS,h2dAreas, $
                        CENTERS1=centersMLT, $
                        CENTERS2=centersILAT, $
@@ -1629,19 +1630,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
-        EPLOTS=ePlots, $
+        EPLOTS=PASIS__alfDB_plot_struct.ePlots, $
         EFLUXPLOTTYPE=eFluxPlotType, $
         LOGEFPLOT=logEfPlot, $
-        ABSEFLUX=abseflux, $
-        NOPOSEFLUX=noPosEFlux, $
-        NONEGEFLUX=noNegEflux, $
+        ABSEFLUX=alfDB_plotLim_struct.abseflux, $
+        NOPOSEFLUX=alfDB_plotLim_struct.noPosEFlux, $
+        NONEGEFLUX=alfDB_plotLim_struct.noNegEflux, $
         EPLOTRANGE=EPlotRange, $
         ENUMFLPLOTS=eNumFlPlots, $
         ENUMFLPLOTTYPE=eNumFlPlotType, $
         LOGENUMFLPLOT=logENumFlPlot, $
-        ABSENUMFL=absENumFl, $
-        NONEGENUMFL=noNegENumFl, $
-        NOPOSENUMFL=noPosENumFl, $
+        ABSENUMFL=alfDB_plotLim_struct.absENumFl, $
+        NONEGENUMFL=alfDB_plotLim_struct.noNegENumFl, $
+        NOPOSENUMFL=alfDB_plotLim_struct.noPosENumFl, $
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
         AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
@@ -1660,37 +1661,45 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ION__MLTS=PASIS__ion__mlts, $
         ION__ILATS=PASIS__ion__ilats, $
         ION_DELTA_T=PASIS__ion_delta_t, $
-        PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-        NONEGPFLUX=noNegPflux, $
-        NOPOSPFLUX=noPosPflux, $
+        PPLOTS=PASIS__alfDB_plot_struct.pPlots, $
+        LOGPFPLOT=logPfPlot, $
+        ABSPFLUX=alfDB_plotLim_struct.absPflux, $
+        NONEGPFLUX=alfDB_plotLim_struct.noNegPflux, $
+        NOPOSPFLUX=alfDB_plotLim_struct.noPosPflux, $
         PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, $
         IFLUXPLOTTYPE=ifluxPlotType, $
         LOGIFPLOT=logIfPlot, $
-        ABSIFLUX=absIflux, $
-        NONEGIFLUX=noNegIflux, $
-        NOPOSIFLUX=noPosIflux, $
+        ABSIFLUX=alfDB_plotLim_struct.absIflux, $
+        NONEGIFLUX=alfDB_plotLim_struct.noNegIflux, $
+        NOPOSIFLUX=alfDB_plotLim_struct.noPosIflux, $
         IPLOTRANGE=IPlotRange, $
         OXYPLOTS=oxyPlots, $
         OXYFLUXPLOTTYPE=oxyFluxPlotType, $
         LOGOXYFPLOT=logOxyfPlot, $
-        ABSOXYFLUX=absOxyFlux, $
-        NONEGOXYFLUX=noNegOxyFlux, $
-        NOPOSOXYFLUX=noPosOxyFlux, $
+        ABSOXYFLUX=alfDB_plotLim_struct.absOxyFlux, $
+        NONEGOXYFLUX=alfDB_plotLim_struct.noNegOxyFlux, $
+        NOPOSOXYFLUX=alfDB_plotLim_struct.noPosOxyFlux, $
         OXYPLOTRANGE=oxyPlotRange, $
         CHAREPLOTS=charEPlots, $
         CHARETYPE=charEType, $
         LOGCHAREPLOT=logCharEPlot, $
-        ABSCHARE=absCharE, $
-        NONEGCHARE=noNegCharE, $
-        NOPOSCHARE=noPosCharE, $
+        ABSCHARE=alfDB_plotLim_struct.absCharE, $
+        NONEGCHARE=alfDB_plotLim_struct.noNegCharE, $
+        NOPOSCHARE=alfDB_plotLim_struct.noPosCharE, $
         CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, $
         LOGCHARIEPLOT=logChariePlot, $
-        ABSCHARIE=absCharie, $
-        NONEGCHARIE=noNegCharie, $
-        NOPOSCHARIE=noPosCharie, $
+        ABSCHARIE=alfDB_plotLim_struct.absCharie, $
+        NONEGCHARIE=alfDB_plotLim_struct.noNegCharie, $
+        NOPOSCHARIE=alfDB_plotLim_struct.noPosCharie, $
         CHARIEPLOTRANGE=ChariePlotRange, $
+        MAGCPLOTS=PASIS__alfDB_plot_struct.magCPlots, $
+        LOGMAGCPLOT=alfDB_plotLim_struct.logMagCPlot, $
+        ABSMAGC=alfDB_plotLim_struct.absMagC, $
+        NONEGMAGC=alfDB_plotLim_struct.noNegMagC, $
+        NOPOSMAGC=alfDB_plotLim_struct.noPosMagC, $
+        MAGCPLOTRANGE=MagCPlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
