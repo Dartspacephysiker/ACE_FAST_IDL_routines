@@ -220,15 +220,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    EPLOTRANGE=ePlotRange, $
    EFLUXPLOTTYPE=eFluxPlotType, $
    LOGEFPLOT=logEfPlot, $
-
-
-
    ENUMFLPLOTS=eNumFlPlots, $
    ENUMFLPLOTTYPE=eNumFlPlotType, $
    LOGENUMFLPLOT=logENumFlPlot, $
-
-
-
    ENUMFLPLOTRANGE=ENumFlPlotRange, $
    AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
    NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
@@ -239,36 +233,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
    PPLOTS=pPlots, $
    LOGPFPLOT=logPfPlot, $
-
-
-
    PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, $
    IFLUXPLOTTYPE=ifluxPlotType, $
    LOGIFPLOT=logIfPlot, $
-
-
-
    IPLOTRANGE=IPlotRange, $
    OXYPLOTS=oxyPlots, $
    OXYFLUXPLOTTYPE=oxyFluxPlotType, $
    LOGOXYFPLOT=logOxyfPlot, $
-
-
-
    OXYPLOTRANGE=oxyPlotRange, $
    CHAREPLOTS=charEPlots, $
    CHARETYPE=charEType, $
    LOGCHAREPLOT=logCharEPlot, $
-
-
-
    CHAREPLOTRANGE=CharEPlotRange, $
    CHARIEPLOTS=chariePlots, $
    LOGCHARIEPLOT=logChariePlot, $
-
-
-
    CHARIEPLOTRANGE=ChariePlotRange, $
    AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
    FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
@@ -415,20 +394,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    NO_COLORBAR=no_colorbar, $
    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
    CB_FORCE_OOBLOW=cb_force_oobLow, $
-   PLOTH2D_CONTOUR=plotH2D_contour, $
+   ;; PLOTH2D_CONTOUR=plotH2D_contour, $
    CONTOUR__LEVELS=contour__levels, $
    CONTOUR__PERCENT=contour__percent, $
-   PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
+   ;; PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
    OVERPLOT_FILE=overplot_file, $
    OVERPLOT_ARR=overplot_arr, $
    OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
    OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
    OVERPLOT_PLOTRANGE=op_plotRange, $
    FANCY_PLOTNAMES=fancy_plotNames, $
-   SHOW_INTEGRALS=show_integrals, $
-   MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-   MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
-   INTEGRALSAVFILEPREF=integralSavFilePref, $
+   ;; SHOW_INTEGRALS=show_integrals, $
+   ;; MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+   ;; MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
+   ;; INTEGRALSAVFILEPREF=integralSavFilePref, $
    OUT_TEMPFILE_LIST=out_tempFile_list, $
    OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
    OUT_PARAMSTRING_LIST=out_paramString_list, $
@@ -734,7 +713,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Open file for text summary, if desired
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.outputPlotSummary) THEN BEGIN
      OPENW,lun,txtOutputDir + 'outputSummary_'+paramString+'.txt',/GET_LUN 
-     IF KEYWORD_SET(executing_multiples) THEN BEGIN
+     IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN BEGIN
         PRINT,"What are you thinking? You're not setup to get multi-output..."
         STOP
      ENDIF
@@ -1509,12 +1488,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDIF
 
   ;;Doing grossrates?
-  IF KEYWORD_SET(do_grossRate_fluxQuantities) OR $
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.do_grossRate_fluxQuantities) OR $
      KEYWORD_SET(do_grossRate_with_long_width) OR $
      KEYWORD_SET(grossRate_info_file) OR $
-     KEYWORD_SET(show_integrals) OR $
-     KEYWORD_SET(make_integral_txtfile) OR $
-     KEYWORD_SET(make_integral_savfiles) $
+     KEYWORD_SET(PASIS__alfDB_plot_struct.show_integrals) OR $
+     KEYWORD_SET(PASIS__alfDB_plot_struct.make_integral_txtfile) OR $
+     KEYWORD_SET(PASIS__alfDB_plot_struct.make_integral_savfiles) $
   THEN grossRateMe = 1
 
   ;;Need area or length of each bin for gross rates
@@ -1609,9 +1588,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF
 
      IF KEYWORD_SET(PASIS__paramString_list) THEN BEGIN 
-        paramString = PASIS__paramString_list[iMulti] 
+        paramStr           = PASIS__paramString_list[iMulti] 
      ENDIF
 
+     extra = CREATE_STRUCT(PASIS__alfDB_plot_struct,alfDB_plotLim_struct)
      GET_ALFVENDB_2DHISTOS, $
         plot_i, $
         fastLocInterped_i, $
@@ -1623,28 +1603,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
         IMF_STRUCT=PASIS__IMF_struct, $
         MIMC_STRUCT=PASIS__MIMC_struct, $
-        MASKMIN=maskMin, $
-        THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
-        NPLOTS=nPlots, $
-        NEVENTSPLOTRANGE=nEventsPlotRange, $
-        LOGNEVENTSPLOT=logNEventsPlot, $
-        NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
-        NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
-        EPLOTS=PASIS__alfDB_plot_struct.ePlots, $
-        EFLUXPLOTTYPE=eFluxPlotType, $
-        LOGEFPLOT=logEfPlot, $
-        ABSEFLUX=alfDB_plotLim_struct.abseflux, $
-        NOPOSEFLUX=alfDB_plotLim_struct.noPosEFlux, $
-        NONEGEFLUX=alfDB_plotLim_struct.noNegEflux, $
-        EPLOTRANGE=EPlotRange, $
-        ENUMFLPLOTS=eNumFlPlots, $
-        ENUMFLPLOTTYPE=eNumFlPlotType, $
-        LOGENUMFLPLOT=logENumFlPlot, $
-        ABSENUMFL=alfDB_plotLim_struct.absENumFl, $
-        NONEGENUMFL=alfDB_plotLim_struct.noNegENumFl, $
-        NOPOSENUMFL=alfDB_plotLim_struct.noPosENumFl, $
-        ENUMFLPLOTRANGE=ENumFlPlotRange, $
-        AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         EFLUX_ESPEC_DATA=PASIS__eFlux_eSpec_data, $
@@ -1661,101 +1619,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ION__MLTS=PASIS__ion__mlts, $
         ION__ILATS=PASIS__ion__ilats, $
         ION_DELTA_T=PASIS__ion_delta_t, $
-        PPLOTS=PASIS__alfDB_plot_struct.pPlots, $
-        LOGPFPLOT=logPfPlot, $
-        ABSPFLUX=alfDB_plotLim_struct.absPflux, $
-        NONEGPFLUX=alfDB_plotLim_struct.noNegPflux, $
-        NOPOSPFLUX=alfDB_plotLim_struct.noPosPflux, $
-        PPLOTRANGE=PPlotRange, $
-        IONPLOTS=ionPlots, $
-        IFLUXPLOTTYPE=ifluxPlotType, $
-        LOGIFPLOT=logIfPlot, $
-        ABSIFLUX=alfDB_plotLim_struct.absIflux, $
-        NONEGIFLUX=alfDB_plotLim_struct.noNegIflux, $
-        NOPOSIFLUX=alfDB_plotLim_struct.noPosIflux, $
-        IPLOTRANGE=IPlotRange, $
-        OXYPLOTS=oxyPlots, $
-        OXYFLUXPLOTTYPE=oxyFluxPlotType, $
-        LOGOXYFPLOT=logOxyfPlot, $
-        ABSOXYFLUX=alfDB_plotLim_struct.absOxyFlux, $
-        NONEGOXYFLUX=alfDB_plotLim_struct.noNegOxyFlux, $
-        NOPOSOXYFLUX=alfDB_plotLim_struct.noPosOxyFlux, $
-        OXYPLOTRANGE=oxyPlotRange, $
-        CHAREPLOTS=charEPlots, $
-        CHARETYPE=charEType, $
-        LOGCHAREPLOT=logCharEPlot, $
-        ABSCHARE=alfDB_plotLim_struct.absCharE, $
-        NONEGCHARE=alfDB_plotLim_struct.noNegCharE, $
-        NOPOSCHARE=alfDB_plotLim_struct.noPosCharE, $
-        CHAREPLOTRANGE=CharEPlotRange, $
-        CHARIEPLOTS=chariePlots, $
-        LOGCHARIEPLOT=logChariePlot, $
-        ABSCHARIE=alfDB_plotLim_struct.absCharie, $
-        NONEGCHARIE=alfDB_plotLim_struct.noNegCharie, $
-        NOPOSCHARIE=alfDB_plotLim_struct.noPosCharie, $
-        CHARIEPLOTRANGE=ChariePlotRange, $
-        MAGCPLOTS=PASIS__alfDB_plot_struct.magCPlots, $
-        LOGMAGCPLOT=alfDB_plotLim_struct.logMagCPlot, $
-        ABSMAGC=alfDB_plotLim_struct.absMagC, $
-        NONEGMAGC=alfDB_plotLim_struct.noNegMagC, $
-        NOPOSMAGC=alfDB_plotLim_struct.noPosMagC, $
-        MAGCPLOTRANGE=MagCPlotRange, $
-        AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-        FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
-        FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-        FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
-        DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
-        DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
-        ORBCONTRIBPLOT=orbContribPlot, $
-        LOGORBCONTRIBPLOT=logOrbContribPlot, $
-        ORBTOTPLOT=orbTotPlot, $
-        ORBFREQPLOT=orbFreqPlot, $
-        ORBCONTRIBRANGE=orbContribRange, $
-        ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
         ORBCONTRIB__REFERENCE_ALFVENDB_NOT_EPHEMERIS=orbContrib__reference_alfvenDB, $
-        ORBTOTRANGE=orbTotRange, $
-        ORBFREQRANGE=orbFreqRange, $
-        ORBCONTRIB_NOMASK=orbContrib_noMask, $
-        NEVENTPERORBPLOT=nEventPerOrbPlot, $
-        LOGNEVENTPERORB=logNEventPerOrb, $
-        NEVENTPERORBRANGE=nEventPerOrbRange, $
-        NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
         DIVNEVBYTOTAL=divNEvByTotal, $
-        NEVENTPERMINPLOT=nEventPerMinPlot, $
-        NEVENTPERMINRANGE=nEventPerMinRange, $
-        LOGNEVENTPERMIN=logNEventPerMin, $
-        NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
-        NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
-        NOWEPCO_RANGE=nowepco_range, $
-        NOWEPCO_AUTOSCALE=nowepco_autoscale, $
-        LOG_NOWEPCOPLOT=log_nowepcoPlot, $
-        PROBOCCURRENCEPLOT=probOccurrencePlot, $
-        PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
-        PROBOCCURRENCERANGE=probOccurrenceRange, $
-        LOGPROBOCCURRENCE=logProbOccurrence, $
-        THISTDENOMINATORPLOT=tHistDenominatorPlot, $
-        THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
-        THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
-        THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
-        THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
-        NEWELLPLOTS=newellPlots, $
-        NEWELL_PLOTRANGE=newell_plotRange, $
-        LOG_NEWELLPLOT=log_newellPlot, $
-        NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
-        NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
         NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
         ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
-        ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
-        ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
-        TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
-        TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
-        LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
-        TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
-        TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
-        LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
-        DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
-        DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
         GROSSRATE__H2D_AREAS=h2dAreas, $
         DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
         GROSSRATE__H2D_LONGWIDTHS=h2dLongWidths, $
@@ -1792,7 +1660,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         MEDHISTOUTTXT=medHistOutTxt, $
         LOGAVGPLOT=logAvgPlot, $
         ALL_LOGPLOTS=all_logPlots,$
-        PARAMSTRING=paramString, $
+        PARAMSTRG=paramStr, $
         PARAMSTRPREFIX=plotPrefix, $
         PARAMSTRSUFFIX=plotSuffix, $
         TMPLT_H2DSTR=tmplt_h2dStr, $
@@ -1800,6 +1668,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         RESET_OMNI_INDS=reset_omni_inds, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         TXTOUTPUTDIR=txtOutputDir, $
+        _EXTRA=extra, $
         LUN=lun
 
      h2dStrArr_List.add,h2dStrArr
@@ -1930,15 +1799,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            TEMPFILE=out_tempFile, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
            MIMC_STRUCT=PASIS__MIMC_struct, $
-           SQUAREPLOT=PASIS__alfDB_plot_struct.squarePlot, $
-           POLARCONTOUR=PASIS__alfDB_plot_struct.polarContour, $ 
-           JUSTDATA=PASIS__alfDB_plot_struct.justData, $
-           SHOWPLOTSNOSAVE=PASIS__alfDB_plot_struct.showPlotsNoSave, $
+           ;; SQUAREPLOT=PASIS__alfDB_plot_struct.squarePlot, $
+           ;; POLARCONTOUR=PASIS__alfDB_plot_struct.polarContour, $ 
+           ;; JUSTDATA=PASIS__alfDB_plot_struct.justData, $
+           ;; SHOWPLOTSNOSAVE=PASIS__alfDB_plot_struct.showPlotsNoSave, $
            PLOTDIR=plotDir, $
-           PLOTMEDORAVG=PASIS__alfDB_plot_struct.plotMedOrAvg, $
+           ;; PLOTMEDORAVG=PASIS__alfDB_plot_struct.plotMedOrAvg, $
            PARAMSTR=paramString, $
            ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
-           DEL_PS=PASIS__alfDB_plot_struct.del_PS, $
+           ;; DEL_PS=PASIS__alfDB_plot_struct.del_PS, $
            HEMI=PASIS__MIMC_struct.hemi, $
            CLOCKSTR=clockStr, $
            SUPPRESS_THICKGRID=suppress_thickGrid, $
@@ -1962,23 +1831,23 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            TILEPLOTTITLE=tilePlotTitle, $
            NO_COLORBAR=no_colorbar, $
            EPS_OUTPUT=eps_output, $
-           PLOTH2D_CONTOUR=PASIS__alfDB_plot_struct.plotH2D_contour, $
-           CONTOUR__LEVELS=PASIS__alfDB_plot_struct.contour__levels, $
-           CONTOUR__PERCENT=PASIS__alfDB_plot_struct.contour__percent, $
-           PLOTH2D__KERNEL_DENSITY_UNMASK=PASIS__alfDB_plot_struct.plotH2D__kernel_density_unmask, $
+           ;; PLOTH2D_CONTOUR=PASIS__alfDB_plot_struct.plotH2D_contour, $
+           ;; CONTOUR__LEVELS=PASIS__alfDB_plot_struct.contour__levels, $
+           ;; CONTOUR__PERCENT=PASIS__alfDB_plot_struct.contour__percent, $
+           ;; PLOTH2D__KERNEL_DENSITY_UNMASK=PASIS__alfDB_plot_struct.plotH2D__kernel_density_unmask, $
            ;; OVERPLOTSTR=KEYWORD_SET(sendit) ? oplotStr : !NULL, $
            OVERPLOTSTR=KEYWORD_SET(sendit), $
-           OVERPLOT_CONTOUR__LEVELS=PASIS__alfDB_plot_struct.op_contour__levels, $
-           OVERPLOT_CONTOUR__PERCENT=PASIS__alfDB_plot_struct.op_contour__percent, $
-           OVERPLOT_PLOTRANGE=PASIS__alfDB_plot_struct.op_plotRange, $
+           ;; OVERPLOT_CONTOUR__LEVELS=PASIS__alfDB_plot_struct.op_contour__levels, $
+           ;; OVERPLOT_CONTOUR__PERCENT=PASIS__alfDB_plot_struct.op_contour__percent, $
+           ;; OVERPLOT_PLOTRANGE=PASIS__alfDB_plot_struct.op_plotRange, $
            CENTERS_MLT=centersMLT, $
            CENTERS_ILAT=centersILAT, $
-           SHOW_INTEGRALS=show_integrals, $
-           MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-           MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
-           INTEGRALSAVFILEPREF=integralSavFilePref, $
+           ;; SHOW_INTEGRALS=PASIS__alfDB_plot_struct.show_integrals, $
+           ;; MAKE_INTEGRAL_TXTFILE=PASIS__alfDB_plot_struct.make_integral_txtfile, $
+           ;; MAKE_INTEGRAL_SAVFILE=PASIS__alfDB_plot_struct.make_integral_savfiles, $
+           ;; INTEGRALSAVFILEPREF=PASIS__alfDB_plot_struct.integralSavFilePref, $
            TXTOUTPUTDIR=txtOutputDir, $
-           _EXTRA = e
+           _EXTRA=PASIS__alfDB_plot_struct
      ENDIF
 
      IF KEYWORD_SET(outputPlotSummary) THEN BEGIN 
