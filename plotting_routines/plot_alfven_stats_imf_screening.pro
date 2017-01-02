@@ -1273,7 +1273,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs)) THEN BEGIN
 
-     IF KEYWORD_SET(get_eSpec_i) OR KEYWORD_SET(get_ion_i) THEN BEGIN
+     IF (KEYWORD_SET(get_eSpec_i) AND KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs)) OR $
+        (KEYWORD_SET(get_ion_i  ) AND KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs  ))    $
+     THEN BEGIN
 
         GET_ESPEC_FLUX_DATA,plot_i_list, $
                             /FOR_IMF_SCREENING, $
@@ -1283,7 +1285,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                             DBS_RESET=DBs_reset, $
                             T1_ARR=t1_arr,T2_ARR=t2_arr, $
                             ;; ESPEC_DELTA_T=eSpec_delta_t, $
-                            ION_DELTA_T=ion_delta_t, $
+                            ;; ION_DELTA_T=ion_delta_t, $
                             OUT_EFLUX_DATA=eFlux_eSpec_data, $
                             OUT_ENUMFLUX_DATA=eNumFlux_eSpec_data, $
                             OUT_IFLUX_DATA=iFlux_eSpec_data, $
@@ -1611,7 +1613,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         INUMFLUX_ION_DATA=PASIS__iNumFlux_ion_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
-        ;; ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
+        ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTS=PASIS__eSpec__mlts, $
         ESPEC__ILATS=PASIS__eSpec__ilats, $
