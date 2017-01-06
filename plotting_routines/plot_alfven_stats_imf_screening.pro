@@ -370,6 +370,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    DEL_PS=del_PS, $
    EPS_OUTPUT=eps_output, $
    SUPPRESS_THICKGRID=suppress_thickGrid, $
+   SUPPRESS_THINGRID=suppress_thinGrid, $
    SUPPRESS_GRIDLABELS=suppress_gridLabels, $
    SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
    SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
@@ -1813,6 +1814,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            HEMI=PASIS__MIMC_struct.hemi, $
            CLOCKSTR=clockStr, $
            SUPPRESS_THICKGRID=suppress_thickGrid, $
+           SUPPRESS_THINGRID=suppress_thinGrid, $
            SUPPRESS_GRIDLABELS=suppress_gridLabels, $
            SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
            SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $

@@ -97,8 +97,20 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
                  ENDFOR
               END
               ELSE: BEGIN
-                 PRINT,"This should have been handled at the beginning of the routine, since you're not doing multiples"
-                 STOP
+                 IF ~(KEYWORD_SET(alfDB_plot_struct.storm_opt.nonStorm     ) OR $
+                      KEYWORD_SET(alfDB_plot_struct.storm_opt.mainPhase    ) OR $
+                      KEYWORD_SET(alfDB_plot_struct.storm_opt.recoveryPhase))   $
+                 THEN BEGIN
+                    PRINT,"This should have been handled at the beginning of the routine, since you're not doing multiples"
+                    STOP
+                 ENDIF ELSE BEGIN
+                    restricted_and_interped_i_list = CGSETINTERSECTION( $
+                                                     restrict_with_these_i[0], $
+                                                     good_i, $
+                                                     COUNT=count)
+                    PRINT,"N " + alfDB_plot_struct.paramString[0] + ' inds: ' + $
+                          STRCOMPRESS(count,/REMOVE_ALL)
+                 ENDELSE
               END
         ENDCASE
         END
