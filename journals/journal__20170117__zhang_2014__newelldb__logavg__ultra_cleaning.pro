@@ -1,5 +1,5 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
-PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
+PRO JOURNAL__20170117__ZHANG_2014__NEWELLDB__LOGAVG__ULTRA_CLEANING
 
   COMPILE_OPT IDL2
 
@@ -45,15 +45,15 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 1
-  logAvgPlot                     = 0
+  do_timeAvg_fluxQuantities      = 0
+  logAvgPlot                     = 1
   medianPlot                     = 0
   divide_by_width_x              = 1
 
-  ;; write_obsArr_textFile          = 1
-  ;; write_obsArr__inc_IMF          = 1
-  ;; write_obsArr__orb_avg_obs      = 1
-  ;; justData                       = 1
+  write_obsArr_textFile          = 1
+  write_obsArr__inc_IMF          = 1
+  write_obsArr__orb_avg_obs      = 1
+  justData                       = 1
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -152,15 +152,16 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
 
   eFluxPlotType                  = 'Max'
-  CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
-        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
-     END
-     ELSE: BEGIN
-        ePlotRange               = [[0,0.5],[0,1.0],[0,0.50],[0,0.5]]
-     END
-  ENDCASE
-  logEfPlot                      = 0
+  ;; CASE 1 OF
+  ;;    KEYWORD_SET(eSpec_noMap): BEGIN
+  ;;       ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+  ;;    END
+  ;;    ELSE: BEGIN
+  ;;       ePlotRange               = [[1e-2,1e2],[1e-2,1e2],[1e-2,1e2],[1e-2,1e2]]
+  ;;    END
+  ;; ENDCASE
+  ePlotRange                     = [[1e-1,5e1],[1e-2,1e1],[1e-1,5e1],[1e-2,1e2]]
+  logEfPlot                      = 1
   noNegEflux                     = 1
   ;; ePlotRange                     = [1e-3,1e1]
   ;; logEfPlot                      = 1
@@ -169,17 +170,19 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eNumFlPlotType                 = ['ESA_Number_flux']
   noNegENumFl                    = 1
   ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
-  CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
-        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
-     END
-     ELSE: BEGIN
-        ENumFlPlotRange          = [[0,5.0e8],[0,2.5e9],[0,6.0e8],[0,8.0e8]]
-     END
-  ENDCASE
+  ;; CASE 1 OF
+  ;;    KEYWORD_SET(eSpec_noMap): BEGIN
+  ;;       ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+  ;;    END
+  ;;    ELSE: BEGIN
+  ;;       ENumFlPlotRange          = [[0,5.0e8],[0,2.5e9],[0,6.0e8],[0,8.0e8]]
+  ;;    END
+  ;; ENDCASE
+  ENumFlPlotRange                = [[8e8,8e10],[8e7,8e9],[8e8,8e10],[8e8,8e10]]
+
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
+  logENumFlPlot                  = 1
   ;; ENumFlPlotRange                = [0,2e9]
 
 
@@ -332,6 +335,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ENUMFLPLOTRANGE=eNumFlPlotRange, $
         NONEGENUMFL=noNegENumFl, $
         NOPOSENUMFL=noPosENumFl, $
+        LOGCHAREPLOT=logCharEPlot, $
+        LOGCHARIEPLOT=logChariePlot, $
+        LOGEFPLOT=logEfPlot, $
+        LOGENUMFLPLOT=logENumFlPlot, $
         PPLOTS=pPlots, $
         IONPLOTS=ionPlots, $
         IFLUXPLOTTYPE=ifluxPlotType, $
@@ -580,4 +587,5 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ENDFOR
 
 END
+
 
