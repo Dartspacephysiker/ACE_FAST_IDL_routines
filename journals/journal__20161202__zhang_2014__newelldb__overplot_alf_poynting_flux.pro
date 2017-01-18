@@ -11,7 +11,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -50,10 +50,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   medianPlot                     = 0
   divide_by_width_x              = 1
 
-  ;; write_obsArr_textFile          = 1
-  ;; write_obsArr__inc_IMF          = 1
-  ;; write_obsArr__orb_avg_obs      = 1
-  ;; justData                       = 1
+  write_obsArr_textFile          = 1
+  write_obsArr__inc_IMF          = 1
+  write_obsArr__orb_avg_obs      = 1
+  justData                       = 1
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -157,7 +157,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
      END
      ELSE: BEGIN
-        ePlotRange               = [[0,0.5],[0,1.0],[0,0.50],[0,0.5]]
+        CASE 1 OF
+           KEYWORD_SET(logEfPlot): BEGIN
+              ePlotRange         = [[1e-2,1e1],[1e-2,1e1],[1e-2,1e1],[1e-2,1e1]]
+           END
+           ELSE: BEGIN
+              ePlotRange         = [[0,1.0],[0,1.0],[0,1.0],[0,0.5]]
+           END
+        ENDCASE
      END
   ENDCASE
   logEfPlot                      = 0
@@ -174,7 +181,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
      END
      ELSE: BEGIN
-        ENumFlPlotRange          = [[0,5.0e8],[0,2.5e9],[0,6.0e8],[0,8.0e8]]
+        CASE 1 OF
+           KEYWORD_SET(logENumFlPlot): BEGIN
+              ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
+           END
+           ELSE: BEGIN
+              ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+           END
+        ENDCASE
      END
   ENDCASE
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
@@ -384,6 +398,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ESPEC__NO_MAXIMUS=no_maximus, $
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
         ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
+        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
