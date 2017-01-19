@@ -1721,12 +1721,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      IF ~KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
         ;;Shift the way we historically have
-        h2dStrArr         = SHIFT(h2dStrArr,-1-(nPlots))
+        h2dStrArr         = SHIFT(h2dStrArr,-1-(PASIS__alfDB_plot_struct.nPlots))
 
         plot_i            = N_ELEMENTS(PASIS__plot_i_list) GT 0 ? PASIS__plot_i_list[iList] : !NULL
         IF PASIS__alfDB_plot_struct.keepMe THEN BEGIN 
-           dataNameArr    = SHIFT(dataNameArr,-1-(nPlots)) 
-           dataRawPtrArr  = SHIFT(dataRawPtrArr,-1-(nPlots)) 
+           dataNameArr    = SHIFT(dataNameArr,-1-(PASIS__alfDB_plot_struct.nPlots)) 
+           dataRawPtrArr  = SHIFT(dataRawPtrArr,-1-(PASIS__alfDB_plot_struct.nPlots)) 
         ENDIF
         
         ;; h2dStrArr_list[iList]         = SHIFT(h2dStrArr_List[iList],-1-(nPlots))
