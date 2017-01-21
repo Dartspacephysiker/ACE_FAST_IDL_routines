@@ -612,6 +612,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
+        /LOAD_CHARE, $
         LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
                         KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
                        ) $
