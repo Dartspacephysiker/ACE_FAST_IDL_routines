@@ -11,7 +11,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 0
+  use_prev_plot_i                = 1
+  remake_prev_plot_file          = 1
 
   nonstorm                       = 1
   DSTcutoff                      = -40
@@ -53,7 +54,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   write_obsArr_textFile          = 1
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  justData                       = 1
+  justData                       = 0
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -135,7 +136,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
@@ -206,7 +207,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
      altRange                    = [300,2000]
   ENDIF
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [500,12670]
 
   latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
 
@@ -229,14 +230,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
+  ;; hemi                           = 'NORTH'
   minILAT                        = 60
   maxILAT                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
+  hemi                           = 'SOUTH'
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
   ;; maskMin                        =  1
