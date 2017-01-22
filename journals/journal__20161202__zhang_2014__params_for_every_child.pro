@@ -4,7 +4,7 @@
    nonstorm                           = 1
    DSTcutoff                          = -40
    smooth_dst                         = 0
-   use_mostRecent_Dst_files           = 1
+   use_mostRecent_Dst_files           = 0
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
@@ -41,7 +41,7 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[800,4300]]
+  altRange                       = [[750,4300]]
 
   orbRange                       = [1000,10800]
 
@@ -66,8 +66,8 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minI                           = 60
-  maxI                           = 90
+  ;; minI                           = 60
+  ;; maxI                           = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
