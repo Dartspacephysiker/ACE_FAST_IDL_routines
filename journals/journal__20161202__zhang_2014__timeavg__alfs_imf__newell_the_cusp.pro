@@ -7,7 +7,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
      @journal__20161202__zhang_2014__params_for_every_child.pro
   ENDIF
 
-  latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
+  ;; latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
 
   labels_for_presentation        = 1
 
@@ -25,7 +25,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
 
   fluxPlots__Newell_the_cusp     = 0
-  fluxPlots__broadband_everywhar = 1
+  fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
   use_prev_plot_i                = 1
@@ -36,7 +36,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   adj_upper_plotlim_thresh       = 3    ;;Check third maxima
   adj_lower_plotlim_thresh       = 2    ;;Check minima
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 

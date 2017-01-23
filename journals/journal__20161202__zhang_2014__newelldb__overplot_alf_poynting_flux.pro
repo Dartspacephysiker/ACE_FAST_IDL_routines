@@ -3,21 +3,17 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   COMPILE_OPT IDL2
 
-  ;; plotPref = '-atest_teste-MAPPE-cb' 
-  ;; plotPref = 'rightnow-' 
-  plotPref = 'NO_OP-'
-  ;; plotPref = 'NO_OP_2_NC-'
-  plotPref = 'MAITRE-'
+  plotPref = 'NWO-'
 
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
   remake_prev_plot_file          = 1
 
   nonstorm                       = 1
-  DSTcutoff                      = -40
+  DSTcutoff                      = -50
   smooth_dst                     = 0
-  use_mostRecent_Dst_files       = 1
+  use_mostRecent_Dst_files       = 0
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
@@ -217,11 +213,11 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   smoothWindow                   = 0
 
-  stableIMF                      = 4
+  stableIMF                      = 9
 
   ;;Delay stuff
   nDelays                        = 1
-  delayDeltaSec                  = 1200
+  delayDeltaSec                  = 1800
   binOffset_delay                = 0
   delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
 
@@ -230,14 +226,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
+  ;; hemi                           = 'SOUTH'
   ;; minI                        = -90
   ;; maxI                        = -60
   ;; maskMin                        =  1

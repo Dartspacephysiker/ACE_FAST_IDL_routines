@@ -1,17 +1,17 @@
-;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
-PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
+;;2017/01/10 All part of the Jack Eddy deal
+PRO JOURNAL__20170112__SEARCHING_FOR_ROTHER_ET_AL_2007_STYLE_MAGC_PLOTS
 
-  ALL_NOTJUST1997            = 0
+  ALL_NOTJUST1997            = 1
 
   use_prev_plot_i            = 0
 
-  do_timeAvg_fluxQuantities  = 1
+  do_timeAvg_fluxQuantities  = 0
   logAvgPlot                 = 0
   medianPlot                 = 0
-  maxPlot                    = 0
+  maxPlot                    = 1
   divide_by_width_x          = 1
 
-  include_32Hz               = 0
+  include_32Hz               = 1
   use_AACGM                  = 0
 
   plotH2D_contour            = 0
@@ -25,9 +25,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;;DB stuff
   despun                     = 0
 
-  suppress_MLT_lables        = 1
   suppress_ILAT_labels       = 1
-  fancyPresentationMode      = 1
 
   autoscale_fluxPlots        = 0
 
@@ -40,8 +38,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   show_integrals             = 0
   write_obsArr_textFile      = 0
-  write_obsArr__inc_IMF      = 0
-  write_obsArr__orb_avg_obs  = 0
+  write_obsArr__inc_IMF      = 1
+  write_obsArr__orb_avg_obs  = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
@@ -49,12 +47,12 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; ePlots                         = 0
   ;; eNumFlPlots                    = 0
   pPlots                         = 1
-  magCPlots                      = 0
+  magCPlots                      = 1
   nOrbsWithEventsPerContribOrbsPlot = 0
   ;; ionPlots                       = 0
-  probOccurrencePlot             = 0
+  probOccurrencePlot             = 1
   ;; sum_electron_and_poyntingflux  = 0
-  tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
 
   nowepco_range                  = [0,0.5]
   nowepco_autoscale              = 0
@@ -130,7 +128,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   ;; altRange                       = [[340,4180]]
 
   ;; altRange                       = [[300,3000]]
-  altRange                       = [[750,4300]]
+  altRange                       = [[500,900]]
 
   ;; altRange                    = [[300,4300], $
   ;;                                [500,4300], $
@@ -643,7 +641,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         PLOTPREFIX=plotPrefix, $
         SUFFIX_TXTDIR=suffix_txtDir, $
-        ;; SUPPRESS_THICKGRID=fancyPresentationMode, $
+        SUPPRESS_THICKGRID=fancyPresentationMode, $
         SUPPRESS_GRIDLABELS=fancyPresentationMode, $
         SUPPRESS_MLT_LABELS=fancyPresentationMode, $
         SUPPRESS_ILAT_LABELS=fancyPresentationMode, $

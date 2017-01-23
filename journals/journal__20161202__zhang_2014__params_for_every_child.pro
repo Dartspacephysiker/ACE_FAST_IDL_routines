@@ -2,13 +2,13 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -40
+   DSTcutoff                          = -50
    smooth_dst                         = 0
-   use_mostRecent_Dst_files           = 0
+   use_mostRecent_Dst_files           = 1
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  plotH2D_contour                    = 1
+  plotH2D_contour                    = 0
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
   contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
@@ -43,7 +43,7 @@
 
   altRange                       = [[750,4300]]
 
-  orbRange                       = [1000,10800]
+  orbRange                       = [500,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
@@ -51,11 +51,11 @@
 
   smoothWindow                   = 0
 
-  stableIMF                      = 4
+  stableIMF                      = 9
 
   ;;Delay stuff
   ;; nDelays                        = 1
-  delayDeltaSec                  = 1200
+  delayDeltaSec                  = 1800
   binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = 300
@@ -69,7 +69,7 @@
   ;; minI                           = 60
   ;; maxI                           = 90
   ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 1
+  ;; tHist_mask_bins_below_thresh   = 2
   ;; numOrbLim                      = 5
 
   ;; hemi                           = 'SOUTH'
@@ -87,5 +87,5 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                           = 1.0
-  shiftM                         = 0.5
+  binM                           = 0.75
+  shiftM                         = 0.0

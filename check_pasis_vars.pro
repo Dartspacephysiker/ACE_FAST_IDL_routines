@@ -53,6 +53,69 @@ PRO CHECK_PASIS_VARS, $
      ;; IF (COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i'])).nDiff GT 0 THEN inds_resetTmp = 1 ELSE inds_resetTmp = 0
      ;; inds_reset += TEMPORARY(inds_resetTmp)
 
+     IF TAG_EXIST(PASIS__IMF_struct,'binOffset_delay') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.binOffset_delay,IMF_struct.binOffset_delay) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+     
+     IF TAG_EXIST(PASIS__IMF_struct,'btMin') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.btMin,IMF_struct.btMin) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+     
+     IF TAG_EXIST(PASIS__IMF_struct,'btMax') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.btMax,IMF_struct.btMax) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'bxMin') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.bxMin,IMF_struct.bxMin) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'bxMax') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.bxMax,IMF_struct.bxMax) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'byMin') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.byMin,IMF_struct.byMin) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'byMax') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.byMax,IMF_struct.byMax) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'bzMin') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.bzMin,IMF_struct.bzMin) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'bzMax') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.bzMax,IMF_struct.bzMax) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
      IF ~ARRAY_EQUAL(PASIS__IMF_struct.clockStr,IMF_struct.clockStr) THEN BEGIN
         inds_reset++
         plots_reset++
@@ -103,7 +166,12 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
 
-     comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['clock_i','clockstr', $
+     comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['binOffset_delay', $
+                                                                 'btMin','btMax', $
+                                                                 'bxMin','bxMax', $
+                                                                 'byMin','byMax', $
+                                                                 'bzMin','bzMax', $
+                                                                 'clock_i','clockstr', $
                                                                  'angleLim1','angleLim2', $
                                                                  'do_not_consider_IMF', $
                                                                  'dont_consider_clockAngles', $
@@ -214,7 +282,7 @@ PRO CHECK_PASIS_VARS, $
         IF diffInds[0] NE -1 THEN STOP
 
      ENDIF
-  ENDIF;; ELSE BEGIN
+  ENDIF ;; ELSE BEGIN
      ;; PASIS__IMF_struct = TEMPORARY(IMF_struct)
   ;; ENDELSE
 
