@@ -17,7 +17,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; plotPref += 'NEWELLED_DONE'
   ;; plotPref += 'NEWELLED_AFTROTFIX'
   ;; plotPref += 'FINALE'
-  plotPref += 'customKill_8276--9585_in_SOUF--altbin'
+  plotPref += ''
 
   include_32Hz                   = 0
   EA_binning                     = 0
@@ -25,6 +25,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
 
 
   fluxPlots__Newell_the_cusp     = 0
+  fluxPlots__broadband_everywhar = 1
+  fluxPlots__diffuse_everywhar   = 0
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 0
@@ -146,7 +148,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ENDIF
 
   IF shiftM GT 0. THEN BEGIN
-     plotPref += '-rotated'
+     plotPref += 'rotated-'
   ENDIF
 
   ;;In any case
@@ -208,7 +210,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
   ;; logPfPlot                   = 1
   ;; PPlotRange                  = [1e-1,1e1]
   logPfPlot                      = 0
-  PPlotRange                     = [0,0.20]
+  ;; PPlotRange                     = [0,0.20]
+  PPlotRange                     = KEYWORD_SET(plotH2D_contour) ? [0,0.10] : [0,0.20]
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -305,7 +308,6 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         ORBRANGE=orbRange, $
         ALTITUDERANGE=altitudeRange, $
         CHARERANGE=charERange, $
-        CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
         POYNTRANGE=poyntRange, $
         SAMPLE_T_RESTRICTION=sample_t_restriction, $
         INCLUDE_32HZ=include_32Hz, $
@@ -343,6 +345,8 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
         FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
+        FLUXPLOTS__BROADBAND_EVERYWHAR=fluxPlots__broadband_everywhar, $
+        FLUXPLOTS__DIFFUSE_EVERYWHAR=fluxPlots__diffuse_everywhar, $
         DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
         DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
         ORBCONTRIBPLOT=orbContribPlot, $
@@ -378,7 +382,7 @@ PRO JOURNAL__20161202__ZHANG_2014__TIMEAVG__ALFS_IMF__NEWELL_THE_CUSP
         PLOTH2D_CONTOUR=plotH2D_contour, $
         CONTOUR__LEVELS=contour__levels, $
         CONTOUR__PERCENT=contour__percent, $
-        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
+        PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         HOYDIA=hoyDia, $
         LUN=lun, $
         NEWELL_ANALYZE_EFLUX=Newell_analyze_eFlux, $

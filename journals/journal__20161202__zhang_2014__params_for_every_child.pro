@@ -8,7 +8,7 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  plotH2D_contour                    = 0
+  plotH2D_contour                    = 1
   ;; plotH2D__kde                       = 1
   plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
   contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
@@ -87,5 +87,5 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                           = 0.75
-  shiftM                         = 0.0
+  binM                           = 1.0
+  shiftM                         = 0.5
