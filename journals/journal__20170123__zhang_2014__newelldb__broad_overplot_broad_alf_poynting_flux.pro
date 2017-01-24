@@ -21,7 +21,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_BROAD_ALF_POYNTING_F
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
 
-  show_integrals                 = 1
+  show_integrals                 = 0
 
   EA_binning                     = 0
   plotH2D_contour                = 1
@@ -164,7 +164,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_BROAD_ALF_POYNTING_F
               ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
            END
            ELSE: BEGIN
-              ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              ENumFlPlotRange    = [[0,8.0e8],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
            END
         ENDCASE
      END

@@ -8,7 +8,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
 
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -21,7 +21,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
 
-  show_integrals                 = 1
+  show_integrals                 = 0
 
   EA_binning                     = 0
   plotH2D_contour                = 1
@@ -106,14 +106,14 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
   eSpec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
   eSpec__all_fluxes              = 1
-  Newell__comb_accelerated       = 1
+  Newell__comb_accelerated       = 0
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
@@ -164,7 +164,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
               ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
            END
            ELSE: BEGIN
-              ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              ENumFlPlotRange    = [[0,5.0e8],[0,2.0e9],[0,5.0e8],[0,8.0e8]]
            END
         ENDCASE
      END
@@ -441,6 +441,13 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
         ESPEC__T_PROBOCCURRENCE=eSpec__t_ProbOccurrence, $
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
+        CONTOUR__LEVELS=contour__levels, $
+        CONTOUR__PERCENT=contour__percent, $
+        OVERPLOT_FILE=overplot_file, $
+        OVERPLOT_ARR=overplot_arr, $
+        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+        OVERPLOT_PLOTRANGE=op_plotRange, $        
         SHOW_INTEGRALS=show_integrals, $
         RESET_STRUCT=reset
 
@@ -559,13 +566,6 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        CONTOUR__LEVELS=contour__levels, $
-        CONTOUR__PERCENT=contour__percent, $
-        OVERPLOT_FILE=overplot_file, $
-        OVERPLOT_ARR=overplot_arr, $
-        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
-        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
-        OVERPLOT_PLOTRANGE=op_plotRange, $        
         FANCY_PLOTNAMES=fancy_plotNames, $        
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
