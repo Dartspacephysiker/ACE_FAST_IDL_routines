@@ -1770,6 +1770,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
         ;;Do we have any candidates for overplotting?
         IF KEYWORD_SET(PASIS__alfDB_plot_struct.overplot_file) AND KEYWORD_SET(PASIS__alfDB_plot_struct.overplot_arr) THEN BEGIN
+        ;; IF KEYWORD_SET(overplot_file) AND KEYWORD_SET(overplot_arr) THEN BEGIN
            PRINT,'Checking for overplot stuff ...'
 
            ;; IF N_ELEMENTS(oplotStr) EQ 0 THEN BEGIN
@@ -1777,6 +1778,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; ENDIF
            IF ~KEYWORD_SET(OP__HAVE_VARS) THEN BEGIN
               SET_OVERPLOT_COMMON_VARS_FROM_FILE,PASIS__alfDB_plot_struct.overplot_file
+              ;; SET_OVERPLOT_COMMON_VARS_FROM_FILE,overplot_file
            ENDIF
 
            match = 0
@@ -1784,9 +1786,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;;    match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
            ;;               STRMATCH(STRUPCASE(oplotStr.dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
            ;; ENDFOR 
-           FOR bk=0,N_ELEMENTS(PASIS__alfDB_plot_struct.overplot_arr[0,*])-1 DO BEGIN
+           ;; FOR bk=0,N_ELEMENTS(PASIS__alfDB_plot_struct.overplot_arr[0,*])-1 DO BEGIN
+           FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
               match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(PASIS__alfDB_plot_struct.overplot_arr[0,bk])) AND     $
                          STRMATCH(STRUPCASE(OP__dataNameArr[0]),STRUPCASE(PASIS__alfDB_plot_struct.overplot_arr[1,bk])))
+              ;; match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
+              ;;            STRMATCH(STRUPCASE(OP__dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
            ENDFOR 
 
            CASE match OF
