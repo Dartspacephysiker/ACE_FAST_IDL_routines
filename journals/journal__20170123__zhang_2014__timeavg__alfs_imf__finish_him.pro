@@ -24,9 +24,10 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   use_AACGM                      = 0
 
 
-  fluxPlots__Newell_the_cusp     = 0
+  fluxPlots__invert_Newell_the_cusp = 0
+  fluxPlots__Newell_the_cusp     = 1
   fluxPlots__broadband_everywhar = 0
-  fluxPlots__diffuse_everywhar   = 1
+  fluxPlots__diffuse_everywhar   = 0
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 0
@@ -344,6 +345,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
+        FLUXPLOTS__INVERT_NEWELL_THE_CUSP=fluxPlots__invert_Newell_the_cusp, $
         FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
         FLUXPLOTS__BROADBAND_EVERYWHAR=fluxPlots__broadband_everywhar, $
         FLUXPLOTS__DIFFUSE_EVERYWHAR=fluxPlots__diffuse_everywhar, $
