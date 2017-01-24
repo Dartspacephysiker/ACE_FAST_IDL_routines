@@ -1786,8 +1786,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;;    match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
            ;;               STRMATCH(STRUPCASE(oplotStr.dataNameArr[0]),STRUPCASE(overplot_arr[1,bk])))
            ;; ENDFOR 
-           ;; FOR bk=0,N_ELEMENTS(PASIS__alfDB_plot_struct.overplot_arr[0,*])-1 DO BEGIN
-           FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
+           FOR bk=0,N_ELEMENTS(PASIS__alfDB_plot_struct.overplot_arr[0,*])-1 DO BEGIN
+           ;; FOR bk=0,N_ELEMENTS(overplot_arr[0,*])-1 DO BEGIN
               match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(PASIS__alfDB_plot_struct.overplot_arr[0,bk])) AND     $
                          STRMATCH(STRUPCASE(OP__dataNameArr[0]),STRUPCASE(PASIS__alfDB_plot_struct.overplot_arr[1,bk])))
               ;; match += ( STRMATCH(STRUPCASE(dataNameArr[0]),STRUPCASE(overplot_arr[0,bk])) AND     $
