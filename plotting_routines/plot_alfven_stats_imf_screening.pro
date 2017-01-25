@@ -414,6 +414,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    OUT_PARAMSTRING_LIST=out_paramString_list, $
    USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
    REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+   PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these, $
    OUT_PLOT_I_LIST=out_plot_i_list, $
    OUT_FASTLOC_I_LIST=out_fastLoc_i_list, $
    OUT_I_ESPEC_LIST=out_i_eSpec_list, $
@@ -1565,6 +1566,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
 
+     IF N_ELEMENTS(prev_plot_i__limit_to_these) GT 0 THEN BEGIN
+        test = WHERE(iMulti EQ prev_plot_i__limit_to_these)
+        IF test[0] EQ -1 THEN CONTINUE
+     ENDIF
+
      PRINT,'PLOT_ALFVEN_STATS_IMF_SCREENING: '+PASIS__paramString_list[iMulti]
 
      IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
@@ -1852,6 +1858,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            OVERPLOT_PLOTRANGE=TAG_EXIST(PASIS__alfDB_plot_struct,'op_plotRange') ? PASIS__alfDB_plot_struct.op_plotRange : !NULL, $
            CENTERS_MLT=centersMLT, $
            CENTERS_ILAT=centersILAT, $
+           PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these, $
            ;; SHOW_INTEGRALS=PASIS__alfDB_plot_struct.show_integrals, $
            ;; MAKE_INTEGRAL_TXTFILE=PASIS__alfDB_plot_struct.make_integral_txtfile, $
            ;; MAKE_INTEGRAL_SAVFILE=PASIS__alfDB_plot_struct.make_integral_savfiles, $

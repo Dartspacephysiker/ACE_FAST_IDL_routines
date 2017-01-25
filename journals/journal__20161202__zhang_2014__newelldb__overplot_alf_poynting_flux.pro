@@ -8,8 +8,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
-
+  remake_prev_plot_file          = 0
+  ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
+  prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
+  
   nonstorm                       = 1
   DSTcutoff                      = -50
   smooth_dst                     = 0
@@ -24,7 +26,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -47,7 +49,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   medianPlot                     = 0
   divide_by_width_x              = 1
 
-  write_obsArr_textFile          = 0
+  write_obsArr_textFile          = 1
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
   justData                       = 0
@@ -73,26 +75,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   adj_lower_plotlim_thresh       = 2 ;;Check minima
 
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161202/Alfvenic_pFlux--overplot_data.dat'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-40sm-300-4300km-NC-avg-cont30.0Res_0.0Offset_btMin0.5--Ring_timeAvgd_pFlux.dat'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161203/Dst_-50300-4300km-0rb_1000_10600-NORTH-cur_-1-1-NC-avg--4stable_20Res_btMin1.0--pFlux.dat'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux_rotated.dat'
-  ;; plotPref += '-rot_pFlux-t'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161206/pFlux-mappedAll-rot.dat'
-  ;; plotPref += '-allMapped'
-
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161207/rightnow.dat'
-  ;; plotPref += '-allMapped'
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161205/pFlux.dat'
   ;; plotPref += '-notRot_pFlux-t'
-
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161210/Dst_-40customKill_8276-500-4300km-orb_1000-10600-NORTH-cur_-1-1-NC__pFlux.dat'
-
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday.dat'
-
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday2.dat'
-
-  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161212/pFlux_stuffSunday2_NC.dat'
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
 
@@ -132,7 +115,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 1
+  ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
@@ -460,6 +444,13 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
         ESPEC__T_PROBOCCURRENCE=eSpec__t_ProbOccurrence, $
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
+        CONTOUR__LEVELS=contour__levels, $
+        CONTOUR__PERCENT=contour__percent, $
+        OVERPLOT_FILE=overplot_file, $
+        OVERPLOT_ARR=overplot_arr, $
+        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+        OVERPLOT_PLOTRANGE=op_plotRange, $        
         SHOW_INTEGRALS=show_integrals, $
         RESET_STRUCT=reset
 
@@ -578,16 +569,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        CONTOUR__LEVELS=contour__levels, $
-        CONTOUR__PERCENT=contour__percent, $
-        OVERPLOT_FILE=overplot_file, $
-        OVERPLOT_ARR=overplot_arr, $
-        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
-        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
-        OVERPLOT_PLOTRANGE=op_plotRange, $        
         FANCY_PLOTNAMES=fancy_plotNames, $        
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
-        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+        PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these
      
   ENDFOR
 
