@@ -1,5 +1,5 @@
 ;;11/07/16
-FUNCTION CALCULATE_NEWELL_COUPLING_FUNCTION, $
+FUNCTION CALCULATE_NEWELL_2007_COUPLING_FUNCTION, $
    swSpeed_Avg,Bt_Avg,phiClock_avg, $
    swSpeed_StdDev,Bt_StdDev,phiClock_StdDev, $   
    INC_STDDEV=inc_stdDev, $
@@ -23,7 +23,7 @@ FUNCTION CALCULATE_NEWELL_COUPLING_FUNCTION, $
                                      C_OMNI__mag_UTC[C_OMNI__stable_i]) LE 60.,nStableSW)
         stable_SW_i      = stable_SW_i[stable_SW_ii]
 
-        PRINT,FORMAT='("Got ",I0," SW points for Kan-Lee coupling calc")',nStableSW
+        PRINT,FORMAT='("Got ",I0," SW points for Newell et al. [2007] coupling calc")',nStableSW
 
         swSpeed_Avg      = MEAN(flow_speed[stable_SW_i])   * 1000.D ;m/s
         swSpeed_StdDev   = STDDEV(flow_speed[stable_SW_i]) * 1000.D ;m/s
