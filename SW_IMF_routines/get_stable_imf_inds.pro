@@ -319,7 +319,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      thetaCone_avg          = MEAN(C_OMNI__thetaCone[stable_omni_inds])
      thetaCone_stdDev       = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
 
-     newellInds             = CGSETINTERSECTION(stable_omni_inds,WHERE(FINITE(C_OMNI__NewellFunc)))
+     newellInds             = CGSETINTERSECTION(stable_omni_inds,WHERE(FINITE(C_OMNI__NewellFunc)),COUNT=nNewell)
+     IF nNewell EQ 0 THEN STOP
+     PRINT,"NNewell inds: ",nNewell
      NewellFunc_avg         = MEAN(C_OMNI__NewellFunc[newellInds])
      NewellFunc_stdDev      = STDDEV(C_OMNI__NewellFunc[newellInds])
 
@@ -417,11 +419,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
         PRINTF,outLun,''
         PRINTF,outLun,FORMAT='("Average SW speed",T35,": ",F10.3)',sw_speed[0]
         PRINTF,outLun,FORMAT='("Average KL EField",T35,": ",F10.3)',epsilon_KanLee[0]
-        PRINTF,outLun,FORMAT='("Average NewellFunc",T35,": ",F10.3)',NewellFunc_avg[0]
+        PRINTF,outLun,FORMAT='("Average NewellFunc",T35,": ",F10.3)',NewellFunc_avg
         PRINTF,outLun,''
         PRINTF,outLun,FORMAT='(" SW speed stdDev",T35,": ",F10.3)',sw_speed[1]
         PRINTF,outLun,FORMAT='("KL EField stdDev",T35,": ",F10.3)',epsilon_KanLee[1]
-        PRINTF,outLun,FORMAT='("NewellFunc stdDev",T35,": ",F10.3)',NewellFunc_stdDev[1]
+        PRINTF,outLun,FORMAT='("NewellFunc stdDev",T35,": ",F10.3)',NewellFunc_stdDev
      END
      PRINTF,outLun,''
      PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
@@ -531,6 +533,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         RESTORE,OMNI_stats_savFile
 
         stats = {nPoints:[stats.nPoints,nPoints], $
+                 nSWPoints:[stats.nSWPoints,nNewell], $
                  nTime:[stats.nTime,nTime], $
                  clockStr:[stats.clockStr,C_OMNI__clockStr], $
                  avg:{Bx:[stats.avg.Bx,Bx_avg], $
@@ -540,7 +543,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:[stats.avg.phiClock,phiClock_avg], $
                       thetaCone:[stats.avg.thetaCone,thetaCone_avg], $
                       cone_overClock:[stats.avg.cone_overClock,cone_overClock_avg], $
-                      KL_Efield:[stats.avg.KL_EField,epsilon_KanLee[0]], $
+                      KL_EField:[stats.avg.KL_EField,epsilon_KanLee[0]], $
+                      swSpeed:[stats.avg.swSpeed,sw_speed[0]], $
                       ;; NewellFunc:[stats.avg.NewellFunc,NewellFunc[0]]}, $
                       NewellFunc:[stats.avg.NewellFunc,NewellFunc_avg]}, $
                  stdDev:{Bx:[stats.stdDev.Bx,Bx_StdDev], $
@@ -550,7 +554,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
                          thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
                          cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
-                         KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]], $
+                         KL_EField:[stats.stdDev.KL_EField,epsilon_KanLee[1]], $
+                         swSpeed:[stats.stdDev.swSpeed,sw_speed[1]], $
                          ;; NewellFunc:[stats.stdDev.NewellFunc,NewellFunc[1]]}, $
                          NewellFunc:[stats.stdDev.NewellFunc,NewellFunc_stdDev]}, $
                  covar:{BxBt:[stats.covar.BxBt,BxBt_covar], $
@@ -561,6 +566,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF ELSE BEGIN
         PRINT,'Making ' + OMNI_stats_savFile + ' ...'
         stats = {nPoints:nPoints, $
+                 nSWPoints:nNewell, $
                  nTime:nTime, $
                  clockStr:C_OMNI__clockStr, $
                  avg:{Bx:Bx_avg, $
@@ -570,7 +576,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:phiClock_avg, $
                       thetaCone:thetaCone_avg, $
                       cone_overClock:cone_overClock_avg, $
-                      KL_Efield:epsilon_KanLee[0], $
+                      KL_EField:epsilon_KanLee[0], $
+                      swSpeed:sw_speed[0], $
                       ;; NewellFunc:NewellFunc[0]}, $
                       NewellFunc:NewellFunc_avg}, $
                  stdDev:{Bx:Bx_StdDev, $
@@ -580,7 +587,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          phiClock:phiClock_StdDev, $
                          thetaCone:thetaCone_StdDev, $
                          cone_overClock:cone_overClock_StdDev, $
-                         KL_Efield:epsilon_KanLee[1], $
+                         KL_EField:epsilon_KanLee[1], $
+                         swSpeed:sw_speed[1], $
                          ;; NewellFunc:NewellFunc[1]}, $
                          NewellFunc:NewellFunc_stdDev}, $
                  covar:{BxBt:BxBt_covar, $

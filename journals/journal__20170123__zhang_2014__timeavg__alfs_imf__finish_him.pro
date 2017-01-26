@@ -66,6 +66,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
   make_OMNI_stats_savFile         = 1
+  OMNI_statsSavFilePref           = 'Alfvens_dodat_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   calc_KL_sw_coupling_func        = 1
   make_integral_savfiles          = 0
 
@@ -74,7 +75,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
   justData                        = 1
-  justInds                        = 0
+  justInds                        = 1
   indsPref                        = ''
   CASE 1 OF
      KEYWORD_SET(fluxPlots__invert_Newell_the_cusp): BEGIN
@@ -476,6 +477,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
         PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
         SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
         MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+        OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
         CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
