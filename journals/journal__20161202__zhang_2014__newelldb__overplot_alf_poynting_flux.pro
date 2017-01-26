@@ -8,9 +8,9 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  remake_prev_plot_file          = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
-  prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
+  ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -49,7 +49,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   medianPlot                     = 0
   divide_by_width_x              = 1
 
-  write_obsArr_textFile          = 1
+  write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
   justData                       = 0
@@ -116,8 +116,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; eSpec__noMap                   = 1
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
-  ePlots                         = 0
-  eNumFlPlots                    = 1
+  ePlots                         = 1
+  eNumFlPlots                    = 0
 
   tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
@@ -211,7 +211,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
   hemi                           = 'NORTH'
-  minI                        = 60
+  minI                        = 54
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1

@@ -321,6 +321,16 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      ENDIF
 
+     IF KEYWORD_SET(calc_Newell_coupling_func) OR $
+        KEYWORD_SET(make_OMNI_stats_savFile) $
+     THEN BEGIN
+        epsilon_KanLee      = CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION(/INC_STDDEV, $
+                                                                     /CALC_FROM_COMMON_VARS, $
+                                                                     OUT_SW_SPEED=sw_speed)
+
+
+     ENDIF
+
      ;; IF KEYWORD_SET(print_OMNI_covariances) THEN BEGIN
      BxBy_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
                                      C_OMNI__By[stable_omni_Inds], $

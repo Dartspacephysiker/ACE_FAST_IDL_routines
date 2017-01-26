@@ -3,6 +3,13 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   COMPILE_OPT IDL2
 
   do_what_everyone_does          = 1
+
+  plotH2D_contour                    = 0
+  ;; plotH2D__kde                       = 1
+  plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
+  contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  contour__percent                   = KEYWORD_SET(plotH2D_contour)
+
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
      @journal__20170123__zhang_2014__params_for_finishing_him.pro
   ENDIF
@@ -25,7 +32,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 1
+  fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
@@ -44,109 +51,6 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   suppress_gridLabels            = [0,1,1, $
                                     1,1,1, $
                                     1,1,1]
-
-  ;;NOTE: Bx-specific stuff on other side of IF statement
-  IF ~KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-
-     restore_last_session            = 0
-
-     nonstorm                        = 1
-     DSTcutoff                       = -50
-     smooth_dst                      = 0
-     use_mostRecent_Dst_files        = 1
-
-     @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
-
-     plotPref += '-newDim'
-     ;; plotPref += '-keilDim_'
-
-     include_32Hz                    = 1
-
-     plotH2D_contour                 = 1
-     plotH2D__kde                    = 0
-
-     EA_binning                      = 0
-
-     minMC                           = 1
-     maxNegMC                        = -1
-
-     do_timeAvg_fluxQuantities       = 1
-     logAvgPlot                      = 0
-     medianPlot                      = 0
-     divide_by_width_x               = 1
-     org_plots_by_folder             = 1
-
-     dont_blackball_maximus          = 1
-     dont_blackball_fastLoc          = 1
-
-     ;;DB stuff
-     do_despun                       = 0
-     use_AACGM                       = 0
-     use_MAG                         = 0
-
-     autoscale_fluxPlots             = 0
-     fluxPlots__remove_outliers      = 0
-     fluxPlots__remove_log_outliers  = 0
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;;Tiled plot options
-
-     ;; altRange                      = [[340,1180], $
-     ;;                             [1180,2180], $
-     ;;                             [2180,3180], $
-     ;;                             [3180,4180]]
-
-     altRange                         = [[300,4300]]
-
-     orbRange                         = [1000,10600]
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;;IMF condition stuff--run the ring!
-     btMin                            = 0.0
-     ;; btMax                         = 5
-
-     ;;Delay stuff
-     nDelays                          = 1
-     delayDeltaSec                    = 1800
-     binOffset_delay                  = 0
-     delayArr                         = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-
-     smoothWindow                     = 5
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;;ILAT stuff
-     ;; hemi                             = 'NORTH'
-     ;; minI                          = 60
-     ;; maxI                          = 90
-     ;; maskMin                       = 5
-     ;; tHist_mask_bins_below_thresh  = 5
-     ;; numOrbLim                     = 5
-
-     ;; hemi                          = 'SOUTH'
-     ;; minI                       = -90
-     ;; maxI                       = -60
-     ;; maskMin                       =  10
-
-     ;; tHist_mask_bins_below_thresh  = 2
-
-     stableIMF                        = 9
-
-     ;; numOrbLim                     = 10
-
-     ;; binI                       = 2.0
-     binI                             = 2.5
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;;MLT stuff
-     binM                             = 1.0
-     shiftM                           = 1.0
-
-     ;; minM                          = 6
-     ;; maxM                          = 18
-
-     ;;Bonus
-
-  ENDIF
 
   IF shiftM GT 0. THEN BEGIN
      plotPref += 'rotated-'
@@ -168,12 +72,31 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
+  justData                        = 1
   justInds                        = 0
-  justInds_saveToFile             = 'Alfvens_IMF--inds--' + STRLOWCASE(hemi) + $
-                                    '_hemi--newellthecusp--20161226.sav'
+  indsPref                        = ''
+  CASE 1 OF
+     KEYWORD_SET(fluxPlots__invert_Newell_the_cusp): BEGIN
+        indsPref = 'invNC'
+     END
+     KEYWORD_SET(fluxPlots__Newell_the_cusp       ): BEGIN  
+        indsPref = 'NC'
+     END
+     KEYWORD_SET(fluxPlots__broadband_everywhar   ): BEGIN  
+        indsPref = 'broadEvry'
+     END
+     KEYWORD_SET(fluxPlots__diffuse_everywhar     ): BEGIN 
+        indsPref = 'diffEvry'
+     END
+  ENDCASE
+
+  justInds_saveToFile             = 'Alfvens_IMF-inds-' + indsPref + '-' + $
+                                    STRLOWCASE(hemi) + '_hemi-' + $
+                                    GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
+                                    '.sav'
                                     ;; '_hemi--20161224.sav'
   saveDir                         = '/home/spencerh/Desktop/'
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   besides_pFlux                      = 0
