@@ -2,21 +2,21 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   COMPILE_OPT IDL2
 
-  do_what_everyone_does          = 1
+  do_what_everyone_does    = 1
 
-  plotH2D_contour                    = 0
-  ;; plotH2D__kde                       = 1
-  plotH2D__kde                       = KEYWORD_SET(plotH2D_contour)
-  contour__levels                    = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
-  contour__percent                   = KEYWORD_SET(plotH2D_contour)
+  plotH2D_contour          = 0
+  ;; plotH2D__kde          = 1
+  plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
+  contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  contour__percent         = KEYWORD_SET(plotH2D_contour)
 
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
      @journal__20170123__zhang_2014__params_for_finishing_him.pro
   ENDIF
 
-  ;; latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
+  ;; latest_UTC            = STR_TO_TIME('1999-05-16/03:20:59.853')
 
-  labels_for_presentation        = 1
+  labels_for_presentation  = 1
 
   ;; plotPref += '-smeared'
   ;; plotPref += '-fattest'
@@ -37,7 +37,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   fluxPlots__diffuse_everywhar   = 0
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  remake_prev_plot_file          = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -61,10 +61,11 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 0
+  make_OMNI_stuff                 = 1
   print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
+  make_OMNI_stats_savFile         = 1
   calc_KL_sw_coupling_func        = 1
   make_integral_savfiles          = 0
 
@@ -87,6 +88,9 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
      END
      KEYWORD_SET(fluxPlots__diffuse_everywhar     ): BEGIN 
         indsPref = 'diffEvry'
+     END
+     ELSE: BEGIN
+        indsPref = ''
      END
   ENDCASE
 

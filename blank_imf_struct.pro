@@ -25,6 +25,8 @@ FUNCTION BLANK_IMF_STRUCT
                   abs_btMax                  : 0B      , $
                   abs_bxMin                  : 0B      , $
                   abs_bxMax                  : 0B      , $
+                  abs_N2007FuncMin           : 0B      , $
+                  abs_N2007FuncMax           : 0B      , $
                   do_not_consider_IMF        : 0B      , $
                   satellite                  : 'OMNI'  , $
                   omni_Coords                : 'GSM'   , $

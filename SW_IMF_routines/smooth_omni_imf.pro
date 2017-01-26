@@ -1,14 +1,14 @@
 PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
-                    IMF_STRUCT=IMF_struct;, $
-                    ;; smooth_IMF, $
-                    ;;        BYMIN=byMin, $
-                    ;;        BYMAX=byMax, $
-                    ;;        BZMIN=bzMin, $
-                    ;;        BZMAX=bzMax, $
-                    ;;        BTMIN=btMin, $
-                    ;;        BTMAX=btMax, $
-                    ;;        BXMIN=bxMin, $
-                    ;;        BXMAX=bxMax                    
+                    IMF_STRUCT=IMF_struct ;, $
+  ;; smooth_IMF, $
+  ;;        BYMIN=byMin, $
+  ;;        BYMAX=byMax, $
+  ;;        BZMIN=bzMin, $
+  ;;        BZMAX=bzMax, $
+  ;;        BTMIN=btMin, $
+  ;;        BTMAX=btMax, $
+  ;;        BXMIN=bxMin, $
+  ;;        BXMAX=bxMax                    
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY
@@ -49,19 +49,34 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
         curStop                          = C_OMNI__streakstop_ii[streakNum]
         IF TAG_EXIST(IMF_struct,'byMin') OR TAG_EXIST(IMF_struct,'byMax') THEN BEGIN 
            C_OMNI__By[curStart:curStop]  = SMOOTH(C_OMNI__By[curStart:curStop],smooth_IMF, $
-                                                  /EDGE_TRUNCATE)
+                                                  /EDGE_TRUNCATE, $
+                                                  /NAN, $
+                                                  MISSING=!VALUES.F_NaN)
         ENDIF
         IF TAG_EXIST(IMF_struct,'bzMin') OR TAG_EXIST(IMF_struct,'bzMax') THEN BEGIN 
            C_OMNI__Bz[curStart:curStop]  = SMOOTH(C_OMNI__Bz[curStart:curStop],smooth_IMF, $
-                                                  /EDGE_TRUNCATE)
+                                                  /EDGE_TRUNCATE, $
+                                                  /NAN, $
+                                                  MISSING=!VALUES.F_NaN)
         ENDIF
         IF TAG_EXIST(IMF_struct,'btMin') OR TAG_EXIST(IMF_struct,'btMax') THEN BEGIN 
            C_OMNI__Bt[curStart:curStop]  = SMOOTH(C_OMNI__Bt[curStart:curStop],smooth_IMF, $
-                                                  /EDGE_TRUNCATE)
+                                                  /EDGE_TRUNCATE, $
+                                                  /NAN, $
+                                                  MISSING=!VALUES.F_NaN)
         ENDIF
         IF TAG_EXIST(IMF_struct,'bxMin') OR TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN 
            C_OMNI__Bx[curStart:curStop]  = SMOOTH(C_OMNI__Bx[curStart:curStop],smooth_IMF, $
-                                                  /EDGE_TRUNCATE)
+                                                  /EDGE_TRUNCATE, $
+                                                  /NAN, $
+                                                  MISSING=!VALUES.F_NaN)
+        ENDIF
+
+        IF TAG_EXIST(IMF_struct,'Newell2007FuncMin') OR TAG_EXIST(IMF_struct,'Newell2007FuncMax') THEN BEGIN 
+           C_OMNI__NewellFunc[curStart:curStop]  = SMOOTH(C_OMNI__NewellFunc[curStart:curStop],smooth_IMF, $
+                                                          /EDGE_TRUNCATE, $
+                                                          /NAN, $
+                                                          MISSING=!VALUES.F_NaN)
         ENDIF
         ;; C_OMNI__StreakDurArr[curStart:curStop] = INDGEN(curLen)
      ENDFOR
@@ -69,9 +84,9 @@ PRO SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
      ;;Need to recalculate clock stuff
      C_OMNI__phiClock        = ATAN(C_OMNI__By,C_OMNI__Bz)*180/!PI
      C_OMNI__thetaCone       = ACOS(ABS(C_OMNI__Bx) / $
-                                     SQRT(C_OMNI__Bx*C_OMNI__Bx+ $
-                                          C_OMNI__By*C_OMNI__By+ $
-                                          C_OMNI__Bz*C_OMNI__Bz))*180/!PI
+                                    SQRT(C_OMNI__Bx*C_OMNI__Bx+ $
+                                         C_OMNI__By*C_OMNI__By+ $
+                                         C_OMNI__Bz*C_OMNI__Bz))*180/!PI
      C_OMNI__Bxy_over_Bz     = SQRT(C_OMNI__Bx*C_OMNI__Bx+C_OMNI__By*C_OMNI__By)/ABS(C_OMNI__Bz)
      C_OMNI__cone_overClock  = C_OMNI__thetaCone/C_OMNI__phiClock
 

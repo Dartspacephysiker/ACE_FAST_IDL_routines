@@ -116,6 +116,20 @@ PRO CHECK_PASIS_VARS, $
         ENDIF
      ENDIF
 
+     IF TAG_EXIST(PASIS__IMF_struct,'N2007FuncMin') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.N2007FuncMin,IMF_struct.N2007FuncMin) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
+     IF TAG_EXIST(PASIS__IMF_struct,'N2007FuncMax') THEN BEGIN
+        IF ~ARRAY_EQUAL(PASIS__IMF_struct.N2007FuncMax,IMF_struct.N2007FuncMax) THEN BEGIN
+           inds_reset++
+           plots_reset++
+        ENDIF
+     ENDIF
+
      IF ~ARRAY_EQUAL(PASIS__IMF_struct.clockStr,IMF_struct.clockStr) THEN BEGIN
         inds_reset++
         plots_reset++
@@ -171,6 +185,7 @@ PRO CHECK_PASIS_VARS, $
                                                                  'bxMin','bxMax', $
                                                                  'byMin','byMax', $
                                                                  'bzMin','bzMax', $
+                                                                 'N2007FuncMin','N2007FuncMax', $
                                                                  'clock_i','clockstr', $
                                                                  'angleLim1','angleLim2', $
                                                                  'do_not_consider_IMF', $

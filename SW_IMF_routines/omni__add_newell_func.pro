@@ -1,80 +1,32 @@
-PRO OMNI__GET_NEWELL_FUNC,Bx, $
-                        By_GSE,Bz_GSE,Bt_GSE, $
-                        thetaCone_GSE,phiClock_GSE,cone_overClock_GSE,Bxy_over_Bz_GSE, $
-                        By_GSM,Bz_GSM,Bt_GSM, $
-                        thetaCone_GSM,phiClock_GSM,cone_overClock_GSM,Bxy_over_Bz_GSM, $
-                        OMNI_COORDS=OMNI_coords, $
-                        LUN=lun
+PRO OMNI__ADD_NEWELL_FUNC,goodmag_goodtimes_i
 
   COMPILE_OPT idl2
 
   @common__omni_stability.pro
 
-  IF KEYWORD_SET(OMNI_coords) THEN BEGIN
-     C_OMNI__magCoords           = OMNI_coords 
-  ENDIF ELSE BEGIN
-     PRINTF,lun,'No OMNI coordinate type selected! Defaulting to GSE ...'
-     C_OMNI__magCoords           = 'GSE'
-  ENDELSE
+  ;;Get SW flow data
+  dataDir             = "/SPENCEdata/Research/database/OMNI/"
+  culledSWDataStr     = "culled_OMNI_swdata.dat"
 
-  ;;No need to pick up Bx with magcoords, since it's the same either way
-  C_OMNI__Bx                     = TEMPORARY(Bx)
-  CASE C_OMNI__magCoords OF 
-     "GSE": BEGIN
-        C_OMNI__By               = TEMPORARY(By_GSE)
-        C_OMNI__Bz               = TEMPORARY(Bz_GSE)
-        C_OMNI__Bt               = TEMPORARY(Bt_GSE)
-        C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSE)
-        C_OMNI__phiClock         = TEMPORARY(phiClock_GSE)
-        C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSE)
-        C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSE)
+  RESTORE,dataDir + culledSWDataStr
 
-        By_GSM                   = !NULL
-        Bz_GSM                   = !NULL
-        Bt_GSM                   = !NULL
-        thetaCone_GSM            = !NULL
-        phiClock_GSM             = !NULL
-        cone_overClock_GSM       = !NULL
-        Bxy_over_Bz_GSM          = !NULL
-     END
-     "GSM": BEGIN
-        C_OMNI__By               = TEMPORARY(By_GSM)
-        C_OMNI__Bz               = TEMPORARY(Bz_GSM)
-        C_OMNI__Bt               = TEMPORARY(Bt_GSM)
-        C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
-        C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
-        C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
-        C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
+  nMagUTC             = N_ELEMENTS(C_OMNI__mag_UTC)
+  C_OMNI__NewellFunc  = MAKE_ARRAY(nMagUTC,VALUE=!VALUES.F_NAN,/FLOAT)
+  SWMag_i             = VALUE_CLOSEST2(mag_UTC_sw,C_OMNI__mag_UTC)
+  SWMag_ii            = WHERE(ABS(mag_UTC_sw[SWMag_i]-C_OMNI__mag_UTC) LT 60.,nGood_SWMag)
+  IF nGood_SWMag EQ 0 THEN BEGIN
+     PRINT,"Hosed!! Looks like there's no place for SW data and IMF mag data to line up. "
+     STOP
+  ENDIF
 
-        By_GSE                   = !NULL
-        Bz_GSE                   = !NULL
-        Bt_GSE                   = !NULL
-        thetaCone_GSE            = !NULL
-        phiClock_GSE             = !NULL
-        cone_overClock_GSE       = !NULL
-        Bxy_over_Bz_GSE          = !NULL
-     END
-     ELSE: BEGIN
-        print,"Invalid/no coordinates chosen for OMNI data! Defaulting to GSM..."
-        WAIT,1.0
-        C_OMNI__By               = TEMPORARY(By_GSM)
-        C_OMNI__Bz               = TEMPORARY(Bz_GSM)
-        C_OMNI__Bt               = TEMPORARY(Bt_GSM)
-        C_OMNI__thetaCone        = TEMPORARY(thetaCone_GSM)
-        C_OMNI__phiClock         = TEMPORARY(phiClock_GSM)
-        C_OMNI__cone_overClock   = TEMPORARY(cone_overClock_GSM)
-        C_OMNI__Bxy_over_Bz      = TEMPORARY(Bxy_over_Bz_GSM)
+  ;;Now the opposite--inds for mag data
+  magSW_i             = VALUE_CLOSEST2(C_OMNI__mag_UTC,mag_UTC_sw)
+  magSW_ii            = WHERE(ABS(mag_UTC_sw-C_OMNI__mag_UTC[magSW_i]) LT 60.,nGood_magSW)
 
-        By_GSE                   = !NULL
-        Bz_GSE                   = !NULL
-        Bt_GSE                   = !NULL
-        thetaCone_GSE            = !NULL
-        phiClock_GSE             = !NULL
-        cone_overClock_GSE       = !NULL
-        Bxy_over_Bz_GSE          = !NULL
-     END
-  ENDCASE
-  C_OMNI__thetaCone              = C_OMNI__thetaCone*180/!PI
-  C_OMNI__phiClock               = C_OMNI__phiClock*180/!PI
+  good_SWMag_i                      = SWMag_i[SWMag_ii]
+  good_magSW_i                      = magSW_i[magSW_ii]
+  C_OMNI__NewellFunc[good_magSW_i]  = (flow_speed[good_SWMag_i] * 1.0D-3  )^(4.D/3.D)*$ ;Flow speed in m/s
+                                      (C_OMNI__Bt[good_magSW_i] * 1.0D-9  )^(2.D/3.D)*$ ;magField in nT!
+                                      (SIN(C_OMNI__phiClock[good_magSW_i]/2.D))^(8.D/3.D)
 
 END

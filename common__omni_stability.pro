@@ -3,7 +3,7 @@
 
   ;; COMPILE_OPT idl2
 
-  COMMON OMNI_STABILITY,C_OMNI__mag_UTC, $
+  COMMON OMNI_STABILITY,C_OMNI__mag_UTC , $
      C_OMNI__Bx                         , $
      C_OMNI__By                         , $
      C_OMNI__Bz                         , $
@@ -56,6 +56,12 @@
      C_OMNI__bxMax_i                    , $
      C_OMNI__bxMax                      , $
      C_OMNI__abs_bxMax                  , $
+     C_OMNI__N2007FuncMin_i             , $
+     C_OMNI__N2007FuncMin               , $
+     C_OMNI__abs_N2007FuncMin           , $
+     C_OMNI__N2007FuncMax_i             , $
+     C_OMNI__N2007FuncMax               , $
+     C_OMNI__abs_N2007FuncMax           , $
      C_OMNI__bx_over_by_ratio_max_i     , $
      C_OMNI__bx_over_by_ratio_max       , $
      C_OMNI__bx_over_by_ratio_min_i     , $
@@ -65,7 +71,8 @@
      C_OMNI__DONE_FIRST_STREAK_CALC     , $
      C_OMNI__StreakDurArr               , $
      C_OMNI__is_smoothed                , $
-     C_OMNI__smoothLen
+     C_OMNI__smoothLen                  , $
+     C_OMNI__NewellFunc
 
 
 ;; END

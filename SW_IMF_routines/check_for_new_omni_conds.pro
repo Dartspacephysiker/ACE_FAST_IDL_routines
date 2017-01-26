@@ -134,6 +134,24 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
      ENDIF
   ENDIF
 
+  IF TAG_EXIST(IMF_struct,'N2007FuncMin') THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__N2007FuncMin) NE 0 THEN BEGIN
+        IF C_OMNI__N2007FuncMin NE IMF_struct.N2007FuncMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF TAG_EXIST(IMF_struct,'N2007FuncMax') THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__N2007FuncMax) NE 0 THEN BEGIN
+        IF C_OMNI__N2007FuncMax NE IMF_struct.N2007FuncMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
   IF TAG_EXIST(IMF_struct,'abs_byMin') THEN BEGIN
      IF N_ELEMENTS(C_OMNI__abs_byMin) NE 0 THEN BEGIN
         IF C_OMNI__abs_byMin NE IMF_struct.abs_byMin THEN BEGIN
@@ -200,6 +218,24 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
   IF TAG_EXIST(IMF_struct,'abs_bxMax') THEN BEGIN
      IF N_ELEMENTS(C_OMNI__abs_bxMax) NE 0 THEN BEGIN
         IF C_OMNI__abs_bxMax NE IMF_struct.abs_bxMax THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF TAG_EXIST(IMF_struct,'abs_N2007FuncMin') THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_N2007FuncMin) NE 0 THEN BEGIN
+        IF C_OMNI__abs_N2007FuncMin NE IMF_struct.abs_N2007FuncMin THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
+  IF TAG_EXIST(IMF_struct,'abs_N2007FuncMax') THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__abs_N2007FuncMax) NE 0 THEN BEGIN
+        IF C_OMNI__abs_N2007FuncMax NE IMF_struct.abs_N2007FuncMax THEN BEGIN
            C_OMNI__RECALCULATE = 1
            RETURN
         ENDIF

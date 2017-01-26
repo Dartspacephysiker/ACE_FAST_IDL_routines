@@ -18,9 +18,9 @@ FUNCTION CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION, $
   CASE 1 OF
      KEYWORD_SET(calc_from_common_vars): BEGIN
         ;;First find out where things match
-        stable_SW_i      = VALUE_CLOSEST2(mag_UTC_sw,c_omni__mag_UTC[C_OMNI__stable_i])
+        stable_SW_i      = VALUE_CLOSEST2(mag_UTC_sw,C_OMNI__mag_UTC[C_OMNI__stable_i])
         stable_SW_ii     = WHERE(ABS(mag_UTC_sw[stable_SW_i] - $
-                                     C_OMNI__mag_UTC[C_OMNI__stable_i]) LE 60.,nStableSW)
+                                     C_OMNI__mag_UTC[C_OMNI__stable_i]) LT 60. AND FINITE(flow_speed),nStableSW)
         stable_SW_i      = stable_SW_i[stable_SW_ii]
 
         PRINT,FORMAT='("Got ",I0," SW points for Kan-Lee coupling calc")',nStableSW

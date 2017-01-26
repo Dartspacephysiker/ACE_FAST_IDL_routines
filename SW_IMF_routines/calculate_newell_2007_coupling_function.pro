@@ -10,6 +10,9 @@ FUNCTION CALCULATE_NEWELL_2007_COUPLING_FUNCTION, $
 
   @common__omni_stability.pro
 
+  PRINT,"STOP!!!!! You haven't worked on this, pal. IT's still a copy of the corresponding Kan-Lee function."
+  STOP
+
   dataDir                = "/SPENCEdata/Research/database/OMNI/"
   culledSWDataStr        = "culled_OMNI_swdata.dat"
 
@@ -20,7 +23,7 @@ FUNCTION CALCULATE_NEWELL_2007_COUPLING_FUNCTION, $
         ;;First find out where things match
         stable_SW_i      = VALUE_CLOSEST2(mag_UTC_sw,c_omni__mag_UTC[C_OMNI__stable_i])
         stable_SW_ii     = WHERE(ABS(mag_UTC_sw[stable_SW_i] - $
-                                     C_OMNI__mag_UTC[C_OMNI__stable_i]) LE 60.,nStableSW)
+                                     C_OMNI__mag_UTC[C_OMNI__stable_i]) LT 60.,nStableSW)
         stable_SW_i      = stable_SW_i[stable_SW_ii]
 
         PRINT,FORMAT='("Got ",I0," SW points for Newell et al. [2007] coupling calc")',nStableSW

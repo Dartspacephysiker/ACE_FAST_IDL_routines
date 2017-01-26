@@ -99,6 +99,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          OMNI_COORDS=IMF_struct.OMNI_coords, $
                          LUN=lun
 
+     IF (TAG_EXIST(IMF_struct,'N2007FuncMin') OR TAG_EXIST(IMF_struct,'N2007FuncMax')) $
+        OR  KEYWORD_SET(make_OMNI_stats_savFile) $
+        AND ~ISA(C_OMNI__NewellFunc) $
+     THEN BEGIN
+        OMNI__ADD_NEWELL_FUNC
+     ENDIF
+     
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;;Do the cleaning
 
@@ -131,16 +138,16 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;; IF KEYWORD_SET(smooth_IMF) THEN BEGIN
      IF TAG_EXIST(IMF_struct,'smooth_IMF') THEN BEGIN
         SMOOTH_OMNI_IMF,goodmag_goodtimes_i, $
-                        IMF_STRUCT=IMF_struct;, $
-                        ;; IMF_struct.smooth_IMF, $
-                        ;; BYMIN=byMin, $
-                        ;; BYMAX=byMax, $
-                        ;; BZMIN=bzMin, $
-                        ;; BZMAX=bzMax, $
-                        ;; BTMIN=btMin, $
-                        ;; BTMAX=btMax, $
-                        ;; BXMIN=bxMin, $
-                        ;; BXMAX=bxMax
+                        IMF_STRUCT=IMF_struct ;, $
+        ;; IMF_struct.smooth_IMF, $
+        ;; BYMIN=byMin, $
+        ;; BYMAX=byMax, $
+        ;; BZMIN=bzMin, $
+        ;; BZMAX=bzMax, $
+        ;; BTMIN=btMin, $
+        ;; BTMAX=btMax, $
+        ;; BXMIN=bxMin, $
+        ;; BXMAX=bxMax
      ENDIF
 
      C_OMNI__time_i = GET_OMNI_TIME_I(C_OMNI__mag_UTC, $
@@ -157,9 +164,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      STR_ELEMENT,IMF_struct,'clockStr',val
      IF val[0] NE '' THEN BEGIN
         SET_IMF_CLOCK_ANGLE, $
-           IMF_STRUCT=IMF_struct;, $
-           ;; CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
-           ;;                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
+           IMF_STRUCT=IMF_struct ;, $
+        ;; CLOCKSTR=clockStr,IN_ANGLE1=angleLim1,IN_ANGLE2=AngleLim2, $
+        ;;                  DONT_CONSIDER_CLOCKANGLES=dont_consider_clockAngles
 
         GET_IMF_CLOCKANGLE_INDS,C_OMNI__phiClock, $
                                 ;; IMF_STRUCT=IMF_struct, $
@@ -177,10 +184,12 @@ FUNCTION GET_STABLE_IMF_INDS, $
         USE_COMBINED_INDS           = 1
      ENDIF
 
-     IF TAG_EXIST(IMF_struct,'byMin') OR TAG_EXIST(IMF_struct,'byMax') $
-        OR TAG_EXIST(IMF_struct,'bzMin') OR TAG_EXIST(IMF_struct,'bzMax') $
-        OR TAG_EXIST(IMF_struct,'btMin') OR TAG_EXIST(IMF_struct,'btMax') $
-        OR TAG_EXIST(IMF_struct,'bxMin') OR TAG_EXIST(IMF_struct,'bxMax') THEN BEGIN
+     IF    TAG_EXIST(IMF_struct,'byMin'        ) OR TAG_EXIST(IMF_struct,'byMax') $
+        OR TAG_EXIST(IMF_struct,'bzMin'        ) OR TAG_EXIST(IMF_struct,'bzMax') $
+        OR TAG_EXIST(IMF_struct,'btMin'        ) OR TAG_EXIST(IMF_struct,'btMax') $
+        OR TAG_EXIST(IMF_struct,'bxMin'        ) OR TAG_EXIST(IMF_struct,'bxMax') $
+        OR TAG_EXIST(IMF_struct,'N2007FuncMin' ) OR TAG_EXIST(IMF_struct,'N2007FuncMax') $
+     THEN BEGIN
         GET_IMF_BY_BZ_LIM_INDS,C_OMNI__By,C_OMNI__Bz,C_OMNI__Bt,C_OMNI__Bx, $
                                byMin,byMax, $
                                bzMin,bzMax, $
@@ -310,6 +319,10 @@ FUNCTION GET_STABLE_IMF_INDS, $
      thetaCone_avg          = MEAN(C_OMNI__thetaCone[stable_omni_inds])
      thetaCone_stdDev       = STDDEV(C_OMNI__thetaCone[stable_omni_inds])
 
+     newellInds             = CGSETINTERSECTION(stable_omni_inds,WHERE(FINITE(C_OMNI__NewellFunc)))
+     NewellFunc_avg         = MEAN(C_OMNI__NewellFunc[newellInds])
+     NewellFunc_stdDev      = STDDEV(C_OMNI__NewellFunc[newellInds])
+
      ;;And swSpeed stuff
      IF KEYWORD_SET(calc_KL_sw_coupling_func) OR $
         KEYWORD_SET(make_OMNI_stats_savFile) $
@@ -321,30 +334,28 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
      ENDIF
 
-     IF KEYWORD_SET(calc_Newell_coupling_func) OR $
-        KEYWORD_SET(make_OMNI_stats_savFile) $
-     THEN BEGIN
-        epsilon_KanLee      = CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION(/INC_STDDEV, $
-                                                                     /CALC_FROM_COMMON_VARS, $
-                                                                     OUT_SW_SPEED=sw_speed)
-
-
-     ENDIF
+     ;; IF KEYWORD_SET(calc_Newell_coupling_func) OR $
+     ;;    KEYWORD_SET(make_OMNI_stats_savFile) $
+     ;; THEN BEGIN
+     ;;    NewellFunc  = CALCULATE_NEWELL_2007_COUPLING_FUNCTION(/INC_STDDEV, $
+     ;;                                                          /CALC_FROM_COMMON_VARS, $
+     ;;                                                          OUT_SW_SPEED=sw_speed)
+     ;; ENDIF
 
      ;; IF KEYWORD_SET(print_OMNI_covariances) THEN BEGIN
-     BxBy_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
-                                     C_OMNI__By[stable_omni_Inds], $
-                                     /COVARIANCE)
-     BxBz_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
-                                     C_OMNI__Bz[stable_omni_Inds], $
-                                     /COVARIANCE)
-     ByBz_covar          = CORRELATE(C_OMNI__By[stable_omni_Inds], $
-                                     C_OMNI__Bz[stable_omni_Inds], $
-                                     /COVARIANCE)
+     BxBy_covar     = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                C_OMNI__By[stable_omni_Inds], $
+                                /COVARIANCE)
+     BxBz_covar     = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                C_OMNI__Bz[stable_omni_Inds], $
+                                /COVARIANCE)
+     ByBz_covar     = CORRELATE(C_OMNI__By[stable_omni_Inds], $
+                                C_OMNI__Bz[stable_omni_Inds], $
+                                /COVARIANCE)
 
-     BxBt_covar          = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
-                                     C_OMNI__Bt[stable_omni_Inds], $
-                                     /COVARIANCE)
+     BxBt_covar     = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
+                                C_OMNI__Bt[stable_omni_Inds], $
+                                /COVARIANCE)
      ;; ENDIF
 
 
@@ -406,9 +417,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
         PRINTF,outLun,''
         PRINTF,outLun,FORMAT='("Average SW speed",T35,": ",F10.3)',sw_speed[0]
         PRINTF,outLun,FORMAT='("Average KL EField",T35,": ",F10.3)',epsilon_KanLee[0]
+        PRINTF,outLun,FORMAT='("Average NewellFunc",T35,": ",F10.3)',NewellFunc_avg[0]
         PRINTF,outLun,''
         PRINTF,outLun,FORMAT='(" SW speed stdDev",T35,": ",F10.3)',sw_speed[1]
         PRINTF,outLun,FORMAT='("KL EField stdDev",T35,": ",F10.3)',epsilon_KanLee[1]
+        PRINTF,outLun,FORMAT='("NewellFunc stdDev",T35,": ",F10.3)',NewellFunc_stdDev[1]
      END
      PRINTF,outLun,''
      PRINTF,outLun,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
@@ -527,15 +540,19 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:[stats.avg.phiClock,phiClock_avg], $
                       thetaCone:[stats.avg.thetaCone,thetaCone_avg], $
                       cone_overClock:[stats.avg.cone_overClock,cone_overClock_avg], $
-                      KL_Efield:[stats.avg.KL_EField,epsilon_KanLee[0]]}, $
+                      KL_Efield:[stats.avg.KL_EField,epsilon_KanLee[0]], $
+                      ;; NewellFunc:[stats.avg.NewellFunc,NewellFunc[0]]}, $
+                      NewellFunc:[stats.avg.NewellFunc,NewellFunc_avg]}, $
                  stdDev:{Bx:[stats.stdDev.Bx,Bx_StdDev], $
-                      By:[stats.stdDev.By,By_StdDev], $
-                      Bz:[stats.stdDev.Bz,Bz_StdDev], $
-                      Bt:[stats.stdDev.Bt,Bt_StdDev], $
-                      phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
-                      thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
-                      cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
-                      KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]]}, $
+                         By:[stats.stdDev.By,By_StdDev], $
+                         Bz:[stats.stdDev.Bz,Bz_StdDev], $
+                         Bt:[stats.stdDev.Bt,Bt_StdDev], $
+                         phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
+                         thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
+                         cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
+                         KL_Efield:[stats.stdDev.KL_EField,epsilon_KanLee[1]], $
+                         ;; NewellFunc:[stats.stdDev.NewellFunc,NewellFunc[1]]}, $
+                         NewellFunc:[stats.stdDev.NewellFunc,NewellFunc_stdDev]}, $
                  covar:{BxBt:[stats.covar.BxBt,BxBt_covar], $
                         BxBy:[stats.covar.BxBy,BxBy_covar], $
                         BxBz:[stats.covar.BxBz,BxBz_covar], $
@@ -553,15 +570,19 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:phiClock_avg, $
                       thetaCone:thetaCone_avg, $
                       cone_overClock:cone_overClock_avg, $
-                      KL_Efield:epsilon_KanLee[0]}, $
+                      KL_Efield:epsilon_KanLee[0], $
+                      ;; NewellFunc:NewellFunc[0]}, $
+                      NewellFunc:NewellFunc_avg}, $
                  stdDev:{Bx:Bx_StdDev, $
-                      By:By_StdDev, $
-                      Bz:Bz_StdDev, $
-                      Bt:Bt_StdDev, $
-                      phiClock:phiClock_StdDev, $
-                      thetaCone:thetaCone_StdDev, $
-                      cone_overClock:cone_overClock_StdDev, $
-                      KL_Efield:epsilon_KanLee[1]}, $
+                         By:By_StdDev, $
+                         Bz:Bz_StdDev, $
+                         Bt:Bt_StdDev, $
+                         phiClock:phiClock_StdDev, $
+                         thetaCone:thetaCone_StdDev, $
+                         cone_overClock:cone_overClock_StdDev, $
+                         KL_Efield:epsilon_KanLee[1], $
+                         ;; NewellFunc:NewellFunc[1]}, $
+                         NewellFunc:NewellFunc_stdDev}, $
                  covar:{BxBt:BxBt_covar, $
                         BxBy:BxBy_covar, $
                         BxBz:BxBz_covar, $
@@ -592,7 +613,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
         stable_omni_ind_list = LIST(stable_omni_inds)
         clockStr_list        = LIST(C_OMNI__clockStr)
      ENDELSE
-        SAVE,stable_omni_ind_list,clockStr_list,FILENAME=file
+     SAVE,stable_omni_ind_list,clockStr_list,FILENAME=file
   ENDIF
 
   omni_paramStr                     = C_OMNI__paramStr

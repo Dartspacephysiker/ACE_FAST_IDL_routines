@@ -5,6 +5,8 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY
 
+  message = "Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
   ;; C_OMNI__combined_i              = C_OMNI__time_i
@@ -30,77 +32,91 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
   IF KEYWORD_SET(C_OMNI__phiIMF_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__phiIMF_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bxMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bxMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bxMax_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bxMax_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__byMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__byMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__byMax_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__byMax_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bzMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bzMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bzMax_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bzMax_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__btMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__btMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__btMax_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__btMax_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
+        STOP
+     ENDIF
+  ENDIF
+  IF KEYWORD_SET(C_OMNI__N2007FuncMin_i) THEN BEGIN
+     C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__N2007FuncMin_i,SUCCESS=success)
+     IF ~success THEN BEGIN
+        PRINTF,lun,message
+        STOP
+     ENDIF
+  ENDIF
+  IF KEYWORD_SET(C_OMNI__N2007FuncMax_i) THEN BEGIN
+     C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__N2007FuncMax_i,SUCCESS=success)
+     IF ~success THEN BEGIN
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bx_over_by_ratio_min_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bx_over_by_ratio_min_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__bx_over_by_ratio_max_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__bx_over_by_ratio_max_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
@@ -108,14 +124,14 @@ PRO COMBINE_OMNI_IMF_INDS,LUN=lun
   IF KEYWORD_SET(C_OMNI__tConeMin_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__tConeMin_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF
   IF KEYWORD_SET(C_OMNI__tConeMax_i) THEN BEGIN
      C_OMNI__combined_i       = CGSETINTERSECTION(C_OMNI__combined_i,C_OMNI__tConeMax_i,SUCCESS=success)
      IF ~success THEN BEGIN
-        PRINTF,lun,"Choked trying to combine OMNI indices corresponding to all requested restrictions! No inds left!"
+        PRINTF,lun,message
         STOP
      ENDIF
   ENDIF

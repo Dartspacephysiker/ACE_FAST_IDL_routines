@@ -79,7 +79,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
 
      qual_db_i_list.add,qualifying_db_i
   ENDFOR
-     
+  
   ;; IF ~KEYWORD_SET(IMF_struct.multiple_delays) THEN qual_db_i_list = qual_db_i_list.ToArray
 
   out_OMNI_paramStr      = OMNI_paramStr

@@ -178,4 +178,37 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
      C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"bxy_ratioMax_",F0.2)',absStr,C_OMNI__bx_over_by_ratio_max)
   ENDIF
 
+  IF TAG_EXIST(IMF_struct,'N2007FuncMin') THEN BEGIN 
+     C_OMNI__N2007FuncMin          = IMF_struct.N2007FuncMin
+     C_OMNI__abs_N2007FuncMin      = KEYWORD_SET(IMF_struct.abs_N2007FuncMin)
+     IF C_OMNI__abs_N2007FuncMin THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__N2007FuncMin_i     = WHERE(C_OMNI__NewellFunc LE -ABS(C_OMNI__N2007FuncMin) OR C_OMNI__NewellFunc GE ABS(C_OMNI__N2007FuncMin),NCOMPLEMENT=N2007FuncMinLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__N2007FuncMin_i     = WHERE(C_OMNI__NewellFunc GE C_OMNI__N2007FuncMin,NCOMPLEMENT=N2007FuncMinLost)
+     ENDELSE
+
+     PRINTF,lun,FORMAT='("N2007FuncMin magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__N2007FuncMin,N2007FuncMinLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"N2007FuncMin_",F0.2)',absStr,C_OMNI__N2007FuncMin)
+  ENDIF
+
+  IF TAG_EXIST(IMF_struct,'N2007FuncMax') THEN BEGIN 
+     C_OMNI__N2007FuncMax          = IMF_struct.N2007FuncMax
+     C_OMNI__abs_N2007FuncMax      = KEYWORD_SET(IMF_struct.abs_N2007FuncMax)
+     IF C_OMNI__abs_N2007FuncMax THEN BEGIN
+        absStr              = 'ABS_'
+        C_OMNI__N2007FuncMax_i     = WHERE(ABS(C_OMNI__NewellFunc) LE ABS(C_OMNI__N2007FuncMax),NCOMPLEMENT=N2007FuncMaxLost)
+     ENDIF ELSE BEGIN
+        absStr              = ''
+        C_OMNI__N2007FuncMax_i     = WHERE(C_OMNI__NewellFunc LE C_OMNI__N2007FuncMax,NCOMPLEMENT=N2007FuncMaxLost)
+     ENDELSE
+
+     PRINTF,lun,""
+     PRINTF,lun,FORMAT='("N2007FuncMax magnitude requirement, nLost:",T40,F5.2," nT, ",T50,I0)',C_OMNI__N2007FuncMax,N2007FuncMaxLost
+     C_OMNI__paramStr      += STRING(FORMAT='("--",A0,"N2007FuncMax_",F0.2)',absStr,C_OMNI__N2007FuncMax)
+  ENDIF
+
+
+
 END
