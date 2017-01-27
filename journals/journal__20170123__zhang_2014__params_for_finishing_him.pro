@@ -59,7 +59,7 @@
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
+  hemi                           = 'BOTH'
   ;; minI                           = 60
   ;; maxI                           = 90
   ;; maskMin                        = 5

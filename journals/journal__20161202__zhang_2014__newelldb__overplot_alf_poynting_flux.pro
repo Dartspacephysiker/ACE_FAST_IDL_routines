@@ -55,8 +55,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   justData                       = 0
   
   saveDir                        = '/home/spencerh/Desktop/'
-  justInds                       = 0
-  ;; justInds_saveToFile            = 'newellZhang2014--not_2009--inds.sav'
+  justInds                       = 1
+  justInds_saveToFilePref        = 'newellZhang2014--'
 
   ;;DB stuff
   do_despun                      = 0
@@ -210,8 +210,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minI                        = 54
+  hemi                        = 'BOTH'
+  minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
@@ -227,6 +227,10 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; binI                     = 2.0
   binI                        = 2.0
+
+  IF KEYWORD_SET(justInds_saveToFilePref) THEN BEGIN
+     justInds_saveToFile = justInds_saveToFilePref + hemi + '_inds.sav'
+  ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
