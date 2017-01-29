@@ -1499,7 +1499,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      KEYWORD_SET(PASIS__alfDB_plot_struct.show_integrals) OR $
      KEYWORD_SET(PASIS__alfDB_plot_struct.make_integral_txtfile) OR $
      KEYWORD_SET(PASIS__alfDB_plot_struct.make_integral_savfiles) $
-  THEN grossRateMe = 1
+  THEN BEGIN
+     grossRateMe = 1
+
+     ;;Check to see whether we're doing several custom integrals
+     IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN BEGIN
+        customInteg_multi = BYTE(PASIS__alfDB_plot_struct,custom_integral.nFriends EQ N_ELEMENTS(PASIS__alfDB_plot_struct.multiples))
+     ENDIF ELSE BEGIN
+        customInteg_multi = 0B
+     ENDELSE
+
+  ENDIF
 
   ;;Need area or length of each bin for gross rates
   IF KEYWORD_SET(grossRateMe                                            ) OR $
@@ -1599,6 +1609,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      IF KEYWORD_SET(PASIS__paramString_list) THEN BEGIN 
         paramStr           = PASIS__paramString_list[iMulti] 
+     ENDIF
+
+     IF KEYWORD_SET(PASIS__alfDB_plot_struct.show_integrals) AND $
+        TAG_EXIST(PASIS__alfDB_plot_struct,'custom_integral') THEN BEGIN
+        PASIS__alfDB_plot_struct.custom_integral.friend_i = customInteg_multi ? iMulti : 0
      ENDIF
 
      extra = CREATE_STRUCT(PASIS__alfDB_plot_struct,alfDB_plotLim_struct)

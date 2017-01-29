@@ -55,7 +55,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   justData                       = 0
   
   saveDir                        = '/home/spencerh/Desktop/'
-  justInds                       = 1
+  justInds                       = 0
   justInds_saveToFilePref        = 'newellZhang2014--'
 
   ;;DB stuff
@@ -117,7 +117,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
   ePlots                         = 1
-  eNumFlPlots                    = 0
+  eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
@@ -210,7 +210,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'BOTH'
+  hemi                        = 'NORTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
