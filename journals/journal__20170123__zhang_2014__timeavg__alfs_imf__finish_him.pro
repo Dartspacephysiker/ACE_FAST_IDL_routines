@@ -37,7 +37,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   fluxPlots__diffuse_everywhar   = 0
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -104,7 +104,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 0
+  besides_pFlux                      = 1
   ePlots                             = besides_pFlux
   eNumFlPlots                        = besides_pFlux
   pPlots                             = 1
@@ -214,6 +214,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
                                    BTMAX=btMax, $
                                    BXMIN=bxMin, $
                                    BXMAX=bxMax, $
+                                   CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
                                    /AND_TILING_OPTIONS, $
                                    GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                    TILE_IMAGES=tile_images, $
@@ -310,6 +311,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
         PARAMSTRPREFIX=plotPrefix, $
         PARAMSTRSUFFIX=plotSuffix,$
         PLOTH2D_CONTOUR=plotH2D_contour, $
+        CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
         CONTOUR__LEVELS=contour__levels, $
         CONTOUR__PERCENT=contour__percent, $
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
