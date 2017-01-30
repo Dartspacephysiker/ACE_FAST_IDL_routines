@@ -32,7 +32,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 0
+  fluxPlots__Newell_the_cusp     = 1
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
@@ -75,7 +75,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
   justData                        = 0
-  justInds                        = 0
+  justInds                        = 1
   indsPref                        = ''
   CASE 1 OF
      KEYWORD_SET(fluxPlots__invert_Newell_the_cusp): BEGIN
@@ -100,7 +100,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
                                     GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
                                     '.sav'
                                     ;; '_hemi--20161224.sav'
-  saveDir                         = '/home/spencerh/Desktop/'
+  saveDir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots

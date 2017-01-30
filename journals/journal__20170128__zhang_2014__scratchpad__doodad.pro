@@ -5,7 +5,8 @@ PRO JOURNAL__20170128__ZHANG_2014__SCRATCHPAD__DOODAD
 
   second_set = 1
 
-  dir       = '/home/spencerh/Desktop/Spence_paper_drafts/2017/Alfvens_IMF/dataFiles/'
+  ;; dir       = '/home/spencerh/Desktop/Spence_paper_drafts/2017/Alfvens_IMF/dataFiles/'
+  dir       = '~/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
   statsFile = 'OMNI_stats--Alfvens_dodat_20170127.sav'
 
   IF KEYWORD_SET(second_set) THEN BEGIN
