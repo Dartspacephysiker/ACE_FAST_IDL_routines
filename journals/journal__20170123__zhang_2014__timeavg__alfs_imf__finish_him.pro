@@ -18,12 +18,6 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   labels_for_presentation  = 1
 
-  ;; plotPref += '-smeared'
-  ;; plotPref += '-fattest'
-  ;; plotPref = '-keilbin'
-  ;; plotPref += 'NEWELLED_DONE'
-  ;; plotPref += 'NEWELLED_AFTROTFIX'
-  ;; plotPref += 'FINALE'
   plotPref += ''
 
   include_32Hz                   = 0
@@ -32,7 +26,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 1
+  fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
@@ -71,11 +65,11 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   make_integral_savfiles          = 1
 
   show_integrals                  = 1
-  write_obsArr_textFile           = 1
+  write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
-  justInds                        = 1
+  justData                        = 1
+  justInds                        = 0
   indsPref                        = ''
   CASE 1 OF
      KEYWORD_SET(fluxPlots__invert_Newell_the_cusp): BEGIN

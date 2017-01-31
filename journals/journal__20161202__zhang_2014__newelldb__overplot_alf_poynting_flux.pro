@@ -52,7 +52,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  justData                       = 0
+  justData                       = 1
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -210,14 +210,14 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'NORTH'
+  ;; hemi                        = 'NORTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
+  hemi                           = 'SOUTH'
   ;; minI                        = -90
   ;; maxI                        = -60
   ;; maskMin                        =  1

@@ -64,9 +64,27 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
   clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
 
   ;;Do dawn integrals?
-  
-  MLTRange  = TRANSPOSE(REFORM([REPLICATE(7.5,8),REPLICATE(10.5,8)],8,2))
-  ILATRange = TRANSPOSE(REFORM([REPLICATE(70,8),REPLICATE(80,8)],8,2))
+  ;; minM_c    = 7.5
+  ;; maxM_c    = 10.5
+  minM_c    = [ 6,12]
+  maxM_c    = [12,18]
+  minI_c    = [70,70]
+  maxI_c    = [80,80]
+  navn_c    = ['dawn','dusk']
+  MLTRange  = !NULL
+  ILATRange = !NULL
+  CASE N_ELEMENTS(minM_c) OF
+     0: 
+     1: BEGIN
+
+     END
+     ELSE: BEGIN
+        FOR k=0,N_ELEMENTS(minM_c)-1 DO BEGIN
+           MLTRange  = [[[MLTRange]],[[TRANSPOSE(REFORM([REPLICATE(minM_c[k],8),REPLICATE(maxM_c[k],8)],8,2))]]]
+           ILATRange = [[[ILATRange]],[[TRANSPOSE(REFORM([REPLICATE(minI_c[k],8),REPLICATE(maxI_c[k],8)],8,2))]]]
+        ENDFOR
+     END
+  ENDCASE
   custom_integral_struct = {MLTRange:MLTRange,ILATRange:ILATRange}
 
   IF KEYWORD_SET(and_tiling_options) THEN BEGIN
