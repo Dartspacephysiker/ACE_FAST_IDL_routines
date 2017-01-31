@@ -8,8 +8,8 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  minMC                              = 1
-  maxNegMC                           = -1
+  minMC                              = 10
+  maxNegMC                           = -10
 
   do_timeAvg_fluxQuantities          = 1
   logAvgPlot                         = 0
@@ -59,14 +59,14 @@
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'BOTH'
-  ;; minI                           = 60
-  ;; maxI                           = 90
+  ;; hemi                           = 'NORTH'
+  minI                           = 60
+  maxI                           = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
   ;; numOrbLim                      = 5
 
-  ;; hemi                           = 'SOUTH'
+  hemi                           = 'SOUTH'
   ;; minI                           = -90
   ;; maxI                           = -60
   ;; southern_hemi_plotScales          = 1
