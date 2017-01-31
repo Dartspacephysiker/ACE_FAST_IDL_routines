@@ -8,7 +8,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
@@ -55,7 +55,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   justData                       = 0
   
   saveDir                        = '/home/spencerh/Desktop/'
-  justInds                       = 1
+  justInds                       = 0
   justInds_saveToFilePref        = 'newellZhang2014--'
 
   ;;DB stuff
@@ -117,7 +117,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
   ePlots                         = 1
-  eNumFlPlots                    = 0
+  eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
@@ -210,7 +210,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'BOTH'
+  hemi                        = 'NORTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
@@ -266,6 +266,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
                                    BTMAX=btMax, $
                                    BXMIN=bxMin, $
                                    BXMAX=bxMax, $
+                                   CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
                                    /AND_TILING_OPTIONS, $
                                    GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                    TILE_IMAGES=tile_images, $
@@ -375,6 +376,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         PARAMSTRPREFIX=plotPrefix, $
         PARAMSTRSUFFIX=plotSuffix,$
         PLOTH2D_CONTOUR=plotH2D_contour, $
+        CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
         HOYDIA=hoyDia, $
         LUN=lun, $

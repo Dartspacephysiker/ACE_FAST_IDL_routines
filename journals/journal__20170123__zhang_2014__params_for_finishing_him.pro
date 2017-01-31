@@ -59,14 +59,14 @@
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   minI                           = 60
   maxI                           = 90
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
   ;; numOrbLim                      = 5
 
-  hemi                           = 'SOUTH'
+  ;; hemi                           = 'SOUTH'
   ;; minI                           = -90
   ;; maxI                           = -60
   ;; southern_hemi_plotScales          = 1

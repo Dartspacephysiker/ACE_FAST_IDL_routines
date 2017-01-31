@@ -9,6 +9,7 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                   BTMAX=btMax, $
                                   BXMIN=bxMin, $
                                   BXMAX=bxMax, $
+                                  CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
                                   AND_TILING_OPTIONS=and_tiling_options, $
                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                   TILE_IMAGES=tile_images, $
@@ -60,6 +61,13 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
      IMFTitle += ' B!Dt!N Min: ' + STRCOMPRESS(bxMin,/REMOVE_ALL) + 'nT'
   ENDIF
 
+  clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
+
+  ;;Do dawn integrals?
+  
+  MLTRange  = TRANSPOSE(REFORM([REPLICATE(7.5,8),REPLICATE(10.5,8)],8,2))
+  ILATRange = TRANSPOSE(REFORM([REPLICATE(70,8),REPLICATE(80,8)],8,2))
+  custom_integral_struct = {MLTRange:MLTRange,ILATRange:ILATRange}
 
   IF KEYWORD_SET(and_tiling_options) THEN BEGIN
      tile_images                 = 1
