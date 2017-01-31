@@ -18,7 +18,13 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   labels_for_presentation  = 1
 
-  plotPref += ''
+  plotPref += '--upto90ILAT'
+  ;; plotPref += ''
+
+  minM_c    = [ 6,12]
+  maxM_c    = [12,18]
+  minI_c    = [70,70]
+  maxI_c    = [90,90]
 
   include_32Hz                   = 0
   EA_binning                     = 0
@@ -209,6 +215,10 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
                                    BXMIN=bxMin, $
                                    BXMAX=bxMax, $
                                    CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
+                                   CUSTOM_INTEG_MINM=minM_c, $
+                                   CUSTOM_INTEG_MAXM=maxM_c, $
+                                   CUSTOM_INTEG_MINI=minI_c, $
+                                   CUSTOM_INTEG_MAXI=maxI_c, $
                                    /AND_TILING_OPTIONS, $
                                    GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                    TILE_IMAGES=tile_images, $

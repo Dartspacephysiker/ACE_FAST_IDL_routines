@@ -10,6 +10,10 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                   BXMIN=bxMin, $
                                   BXMAX=bxMax, $
                                   CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
+                                  CUSTOM_INTEG_MINM=minM_c, $
+                                  CUSTOM_INTEG_MAXM=maxM_c, $
+                                  CUSTOM_INTEG_MINI=minI_c, $
+                                  CUSTOM_INTEG_MAXI=maxI_c, $
                                   AND_TILING_OPTIONS=and_tiling_options, $
                                   GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
                                   TILE_IMAGES=tile_images, $
@@ -66,10 +70,10 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
   ;;Do dawn integrals?
   ;; minM_c    = 7.5
   ;; maxM_c    = 10.5
-  minM_c    = [ 6,12]
-  maxM_c    = [12,18]
-  minI_c    = [70,70]
-  maxI_c    = [80,80]
+  IF ~KEYWORD_SET(minM_c) THEN minM_c    = [ 6,12]
+  IF ~KEYWORD_SET(maxM_c) THEN maxM_c    = [12,18]
+  IF ~KEYWORD_SET(minI_c) THEN minI_c    = [70,70]
+  IF ~KEYWORD_SET(maxI_c) THEN maxI_c    = [80,80]
   navn_c    = ['dawn','dusk']
   MLTRange  = !NULL
   ILATRange = !NULL
