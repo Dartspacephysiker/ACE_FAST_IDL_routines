@@ -1504,7 +1504,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      grossRateMe = 1
 
      ;;Check to see whether we're doing several custom integrals
-     IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) THEN BEGIN
+     IF KEYWORD_SET(PASIS__alfDB_plot_struct.executing_multiples) AND (PASIS__alfDB_plot_struct.nCustomIntegrals GT 0) THEN BEGIN
         customInteg_multi = BYTE(PASIS__alfDB_plot_struct.custom_integral.nFriends EQ N_ELEMENTS(PASIS__alfDB_plot_struct.multiples))
      ENDIF ELSE BEGIN
         customInteg_multi = 0B
