@@ -1791,7 +1791,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            CLOCKSTR=clockStr, $
            PLOTMEDORAVG=plotMedOrAvg, $
            STABLEIMF=PASIS__IMF_struct.stableIMF, $
-           HOYDIA=hoyDia,HEMI=hemi, $
+           HOYDIA=hoyDia, $
+           HEMI=hemi, $
            OUT_TEMPFILE=out_tempFile
      ENDIF
 
