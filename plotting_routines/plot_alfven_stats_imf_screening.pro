@@ -415,6 +415,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
    REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
    PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these, $
+   USE_PREVIOUS_THISTOS_IF_EXISTING=use_prev_tHistos, $
    OUT_PLOT_I_LIST=out_plot_i_list, $
    OUT_FASTLOC_I_LIST=out_fastLoc_i_list, $
    OUT_I_ESPEC_LIST=out_i_eSpec_list, $
@@ -1314,10 +1315,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                             INDICES__ESPEC=indices__eSpec_list, $
                             INDICES__ION=indices__ion_list, $
                             ESPEC__MLTS=eSpec__mlts, $
-                            ESPEC__ILATS=eSpec__ilats, $
+                            ;; ESPEC__ILATS=eSpec__ilats, $
                             ESPEC__INFO=eSpec_info, $
                             ION__MLTS=ion__mlts, $
-                            ION__ILATS=ion__ilats, $
+                            ;; ION__ILATS=ion__ilats, $
                             ION__INFO=ion_info, $
                             CHARIERANGE=charIERange, $
                             RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
@@ -1334,7 +1335,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; PASIS__eSpec_delta_t        = KEYWORD_SET(eSpec_delta_t) ? $
            ;;                               TEMPORARY(eSpec_delta_t) : !NULL
            PASIS__eSpec__MLTs          = KEYWORD_SET(eSpec__MLTs)
-           PASIS__eSpec__ILATs         = KEYWORD_SET(eSpec__ILATs)
+           ;; PASIS__eSpec__ILATs         = KEYWORD_SET(eSpec__ILATs)
            PASIS__indices__eSpec_list  = TEMPORARY(indices__eSpec_list)
         ENDIF
 
@@ -1344,7 +1345,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; PASIS__ion_delta_t          = KEYWORD_SET(ion_delta_t) ? $
            ;;                               TEMPORARY(ion_delta_t) : !NULL
            PASIS__ion__MLTs            = KEYWORD_SET(ion__MLTs)
-           PASIS__ion__ILATs           = KEYWORD_SET(ion__ILATs)
+           ;; PASIS__ion__ILATs           = KEYWORD_SET(ion__ILATs)
            PASIS__indices__ion_list    = TEMPORARY(indices__ion_list)
         ENDIF
      ENDIF
@@ -1589,6 +1590,22 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      NIter = 1
   ENDELSE
 
+  IF KEYWORD_SET(use_prev_tHistos) THEN BEGIN
+     IF N_ELEMENTS(PASIS__FL_tHisto_list) EQ NIter THEN BEGIN
+        have_prev_tHistos = 1
+     ENDIF ELSE BEGIN
+        have_prev_tHistos = 0
+     ENDELSE
+
+     IF N_ELEMENTS(PASIS__FL_eSpec_tHisto_list) EQ NIter THEN BEGIN
+        have_prev_eSpec_tHistos = 1
+     ENDIF ELSE BEGIN
+        have_prev_eSpec_tHistos = 0
+     ENDELSE
+  ENDIF ELSE BEGIN
+     have_prev_eSpec_tHistos = 0
+  ENDELSE
+
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
   dataRawPtrArr_List               = LIST()
@@ -1635,6 +1652,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         PASIS__alfDB_plot_struct.custom_integral.friend_i = customInteg_multi ? iMulti : 0
      ENDIF
 
+     IF KEYWORD_SET(have_prev_tHistos) THEN BEGIN
+        tHistDenominator = PASIS__FL_tHisto_list[iMulti]
+     ENDIF 
+     IF KEYWORD_SET(have_prev_eSpec_tHistos) THEN BEGIN
+        eSpec_tHistDenominator = PASIS__FL_eSpec_tHisto_list[iMulti]
+     ENDIF 
+
      extra = CREATE_STRUCT(PASIS__alfDB_plot_struct,alfDB_plotLim_struct)
      GET_ALFVENDB_2DHISTOS, $
         plot_i, $
@@ -1657,11 +1681,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         INDICES__ION=indices__ion, $
         ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
-        ESPEC__MLTS=PASIS__eSpec__mlts, $
-        ESPEC__ILATS=PASIS__eSpec__ilats, $
+        ESPEC__MLTSILATS=PASIS__eSpec__mlts, $
         ;; FOR_ION_DB=for_ion_DB, $
-        ION__MLTS=PASIS__ion__mlts, $
-        ION__ILATS=PASIS__ion__ilats, $
+        ION__MLTSILATS=PASIS__ion__mlts, $
+        ;; ION__ILATS=PASIS__ion__ilats, $
         ION_DELTA_T=PASIS__ion_delta_t, $
         ORBCONTRIB__REFERENCE_ALFVENDB_NOT_EPHEMERIS=orbContrib__reference_alfvenDB, $
         DIVNEVBYTOTAL=divNEvByTotal, $
@@ -1712,12 +1735,38 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         RESET_OMNI_INDS=reset_omni_inds, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         TXTOUTPUTDIR=txtOutputDir, $
+        HAVE_PREVIOUS_THISTO=have_prev_tHistos, $
+        HAVE_PREVIOUS_ESPEC_THISTO=have_prev_eSpec_tHistos, $
+        IN_THISTDENOMINATOR=tHistDenominator, $
+        IN_ESPEC_THISTDENOMINATOR=eSpec_tHistDenominator, $
         _EXTRA=extra, $
         LUN=lun
 
      h2dStrArr_List.add,h2dStrArr
      dataNameArr_list.add,dataNameArr
      dataRawPtrArr_list.add,dataRawPtrArr
+
+     IF KEYWORD_SET(use_prev_tHistos) AND ~KEYWORD_SET(have_prev_tHistos) THEN BEGIN
+        CASE iMulti OF
+           0: BEGIN
+              PASIS__FL_tHisto_list = LIST(tHistDenominator)
+           END
+           ELSE: BEGIN
+              PASIS__FL_tHisto_list.Add,tHistDenominator
+           END
+        ENDCASE
+     ENDIF
+
+     IF KEYWORD_SET(use_prev_tHistos) AND ~KEYWORD_SET(have_prev_eSpec_tHistos) THEN BEGIN
+        CASE iMulti OF
+           0: BEGIN
+              PASIS__FL_eSpec_tHisto_list = LIST(eSpec_tHistDenominator)
+           END
+           ELSE: BEGIN
+              PASIS__FL_eSpec_tHisto_list.Add,eSpec_tHistDenominator
+           END
+        ENDCASE
+     ENDIF
 
   ENDFOR
 

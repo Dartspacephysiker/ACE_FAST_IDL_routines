@@ -15,6 +15,8 @@ PRO CLEAR_PASIS_VARS,INDS_RESET=inds_reset, $
      PASIS__fastLocInterped_i_list = !NULL
      PASIS__indices__eSpec_list    = !NULL
      PASIS__indices__ion_list      = !NULL
+     PASIS__fastLoc_tHisto_list    = !NULL
+     PASIS__indices__eSpec__types  = !NULL
   ENDIF
 
   IF KEYWORD_SET(plots_reset) OR KEYWORD_SET(DBs_reset) THEN BEGIN
