@@ -1,60 +1,50 @@
-;;2016/08/18 The reason for higher alts is that we want to account for 50% dissipation on dayside and 90% dissipation on nightside
-PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
+;;2017/02/02 More 'nothers
+PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
 
-  ALL_NOTJUST1997            = 0
+  use_prev_plot_i           = 1
+  remake_prev_plot_file     = 1
+  
+  do_timeAvg_fluxQuantities = 1
+  logAvgPlot                = 0
+  medianPlot                = 0
+  divide_by_width_x         = 1
 
-  use_prev_plot_i            = 0
+  include_32Hz              = 0
+  use_Lng                   = 1
+  use_AACGM                 = 0
+  use_GEI                   = 1
+  use_GEO                   = 0
+  use_MAG                   = 0
 
-  do_timeAvg_fluxQuantities  = 1
-  logAvgPlot                 = 0
-  medianPlot                 = 0
-  maxPlot                    = 0
-  divide_by_width_x          = 1
-
-  include_32Hz               = 0
-  use_AACGM                  = 0
-
-  plotH2D_contour            = 0
-  plotH2D__kde               = KEYWORD_SET(plotH2D_contour)
-
-  EA_binning                 = 0
-
-  minMC                      = 1
-  maxnegMC                   = -1
+  minMC                     = 1
+  maxnegMC                  = -1
 
   ;;DB stuff
-  despun                     = 0
+  do_despun                 = 0
 
-  suppress_MLT_lables        = 1
-  suppress_ILAT_labels       = 1
-  fancyPresentationMode      = 1
+  suppress_ILAT_labels      = 1
 
-  autoscale_fluxPlots        = 0
+  autoscale_fluxPlots       = 0
 
-  do_not_consider_IMF        = 1
+  do_not_consider_IMF       = 1
 
-  cb_force_oobHigh           = 0
+  cb_force_oobHigh          = 0
 
-  dont_blackball_maximus     = 1
-  dont_blackball_fastloc     = 1
+  dont_blackball_maximus    = 1
+  dont_blackball_fastloc    = 1
 
-  show_integrals             = 0
-  write_obsArr_textFile      = 0
-  write_obsArr__inc_IMF      = 0
-  write_obsArr__orb_avg_obs  = 0
-
+  show_integrals            = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
   ;; ePlots                         = 0
   ;; eNumFlPlots                    = 0
   pPlots                         = 1
-  magCPlots                      = 0
   nOrbsWithEventsPerContribOrbsPlot = 0
   ;; ionPlots                       = 0
   probOccurrencePlot             = 0
   ;; sum_electron_and_poyntingflux  = 0
-  tHistDenominatorPlot           = 0
+  ;; tHistDenominatorPlot           = 0
 
   nowepco_range                  = [0,0.5]
   nowepco_autoscale              = 0
@@ -86,18 +76,13 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         logPfPlot   = 0
         PPlotRange  = [0.00,0.15]
      END
-     ;; KEYWORD_SET(logAvgPlot): BEGIN
-     ELSE: BEGIN
+     KEYWORD_SET(logAvgPlot): BEGIN
         logPfPlot   = 0
-        ;; PPlotRange  = [0.00,1.1]
-        PPlotRange  = [0.00,0.3]
+        PPlotRange  = [0.00,1.1]
      END
      ELSE: BEGIN
      END
   ENDCASE
-
-  magCPlotRange                  = [0,500]
-  absMagC                        = 1
 
   ifluxPlotType                  = 'Integ_Up'
   noNegIflux                     = 1
@@ -129,55 +114,46 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
 
   ;; altRange                       = [[340,4180]]
 
-  ;; altRange                       = [[300,3000]]
-  altRange                       = [[750,4300]]
-
-  ;; altRange                    = [[300,4300], $
-  ;;                                [500,4300], $
-  ;;                                [1000,4300], $
-  ;;                                [1500,4300], $
-  ;;                                [2000,4300], $
-  ;;                                [2500,4300], $
-  ;;                                [3000,4300], $
-  ;;                                [3500,4300], $
-  ;;                                [4000,4300]]
+  altRange                       = [[500,4300], $
+                                    [600,4300], $
+                                    [700,4300], $
+                                    [800,4300], $
+                                    [900,4300], $
+                                    [1000,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
 
-  IF ~KEYWORD_SET(ALL_NOTJUST1997) THEN BEGIN
-     jahr                     = '1997'
-     ;; jahr                     = '1998'
-     t1Str                    = jahr + '-01-01/00:00:00.000'
-     t2Str                    = jahr + '-12-31/23:59:59.999'
+  jahr         = '1997'
+  ;; jahr      = '1998'
+  t1Str        = jahr + '-01-01/00:00:00.000'
+  t2Str        = jahr + '-12-31/23:59:59.999'
 
-     ;; jahr                     = '1999'
-     ;; t1Str                    = jahr + '-01-01/00:00:00.000'
-     ;; t2Str                    = jahr + '-11-02/23:59:59.999'
+  ;; jahr      = '1999'
+  ;; t1Str     = jahr + '-01-01/00:00:00.000'
+  ;; t2Str     = jahr + '-11-02/23:59:59.999'
 
-     t1                       = STR_TO_TIME(t1Str)
-     t2                       = STR_TO_TIME(t2Str)
+  t1           = STR_TO_TIME(t1Str)
+  t2           = STR_TO_TIME(t2Str)
 
-     plotPref                   = 'just_' + jahr
+  plotPref     = 'just_' + jahr
 
-     @common__maximus_vars.pro
-     IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
-        LOAD_MAXIMUS_AND_CDBTIME, $
-           DESPUNDB=despun, $
-           USE_AACGM=use_AACGM, $
-           USE_MAG=use_mag ;; , $
+  @common__maximus_vars.pro
+  IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+     LOAD_MAXIMUS_AND_CDBTIME, $
+        DESPUNDB=despun, $
+        USE_LNG=use_lng, $
+        USE_AACGM=use_AACGM, $
+        USE_GEI=use_GEI, $
+        USE_GEO=use_GEO, $
+        USE_MAG=use_MAG;; , $
         ;; /NO_MEMORY_LOAD
-     ENDIF
-     orbRange     = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
-                     MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
-
-  ENDIF ELSE BEGIN
-     ;; orbRange    = [1000,11800]
-     orbRange    = [1000,10600]
-     plotPref    = 'ALL'
-  ENDELSE
-
-  ;; orbRange                    = [1000,10800]
+  ENDIF
+  orbRange     = [MIN(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times GE t1)]), $
+                  MAX(MAXIMUS__maximus.orbit[WHERE(MAXIMUS__times LE t2)])]
+  ;; maximus      = !NULL
+  ;; cdbTime      = !NULL
+  ;; orbRange  = [1000,10800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
@@ -186,28 +162,23 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
   maxILAT                        = 90
 
   ;; hemi                        = 'SOUTH'
-  ;; minILAT                     = -86
-  ;; maxILAT                     = -62
+  ;; minILAT                     = -90
+  ;; maxILAT                     = -60
 
   ;; binILAT                     = 2.0
-  binI                           = 2.0
+  binILAT                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                           = 0.75
-  shiftM                         = 0.0
-
-  IF KEYWORD_SET(shiftMLT) THEN BEGIN
-     ;; plotPref += '-rotFICK' ;was using this to diagnose what was wrong with rotating when doing a contour plot
-     plotPref += '-rot'
-  ENDIF
+  binMLT                         = 0.75
+  shiftMLT                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
 
   ;;Bonus
   ;; maskMin                        = 10
-  ;; tHist_mask_bins_below_thresh   = 3
+  ;; tHist_mask_bins_below_thresh   = 5
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
@@ -254,7 +225,10 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
         DESPUNDB=despunDB, $
         COORDINATE_SYSTEM=coordinate_system, $
+        USE_LNG=use_Lng, $
         USE_AACGM_COORDS=use_AACGM, $
+        USE_GEI_COORDS=use_GEI, $
+        USE_GEO_COORDS=use_GEO, $
         USE_MAG_COORDS=use_MAG, $
         LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
         LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
@@ -403,7 +377,7 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
         _REF_EXTRA=e, $
         RESET_STRUCT=reset
-     
+
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         FOR_ESPEC_DBS=for_eSpec_DBs, $
         NEED_FASTLOC_I=need_fastLoc_i, $
@@ -453,8 +427,6 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         NO_BURSTDATA=no_burstData, $
         DATADIR=dataDir, $
         COORDINATE_SYSTEM=coordinate_system, $
-        USE_AACGM_COORDS=use_AACGM, $
-        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -484,7 +456,8 @@ PRO JOURNAL__20161125__VANILLA_TAVG_OR_LOGAVG_PFLUX__CONTOUR__EQUAL_AREA_BINNING
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         FANCY_PLOTNAMES=fancy_plotNames, $
-        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
 
   
   ENDFOR

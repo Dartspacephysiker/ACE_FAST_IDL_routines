@@ -539,6 +539,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            CHASTDB=PASIS__alfDB_plot_struct.chastDB, $
            DESPUNDB=PASIS__alfDB_plot_struct.despunDB, $
            COORDINATE_SYSTEM=PASIS__MIMC_struct.coordinate_system, $
+           USE_LNG=PASIS__MIMC_struct.use_lng, $
            USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
            USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
            USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
@@ -585,6 +586,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
            INCLUDE_32Hz=PASIS__alfDB_plot_struct.include_32Hz, $
            COORDINATE_SYSTEM=coordinate_system, $
+           USE_LNG=PASIS__MIMC_struct.use_lng, $
            USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
            USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
            USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
@@ -617,6 +619,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
+        USE_LNG=PASIS__MIMC_struct.use_lng, $
         USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
         USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
         USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
@@ -644,6 +647,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      LOAD_NEWELL_ION_DB, $
         DOWNGOING=PASIS__alfDB_plot_struct.ion__downgoing, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.ion__noMap, $
+        USE_LNG=PASIS__MIMC_struct.use_lng, $
+        USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
+        USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
+        USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
+        USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
+        USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
         LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
                         KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
                        ) $
