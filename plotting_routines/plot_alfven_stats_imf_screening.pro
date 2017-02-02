@@ -539,12 +539,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            DESPUNDB=PASIS__alfDB_plot_struct.despunDB, $
            COORDINATE_SYSTEM=PASIS__MIMC_struct.coordinate_system, $
            USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
-           USE_GEO_COORDS=PASIS__MIMC_struct.use_geo, $
-           USE_MAG_COORDS=PASIS__MIMC_struct.use_mag, $
+           USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
+           USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
+           USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
+           USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
            LOAD_DELTA_ILAT_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dILAT, $
            LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dAngle, $
            LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dx, $
-           USE_SDT_COORDS=use_SDT, $
            USING_HEAVIES=using_heavies, $
            FORCE_LOAD_MAXIMUS=force_load_maximus, $
            FORCE_LOAD_CDBTIME=force_load_cdbTime, $
@@ -583,9 +584,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
            INCLUDE_32Hz=PASIS__alfDB_plot_struct.include_32Hz, $
            COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
-           USE_GEO_COORDS=PASIS__MIMC_struct.use_geo, $
-           USE_MAG_COORDS=PASIS__MIMC_struct.use_mag, $
+           USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
+           USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
+           USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
+           USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
+           USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
            FOR_ESPEC_DBS=fl_elOrIon, $
            ;; CHECK_DB=check_DB, $
            JUST_FASTLOC=just_fastLoc, $
@@ -613,6 +616,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
+        USE_AACGM_COORDS=use_AACGM, $
+        USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
+        USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
+        USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
+        USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
         /LOAD_CHARE, $
         LOAD_DELTA_T=( (KEYWORD_SET(PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
                         KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
