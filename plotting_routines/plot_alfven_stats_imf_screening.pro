@@ -344,8 +344,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    NO_BURSTDATA=no_burstData, $
    DATADIR=dataDir, $
    COORDINATE_SYSTEM=coordinate_system, $
-   USE_AACGM_COORDS=use_AACGM, $
-   USE_MAG_COORDS=use_MAG, $
+   ;; USE_AACGM_COORDS=use_AACGM, $
+   ;; USE_MAG_COORDS=use_MAG, $
    NEVENTSPLOTRANGE=nEventsPlotRange, $
    LOGNEVENTSPLOT=logNEventsPlot, $
    NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
@@ -507,11 +507,12 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                 ;; KEYWORD_SET(make_OMNI_stats_savFile )    ) AND $
                ~KEYWORD_SET(PASIS__IMF_struct.do_not_consider_IMF)
   
+  ;;Use longitude and not mlt?
+  ;; IF KEYWORD_SET(PASIS__MIMC_struct.use_GEI) OR KEYWORD_SET(PASIS__MIMC_struct.use_GEI)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs we need
   IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
-
-
 
      IF N_ELEMENTS(MAXIMUS__maximus) GT 0 THEN BEGIN
         IF (STRUPCASE(STRMID(MAXIMUS__maximus.info.coords,0,3)) NE       $
@@ -538,7 +539,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            CHASTDB=PASIS__alfDB_plot_struct.chastDB, $
            DESPUNDB=PASIS__alfDB_plot_struct.despunDB, $
            COORDINATE_SYSTEM=PASIS__MIMC_struct.coordinate_system, $
-           USE_AACGM_COORDS=PASIS__MIMC_struct.use_aacgm, $
+           USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
            USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
            USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
            USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
@@ -616,7 +617,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
-        USE_AACGM_COORDS=use_AACGM, $
+        USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
         USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
         USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
         USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
@@ -1478,16 +1479,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;HISTOS
 
   tmplt_h2dStr = MAKE_H2DSTR_TMPLT( $
-                 BIN1=PASIS__MIMC_struct.binM, $
+                 BIN1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.binLng : PASIS__MIMC_struct.binM), $
                  BIN2=(KEYWORD_SET(PASIS__MIMC_struct.do_lShell) ? $
                        PASIS__MIMC_struct.binL : PASIS__MIMC_struct.binI),$
-                 MIN1=PASIS__MIMC_struct.minM, $
+                 MIN1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.minLng : PASIS__MIMC_struct.minM), $
                  MIN2=(KEYWORD_SET(PASIS__MIMC_struct.do_Lshell) ? $
                        PASIS__MIMC_struct.minL : PASIS__MIMC_struct.minI),$
-                 MAX1=PASIS__MIMC_struct.maxM, $
+                 MAX1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.maxLng : PASIS__MIMC_struct.maxM), $
                  MAX2=(KEYWORD_SET(do_Lshell) ? $
                        PASIS__MIMC_struct.maxL : PASIS__MIMC_struct.maxI), $
-                 SHIFT1=PASIS__MIMC_struct.shiftM, $
+                 SHIFT1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.shiftLng : PASIS__MIMC_struct.shiftM), $
                  SHIFT2=shiftI, $
                  EQUAL_AREA_BINNING=PASIS__alfDB_plot_struct.EA_binning, $
                  DO_TIMEAVG_FLUXQUANTITIES=PASIS__alfDB_plot_struct.do_timeAvg_fluxQuantities, $
@@ -1536,13 +1537,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      GET_H2D_BIN_AREAS,h2dAreas, $
                        CENTERS1=centersMLT, $
                        CENTERS2=centersILAT, $
-                       BINSIZE1=PASIS__MIMC_struct.binM*15., $
+                       BINSIZE1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.binLng : PASIS__MIMC_struct.binM*15.), $
                        BINSIZE2=PASIS__MIMC_struct.binI, $
-                       MAX1=PASIS__MIMC_struct.maxM*15., $
+                       MAX1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.maxLng : PASIS__MIMC_struct.maxM*15.), $
                        MAX2=PASIS__MIMC_struct.maxI, $
-                       MIN1=PASIS__MIMC_struct.minM*15., $
+                       MIN1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.minLng : PASIS__MIMC_struct.minM*15.), $
                        MIN2=PASIS__MIMC_struct.minI, $
-                       SHIFT1=PASIS__MIMC_struct.shiftM*15., $
+                       SHIFT1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.shiftLng : PASIS__MIMC_struct.shiftM*15.), $
                        SHIFT2=shiftI, $
                        EQUAL_AREA_BINNING=PASIS__alfDB_plot_struct.EA_binning
 
@@ -1553,13 +1554,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                             /LONGITUDINAL, $
                             CENTERS1=centersMLT, $
                             CENTERS2=centersILAT, $
-                            BINSIZE1=PASIS__MIMC_struct.binM*15., $
+                            BINSIZE1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.binLng : PASIS__MIMC_struct.binM*15.), $
                             BINSIZE2=PASIS__MIMC_struct.binI, $
-                            MAX1=PASIS__MIMC_struct.maxM*15., $
+                            MAX1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.maxLng : PASIS__MIMC_struct.maxM*15.), $
                             MAX2=PASIS__MIMC_struct.maxI, $
-                            MIN1=PASIS__MIMC_struct.minM*15., $
+                            MIN1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.minLng : PASIS__MIMC_struct.minM*15.), $
                             MIN2=PASIS__MIMC_struct.minI, $
-                            SHIFT1=PASIS__MIMC_struct.shiftM*15., $
+                            SHIFT1=(KEYWORD_SET(PASIS__MIMC_struct.use_Lng) ? PASIS__MIMC_struct.shiftLng : PASIS__MIMC_struct.shiftM*15.), $
                             SHIFT2=shiftI, $
                             EQUAL_AREA_BINNING=PASIS__alfDB_plot_struct.EA_binning
      ENDIF
