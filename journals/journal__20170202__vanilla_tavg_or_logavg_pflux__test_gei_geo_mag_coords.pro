@@ -12,8 +12,8 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   include_32Hz              = 0
   use_Lng                   = 1
   use_AACGM                 = 0
-  use_GEI                   = 1
-  use_GEO                   = 0
+  use_GEI                   = 0
+  use_GEO                   = 1
   use_MAG                   = 0
 
   minMC                     = 1
@@ -114,12 +114,14 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
 
   ;; altRange                       = [[340,4180]]
 
-  altRange                       = [[500,4300], $
-                                    [600,4300], $
-                                    [700,4300], $
-                                    [800,4300], $
-                                    [900,4300], $
-                                    [1000,4300]]
+  ;; altRange                       = [[500,4300], $
+  ;;                                   [600,4300], $
+  ;;                                   [700,4300], $
+  ;;                                   [800,4300], $
+  ;;                                   [900,4300], $
+  ;;                                   [1000,4300]]
+
+  altRange                       = [[500,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -157,21 +159,26 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  hemi                        = 'NORTH'
+  minI                        = 60
+  maxI                        = 90
+
+  hemi                        = 'GLOBE'
+  minI                        = -90
+  maxI                        = 90
+  map_projection              = 'ROBINSON'
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -90
   ;; maxILAT                     = -60
 
   ;; binILAT                     = 2.0
-  binILAT                        = 2.0
+  binI                        = 2.0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binMLT                         = 0.75
-  shiftMLT                       = 0.0
+  binM                         = 0.75
+  shiftM                       = 0.0
 
   ;; minMLT                      = 6
   ;; maxMLT                      = 18
@@ -237,6 +244,8 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
         NORTH=north, $
         SOUTH=south, $
         BOTH_HEMIS=both_hemis, $
+        GLOBE=globe, $
+        MAP_PROJECTION=map_projection, $
         DAYSIDE=dayside, $
         NIGHTSIDE=nightside, $
         NPLOTS=nPlots, $
