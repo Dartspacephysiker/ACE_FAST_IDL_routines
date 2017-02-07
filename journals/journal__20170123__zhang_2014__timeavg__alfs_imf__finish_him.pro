@@ -68,13 +68,13 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   make_OMNI_stats_savFile         = KEYWORD_SET(make_OMNI_stuff)
   OMNI_statsSavFilePref           = 'Alfvens_dodat_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   calc_KL_sw_coupling_func        = 1
-  make_integral_savfiles          = 1
+  make_integral_savfiles          = 0
 
   show_integrals                  = 1
   write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 1
+  justData                        = 0
   justInds                        = 0
   indsPref                        = ''
   CASE 1 OF
@@ -510,8 +510,6 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
         RESET_GOOD_INDS=reset_good_inds, $
         DATADIR=dataDir, $
         COORDINATE_SYSTEM=coordinate_system, $
-        USE_AACGM_COORDS=use_AACGM, $
-        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
