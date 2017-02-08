@@ -13,8 +13,8 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  use_prev_plot_i                = 0
+  remake_prev_plot_file          = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
@@ -58,7 +58,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  justData                       = 1
+  justData                       = 0
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
