@@ -72,7 +72,8 @@
      C_OMNI__StreakDurArr               , $
      C_OMNI__is_smoothed                , $
      C_OMNI__smoothLen                  , $
-     C_OMNI__NewellFunc
+     C_OMNI__NewellFunc                 , $
+     C_OMNI__tiltAngle
 
 
 ;; END
