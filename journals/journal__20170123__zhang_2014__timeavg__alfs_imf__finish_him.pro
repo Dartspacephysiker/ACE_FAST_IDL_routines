@@ -34,7 +34,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   use_AACGM                      = 0
 
 
-  fluxPlots__invert_Newell_the_cusp = 0
+  fluxPlots__invert_Newell_the_cusp = 1
   fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
@@ -61,7 +61,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 1
+  make_OMNI_stuff                 = 0
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
@@ -74,7 +74,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 1
+  justData                        = 0
   justInds                        = 0
   indsPref                        = ''
   CASE 1 OF
@@ -100,7 +100,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
                                     GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
                                     '.sav'
                                     ;; '_hemi--20161224.sav'
-  saveDir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
+  saveDir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
