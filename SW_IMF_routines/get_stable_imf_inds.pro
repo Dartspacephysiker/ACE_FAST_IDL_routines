@@ -608,18 +608,32 @@ FUNCTION GET_STABLE_IMF_INDS, $
 
         newLine     = STRING(10B)
         prettyClock = ['Northward','Dawn-North','Dawnward','Dawn-South','Southward','Dusk-South','Duskward','Dusk-North']
+        ;; printString = "sC_i = SORT(stats.clockStr) " + newLine + $
+        ;;               "oi   = [sC_i[0],sC_i[2],sC_i[4],sC_i[3],sC_i[1],sC_i[6],sC_i[7],sC_i[5]]" + newLine + $
+        ;;               "amp  = ' &'" + newLine + $
+        ;;               "endL = ' \\'" + newLine + $
+        ;;               "FOR k=0,7 DO PRINT," + $
+        ;;               "FORMAT='(I1,A2,T5,A10,A2,T19,F6.2,A2,T30,F6.2,A2,T40,F6.2,A2,T53,F6.2,A2,T63,F6.2,A2,T73,F6.2,A2,T83,F6.2,A2,T94,F6.2,A2,T104,F6.2,A2,T114,F6.2,A3)'," + $
+        ;;               "k+1,amp,stats.prettyClock[k],amp,stats.nPoints[oi[k]]/60./24.,amp,stats.npoints[oi[k]]/FLOAT(stats.nTime[oi[k]])*100.,amp," + $
+        ;;               "stats.avg.bx[oi[k]],amp,stats.avg.by[oi[k]],amp,stats.avg.bz[oi[k]],amp,stats.avg.swSpeed[oi[k]]/1000.,amp," + $
+        ;;               "stats.stdDev.bx[oi[k]],amp,stats.stdDev.by[oi[k]],amp,stats.stdDev.bz[oi[k]],amp,stats.stdDev.swSpeed[oi[k]]/1000.,endL" + $
+        ;;               newLine + $
+        ;;               "PRINT,FORMAT='(A3,T5,A2,T19,F6.2,A2,T30,F6.2,A2,T40,A2,T53,A2,T63,A2,T73,A2,T83,A2,T94,A2,T104,A2,T114,A3)'," + $
+        ;;               "amp,amp,TOTAL(stats.nPoints)/60./24.,amp,TOTAL(stats.npoints)/FLOAT(stats.nTime[0])*100.,amp,amp,amp,amp,amp,amp,amp,amp,endL"
+
         printString = "sC_i = SORT(stats.clockStr) " + newLine + $
                       "oi   = [sC_i[0],sC_i[2],sC_i[4],sC_i[3],sC_i[1],sC_i[6],sC_i[7],sC_i[5]]" + newLine + $
                       "amp  = ' &'" + newLine + $
                       "endL = ' \\'" + newLine + $
                       "FOR k=0,7 DO PRINT," + $
-                      "FORMAT='(I1,A2,T5,A10,A2,T19,F6.2,A2,T30,F6.2,A2,T40,F6.2,A2,T53,F6.2,A2,T63,F6.2,A2,T73,F6.2,A2,T83,F6.2,A2,T94,F6.2,A2,T104,F6.2,A2,T114,F6.2,A3)'," + $
+                      "FORMAT='(I1,A2,T5,A10,A2,T19,F6.2,A2,T30,F6.2,A2,T40,F6.2,A2,T53,F6.2,A2,T63,F6.2,A2,T73,F6.2,A2,T83,F6.2,A2,T94,F6.2,A2,T104,F6.2,A2,T114,F6.2,A2,T124,F6.2,A2,T134,F6.2,A3)'," + $
                       "k+1,amp,stats.prettyClock[k],amp,stats.nPoints[oi[k]]/60./24.,amp,stats.npoints[oi[k]]/FLOAT(stats.nTime[oi[k]])*100.,amp," + $
-                      "stats.avg.bx[oi[k]],amp,stats.avg.by[oi[k]],amp,stats.avg.bz[oi[k]],amp,stats.avg.swSpeed[oi[k]]/1000.,amp," + $
-                      "stats.stdDev.bx[oi[k]],amp,stats.stdDev.by[oi[k]],amp,stats.stdDev.bz[oi[k]],amp,stats.stdDev.swSpeed[oi[k]]/1000.,endL" + $
+                      "stats.avg.bx[oi[k]],amp,stats.avg.by[oi[k]],amp,stats.avg.bz[oi[k]],amp,stats.avg.swSpeed[oi[k]]/1000.,amp,stats.avg.dpTilt[oi[k]],amp," + $
+                      "stats.stdDev.bx[oi[k]],amp,stats.stdDev.by[oi[k]],amp,stats.stdDev.bz[oi[k]],amp,stats.stdDev.swSpeed[oi[k]]/1000.,amp,stats.stdDev.dpTilt[oi[k]],endL" + $
                       newLine + $
-                      "PRINT,FORMAT='(A3,T5,A2,T19,F6.2,A2,T30,F6.2,A2,T40,A2,T53,A2,T63,A2,T73,A2,T83,A2,T94,A2,T104,A2,T114,A3)'," + $
-                      "amp,amp,TOTAL(stats.nPoints)/60./24.,amp,TOTAL(stats.npoints)/FLOAT(stats.nTime[0])*100.,amp,amp,amp,amp,amp,amp,amp,amp,endL"
+                      "PRINT,FORMAT='(A3,T5,A2,T19,F6.2,A2,T30,F6.2,A2,T40,A2,T53,A2,T63,A2,T73,A2,T83,A2,T94,A2,T104,A2,T114,A3,T124,A2,T134,A3)'," + $
+                      "amp,amp,TOTAL(stats.nPoints)/60./24.,amp,TOTAL(stats.npoints)/FLOAT(stats.nTime[0])*100.,amp,amp,amp,amp,amp,amp,amp,amp,amp,amp,endL"
+
         stats = {nPoints:nPoints, $
                  nSWPoints:nNewell, $
                  nTime:nTime, $

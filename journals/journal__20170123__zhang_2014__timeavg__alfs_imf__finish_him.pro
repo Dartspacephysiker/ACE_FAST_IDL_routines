@@ -2,6 +2,9 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   COMPILE_OPT IDL2
 
+  use_prev_plot_i                = 0
+  remake_prev_plot_file          = 1
+
   do_what_everyone_does    = 1
 
   plotH2D_contour          = 0
@@ -36,9 +39,6 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
-  use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
-
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
   adj_upper_plotlim_thresh       = 3    ;;Check third maxima
@@ -61,7 +61,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 0
+  make_OMNI_stuff                 = 1
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
@@ -74,7 +74,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 1
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
+  justData                        = 1
   justInds                        = 0
   indsPref                        = ''
   CASE 1 OF
