@@ -84,7 +84,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
      dataDir           = "/SPENCEdata/Research/database/OMNI/"
      culledDataStr     = "culled_OMNI_magdata.dat"
-     tiltFile          = 'sw_data--GEOPACK_dipole_tilt.dat'
+     ;; tiltFile          = 'sw_data--GEOPACK-dpTilt.sav'
+     tiltFile          = 'sw_data--dpTilt_for_culled_OMNI_magdata.dat'
 
      RESTORE,dataDir + culledDataStr
      ;; RESTORE,dataDir + "/OMNI/culled_OMNI_magdata__20160702.dat"
@@ -93,7 +94,9 @@ FUNCTION GET_STABLE_IMF_INDS, $
      IF KEYWORD_SET(make_OMNI_stats_savFile) THEN BEGIN
         PRINT,"Loading OMNI tiltAngle thing ..."
         RESTORE,dataDir+tiltFile
-        C_OMNI__tiltAngle = tiltAngle.angle[goodmag_goodtimes_i]
+        ;; C_OMNI__tiltAngle = dpTilt.angle[goodmag_goodtimes_i]
+        C_OMNI__tiltAngle = TEMPORARY(tiltAngle)
+        IF N_ELEMENTS(C_OMNI__tiltAngle) NE N_ELEMENTS(mag_UTC) THEN STOP
      ENDIF
 
      C_OMNI__mag_UTC   = TEMPORARY(mag_UTC)
@@ -344,8 +347,8 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ENDIF
 
      ;;And dipole tilt stuff
-     dipTheta_avg           = MEAN(C_OMNI__tiltAngle[stable_omni_inds])
-     dipTheta_stdDev        = STDDEV(C_OMNI__tiltAngle[stable_omni_inds])
+     dpTilt_avg           = MEAN(C_OMNI__tiltAngle[stable_omni_inds])
+     dpTilt_stdDev        = STDDEV(C_OMNI__tiltAngle[stable_omni_inds])
 
      ;; IF KEYWORD_SET(print_OMNI_covariances) THEN BEGIN
      BxBy_covar     = CORRELATE(C_OMNI__Bx[stable_omni_Inds], $
@@ -363,13 +366,16 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                 /COVARIANCE)
 
 
-     dipThetaBy_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
+     dpTiltBx_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
+                                  C_OMNI__Bx[stable_omni_Inds], $
+                                  /COVARIANCE)
+     dpTiltBy_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
                                   C_OMNI__By[stable_omni_Inds], $
                                   /COVARIANCE)
-     dipThetaBz_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
+     dpTiltBz_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
                                   C_OMNI__Bz[stable_omni_Inds], $
                                   /COVARIANCE)
-     dipThetaBt_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
+     dpTiltBt_covar = CORRELATE(C_OMNI__tiltAngle[stable_omni_Inds], $
                                   C_OMNI__Bt[stable_omni_Inds], $
                                   /COVARIANCE)
 
@@ -431,8 +437,14 @@ FUNCTION GET_STABLE_IMF_INDS, $
      PRINTF,outLun,FORMAT='("cone_overClock stdDev",T35,": ",F10.3)',cone_overClock_stdDev
      PRINTF,outLun,''
      PRINTF,outLun,''
-     PRINTF,outLun,FORMAT='("Average dipoleTilt",T35,": ",F10.3)',dipTheta_avg
-     PRINTF,outLun,FORMAT='("dipoleTilt stdDev",T35,": ",F10.3)',dipTheta_stdDev
+     PRINTF,outLun,FORMAT='("Average dipoleTilt",T35,": ",F10.3)',dpTilt_avg
+     PRINTF,outLun,FORMAT='("dipoleTilt stdDev",T35,": ",F10.3)',dpTilt_stdDev
+     PRINTF,outLun,''
+     PRINTF,outLun,FORMAT='("dpTiltBx covar",T35,": ",F10.3)',dpTiltBx_covar
+     PRINTF,outLun,FORMAT='("dpTiltBy covar",T35,": ",F10.3)',dpTiltBy_covar
+     PRINTF,outLun,FORMAT='("dpTiltBz covar",T35,": ",F10.3)',dpTiltBz_covar
+     PRINTF,outLun,FORMAT='("dpTiltBt covar",T35,": ",F10.3)',dpTiltBt_covar
+
      IF KEYWORD_SET(calc_KL_sw_coupling_func) THEN BEGIN
         PRINTF,outLun,''
         PRINTF,outLun,''
@@ -562,7 +574,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:[stats.avg.phiClock,phiClock_avg], $
                       thetaCone:[stats.avg.thetaCone,thetaCone_avg], $
                       cone_overClock:[stats.avg.cone_overClock,cone_overClock_avg], $
-                      dipTheta:[stats.avg.dipTheta,dipTheta_avg], $
+                      dpTilt:[stats.avg.dpTilt,dpTilt_avg], $
                       KL_EField:[stats.avg.KL_EField,epsilon_KanLee[0]], $
                       swSpeed:[stats.avg.swSpeed,sw_speed[0]], $
                       ;; NewellFunc:[stats.avg.NewellFunc,NewellFunc[0]]}, $
@@ -574,7 +586,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
                          thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
                          cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
-                         dipTheta:[stats.stdDev.dipTheta,dipTheta_StdDev], $
+                         dpTilt:[stats.stdDev.dpTilt,dpTilt_StdDev], $
                          KL_EField:[stats.stdDev.KL_EField,epsilon_KanLee[1]], $
                          swSpeed:[stats.stdDev.swSpeed,sw_speed[1]], $
                          ;; NewellFunc:[stats.stdDev.NewellFunc,NewellFunc[1]]}, $
@@ -582,7 +594,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
                  covar:{BxBt:[stats.covar.BxBt,BxBt_covar], $
                         BxBy:[stats.covar.BxBy,BxBy_covar], $
                         BxBz:[stats.covar.BxBz,BxBz_covar], $
-                        ByBz:[stats.covar.ByBz,ByBz_covar]}, $
+                        ByBz:[stats.covar.ByBz,ByBz_covar], $
+                        dpTiltBx:[stats.covar.dpTiltBx,dpTiltBx_covar], $
+                        dpTiltBy:[stats.covar.dpTiltBy,dpTiltBy_covar], $
+                        dpTiltBz:[stats.covar.dpTiltBz,dpTiltBz_covar], $
+                        dpTiltBt:[stats.covar.dpTiltBt,dpTiltBt_covar]}, $
                  printString:stats.printString, $
                  prettyClock:stats.prettyClock $
                 }
@@ -615,7 +631,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       phiClock:phiClock_avg, $
                       thetaCone:thetaCone_avg, $
                       cone_overClock:cone_overClock_avg, $
-                      dipTheta:dipTheta_avg, $
+                      dpTilt:dpTilt_avg, $
                       KL_EField:epsilon_KanLee[0], $
                       swSpeed:sw_speed[0], $
                       ;; NewellFunc:NewellFunc[0]}, $
@@ -627,7 +643,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          phiClock:phiClock_StdDev, $
                          thetaCone:thetaCone_StdDev, $
                          cone_overClock:cone_overClock_StdDev, $
-                         dipTheta:dipTheta_StdDev, $
+                         dpTilt:dpTilt_StdDev, $
                          KL_EField:epsilon_KanLee[1], $
                          swSpeed:sw_speed[1], $
                          ;; NewellFunc:NewellFunc[1]}, $
@@ -635,7 +651,11 @@ FUNCTION GET_STABLE_IMF_INDS, $
                  covar:{BxBt:BxBt_covar, $
                         BxBy:BxBy_covar, $
                         BxBz:BxBz_covar, $
-                        ByBz:ByBz_covar}, $
+                        ByBz:ByBz_covar, $
+                        dpTiltBx:dpTiltBx_covar, $
+                        dpTiltBy:dpTiltBy_covar, $
+                        dpTiltBz:dpTiltBz_covar, $
+                        dpTiltBt:dpTiltBt_covar}, $
                  printString:printString, $
                  prettyClock:prettyClock $
                  }
