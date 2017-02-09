@@ -2,12 +2,12 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   COMPILE_OPT IDL2
 
-  use_prev_plot_i                = 0
-  remake_prev_plot_file          = 1
+  use_prev_plot_i                = 1
+  remake_prev_plot_file          = 0
 
   do_what_everyone_does    = 1
 
-  plotH2D_contour          = 0
+  plotH2D_contour          = 1
   ;; plotH2D__kde          = 1
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
   contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
@@ -34,8 +34,8 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   use_AACGM                      = 0
 
 
-  fluxPlots__invert_Newell_the_cusp = 1
-  fluxPlots__Newell_the_cusp     = 0
+  fluxPlots__invert_Newell_the_cusp = 0
+  fluxPlots__Newell_the_cusp     = 1
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
