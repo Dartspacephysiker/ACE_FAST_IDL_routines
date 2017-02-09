@@ -13,7 +13,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 0
+  use_prev_plot_i                = 1
   remake_prev_plot_file          = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
@@ -95,7 +95,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
   ;; op_plotRange                   = [0.00,0.10]
 
 
-  tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 0
+  tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -173,7 +173,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
               ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
            END
            ELSE: BEGIN
-              ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              ENumFlPlotRange    = [[0,1.2e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
            END
         ENDCASE
      END

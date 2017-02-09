@@ -5,6 +5,8 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
 
   plotPref = 'NWO-'
 
+  make_sure_op_file_exists       = 1
+
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
@@ -34,8 +36,8 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
 
   ;; contour__levels                = [10,30,40,60,70,90]
   ;; contour__levels                = [20,30,50,60,80,90]
-  contour__levels                = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
-  ;; contour__levels                = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  ;; contour__levels                = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
+  contour__levels                = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
   ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
 
@@ -75,7 +77,14 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
 
   plotPref += '-NC_alf_pFlux-'
 
-  overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170123/NC_pFlux.dat'
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170123/NC_pFlux.dat'
+
+  op_dir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  op_file                        = 'NC-cont-kde_pFlux.dat'
+  ;; op_file                        = 'NC_pFlux.dat' ;thinner MLT bins, not centered on cusp (edge effects)
+  overplot_file                  = op_dir+op_file
+
+  IF KEYWORD_SET(make_sure_op_file_exists) AND ~FILE_TEST(overplot_file) THEN STOP
 
   overplot_arr                   = [['*eNumFl-all_fluxes_eSpec-2009_broad*','*tavgd_pf*'], $
                                     ['*eNumFl-all_fluxes_eSpec-2009_mono*','*tavgd_pf*'], $
@@ -164,7 +173,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
               ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
            END
            ELSE: BEGIN
-              ENumFlPlotRange    = [[0,7.5e8],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
            END
         ENDCASE
      END
