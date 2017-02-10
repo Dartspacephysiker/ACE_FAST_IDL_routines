@@ -14,8 +14,10 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
   ;; outFile     = 'NewellInterp_for_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
   outFile     = 'NewellInterp_for_cusp_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
 
-  good_i_dir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
-  good_i_file = 'maximus_good_i-20170209.sav'
+  ;; good_i_dir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  ;; good_i_file = 'maximus_good_i-20170209.sav'
+  good_i_dir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170210/'
+  good_i_file = 'maximus_good_i__NORTH-20170210.sav'
 
 
   RESTORE,good_i_dir+good_i_file

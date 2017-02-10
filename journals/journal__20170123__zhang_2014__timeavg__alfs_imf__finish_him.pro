@@ -7,7 +7,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   do_what_everyone_does    = 1
 
-  plotH2D_contour          = 1
+  plotH2D_contour          = 0
   ;; plotH2D__kde          = 1
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
   contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
@@ -35,7 +35,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 1
+  fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
@@ -44,7 +44,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   adj_upper_plotlim_thresh       = 3    ;;Check third maxima
   adj_lower_plotlim_thresh       = 2    ;;Check minima
 
-  tile__include_IMF_arrows       = 0
+  tile__include_IMF_arrows       = 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -61,7 +61,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 0
+  make_OMNI_stuff                 = 1
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)

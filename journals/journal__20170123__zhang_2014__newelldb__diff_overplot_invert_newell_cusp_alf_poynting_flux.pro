@@ -49,7 +49,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 0
+  do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
