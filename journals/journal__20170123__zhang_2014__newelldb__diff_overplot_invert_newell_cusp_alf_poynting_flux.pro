@@ -79,7 +79,8 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
 
   ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170123/invNC_pFlux.dat'
 
-  op_dir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  ;; op_dir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  op_dir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170210/'
   op_file                        = 'invNC-cont-kde_pFlux.dat'
   ;; op_file                        = 'NC_pFlux.dat' ;thinner MLT bins, not centered on cusp (edge effects)
   overplot_file                  = op_dir+op_file
