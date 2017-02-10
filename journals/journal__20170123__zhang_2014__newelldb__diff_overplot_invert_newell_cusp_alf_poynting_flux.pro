@@ -36,15 +36,20 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
 
   ;; contour__levels                = [10,30,40,60,70,90]
   ;; contour__levels                = [20,30,50,60,80,90]
-  contour__levels                = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
+  ;; contour__levels                = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
   ;; contour__levels                = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  contour__levels                = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
   ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+
+  contour__nColors               = 8
+  contour__CTBottom              = 0
+  contour__CTIndex               = -60
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
-  do_timeAvg_fluxQuantities      = 1
+  do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0
   medianPlot                     = 0
   divide_by_width_x              = 1
@@ -91,10 +96,12 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
                                     ['*eNumFl-all_fluxes_eSpec-2009_mono*','*tavgd_pf*'], $
                                     ['*eNumFl-all_fluxes_eSpec-2009_diff*','*tavgd_pf*']]
   ;; ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [10,40,70]
+  ;; op_contour__levels             = [10,40,70]
   ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
-  op_plotRange                   = [0.00,0.20]
+  op_plotRange                   = [0.00,0.10]
+
+  op_contour__levels             = [10,50,75]
 
 
   tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 0
@@ -174,7 +181,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
               ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
            END
            ELSE: BEGIN
-              ENumFlPlotRange    = [[0,5.0e8],[0,2.0e9],[0,5.0e8],[0,8.0e8]]
+              ENumFlPlotRange    = [[0,5.0e8],[0,1.6e9],[0,5.0e8],[0,8.0e8]]
               cbENumFlDivFac     = [1e8,1e9,1e8,1e8]          
            END
         ENDCASE
@@ -218,7 +225,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                           = 'NORTH'
+  hemi                        = 'BOTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
@@ -460,6 +467,9 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
         CONTOUR__LEVELS=contour__levels, $
         CONTOUR__PERCENT=contour__percent, $
+        CONTOUR__NCOLORS=contour__nColors, $
+        CONTOUR__CTINDEX=contour__CTIndex, $
+        CONTOUR__CTBOTTOM=contour__CTBottom, $
         OVERPLOT_FILE=overplot_file, $
         OVERPLOT_ARR=overplot_arr, $
         OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $

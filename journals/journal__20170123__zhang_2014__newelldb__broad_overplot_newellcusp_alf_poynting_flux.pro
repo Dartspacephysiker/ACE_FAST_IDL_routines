@@ -41,6 +41,10 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
   ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
 
+  ;; contour__nColors               = 8
+  contour__CTBottom              = 0
+  contour__CTIndex               = -49
+
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
@@ -90,12 +94,16 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
   overplot_arr                   = [['*eNumFl-all_fluxes_eSpec-2009_broad*','*tavgd_pf*'], $
                                     ['*eNumFl-all_fluxes_eSpec-2009_mono*','*tavgd_pf*'], $
                                     ['*eNumFl-all_fluxes_eSpec-2009_diff*','*tavgd_pf*']]
-  ;; ;; op_contour__levels             = [20,50,80]
-  op_contour__levels             = [10,40,70]
+  ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  op_contour__levels             = [10,40,80]
   ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
   op_plotRange                   = [0.00,0.10]
-
+  ;; op_contour__levels             = [15,45,75]
+  ;; op_contour__nColors            = 20
+  ;; op_contour__CTIndex            = 
+  ;; op_contour__CTBottom           = 
 
   tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 0
   tile__cb_in_center_panel       = 1
@@ -175,6 +183,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
            END
            ELSE: BEGIN
               ENumFlPlotRange    = [[0,1.0e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              cbENumFlDivFac     = [1e9,1e9,1e8,1e8]          
            END
         ENDCASE
      END
@@ -387,6 +396,12 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
         ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ;; CBEFDIVFAC=cbEFDivFac, $
+        CBENUMFLDIVFAC=cbENumFlDivFac, $
+        ;; CBPFDIVFAC=CBPFDivFac, $
+        ;; CBIFDIVFAC=cbIFDivFac, $
+        ;; CBCHAREDIVFAC=cbCharEDivFac, $
+        ;; CBMAGCDIVFAC=CBMagCDivFac, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
@@ -453,10 +468,16 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_NEWELLCUSP_ALF_POYNT
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
         CONTOUR__LEVELS=contour__levels, $
         CONTOUR__PERCENT=contour__percent, $
+        CONTOUR__NCOLORS=contour__nColors, $
+        CONTOUR__CTINDEX=contour__CTIndex, $
+        CONTOUR__CTBOTTOM=contour__CTBottom, $
         OVERPLOT_FILE=overplot_file, $
         OVERPLOT_ARR=overplot_arr, $
         OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
         OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+        OVERPLOT_CONTOUR__NCOLORS=op_contour__nColors, $
+        OVERPLOT_CONTOUR__CTINDEX=op_contour__CTIndex, $
+        OVERPLOT_CONTOUR__CTBOTTOM=op_contour__CTBottom, $
         OVERPLOT_PLOTRANGE=op_plotRange, $        
         SHOW_INTEGRALS=show_integrals, $
         RESET_STRUCT=reset

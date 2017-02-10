@@ -175,6 +175,7 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
            END
            ELSE: BEGIN
               ENumFlPlotRange    = [[0,1.2e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              cbENumFlDivFac     = [1e9,1e9,1e8,1e8]          
            END
         ENDCASE
      END
@@ -397,6 +398,12 @@ PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
         ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ;; CBEFDIVFAC=cbEFDivFac, $
+        CBENUMFLDIVFAC=cbENumFlDivFac, $
+        ;; CBPFDIVFAC=CBPFDivFac, $
+        ;; CBIFDIVFAC=cbIFDivFac, $
+        ;; CBCHAREDIVFAC=cbCharEDivFac, $
+        ;; CBMAGCDIVFAC=CBMagCDivFac, $
         NONSTORM=nonStorm, $
         RECOVERYPHASE=recoveryPhase, $
         MAINPHASE=mainPhase, $
