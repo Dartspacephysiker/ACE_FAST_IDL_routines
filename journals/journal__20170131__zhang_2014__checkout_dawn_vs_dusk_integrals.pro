@@ -3,8 +3,10 @@ PRO JOURNAL__20170131__ZHANG2014__CHECKOUT_DAWN_VS_DUSK_INTEGRALS
 
   COMPILE_OPT IDL2
 
-  dir           = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
-  statsFile     = 'OMNI_stats--Alfvens_dodat_20170127.sav'
+  ;; dir           = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
+  ;; statsFile     = 'OMNI_stats--Alfvens_dodat_20170127.sav'
+  dir           = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170210/'
+  statsFile     = 'OMNI_stats--Alfvens_dodat_20170210.sav'
 
   integPrecis   = 'F0.2'
   integPrecis   = 'F0.4'
@@ -14,7 +16,7 @@ PRO JOURNAL__20170131__ZHANG2014__CHECKOUT_DAWN_VS_DUSK_INTEGRALS
 
   especs        = 1
 
-  rel_to_bzNorth = 1
+  rel_to_bzNorth = 0
   up_to_90       = 1
 
   evryStr     = ''
@@ -65,6 +67,7 @@ PRO JOURNAL__20170131__ZHANG2014__CHECKOUT_DAWN_VS_DUSK_INTEGRALS
      PRINT,''
      PRINT,evryStr
      PRINT,H2DStrArr[jj].title
+     IF ~KEYWORD_SET(rel_to_bzNorth) THEN PRINT,"Norming factor : 10^" + STRING(FORMAT='(F0.2)',ALOG10(H2DStrArr[0].grossFac))
      PRINT,FORMAT='(A0,T15,A0,T30,A0,T45,A0,T60,A0,T75,A0)',"ClockStr","Dawn Integ","Dusk Integ","Dawn/Dusk","Dawn+Dusk","Dawn wins"
      FOR k=0,N_ELEMENTS(H2DStrArr)-1 DO BEGIN
         

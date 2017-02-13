@@ -5,19 +5,21 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
 
   @common__maximus_vars.pro
 
-  inDir       = '/SPENCEdata/Research/database/FAST/dartdb/saves/'
-  inFile      = 'Dartdb_20151222--500-16361_inc_lower_lats--max_magCurrent_time_alfs_into_20170203_eSpecDB__good_i.sav'
-  inFile      = inDir + inFile
+  inDir           = '/SPENCEdata/Research/database/FAST/dartdb/saves/'
+  inFile          = 'Dartdb_20151222--500-16361_inc_lower_lats--max_magCurrent_time_alfs_into_20170203_eSpecDB__good_i.sav'
+  inFile          = inDir + inFile
   
-  make_file   = 1
+  make_file       = 1
 
-  ;; outFile     = 'NewellInterp_for_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
-  outFile     = 'NewellInterp_for_cusp_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
+  pasApresMidi    = 1
 
-  ;; good_i_dir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
-  ;; good_i_file = 'maximus_good_i-20170209.sav'
-  good_i_dir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170210/'
-  good_i_file = 'maximus_good_i__NORTH-20170210.sav'
+  ;; outFile      = 'NewellInterp_for_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
+  outFile         = 'NewellInterp_for_cusp_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
+
+  ;; good_i_dir   = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  ;; good_i_file  = 'maximus_good_i-20170209.sav'
+  good_i_dir      = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170210/'
+  good_i_file     = 'maximus_good_i__NORTH-20170210.sav'
 
 
   RESTORE,good_i_dir+good_i_file
@@ -40,9 +42,17 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
                       COMPLEMENT=notNooner_i, $
                       NCOMPLEMENT=nNotNooner)
 
-     good_i   = CGSETINTERSECTION(good_i,nooner_i,COUNT=nAft)
-     PRINT,FORMAT='("Lost ",I0," inds to noon restriction")',nBef-nAft
-     nGNooner = nAft
+     IF KEYWORD_SET(pasApresMidi) THEN BEGIN
+        restStr  = '!noon'
+        good_i   = CGSETINTERSECTION(good_i,notNooner_i,COUNT=nAft)
+        nGNooner = nAft
+     ENDIF ELSE BEGIN
+        restStr  = 'noon'
+        good_i   = CGSETINTERSECTION(good_i,nooner_i,COUNT=nAft)
+        nGNooner = nAft
+     ENDELSE
+     
+     PRINT,FORMAT='("Lost ",I0," inds to ",A0," restriction")',nBef-nAft,restStr
 
      justGood = MAKE_NEWELL_IDENT_STRUCT_FOR_ALFDB__FROM_FILE(/USE_COMMON_VARS, $
                                                               USER_INDS=good_i, $
@@ -82,15 +92,37 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
                         COMPLEMENT=noonLowCE_ii, $
                         NCOMPLEMENT=nNoonLowCE)
   
+  IF MAXIMUS__maximus.info.mapped.mag_current THEN BEGIN
+     PRINT,"Temp unmap mag_current ..."
+     LOAD_MAPPING_RATIO_DB,mapRatio
+     MAXIMUS__maximus.mag_current /= mapRatio.ratio
+  ENDIF
+
+  noonmagcge10_ii = WHERE(ABS(MAXIMUS__maximus.mag_current[good_i]) GE 10, $
+                         nNoonMagCGE10, $
+                         COMPLEMENT=noonmagclt10_ii, $
+                         NCOMPLEMENT=nNoonMagCLT10)
+  IF MAXIMUS__maximus.info.mapped.mag_current THEN BEGIN
+     MAXIMUS__maximus.mag_current *= (TEMPORARY(mapRatio)).ratio
+  ENDIF
+
+  noonhighCEGE10_ii = CGSETINTERSECTION(noonHighCE_ii,noonmagcge10_ii,COUNT=nNoonHighCEGE10)
+  noonlowCEGE10_ii = CGSETINTERSECTION(noonLowCE_ii,noonmagcge10_ii,COUNT=nNoonLowCEGE10)
+
   ;; notNoonHighCE_iii = WHERE(MAXIMUS__maximus.max_charE_lossCone[goodNotNoon_i] GE 80, $
   ;;                       nNotNoonHighCE, $
   ;;                       COMPLEMENT=notNoonLowCE_iii, $
   ;;                       NCOMPLEMENT=nNotNoonLowCE)
 
   PRINT,'************'
-  PRINT,"highCE in noon: ",nNoonHighCE,FLOAT(nNoonHighCE)/nGNooner*100.,"%"
-  PRINT,"lowCE  in noon: ",nNoonLowCE,FLOAT(nNoonLowCE)/nGNooner*100.,"%"
+  PRINT,FORMAT='("highCE in ",A0,": ")',restStr,nNoonHighCE,FLOAT(nNoonHighCE)/nGNooner*100.,"%"
+  PRINT,FORMAT='("lowCE  in ",A0,": ")',restStr,nNoonLowCE,FLOAT(nNoonLowCE)/nGNooner*100.,"%"
   PRINT,"Tot           : ",nNoonHighCE+nNoonLowCE
+  PRINT,''
+  PRINT,'************'
+  PRINT,FORMAT='("highCEGE10 in ",A0,": ")',restStr,nNoonHighCEGE10,FLOAT(nNoonHighCEGE10)/nNoonMagCGE10*100.,"%"
+  PRINT,FORMAT='("lowCEGE10  in ",A0,": ")',restStr,nNoonLowCEGE10,FLOAT(nNoonLowCEGE10)/nNoonMagCGE10*100.,"%"
+  PRINT,"TotGE10           : ",nNoonHighCEGE10+nNoonLowCEGE10
   PRINT,''
   ;; PRINT,"highCE in notNoon: ",nNotNoonHighCE,FLOAT(nNotNoonHighCE)/nNotNooner*100.,"%"
   ;; PRINT,"lowCE  in notNoon: ",nNotNoonLowCE,FLOAT(nNotNoonLowCE)/nNotNooner*100.,"%"
@@ -137,8 +169,12 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
   PRINT,"These should all be discarded, based on whahappun to the Alfven waves"
   PRINT,''
   
-  discrimInds  = noonLowCE_ii
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;First, the weak currents
+  
+  ;; discrimInds  = noonLowCE_ii
   ;; discrimInds  = LINDGEN(N_ELEMENTS(justGood.broad))
+
   discrimInds  = CGSETDIFFERENCE(LINDGEN(N_ELEMENTS(justGood.broad)),justGood.disqual_i,COUNT=cnt)
   nGNooner     = cnt
   
@@ -157,6 +193,28 @@ PRO JOURNAL__20170209__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
   PRINT,"MonoBef  : ",nMonoBef,FLOAT(nMonoBef)/nGNooner*100.,"%"
   PRINT,"DiffBef  : ",nDiffBef,FLOAT(nDiffBef)/nGNooner*100.,"%"
   PRINT,"TotBef   : ",nTotBef,FLOAT(nTotBef)/nGNooner*100.,"%"
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Then, the not-weak currents
+
+  discrimInds  = CGSETDIFFERENCE(noonmagcge10_ii,justGood.disqual_i,COUNT=cnt)
+  nGNooner     = cnt
+  
+  broadGE10_iii = WHERE((justGood.broad[discrimInds] EQ 1) OR (justGood.broad[discrimInds] EQ 2), $
+                  nBroadGE10)
+  monoGE10_iii  = WHERE((justGood.mono[discrimInds] EQ 1) OR (justGood.mono[discrimInds] EQ 2), $
+                  nMonoGE10)
+  ;; diffGE10_iii  = WHERE((justGood.diffuse[discrimInds] EQ 1) OR (justGood.diffuse[discrimInds] EQ 2), $
+  ;;                    nDiffGE10)
+  diffGE10_iii  = WHERE(( (justGood.broad[discrimInds] EQ 0) OR (justGood.broad[discrimInds] GT 2) ) AND $
+                       ( (justGood.mono[discrimInds]  EQ 0) OR (justGood.mono[discrimInds]  GT 2) ),nDiffGE10)
+
+  nTotGE10      = nBroadGE10+nMonoGE10+nDiffGE10
+  PRINT,''
+  PRINT,"BroadGE10 : ",nBroadGE10,FLOAT(nBroadGE10)/nGNooner*100.,"%"
+  PRINT,"MonoGE10  : ",nMonoGE10,FLOAT(nMonoGE10)/nGNooner*100.,"%"
+  PRINT,"DiffGE10  : ",nDiffGE10,FLOAT(nDiffGE10)/nGNooner*100.,"%"
+  PRINT,"TotGE10   : ",nTotGE10,FLOAT(nTotGE10)/nGNooner*100.,"%"
 
 
   ;; broadAft_iii = WHERE((alfNoon.broad[discrimInds] EQ 1) OR (alfNoon.broad[discrimInds] EQ 2), $
