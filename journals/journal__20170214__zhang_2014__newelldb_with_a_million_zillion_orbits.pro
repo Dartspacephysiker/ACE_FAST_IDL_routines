@@ -15,7 +15,7 @@ PRO JOURNAL__20170214__ZHANG_2014__NEWELLDB_WITH_A_MILLION_ZILLION_ORBITS
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 0
-  use_prev_tHistos               = 1
+  use_prev_tHistos               = 0
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
@@ -218,7 +218,8 @@ PRO JOURNAL__20170214__ZHANG_2014__NEWELLDB_WITH_A_MILLION_ZILLION_ORBITS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'NORTH'
+  ;; hemi                        = 'NORTH'
+  hemi                        = 'SOUTH'
   minI                        = 40
   maxI                        = 90
   ;; maskMin                        = 100
@@ -234,7 +235,7 @@ PRO JOURNAL__20170214__ZHANG_2014__NEWELLDB_WITH_A_MILLION_ZILLION_ORBITS
   ;; numOrbLim                      = 10
 
   ;; binI                     = 2.0
-  binI                        = 2.0
+  binI                        = 1.0
 
   IF KEYWORD_SET(justInds_saveToFilePref) THEN BEGIN
      justInds_saveToFile = justInds_saveToFilePref + hemi + '_inds.sav'
@@ -242,7 +243,7 @@ PRO JOURNAL__20170214__ZHANG_2014__NEWELLDB_WITH_A_MILLION_ZILLION_ORBITS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
+  binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.5
   shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
 
   IF shiftM GT 0. THEN BEGIN
