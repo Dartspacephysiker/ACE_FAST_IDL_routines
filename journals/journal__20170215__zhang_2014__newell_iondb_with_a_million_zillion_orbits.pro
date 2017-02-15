@@ -112,19 +112,38 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  eSpec_flux_plots               = 1
-  Newell_analyze_eFlux           = 1
-  eSpec__all_fluxes              = 1
-  Newell__comb_accelerated       = 1
+  ionPlots                       = 1
+  chariEPlots                    = 1
 
-  eSpec__Newell_2009_interp      = 1
-  eSpec__use_2000km_file         = 0
-  eSpec__remove_outliers         = 0
+  ;;Things for the ion DB
+  ion_flux_plots                 = 1
+  ion__all_fluxes                = 1
+  ion__downgoing                 = 1
+  ion__no_maximus                = 1
+
+  ;; eSpec__all_fluxes              = 1
+  ;; Newell__comb_accelerated       = 1
+
+  ;; eSpec__Newell_2009_interp      = 1
+  ;; eSpec__use_2000km_file         = 0
+  ;; eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
-  ePlots                         = 1
-  eNumFlPlots                    = 1
+  ;; ePlots                         = 1
+  ;; eNumFlPlots                    = 1
+
+
+  
+  ifluxPlotType                  = ['Ji_ion','Jei_ion']
+  noPosIFlux                     = [0,0]
+  noNegIFlux                     = [0,0]
+  logIfPlot                      = [0,0]
+  iPlotRange                     = [[],[]]
+  ;; cbIFDivFac                     = [1e9,1e9,1e8,1e8]          
+
+  chariEPlotRange                = [4,2.4e4]
+  logChariePlot                  = 1
 
   tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]
@@ -132,70 +151,12 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   ;; tHistDenomPlotAutoscale        = 1
   tHistDenomPlot_noMask          = 1
 
-  espec__newellPlot_probOccurrence = 0
-  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
-
-  eSpec__t_ProbOccurrence    = 0
-  eSpec__t_probOcc_plotRange = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
-
-
-  eFluxPlotType                  = 'Max'
-  CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
-        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
-     END
-     ELSE: BEGIN
-        CASE 1 OF
-           KEYWORD_SET(logEfPlot): BEGIN
-              ePlotRange         = [[1e-2,1e1],[1e-2,1e1],[1e-2,1e1],[1e-2,1e1]]
-           END
-           ELSE: BEGIN
-              ePlotRange         = [[0,1.0],[0,1.0],[0,1.0],[0,0.5]]
-           END
-        ENDCASE
-     END
-  ENDCASE
-  logEfPlot                      = 0
-  noNegEflux                     = 1
-  ;; ePlotRange                     = [1e-3,1e1]
-  ;; logEfPlot                      = 1
-  noNegEflux                     = 1
-
-  eNumFlPlotType                 = ['ESA_Number_flux']
-  noNegENumFl                    = 1
-  ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
-  CASE 1 OF
-     KEYWORD_SET(eSpec_noMap): BEGIN
-        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
-     END
-     ELSE: BEGIN
-        CASE 1 OF
-           KEYWORD_SET(logENumFlPlot): BEGIN
-              ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
-           END
-           ELSE: BEGIN
-              ENumFlPlotRange    = [[0,1.2e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
-              cbENumFlDivFac     = [1e9,1e9,1e8,1e8]          
-           END
-        ENDCASE
-     END
-  ENDCASE
-  ;; eNumFlPlotType                 = 'ESA_Number_flux'
-  ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
-  ;; ENumFlPlotRange                = [0,2e9]
-
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
   altRange                       = [[300,4300]]
 
-  IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
-     altRange                    = [300,2000]
-  ENDIF
-
-  orbRange                       = [500,24634]
+  orbRange                       = [500,14361]
 
   ;; latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
 
@@ -218,8 +179,8 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  ;; hemi                        = 'NORTH'
-  hemi                        = 'SOUTH'
+  hemi                        = 'NORTH'
+  ;; hemi                        = 'SOUTH'
   minI                        = 40
   maxI                        = 90
   ;; maskMin                        = 100
@@ -343,14 +304,21 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
         ENUMFLPLOTS=eNumFlPlots, $
         ENUMFLPLOTTYPE=eNumFlPlotType, $
         ENUMFLPLOTRANGE=eNumFlPlotRange, $
-        NONEGENUMFL=noNegENumFl, $
-        NOPOSENUMFL=noPosENumFl, $
-        PPLOTS=pPlots, $
+        ;; NONEGENUMFL=noNegENumFl, $
+        ;; NOPOSENUMFL=noPosENumFl, $
+        ;; PPLOTS=pPlots, $
         IONPLOTS=ionPlots, $
+        IPLOTRANGE=IPlotRange, $
         IFLUXPLOTTYPE=ifluxPlotType, $
-        CHAREPLOTS=charEPlots, $
-        CHARETYPE=charEType, $
+        NONEGIFLUX=noNegIflux, $
+        NOPOSIFLUX=noPosIflux, $
+        ABSIFLUX=absIflux, $
+        LOGIFPLOT=logIfPlot, $
+        ;; CHAREPLOTS=charEPlots, $
+        ;; CHARETYPE=charEType, $
         CHARIEPLOTS=chariEPlots, $
+        LOGCHARIEPLOT=logChariePlot, $
+        CHARIEPLOTRANGE=chariEPlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
@@ -395,14 +363,20 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
         LUN=lun, $
         NEWELL_ANALYZE_EFLUX=Newell_analyze_eFlux, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
-        ESPEC__NO_MAXIMUS=no_maximus, $
-        ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ;; ESPEC__NO_MAXIMUS=no_maximus, $
+        ;; ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
+        ;; ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
+        ;; ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
+        ION__NO_MAXIMUS=ion__no_maximus, $
+        ION__NOMAPTO100KM=ion__noMap, $
+        ION__DOWNGOING=ion__downgoing, $
+        ION_FLUX_PLOTS=ion_flux_plots, $
+        ION__JUNK_ALFVEN_CANDIDATES=ion__junk_alfven_candidates, $
+        ION__ALL_FLUXES=ion__all_fluxes, $
         ;; CBEFDIVFAC=cbEFDivFac, $
-        CBENUMFLDIVFAC=cbENumFlDivFac, $
+        ;; CBENUMFLDIVFAC=cbENumFlDivFac, $
         ;; CBPFDIVFAC=CBPFDivFac, $
-        ;; CBIFDIVFAC=cbIFDivFac, $
+        CBIFDIVFAC=cbIFDivFac, $
         ;; CBCHAREDIVFAC=cbCharEDivFac, $
         ;; CBMAGCDIVFAC=CBMagCDivFac, $
         NONSTORM=nonStorm, $

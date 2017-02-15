@@ -567,7 +567,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
 
-     fl_elOrIon = KEYWORD_SET(for_eSpec_DBs) OR KEYWORD_SET(for_ion_DBs)
+     fl_elOrIon = KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs)
 
      IF N_ELEMENTS((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
         IF (STRUPCASE(STRMID((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
@@ -1685,7 +1685,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;; FOR_ION_DB=for_ion_DB, $
         ION__MLTSILATS=PASIS__ion__mlts, $
         ;; ION__ILATS=PASIS__ion__ilats, $
-        ION_DELTA_T=PASIS__ion_delta_t, $
+        ;; ION_DELTA_T=PASIS__ion_delta_t, $
         ORBCONTRIB__REFERENCE_ALFVENDB_NOT_EPHEMERIS=orbContrib__reference_alfvenDB, $
         DIVNEVBYTOTAL=divNEvByTotal, $
         NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
