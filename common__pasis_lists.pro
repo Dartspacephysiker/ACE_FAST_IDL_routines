@@ -9,8 +9,8 @@ COMMON PASIS, $
    PASIS__eNumFlux_eSpec_data    , $ ;= !NULL
    PASIS__eSpec__MLTs            , $ ;= !NULL        
    ;; PASIS__eSpec__ILATs           , $ ;= !NULL       
-   PASIS__iFlux_eSpec_data       , $ ;= !NULL   
-   PASIS__iNumFlux_eSpec_data    , $ ;= !NULL
+   PASIS__iFlux_ion_data         , $ ;= !NULL   
+   PASIS__iNumFlux_ion_data      , $ ;= !NULL
    PASIS__ion_delta_t            , $ ;= !NULL
    PASIS__ion__MLTs              , $ ;= !NULL        
    ;; PASIS__ion__ILATs             , $ ;= !NULL

@@ -658,6 +658,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                         KEYWORD_SET(PASIS__alfDB_plot_struct.t_probOccurrence) $
                        ) $
                        AND ~other_guys), $
+        /LOAD_CHARE, $
         LOAD_DELTA_ILAT_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dILAT, $
         LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dAngle, $
         LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__alfDB_plot_struct.load_dx, $
@@ -1381,7 +1382,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         saveStr += 'out_fastLoc_i_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"fastLoc",' + $
-                   (KEYWORD_SET(for_eSpec_DBs) ? "FL_eSpec__fastLoc" : "FL__fastLoc" ) + '.info'
+                   (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR $
+                    KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) ? $
+                    "FL_eSpec__fastLoc" : "FL__fastLoc" ) + '.info'
      ENDIF
 
 
@@ -1444,10 +1447,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-
   IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
-     IF ~(COMPARE_DELTA_TYPES(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
-                              (KEYWORD_SET(for_eSpec_DBs) ? NEWELL__eSpec     : MAXIMUS__maximus))) $
+     IF ~(COMPARE_DELTA_TYPES(KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR $
+                              KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) ? $
+                              FL_eSpec__fastLoc : FL__fastLoc, $
+                              (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? $
+                               NEWELL__eSpec     : $
+                               KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) ? NEWELL_I__ion : MAXIMUS__maximus))) $
      THEN BEGIN
         PRINT,"Mismatch!!"
         STOP
@@ -1458,14 +1464,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Now time for data summary
 
   ;; IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-     PRINT_ALFVENDB_PLOTSUMMARY,KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? NEWELL__eSpec : MAXIMUS__maximus, $
-                                KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? PASIS__indices__eSpec_list : PASIS__plot_i_list, $
-                                IMF_STRUCT=PASIS__IMF_struct, $
-                                MIMC_STRUCT=PASIS__MIMC_struct, $
-                                ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-                                PARAMSTRING=PASIS__paramString, $
-                                PARAMSTR_LIST=PASIS__paramString_list, $
-                                LUN=lun
+  PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? $
+                              (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? NEWELL__eSpec : NEWELL_I__ion) : $
+                              MAXIMUS__maximus), $
+                             (KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? $
+                              (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__indices__ion_list) : $
+                              PASIS__plot_i_list), $
+                             IMF_STRUCT=PASIS__IMF_struct, $
+                             MIMC_STRUCT=PASIS__MIMC_struct, $
+                             ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                             PARAMSTRING=PASIS__paramString, $
+                             PARAMSTR_LIST=PASIS__paramString_list, $
+                             LUN=lun
   ;; ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1509,7 +1519,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
      tmplt_h2dStr.is_alfDB   = 0B
-     tmplt_h2dStr.is_eSpecDB = 1B
+     tmplt_h2dStr.is_eSpecDB = PASIS__alfDB_plot_struct.for_eSpec_DBs & tmplt_h2dStr.is_ionDB = PASIS__alfDB_plot_struct.for_ion_DBs
   ENDIF
 
   ;;Doing grossrates?
@@ -1679,7 +1689,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         INUMFLUX_ION_DATA=PASIS__iNumFlux_ion_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
-        ESPEC__NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
+        NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTSILATS=PASIS__eSpec__mlts, $
         ;; FOR_ION_DB=for_ion_DB, $
@@ -1825,7 +1835,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;;    dataRawPtrArr_list[iList]  = SHIFT(dataRawPtrArr_list[iList],-2) 
         ;; ENDIF
      ENDIF ELSE BEGIN
-        plot_i            = KEYWORD_SET(FOR_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__plot_i_list
+        plot_i            = KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : $
+                            KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) ? PASIS__indices__ion_list : PASIS__plot_i_list
      ENDELSE
 
      IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.squarePlot) THEN BEGIN
