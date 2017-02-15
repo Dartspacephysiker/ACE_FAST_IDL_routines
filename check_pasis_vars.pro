@@ -302,10 +302,14 @@ PRO CHECK_PASIS_VARS, $
   ;; ENDELSE
 
   IF compare_MIMC_struct THEN BEGIN
-     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct,INDS_RESET=inds_resetTmp,DBS_RESET=DBs_resetTmp
+     COMPARE_MIMC_STRUCT,PASIS__MIMC_struct,MIMC_struct, $
+                         INDS_RESET=inds_resetTmp, $
+                         DBS_RESET=DBs_resetTmp, $
+                         PLOTS_RESET=plots_resetTmp
      
-     inds_reset += TEMPORARY(inds_resetTmp)
-     DBs_reset  += TEMPORARY(DBs_resetTmp )
+     inds_reset   += TEMPORARY(inds_resetTmp  )
+     DBs_reset    += TEMPORARY(DBs_resetTmp   )
+     plots_reset  += TEMPORARY(plots_resetTmp )
   ENDIF;; ELSE BEGIN
   ;; ENDELSE
 

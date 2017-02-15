@@ -15,7 +15,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 0
-  use_prev_tHistos               = 0
+  use_prev_tHistos               = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
@@ -60,7 +60,8 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
   justData                       = 0
-  
+  write_obsArr__bigBins          = 1
+
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
   justInds_saveToFilePref        = 'newellZhang2014--'
@@ -137,12 +138,13 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   
   ifluxPlotType                  = ['Ji_ion','Jei_ion']
   noPosIFlux                     = [0,0]
-  noNegIFlux                     = [0,0]
+  noNegIFlux                     = [1,1]
   logIfPlot                      = [0,0]
-  iPlotRange                     = [[],[]]
+  ;; iPlotRange                     = [[1e6,1e9],[1e-4,1e0]]
+  iPlotRange                     = [[0,3e8],[0,1e0]]
   ;; cbIFDivFac                     = [1e9,1e9,1e8,1e8]          
 
-  chariEPlotRange                = [4,2.4e4]
+  chariEPlotRange                = [1e3,2.4e4]
   logChariePlot                  = 1
 
   tHistDenominatorPlot           = 0
@@ -209,6 +211,11 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
 
   IF shiftM GT 0. THEN BEGIN
      plotPref += '-rot'
+  ENDIF
+
+  IF KEYWORD_SET(write_obsArr__bigBins) THEN BEGIN
+     binI = 2.5
+     binM = 1.0
   ENDIF
 
   ;; minM                      = 6
