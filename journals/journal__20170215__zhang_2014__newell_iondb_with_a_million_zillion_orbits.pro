@@ -14,7 +14,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  remake_prev_plot_file          = 1
   use_prev_tHistos               = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
@@ -60,7 +60,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
   justData                       = 0
-  write_obsArr__bigBins          = 1
+  write_obsArr__bigBins          = 1 AND KEYWORD_SET(write_obsArr_textFile)
 
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -76,7 +76,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   fluxPlots__remove_log_outliers = 0
   
   ;; dont_blackball_maximus         = 
-  ;; dont_blackball_fastloc         = 0
+  dont_blackball_fastloc         = 1
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
@@ -113,8 +113,8 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
-  ionPlots                       = 1
-  chariEPlots                    = 1
+  ionPlots                       = 1 AND ~KEYWORD_SET(write_obsArr_textFile)
+  chariEPlots                    = 1 AND ~KEYWORD_SET(write_obsArr_textFile)
 
   ;;Things for the ion DB
   ion_flux_plots                 = 1
@@ -122,32 +122,19 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   ion__downgoing                 = 1
   ion__no_maximus                = 1
 
-  ;; eSpec__all_fluxes              = 1
-  ;; Newell__comb_accelerated       = 1
-
-  ;; eSpec__Newell_2009_interp      = 1
-  ;; eSpec__use_2000km_file         = 0
-  ;; eSpec__remove_outliers         = 0
-  ;; eSpec__noMap                   = 1
-
-  ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
-  ;; ePlots                         = 1
-  ;; eNumFlPlots                    = 1
-
-
-  
   ifluxPlotType                  = ['Ji_ion','Jei_ion']
   noPosIFlux                     = [0,0]
   noNegIFlux                     = [1,1]
   logIfPlot                      = [0,0]
   ;; iPlotRange                     = [[1e6,1e9],[1e-4,1e0]]
-  iPlotRange                     = [[0,3e8],[0,1e0]]
+  iPlotRange                     = [[0,1e8],[0,0.2]]
   ;; cbIFDivFac                     = [1e9,1e9,1e8,1e8]          
 
-  chariEPlotRange                = [1e3,2.4e4]
-  logChariePlot                  = 1
+  chariEPlotRange                = [1e2,1e4]
+  logChariePlot                  = 0
+  noNegCharie                    = 1
 
-  tHistDenominatorPlot           = 0
+  tHistDenominatorPlot           = 1
    tHistDenomPlotRange           = [0.,150.]
   ;; tHistDenomPlotNormalize        = 0
   ;; tHistDenomPlotAutoscale        = 1
@@ -159,6 +146,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   altRange                       = [[300,4300]]
 
   orbRange                       = [500,14361]
+  ;; orbRange                       = [500,12670]
 
   ;; latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
 
@@ -181,9 +169,9 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'NORTH'
-  ;; hemi                        = 'SOUTH'
-  minI                        = 40
+  ;; hemi                        = 'NORTH'
+  hemi                        = 'SOUTH'
+  minI                        = 55
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1
@@ -325,6 +313,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
         ;; CHARETYPE=charEType, $
         CHARIEPLOTS=chariEPlots, $
         LOGCHARIEPLOT=logChariePlot, $
+        NONEGCHARIE=noNegCharie, $
         CHARIEPLOTRANGE=chariEPlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
@@ -459,7 +448,6 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
         OVERPLOT_PLOTRANGE=op_plotRange, $        
         SHOW_INTEGRALS=show_integrals, $
         RESET_STRUCT=reset
-
 
      PLOT_ALFVEN_STATS_IMF_SCREENING, $
         FOR_ESPEC_DBS=for_eSpec_DBs, $

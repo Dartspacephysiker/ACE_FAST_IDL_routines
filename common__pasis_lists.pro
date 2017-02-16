@@ -19,4 +19,5 @@ COMMON PASIS, $
    PASIS__MIMC_struct            , $ ;= !NULL
    PASIS__FL_tHisto_list         , $ ;= !NULL
    PASIS__FL_eSpec_tHisto_list   , $ ;= !NULL
-   PASIS__indices__eSpec__types      ;= !NULL
+   PASIS__indices__eSpec__types
+;= !NULL

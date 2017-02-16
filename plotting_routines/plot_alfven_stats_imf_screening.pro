@@ -469,7 +469,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      get_eSpec_i          = 1
      get_paramString      = 1
      get_paramString_list = 1
-     ;; get_ion_i      = 1 ;not implemented
+     get_ion_i            = 1
 
      inds_reset           = 1
      DBs_reset            = 1
@@ -1165,7 +1165,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF
 
      ;;Now eSpecDB
-     IF for_ion_DBs AND KEYWORD_SET(get_ion_i) $
+     IF PASIS__alfDB_plot_struct.for_ion_DBs AND KEYWORD_SET(get_ion_i) $
      THEN BEGIN 
 
         GET_AE_FASTDB_INDICES, $
