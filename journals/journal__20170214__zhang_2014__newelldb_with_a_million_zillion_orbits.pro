@@ -220,7 +220,8 @@ PRO JOURNAL__20170214__ZHANG_2014__NEWELLDB_WITH_A_MILLION_ZILLION_ORBITS
   ;;ILAT stuff
   ;; hemi                        = 'NORTH'
   hemi                        = 'SOUTH'
-  minI                        = 40
+  ;; hemi                        = 'BOTH'
+  minI                        = 45
   maxI                        = 90
   ;; maskMin                        = 100
   ;; tHist_mask_bins_below_thresh   = 1

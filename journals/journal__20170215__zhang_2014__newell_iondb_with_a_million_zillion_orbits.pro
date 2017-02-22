@@ -14,7 +14,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
   use_prev_tHistos               = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
@@ -127,7 +127,7 @@ PRO JOURNAL__20170215__ZHANG_2014__NEWELL_IONDB_WITH_A_MILLION_ZILLION_ORBITS
   noNegIFlux                     = [1,1]
   logIfPlot                      = [0,0]
   ;; iPlotRange                     = [[1e6,1e9],[1e-4,1e0]]
-  iPlotRange                     = [[0,1e8],[0,0.2]]
+  iPlotRange                     = [[0,1e8],[0,0.5]]
   ;; cbIFDivFac                     = [1e9,1e9,1e8,1e8]          
 
   chariEPlotRange                = [1e2,1e4]
