@@ -16,7 +16,7 @@ testcode/laTEST/*.png
 #No testcode postscripts
 testcode/laTEST/*.ps
 
-TAUEST/tauest_readme.txt
+fortran/TAUEST/tauest_readme.txt
 
 #None 'dat file
 *.dat
