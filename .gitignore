@@ -1,30 +1,22 @@
 #No emacs temp files
 *~
 
-#Not various_untracked folder
-various_untracked/*
-
-#No txtoutput texts in 'Compare_Chaston_DB'
-Compare_new_DB_with_Chastons/txtoutput/*.txt
-Compare_new_DB_with_Chastons/txtoutput/*.sav
-
 #plots dir and other graphic/data dirs are too big (and secret!)
 #If you want to back these up, use your rsync stuff
-plots/*
-histos_scatters/*
-ks_output/*
-plot_indices_saves/*
-Compare_new_DB_with_Chastons/post_AGU_2014_various/boxplots/*
-Compare_new_DB_with_Chastons/post_AGU_2014_various/histos/*
-Compare_new_DB_with_Chastons/txtoutput/*
-medHistData/*
-
+plots/
+plot_indices_saves/
+processed/
+saves_output_etc/
+temp/
+txtOutput/
 
 #No testcode pngs
 testcode/laTEST/*.png
 
 #No testcode postscripts
 testcode/laTEST/*.ps
+
+TAUEST/tauest_readme.txt
 
 #None 'dat file
 *.dat
@@ -38,12 +30,3 @@ testcode/laTEST/*.ps
 #No dat_and_plots dirs
 *dat_and_plots*
 testcode/laTEST/goodplots
-
-#No raw saves
-rawsaves/*
-
-#No DB files
-scripts_for_processing_Dartmouth_data/*.sav
-scripts_for_processing_Dartmouth_data/*.sav_raw
-scripts_for_processing_Dartmouth_data/*.txt
-scripts_for_processing_Dartmouth_data/fastLoc_timeHistos/*
