@@ -30,3 +30,6 @@ fortran/TAUEST/tauest_readme.txt
 #No dat_and_plots dirs
 *dat_and_plots*
 testcode/laTEST/goodplots
+
+#No R history
+R_things/.Rhistory
