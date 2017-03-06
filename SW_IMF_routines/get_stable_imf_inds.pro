@@ -379,6 +379,13 @@ FUNCTION GET_STABLE_IMF_INDS, $
                                   C_OMNI__Bt[stable_omni_Inds], $
                                   /COVARIANCE)
 
+     BMag_avg       = SQRT(Bx_avg^2 + By_avg^2 + Bz_avg^2)
+
+     ;;2017/03/06
+     ;;Calcked expression from journal__20170306__compute_uncertainty_in_b_mag.py:
+     ;;(bx**2*s2bx + 2*bx*by*sbx_by + 2*bx*bz*sbx_bz + by**2*s2by + 2*by*bz*sby_bz + bz**2*s2bz)/(bx**2 + by**2 + bz**2)
+     BMag_stdDev    = SQRT((Bx_avg*Bx_StdDev)^2D + (By_avg*By_StdDev)^2D + (Bz_avg*Bz_StdDev)^2D + $
+                             2*Bx_avg*By_avg*BxBy_covar + 2*Bx_avg*Bz_avg*BxBz_covar + 2*By_avg*Bz_avg*ByBz_covar) / BMag
      ;; ENDIF
 
 
@@ -571,6 +578,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       By:[stats.avg.By,By_avg], $
                       Bz:[stats.avg.Bz,Bz_avg], $
                       Bt:[stats.avg.Bt,Bt_avg], $
+                      BMag:[stats.avg.BMag,BMag_avg], $
                       phiClock:[stats.avg.phiClock,phiClock_avg], $
                       thetaCone:[stats.avg.thetaCone,thetaCone_avg], $
                       cone_overClock:[stats.avg.cone_overClock,cone_overClock_avg], $
@@ -583,6 +591,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          By:[stats.stdDev.By,By_StdDev], $
                          Bz:[stats.stdDev.Bz,Bz_StdDev], $
                          Bt:[stats.stdDev.Bt,Bt_StdDev], $
+                         BMag:[stats.stdDev.BMag,BMag_StdDev], $
                          phiClock:[stats.stdDev.phiClock,phiClock_StdDev], $
                          thetaCone:[stats.stdDev.thetaCone,thetaCone_StdDev], $
                          cone_overClock:[stats.stdDev.cone_overClock,cone_overClock_StdDev], $
@@ -642,6 +651,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                       By:By_avg, $
                       Bz:Bz_avg, $
                       Bt:Bt_avg, $
+                      BMag:BMag_avg, $
                       phiClock:phiClock_avg, $
                       thetaCone:thetaCone_avg, $
                       cone_overClock:cone_overClock_avg, $
@@ -654,6 +664,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
                          By:By_StdDev, $
                          Bz:Bz_StdDev, $
                          Bt:Bt_StdDev, $
+                         BMag:BMag_StdDev, $
                          phiClock:phiClock_StdDev, $
                          thetaCone:thetaCone_StdDev, $
                          cone_overClock:cone_overClock_StdDev, $
