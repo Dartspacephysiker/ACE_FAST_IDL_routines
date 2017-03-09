@@ -513,7 +513,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs we need
-  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+  IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
+       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) $
+  THEN BEGIN
 
      IF N_ELEMENTS(MAXIMUS__maximus) GT 0 THEN BEGIN
         IF (STRUPCASE(STRMID(MAXIMUS__maximus.info.coords,0,3)) NE       $
@@ -749,7 +751,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.use_storm_stuff) THEN BEGIN
 
-     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) AND KEYWORD_SET(get_plot_i) $
+     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
+       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus))  $
      THEN BEGIN
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
@@ -990,7 +993,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
 
-     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) OR KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
+     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) OR $
+          KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
         GET_AE_FASTDB_INDICES, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
            IMF_STRUCT=PASIS__IMF_struct, $
@@ -1225,7 +1229,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+  IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
+       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
      
      IF KEYWORD_SET(get_plot_i) THEN BEGIN
         plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $

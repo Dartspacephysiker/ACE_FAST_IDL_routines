@@ -1,4 +1,6 @@
-;;01/28/17
+;2017/01/28
+;2017/03/05{?) Added the latest, which has a proper calculation of σB (i.e., it includes covariance terms that serve to reduce the
+;overall variability)
 PRO JOURNAL__20170128__ZHANG_2014__SCRATCHPAD__DOODAD
 
   COMPILE_OPT IDL2
@@ -6,8 +8,12 @@ PRO JOURNAL__20170128__ZHANG_2014__SCRATCHPAD__DOODAD
   second_set = 1
 
   ;; dir       = '/home/spencerh/Desktop/Spence_paper_drafts/2017/Alfvens_IMF/dataFiles/'
-  dir       = '~/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
-  statsFile = 'OMNI_stats--Alfvens_dodat_20170127.sav'
+  ;; dir       = '~/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
+  ;; statsFile = 'OMNI_stats--Alfvens_dodat_20170127.sav'
+
+  ;;From the future! We import the file containing BMag_avg and BMag_StdDev
+  dir       = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/txtOutput/20170306/'
+  statsFile = 'OMNI_stats--Alfvens_dodat_20170306.sav'
 
   IF KEYWORD_SET(second_set) THEN BEGIN
      PRINT,"customInteg__70-80ILAT__6-12MLT"

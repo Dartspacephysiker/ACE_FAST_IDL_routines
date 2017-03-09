@@ -385,7 +385,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      ;;Calcked expression from journal__20170306__compute_uncertainty_in_b_mag.py:
      ;;(bx**2*s2bx + 2*bx*by*sbx_by + 2*bx*bz*sbx_bz + by**2*s2by + 2*by*bz*sby_bz + bz**2*s2bz)/(bx**2 + by**2 + bz**2)
      BMag_stdDev    = SQRT((Bx_avg*Bx_StdDev)^2D + (By_avg*By_StdDev)^2D + (Bz_avg*Bz_StdDev)^2D + $
-                             2*Bx_avg*By_avg*BxBy_covar + 2*Bx_avg*Bz_avg*BxBz_covar + 2*By_avg*Bz_avg*ByBz_covar) / BMag
+                             2*Bx_avg*By_avg*BxBy_covar + 2*Bx_avg*Bz_avg*BxBz_covar + 2*By_avg*Bz_avg*ByBz_covar) / BMag_avg
      ;; ENDIF
 
 
