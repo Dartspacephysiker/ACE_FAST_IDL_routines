@@ -1,7 +1,7 @@
 ;;2017/01/23 Overplot diffuse number flux with diffuse Alfvénic Poynting flux
 PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLUX
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   plotPref = 'NWO-'
 

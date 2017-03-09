@@ -1,7 +1,7 @@
 ;;2017/01/27 Dagen har kommet
 PRO MAKE_CULLED_OMNI_DENS_PRESSURE_TEMP_FILE
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   dataDir              = '/SPENCEdata/Research/database/'
 

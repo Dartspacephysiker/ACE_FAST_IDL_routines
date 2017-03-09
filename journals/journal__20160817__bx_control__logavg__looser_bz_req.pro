@@ -2,7 +2,7 @@
 ;;Jim had a great idea: Don't be so stiff with Bx
 PRO JOURNAL__20160817__BX_CONTROL__LOGAVG__LOOSER_BZ_REQ
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

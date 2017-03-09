@@ -1,7 +1,7 @@
 ;2016/07/19 Same as they were on 2016/07/02, but now stormless
 PRO JOURNAL__20160719__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__REAL_BTMIN_2__ALFIMFPAPE__NONSTORM
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   nonStorm                       = 1
   DSTCutoff                      = -20

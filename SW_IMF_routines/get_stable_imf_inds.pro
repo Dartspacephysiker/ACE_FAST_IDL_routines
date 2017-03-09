@@ -37,7 +37,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
    LUN=lun, $
    TXTOUTPUTDIR=txtOutputDir
   
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   ;;This and GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS should be the only two routines that have a full definition of this block
   @common__omni_stability.pro

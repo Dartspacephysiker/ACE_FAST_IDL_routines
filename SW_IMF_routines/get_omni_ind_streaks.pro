@@ -3,7 +3,7 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
                          USE_COMBINED_OMNI_IMF_INDS=use_combined_OMNI_IMF_inds, $
                          LUN=lun
   
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   ;;Vars for OMNI stability
   @common__omni_stability.pro

@@ -1,7 +1,7 @@
 ;;2016/12/14 So, um, electrons
 PRO JOURNAL__20161214__BX_CONTROL__NEWELLDB
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i                    = 0
 

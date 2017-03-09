@@ -1,7 +1,7 @@
 ;2016/06/17 It has become apparent that something was wrong with the E-field instrument after August 1999; see JOURNAL__201601617__... about this in Alfven_db_routines repository.
 PRO JOURNAL__20160617__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__TOP_2500KM__CEDAR2016__TEST_THIST_THRESH__PRIOR_TO_AUG_1999
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0

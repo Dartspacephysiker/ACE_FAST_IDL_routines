@@ -5,7 +5,7 @@ PRO INTERP_POLAR2DCONTOUR,temp,tempname, $
                           FNAME=fname, $
                           _EXTRA=e
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   RESTORE,ancillaryData
   

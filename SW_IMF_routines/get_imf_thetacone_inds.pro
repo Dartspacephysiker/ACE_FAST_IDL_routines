@@ -3,7 +3,7 @@ PRO GET_IMF_THETACONE_INDS,thetaCone, $
                            IMF_STRUCT=IMF_struct, $
                            LUN=lun
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__omni_stability.pro
 

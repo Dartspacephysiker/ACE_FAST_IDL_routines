@@ -7,7 +7,7 @@
 ;;-->Pick almost no masking since that way Bill can make his own call about stuff
 PRO JOURNAL__20160720__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL__ALMOST_SETTLED
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

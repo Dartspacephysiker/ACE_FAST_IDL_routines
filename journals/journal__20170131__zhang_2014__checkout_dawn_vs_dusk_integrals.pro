@@ -1,7 +1,7 @@
 ;;01/31/17
 PRO JOURNAL__20170131__ZHANG2014__CHECKOUT_DAWN_VS_DUSK_INTEGRALS
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; dir           = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
   ;; statsFile     = 'OMNI_stats--Alfvens_dodat_20170127.sav'

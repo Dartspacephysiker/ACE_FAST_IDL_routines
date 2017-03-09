@@ -1,6 +1,6 @@
 PRO OMNI__ADD_NEWELL_FUNC,goodmag_goodtimes_i
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
 

@@ -1,6 +1,6 @@
 PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i                = 1
   remake_prev_plot_file          = 1

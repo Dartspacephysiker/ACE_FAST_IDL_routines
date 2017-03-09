@@ -12,7 +12,7 @@ PRO PREDICTED_CUSP_LOCATION__ZHANG_ET_AL_2013,By,Bz, $
    ILAT_CUSP_PW_B=ILAT_cusp_pw_b, $
    LUN=lun
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;From Zhang et al. 2013 Predicting the Location of Polar Cusp in

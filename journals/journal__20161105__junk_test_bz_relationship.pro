@@ -1,6 +1,6 @@
 PRO JOURNAL__20161105__JUNK_TEST_BZ_RELATIONSHIP
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   runNum = 2
 

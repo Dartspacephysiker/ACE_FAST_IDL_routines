@@ -31,7 +31,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
    TXTOUTPUTDIR=txtOutputDir
 
   
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   IF N_ELEMENTS(lun) EQ 0 THEN BEGIN
      lun                                = -1 ;stdout

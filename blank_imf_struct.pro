@@ -1,7 +1,7 @@
 ;;12/02/16
 FUNCTION BLANK_IMF_STRUCT
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
      IMF_struct = { $
                   clockStr                   : ''      , $

@@ -1,7 +1,7 @@
 ;2016/07/08 Jim pointed out that these steps need to be fined
 PRO JOURNAL__20161105__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE__BZ_SOUTH_RELATIONSHIP
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; nonstorm                       = 1
   ;; DSTcutoff                      = -25

@@ -13,7 +13,7 @@
 
 PRO CHECK_SPACE_BETWEEN_OMNIDATA_20150221
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   dataDir                    = '/SPENCEdata/Research/database/'
 

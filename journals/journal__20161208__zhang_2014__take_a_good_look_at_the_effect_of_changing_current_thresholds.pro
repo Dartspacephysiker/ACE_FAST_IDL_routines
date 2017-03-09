@@ -2,7 +2,7 @@
 ;The whole point of this journal is to see what happens if we change the magnitude of the current threshold, in steps of 1 to some other number
 PRO JOURNAL__20161208__ZHANG_2014__TAKE_A_GOOD_LOOK_AT_THE_EFFECT_OF_CHANGING_CURRENT_THRESHOLDS
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_what_everyone_does          = 1
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN

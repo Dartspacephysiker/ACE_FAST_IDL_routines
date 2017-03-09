@@ -6,7 +6,7 @@ FUNCTION CALCULATE_KAN_LEE_SW_COUPLING_FUNCTION, $
    CALC_FROM_COMMON_VARS=calc_from_common_vars, $
    OUT_SW_SPEED=sw_speed
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__omni_stability.pro
 

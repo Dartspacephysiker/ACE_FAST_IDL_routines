@@ -12,7 +12,7 @@ PRO GET_IMF_BY_BZ_LIM_INDS,By,Bz,Bt,Bx,byMin,byMax,bzMin,bzMax,btMin,btMax,bxMin
                            ;; BX_OVER_BY_RATIO_MIN=bx_over_by_ratio_min, $
                            LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY

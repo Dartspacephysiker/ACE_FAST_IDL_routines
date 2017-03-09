@@ -4,7 +4,7 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
                              RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                              LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY

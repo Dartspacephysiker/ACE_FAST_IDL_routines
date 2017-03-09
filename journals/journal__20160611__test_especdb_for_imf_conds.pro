@@ -1,7 +1,7 @@
 ;;06/11/16
 PRO JOURNAL__20160611__TEST_ESPECDB_FOR_IMF_CONDS
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   multiple_IMF_clockAngles     = 1
   tiling_order                 = [7,0,1,6,-9,2,5,4,3]

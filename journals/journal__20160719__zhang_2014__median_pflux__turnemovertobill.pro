@@ -2,7 +2,7 @@
 ;;The idea is to just make the same figs with the same ILAT/MLT binning that I made before so that they're easy to compare.
 PRO JOURNAL__20160719__ZHANG_2014__MEDIAN_PFLUX__TURNEMOVERTOBILL
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   nonstorm                       = 1
   DSTcutoff                      = -20

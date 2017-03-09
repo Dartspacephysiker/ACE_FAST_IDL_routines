@@ -3,7 +3,7 @@ PRO CLEAR_PASIS_VARS,INDS_RESET=inds_reset, $
                      PLOTS_RESET=plots_reset, $
                      DBS_RESET=DBs_reset
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__pasis_lists.pro
 

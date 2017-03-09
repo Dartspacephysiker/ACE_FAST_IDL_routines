@@ -6,7 +6,7 @@ PRO OMNI__SELECT_COORDS,Bx, $
                         OMNI_COORDS=OMNI_coords, $
                         LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
 

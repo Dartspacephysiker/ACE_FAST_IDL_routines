@@ -19,7 +19,7 @@ PRO CHECK_PASIS_VARS, $
    COMPARE_MIMC_STRUCT=compare_MIMC_struct, $
    COMPARE_IMF_STRUCT=compare_IMF_struct
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__pasis_lists.pro
 

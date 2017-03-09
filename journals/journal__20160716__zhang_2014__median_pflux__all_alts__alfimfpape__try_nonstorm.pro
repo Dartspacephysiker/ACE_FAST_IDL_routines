@@ -1,7 +1,7 @@
 ;2016/07/16 As part of my response to Bill Lotko's concerns, I said I'd try a few other measures of Poynting flux. Here's another.
 PRO JOURNAL__20160716__ZHANG_2014__MEDIAN_PFLUX__ALL_ALTS__ALFIMFPAPE__TRY_NONSTORM
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   nonstorm                       = 1
   DSTcutoff                      = -50

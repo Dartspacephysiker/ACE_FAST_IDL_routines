@@ -1,7 +1,7 @@
 ;;2016/12/02 The updated version, all the bells and whistles
 PRO JOURNAL__20161202__BX_CONTROL__TIMEAVG__WITH_ORB_INFO__CONTOUR__KDE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i                    = 1
 

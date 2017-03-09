@@ -1,7 +1,7 @@
 ;;01/31/17
 PRO JOURNAL__20170131__ZHANG_2014__CUSP_STATS__MAG_CURRENT_VS_CHAR_ENERGY
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   dir           = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170129/'
   goodFile      = 'alfdb_good_i_above_60_ILAT__NORTH--20170126.sav'

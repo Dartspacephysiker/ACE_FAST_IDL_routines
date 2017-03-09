@@ -26,7 +26,7 @@ FUNCTION INTERP_MAG_DATA,db_i, satellite, delay, lun, $
                          DO_ABS_BZMAX=abs_bzMax, $
                          OMNI_COORDS=omni_Coords ;, $
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
 
   ;;If using cleaned DB, use all indices!

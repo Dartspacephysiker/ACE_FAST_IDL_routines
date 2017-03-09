@@ -1,7 +1,7 @@
 ;;08/18/16
 PRO JOURNAL__20160818__CALC_50DAYSIDE_10NIGHTSIDE_TAVGD_PFLUXES_FOR_LFMPOLAR_COMPARISON
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ILAT_restriction_on_stats = 1 ;;limit the range of ILATs considered in calculating medians, maxes, etc.
 

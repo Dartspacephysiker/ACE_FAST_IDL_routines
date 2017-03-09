@@ -1,6 +1,6 @@
 PRO COMBINE_OMNI_IMF_INDS,LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY

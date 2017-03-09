@@ -2,7 +2,7 @@ FUNCTION GET_OMNI_TIME_I,mag_UTC, $
                          IMF_STRUCT=IMF_struct, $
                          LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   CASE 1 OF
      ;; KEYWORD_SET(restrict_to_alfvendb_times): BEGIN

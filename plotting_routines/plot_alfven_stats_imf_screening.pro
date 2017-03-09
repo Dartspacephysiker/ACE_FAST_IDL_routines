@@ -424,7 +424,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    DONT_LOAD_IN_MEMORY=nonMem   ;, $
 ;   _EXTRA=e
   
- COMPILE_OPT idl2
+ COMPILE_OPT idl2,strictarrsubs
 
   !EXCEPT=0                                                      ;Do report errors, please
 

@@ -1,7 +1,7 @@
 ;;2017/02/11
 PRO JOURNAL__20170211__ZHANG2014__HOW_MANY_BROADS_FOR_EACH_PHI_IMF_ORIENTATION
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   indsDir     = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
   indsFil     = 'multi_PASIS_vars-eSpec-w_t-NWO--upto90-Dst_-50750-4300_km--orbs_500-12670-NORTH-0sampT-avgnStorm_9stable_0.0Del_30.0Res_0.0Ofst_btMin1.0-Ring.sav'

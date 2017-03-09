@@ -2,7 +2,7 @@
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
 PRO JOURNAL__20160816__ZHANG_2014__PROBOCC__BOTH_HEMIS_ALFIMFPAPE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

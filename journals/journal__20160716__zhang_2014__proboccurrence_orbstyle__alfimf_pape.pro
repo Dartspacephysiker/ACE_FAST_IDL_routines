@@ -1,7 +1,7 @@
 ;2016/07/16 I told Bill Lotko I'd give this a whirl
 PRO JOURNAL__20160716__ZHANG_2014__PROBOCCURRENCE_ORBSTYLE__ALFIMF_PAPE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0

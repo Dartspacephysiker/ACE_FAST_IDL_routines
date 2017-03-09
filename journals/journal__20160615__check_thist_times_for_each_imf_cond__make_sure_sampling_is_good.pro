@@ -3,7 +3,7 @@
 
 PRO JOURNAL__20160615__CHECK_THIST_TIMES_FOR_EACH_IMF_COND__MAKE_SURE_SAMPLING_IS_GOOD
   
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   do_txt                  = 1
 

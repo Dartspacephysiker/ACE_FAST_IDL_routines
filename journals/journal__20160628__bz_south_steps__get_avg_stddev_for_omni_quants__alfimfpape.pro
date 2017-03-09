@@ -1,7 +1,7 @@
 ;2016/06/28 Want to, you know, check out some gross rates
 PRO JOURNAL__20160628__BZ_SOUTH_STEPS__GET_AVG_STDDEV_FOR_OMNI_QUANTS__ALFIMFPAPE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0

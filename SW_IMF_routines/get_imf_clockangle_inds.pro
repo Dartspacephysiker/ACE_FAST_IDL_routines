@@ -6,7 +6,7 @@ PRO GET_IMF_CLOCKANGLE_INDS,phiClock, $
                             ;; ANGLELIM2=angleLim2, $
                             LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   @common__omni_stability.pro
   ;; COMMON OMNI_STABILITY

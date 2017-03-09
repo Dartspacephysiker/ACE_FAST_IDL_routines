@@ -2,7 +2,7 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
 PRO JOURNAL__20161202__ZHANG_2014__NEWELLDB__OVERPLOT_ALF_POYNTING_FLUX
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   plotPref = 'NWO-'
 

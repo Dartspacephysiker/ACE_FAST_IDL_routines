@@ -2,7 +2,7 @@
 ;;See, what we need is the average Kp so that we can compare with Keiling et al. [2003] and Zhang's thesis
 PRO JOURNAL__20160719__GET_AVG_KP_DURING_1997_FOR_ALFIMFPAPE_PFLUX_FIG
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; ;;Don't use these lines. We hate them.
   ;; KpDir   = '/SPENCEdata/Research/database/OMNI/'

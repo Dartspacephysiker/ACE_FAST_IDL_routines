@@ -6,7 +6,7 @@ FUNCTION SETUP_STATS__BZ_RELATIONSHIP, $
    NH_INDS=NH_inds, $
    SH_INDS=SH_inds
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   RESTORE,(KEYWORD_SET(filesDir) ? filesDir : '') + OMNI_file
   RESTORE,(KEYWORD_SET(filesDir) ? filesDir : '') + integ_file

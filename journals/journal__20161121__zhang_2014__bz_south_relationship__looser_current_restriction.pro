@@ -1,7 +1,7 @@
 ;
 PRO JOURNAL__20161121__ZHANG_2014__BZ_SOUTH_RELATIONSHIP__LOOSER_CURRENT_RESTRICTION
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; nonstorm                       = 1
   ;; DSTcutoff                      = -25

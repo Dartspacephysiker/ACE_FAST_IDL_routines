@@ -2,7 +2,7 @@
 ;;Checking out Bill's recommendation—what about _really_ quiet periods? Say, -10 nT?
 PRO JOURNAL__20160817__BX_CONTROL__TIMEAVG__LOOSER_BZ_REQ
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

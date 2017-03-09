@@ -2,7 +2,7 @@
 ;;And now—the role of Bx
 PRO JOURNAL__20160813__ZHANG_2014__TIMEAVG__BX_RESTRICTION
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

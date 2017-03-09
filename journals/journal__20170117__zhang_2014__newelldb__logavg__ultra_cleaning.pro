@@ -1,7 +1,7 @@
 ;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
 PRO JOURNAL__20170117__ZHANG_2014__NEWELLDB__LOGAVG__ULTRA_CLEANING
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; plotPref = '-atest_teste-MAPPE-cb' 
   ;; plotPref = 'rightnow-' 

@@ -1,7 +1,7 @@
 ;;2016/10/15 And now with equal-area binning
 PRO JOURNAL__20161015__ZHANG_2014__LOGAVG__EQUAL_AREA_BINNING
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

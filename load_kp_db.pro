@@ -3,7 +3,7 @@ PRO LOAD_KP_DB,Kp,DBFILE=dbFile,DBDIR=dbDir, $
 
   COMMON KP,KP__Kp,KP__dbDir,KP__dbFile
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   IF N_ELEMENTS(lun) EQ 0 THEN  BEGIN
      lun      = -1

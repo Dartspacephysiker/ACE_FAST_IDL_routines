@@ -1,7 +1,7 @@
 ;2016/06/18 OK, so things went wrong after orbit 12670 at some point—a little later than Aug 1999 (Nov 1999, in fact).
 PRO JOURNAL__20160620__ZHANG_2014__TIMEAVG_PFLUX_AND_OTHERS__CEDAR2016__FINAL__DIFF_ILAT
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0

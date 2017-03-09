@@ -1,7 +1,7 @@
 ;2016/06/28 Want to, you know, check out some gross rates
 PRO JOURNAL__20160628__ZHANG_2014__GLOBAL_RATES__ALFIMFPAPE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0

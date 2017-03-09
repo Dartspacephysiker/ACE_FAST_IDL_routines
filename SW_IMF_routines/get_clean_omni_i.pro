@@ -1,7 +1,7 @@
 FUNCTION GET_CLEAN_OMNI_I,Bx,By,Bz, $
                           LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   clean_i                        = WHERE((ABS(Bx) LE 99.9) AND $
                                          (ABS(By) LE 99.9) AND $

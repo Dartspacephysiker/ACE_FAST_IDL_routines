@@ -1,7 +1,7 @@
 ;;12/06/16
 PRO CLEAR_MIMC_COMMON_VARS
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__mlt_ilat_magc_etc.pro
 

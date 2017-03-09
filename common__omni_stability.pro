@@ -1,7 +1,7 @@
 ;;2016/08/19 Common block for OMNI stuff
 ;; PRO COMMON__OMNI_STABILITY
 
-  ;; COMPILE_OPT idl2
+  ;; COMPILE_OPT idl2,strictarrsubs
 
   COMMON OMNI_STABILITY,C_OMNI__mag_UTC , $
      C_OMNI__Bx                         , $

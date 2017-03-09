@@ -13,7 +13,7 @@
 ;;Let's take a look here. I feel confident it has to do with the averaging being employed
 PRO JOURNAL__20160802__CHASTON_ET_AL_2007_REPRODUCTION__PROBOCCURRENCE__ALLEVIATE_BILLS_CONCERNS__ALFIMFPAPE__USE_CHASTON_DB
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   do_timeAvg_fluxQuantities      = 0
   logAvgPlot                     = 0

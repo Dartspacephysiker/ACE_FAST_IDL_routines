@@ -19,7 +19,7 @@ FUNCTION GET_OMNI_IMF_INDS_AND_QUANTITIES,satellite, $
                                           OMNI_COORDS=omni_Coords, $
                                           LUN=lun
   
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   IF ~KEYWORD_SET(lun) THEN lun           = -1
   IF NOT KEYWORD_SET(dataDir) THEN dataDir="/SPENCEdata/Research/database/"

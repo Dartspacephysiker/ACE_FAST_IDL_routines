@@ -21,7 +21,7 @@ PRO JOURNAL__20161121__TEST_BZ_RELATIONSHIP__ALF_IMF_PAPER, $
    SAVENAME=saveName, $
    ADD_PLOTDIR=add_plotDir
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   IF N_ELEMENTS(use_Kan_Lee) EQ 0 THEN use_Kan_Lee  = 1
 

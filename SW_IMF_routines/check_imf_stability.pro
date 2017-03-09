@@ -19,7 +19,7 @@ FUNCTION CHECK_IMF_STABILITY,clockStr,angleLim1,angleLim2,phiDB, $
                              BX_OVER_BYBZ=bx_over_bybz,INCLUDENOCONSECDATA=includenoconsecdata, $
                              LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT idl2,strictarrsubs
 
   printf,lun,"****From check_imf_stability.pro****"
 

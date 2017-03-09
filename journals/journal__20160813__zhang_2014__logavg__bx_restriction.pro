@@ -2,7 +2,7 @@
 ;;So what is the role of Bx? It appears to cause stuff to move to lower latitudes
 PRO JOURNAL__20160813__ZHANG_2014__LOGAVG__BX_RESTRICTION
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 

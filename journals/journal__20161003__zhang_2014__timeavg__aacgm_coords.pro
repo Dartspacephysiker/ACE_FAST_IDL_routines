@@ -1,7 +1,7 @@
 ;;2016/08/01 But what happens if we use AACGM coordinates?
 PRO JOURNAL__20161003__ZHANG_2014__TIMEAVG__AACGM_COORDS
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   restore_last_session           = 0
 
