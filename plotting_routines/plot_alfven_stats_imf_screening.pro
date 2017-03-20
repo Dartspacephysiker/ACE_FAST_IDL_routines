@@ -369,6 +369,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    OUTPUTPLOTSUMMARY=outputPlotSummary, $
    DEL_PS=del_PS, $
    EPS_OUTPUT=eps_output, $
+   GRIDCOLOR=gridColor, $
    SUPPRESS_THICKGRID=suppress_thickGrid, $
    SUPPRESS_THINGRID=suppress_thinGrid, $
    SUPPRESS_GRIDLABELS=suppress_gridLabels, $
@@ -511,10 +512,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Use longitude and not mlt?
   ;; IF KEYWORD_SET(PASIS__MIMC_struct.use_GEI) OR KEYWORD_SET(PASIS__MIMC_struct.use_GEI)
 
+  no_maximus = KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
+               KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs we need
-  IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
-       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) $
+  IF ~(no_maximus) $
   THEN BEGIN
 
      IF N_ELEMENTS(MAXIMUS__maximus) GT 0 THEN BEGIN
@@ -751,8 +753,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.use_storm_stuff) THEN BEGIN
 
-     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
-       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus))  $
+     IF ~(no_maximus)  $
      THEN BEGIN
         GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
@@ -993,8 +994,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
 
-     IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) OR $
-          KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
+     IF ~(no_maximus) THEN BEGIN
         GET_AE_FASTDB_INDICES, $
            ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
            IMF_STRUCT=PASIS__IMF_struct, $
@@ -1229,8 +1229,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF ~(KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
-       KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)) THEN BEGIN
+  IF ~(no_maximus) THEN BEGIN
      
      IF KEYWORD_SET(get_plot_i) THEN BEGIN
         plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
@@ -1469,10 +1468,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Now time for data summary
 
   ;; IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-  PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? $
+  PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(no_maximus) ? $
                               (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? NEWELL__eSpec : NEWELL_I__ion) : $
                               MAXIMUS__maximus), $
-                             (KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) ? $
+                             (KEYWORD_SET(no_maximus) ? $
                               (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__indices__ion_list) : $
                               PASIS__plot_i_list), $
                              IMF_STRUCT=PASIS__IMF_struct, $
@@ -1485,7 +1484,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Saving indices?
-  IF KEYWORD_SET(save_alf_indices) AND ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+  IF KEYWORD_SET(save_alf_indices) AND ~KEYWORD_SET(no_maximus) THEN BEGIN
      IF N_ELEMENTS(PASIS__paramString_list) GT 0 THEN BEGIN
         alfDB_ind_filename    = PASIS__paramString_list.toArray() + '--' + 'alfDB_indices.sav'
      ENDIF ELSE BEGIN
@@ -1522,7 +1521,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                  CB_FORCE_OOBLOW=cb_force_oobLow, $
                  NCUSTOMINTEGRALS=PASIS__alfDB_plot_struct.nCustomIntegrals)
 
-  IF KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+  IF KEYWORD_SET(no_maximus) THEN BEGIN
      tmplt_h2dStr.is_alfDB   = 0B
      tmplt_h2dStr.is_eSpecDB = PASIS__alfDB_plot_struct.for_eSpec_DBs & tmplt_h2dStr.is_ionDB = PASIS__alfDB_plot_struct.for_ion_DBs
   ENDIF
@@ -1650,7 +1649,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         indices__eSpec     = PASIS__indices__eSpec_list[iMulti]
      ENDIF
 
-     IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.no_maximus) THEN BEGIN
+     IF ~KEYWORD_SET(no_maximus) THEN BEGIN
         plot_i             = PASIS__plot_i_list[iMulti]
      ENDIF
 
@@ -1694,7 +1693,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         INUMFLUX_ION_DATA=PASIS__iNumFlux_ion_data, $
         INDICES__ESPEC=indices__eSpec, $
         INDICES__ION=indices__ion, $
-        NO_MAXIMUS=PASIS__alfDB_plot_struct.no_maximus, $
+        NO_MAXIMUS=no_maximus, $
         ;; FOR_ESPEC_DB=for_eSpec_DB, $
         ESPEC__MLTSILATS=PASIS__eSpec__mlts, $
         ;; FOR_ION_DB=for_ion_DB, $
@@ -1925,6 +1924,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DEL_PS=PASIS__alfDB_plot_struct.del_PS, $
            HEMI=PASIS__MIMC_struct.hemi, $
            CLOCKSTR=clockStr, $
+           GRIDCOLOR=gridColor, $
            SUPPRESS_THICKGRID=suppress_thickGrid, $
            SUPPRESS_THINGRID=suppress_thinGrid, $
            SUPPRESS_GRIDLABELS=suppress_gridLabels, $

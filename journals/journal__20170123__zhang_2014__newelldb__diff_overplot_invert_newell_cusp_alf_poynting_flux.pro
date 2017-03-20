@@ -45,6 +45,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
   contour__nColors               = 8
   contour__CTBottom              = 0
   contour__CTIndex               = -60
+  gridColor                      = 'gray'
 
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
@@ -96,18 +97,19 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
                                     ['*eNumFl-all_fluxes_eSpec-2009_mono*','*tavgd_pf*'], $
                                     ['*eNumFl-all_fluxes_eSpec-2009_diff*','*tavgd_pf*']]
   ;; ;; op_contour__levels             = [20,50,80]
-  ;; op_contour__levels             = [10,40,70]
+  op_contour__levels             = [10,40,70]
   ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
   op_contour__percent            = 1
   op_plotRange                   = [0.00,0.10]
 
-  op_contour__levels             = [10,50,75]
+  ;; op_contour__levels             = [10,50,75]
 
 
   tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 0
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
+  suppress_MLT_labels            = 1
   suppress_gridLabels            = [0,1,1, $
                                     1,1,1, $
                                     1,1,1]
@@ -225,7 +227,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff
-  hemi                        = 'BOTH'
+  hemi                        = 'NORTH'
   minI                        = 60
   maxI                        = 90
   ;; maskMin                        = 100
@@ -565,6 +567,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_INVERT_NEWELL_CUSP_AL
         OUTPUTPLOTSUMMARY=outputPlotSummary, $
         DEL_PS=del_PS, $
         EPS_OUTPUT=eps_output, $
+        GRIDCOLOR=gridColor, $
         SUPPRESS_THICKGRID=suppress_thickGrid, $
         SUPPRESS_GRIDLABELS=suppress_gridLabels, $
         SUPPRESS_MLT_LABELS=suppress_MLT_labels, $

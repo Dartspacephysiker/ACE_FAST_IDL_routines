@@ -61,7 +61,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 1
+  make_OMNI_stuff                 = 0
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
@@ -72,7 +72,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   show_integrals                  = 1
   write_obsArr_textFile           = 0
-  write_obsArr__inc_IMF           = 1
+  write_obsArr__inc_IMF           = 0
   write_obsArr__orb_avg_obs       = 1
   justData                        = 0
   justInds                        = 0
@@ -104,13 +104,13 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 1
-  ePlots                             = besides_pFlux
-  eNumFlPlots                        = besides_pFlux
+  besides_pFlux                      = 0
+  ePlots                             = 0
+  eNumFlPlots                        = 1
   pPlots                             = 1
   ionPlots                           = besides_pFlux
   ;; probOccurrencePlot                 = besides_pFlux
-  tHistDenominatorPlot               = 1 ;besides_pFlux
+  tHistDenominatorPlot               = besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
 

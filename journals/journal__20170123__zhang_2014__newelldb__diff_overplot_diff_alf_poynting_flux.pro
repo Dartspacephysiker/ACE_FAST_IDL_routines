@@ -39,6 +39,8 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
   ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
   contour__percent               = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
 
+  gridColor                      = 'gray'
+
   ;; minMC                          = 5
   ;; maxNegMC                       = -5
 
@@ -91,6 +93,7 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__DIFF_OVERPLOT_DIFF_ALF_POYNTING_FLU
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
+  suppress_MLT_labels            = 1
   suppress_gridLabels            = [0,1,1, $
                                     1,1,1, $
                                     1,1,1]

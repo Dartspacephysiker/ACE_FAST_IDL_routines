@@ -7,8 +7,8 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_BROAD_ALF_POYNTING_F
 
   labels_for_presentation        = 1
 
-  use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  use_prev_plot_i                = 0
+  remake_prev_plot_file          = 1
 
   nonstorm                       = 1
   DSTcutoff                      = -50
@@ -566,13 +566,13 @@ PRO JOURNAL__20170123__ZHANG_2014__NEWELLDB__BROAD_OVERPLOT_BROAD_ALF_POYNTING_F
         NO_COLORBAR=no_colorbar, $
         CB_FORCE_OOBHIGH=cb_force_oobHigh, $
         CB_FORCE_OOBLOW=cb_force_oobLow, $
-        CONTOUR__LEVELS=contour__levels, $
-        CONTOUR__PERCENT=contour__percent, $
-        OVERPLOT_FILE=overplot_file, $
-        OVERPLOT_ARR=overplot_arr, $
-        OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
-        OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
-        OVERPLOT_PLOTRANGE=op_plotRange, $        
+        ;; CONTOUR__LEVELS=contour__levels, $
+        ;; CONTOUR__PERCENT=contour__percent, $
+        ;; OVERPLOT_FILE=overplot_file, $
+        ;; OVERPLOT_ARR=overplot_arr, $
+        ;; OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+        ;; OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+        ;; OVERPLOT_PLOTRANGE=op_plotRange, $        
         FANCY_PLOTNAMES=fancy_plotNames, $        
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
         REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
