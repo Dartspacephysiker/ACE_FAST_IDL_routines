@@ -1,7 +1,7 @@
 PRO LOAD_KP_DB,Kp,DBFILE=dbFile,DBDIR=dbDir, $
                LUN=lun
 
-  COMMON KP,KP__Kp,KP__dbDir,KP__dbFile
+  COMMON KPCOMMON,KP__Kp,KP__dbDir,KP__dbFile
 
   COMPILE_OPT idl2,strictarrsubs
 
