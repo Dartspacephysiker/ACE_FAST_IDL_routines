@@ -109,7 +109,8 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
   AEVal         = AE__AE.AE[AEInds]
   KpVal         = KP__Kp.Kp[KpInds]
 
-  struct        = {times : {mag   : mag_UTC[magInds], $
+  struct        = {times : {FAST  : struc.time, $
+                            mag   : mag_UTC[magInds], $
                             dst   : DST__Dst.time[dstInds], $
                             kp    : KP__Kp.time[KpInds], $
                             SWTP  : mag_UTC_SWTP[presInds]}, $
