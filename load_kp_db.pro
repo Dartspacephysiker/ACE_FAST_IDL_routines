@@ -1,4 +1,5 @@
 PRO LOAD_KP_DB,Kp,DBFILE=dbFile,DBDIR=dbDir, $
+               FORCE_LOAD_DB=force_load_db, $
                LUN=lun
 
   COMMON KPCOMMON,KP__Kp,KP__dbDir,KP__dbFile
@@ -44,7 +45,8 @@ PRO LOAD_KP_DB,Kp,DBFILE=dbFile,DBDIR=dbDir, $
   ENDIF ELSE BEGIN
      PRINTF,lun,'Kp DB already loaded! Not restoring ' + dbFile + '...'
   ENDELSE
-  KP__Kp      = Kp
+  STR_ELEMENT,Kp,'kp',FLOAT(Kp.kp)/10.D,/ADD_REPLACE
+  KP__Kp   = Kp
 
   RETURN
 

@@ -24,7 +24,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
      7: BEGIN
         t1 = STR_TO_TIME(tee1)
      END
-     8: BEGIN
+     5: BEGIN
         t1 = tee1
      END
   ENDCASE
@@ -39,7 +39,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
         7: BEGIN
            t2 = STR_TO_TIME(tee2)
         END
-        8: BEGIN
+        5: BEGIN
            t1 = tee2
         END
      ENDCASE
@@ -72,11 +72,11 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
   aeInds        = VALUE_CLOSEST2(AE__ae.time,struc.time,/CONSTRAIN)
   KpInds        = VALUE_CLOSEST2(KP__Kp.time,struc.time,/CONSTRAIN)
 
-  maxTDiff      = 61.
+  maxTDiff      = 90.
   maxDstTDiff   = 3600.
   IF (WHERE(ABS(mag_UTC[magInds]-struc.time      ) GT maxTDiff   ))[0] NE -1 OR $
-     (WHERE(ABS(mag_UTC_SW[swInds]-struc.time    ) GT maxTDiff))[0] NE -1 OR $
-     (WHERE(ABS(mag_UTC_SWTP[presInds]-struc.time) GT maxTDiff   ))[0] NE -1 OR $
+     (WHERE(ABS(mag_UTC_SW[swInds]-struc.time    ) GT maxTDiff*5))[0] NE -1 OR $
+     (WHERE(ABS(mag_UTC_SWTP[presInds]-struc.time) GT maxTDiff*5 ))[0] NE -1 OR $
      (WHERE(ABS(DST__Dst.time[dstInds]-struc.time     ) GT maxDstTDiff))[0] NE -1 OR $
      (WHERE(ABS(AE__AE.time[AEInds]-struc.time       ) GT maxDstTDiff))[0] NE -1 OR $
      (WHERE(ABS(KP__Kp.time[kpInds]-struc.time       ) GT maxDstTDiff))[0] NE -1 $
@@ -117,14 +117,15 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
                    ;; Bx    : Bx, $
                    ;; By    : By, $
                    ;; Bz    : Bz, $
-                   IMF   : IMF, $
-                   P     : press, $
-                   T     : temp, $
-                   V_SW  : V_SW, $
-                   VSpeed : swSpeed, $
-                   dst   : dstVal, $
-                   AE    : AEVal, $
-                   Kp    : KpVal}
+                   IMF    : TEMPORARY(IMF)      , $
+                   N      : TEMPORARY(protDens) , $
+                   P      : TEMPORARY(press)    , $
+                   T      : TEMPORARY(temp)     , $
+                   V_SW   : TEMPORARY(V_SW)     , $
+                   VSpeed : TEMPORARY(swSpeed)  , $
+                   dst    : TEMPORARY(dstVal)   , $
+                   AE     : TEMPORARY(AEVal)    , $
+                   Kp     : TEMPORARY(KpVal)}
 
   
   RETURN,struct
