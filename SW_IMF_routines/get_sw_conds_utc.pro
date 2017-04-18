@@ -1,6 +1,7 @@
 ;2017/04/07
 FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
-                          TIME_ARRAY=time_array
+                          TIME_ARRAY=time_array, $
+                          REABERRATE_VY=reaberrate_Vy
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
@@ -40,7 +41,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
            t2 = STR_TO_TIME(tee2)
         END
         5: BEGIN
-           t1 = tee2
+           t2 = tee2
         END
      ENDCASE
 
@@ -82,7 +83,10 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
      (WHERE(ABS(KP__Kp.time[kpInds]-struc.time       ) GT maxDstTDiff))[0] NE -1 $
   THEN BEGIN
      STOP
+     good_SW_dat = 0
   ENDIF
+  good_sw_dat   = 1 ;;Otherwise it's good
+
 
   Bx            = Bx[magInds]
   IF KEYWORD_SET(GSE) THEN BEGIN
@@ -98,7 +102,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
   IMF           = TRANSPOSE([[Bx],[By],[Bz]])
 
   swSpeed       = flow_speed[swInds]
-  V_SW          = TRANSPOSE([[Vx[swInds]],[Vy[swInds]],[Vz[swInds]]])
+  V_SW          = TRANSPOSE([[Vx[swInds]*(-1.D)],[Vy[swInds]],[Vz[swInds]]])
   ;; Vt            = Vt[swInds]
 
   press         = pressure[presInds]
@@ -125,9 +129,14 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
                    VSpeed : TEMPORARY(swSpeed)  , $
                    dst    : TEMPORARY(dstVal)   , $
                    AE     : TEMPORARY(AEVal)    , $
-                   Kp     : TEMPORARY(KpVal)}
+                   Kp     : TEMPORARY(KpVal), $
+                   valid  : KEYWORD_SET(good_SW_dat)}
 
   
+  IF KEYWORD_SET(reaberrate_vy) THEN BEGIN
+     struct.v_SW[1,*] += 29.78   ;Re-aberrate Vy (you know, earth's orbital motion of ~30 km/s)
+  ENDIF
+
   RETURN,struct
   
 END
