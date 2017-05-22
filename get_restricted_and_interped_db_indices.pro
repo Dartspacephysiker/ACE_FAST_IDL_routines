@@ -23,6 +23,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
    NO_BURSTDATA=no_burstData, $
    GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
    FOR_ESPEC_OR_ION_DB=for_eSpec_or_ion_db, $
+   FOR_SWAY_DB=for_sWay_DB, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
@@ -53,12 +54,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
                                     ;; /PRINT_PARAM_SUMMARY)
      
   ENDIF ELSE BEGIN
+
      good_i  = GET_CHASTON_IND(dbStruct,lun, $
                                DBTIMES=dbTimes, $
                                DBFILE=dbfile, $
                                RESET_GOOD_INDS=reset_good_inds, $
                                DO_NOT_SET_DEFAULTS=do_not_set_defaults, $
                                GET_TIME_I_NOT_ALFVENDB_I=get_time_i_not_alfvendb_i, $
+                               GET_SWAY_I_NOT_ALFVENDB_I=for_sWay_DB, $
                                FOR_ESPEC_DBS=for_eSpec_DBs, $
                                ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                IMF_STRUCT=IMF_struct, $
@@ -143,8 +146,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
            ;; tempClockStr  = IMF_struct.clockStr[iClock]
            IMF_struct.clock_i = iClock
            tempList      = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS( $
-                           KEYWORD_SET(for_eSpec_or_ion_db) ? $
-                           dbStruct.x : $
+                           (KEYWORD_SET(for_eSpec_or_ion_db) OR KEYWORD_SET(for_sWay_DB)) ? $
+                           dbStruct.(0) : $
                            dbTimes,good_i,delay, $
                            IMF_STRUCT=IMF_struct, $
                            MIMC_STRUCT=MIMC_struct, $
@@ -167,8 +170,8 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
      ENDIF ELSE BEGIN
         IMF_struct.clock_i = 0
         restricted_and_interped_i_list  = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS($
-                                          KEYWORD_SET(for_eSpec_or_ion_db) ? $
-                                          dbStruct.x : $
+                                          (KEYWORD_SET(for_eSpec_or_ion_db) OR KEYWORD_SET(for_sWay_DB)) ? $
+                                          dbStruct.(0) : $
                                           dbTimes, $
                                           good_i,delay, $
                                           /RESTRICT_TO_ALFVENDB_TIMES, $

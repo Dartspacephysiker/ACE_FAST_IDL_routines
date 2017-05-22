@@ -196,6 +196,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    RESTRICT_WITH_THESE_I=restrict_with_these_i, $
    FOR_ION_DBS=for_ion_DBs, $
    FOR_ESPEC_DBS=for_eSpec_DBs, $
+   FOR_SWAY_DB=for_sway_DB, $
    NEED_FASTLOC_I=need_fastLoc_i, $
    USE_STORM_STUFF=use_storm_stuff, $
    AE_STUFF=ae_stuff, $    
@@ -436,8 +437,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   @common__newell_ion_db.pro
   @common__pasis_lists.pro
   @common__overplot_vars.pro
+  @common__strangeway_bands.pro
 
-  IF KEYWORD_SET(for_eSpec_DBs) AND KEYWORD_SET(for_ion_DBs) THEN BEGIN
+  IF KEYWORD_SET(for_eSpec_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_sway_DB) THEN BEGIN
      PRINT,"Just do one database at a time. It hurts me and you to do more, after all"
      STOP
   ENDIF
@@ -455,9 +457,11 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         GET_FASTLOC_I=get_fastLoc_i, $
         GET_ESPEC_I=get_eSpec_i, $
         GET_ION_I=get_ion_i, $
+        GET_SWAY_I=get_sWay_i, $
         PLOT_I_LIST=plot_i_list, $
         INDICES__ESPEC_LIST=indices__eSpec_list, $
         INDICES__ION_LIST=indices_ion_list, $
+        INDICES__SWAY_LIST=indices_sWay_list, $
         GET_PARAMSTRING=get_paramString, $
         GET_PARMSTRINGLIST=get_paramString_list, $
         COMPARE_ALFDB_PLOT_STRUCT=compare_alfDB_plot_struct, $
@@ -465,16 +469,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         COMPARE_IMF_STRUCT=compare_IMF_struct       
 
   ENDIF ELSE BEGIN
+
      get_plot_i           = 1
      get_fastLoc_i        = 1
      get_eSpec_i          = 1
      get_paramString      = 1
      get_paramString_list = 1
      get_ion_i            = 1
+     get_sWay_i           = 1
 
      inds_reset           = 1
      DBs_reset            = 1
      plots_reset          = 1
+
   ENDELSE
 
   ;;In any case
@@ -496,6 +503,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         get_plot_i    = 0
         get_fastLoc_i = 0
         get_eSpec_i   = 0
+        get_ion_i     = 0
+        get_sWay_i    = 0
      ENDIF ELSE BEGIN
         ;; STOP
      ENDELSE
@@ -503,6 +512,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   get_OMNI_i = (KEYWORD_SET(get_eSpec_i  )            OR $
                 KEYWORD_SET(get_fastLoc_i)            OR $
+                KEYWORD_SET(get_sWay_i)               OR $
                 KEYWORD_SET(get_plot_i)  )            AND $
                 ;; KEYWORD_SET(print_avg_IMF_components) OR $
                 ;; KEYWORD_SET(save_master_OMNI_inds   ) OR $
@@ -513,7 +523,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;; IF KEYWORD_SET(PASIS__MIMC_struct.use_GEI) OR KEYWORD_SET(PASIS__MIMC_struct.use_GEI)
 
   no_maximus = KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__no_maximus) OR $
-               KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus)
+               KEYWORD_SET(PASIS__alfDB_plot_struct.ion__no_maximus  ) OR $
+               KEYWORD_SET(PASIS__alfDB_plot_struct.for_sway_DB)
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs we need
   IF ~(no_maximus) $
@@ -669,6 +680,39 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         FORCE_LOAD_DB=KEYWORD_SET(DBs_reset)
 
      ion_info = NEWELL_I__ion.info
+
+  ENDIF
+
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.sway_plotType) AND $
+     KEYWORD_SET(PASIS__alfDB_plot_struct.for_sway_DB)       $
+  THEN BEGIN
+
+     LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
+                                    DBDir=DBDir, $
+                                    DBFile=DBFile, $
+                                    ;; DB_TFILE=DB_tFile, $
+                                    CORRECT_FLUXES=correct_fluxes, $
+                                    DO_NOT_MAP_PFLUX=do_not_map_pflux, $
+                                    DO_NOT_MAP_IONFLUX=do_not_map_ionflux, $
+                                    DO_NOT_MAP_ANYTHING=no_mapping, $
+                                    COORDINATE_SYSTEM=coordinate_system, $
+                                    USE_LNG=use_lng, $
+                                    USE_AACGM_COORDS=use_AACGM, $
+                                    USE_GEI_COORDS=use_GEI, $
+                                    USE_GEO_COORDS=use_GEO, $
+                                    USE_MAG_COORDS=use_MAG, $
+                                    USE_SDT_COORDS=use_SDT, $
+                                    USING_HEAVIES=using_heavies, $
+                                    FORCE_LOAD=force_load, $
+                                    JUST_TIME=just_time, $
+                                    LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
+                                    LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
+                                    LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
+                                    CHECK_DB=check_DB, $
+                                    QUIET=quiet, $
+                                    CLEAR_MEMORY=clear_memory, $
+                                    NO_MEMORY_LOAD=noMem, $
+                                    LUN=lun
 
   ENDIF
 
@@ -990,6 +1034,50 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
+     IF PASIS__alfDB_plot_struct.for_sway_DB AND KEYWORD_SET(get_sWay_i) $
+     THEN BEGIN 
+
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+           IMF_STRUCT=PASIS__IMF_struct, $
+           MIMC_STRUCT=PASIS__MIMC_struct, $
+           /GET_SWAY_I_NOT_ALFDB_I, $
+           ;; DSTCUTOFF=dstCutoff, $
+           ;; SMOOTH_DST=smooth_dst, $
+           USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+           NONSTORM_I=ns_sWay_i, $
+           MAINPHASE_I=mp_sWay_i, $
+           RECOVERYPHASE_I=rp_sWay_i, $
+           STORM_DST_I=s_dst_sWay_i, $
+           NONSTORM_DST_I=ns_dst_sWay_i, $
+           MAINPHASE_DST_I=mp_dst_sWay_i, $
+           RECOVERYPHASE_DST_I=rp_dst_sWay_i, $
+           N_STORM=n_sWay_s, $
+           N_NONSTORM=n_sWay_ns, $
+           N_MAINPHASE=n_sWay_mp, $
+           N_RECOVERYPHASE=n_sWay_rp, $
+           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
+              restrict_with_these_sWay_i = ns_sWay_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.mainPhase): BEGIN
+              restrict_with_these_sWay_i = mp_sWay_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.recoveryPhase): BEGIN
+              restrict_with_these_sWay_i = rp_sWay_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+              PRINTF,lun,'Restricting sWayDB with each storm phase in turn ...'
+              restrict_with_these_sWay_i = LIST(ns_sWay_i,mp_sWay_i,rp_sWay_i)
+           END
+        ENDCASE
+
+
+     ENDIF
+
   ENDIF
 
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.ae_stuff) THEN BEGIN
@@ -1168,7 +1256,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      ENDIF
 
-     ;;Now eSpecDB
+     ;;Now ionDB
      IF PASIS__alfDB_plot_struct.for_ion_DBs AND KEYWORD_SET(get_ion_i) $
      THEN BEGIN 
 
@@ -1207,6 +1295,50 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
               PRINTF,lun,'Restricting ionDB with low and high ' + navn + ' indices in turn ...'
               restrict_with_these_i = LIST(high_ion_i,low_ion_i)
+           END
+        ENDCASE
+
+     ENDIF
+
+     ;;Now sWayDB
+     IF PASIS__alfDB_plot_struct.for_sWay_DBs AND KEYWORD_SET(get_sWay_i) $
+     THEN BEGIN 
+
+        GET_AE_FASTDB_INDICES, $
+           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+           IMF_STRUCT=IMF_struct, $
+           MIMC_STRUCT=MIMC_struct, $
+           /GET_IONDB_I_NOT_ALFDB_I, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           ;; AECUTOFF=AEcutoff, $
+           ;; SMOOTH_AE=smooth_AE, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           HIGH_I=high_sWay_i, $
+           LOW_I=low_sWay_i, $
+           N_HIGH=n_sWay_high, $
+           N_LOW=n_sWay_low, $
+           OUT_NAME=navn, $
+           HIGH_AE_T1=high_ae_t1, $
+           LOW_AE_T1=low_ae_t1, $
+           HIGH_AE_T2=high_ae_t2, $
+           LOW_AE_T2=low_ae_t2
+        
+        CASE 1 OF
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_high): BEGIN
+              PRINTF,lun,'Restricting sWayDB with high ' + navn + ' indices ...'
+              restrict_with_these_sWay_i = high_sWay_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_low): BEGIN
+              PRINTF,lun,'Restricting sWayDB with low ' + navn + ' indices ...'
+              restrict_with_these_sWay_i = low_sWay_i
+           END
+           KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
+              PRINTF,lun,'Restricting sWayDB with low and high ' + navn + ' indices in turn ...'
+              restrict_with_these_i = LIST(high_sWay_i,low_sWay_i)
            END
         ENDCASE
 
@@ -1357,6 +1489,42 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
+  IF KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB) THEN BEGIN
+
+     IF KEYWORD_SET(get_sWay_i) THEN BEGIN
+
+        plot_i_list  = GET_RESTRICTED_AND_INTERPED_DB_INDICES( $
+                       SWAY__DB, $
+                       ;; DBTIMES=MAXIMUS__times, $
+                       DBFILE=dbfile, $
+                       /FOR_SWAY_DB, $
+                       LUN=lun, $
+                       ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                       IMF_STRUCT=PASIS__IMF_struct, $
+                       MIMC_STRUCT=PASIS__MIMC_struct, $
+                       RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
+                       RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+                       RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
+                       /DO_NOT_SET_DEFAULTS, $
+                       PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
+                       PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
+                       PRINT_OMNI_COVARIANCES=print_OMNI_covariances, $
+                       SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
+                       MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
+                       OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
+                       CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
+                       RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
+                       NO_BURSTDATA=no_burstData, $
+                       DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonMem), $
+                       TXTOUTPUTDIR=txtOutputDir)
+
+        ;;These can be reloaded, if we like
+        PASIS__indices__sWay_list = TEMPORARY(plot_i_list)
+
+     ENDIF
+
+  ENDIF
+
   ;;Save in any case?
   ;; IF KEYWORD_SET(use_prev_plot_i) THEN BEGIN
   SAVE_PASIS_VARS,NEED_FASTLOC_I=need_fastLoc_i, $
@@ -1405,6 +1573,13 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         saveStr += 'out_i_ion_list,'
         nInfo++
         infoStr += (nInfo GT 1 ? ',' : '') + '"ion",ion_info'
+     ENDIF
+
+     IF N_ELEMENTS(PASIS__indices__sWay_list) GT 0 THEN BEGIN
+        out_i_sWay_list  = PASIS__indices__sWay_list
+        saveStr += 'out_i_sWay_list,'
+        nInfo++
+        infoStr += (nInfo GT 1 ? ',' : '') + '"sWay",sWay_info'
      ENDIF
 
      IF nInfo GT 0 THEN BEGIN
@@ -1468,18 +1643,20 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Now time for data summary
 
   ;; IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-  PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(no_maximus) ? $
-                              (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? NEWELL__eSpec : NEWELL_I__ion) : $
-                              MAXIMUS__maximus), $
-                             (KEYWORD_SET(no_maximus) ? $
-                              (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__indices__ion_list) : $
-                              PASIS__plot_i_list), $
-                             IMF_STRUCT=PASIS__IMF_struct, $
-                             MIMC_STRUCT=PASIS__MIMC_struct, $
-                             ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
-                             PARAMSTRING=PASIS__paramString, $
-                             PARAMSTR_LIST=PASIS__paramString_list, $
-                             LUN=lun
+  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB) THEN BEGIN
+     PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(no_maximus) ? $
+                                 (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? NEWELL__eSpec : NEWELL_I__ion) : $
+                                 MAXIMUS__maximus), $
+                                (KEYWORD_SET(no_maximus) ? $
+                                 (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : PASIS__indices__ion_list) : $
+                                 PASIS__plot_i_list), $
+                                IMF_STRUCT=PASIS__IMF_struct, $
+                                MIMC_STRUCT=PASIS__MIMC_struct, $
+                                ALFDB_PLOT_STRUCT=PASIS__alfDB_plot_struct, $
+                                PARAMSTRING=PASIS__paramString, $
+                                PARAMSTR_LIST=PASIS__paramString_list, $
+                                LUN=lun
+  ENDIF
   ;; ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1523,7 +1700,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   IF KEYWORD_SET(no_maximus) THEN BEGIN
      tmplt_h2dStr.is_alfDB   = 0B
-     tmplt_h2dStr.is_eSpecDB = PASIS__alfDB_plot_struct.for_eSpec_DBs & tmplt_h2dStr.is_ionDB = PASIS__alfDB_plot_struct.for_ion_DBs
+     tmplt_h2dStr.is_eSpecDB = PASIS__alfDB_plot_struct.for_eSpec_DBs
+     tmplt_h2dStr.is_ionDB   = PASIS__alfDB_plot_struct.for_ion_DBs
+     tmplt_h2dStr.is_swayDB  = PASIS__alfDB_plot_struct.for_sWay_DB
   ENDIF
 
   ;;Doing grossrates?
@@ -1651,7 +1830,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      IF ~KEYWORD_SET(no_maximus) THEN BEGIN
         plot_i             = PASIS__plot_i_list[iMulti]
-     ENDIF
+     ENDIF ELSE BEGIN
+        plot_i             = PASIS__indices__sWay_list[iMulti]
+     ENDELSE
 
      IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
         fastLocInterped_i  = PASIS__fastLocInterped_i_list[iMulti]

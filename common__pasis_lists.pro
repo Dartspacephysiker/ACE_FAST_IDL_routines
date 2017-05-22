@@ -13,6 +13,7 @@ COMMON PASIS, $
    PASIS__iNumFlux_ion_data      , $ ;= !NULL
    PASIS__ion_delta_t            , $ ;= !NULL
    PASIS__ion__MLTs              , $ ;= !NULL        
+   PASIS__indices__sWay_list     , $ ;= !NULL        
    ;; PASIS__ion__ILATs             , $ ;= !NULL
    PASIS__alfDB_plot_struct      , $ ;= !NULL
    PASIS__IMF_struct             , $ ;= !NULL

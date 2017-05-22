@@ -10,9 +10,11 @@ PRO CHECK_PASIS_VARS, $
    GET_FASTLOC_I=get_fastLoc_i, $
    GET_ESPEC_I=get_eSpec_i, $
    GET_ION_I=get_ion_i, $
+   GET_SWAY_I=get_sWay_i, $
    PLOT_I_LIST=plot_i_list, $
    INDICES__ESPEC_LIST=indices__eSpec_list, $
    INDICES__ION_LIST=indices_ion_list, $
+   INDICES__SWAY_LIST=indices_sWay_list, $
    GET_PARAMSTRING=get_paramString, $
    GET_PARMSTRINGLIST=get_paramString_list, $
    COMPARE_ALFDB_PLOT_STRUCT=compare_alfDB_plot_struct, $
@@ -336,6 +338,12 @@ PRO CHECK_PASIS_VARS, $
      get_ion_i             = 0
   ENDIF ELSE BEGIN
      get_ion_i             = 1
+  ENDELSE
+
+  IF N_ELEMENTS(PASIS__indices__sWay_list) GT 0 THEN BEGIN
+     get_sWay_i            = 0
+  ENDIF ELSE BEGIN
+     get_sWay_i            = 1
   ENDELSE
 
   IF N_ELEMENTS(PASIS__fastLocInterped_i_list) GT 0 THEN BEGIN
