@@ -6,7 +6,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   
   ;; do_timeAvg_fluxQuantities = 1
   ;; logAvgPlot                = 0
-  ;; medianPlot                = 0
+  medianPlot                = 1
   ;; divide_by_width_x         = 1
 
   ;; use_Lng                   = 1
@@ -38,32 +38,46 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   ;; write_obsArr_textFile     = 1
 
-  sway_plotType             = ['pflux.b.dc','pflux.b.ac', $
-                               'db.p.dc'   ,'db.p.ac', $
-                               'db.v.dc'   ,'db.v.ac']
+  sway_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
+                               'db.p.dc'    ,'db.p.ac'    , $
+                               'db.v.dc'    ,'db.v.ac'    , $
+                               'e.alongV.dc','e.alongV.ac']
 
-  ;; log_swayPlot              = [0,0, $
-  ;;                              0,0, $
-  ;;                              0,0]
+  log_swayPlot              = [0,0, $
+                               0,0, $
+                               0,0, $
+                               0,0]
 
-  ;; swayPlotRange             = [[0,100],[0,4.0], $
-  ;;                              [0,200],[0,0.5], $
-  ;;                              [0,400],[0,0.2]]
+  swayPlotRange             = [[0,100],[0,4.0], $
+                               [0,200],[0,3.5], $
+                               [0,400],[0,3.5], $
+                               [0,400],[0,3.5]]
 
+  CASE 1 OF
+     KEYWORD_SET(medianPlot) AND ((WHERE(log_swayPlot EQ 1))[0] EQ -1): BEGIN
+
+        swayPlotRange             = [[0,4.3],[0,0.03], $
+                                     [0,70],[0,1.7], $
+                                     [0,70],[0,1.7], $
+                                     [0,31],[0,10.5]]
+
+     END
+     ELSE:
+  ENDCASE
   ;;loggers
-  log_swayPlot              = [1,1, $
-                               1,0, $
-                               1,0]
+  ;; log_swayPlot              = [1,1, $
+  ;;                              1,0, $
+  ;;                              1,0]
   ;; log_swayPlot              = REPLICATE(1,6)
 
-  swayPlotRange             = [[1D0,1D3],[1D-2,1D1], $
-                               ;; [1D0,1D3],[1D-2,1D1], $
-                               ;; [1D0,1D3],[1D-2,1D1]]
-                               [1D0,1D3],[0,3.5], $
-                               [1D0,1D3],[0,3.5]]
+  ;; swayPlotRange             = [[1D0,1D3],[1D-2,1D1], $
+  ;;                              ;; [1D0,1D3],[1D-2,1D1], $
+  ;;                              ;; [1D0,1D3],[1D-2,1D1]]
+  ;;                              [1D0,1D3],[0,3.5], $
+  ;;                              [1D0,1D3],[0,3.5]]
 
   ;; noNeg_sWay                = 1
-  ;; abs_sWay                  = 1
+  abs_sWay                  = 1
   ;; noPos_sWay                = 1
 
   ;; ePlots                         = 0
@@ -150,7 +164,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   ;;                                   [900,4300], $
   ;;                                   [1000,4300]]
 
-  altRange                       = [[2000,4300]]
+  altRange                       = [[300,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
