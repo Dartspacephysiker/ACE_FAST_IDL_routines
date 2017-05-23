@@ -1308,7 +1308,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
            IMF_STRUCT=IMF_struct, $
            MIMC_STRUCT=MIMC_struct, $
-           /GET_IONDB_I_NOT_ALFDB_I, $
+           /GET_SWAY_I_NOT_ALFDB_I, $
            COORDINATE_SYSTEM=coordinate_system, $
            ;; AECUTOFF=AEcutoff, $
            ;; SMOOTH_AE=smooth_AE, $
