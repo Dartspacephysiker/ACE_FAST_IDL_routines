@@ -288,6 +288,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
         ABSMAGC=absMagC, $
         ABSOXYFLUX=absOxyFlux, $
         ABSPFLUX=absPflux, $
+        ABS_SWAY=abs_sWay, $
         NONEGCHARE=noNegCharE, $
         NONEGCHARIE=noNegCharie, $
         NONEGEFLUX=noNegEflux, $
@@ -296,6 +297,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
         NONEGMAGC=noNegMagC, $
         NONEGOXYFLUX=noNegOxyFlux, $
         NONEGPFLUX=noNegPflux, $
+        NONEG_SWAY=noNeg_sWay, $
         NOPOSCHARE=noPosCharE, $
         NOPOSCHARIE=noPosCharie, $
         NOPOSEFLUX=noPosEFlux, $
@@ -304,6 +306,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
         NOPOSMAGC=noPosMagC, $
         NOPOSOXYFLUX=noPosOxyFlux, $
         NOPOSPFLUX=noPosPflux, $
+        NOPOS_SWAY=noPos_sWay, $
         LOGCHAREPLOT=logCharEPlot, $
         LOGCHARIEPLOT=logChariePlot, $
         LOGEFPLOT=logEfPlot, $
