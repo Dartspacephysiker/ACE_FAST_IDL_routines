@@ -38,7 +38,10 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   ;; write_obsArr_textFile     = 1
 
-  sway_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
+  sWay_use_8Hz_DB           = 0
+  ;; sWay_maxMagFlag           = 0
+
+  sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
                                'db.p.dc'    ,'db.p.ac'    , $
                                'db.v.dc'    ,'db.v.ac'    , $
                                'e.alongV.dc','e.alongV.ac']
@@ -79,72 +82,6 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   ;; noNeg_sWay                = 1
   abs_sWay                  = 1
   ;; noPos_sWay                = 1
-
-  ;; ePlots                         = 0
-  ;; eNumFlPlots                    = 0
-  ;; pPlots                         = 1
-  nOrbsWithEventsPerContribOrbsPlot = 0
-  ;; ionPlots                       = 0
-  ;; probOccurrencePlot             = 0
-  ;; sum_electron_and_poyntingflux  = 0
-  ;; tHistDenominatorPlot           = 0
-
-  nowepco_range                  = [0,0.5]
-  nowepco_autoscale              = 0
-
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
-  ;; eFluxPlotType                  = 'Max'
-  ;; ePlotRange                     = [0,1]
-  ;; logEfPlot                      = 0
-  ;; noNegEflux                     = 0
-
-  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,1], $
-  ;;                             [0,2e9]]
-  ;; eNumFlPlotType                 = 'ESA_Number_flux'
-  ;; noNegENumFl                    = 0
-  ;; logENumFlPlot                  = 0
-  ;; ENumFlPlotRange                = [0,2e9]
-
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [0.05,50.0]
-  ;; CASE 1 OF
-  ;;    KEYWORD_SET(do_timeAvg_fluxQuantities): BEGIN
-  ;;       logPfPlot   = 0
-  ;;       PPlotRange  = [0.00,0.15]
-  ;;    END
-  ;;    KEYWORD_SET(logAvgPlot): BEGIN
-  ;;       logPfPlot   = 0
-  ;;       PPlotRange  = [0.00,1.1]
-  ;;    END
-  ;;    ELSE: BEGIN
-  ;;    END
-  ;; ENDCASE
-
-  ;; ifluxPlotType                  = 'Integ_Up'
-  ;; noNegIflux                     = 1
-  ;; ;; logIfPlot                   = 1
-  ;; ;; IPlotRange                  = [1e6,1e8]
-  ;; logIfPlot                      = 0
-  ;; IPlotRange                     = [0,3e8]
-  
-  ;; ;; logProbOccurrence              = 1
-  ;; ;; probOccurrenceRange            = [0.001,0.1]
-  ;; logProbOccurrence              = 0
-  ;; probOccurrenceRange            = [0.0,0.5]
-
-  ;; summed_eFlux_pFluxplotRange    = [0,1.5]
-  
-  ;; ;; tHistDenomPlotRange            = 
-  ;; ;; tHistDenomPlotNormalize        = 
-  ;; tHistDenomPlotAutoscale        = 1
-  ;; tHistDenomPlot_noMask          = 1
 
   ;;Otros
   reset_good_inds                = 1
@@ -250,7 +187,7 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
      PLOT_ALFVEN_STATS__SETUP, $
         FOR_ESPEC_DBS=for_eSpec_DBs, $
         FOR_ION_DBS=for_ion_DBs, $
-        FOR_SWAY_DB=for_sway_DB, $
+        FOR_SWAY_DB=for_sWay_DB, $
         NEED_FASTLOC_I=need_fastLoc_i, $
         USE_STORM_STUFF=use_storm_stuff, $
         AE_STUFF=ae_stuff, $    
@@ -357,10 +294,12 @@ PRO JOURNAL__20170522__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
         LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
         LOG_NEWELLPLOT=log_newellPlot, $
         LOG_NOWEPCOPLOT=log_nowepcoPlot, $
-        SWAY_PLOTTYPE=sway_plotType, $
+        SWAY_PLOTTYPE=sWay_plotType, $
         LOG_SWAYPLOT=log_swayPlot, $
         SWAYPLOT_AUTOSCALE=swayPlot_autoScale, $
         SWAYPLOTRANGE=swayPlotRange, $
+        SWAY_MAXMAGFLAG=sWay_maxMagFlag, $
+        SWAY_USE_8HZ_DB=sWay_use_8Hz_DB, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
         FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $

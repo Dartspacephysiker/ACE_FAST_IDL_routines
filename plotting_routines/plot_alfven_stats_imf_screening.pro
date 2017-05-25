@@ -460,8 +460,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         GET_SWAY_I=get_sWay_i, $
         PLOT_I_LIST=plot_i_list, $
         INDICES__ESPEC_LIST=indices__eSpec_list, $
-        INDICES__ION_LIST=indices_ion_list, $
-        INDICES__SWAY_LIST=indices_sWay_list, $
+        INDICES__ION_LIST=indices__ion_list, $
+        INDICES__SWAY_LIST=indices__sWay_list, $
         GET_PARAMSTRING=get_paramString, $
         GET_PARMSTRINGLIST=get_paramString_list, $
         COMPARE_ALFDB_PLOT_STRUCT=compare_alfDB_plot_struct, $
@@ -690,6 +690,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
                                     DBDir=DBDir, $
                                     DBFile=DBFile, $
+                                    USE_8HZ_DB=PASIS__alfDB_plot_struct.sWay_use_8Hz_DB, $
                                     ;; DB_TFILE=DB_tFile, $
                                     CORRECT_FLUXES=correct_fluxes, $
                                     DO_NOT_MAP_PFLUX=do_not_map_pflux, $
@@ -2021,7 +2022,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         ;; ENDIF
      ENDIF ELSE BEGIN
         plot_i            = KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? PASIS__indices__eSpec_list : $
-                            KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs) ? PASIS__indices__ion_list : PASIS__plot_i_list
+                            KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs  ) ? PASIS__indices__ion_list   : $
+                            KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB  ) ? PASIS__indices__sWay_list  : PASIS__plot_i_list
      ENDELSE
 
      IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.squarePlot) THEN BEGIN
