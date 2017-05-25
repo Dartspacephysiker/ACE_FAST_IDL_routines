@@ -22,7 +22,7 @@ PRO JOURNAL__20170524__ZHANG_2014__SWAY_DB
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
   logAvgPlot                         = 0
-  medianPlot                         = 0
+  medianPlot                         = 1
   divide_by_width_x                  = 1
   org_plots_by_folder                = 1
 
@@ -52,6 +52,10 @@ PRO JOURNAL__20170524__ZHANG_2014__SWAY_DB
   hemi                           = 'NORTH'
   minI                           = 60
   maxI                           = 90
+
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -60
 
   binI                           = 2.0
 
@@ -165,6 +169,13 @@ PRO JOURNAL__20170524__ZHANG_2014__SWAY_DB
                                      [0,70],[0,1.7], $
                                      [0,70],[0,1.7], $
                                      [0,31],[0,10.5]]
+
+        IF DSTcutoff EQ -100 AND ~KEYWORD_SET(medianPlot) THEN BEGIN
+           swayPlotRange          = [[0,10],[0,0.1], $
+                                     [0,300],[0,4], $
+                                     [0,400],[0,9], $
+                                     [0,70],[0,30]]
+        ENDIF
 
      END
      ELSE:
