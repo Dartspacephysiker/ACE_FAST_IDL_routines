@@ -2,7 +2,7 @@
 PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   use_prev_plot_i           = 1
-  remake_prev_plot_file     = 1
+  remake_prev_plot_file     = 0
   
   ;; do_timeAvg_fluxQuantities = 1
   ;; logAvgPlot                = 0
@@ -68,27 +68,46 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   ;;                              [0,400],[0,3.5], $
   ;;                              [0,400],[0,3.5]]
 
-  sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh']
-
-  log_swayPlot              = [0,0,0]
-
-  swayPlotRange             = [[0,100],[0,4.0],[0,4.0]]
-                               ;; [0,200],[0,3.5], $
-                               ;; [0,400],[0,3.5], $
-                               ;; [0,400],[0,3.5]]
-
+  FOR_PFLUX = 0
+  FOR_DB    = 1
 
   CASE 1 OF
-     KEYWORD_SET(medianPlot) AND ((WHERE(log_swayPlot EQ 1))[0] EQ -1): BEGIN
+     KEYWORD_SET(FOR_PFLUX): BEGIN
+        sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh']
 
-        swayPlotRange             = [[0,4.3],[0,0.1],[0,0.1]]; $
-                                     ;; [0,70],[0,1.7], $
-                                     ;; [0,70],[0,1.7], $
-                                     ;; [0,31],[0,10.5]]
+        log_swayPlot              = [0,0,0]
+
+        swayPlotRange             = [[0,100],[0,4.0],[0,4.0]]
+        ;; [0,200],[0,3.5], $
+        ;; [0,400],[0,3.5], $
+        ;; [0,400],[0,3.5]]
+        CASE 1 OF
+           KEYWORD_SET(medianPlot) AND ((WHERE(log_swayPlot EQ 1))[0] EQ -1): BEGIN
+
+              swayPlotRange             = [[0,4.3],[0,0.1],[0,0.1]] ; $
+              ;; [0,70],[0,1.7], $
+              ;; [0,70],[0,1.7], $
+              ;; [0,31],[0,10.5]]
+
+           END
+           ELSE:
+        ENDCASE
 
      END
-     ELSE:
+     KEYWORD_SET(FOR_DB): BEGIN
+        sWay_plotType             = ['dB.p.dc' ,'dB.p.ac' ,'dB.p.acHigh', $
+                                     'dB.v.dc' ,'dB.v.ac' ,'dB.v.acHigh']
+
+        log_swayPlot              = [0,0,0, $
+                                     0,0,0]
+
+        swayPlotRange             = [[0,100],[0,3.5],[0,3.5],  $
+                                     [0,100],[0,3.5],[0,3.5]]
+
+
+     END
   ENDCASE
+
   ;;loggers
   ;; log_swayPlot              = [1,1, $
   ;;                              1,0, $
