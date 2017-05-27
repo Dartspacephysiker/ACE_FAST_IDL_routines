@@ -691,6 +691,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                     DBDir=DBDir, $
                                     DBFile=DBFile, $
                                     USE_8HZ_DB=PASIS__alfDB_plot_struct.sWay_use_8Hz_DB, $
+                                    USE_8HZ__SWAY_PLOTTYPE=PASIS__alfDB_plot_struct.sway_plotType, $
                                     ;; DB_TFILE=DB_tFile, $
                                     CORRECT_FLUXES=correct_fluxes, $
                                     DO_NOT_MAP_PFLUX=do_not_map_pflux, $
