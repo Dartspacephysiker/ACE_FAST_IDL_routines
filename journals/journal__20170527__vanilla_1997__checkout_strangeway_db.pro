@@ -38,10 +38,10 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   sWay_use_8Hz_DB           = 1
   ;; sWay_maxMagFlag           = 0
 
-  ;; sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
-  ;;                              'db.p.dc'    ,'db.p.ac'    , $
-  ;;                              'db.v.dc'    ,'db.v.ac'    , $
-  ;;                              'e.alongV.dc','e.alongV.ac']
+  ;; sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' , $
+  ;;                              'db.p.DC'    ,'db.p.AC'    , $
+  ;;                              'db.v.DC'    ,'db.v.AC'    , $
+  ;;                              'e.alongV.DC','e.alongV.AC']
 
   ;; log_swayPlot              = [0,0, $
   ;;                              0,0, $
@@ -53,10 +53,10 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
                                [0,400],[0,3.5], $
                                [0,400],[0,3.5]]
 
-  ;; sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh', $
-  ;;                              'db.p.dc'    ,'db.p.ac'    ,'db.p.acHigh'   , $
-  ;;                              'db.v.dc'    ,'db.v.ac'    ,'db.v.acHigh'   , $
-  ;;                              'e.alongV.dc','e.alongV.ac','e.alongV.acHigh']
+  ;; sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' ,'pflux.b.ACHigh', $
+  ;;                              'db.p.DC'    ,'db.p.AC'    ,'db.p.ACHigh'   , $
+  ;;                              'db.v.DC'    ,'db.v.AC'    ,'db.v.ACHigh'   , $
+  ;;                              'e.alongV.DC','e.alongV.AC','e.alongV.ACHigh']
 
   ;; log_swayPlot              = [0,0, $
   ;;                              0,0, $
@@ -73,7 +73,7 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   CASE 1 OF
      KEYWORD_SET(FOR_PFLUX): BEGIN
-        sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh','pFlux.B.ACBoth']
+        sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' ,'pflux.b.ACHigh','pFlux.B.ACBoth']
 
         log_swayPlot              = [0,0,0]
 
@@ -84,7 +84,7 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
         CASE 1 OF
            KEYWORD_SET(medianPlot) AND ((WHERE(log_swayPlot EQ 1))[0] EQ -1): BEGIN
 
-              swayPlotRange             = [[0,4.3],[0,0.1],[0,0.1]] ; $
+              swayPlotRange       = [[0,4.3],[0,0.1],[0,0.1]] ; $
               ;; [0,70],[0,1.7], $
               ;; [0,70],[0,1.7], $
               ;; [0,31],[0,10.5]]
@@ -95,14 +95,14 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
      END
      KEYWORD_SET(FOR_DB): BEGIN
-        sWay_plotType             = ['dB.p.dc' ,'dB.p.ac' ,'dB.p.acHigh', $
-                                     'dB.v.dc' ,'dB.v.ac' ,'dB.v.acHigh']
+        sWay_plotType             = ['dB.p.DC' ,'dB.p.AC' ,'dB.p.ACHigh','dB.p.ACBoth', $
+                                     'dB.v.DC' ,'dB.v.AC' ,'dB.v.ACHigh','dB.v.ACBoth']
 
         log_swayPlot              = [0,0,0, $
                                      0,0,0]
 
-        swayPlotRange             = [[0,100],[0,3.5],[0,3.5],  $
-                                     [0,100],[0,3.5],[0,3.5]]
+        swayPlotRange             = [[0,55],[0,1.8],[0,0.7],  $
+                                     [0,65],[0,1.4],[0,0.55]]
 
 
      END
