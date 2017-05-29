@@ -82,11 +82,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
            qualifying_db_ii = WHERE( $
                               (startT[checkStart] LE dbTimes[db_i]) AND $
                               ((dbTimes[db_i] - startT[checkStart]) LT gaps[checkStart]), $
-                              nKeep)
-
-
-
-
+                              nQualify)
 
            ;; FOR k=0,n_streaks-1 DO BEGIN
            ;;    tmpStartT = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii[k]]]+IMF_struct.delay[iDel]-C_OMNI__stableIMF*60.
