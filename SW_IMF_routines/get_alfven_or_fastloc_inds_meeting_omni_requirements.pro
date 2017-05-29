@@ -105,7 +105,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                  MIN(gaps)/60., $
                  MEDIAN(gaps)/60., $
                  MEAN(gaps)/60., $
-                 MAX(gaps)
+                 MAX(gaps)/60.
            ;; nQualify = N_ELEMENTS(qualifying_db_ii)
 
            PRINT
