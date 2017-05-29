@@ -61,20 +61,20 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
      IF bro THEN BEGIN
 
         qualifying_db_ii = !NULL
-        allowable_gap    = 2
+        allowable_gap    = 3
 
         GET_STREAKS,stable_OMNI_i, $
                     START_I=start_OMNI_ii, $
                     STOP_I=stop_OMNI_ii, $
                     OUT_STREAKLENS=streakLens, $
                     N_STREAKS=n_streaks, $
-                    SINGLE_I=single_OMNI_ii, $
-                    ALLOWABLE_GAP=allowable_gap
+                    SINGLE_I=single_OMNI_ii;; , $
+                    ;; ALLOWABLE_GAP=allowable_gap
 
         IF n_streaks GT 0 THEN BEGIN
 
            FOR k=0,n_streaks-1 DO BEGIN
-              tmpStartT = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii[k]]]+IMF_struct.delay[iDel]
+              tmpStartT = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii[k]]]+IMF_struct.delay[iDel]-C_OMNI__stableIMF*60.
               tmpStopT  = C_OMNI__mag_UTC[stable_omni_i[stop_OMNI_ii[k] ]]+IMF_struct.delay[iDel]
 
               IF tmpStartT GT tmpStopT THEN STOP
@@ -85,7 +85,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                  qualifying_db_ii = [qualifying_db_ii,TEMPORARY(qualifying_db_iiTmp)]
               ENDIF
 
-              PRINT,FORMAT='(I0,T10,A0,"-",A0," (",F05.1," min)",T80,I0)',k,TIME_TO_STR(tmpStartT),TIME_TO_STR(tmpStopT),(tmpStopT-tmpStartT)/60.,nQualify
+              PRINT,FORMAT='(I0,T10,A0,"-",A0," (",F07.1," min)",T80,I0)',k,TIME_TO_STR(tmpStartT),TIME_TO_STR(tmpStopT),(tmpStopT-tmpStartT)/60.,nQualify
 
            ENDFOR
 

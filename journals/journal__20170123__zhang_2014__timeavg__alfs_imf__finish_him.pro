@@ -2,7 +2,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  use_prev_plot_i                = 1
+  use_prev_plot_i                = 0
   remake_prev_plot_file          = 1
 
   do_what_everyone_does    = 1
@@ -386,6 +386,7 @@ PRO JOURNAL__20170123__ZHANG_2014__TIMEAVG__ALFS_IMF__FINISH_HIM
         RESOLUTION_DELAY=delayDeltaSec, $
         BINOFFSET_DELAY=binOffset_delay, $
         STABLEIMF=stableIMF, $
+        IMF_ALLOWABLE_STREAK_DT=IMF_allowable_streak_dt, $
         SMOOTHWINDOW=smoothWindow, $
         INCLUDENOCONSECDATA=includeNoConsecData, $
         EARLIEST_UTC=earliest_UTC, $

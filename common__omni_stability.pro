@@ -16,6 +16,7 @@
      C_OMNI__stable_i                   , $
      C_OMNI__stableIMF                  , $
      C_OMNI__HAVE_STABLE_INDS           , $
+     C_OMNI__allowable_gap              , $
      C_OMNI__magCoords                  , $
      C_OMNI__combined_i                 , $
      C_OMNI__time_i                     , $

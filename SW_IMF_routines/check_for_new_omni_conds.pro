@@ -52,6 +52,15 @@ PRO CHECK_FOR_NEW_OMNI_CONDS,MAG_UTC=mag_utc, $
      ENDIF
   ENDIF
 
+  IF TAG_EXIST(IMF_struct,'IMF_allowable_streak_dt') THEN BEGIN
+     IF N_ELEMENTS(C_OMNI__stableIMF) NE 0 THEN BEGIN
+        IF C_OMNI__allowable_gap NE IMF_struct.IMF_allowable_streak_dt THEN BEGIN
+           C_OMNI__RECALCULATE = 1
+           RETURN
+        ENDIF
+     ENDIF
+  ENDIF
+
   IF N_ELEMENTS(restrict_to_alfvendb_times) NE 0 THEN BEGIN
      IF N_ELEMENTS(C_OMNI__restrict_to_alfvendb_times) NE 0 THEN BEGIN
         IF C_OMNI__restrict_to_alfvendb_times NE restrict_to_alfvendb_times THEN BEGIN

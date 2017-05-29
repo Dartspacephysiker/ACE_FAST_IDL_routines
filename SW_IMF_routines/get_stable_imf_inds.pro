@@ -227,6 +227,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      STR_ELEMENT,IMF_struct,'stableIMF',test
      IF KEYWORD_SET(test) THEN BEGIN
         C_OMNI__stableIMF           = IMF_struct.stableIMF
+        C_OMNI__allowable_gap       = IMF_struct.IMF_allowable_streak_dt
         C_OMNI__paramStr           += STRING(FORMAT='("--",I0,"_stable")',C_OMNI__stableIMF)
 
         GET_OMNI_IND_STREAKS,C_OMNI__mag_UTC,goodmag_goodtimes_i, $ ; Get streaks in the database first of all

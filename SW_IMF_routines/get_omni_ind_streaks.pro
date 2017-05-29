@@ -68,20 +68,79 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
      GET_STREAKS,goodmag_goodtimes_i[C_OMNI__combined_i], $
                  START_I=C_OMNI__TOTDB_streakstart_ii, $
                  STOP_I=C_OMNI__TOTDB_streakstop_ii, $
+                 N_STREAKS=n_streaks, $
                  OUT_STREAKLENS=C_OMNI__streakLens, $
-                 SINGLE_I=C_OMNI__single_i
+                 SINGLE_I=C_OMNI__single_i;; , $
+                 ;; ALLOWABLE_GAP=FIX(C_OMNI__allowable_gap/60.)
      ;; C_OMNI__streakstart_i    = goodmag_goodtimes_i[C_OMNI__streakstart_ii]
      ;; C_OMNI__streakstop_i     = goodmag_goodtimes_i[C_OMNI__streakstop_ii]
      C_OMNI__TOTDB_streakstart_i    = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii]]
      C_OMNI__TOTDB_streakstop_i     = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii]]
+     C_OMNI__nStreaks               = N_ELEMENTS(C_OMNI__streakLens)
+     C_OMNI__gapLengths             = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[1:-1]]] - $
+                                      goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[0:-2]]]
 
-     C_OMNI__nStreaks         = N_ELEMENTS(C_OMNI__streakLens)
-     C_OMNI__gapLengths       = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[1:-1]]]-goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[0:-2]]]
+     IF (C_OMNI__nStreaks GT 0) AND C_OMNI__allowable_gap GT 0. THEN BEGIN
+
+        allowable_gap = FIX(C_OMNI__allowable_gap/60.)
+        IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,'Allowable gap between start and stop: ' + STRCOMPRESS(allowable_gap,/REMOVE_ALL)
+
+        stitchTheseGaps_ii = WHERE(C_OMNI__gapLengths LE allowable_gap,nGapsToStitch)
+        IF nGapsToStitch GT 0 THEN BEGIN
+
+           start_i   = TEMPORARY(C_OMNI__TOTDB_streakstart_i)
+           stop_i    = TEMPORARY(C_OMNI__TOTDB_streakstop_i)
+
+           streakInd = 1
+           nStreaks  = N_ELEMENTS(start_i)
+
+           newStart_i = start_i[0]
+           newStop_i  = stop_i[0]
+           newNStreaks = 1
+           WHILE streakInd LT nStreaks DO BEGIN
+              
+              ;; tmpStop_i     = stop_i[streakInd-1]
+              ;;Check the start_i ahead of where we are, see if it is within allowable_gap of the last stop_i
+              keepStreaking = (start_i[streakInd] - stop_i[streakInd-1]) LE allowable_gap
+              IF keepStreaking THEN BEGIN
+                 ;;If the start_i ahead of current position is within allowable gap, just adjust newStop_i
+                 newStop_i[-1] = stop_i[streakInd]
+              ENDIF ELSE BEGIN
+                 ;;In this case we need to add a new start_i and a new stop_i since the gap was too large
+                 newStart_i    = [newStart_i,start_i[streakInd]]
+                 newStop_i     = [newStop_i,stop_i[streakInd]]
+                 ;; tmpStart_i    = start_i[streakInd]
+                 newNStreaks++
+              ENDELSE
+
+              streakInd++
+              
+           ENDWHILE
+
+
+
+           start_i = TEMPORARY(newStart_i)
+           stop_i  = TEMPORARY(newStop_i)
+
+           C_OMNI__TOTDB_streakstart_i = TEMPORARY(start_i)
+           C_OMNI__TOTDB_streakstop_i  = TEMPORARY(stop_i)
+
+           C_OMNI__streakLens          = C_OMNI__TOTDB_streakstop_i-C_OMNI__TOTDB_streakstart_i
+           C_OMNI__nStreaks            = N_ELEMENTS(C_OMNI__streakLens)
+           C_OMNI__gapLengths          = C_OMNI__TOTDB_streakstart_i[1:-1] - C_OMNI__TOTDB_streakstop_i[0:-2]
+
+        ENDIF ELSE BEGIN
+
+        ENDELSE
+
+     ENDIF
 
      FOR streakNum=0,C_OMNI__nStreaks-1 DO BEGIN
         curLen             = C_OMNI__streakLens[streakNum]+1
-        curStart           = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[streakNum]]]
-        curStop            = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[streakNum]]]
+        ;; curStart           = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstart_ii[streakNum]]]
+        ;; curStop            = goodmag_goodtimes_i[C_OMNI__combined_i[C_OMNI__TOTDB_streakstop_ii[streakNum]]]
+        curStart           = C_OMNI__TOTDB_streakstart_i[streakNum]
+        curStop            = C_OMNI__TOTDB_streakstop_i[streakNum]
         ;; curStart              = C_OMNI__streakstart_ii[streakNum]
         ;; curStop               = C_OMNI__streakstop_ii[streakNum]
         C_OMNI__StreakDurArr[curStart:curStop]  = INDGEN(curLen)
