@@ -146,47 +146,91 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
-                               'db.p.dc'    ,'db.p.ac'    , $
-                               'db.v.dc'    ,'db.v.ac'    , $
-                               'e.alongV.dc','e.alongV.ac']
-
-  log_sWayPlot              = [0,0, $
-                               0,0, $
-                               0,0, $
-                               0,0]
-
-  sWayPlotRange             = [[0,100],[0,4.0], $
-                               [0,200],[0,3.5], $
-                               [0,400],[0,3.5], $
-                               [0,400],[0,3.5]]
-
   sWay_use_8hz_DB           = 1
 
+  ;; FOR_PFLUX = 1
+  FOR_DB    = 1
+
   CASE 1 OF
-     ;; KEYWORD_SET(medianPlot) AND ((WHERE(log_sWayPlot EQ 1))[0] EQ -1): BEGIN
-     ((WHERE(log_sWayPlot EQ 1))[0] EQ -1): BEGIN
+     KEYWORD_SET(FOR_PFLUX): BEGIN
+        sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' ,'pflux.b.ACHigh','pFlux.B.ACBoth']
 
-        sWayPlotRange             = [[0,4.3],[0,0.1], $
-                                     [0,70],[0,1.7], $
-                                     [0,70],[0,1.7], $
-                                     [0,31],[0,10.5]]
+        abs_sWay                  = [0,1,1,1]
+        ;; noNeg_sWay                = [1,0,0,0]
+        noPos_sWay                = [1,0,0,0]
+        log_swayPlot              = [0,0,0,0]
 
-        IF DSTcutoff EQ -100 AND ~KEYWORD_SET(medianPlot) THEN BEGIN
-           sWayPlotRange          = [[0,10],[0,0.1], $
-                                     [0,300],[0,4], $
-                                     [0,400],[0,9], $
-                                     [0,70],[0,30]]
-        ENDIF
+        swayPlotRange             = [[0,100],[0,4.0],[0,4.0],[0,4.0]]
+        ;; [0,200],[0,3.5], $
+        ;; [0,400],[0,3.5], $
+        ;; [0,400],[0,3.5]]
+        CASE 1 OF
+           KEYWORD_SET(medianPlot) AND ((WHERE(log_swayPlot EQ 1))[0] EQ -1): BEGIN
+
+              swayPlotRange       = [[0,4.3],[0,0.03],[0,0.02],[0,0.05]] ; $
+              ;; [0,70],[0,1.7], $
+              ;; [0,70],[0,1.7], $
+              ;; [0,31],[0,10.5]]
+
+           END
+           ELSE:
+        ENDCASE
 
      END
-     ELSE:
+     KEYWORD_SET(FOR_DB): BEGIN
+        sWay_plotType             = ['dB.p.DC' ,'dB.p.AC' ,'dB.p.ACHigh','dB.p.ACBoth', $
+                                     'dB.v.DC' ,'dB.v.AC' ,'dB.v.ACHigh','dB.v.ACBoth']
+
+        abs_sWay                  = [0,1,1,1, $
+                                     0,1,1,1]
+        noNeg_sWay                = [1,0,0,0, $
+                                     1,0,0,0]
+        ;; noPos_sWay                = [1,0,0,0, $
+        ;;                              1,0,0,0]
+        log_swayPlot              = [0,0,0,0, $
+                                     0,0,0,0]
+
+        swayPlotRange             = [[0,55],[0,1.8],[0,0.7] ,[0,2.2],  $
+                                     [0,65],[0,1.4],[0,0.55],[0,2.0]]
+
+
+     END
   ENDCASE
 
-  ;; noNeg_sWay                = 1
-  abs_sWay                  = 1
-  ;; noPos_sWay                = 1
+  ;; sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' , $
+  ;;                              'db.p.dc'    ,'db.p.ac'    , $
+  ;;                              'db.v.dc'    ,'db.v.ac'    , $
+  ;;                              'e.alongV.dc','e.alongV.ac']
 
+  ;; log_sWayPlot              = [0,0, $
+  ;;                              0,0, $
+  ;;                              0,0, $
+  ;;                              0,0]
+
+  ;; sWayPlotRange             = [[0,100],[0,4.0], $
+  ;;                              [0,200],[0,3.5], $
+  ;;                              [0,400],[0,3.5], $
+  ;;                              [0,400],[0,3.5]]
+
+  ;; CASE 1 OF
+  ;;    ;; KEYWORD_SET(medianPlot) AND ((WHERE(log_sWayPlot EQ 1))[0] EQ -1): BEGIN
+  ;;    ((WHERE(log_sWayPlot EQ 1))[0] EQ -1): BEGIN
+
+  ;;       sWayPlotRange             = [[0,4.3],[0,0.1], $
+  ;;                                    [0,70],[0,1.7], $
+  ;;                                    [0,70],[0,1.7], $
+  ;;                                    [0,31],[0,10.5]]
+
+  ;;       IF DSTcutoff EQ -100 AND ~KEYWORD_SET(medianPlot) THEN BEGIN
+  ;;          sWayPlotRange          = [[0,10],[0,0.1], $
+  ;;                                    [0,300],[0,4], $
+  ;;                                    [0,400],[0,9], $
+  ;;                                    [0,70],[0,30]]
+  ;;       ENDIF
+
+  ;;    END
+  ;;    ELSE:
+  ;; ENDCASE
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
      altitudeRange               = altRange[*,i]
