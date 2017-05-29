@@ -2,7 +2,7 @@
 PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   use_prev_plot_i           = 1
-  remake_prev_plot_file     = 0
+  remake_prev_plot_file     = 1
   
   ;; do_timeAvg_fluxQuantities = 1
   ;; logAvgPlot                = 0
@@ -73,7 +73,7 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
 
   CASE 1 OF
      KEYWORD_SET(FOR_PFLUX): BEGIN
-        sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh']
+        sWay_plotType             = ['pflux.b.dc' ,'pflux.b.ac' ,'pflux.b.acHigh','pFlux.B.ACBoth']
 
         log_swayPlot              = [0,0,0]
 
@@ -142,7 +142,7 @@ PRO JOURNAL__20170527__VANILLA_1997__CHECKOUT_STRANGEWAY_DB
   ;;                                   [900,4300], $
   ;;                                   [1000,4300]]
 
-  altRange                       = [[300,4300]]
+  altRange                       = [[750,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
