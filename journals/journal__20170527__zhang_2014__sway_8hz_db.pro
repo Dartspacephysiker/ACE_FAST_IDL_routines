@@ -148,16 +148,16 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
   ;;The plots
   sWay_use_8hz_DB           = 1
 
-  ;; FOR_PFLUX = 1
-  FOR_DB    = 1
+  FOR_PFLUX = 1
+  ;; FOR_DB    = 1
 
   CASE 1 OF
      KEYWORD_SET(FOR_PFLUX): BEGIN
         sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' ,'pflux.b.ACHigh','pFlux.B.ACBoth']
 
         abs_sWay                  = [0,1,1,1]
-        ;; noNeg_sWay                = [1,0,0,0]
-        noPos_sWay                = [1,0,0,0]
+        noNeg_sWay                = [1,0,0,0]
+        ;; noPos_sWay                = [1,0,0,0]
         log_swayPlot              = [0,0,0,0]
 
         swayPlotRange             = [[0,100],[0,4.0],[0,4.0],[0,4.0]]
