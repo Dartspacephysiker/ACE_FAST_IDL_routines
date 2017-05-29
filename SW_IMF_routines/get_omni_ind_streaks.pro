@@ -57,7 +57,7 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
      ENDELSE
 
      ;;Check if it's sorted
-     CHECK_SORTED,mag_utc,is_sorted
+     CHECK_SORTED,mag_utc,is_sorted,/QUIET
      IF ~is_sorted THEN BEGIN
         PRINTF,lun,"mag_utc isn't sorted!!!" 
         STOP
