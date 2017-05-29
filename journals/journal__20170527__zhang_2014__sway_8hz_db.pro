@@ -156,8 +156,8 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
         sWay_plotType             = ['pflux.b.DC' ,'pflux.b.AC' ,'pflux.b.ACHigh','pFlux.B.ACBoth']
 
         abs_sWay                  = [0,1,1,1]
-        noNeg_sWay                = [1,0,0,0]
-        ;; noPos_sWay                = [1,0,0,0]
+        ;; noNeg_sWay                = [1,0,0,0]
+        noPos_sWay                = [1,0,0,0]
         log_swayPlot              = [0,0,0,0]
 
         swayPlotRange             = [[0,100],[0,4.0],[0,4.0],[0,4.0]]
