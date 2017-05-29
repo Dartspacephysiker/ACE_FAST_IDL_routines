@@ -85,11 +85,15 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
                  qualifying_db_ii = [qualifying_db_ii,TEMPORARY(qualifying_db_iiTmp)]
               ENDIF
 
-              PRINT,FORMAT='(I0,T10,A0,"-",A0," (",F07.1," min)",T80,I0)',k,TIME_TO_STR(tmpStartT),TIME_TO_STR(tmpStopT),(tmpStopT-tmpStartT)/60.,nQualify
-
+              ;; PRINT,FORMAT='(I0,T10,A0,"-",A0," (",F07.1," min)",T80,I0)',k,TIME_TO_STR(tmpStartT),TIME_TO_STR(tmpStopT),(tmpStopT-tmpStartT)/60.,nQualify
            ENDFOR
 
+           thesens = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii]]+IMF_struct.delay[iDel]-C_OMNI__stableIMF*60. + $
+                     C_OMNI__mag_UTC[stable_omni_i[stop_OMNI_ii ]]+IMF_struct.delay[iDel]
+           PRINT,FORMAT='("(Min,Med,Mean,Max) streakLen: (",I0,",",I0,",",I0,",",I0,") min")',MIN(thesens),MEDIAN(thesens),MEAN(thesens),MAX(thesens)
            nQualify = N_ELEMENTS(qualifying_db_ii)
+
+           PRINT
 
         ENDIF
 
