@@ -17,8 +17,10 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
      @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
   ENDIF
 
-  delayArr                 = (INDGEN(13)*5*60)
+  ;; delayArr                 = (INDGEN(13)*5*60)
   ;; delayArr                 = (INDGEN(7)*5*60)+3900
+  delayArr                 = (INDGEN(4)*5*60)
+  add_night_delay          = 40*60
 
   ;; latest_UTC            = STR_TO_TIME('1999-05-16/03:20:59.853')
 
@@ -388,6 +390,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            SATELLITE=satellite, $
            OMNI_COORDS=omni_Coords, $
            DELAY=delay, $
+           ADD_NIGHT_DELAY=add_night_delay, $
            MULTIPLE_DELAYS=multiple_delays, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            OUT_EXECUTING_MULTIPLES=executing_multiples, $
