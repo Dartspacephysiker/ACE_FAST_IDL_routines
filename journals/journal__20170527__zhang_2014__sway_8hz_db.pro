@@ -44,6 +44,7 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
   ;; delayDeltaSec                  = 3600
   binOffset_delay                = 0
   delayArr                       = INDGEN(13)*5*60
+  add_night_delay                = 40*60
 
   reset_omni_inds                = 1
   
@@ -442,6 +443,7 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
            SATELLITE=satellite, $
            OMNI_COORDS=omni_Coords, $
            DELAY=delay, $
+           ADD_NIGHT_DELAY=add_night_delay, $
            MULTIPLE_DELAYS=multiple_delays, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            OUT_EXECUTING_MULTIPLES=executing_multiples, $

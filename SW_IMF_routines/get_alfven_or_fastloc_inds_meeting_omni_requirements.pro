@@ -81,12 +81,12 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS, $
            startT = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii]]+IMF_struct.delay[iDel]-C_OMNI__stableIMF*60.
            stopT  = C_OMNI__mag_UTC[stable_omni_i[stop_OMNI_ii ]]+IMF_struct.delay[iDel]
 
-           checkStart = VALUE_LOCATE(startT,dbTimes[db_i]+nightDelay[db_i]) ;checkStart = VALUE_LOCATE(dbTimes[db_i],startT)
-           checkStop  = VALUE_LOCATE(stopT,dbTimes[db_i]+nightDelay[db_i])  ;checkStop  = VALUE_LOCATE(dbTimes[db_i],stopT)
+           checkStart = VALUE_LOCATE(startT,dbTimes[db_i]-nightDelay[db_i]) ;checkStart = VALUE_LOCATE(dbTimes[db_i],startT)
+           checkStop  = VALUE_LOCATE(stopT,dbTimes[db_i]-nightDelay[db_i])  ;checkStop  = VALUE_LOCATE(dbTimes[db_i],stopT)
            gaps       = stopT-startT
            qualifying_db_ii = WHERE( $
-                              (startT[checkStart] LE dbTimes[db_i]) AND $
-                              ((dbTimes[db_i] - startT[checkStart]) LT gaps[checkStart]), $
+                              (startT[checkStart] LE (dbTimes[db_i]-nightDelay[db_i])) AND $
+                              ((dbTimes[db_i]-nightDelay[db_i] - startT[checkStart]) LE gaps[checkStart]), $
                               nQualify)
 
            ;; FOR k=0,n_streaks-1 DO BEGIN

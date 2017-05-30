@@ -3,7 +3,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  remake_prev_plot_file          = 1
 
   do_what_everyone_does    = 1
 
