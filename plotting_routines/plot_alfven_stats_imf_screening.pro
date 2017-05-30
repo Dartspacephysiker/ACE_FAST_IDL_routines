@@ -439,7 +439,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   @common__overplot_vars.pro
   @common__strangeway_bands.pro
 
-  IF KEYWORD_SET(for_eSpec_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_sway_DB) THEN BEGIN
+  IF (KEYWORD_SET(for_eSpec_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_ion_DBs) + KEYWORD_SET(for_sway_DB)) GT 1 THEN BEGIN
      PRINT,"Just do one database at a time. It hurts me and you to do more, after all"
      STOP
   ENDIF
@@ -1423,7 +1423,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                     NO_BURSTDATA=no_burstData, $
                                     /GET_TIME_I_NOT_ALFVENDB_I, $
                                     GET_TIME_FOR_ESPEC_DBS=KEYWORD_SET(fl_elOrIon), $
-                                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec_flux_plots) OR KEYWORD_SET(nonMem))
+                                    DONT_LOAD_IN_MEMORY=KEYWORD_SET(nonMem))
 
         ;;These can be reloaded, if we like
         PASIS__fastLocInterped_i_list = TEMPORARY(fastLocInterped_i_list)

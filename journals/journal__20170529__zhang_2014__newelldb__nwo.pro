@@ -1,53 +1,102 @@
-PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
+
+;;2016/12/02 Overplot broadband number flux with Alfvénic Poynting flux
+PRO JOURNAL__20170529__ZHANG_2014__NEWELLDB__NWO
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
-
-  do_what_everyone_does    = 1
-
-  plotH2D_contour          = 0
-  ;; plotH2D__kde          = 1
-  plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
-  contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
-  contour__percent         = KEYWORD_SET(plotH2D_contour)
-
-  IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
-     @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
-  ENDIF
-
-  delayArr                 = (INDGEN(13)*5*60)
-  ;; delayArr                 = (INDGEN(7)*5*60)+3900
-
-  ;; latest_UTC            = STR_TO_TIME('1999-05-16/03:20:59.853')
-
-  labels_for_presentation  = 1
-
-  plotPref += '--upto90ILAT'
-  ;; plotPref += ''
+  plotPref = 'NWO-'
 
   minM_c    = [ 6,12]
   maxM_c    = [12,18]
   minI_c    = [70,70]
   maxI_c    = [90,90]
+  plotPref += '-upto90-'
+  
+  labels_for_presentation        = 1
 
-  include_32Hz                   = 0
+  use_prev_plot_i                = 1
+  remake_prev_plot_file          = 1
+  ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
+  ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
+  
+  nonstorm                       = 1
+  DSTcutoff                      = -50
+  smooth_dst                     = 0
+  use_mostRecent_Dst_files       = 1
+
+  @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
+
+  ;; include_32Hz                   = 
+  ;; sample_t_restriction           = 10
+  disregard_sample_t             = 1
+
+  show_integrals                 = 1
+
   EA_binning                     = 0
+  plotH2D_contour                = 0
+  plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
+
+  ;; contour__levels                = [20,40,60,80,95]
+  ;; contour__levels                = [1,30,60,90]
+  ;; contour__levels                = [0,20,50,80]
+  ;; contour__levels                = [0,20,40,60,80,95]
+
+  ;; contour__levels                = [10,30,40,60,70,90]
+  ;; contour__levels                = [20,30,50,60,80,90]
+  contour__levels                = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
+  ;; contour__levels                = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  ;; plotPref += STRING(FORMAT='("-",20(I0,:,"_"))',contour__levels)
+  contour__percent               = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+
+  ;; minMC                          = 5
+  ;; maxNegMC                       = -5
+
+  do_timeAvg_fluxQuantities      = 1
+  logAvgPlot                     = 0
+  medianPlot                     = 0
+  divide_by_width_x              = 1
+
+  write_obsArr_textFile          = 0
+  write_obsArr__inc_IMF          = 1
+  write_obsArr__orb_avg_obs      = 1
+  justData                       = 0
+  
+  saveDir                        = '/home/spencerh/Desktop/'
+  justInds                       = 0
+  justInds_saveToFilePref        = 'newellZhang2014--'
+
+  ;;DB stuff
+  do_despun                      = 0
   use_AACGM                      = 0
+  use_MAG                        = 0
 
-
-  fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 0
-  fluxPlots__broadband_everywhar = 0
-  fluxPlots__diffuse_everywhar   = 0
+  autoscale_fluxPlots            = 0
+  fluxPlots__remove_outliers     = 0
+  fluxPlots__remove_log_outliers = 0
+  
+  ;; dont_blackball_maximus         = 
+  ;; dont_blackball_fastloc         = 0
 
   group_like_plots_for_tiling    = 1
   scale_like_plots_for_tiling    = 0
-  adj_upper_plotlim_thresh       = 3    ;;Check third maxima
-  adj_lower_plotlim_thresh       = 2    ;;Check minima
+  adj_upper_plotlim_thresh       = 3 ;;Check third maxima
+  adj_lower_plotlim_thresh       = 2 ;;Check minima
 
-  tile__include_IMF_arrows       = 0
+  ;; plotPref += '-notRot_pFlux-t'
+
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
+
+  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  ;; op_contour__percent            = 1
+  ;; op_plotRange                   = [0.00,0.10]
+
+
+  tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 1
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -55,127 +104,156 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
                                     1,1,1, $
                                     1,1,1]
 
-  IF shiftM GT 0. THEN BEGIN
-     plotPref += 'rotated-'
-  ENDIF
-
-  ;;In any case
-  reset_good_inds                 = 1
-  reset_OMNI_inds                 = 1
-     
   ;;bonus
-  make_OMNI_stuff                 = 0
-  ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
-  ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
-  save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
-  make_OMNI_stats_savFile         = KEYWORD_SET(make_OMNI_stuff)
-  OMNI_statsSavFilePref           = 'Alfvens_dodat_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
-  calc_KL_sw_coupling_func        = 1
-  make_integral_savfiles          = 0
-
-  show_integrals                  = 1
-  write_obsArr_textFile           = 0
-  write_obsArr__inc_IMF           = 0
-  write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
-  justInds                        = 0
-  indsPref                        = ''
-  CASE 1 OF
-     KEYWORD_SET(fluxPlots__invert_Newell_the_cusp): BEGIN
-        indsPref = 'invNC'
-     END
-     KEYWORD_SET(fluxPlots__Newell_the_cusp       ): BEGIN  
-        indsPref = 'NC'
-     END
-     KEYWORD_SET(fluxPlots__broadband_everywhar   ): BEGIN  
-        indsPref = 'broadEvry'
-     END
-     KEYWORD_SET(fluxPlots__diffuse_everywhar     ): BEGIN 
-        indsPref = 'diffEvry'
-     END
-     ELSE: BEGIN
-        indsPref = ''
-     END
-  ENDCASE
-
-  justInds_saveToFile             = 'Alfvens_IMF-inds-' + indsPref + '-' + $
-                                    STRLOWCASE(hemi) + '_hemi-' + $
-                                    GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
-                                    '.sav'
-                                    ;; '_hemi--20161224.sav'
-  saveDir                         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20170209/'
+  print_avg_imf_components       = 0
+  print_master_OMNI_file         = 0
+  save_master_OMNI_inds          = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 0
-  ePlots                             = 0
-  eNumFlPlots                        = 1
-  pPlots                             = 1
-  ionPlots                           = besides_pFlux
-  ;; probOccurrencePlot                 = besides_pFlux
-  tHistDenominatorPlot               = besides_pFlux
-  sum_electron_and_poyntingflux      = 0
-  nOrbsWithEventsPerContribOrbsPlot  = 0
+  no_maximus                     = 1
+  eSpec_flux_plots               = 1
+  Newell_analyze_eFlux           = 1
+  eSpec__all_fluxes              = 1
+  Newell__comb_accelerated       = 0
 
-  nowepco_range                  = [0,1.0]
+  eSpec__Newell_2009_interp      = 1
+  eSpec__use_2000km_file         = 0
+  eSpec__remove_outliers         = 0
+  ;; eSpec__noMap                   = 1
 
-  ;;e- energy flux
-  ;; eFluxPlotType                  = 'Eflux_losscone_integ'
+  ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
+  ePlots                         = 1
+  eNumFlPlots                    = 1
+
+  tHistDenominatorPlot           = 0
+   tHistDenomPlotRange           = [0.,150.]
+  ;; tHistDenomPlotNormalize        = 0
+  ;; tHistDenomPlotAutoscale        = 1
+  tHistDenomPlot_noMask          = 1
+
+  espec__newellPlot_probOccurrence = 0
+  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+
+  eSpec__t_ProbOccurrence    = 0
+  eSpec__t_probOcc_plotRange = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
+
+
   eFluxPlotType                  = 'Max'
-  ePlotRange                     = [0,0.25]
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+     END
+     ELSE: BEGIN
+        CASE 1 OF
+           KEYWORD_SET(logEfPlot): BEGIN
+              ePlotRange         = [[1e-2,1e1],[1e-2,1e1],[1e-2,1e1],[1e-2,1e1]]
+           END
+           ELSE: BEGIN
+              ePlotRange         = [[0,1.0],[0,1.0],[0,1.0],[0,0.5]]
+           END
+        ENDCASE
+     END
+  ENDCASE
   logEfPlot                      = 0
-  noNegEflux                     = 0
+  noNegEflux                     = 1
+  ;; ePlotRange                     = [1e-3,1e1]
+  ;; logEfPlot                      = 1
+  noNegEflux                     = 1
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  ENumFlPlotRange                = [[0,0.25], $
-                                    [0,1.0e9]]
+  eNumFlPlotType                 = ['ESA_Number_flux']
+  noNegENumFl                    = 1
+  ;; ENumFlPlotRange                = [[0,2.5e8],[0,6.0e8],[0,3.0e8],[0,3.5e8]]
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+     END
+     ELSE: BEGIN
+        CASE 1 OF
+           KEYWORD_SET(logENumFlPlot): BEGIN
+              ENumFlPlotRange    = [[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10],[1.0e8,1.0e10]]
+           END
+           ELSE: BEGIN
+              ENumFlPlotRange    = [[0,1.2e9],[0,2.5e9],[0,1.0e9],[0,8.0e8]]
+              cbENumFlDivFac     = [1e9,1e9,1e8,1e8]          
+           END
+        ENDCASE
+     END
+  ENDCASE
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
   ;; ENumFlPlotRange                = [0,2e9]
 
-  ;; logPfPlot                   = 1
-  ;; PPlotRange                  = [1e-1,1e1]
-  logPfPlot                      = 0
-  ;; PPlotRange                     = [0,0.20]
-  PPlotRange                     = KEYWORD_SET(plotH2D_contour) ? [0,0.20] : [0,0.20]
 
-  ifluxPlotType                  = 'Integ_Up'
-  noNegIflux                     = 1
-  ;; logIfPlot                   = 1
-  ;; IPlotRange                  = [1e6,1e8]
-  logIfPlot                      = 0
-  IPlotRange                     = [0,5.0e7]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Tiled plot options
+
+  altRange                       = [[750,4300]]
+
+  IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
+     altRange                    = [300,2000]
+  ENDIF
+
+  orbRange                       = [500,12670]
+
+  ;; latest_UTC                     = STR_TO_TIME('1999-05-16/03:20:59.853')
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;IMF condition stuff--run the ring!
+  btMin                          = 1.0
+
+  smoothWindow                   = 0
+
+  stableIMF                      = 9
+
+  ;;Delay stuff
+  nDelays                        = 1
+  ;; delayDeltaSec                  = 1800
+  binOffset_delay                = 0
+  ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
+  delayArr                       = (INDGEN(13)*5*60)
+
+  reset_omni_inds                = 1
+  reset_good_inds                = 1
   
-  logProbOccurrence              = 0
-  probOccurrenceRange            = [0,0.15]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;ILAT stuff
+  hemi                        = 'NORTH'
+  minI                        = 60
+  maxI                        = 90
+  ;; maskMin                        = 100
+  ;; tHist_mask_bins_below_thresh   = 1
+  ;; numOrbLim                      = 5
 
-  summed_eFlux_pFluxplotRange    = [0,0.5]
+  ;; hemi                           = 'SOUTH'
+  ;; minI                        = -90
+  ;; maxI                        = -60
+  ;; maskMin                        =  1
+  ;; tHist_mask_bins_below_thresh   = 2
 
-  tHistDenomPlotRange            = [5,80]
-  ;; tHistDenomPlotNormalize        = 
-  ;; tHistDenomPlotAutoscale        =      
-  tHistDenomPlot_noMask          = 1
+  ;; numOrbLim                      = 10
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;Southern hemi ranges
-  ;; ePlotRange                     = [0,0.25]
+  ;; binI                     = 2.0
+  binI                        = 2.0
 
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,0.25], $
-  ;;                                   [0,8.0e8]]
+  IF KEYWORD_SET(justInds_saveToFilePref) THEN BEGIN
+     justInds_saveToFile = justInds_saveToFilePref + hemi + '_inds.sav'
+  ENDIF
 
-  ;; PPlotRange                     = [0,0.25]
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;MLT stuff
+  binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
+  shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
 
-  ;; IPlotRange                     = [0,7.0e7]
+  IF shiftM GT 0. THEN BEGIN
+     plotPref += '-rot'
+  ENDIF
 
-  ;; summed_eFlux_pFluxplotRange    = [0,0.8]
+  ;; minM                      = 6
+  ;; maxM                      = 18
+
+  ;;Bonus
 
   nDelays = N_ELEMENTS(delayArr)
   FOR k=0,nDelays-1 DO BEGIN
@@ -186,32 +264,12 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
 
      FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
         altitudeRange               = altRange[*,i]
-        altStr                      = STRING(FORMAT='(I0,"-",I0,"km-orb_",I0,"-",I0)', $
+        altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
                                              altitudeRange[0], $
                                              altitudeRange[1], $
                                              orbRange[0], $
                                              orbRange[1])
         plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
-
-        IF KEYWORD_SET(grossRate_info_file_pref) THEN BEGIN
-           CASE 1 OF
-              N_ELEMENTS(btMin) GT 0: BEGIN
-                 IF btMin GT 0 THEN BEGIN
-                    grossRate_infos  = STRING(FORMAT='("-btMin",F0.1)',btMin)
-                 ENDIF
-              END
-              N_ELEMENTS(btMax) GT 0: BEGIN
-                 grossRate_infos  = STRING(FORMAT='("-btMax",F0.1)',btMax)
-              END
-              ELSE: BEGIN
-                 grossRate_infos  = ''
-              END
-           ENDCASE
-
-           grossRate_infos       += '_' + hemi 
-           grossRate_info_file    = grossRate_info_file_pref + grossRate_infos + $
-                                    grossRate_info_file_suff + '.txt'
-        ENDIF
 
         SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                       angleLim1,angleLim2, $
@@ -252,6 +310,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            ORBRANGE=orbRange, $
            ALTITUDERANGE=altitudeRange, $
            CHARERANGE=charERange, $
+           CHARE__NEWELL_THE_CUSP=charE__Newell_the_cusp, $
            POYNTRANGE=poyntRange, $
            SAMPLE_T_RESTRICTION=sample_t_restriction, $
            INCLUDE_32HZ=include_32Hz, $
@@ -284,14 +343,26 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            BOTH_HEMIS=both_hemis, $
            DAYSIDE=dayside, $
            NIGHTSIDE=nightside, $
+           NPLOTS=nPlots, $
+           EPLOTS=ePlots, $
+           EFLUXPLOTTYPE=eFluxPlotType, $
+           EPLOTRANGE=ePlotRange, $
+           ENUMFLPLOTS=eNumFlPlots, $
+           ENUMFLPLOTTYPE=eNumFlPlotType, $
+           ENUMFLPLOTRANGE=eNumFlPlotRange, $
+           NONEGENUMFL=noNegENumFl, $
+           NOPOSENUMFL=noPosENumFl, $
+           PPLOTS=pPlots, $
+           IONPLOTS=ionPlots, $
+           IFLUXPLOTTYPE=ifluxPlotType, $
+           CHAREPLOTS=charEPlots, $
+           CHARETYPE=charEType, $
+           CHARIEPLOTS=chariEPlots, $
            AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
            FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
            FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
            FLUXPLOTS__ADD_SUSPECT_OUTLIERS=fluxPlots__add_suspect_outliers, $
-           FLUXPLOTS__INVERT_NEWELL_THE_CUSP=fluxPlots__invert_Newell_the_cusp, $
            FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
-           FLUXPLOTS__BROADBAND_EVERYWHAR=fluxPlots__broadband_everywhar, $
-           FLUXPLOTS__DIFFUSE_EVERYWHAR=fluxPlots__diffuse_everywhar, $
            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
            DO_LOGAVG_THE_TIMEAVG=do_logAvg_the_timeAvg, $
            ORBCONTRIBPLOT=orbContribPlot, $
@@ -309,7 +380,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            NO_BURSTDATA=no_burstData, $
            WRITEASCII=writeASCII, $
            WRITEHDF5=writeHDF5, $
-           WRITEPROCESSEDH2D=writeProcessedH2D, $
+           WRITEPROCESSEDH2D=writeProcessedH2d, $
            SAVERAW=saveRaw, $
            SAVEDIR=saveDir, $
            JUSTDATA=justData, $
@@ -326,22 +397,21 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            PARAMSTRSUFFIX=plotSuffix,$
            PLOTH2D_CONTOUR=plotH2D_contour, $
            CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
-           CONTOUR__LEVELS=contour__levels, $
-           CONTOUR__PERCENT=contour__percent, $
            PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $
            HOYDIA=hoyDia, $
            LUN=lun, $
            NEWELL_ANALYZE_EFLUX=Newell_analyze_eFlux, $
+           NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
            ESPEC__NO_MAXIMUS=no_maximus, $
            ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-           ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
            ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
            ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-           ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-           ESPEC__NOMAPTO100KM=eSpec__noMap, $
-           ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
-           ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
-           ESPEC__T_PROBOCCURRENCE=eSpec__t_probOccurrence, $
+           ;; CBEFDIVFAC=cbEFDivFac, $
+           CBENUMFLDIVFAC=cbENumFlDivFac, $
+           ;; CBPFDIVFAC=CBPFDivFac, $
+           ;; CBIFDIVFAC=cbIFDivFac, $
+           ;; CBCHAREDIVFAC=cbCharEDivFac, $
+           ;; CBMAGCDIVFAC=CBMagCDivFac, $
            NONSTORM=nonStorm, $
            RECOVERYPHASE=recoveryPhase, $
            MAINPHASE=mainPhase, $
@@ -387,7 +457,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            OMNI_PARAMSTR_LIST=OMNIparamStr_list, $
            SATELLITE=satellite, $
            OMNI_COORDS=omni_Coords, $
-           DELAY=delay, $
+           DELAY=delayArr, $
            MULTIPLE_DELAYS=multiple_delays, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            OUT_EXECUTING_MULTIPLES=executing_multiples, $
@@ -396,116 +466,83 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            RESOLUTION_DELAY=delayDeltaSec, $
            BINOFFSET_DELAY=binOffset_delay, $
            STABLEIMF=stableIMF, $
-           IMF_ALLOWABLE_STREAK_DT=IMF_allowable_streak_dt, $
            SMOOTHWINDOW=smoothWindow, $
            INCLUDENOCONSECDATA=includeNoConsecData, $
            EARLIEST_UTC=earliest_UTC, $
            LATEST_UTC=latest_UTC, $
            EARLIEST_JULDAY=earliest_julDay, $
            LATEST_JULDAY=latest_julDay, $
-           SHOW_INTEGRALS=show_integrals, $
-           NPLOTS=nPlots, $
-           EPLOTS=ePlots, $
-           EFLUXPLOTTYPE=eFluxPlotType, $
-           ENUMFLPLOTS=eNumFlPlots, $
-           ENUMFLPLOTTYPE=eNumFlPlotType, $
-           PPLOTS=pPlots, $
-           IONPLOTS=ionPlots, $
-           IFLUXPLOTTYPE=ifluxPlotType, $
-           CHAREPLOTS=charEPlots, $
-           CHARETYPE=charEType, $
-           CHARIEPLOTS=chariEPlots, $
-           MAGCPLOTS=magCPlots, $
-           ABSCHARE=absCharE, $
-           ABSCHARIE=absCharie, $
-           ABSEFLUX=abseflux, $
-           ABSENUMFL=absENumFl, $
-           ABSIFLUX=absIflux, $
-           ABSMAGC=absMagC, $
-           ABSOXYFLUX=absOxyFlux, $
-           ABSPFLUX=absPflux, $
-           NONEGCHARE=noNegCharE, $
-           NONEGCHARIE=noNegCharie, $
-           NONEGEFLUX=noNegEflux, $
-           NONEGENUMFL=noNegENumFl, $
-           NONEGIFLUX=noNegIflux, $
-           NONEGMAGC=noNegMagC, $
-           NONEGOXYFLUX=noNegOxyFlux, $
-           NONEGPFLUX=noNegPflux, $
-           NOPOSCHARE=noPosCharE, $
-           NOPOSCHARIE=noPosCharie, $
-           NOPOSEFLUX=noPosEFlux, $
-           NOPOSENUMFL=noPosENumFl, $
-           NOPOSIFLUX=noPosIflux, $
-           NOPOSMAGC=noPosMagC, $
-           NOPOSOXYFLUX=noPosOxyFlux, $
-           NOPOSPFLUX=noPosPflux, $
-           LOGCHAREPLOT=logCharEPlot, $
-           LOGCHARIEPLOT=logChariePlot, $
-           LOGEFPLOT=logEfPlot, $
-           LOGENUMFLPLOT=logENumFlPlot, $
-           LOGIFPLOT=logIfPlot, $
-           LOGMAGCPLOT=logMagCPlot, $
-           LOGNEVENTPERMIN=logNEventPerMin, $
-           LOGNEVENTPERORB=logNEventPerOrb, $
-           LOGNEVENTSPLOT=logNEventsPlot, $
-           LOGORBCONTRIBPLOT=logOrbContribPlot, $
-           LOGOXYFPLOT=logOxyfPlot, $
-           LOGPFPLOT=logPFPlot, $
-           LOGPROBOCCURRENCE=logProbOccurrence, $
-           LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
-           LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
-           LOG_NEWELLPLOT=log_newellPlot, $
-           LOG_NOWEPCOPLOT=log_nowepcoPlot, $
-           CHAREPLOTRANGE=charePlotRange, $
-           CHARIEPLOTRANGE=chariEPlotRange, $
-           EPLOTRANGE=EPlotRange, $
-           ENUMFLPLOTRANGE=ENumFlPlotRange, $
+           ESPEC__NEWELLPLOT_PROBOCCURRENCE=eSpec__newellPlot_probOccurrence, $
            ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
+           ESPEC__T_PROBOCCURRENCE=eSpec__t_ProbOccurrence, $
            ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
-           IPLOTRANGE=IPlotRange, $
-           MAGCPLOTRANGE=magCPlotRange, $
-           NEVENTPERMINRANGE=nEventPerMinRange, $
-           NEVENTPERORBRANGE=nEventPerOrbRange, $
-           NEVENTSPLOTRANGE=nEventsPlotRange, $
-           NEWELL_PLOTRANGE=newell_plotRange, $
-           NOWEPCO_RANGE=nowepco_range, $
-           ORBCONTRIBRANGE=orbContribRange, $
-           ORBFREQRANGE=orbFreqRange, $
-           ORBTOTRANGE=orbTotRange, $
-           OXYPLOTRANGE=oxyPlotRange, $
-           PPLOTRANGE=PPlotRange, $
-           PROBOCCURRENCERANGE=probOccurrenceRange, $
-           THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+           CONTOUR__LEVELS=contour__levels, $
+           CONTOUR__PERCENT=contour__percent, $
+           OVERPLOT_FILE=overplot_file, $
+           OVERPLOT_ARR=overplot_arr, $
+           OVERPLOT_CONTOUR__LEVELS=op_contour__levels, $
+           OVERPLOT_CONTOUR__PERCENT=op_contour__percent, $
+           OVERPLOT_PLOTRANGE=op_plotRange, $        
+           SHOW_INTEGRALS=show_integrals, $
            RESET_STRUCT=reset
+
 
         PLOT_ALFVEN_STATS_IMF_SCREENING, $
            FOR_ESPEC_DBS=for_eSpec_DBs, $
            NEED_FASTLOC_I=need_fastLoc_i, $
-           USE_STORM_STUFF=use_storm_stuff, $
-           AE_STUFF=ae_stuff, $    
            ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
            ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
            IMF_STRUCT=IMF_struct, $
            MIMC_STRUCT=MIMC_struct, $
-           RESTRICT_WITH_THESE_I=restrict_with_these_i, $
+           MASKMIN=maskMin, $
+           THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
            RESET_OMNI_INDS=reset_omni_inds, $
            PRINT_AVG_IMF_COMPONENTS=print_avg_imf_components, $
            PRINT_MASTER_OMNI_FILE=print_master_OMNI_file, $
            SAVE_MASTER_OMNI_INDS=save_master_OMNI_inds, $
-           MAKE_OMNI_STATS_SAVFILE=make_OMNI_stats_savFile, $
-           OMNI_STATSSAVFILEPREF=OMNI_statsSavFilePref, $ 
-           CALC_KL_SW_COUPLING_FUNC=calc_KL_sw_coupling_func, $
-           AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
-           FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
-           FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
-           FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
-           DONT_BLACKBALL_MAXIMUS=dont_blackball_maximus, $
-           DONT_BLACKBALL_FASTLOC=dont_blackball_fastloc, $
+           ORBCONTRIBPLOT=orbContribPlot, $
+           LOGORBCONTRIBPLOT=logOrbContribPlot, $
+           ORBCONTRIBRANGE=orbContribRange, $
+           ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+           ORBCONTRIB_NOMASK=orbContrib_noMask, $
+           ORBTOTPLOT=orbTotPlot, $
+           ORBFREQPLOT=orbFreqPlot, $
+           ORBTOTRANGE=orbTotRange, $
+           ORBFREQRANGE=orbFreqRange, $
+           NEVENTPERORBPLOT=nEventPerOrbPlot, $
+           LOGNEVENTPERORB=logNEventPerOrb, $
+           NEVENTPERORBRANGE=nEventPerOrbRange, $
+           NEVENTPERORBAUTOSCALE=nEventPerOrbAutoscale, $
+           DIVNEVBYTOTAL=divNEvByTotal, $
+           NEVENTPERMINPLOT=nEventPerMinPlot, $
+           NEVENTPERMINRANGE=nEventPerMinRange, $
+           LOGNEVENTPERMIN=logNEventPerMin, $
+           NEVENTPERMINAUTOSCALE=nEventPerMinAutoscale, $
+           NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+           NOWEPCO_RANGE=nowepco_range, $
+           NOWEPCO_AUTOSCALE=nowepco_autoscale, $
+           PROBOCCURRENCEPLOT=probOccurrencePlot, $
+           PROBOCCURRENCERANGE=probOccurrenceRange, $
+           LOGPROBOCCURRENCE=logProbOccurrence, $
+           THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+           THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+           THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+           THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
+           THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
+           NEWELLPLOTS=newellPlots, $
+           NEWELL_PLOTRANGE=newell_plotRange, $
+           LOG_NEWELLPLOT=log_newellPlot, $
+           NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
+           NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+           NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
+           TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+           TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+           LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+           TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
+           TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
+           LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
            DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
            DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
-           DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
-           WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
            WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
            WRITE_ORB_AND_OBS__INC_IMF=write_obsArr__inc_IMF, $
            WRITE_ORB_AND_OBS__ORB_AVG_OBS=write_obsArr__orb_avg_obs, $
@@ -531,7 +568,6 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            PLOTDIR=plotDir, $
            PLOTPREFIX=plotPrefix, $
            PLOTSUFFIX=plotSuff, $
-           ORG_PLOTS_BY_FOLDER=org_plots_by_folder, $
            MEDHISTOUTDATA=medHistOutData, $
            MEDHISTOUTTXT=medHistOutTxt, $
            OUTPUTPLOTSUMMARY=outputPlotSummary, $
@@ -549,8 +585,6 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            OUT_DATANAMEARR_LIST=out_dataNameArr_list, $
            OUT_PLOT_I_LIST=out_plot_i_list, $
            OUT_PARAMSTRING_LIST=out_paramString_list, $
-           USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
-           REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
            GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
            SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
            ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $
@@ -567,18 +601,15 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            NO_COLORBAR=no_colorbar, $
            CB_FORCE_OOBHIGH=cb_force_oobHigh, $
            CB_FORCE_OOBLOW=cb_force_oobLow, $
-           FANCY_PLOTNAMES=fancy_plotNames
-        ;; MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
-        ;; MAKE_INTEGRAL_SAVFILES=make_integral_savfiles
-
-        ;; /GET_PLOT_I_LIST_LIST, $
-        ;; /GET_PARAMSTR_LIST_LIST, $
-        ;; PLOT_I_LIST_LIST=plot_i_list_list, $
-        ;; PARAMSTR_LIST_LIST=paramStr_list_list
+           FANCY_PLOTNAMES=fancy_plotNames, $        
+           USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+           REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+           PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these
         
      ENDFOR
 
   ENDFOR
 
 END
+
 
