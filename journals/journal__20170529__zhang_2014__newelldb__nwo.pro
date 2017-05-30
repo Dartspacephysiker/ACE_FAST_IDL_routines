@@ -96,7 +96,7 @@ PRO JOURNAL__20170529__ZHANG_2014__NEWELLDB__NWO
   ;; op_plotRange                   = [0.00,0.10]
 
 
-  tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 1
+  tile__include_IMF_arrows       = KEYWORD_SET(plotH2D_contour) ? 0 : 0
   tile__cb_in_center_panel       = 1
   cb_force_oobHigh               = 1
 
@@ -212,7 +212,9 @@ PRO JOURNAL__20170529__ZHANG_2014__NEWELLDB__NWO
   ;; delayDeltaSec                  = 1800
   binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-  delayArr                       = (INDGEN(13)*5*60)
+  ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
+  delayArr                       = (INDGEN(3)*5*60)[1:-1]
+  add_night_delay                = 2400
 
   reset_omni_inds                = 1
   reset_good_inds                = 1
@@ -457,8 +459,9 @@ PRO JOURNAL__20170529__ZHANG_2014__NEWELLDB__NWO
            OMNI_PARAMSTR_LIST=OMNIparamStr_list, $
            SATELLITE=satellite, $
            OMNI_COORDS=omni_Coords, $
-           DELAY=delayArr, $
+           DELAY=delay, $
            MULTIPLE_DELAYS=multiple_delays, $
+           ADD_NIGHT_DELAY=add_night_delay, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            OUT_EXECUTING_MULTIPLES=executing_multiples, $
            OUT_MULTIPLES=multiples, $

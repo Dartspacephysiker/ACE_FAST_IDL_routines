@@ -172,6 +172,14 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
 
+     IF ~TAG_EXIST(PASIS__IMF_struct,'add_night_delay') THEN BEGIN
+        STR_ELEMENT,PASIS__IMF_struct,'add_night_delay',0,/ADD_REPLACE
+     ENDIF
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.add_night_delay,IMF_struct.add_night_delay) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+
      IF ~ARRAY_EQUAL(PASIS__IMF_struct.latest_UTC,IMF_struct.latest_UTC) THEN BEGIN
         inds_reset++
         plots_reset++
@@ -194,6 +202,7 @@ PRO CHECK_PASIS_VARS, $
                                                                  'dont_consider_clockAngles', $
                                                                  'delay_res','stableIMF', $
                                                                  'delay', $
+                                                                 'add_night_delay', $
                                                                  'latest_UTC', $
                                                                  'latest_JulDay'])
 

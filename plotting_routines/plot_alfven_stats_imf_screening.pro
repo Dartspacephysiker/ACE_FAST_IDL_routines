@@ -1645,7 +1645,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ;;Now time for data summary
 
   ;; IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB) THEN BEGIN
+  IF ~KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB) AND N_ELEMENTS(PASIS__IMF_struct.delay) EQ 1 THEN BEGIN
      PRINT_ALFVENDB_PLOTSUMMARY,(KEYWORD_SET(no_maximus) ? $
                                  (KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) ? NEWELL__eSpec : NEWELL_I__ion) : $
                                  MAXIMUS__maximus), $
@@ -1830,11 +1830,15 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         indices__eSpec     = PASIS__indices__eSpec_list[iMulti]
      ENDIF
 
-     IF ~KEYWORD_SET(no_maximus) THEN BEGIN
-        plot_i             = PASIS__plot_i_list[iMulti]
-     ENDIF ELSE BEGIN
-        plot_i             = PASIS__indices__sWay_list[iMulti]
-     ENDELSE
+     CASE 1 OF
+        ~KEYWORD_SET(no_maximus): BEGIN
+           plot_i             = PASIS__plot_i_list[iMulti]
+        END
+        KEYWORD_SET(PASIS__alfDB_plot_struct.for_sWay_DB): BEGIN
+           plot_i             = PASIS__indices__sWay_list[iMulti]
+        END
+        ELSE:
+     ENDCASE
 
      IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
         fastLocInterped_i  = PASIS__fastLocInterped_i_list[iMulti]

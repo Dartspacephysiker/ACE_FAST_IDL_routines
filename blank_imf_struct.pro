@@ -31,6 +31,7 @@ FUNCTION BLANK_IMF_STRUCT
                   satellite                  : 'OMNI'  , $
                   omni_Coords                : 'GSM'   , $
                   delay                      : 900     , $
+                  add_night_delay            : 0       , $
                   ;; multiple_delays            : 0B      , $
                   ;; multiples               : 0       , $
                   ;; multiString             : ''      , $

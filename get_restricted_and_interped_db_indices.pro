@@ -138,6 +138,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
      ENDCASE
 
   ENDIF ELSE BEGIN
+
+     IF KEYWORD_SET(IMF_struct.add_night_delay) THEN BEGIN
+        nightDelay = MAKE_ARRAY(N_ELEMENTS(dbStruct.mlt),/INTEGER,VALUE=0S)
+        nightDelay[WHERE(dbStruct.MLT LE 6.0 OR dbStruct.MLT GE 18.0)] = IMF_struct.add_night_delay
+     ENDIF ELSE BEGIN
+        nightDelay = 0
+     ENDELSE
+
      IF KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) THEN BEGIN
         
         nIter = N_ELEMENTS(IMF_struct.clockStr)-1
@@ -148,10 +156,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
            tempList      = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS( $
                            (KEYWORD_SET(for_eSpec_or_ion_db) OR KEYWORD_SET(for_sWay_DB)) ? $
                            dbStruct.(0) : $
-                           dbTimes,good_i,delay, $
+                           dbTimes, $
+                           good_i, $
+                           delay, $
+                           DBSTRUCT=dbStruct, $
+                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                            IMF_STRUCT=IMF_struct, $
                            MIMC_STRUCT=MIMC_struct, $
-                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+                           NIGHTDELAY=nightDelay, $
                            RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                            /RESET_OMNI_INDS, $
                            OUT_OMNI_PARAMSTR=out_omni_paramStr, $
@@ -167,17 +179,22 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
 
            restricted_and_interped_i_list.add,tempList[0] ;shouldn't be more than one element here
         ENDFOR
+
      ENDIF ELSE BEGIN
+
         IMF_struct.clock_i = 0
         restricted_and_interped_i_list  = GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS($
                                           (KEYWORD_SET(for_eSpec_or_ion_db) OR KEYWORD_SET(for_sWay_DB)) ? $
                                           dbStruct.(0) : $
                                           dbTimes, $
-                                          good_i,delay, $
+                                          good_i, $
+                                          delay, $
+                                          DBSTRUCT=dbStruct, $
                                           /RESTRICT_TO_ALFVENDB_TIMES, $
-                                          MIMC_STRUCT=MIMC_struct, $
                                           ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
                                           IMF_STRUCT=IMF_struct, $
+                                          MIMC_STRUCT=MIMC_struct, $
+                                          NIGHTDELAY=nightDelay, $
                                           RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                                           RESET_OMNI_INDS=reset_omni_inds, $
                                           OUT_OMNI_PARAMSTR=out_omni_paramStr, $

@@ -1,8 +1,13 @@
-FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay, $
+FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS, $
+   dbTimes, $
+   db_i, $
+   delay, $
+   DBSTRUCT=dbStruct, $
    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $
+   NIGHTDELAY=nightDelay, $
    RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
    RESET_OMNI_INDS=reset_omni_inds, $
    ;; OMNI_COORDS=OMNI_coords, $
@@ -76,8 +81,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS,dbTimes,db_i,delay
            startT = C_OMNI__mag_UTC[stable_omni_i[start_OMNI_ii]]+IMF_struct.delay[iDel]-C_OMNI__stableIMF*60.
            stopT  = C_OMNI__mag_UTC[stable_omni_i[stop_OMNI_ii ]]+IMF_struct.delay[iDel]
 
-           checkStart = VALUE_LOCATE(startT,dbTimes[db_i])           ;checkStart = VALUE_LOCATE(dbTimes[db_i],startT)
-           checkStop  = VALUE_LOCATE(stopT,dbTimes[db_i])            ;checkStop  = VALUE_LOCATE(dbTimes[db_i],stopT)
+           checkStart = VALUE_LOCATE(startT,dbTimes[db_i]+nightDelay[db_i]) ;checkStart = VALUE_LOCATE(dbTimes[db_i],startT)
+           checkStop  = VALUE_LOCATE(stopT,dbTimes[db_i]+nightDelay[db_i])  ;checkStop  = VALUE_LOCATE(dbTimes[db_i],stopT)
            gaps       = stopT-startT
            qualifying_db_ii = WHERE( $
                               (startT[checkStart] LE dbTimes[db_i]) AND $
