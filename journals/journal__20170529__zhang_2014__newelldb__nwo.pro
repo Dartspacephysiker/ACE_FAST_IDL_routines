@@ -213,7 +213,7 @@ PRO JOURNAL__20170529__ZHANG_2014__NEWELLDB__NWO
   binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
-  delayArr                       = (INDGEN(3)*5*60)[1:-1]
+  delayArr                       = (INDGEN(12)*5*60)[4:-1]
   add_night_delay                = 2400
 
   reset_omni_inds                = 1

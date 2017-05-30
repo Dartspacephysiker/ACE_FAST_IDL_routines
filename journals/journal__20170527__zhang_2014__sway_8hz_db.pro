@@ -36,9 +36,9 @@ PRO JOURNAL__20170527__ZHANG_2014__SWAY_8HZ_DB
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.5
+  btMin                          = 1.0
   smoothWindow                   = 0
-  stableIMF                      = 19
+  stableIMF                      = 9
 
   ;;Delay stuff
   ;; delayDeltaSec                  = 3600
