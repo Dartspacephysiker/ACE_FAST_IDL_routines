@@ -17,16 +17,19 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
      @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
   ENDIF
 
-  ;; delayArr                 = (INDGEN(13)*5*60)
+  delayArr                 = (INDGEN(25)*5*60)
+  ;; delayArr                 = [10,15]*60
+  ;; delayArr                 = [10,15,20,25,30]*60
   ;; delayArr                 = (INDGEN(7)*5*60)+3900
-  delayArr                 = (INDGEN(4)*5*60)
-  add_night_delay          = 40*60
+  delayArr                 = (INDGEN(19)*5*60)
+  ;; add_night_delay          = 40*60
 
   ;; latest_UTC            = STR_TO_TIME('1999-05-16/03:20:59.853')
 
   labels_for_presentation  = 1
 
-  plotPref += '--upto90ILAT'
+  
+  plotPref = ( (N_ELEMENTS(plotPref)GT 0) ? plotPref : '' ) + '--upto90ILAT'
   ;; plotPref += ''
 
   minM_c    = [ 6,12]

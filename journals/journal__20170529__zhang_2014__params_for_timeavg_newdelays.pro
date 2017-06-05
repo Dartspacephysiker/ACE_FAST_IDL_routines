@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -50
+   DSTcutoff                          = -30
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
@@ -50,8 +50,8 @@
 
   ;;Delay stuff
   ;; nDelays                        = 1
-  delayDeltaSec                  = 1800
-  binOffset_delay                = 0
+  ;; delayDeltaSec                  = 0
+  ;; binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = 300
   delayArr                       = 0
