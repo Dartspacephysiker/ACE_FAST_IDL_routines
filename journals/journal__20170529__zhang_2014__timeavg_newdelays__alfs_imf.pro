@@ -463,6 +463,15 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
            LOG_NEWELLPLOT=log_newellPlot, $
            LOG_NOWEPCOPLOT=log_nowepcoPlot, $
+           CALCVAR_EFLUX=calcVar_Eflux, $
+           CALCVAR_ENUMFL=calcVar_ENumFl, $
+           CALCVAR__SWAY=calcVar__sWay, $
+           CALCVAR_PFLUX=calcVar_Pflux, $
+           CALCVAR_IFLUX=calcVar_Iflux, $
+           CALCVAR_OXYFLUX=calcVar_OxyFlux, $
+           CALCVAR_CHARE=calcVar_CharE, $
+           CALCVAR_CHARIE=calcVar_Charie, $
+           CALCVAR_MAGC=calcVar_MagC, $
            CHAREPLOTRANGE=charePlotRange, $
            CHARIEPLOTRANGE=chariEPlotRange, $
            EPLOTRANGE=EPlotRange, $
@@ -483,6 +492,8 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            PPLOTRANGE=PPlotRange, $
            PROBOCCURRENCERANGE=probOccurrenceRange, $
            THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+           VAR__EACH_BIN=var__each_bin, $
+           VAR__DISTTYPE=var__distType, $
            RESET_STRUCT=reset
 
         PLOT_ALFVEN_STATS_IMF_SCREENING, $

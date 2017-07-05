@@ -1698,7 +1698,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                  BOTH_HEMIS=STRUPCASE(PASIS__MIMC_struct.hemi) EQ 'BOTH', $
                  CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                  CB_FORCE_OOBLOW=cb_force_oobLow, $
-                 NCUSTOMINTEGRALS=PASIS__alfDB_plot_struct.nCustomIntegrals)
+                 NCUSTOMINTEGRALS=PASIS__alfDB_plot_struct.nCustomIntegrals, $
+                 VAR__EACH_BIN=PASIS__alfDB_plot_struct.var__each_bin, $
+                 VAR__DISTTYPE=PASIS__alfDB_plot_struct.var__distType)
 
   IF KEYWORD_SET(no_maximus) THEN BEGIN
      tmplt_h2dStr.is_alfDB   = 0B
@@ -1940,6 +1942,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         HAVE_PREVIOUS_ESPEC_THISTO=have_prev_eSpec_tHistos, $
         IN_THISTDENOMINATOR=tHistDenominator, $
         IN_ESPEC_THISTDENOMINATOR=eSpec_tHistDenominator, $
+        PLOTDIR=plotDir, $
         _EXTRA=extra, $
         LUN=lun
 
