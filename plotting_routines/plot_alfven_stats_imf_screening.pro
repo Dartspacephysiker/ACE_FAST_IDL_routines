@@ -1806,6 +1806,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   h2dStrArr_List                   = LIST()
   dataNameArr_List                 = LIST()
   dataRawPtrArr_List               = LIST()
+  H2DStr_varPlot_i_list            = LIST()
   ;; FOR iMulti=0,N_ELEMENTS(plot_i_list)-1 DO BEGIN
   FOR iMulti=0,NIter-1 DO BEGIN
 
@@ -1942,6 +1943,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
         HAVE_PREVIOUS_ESPEC_THISTO=have_prev_eSpec_tHistos, $
         IN_THISTDENOMINATOR=tHistDenominator, $
         IN_ESPEC_THISTDENOMINATOR=eSpec_tHistDenominator, $
+        OUT_H2DSTR_VARPLOT_I=out_H2DStr_varPlot_i, $
         PLOTDIR=plotDir, $
         _EXTRA=extra, $
         LUN=lun
@@ -1949,6 +1951,10 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      h2dStrArr_List.add,h2dStrArr
      dataNameArr_list.add,dataNameArr
      dataRawPtrArr_list.add,dataRawPtrArr
+
+     IF N_ELEMENTS(out_H2DStr_varPlot_i) GT 0 THEN BEGIN
+        H2DStr_varPlot_i_list.Add,TEMPORARY(out_H2DStr_varPlot_i)
+     ENDIF
 
      IF KEYWORD_SET(use_prev_tHistos) AND ~KEYWORD_SET(have_prev_tHistos) THEN BEGIN
         CASE iMulti OF
@@ -1973,6 +1979,80 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      ENDIF
 
   ENDFOR
+
+  setThreshBasedOnVariance = 1
+  IF KEYWORD_SET(setThreshBasedOnVariance) THEN BEGIN
+
+     nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)
+
+     alleH2DVars  = !NULL
+     alleDataNavn = !NULL
+     nVarPlots    = 0
+     FOR k=0,nListMem-1 DO BEGIN
+
+        H2DStrArr   = H2DStrArr_list[k]
+        dataNameArr = dataNameArr_list[k]
+        H2DStr_varPlot_i = H2DStr_varPlot_i_list[k]
+        
+        alleH2DVars  = [alleH2DVars ,H2DStrArr[H2DStr_varPlot_i]]
+        alleDataNavn = [alleDataNavn,dataNameArr[H2DStr_varPlot_i]]
+
+        nVarPlots += N_ELEMENTS(H2DStr_varPlot_i)
+
+     ENDFOR
+     
+     PRINT,FORMAT='("Got ",I0," varPlots")',nVarPlots
+     
+
+     curMaskVal = 0
+     targetDev_Abt_Mean          = .30
+     targetPctAbove_Dev_Mean_Pct = .90
+     
+     nTot      = N_ELEMENTS(alleH2DVars[0].var.density)
+
+     satisfied = 0B
+     WHILE ~satisfied DO BEGIN
+
+        PRINT,'CurMaskVal: ',curMaskVal
+
+        FOR k=0,nVarPlots-1 DO BEGIN
+           H2DStrTmp = alleH2DVars[k]
+           dataName  = alleDataNavn[k]
+           density   = REFORM(alleH2DVars[k].var.density,nTot)
+           var       = REFORM(alleH2DVars[k].var.var,nTot)
+
+
+           nz_i     = WHERE(density GT 0,nNZero)
+           noMask_i = WHERE(density GT curMaskVal,nNMask)
+           
+
+           IF nNZero EQ 0 THEN BEGIN
+              PRINT,"Bad luck!"
+              STOP
+           ENDIF
+
+           tmpDens = (density)[noMask_i]
+           tmpCV   = (var)[noMask_i]
+
+           below_targDAM_i = WHERE(tmpCV LE targetDev_abt_Mean,nBelow_targDAM)
+           cond            = nBelow_targDAM GE FLOOR(targetPctAbove_Dev_Mean_Pct*nNMask)
+           
+           IF ~cond THEN BEGIN
+              satisfied = 0B
+              BREAK
+           ENDIF ELSE satisfied = 1B
+        
+        ENDFOR
+
+        IF ~satisfied THEN BEGIN
+           curMaskVal++
+        ENDIF
+        
+     ENDWHILE
+
+     STOP
+
+  ENDIF
 
   IF KEYWORD_SET(grossRate_info_file) THEN BEGIN
      CLOSE_GROSSRATE_INFO_FILE,grossRate_info_file,grossLun
