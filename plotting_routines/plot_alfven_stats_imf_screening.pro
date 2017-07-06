@@ -1980,7 +1980,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDFOR
 
-  setThreshBasedOnVariance = 1
+  setThreshBasedOnVariance = 0
   IF KEYWORD_SET(setThreshBasedOnVariance) THEN BEGIN
 
      nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)
@@ -2004,13 +2004,16 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      PRINT,FORMAT='("Got ",I0," varPlots")',nVarPlots
      
 
-     curMaskVal = 0
-     targetDev_Abt_Mean          = .30
-     targetPctAbove_Dev_Mean_Pct = .90
+     curMaskVal = 2
+     targetDev_Abt_Mean          = .33
+     targetPctAbove_Dev_Mean_Pct = .70
      
      nTot      = N_ELEMENTS(alleH2DVars[0].var.density)
 
-     satisfied = 0B
+     pushthrough = 1
+     dontBuyIt   = 0B
+     justGoUntilThesens = 10
+     satisfied   = 0B
      WHILE ~satisfied DO BEGIN
 
         PRINT,'CurMaskVal: ',curMaskVal
@@ -2023,7 +2026,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
 
            nz_i     = WHERE(density GT 0,nNZero)
-           noMask_i = WHERE(density GT curMaskVal,nNMask)
+           noMask_i = WHERE(density GE curMaskVal,nNMask)
            
 
            IF nNZero EQ 0 THEN BEGIN
@@ -2035,16 +2038,36 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            tmpCV   = (var)[noMask_i]
 
            below_targDAM_i = WHERE(tmpCV LE targetDev_abt_Mean,nBelow_targDAM)
-           cond            = nBelow_targDAM GE FLOOR(targetPctAbove_Dev_Mean_Pct*nNMask)
+           cond            = FLOAT(nBelow_targDAM)/nNMask GE targetPctAbove_Dev_Mean_Pct
+           PRINT,FORMAT='("[",I0,"--",A0,T45,"]","  ",F0.2,"% are below ",F0.1,"% deviation about mean")', $
+                 k, $
+                 dataName, $
+                 nBelow_targDAM/FLOAT(nNMask)*100., $
+                 targetDev_abt_Mean*100.
            
            IF ~cond THEN BEGIN
               satisfied = 0B
-              BREAK
+              IF KEYWORD_SET(pushthrough) THEN BEGIN
+                 dontBuyIt = 1B
+              ENDIF ELSE BEGIN
+                 BREAK
+              ENDELSE
            ENDIF ELSE satisfied = 1B
         
         ENDFOR
 
-        IF ~satisfied THEN BEGIN
+        IF ~satisfied OR dontBuyIt THEN BEGIN
+           curMaskVal++
+        ENDIF  ;; ELSE BEGIN        
+        ;;    IF dontBuyIt THEN satisfied = 0B
+        ;; ENDELSE
+        IF dontBuyIt THEN BEGIN
+           satisfied = 0B
+           dontBuyIt = 0B
+        ENDIF
+
+        IF KEYWORD_SET(justGoUntilThesens) AND satisfied THEN BEGIN
+           satisfied = justGoUntilThesens LE curMaskVal
            curMaskVal++
         ENDIF
         
