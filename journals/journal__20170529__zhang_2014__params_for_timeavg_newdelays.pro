@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -30
+   DSTcutoff                          = -50
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 

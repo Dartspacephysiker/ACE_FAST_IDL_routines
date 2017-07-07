@@ -62,8 +62,8 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS, $
   FOR iDel=0,NIter-1 DO BEGIN
 
      ;;Going to try some new stuff 2017/05/29
-     bro = 1
-     IF bro THEN BEGIN
+     new_sweeter_messord = 1
+     IF new_sweeter_messord THEN BEGIN
 
         qualifying_db_ii = !NULL
         allowable_gap    = 3

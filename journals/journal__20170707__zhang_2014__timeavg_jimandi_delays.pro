@@ -1,9 +1,8 @@
-; 2017/05/29
 ; 2017/07/07
 ; Using plot produced in a journal file* Jim and I have decided that the magisk delay for dayside is 30 min, and the magisk delay for
 ; nightside is 55 min. See what it is
 ; *journal__20170707__those_plots_you_were_telling_jim_about__hemisph_rates.pro
-PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
+PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
@@ -38,11 +37,10 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   ;;                                 calcVar_MagC    : 0B $
   ;;                                }
 
-  delayArr                 = (INDGEN(25)*5*60)
-  delayArr                 = (INDGEN(19)*5*60)
+  delayArr                 = [30] ;dayside
+  add_night_delay          = 25 ;becauseJim and I know
 
   labels_for_presentation  = 1
-
   
   plotPref = ( (N_ELEMENTS(plotPref)GT 0) ? plotPref : '' ) + '--upto90ILAT'
 
@@ -601,4 +599,5 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   ENDFOR
 
 END
+
 
