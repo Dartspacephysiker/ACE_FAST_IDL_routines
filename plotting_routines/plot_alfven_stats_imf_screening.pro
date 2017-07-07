@@ -499,6 +499,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      IF LOAD_PASIS_VARS(NEED_FASTLOC_I=need_fastLoc_i, $
                         REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
                         /VERBOSE) $
+
      THEN BEGIN
         get_plot_i    = 0
         get_fastLoc_i = 0
@@ -1699,8 +1700,8 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                  CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                  CB_FORCE_OOBLOW=cb_force_oobLow, $
                  NCUSTOMINTEGRALS=PASIS__alfDB_plot_struct.nCustomIntegrals, $
-                 VAR__EACH_BIN=PASIS__alfDB_plot_struct.var__each_bin, $
-                 VAR__DISTTYPE=PASIS__alfDB_plot_struct.var__distType)
+                 VAR__EACH_BIN=PASIS__alfDB_plot_struct.varOpt.var__each_bin, $
+                 VAR__DISTTYPE=PASIS__alfDB_plot_struct.varOpt.var__distType)
 
   IF KEYWORD_SET(no_maximus) THEN BEGIN
      tmplt_h2dStr.is_alfDB   = 0B
@@ -1980,7 +1981,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDFOR
 
-  setThreshBasedOnVariance = 0
+  setThreshBasedOnVariance = 1
   IF KEYWORD_SET(setThreshBasedOnVariance) THEN BEGIN
 
      nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)

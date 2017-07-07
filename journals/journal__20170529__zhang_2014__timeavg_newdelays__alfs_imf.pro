@@ -17,20 +17,29 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
      @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
   ENDIF
 
-  delayArr                 = (INDGEN(25)*5*60)
-  ;; delayArr                 = [10,15]*60
-  ;; delayArr                 = [10,15,20,25,30]*60
-  ;; delayArr                 = (INDGEN(7)*5*60)+3900
-  delayArr                 = (INDGEN(19)*5*60)
-  ;; add_night_delay          = 40*60
+  ;; varOpt                       = {var__each_bin          : 1, $
+  ;;                                 ;; var__distType         : 
+  ;;                                 assume_lognorm         : 1, $
+  ;;                                 varScatterPlotPref     : 'lognorm_cv', $
+  ;;                                 show_var_scatterplots  : 1, $
+  ;;                                 calcVar_Eflux   : 0B, $
+  ;;                                 calcVar_ENumFl  : [1B,1B], $
+  ;;                                 ;; calcVar__sWay   = 0B, $
+  ;;                                 calcVar_Pflux   : 1B, $
+  ;;                                 calcVar_Iflux   : 1B, $
+  ;;                                 calcVar_OxyFlux : 0B, $
+  ;;                                 calcVar_CharE   : 0B, $
+  ;;                                 calcVar_Charie  : 0B, $
+  ;;                                 calcVar_MagC    : 0B $
+  ;;                                }
 
-  ;; latest_UTC            = STR_TO_TIME('1999-05-16/03:20:59.853')
+  delayArr                 = (INDGEN(25)*5*60)
+  delayArr                 = (INDGEN(19)*5*60)
 
   labels_for_presentation  = 1
 
   
   plotPref = ( (N_ELEMENTS(plotPref)GT 0) ? plotPref : '' ) + '--upto90ILAT'
-  ;; plotPref += ''
 
   minM_c    = [ 6,12]
   maxM_c    = [12,18]
@@ -40,7 +49,6 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   include_32Hz                   = 0
   EA_binning                     = 0
   use_AACGM                      = 0
-
 
   fluxPlots__invert_Newell_the_cusp = 0
   fluxPlots__Newell_the_cusp     = 0
@@ -289,6 +297,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            BOTH_HEMIS=both_hemis, $
            DAYSIDE=dayside, $
            NIGHTSIDE=nightside, $
+           VAROPT=varOpt, $
            AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
            FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
            FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
@@ -463,15 +472,6 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
            LOG_NEWELLPLOT=log_newellPlot, $
            LOG_NOWEPCOPLOT=log_nowepcoPlot, $
-           CALCVAR_EFLUX=calcVar_Eflux, $
-           CALCVAR_ENUMFL=calcVar_ENumFl, $
-           CALCVAR__SWAY=calcVar__sWay, $
-           CALCVAR_PFLUX=calcVar_Pflux, $
-           CALCVAR_IFLUX=calcVar_Iflux, $
-           CALCVAR_OXYFLUX=calcVar_OxyFlux, $
-           CALCVAR_CHARE=calcVar_CharE, $
-           CALCVAR_CHARIE=calcVar_Charie, $
-           CALCVAR_MAGC=calcVar_MagC, $
            CHAREPLOTRANGE=charePlotRange, $
            CHARIEPLOTRANGE=chariEPlotRange, $
            EPLOTRANGE=EPlotRange, $
@@ -492,8 +492,6 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
            PPLOTRANGE=PPlotRange, $
            PROBOCCURRENCERANGE=probOccurrenceRange, $
            THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
-           VAR__EACH_BIN=var__each_bin, $
-           VAR__DISTTYPE=var__distType, $
            RESET_STRUCT=reset
 
         PLOT_ALFVEN_STATS_IMF_SCREENING, $
