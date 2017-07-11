@@ -3,32 +3,55 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  doDawnDuskPlots = 0
-  doRegPlots      = 1
+  doDawnDuskPlots = 1
+  doRegPlots      = 0
 
-  justSaveEmAll = 1B
-  stopEachTime  = 0B
+  include_ions    = 1
 
-  fileDir      = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
+  dstMin       = '-50'
+  ;; dstMin       = '-100'
+
+  justSaveEmAll   = 1B
+  stopEachTime    = 0B
+
+  fileDir         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
   ;; filePref     = 'polarplots_Dst_-50--upto90ILAT1500-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_19stable_'
 
   ;; filePref     = 'polarplots_Dst_-50--upto90ILAT300-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
   ;; plotPref     = 'polarplots_Dst_-50--upto90ILAT300-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
 
-  filePref     = 'polarplots_Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
-  plotPref     = 'Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_30.0Res_btMin1.0-'
+  ;; filePref     = 'polarplots_Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
+  ;; plotPref     = 'Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_30.0Res_btMin1.0-'
+  filePref     = 'polarplots_Dst_' + dstMin + '--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
+  plotPref     = 'Dst_' + dstMin + '--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_30.0Res_btMin1.0-'
 
-  fileSuff     = 'Del_30.0Res_btMin1.0-Ring_tAvgd_'
+  fileSuff     = 'Del_btMin1.0-Ring_tAvgd_'
 
   quants       = ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
   divFacs      = [1.0D25,1.0D9,1.0D9]
   ;; niceNavn     = MAKE_ARRAY(3,/STRING)
   niceNavn     = ['Electron Precipitation (x10!U25!N/s)','Wave Energy Deposition (GW)','Electron Energy Deposition (GW)']
+
+  ;;For three quantities
+  xPlotPos      = [0.1,0.95]
+  positionList = LIST([xPlotPos[0],0.7,xPlotPos[1],0.95], $
+                      [xPlotPos[0],0.35,xPlotPos[1],0.68], $
+                      [xPlotPos[0],0.05,xPlotPos[1],0.33])
+
+  IF KEYWORD_SET(include_ions) THEN BEGIN
+     quants    = [quants  ,'sptAvg_NoN-iflux_IntgUp']
+     divFacs   = [divFacs ,1.0D24]
+     niceNavn  = [niceNavn,'Upflowing ions (x10!U24!N/s)']
+     positionList = LIST([xPlotPos[0],0.74,xPlotPos[1],0.94], $
+                         [xPlotPos[0],0.51,xPlotPos[1],0.72], $
+                         [xPlotPos[0],0.28,xPlotPos[1],0.49], $
+                         [xPlotPos[0],0.05,xPlotPos[1],0.26])
+  ENDIF
   nQuants      = N_ELEMENTS(quants)
 
   nDelay       = 13 ;up to 60
-  nDelay       = 25 ;up to 120
-  dels         = INDGEN(nDelay)*5
+  nDelay       = 29 ;up to 120, starting at -20
+  dels         = (INDGEN(nDelay)-4)*5
   delsStr      = STRING(FORMAT='(F0.1)',dels)
 
   clockStrings = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
@@ -50,14 +73,6 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
   xTickFontSize = 14
   yTickFontSize = 14
   legPos        = [0.95,0.75]
-
-  ;;For three quantities
-  x1            = 0.1
-  x2            = 0.95
-  positionList  = LIST([x1,0.7,x2,0.95], $
-                       [x1,0.35,x2,0.68], $
-                       [x1,0.05,x2,0.33])
-
 
   FOREACH del,delsStr,iDel DO BEGIN
 
@@ -123,6 +138,7 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
                                   XTITLE='Delay (min)', $
                                   XSHOWTEXT=(iQuant EQ (nQuants-1) ? !NULL : 0), $
                                   YTITLE=niceNavn[iQuant], $
+                                  XSTYLE=3, $
                                   FONT_SIZE=fontSize, $
                                   XTICKFONT_SIZE=xTickFontSize, $
                                   YTICKFONT_SIZE=yTickFontSize, $
@@ -189,6 +205,7 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
                                    TITLE=iQuant EQ 0 ? IMF : '', $
                                    XTITLE='Delay (min)', $
                                    XSHOWTEXT=(iQuant EQ (nQuants-1) ? !NULL : 0), $
+                                   XSTYLE=3, $
                                    YTITLE=niceNavn[iQuant], $
                                    FONT_SIZE=fontSize, $
                                    XTICKFONT_SIZE=xTickFontSize, $

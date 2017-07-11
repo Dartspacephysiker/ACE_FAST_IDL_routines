@@ -37,11 +37,11 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                 calcVar_MagC    : 0B $
   ;;                                }
 
-  maskMin                  = 8
+  ;; delayArr                 = [30] ;dayside
+  ;; add_night_delay          = 25 ;because Jim and I know
 
-
-  delayArr                 = [30]*60 ;dayside
-  add_night_delay          = 25*60 ;becauseJim and I know
+  delayArr                 = [15]*60 ;dayside
+  add_night_delay          = 40*60 ;because Jim and I know
 
   labels_for_presentation  = 1
   
