@@ -40,8 +40,8 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;; delayArr                 = [30] ;dayside
   ;; add_night_delay          = 25 ;because Jim and I know
 
-  delayArr                 = [15]*60 ;dayside
-  add_night_delay          = 40*60 ;because Jim and I know
+  delayArr                 = [25]*60 ;dayside
+  add_night_delay          = 30*60 ;because Jim and I know
 
   labels_for_presentation  = 1
   
