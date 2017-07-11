@@ -1,4 +1,4 @@
-;+
+
 ; NAME: PLOT_ALFVEN_STATS_IMF_SCREENING
 ;
 ; PURPOSE: Plot FAST data processed by Chris Chaston's ALFVEN_STATS_5 procedure (with mods).
@@ -1984,7 +1984,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   setThreshBasedOnVariance = 1
   nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)
   IF KEYWORD_SET(setThreshBasedOnVariance) AND nListMem GT 0 THEN BEGIN
-
 
      alleH2DVars  = !NULL
      alleDataNavn = !NULL

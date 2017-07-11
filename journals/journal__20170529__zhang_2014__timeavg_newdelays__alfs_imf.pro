@@ -8,7 +8,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
 
   do_what_everyone_does    = 1
 
@@ -38,8 +38,8 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
   ;;                                 calcVar_MagC    : 0B $
   ;;                                }
 
-  delayArr                 = (INDGEN(25)*5*60)
-  delayArr                 = (INDGEN(19)*5*60)
+  delayArr                 = (INDGEN(29)*5*60)-1200
+  ;; delayArr                 = (INDGEN(19)*5*60)
 
   labels_for_presentation  = 1
 
@@ -48,7 +48,7 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
 
   minM_c    = [ 6,12]
   maxM_c    = [12,18]
-  minI_c    = [70,70]
+  minI_c    = [60,60]
   maxI_c    = [90,90]
 
   include_32Hz                   = 0
@@ -125,12 +125,12 @@ PRO JOURNAL__20170529__ZHANG_2014__TIMEAVG_NEWDELAYS__ALFS_IMF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 0
+  besides_pFlux                      = 1
   ePlots                             = 0
   eNumFlPlots                        = 1
   pPlots                             = 1
   ionPlots                           = besides_pFlux
-  ;; probOccurrencePlot                 = besides_pFlux
+  probOccurrencePlot                 = besides_pFlux
   tHistDenominatorPlot               = besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
