@@ -1982,9 +1982,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
   ENDFOR
 
   setThreshBasedOnVariance = 1
-  IF KEYWORD_SET(setThreshBasedOnVariance) THEN BEGIN
+  nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)
+  IF KEYWORD_SET(setThreshBasedOnVariance) AND nListMem GT 0 THEN BEGIN
 
-     nListMem = N_ELEMENTS(H2DStr_varPlot_i_list)
 
      alleH2DVars  = !NULL
      alleDataNavn = !NULL

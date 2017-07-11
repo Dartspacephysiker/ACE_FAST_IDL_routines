@@ -45,7 +45,7 @@
 
   smoothWindow                   = 0
 
-  stableIMF                      = 9
+  stableIMF                      = 19
   IMF_allowable_streak_dt        = 300
 
   ;;Delay stuff
