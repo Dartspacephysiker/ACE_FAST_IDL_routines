@@ -6,8 +6,8 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  use_prev_plot_i          = 1
+  remake_prev_plot_file    = 0
 
   do_what_everyone_does    = 1
 
@@ -37,8 +37,11 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                 calcVar_MagC    : 0B $
   ;;                                }
 
-  delayArr                 = [30] ;dayside
-  add_night_delay          = 25 ;becauseJim and I know
+  maskMin                  = 8
+
+
+  delayArr                 = [30]*60 ;dayside
+  add_night_delay          = 25*60 ;becauseJim and I know
 
   labels_for_presentation  = 1
   
@@ -123,12 +126,12 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 0
+  besides_pFlux                      = 1
   ePlots                             = 0
   eNumFlPlots                        = 1
   pPlots                             = 1
   ionPlots                           = besides_pFlux
-  ;; probOccurrencePlot                 = besides_pFlux
+  probOccurrencePlot                 = besides_pFlux
   tHistDenominatorPlot               = besides_pFlux
   sum_electron_and_poyntingflux      = 0
   nOrbsWithEventsPerContribOrbsPlot  = 0
