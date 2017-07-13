@@ -117,8 +117,6 @@ PRO GET_OMNI_IND_STREAKS,mag_utc,goodmag_goodtimes_i, $
               
            ENDWHILE
 
-
-
            start_i = TEMPORARY(newStart_i)
            stop_i  = TEMPORARY(newStop_i)
 

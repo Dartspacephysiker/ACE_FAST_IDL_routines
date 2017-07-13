@@ -66,7 +66,7 @@ FUNCTION GET_ALFVEN_OR_FASTLOC_INDS_MEETING_OMNI_REQUIREMENTS, $
      IF new_sweeter_messord THEN BEGIN
 
         qualifying_db_ii = !NULL
-        allowable_gap    = 3
+        ;; allowable_gap    = 3
 
         GET_STREAKS,stable_OMNI_i, $
                     START_I=start_OMNI_ii, $

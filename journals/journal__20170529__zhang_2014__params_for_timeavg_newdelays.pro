@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -40
+   DSTcutoff                          = -25
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
@@ -35,18 +35,18 @@
 
   reset_good_inds                = 1
 
-  altRange                       = [[750,4300]]
+  altRange                       = [[300,4300]]
 
   orbRange                       = [500,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 1.0
+  btMin                          = 0.5
 
   smoothWindow                   = 0
 
   stableIMF                      = 19
-  IMF_allowable_streak_dt        = 300
+  IMF_allowable_streak_dt        = 0
 
   ;;Delay stuff
   ;; nDelays                        = 1

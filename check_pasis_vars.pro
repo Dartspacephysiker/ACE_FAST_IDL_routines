@@ -190,6 +190,11 @@ PRO CHECK_PASIS_VARS, $
         plots_reset++
      ENDIF
 
+     IF ~ARRAY_EQUAL(PASIS__IMF_struct.IMF_allowable_streak_dt,IMF_struct.IMF_allowable_streak_dt) THEN BEGIN
+        inds_reset++
+        plots_reset++
+     ENDIF
+
      comp =  COMPARE_STRUCT(PASIS__IMF_struct,IMF_struct,EXCEPT=['binOffset_delay', $
                                                                  'btMin','btMax', $
                                                                  'bxMin','bxMax', $
@@ -204,7 +209,8 @@ PRO CHECK_PASIS_VARS, $
                                                                  'delay', $
                                                                  'add_night_delay', $
                                                                  'latest_UTC', $
-                                                                 'latest_JulDay'])
+                                                                 'latest_JulDay', $
+                                                                 'IMF_allowable_streak_dt'])
 
      IF comp.nDiff GT 0 THEN BEGIN
 
