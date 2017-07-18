@@ -188,7 +188,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Tiled plot options
 
-  altRange                       = [[750,4300]]
+  altRange                       = [[300,4300]]
 
   IF KEYWORD_SET(eSpec__use_2000km_file) THEN BEGIN
      altRange                    = [300,2000]
@@ -204,7 +204,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   smoothWindow                   = 0
 
-  stableIMF                      = 9
+  stableIMF                      = 24
 
   ;;Delay stuff
   nDelays                        = 1
@@ -213,8 +213,8 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
   ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
-  delayArr                       = [30]*60
-  add_night_delay                = 25*60
+  delayArr                       = [25]*60
+  add_night_delay                = 30*60
 
   reset_omni_inds                = 1
   reset_good_inds                = 1
