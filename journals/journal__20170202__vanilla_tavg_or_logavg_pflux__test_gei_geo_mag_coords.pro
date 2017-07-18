@@ -10,10 +10,10 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   divide_by_width_x         = 1
 
   include_32Hz              = 0
-  use_Lng                   = 1
-  use_AACGM                 = 0
+  use_Lng                   = 0
+  use_AACGM                 = 1
   use_GEI                   = 0
-  use_GEO                   = 1
+  use_GEO                   = 0
   use_MAG                   = 0
 
   minMC                     = 1
@@ -33,17 +33,17 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   dont_blackball_maximus    = 1
   dont_blackball_fastloc    = 1
 
-  show_integrals            = 1
+  show_integrals            = 0
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
 
   ;; ePlots                         = 0
-  ;; eNumFlPlots                    = 0
+  eNumFlPlots                    = 1
   pPlots                         = 1
   nOrbsWithEventsPerContribOrbsPlot = 0
   ;; ionPlots                       = 0
   probOccurrencePlot             = 0
-  ;; sum_electron_and_poyntingflux  = 0
+  sum_electron_and_poyntingflux  = 1
   ;; tHistDenominatorPlot           = 0
 
   nowepco_range                  = [0,0.5]
@@ -56,14 +56,14 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   ;; logEfPlot                      = 0
   ;; noNegEflux                     = 0
 
-  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  ;; noNegENumFl                    = [1,1]
-  ;; logENumFlPlot               = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  ;; logENumFlPlot                  = [0,0]
-  ;; ENumFlPlotRange                = [[0,1], $
-  ;;                             [0,2e9]]
+  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  noNegENumFl                    = [1,1]
+  ;; logENumFlPlot                  = [1,1]
+  ;; ENumFlPlotRange                = [[1e-1,1e1], $
+  ;;                                   [1e7,1e9]]
+  logENumFlPlot                  = [0,0]
+  ENumFlPlotRange                = [[0,0.25], $
+                                    [0,1e9]]
   ;; eNumFlPlotType                 = 'ESA_Number_flux'
   ;; noNegENumFl                    = 0
   ;; logENumFlPlot                  = 0
@@ -96,7 +96,7 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   logProbOccurrence              = 0
   probOccurrenceRange            = [0.0,0.5]
 
-  summed_eFlux_pFluxplotRange    = [0,1.5]
+  summed_eFlux_pFluxplotRange    = [0,0.4]
   
   ;; tHistDenomPlotRange            = 
   ;; tHistDenomPlotNormalize        = 
@@ -121,7 +121,7 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   ;;                                   [900,4300], $
   ;;                                   [1000,4300]]
 
-  altRange                       = [[500,4300]]
+  altRange                       = [[750,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
@@ -163,10 +163,10 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   minI                        = 60
   maxI                        = 90
 
-  hemi                        = 'GLOBE'
-  minI                        = -90
-  maxI                        = 90
-  map_projection              = 'ROBINSON'
+  ;; hemi                        = 'GLOBE'
+  ;; minI                        = -90
+  ;; maxI                        = 90
+  ;; map_projection              = 'ROBINSON'
 
   ;; hemi                        = 'SOUTH'
   ;; minILAT                     = -90
@@ -184,7 +184,7 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   ;; maxMLT                      = 18
 
   ;;Bonus
-  ;; maskMin                        = 10
+  ;; maskMin                        = 8
   ;; tHist_mask_bins_below_thresh   = 5
 
   FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN

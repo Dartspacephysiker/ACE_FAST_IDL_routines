@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -25
+   DSTcutoff                          = -40
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
@@ -41,11 +41,11 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;IMF condition stuff--run the ring!
-  btMin                          = 0.5
+  btMin                          = 1.0
 
   smoothWindow                   = 0
 
-  stableIMF                      = 19
+  stableIMF                      = 14
   IMF_allowable_streak_dt        = 0
 
   ;;Delay stuff

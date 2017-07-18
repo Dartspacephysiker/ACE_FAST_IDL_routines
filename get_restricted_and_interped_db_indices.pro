@@ -140,11 +140,14 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
   ENDIF ELSE BEGIN
 
      nightDelay = MAKE_ARRAY(N_ELEMENTS(dbStruct.mlt),/INTEGER,VALUE=0S)
-     IF KEYWORD_SET(IMF_struct.add_night_delay) THEN BEGIN
-        nightDelay[WHERE(dbStruct.MLT LE 6.0 OR dbStruct.MLT GE 18.0)] = IMF_struct.add_night_delay
-     ENDIF ;; ELSE BEGIN
-     ;;    nightDelay = 
-     ;; ENDELSE
+     CASE 1 OF
+        KEYWORD_SET(IMF_struct.fixed_night_delay): BEGIN
+           nightDelay[WHERE(dbStruct.MLT LE 6.0 OR dbStruct.MLT GE 18.0)] = IMF_struct.fixed_night_delay - IMF_struct.delay[0]
+        END
+        KEYWORD_SET(IMF_struct.add_night_delay): BEGIN
+           nightDelay[WHERE(dbStruct.MLT LE 6.0 OR dbStruct.MLT GE 18.0)] = IMF_struct.add_night_delay
+        END
+     ENDCASE
 
      IF KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) THEN BEGIN
         
