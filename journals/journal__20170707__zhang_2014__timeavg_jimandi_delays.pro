@@ -39,13 +39,15 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                }
 
   ;; delayArr                 = [10]*60 ;dayside
-  ;; add_night_delay          = 25*60 ;because Jim and I know
+  add_night_delay          = 45*60 ;because Jim and I know
 
-  fixed_night_delay           = 70*60
+  ;; fixed_night_delay           = 70*60
 
   ;; delayArr                 = [-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70]*60 ;dayside
   ;; delayArr                 = [55,60,65,70]*60 ;dayside
-  delayArr                 = (0+[0,5,10,15,20,25])*60 ;dayside
+  ;; delayArr                 = (0+[15])*60 ;dayside
+  delayArr                 = (0+[15,20,25,30,35,40,45])*60 ;dayside
+  ;; delayArr                 = (0+[20])*60 ;dayside
   ;; delayArr                 = [55]*60 ;dayside
   ;; delayArr                 = [-10,-5,0,5]*60 ;dayside
   ;; delayArr                 = [-25,-20,-15,-10,-5,0]*60 ;dayside

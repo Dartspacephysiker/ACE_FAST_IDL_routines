@@ -2,7 +2,7 @@
 ;;We need some UNITY for crying out loud
 
    nonstorm                           = 1
-   DSTcutoff                          = -40
+   DSTcutoff                          = -25
    smooth_dst                         = 0
    use_mostRecent_Dst_files           = 1
 
@@ -45,7 +45,7 @@
 
   smoothWindow                   = 0
 
-  stableIMF                      = 14
+  stableIMF                      = 19
   IMF_allowable_streak_dt        = 0
 
   ;;Delay stuff

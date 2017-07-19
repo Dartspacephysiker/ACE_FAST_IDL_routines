@@ -2,7 +2,7 @@
 PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
 
   use_prev_plot_i           = 1
-  remake_prev_plot_file     = 1
+  remake_prev_plot_file     = 0
   
   do_timeAvg_fluxQuantities = 1
   logAvgPlot                = 0
@@ -23,6 +23,7 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   do_despun                 = 0
 
   suppress_ILAT_labels      = 1
+  fancyPresentationMode     = 1
 
   autoscale_fluxPlots       = 0
 
@@ -121,7 +122,7 @@ PRO JOURNAL__20170202__VANILLA_TAVG_OR_LOGAVG_PFLUX__TEST_GEI_GEO_MAG_COORDS
   ;;                                   [900,4300], $
   ;;                                   [1000,4300]]
 
-  altRange                       = [[750,4300]]
+  altRange                       = [[300,4300]]
 
   ;;A more involved method for getting the correct orbits ...
   ;; orbRange                       = [500,12670]
