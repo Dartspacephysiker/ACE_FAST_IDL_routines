@@ -8,37 +8,52 @@ PRO JOURNAL__20170719__AVG_OVER_DELAYS
 
   include_ions    = 1
 
-  ;; dstMin       = '-75'
+  ;; DstCutoff    = -75
   ;; stableIMF    = '29'
 
-  ;; dstMin       = '-40'
+  ;; DstCutoff    = -40
   ;; stableIMF    = '19'
   ;; add_night_delay = 45*60
 
-  ;; dstMin       = '-20'
+  ;; DstCutoff    = -20
   ;; stableIMF    = '19'
 
-  ;; dstMin       = '-40'
+  ;; DstCutoff    = -40
   ;; stableIMF    = '14'
   ;; fixed_night_delay = 70.*60
 
-  ;; dstMin       = '-30'
+  ;; DstCutoff    = -30
   ;; stableIMF    = '9'
   ;; dels         = [0:45:5]*60
 
-  ;; dstMin       = '-30'
+  ;; DstCutoff    = -30
   ;; stableIMF    = '19'
   ;; add_night_delay = 50*60
   ;; dels         = [0:30:5]*60
 
-  dstMin       = '-40'
+  ;; DstCutoff    = -40
+  ;; stableIMF    = '19'
+  ;; add_night_delay = 45*60
+  ;; dels         = [0:30:5]*60
+
+  ;; DstCutoff    = -25
   stableIMF    = '19'
   add_night_delay = 45*60
-  dels         = [0:30:5]*60
+  dels         = [0:45:5]*60
 
   nDelay          = N_ELEMENTS(dels)
 
   fileDir         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
+
+  IF KEYWORD_SET(DstCutoff) THEN BEGIN
+     DstString = (N_ELEMENTS(plotPref) GT 0 ? plotPref : '' ) + $
+                 'Dst_' + STRCOMPRESS(DSTcutoff,/REMOVE_ALL)
+     avgString = 'avgnStorm'
+  ENDIF ELSE BEGIN
+     DstString = ''
+     avgString = 'avg'
+  ENDELSE
+
 
   IF KEYWORD_SET(add_night_delay) THEN BEGIN
      addNightStr             = STRING(FORMAT='("_",F0.1,"ntDel")',add_night_delay/60.) 
@@ -58,11 +73,14 @@ PRO JOURNAL__20170719__AVG_OVER_DELAYS
   btMinStr     = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
 
-  filePref     = 'polarplots_Dst_' + dstMin + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-avgnStorm_' + stableIMF + 'stable'
+  filePref     = 'polarplots_' + DstString + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-' + avgString + $
+                 '_' + stableIMF + 'stable'
   fileSuff     = btMinStr + '-Ring'
-  plotPref     = 'Dst_' + dstMin + '--300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-avgnStorm_' + stableIMF + 'stable_45.0ntDel' + btMinStr + '-'
+  plotPref     = DstString + '--300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-' + avgString + $
+                 '_' + stableIMF + 'stable_45.0ntDel' + btMinStr + '-'
   
-  configFilePref = 'multi_PASIS_vars-alfDB-w_t-Dst_' + dstMin + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-avgnStorm_' + stableIMF + 'stable'
+  configFilePref = 'multi_PASIS_vars-alfDB-w_t-' + DstString + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-' + avgString + $
+                   '_' + stableIMF + 'stable'
 
   quants       = '_tAvgd_' + ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
 
@@ -76,9 +94,7 @@ PRO JOURNAL__20170719__AVG_OVER_DELAYS
 
      FOREACH delay,dels,iDel DO BEGIN
 
-        delayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) 
-
-        delayStr = delayStr + addNightStr
+        delayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
 
         fileName = filePref + delayStr + fileSuff
 

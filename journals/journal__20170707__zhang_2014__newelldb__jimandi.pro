@@ -19,7 +19,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
   nonstorm                       = 1
-  DSTcutoff                      = -50
+  DSTcutoff                      = -25
   smooth_dst                     = 0
   use_mostRecent_Dst_files       = 1
 
@@ -53,7 +53,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   do_timeAvg_fluxQuantities      = 1
   logAvgPlot                     = 0
   medianPlot                     = 0
-  divide_by_width_x              = 1
+  ;; divide_by_width_x              = 1
 
   write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
@@ -204,17 +204,21 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   smoothWindow                   = 0
 
-  stableIMF                      = 24
+  stableIMF                      = 19
 
   ;;Delay stuff
-  nDelays                        = 1
+  ;; nDelays                        = 1
   ;; delayDeltaSec                  = 1800
-  binOffset_delay                = 0
+  ;; binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
   ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
-  delayArr                       = [25]*60
-  add_night_delay                = 30*60
+  delayArr                       = [0,5,10,15,20,25,30,35,40,45]*60
+  add_night_delay                = 45*60
+
+  ;; fixed_night_delay           = 70*60
+
+  nDelays                        = N_ELEMENTS(delayArr)
 
   reset_omni_inds                = 1
   reset_good_inds                = 1
@@ -462,6 +466,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
            DELAY=delay, $
            MULTIPLE_DELAYS=multiple_delays, $
            ADD_NIGHT_DELAY=add_night_delay, $
+           FIXED_NIGHT_DELAY=fixed_night_delay, $
            MULTIPLE_IMF_CLOCKANGLES=multiple_IMF_clockAngles, $
            OUT_EXECUTING_MULTIPLES=executing_multiples, $
            OUT_MULTIPLES=multiples, $

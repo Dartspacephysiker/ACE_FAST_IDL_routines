@@ -147,6 +147,7 @@ FUNCTION GET_RESTRICTED_AND_INTERPED_DB_INDICES,dbStruct, $
         KEYWORD_SET(IMF_struct.add_night_delay): BEGIN
            nightDelay[WHERE(dbStruct.MLT LE 6.0 OR dbStruct.MLT GE 18.0)] = IMF_struct.add_night_delay
         END
+        ELSE:
      ENDCASE
 
      IF KEYWORD_SET(alfDB_plot_struct.multiple_IMF_clockAngles) THEN BEGIN

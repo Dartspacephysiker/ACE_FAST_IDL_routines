@@ -7,7 +7,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i          = 1
-  remake_prev_plot_file    = 1
+  remake_prev_plot_file    = 0
 
   do_what_everyone_does    = 1
 
@@ -39,14 +39,15 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                }
 
   ;; delayArr                 = [10]*60 ;dayside
-  add_night_delay          = 45*60 ;because Jim and I know
+  ;; add_night_delay          = 45*60 ;because Jim and I know
 
   ;; fixed_night_delay           = 70*60
 
-  ;; delayArr                 = [-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70]*60 ;dayside
+  delayArr                 = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80]*60 ;dayside
+  ;; delayArr                 = [-15,-10,-5,50,55,60,65,70,75,80]*60 ;dayside
   ;; delayArr                 = [55,60,65,70]*60 ;dayside
   ;; delayArr                 = (0+[15])*60 ;dayside
-  delayArr                 = (0+[15,20,25,30,35,40,45])*60 ;dayside
+  ;; delayArr                 = (0+[0,5,10,15,20,25,30,35,40,45])*60 ;dayside
   ;; delayArr                 = (0+[20])*60 ;dayside
   ;; delayArr                 = [55]*60 ;dayside
   ;; delayArr                 = [-10,-5,0,5]*60 ;dayside
@@ -95,7 +96,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   reset_OMNI_inds                 = 1
      
   ;;bonus
-  make_OMNI_stuff                 = 0
+    make_OMNI_stuff                 = 0
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
@@ -138,9 +139,9 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 1
+  besides_pFlux                      = 0
   ePlots                             = 0
-  eNumFlPlots                        = 1
+  eNumFlPlots                        = 0
   pPlots                             = 1
   ionPlots                           = besides_pFlux
   probOccurrencePlot                 = besides_pFlux
