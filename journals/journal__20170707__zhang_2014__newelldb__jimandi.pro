@@ -25,6 +25,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
+  paramPref                      = plotPref
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
@@ -66,7 +67,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 0
+  use_AACGM                      = 1
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -213,8 +214,9 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
   ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
-  delayArr                       = [0,5,10,15,20,25,30,35,40,45]*60
-  add_night_delay                = 45*60
+  delayArr                       = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  ;; delayArr                       = [0]*60
+  ;; add_night_delay                = 45*60
 
   ;; fixed_night_delay           = 70*60
 
@@ -249,8 +251,10 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
-  shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
+  ;; binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
+  ;; shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
+  binM                         = 1.0
+  shiftM                       = 0.5
 
   IF shiftM GT 0. THEN BEGIN
      plotPref += '-rot'
@@ -399,8 +403,8 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
            DEL_PS=del_PS, $
            KEEPME=keepMe, $
            PARAMSTRING=paramString, $
-           PARAMSTRPREFIX=plotPrefix, $
-           PARAMSTRSUFFIX=plotSuffix,$
+           ;; PARAMSTRPREFIX=plotPrefix, $
+           ;; PARAMSTRSUFFIX=plotSuffix,$
            PLOTH2D_CONTOUR=plotH2D_contour, $
            CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
            PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kde, $

@@ -1464,6 +1464,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                             RESET_OMNI_INDS=KEYWORD_SET(reset_omni_inds) OR KEYWORD_SET(inds_reset), $
                             RESTRICT_WITH_THESE_ESPEC_I=restrict_with_these_eSpec_i, $
                             RESTRICT_WITH_THESE_ION_I=restrict_with_these_ion_i, $
+                            RESTRICT_OMNI_WITH_THESE_I=restrict_OMNI_with_these_i, $
                             /DO_NOT_SET_DEFAULTS, $
                             RESET_GOOD_INDS=KEYWORD_SET(reset_good_inds) OR KEYWORD_SET(inds_reset), $
                             DONT_LOAD_IN_MEMORY=KEYWORD_SET(do_timeAvg_fluxQuantities) OR $

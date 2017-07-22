@@ -69,8 +69,8 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   EA_binning                     = 0
   use_AACGM                      = 1
 
-  fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 1
+  fluxPlots__invert_Newell_the_cusp = 1
+  fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
