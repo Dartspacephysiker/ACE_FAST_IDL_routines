@@ -12,4 +12,6 @@ IF KEYWORD_SET(DSTcutoff) THEN BEGIN
       
    ENDIF
 
+   paramPref = plotPref
+   
 ENDIF

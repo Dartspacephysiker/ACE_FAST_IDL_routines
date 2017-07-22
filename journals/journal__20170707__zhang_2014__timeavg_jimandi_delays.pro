@@ -7,7 +7,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i          = 1
-  remake_prev_plot_file    = 1
+  remake_prev_plot_file    = 0
 
   do_what_everyone_does    = 1
 
@@ -58,7 +58,8 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   labels_for_presentation  = 1
   
-  plotPref = ( (N_ELEMENTS(plotPref)GT 0) ? plotPref : '' ) + '--upto90ILAT'
+  plotPref  = ( (N_ELEMENTS(plotPref) GT 0) ? plotPref : '' ) + '--upto90ILAT'
+  paramPref = ( (N_ELEMENTS(paramPref) GT 0) ? paramPref : '' ) + '--upto90ILAT'
 
   minM_c    = [ 6,12]
   maxM_c    = [12,18]
@@ -223,6 +224,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
                                              altitudeRange[1], $
                                              orbRange[0], $
                                              orbRange[1])
+        paramStrPrefix = (KEYWORD_SET(paramPref) ? paramPref : '') + altStr
         plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
         IF KEYWORD_SET(grossRate_info_file_pref) THEN BEGIN
@@ -355,8 +357,8 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
            DEL_PS=del_PS, $
            KEEPME=keepMe, $
            PARAMSTRING=paramString, $
-           PARAMSTRPREFIX=plotPrefix, $
-           PARAMSTRSUFFIX=plotSuffix,$
+           PARAMSTRPREFIX=paramStrPrefix, $
+           PARAMSTRSUFFIX=paramStrSuffix,$
            PLOTH2D_CONTOUR=plotH2D_contour, $
            CUSTOM_INTEGRAL_STRUCT=custom_integral_struct, $
            CONTOUR__LEVELS=contour__levels, $
