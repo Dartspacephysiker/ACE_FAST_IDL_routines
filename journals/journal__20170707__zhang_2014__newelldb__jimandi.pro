@@ -33,7 +33,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 0
+  plotH2D_contour                = 1
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -260,6 +260,12 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
      plotPref += '-rot'
   ENDIF
 
+  IF KEYWORD_SET(plotH2D_contour) THEN BEGIN
+     plotPref += '-cont'
+  ENDIF
+  IF KEYWORD_SET(plotH2D__kde) THEN BEGIN
+     plotPref += '-kde'
+  ENDIF
   ;; minM                      = 6
   ;; maxM                      = 18
 
@@ -279,6 +285,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
                                              altitudeRange[1], $
                                              orbRange[0], $
                                              orbRange[1])
+        paramStrPrefix = (KEYWORD_SET(paramPref) ? paramPref : '') + altStr
         plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
         SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
@@ -403,6 +410,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
            DEL_PS=del_PS, $
            KEEPME=keepMe, $
            PARAMSTRING=paramString, $
+           PARAMSTRPREFIX=paramStrPrefix, $
            ;; PARAMSTRPREFIX=plotPrefix, $
            ;; PARAMSTRSUFFIX=plotSuffix,$
            PLOTH2D_CONTOUR=plotH2D_contour, $
