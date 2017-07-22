@@ -82,5 +82,7 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  binM                           = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75 ;Why? 'Cause it 
-  shiftM                         = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0  ;means we're doing overplot stuff
+  ;; binM                           = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75 ;Why? 'Cause it 
+  ;; shiftM                         = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0  ;means we're doing overplot stuff
+  binM                           = 1.0
+  shiftM                         = 0.5
