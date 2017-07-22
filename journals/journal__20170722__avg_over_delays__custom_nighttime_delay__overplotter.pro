@@ -211,9 +211,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   @common__overplot_vars.pro
 
-  eSpeckers                = 0
+  eSpeckers             = 0
 
-  overplot_pFlux           = 1
+  overplot_pFlux        = 1
 
   myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   OP_quants             = '_tAvgd_pF_pF'

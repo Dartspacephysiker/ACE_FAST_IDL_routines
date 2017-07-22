@@ -9,35 +9,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   altitudeRange   = [300,4300]
 
   save_coolFiles  = 1
-  makePlots       = 0
-
-  ;; DstCutoff    = -75
-  ;; stableIMF    = '29'
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '19'
-  ;; add_night_delay = 45*60
-
-  ;; DstCutoff    = -20
-  ;; stableIMF    = '19'
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '14'
-  ;; fixed_night_delay = 70.*60
-
-  ;; DstCutoff    = -30
-  ;; stableIMF    = '9'
-  ;; dels         = [0:45:5]*60
-
-  ;; DstCutoff    = -30
-  ;; stableIMF    = '19'
-  ;; add_night_delay = 50*60
-  ;; dels         = [0:30:5]*60
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '19'
-  ;; add_night_delay = 45*60
-  ;; dels         = [0:30:5]*60
+  makePlots       = 1
 
   DstCutoff    = -25
   stableIMF    = '19'
