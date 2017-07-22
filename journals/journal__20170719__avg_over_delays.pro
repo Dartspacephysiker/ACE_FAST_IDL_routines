@@ -54,7 +54,6 @@ PRO JOURNAL__20170719__AVG_OVER_DELAYS
      avgString = 'avg'
   ENDELSE
 
-
   IF KEYWORD_SET(add_night_delay) THEN BEGIN
      addNightStr             = STRING(FORMAT='("_",F0.1,"ntDel")',add_night_delay/60.) 
   ENDIF ELSE BEGIN
