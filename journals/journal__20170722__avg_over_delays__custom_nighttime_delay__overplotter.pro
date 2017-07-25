@@ -14,7 +14,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                                    ANCILLARYSTR=ancillaryStr, $
                                    ORBPREF=orbPref, $
                                    KMPREF=kmPref, $
-                                   CONFIGFILEPREF=configFilePref, $
+                                   OUT_CONFFILEPREF=configFilePref, $
                                    FILEDIR=fileDir, $
                                    OUT_CONFIGFILE=configFile, $
                                    OUT_PARAMSTRINGPREF=paramStringPref, $
@@ -26,6 +26,8 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                                    COOLFILE_LIST=coolFile_list, $
                                    OUT_CENTERSMLT=centersMLT, $
                                    OUT_CENTERSILAT=centersILAT, $
+                                   CHECKOUTINDS=checkOutInds, $
+                                   GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
                                    _EXTRA=e
 
   orbStr          = STRING(FORMAT='(A0,I0,"-",I0)',orbPref,orbRange[0],orbRange[1])
@@ -203,6 +205,89 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      DataNameArr_list.Add,TEMPORARY(dataNameArr)
   ENDFOREACH
 
+  eSpec = 1
+  alfDB = 0
+  checkOutInds = 1
+  IF KEYWORD_SET(checkOutInds) THEN BEGIN
+
+     ;; LOAD_NEWELL_ESPEC_DB,eSpec,/NO_MEMORY_LOAD
+
+     ;; mlts = (TEMPORARY(eSpec)).mlt
+     dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
+     mltFile = 'espec_mlts.sav'
+     RESTORE,dirDir+mltFile
+     allDayInds = WHERE(mlts GE 6  AND mlts LT 18, $
+                        nAllDayInds, $
+                        COMPLEMENT=allNightInds,NCOMPLEMENT=nAllNightInds)
+     mlts = !NULL
+     
+     myFile = 'eSpec_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
+
+     IF FILE_TEST(dirDir+myFile) THEN BEGIN
+        RESTORE,dirDir+myFile
+        PRINT,"Spence, check out these inds. Are they qualité? Do you need to spend a little extra time doing this and that?"
+        STOP
+        
+     ENDIF
+
+     dayIndsList = LIST()
+     nitIndsList = LIST()
+     FOREACH delay,dels,iDel DO BEGIN
+
+        PRINT,"Delay ind: ",STRING(FORMAT='(I0,"/",I0)',iDel,N_ELEMENTS(dels)-1)
+
+        FOREACH IMF,clockStrings,iIMF DO BEGIN
+
+           IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
+
+              dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
+              nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+getfile_with_nightdelay)/60.) + addNightStr
+
+              dayConfigFile = configFilePref + dayDelayStr + fileSuff + '.sav'
+              IF FILE_TEST(fileDir+dayConfigFile) THEN BEGIN
+                 RESTORE,fileDir+dayConfigFile
+              ENDIF ELSE STOP
+
+              CASE 1 OF
+                 KEYWORD_SET(eSpec): BEGIN
+                    IF iDel EQ 0 THEN BEGIN
+                       dayIndsList.Add,CGSETINTERSECTION(PASIS__indices__eSpec_list[iIMF],allDayInds)
+                    ENDIF ELSE BEGIN
+                       dayIndsList[iIMF] = CGSETUNION(dayIndsList[iIMF],CGSETINTERSECTION(allDayInds,PASIS__indices__eSpec_list[iIMF]))
+                    ENDELSE
+                 END
+                 ELSE: STOP
+              ENDCASE
+
+              nitConfigFile = configFilePref + nitDelayStr + fileSuff + '.sav'
+              IF FILE_TEST(fileDir+nitConfigFile) THEN BEGIN
+                 RESTORE,fileDir+nitConfigFile
+              ENDIF ELSE STOP
+
+              CASE 1 OF
+                 KEYWORD_SET(eSpec): BEGIN
+                    IF iDel EQ 0 THEN BEGIN
+                       nitIndsList.Add,CGSETINTERSECTION(PASIS__indices__eSpec_list[iIMF],allNightInds)
+                    ENDIF ELSE BEGIN
+                       nitIndsList[iIMF] = CGSETUNION(nitIndsList[iIMF],CGSETINTERSECTION(allNightInds,PASIS__indices__eSpec_list[iIMF]))
+                    ENDELSE
+                 END
+                 ELSE: STOP
+              ENDCASE
+           ENDIF ELSE BEGIN
+
+              STOP
+
+           ENDELSE
+           
+        ENDFOREACH
+
+     ENDFOREACH
+
+     STOP
+
+  ENDIF
+
 END
 
 PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
@@ -211,19 +296,33 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   @common__overplot_vars.pro
 
-  eSpeckers                = 0
+  eSpeckers             = 0
 
-  overplot_pFlux           = 1
+  overplot_pFlux        = 1
 
-  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  plotH2D_contour          = 1
+
+  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  ;; OP_quants             = '_tAvgd_pF_pF'
+  ;; OP_ancillaryStr       = 'cur_-1-1-NC-'
+  ;; plotPref              = 'NC_pF_overlaid-'
+  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+  ;; ;; contour__nColors   = 8
+  ;; contour__CTBottom     = 0
+  ;; contour__CTIndex      = -49
+  ;; gridColor             = 'gray'
+
+
+  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
   OP_quants             = '_tAvgd_pF_pF'
-  OP_ancillaryStr       = 'cur_-1-1-NC-'
-  plotPref              = 'NC_pF_overlaid-'
-
-  ;; myQuants                 = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
-  ;; OP_quants                = '_tAvgd_pF_pF'
-  ;; OP_ancillaryStr          = 'cur_-1-1-invNC-'
-  ;; plotPref                 = 'invNC_pF_overlaid-'
+  OP_ancillaryStr       = 'cur_-1-1-invNC-'
+  plotPref              = 'invNC_pF_overlaid-'
+  contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+  contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+  contour__nColors      = 8
+  contour__CTBottom     = 0
+  contour__CTIndex      = -60
 
   finalDelOnplotPref       = 1
 
@@ -242,7 +341,6 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   show_integrals           = 0
 
   ;;Plot options
-  plotH2D_contour          = 1
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
 
   IF KEYWORD_SET(plotH2D_contour) THEN BEGIN
@@ -251,13 +349,6 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   IF KEYWORD_SET(plotH2D__kde) THEN BEGIN
      plotPref += 'kde-'
   ENDIF
-
-  contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
-  contour__percent         = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  ;; contour__nColors      = 8
-  contour__CTBottom        = 0
-  contour__CTIndex         = -49
-  gridColor                = 'gray'
 
   ;;OVERPLOT OPTIONS
   op_dir                   = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
@@ -280,6 +371,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   ;; op_contour__nColors   = 20
   ;; op_contour__CTIndex   = 
   ;; op_contour__CTBottom  = 
+
 
   nDelay                   = N_ELEMENTS(dels)
 
@@ -377,6 +469,8 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
      COOLFILE_LIST=coolFile_list, $
      OUT_CENTERSMLT=centersMLT, $
      OUT_CENTERSILAT=centersILAT, $
+     CHECKOUTINDS=checkOutInds, $
+     GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
      _EXTRA=avgPackage
 
   IF KEYWORD_SET(overplot_pFlux) THEN BEGIN
@@ -415,6 +509,8 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
         COOLFILE_LIST=OP_coolFile_list, $
         OUT_CENTERSMLT=oCentersMLT, $
         OUT_CENTERSILAT=oCentersILAT, $
+        CHECKOUTINDS=checkOutInds, $
+        GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
         _EXTRA=OP_avgPackage
 
   ENDIF
