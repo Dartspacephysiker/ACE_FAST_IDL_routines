@@ -8,8 +8,8 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  minMC                              = 1
-  maxNegMC                           = -1
+  minMC                              = 10
+  maxNegMC                           = -10
 
   do_timeAvg_fluxQuantities          = 1
   logAvgPlot                         = 0
@@ -82,7 +82,7 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  ;; binM                           = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75 ;Why? 'Cause it 
-  ;; shiftM                         = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0  ;means we're doing overplot stuff
-  binM                           = 1.0
-  shiftM                         = 0.5
+  binM                           = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75 ;Why? 'Cause it 
+  shiftM                         = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0  ;means we're doing overplot stuff
+  ;; binM                           = 1.0
+  ;; shiftM                         = 0.0

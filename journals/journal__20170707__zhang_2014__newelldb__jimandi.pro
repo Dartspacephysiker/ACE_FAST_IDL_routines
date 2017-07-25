@@ -14,7 +14,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 0
+  remake_prev_plot_file          = 1
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
