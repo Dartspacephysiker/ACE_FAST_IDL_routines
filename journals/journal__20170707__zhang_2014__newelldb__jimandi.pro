@@ -59,7 +59,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  justData                       = 0
+  justData                       = 1
   
   saveDir                        = '/home/spencerh/Desktop/'
   justInds                       = 0
@@ -67,7 +67,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 1
+  use_AACGM                      = 0
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -205,7 +205,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   smoothWindow                   = 0
 
-  stableIMF                      = 19
+  stableIMF                      = 14
 
   ;;Delay stuff
   ;; nDelays                        = 1
@@ -214,7 +214,8 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
   ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
   ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
-  delayArr                       = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  ;; delayArr                       = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  delayArr                       = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
   ;; delayArr                       = [0]*60
   ;; add_night_delay                = 45*60
 
@@ -279,14 +280,14 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
      PRINT,FORMAT='("Doing delay = ",I0," min")',delay/60.
 
      FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
-        altitudeRange               = altRange[*,i]
-        altStr                      = STRING(FORMAT='(I0,"-",I0,"_km--orbs_",I0,"-",I0)', $
-                                             altitudeRange[0], $
-                                             altitudeRange[1], $
-                                             orbRange[0], $
-                                             orbRange[1])
+        altitudeRange = altRange[*,i]
+        altStr        = STRING(FORMAT='(I0,"-",I0,"km--orb_",I0,"-",I0)', $
+                               altitudeRange[0], $
+                               altitudeRange[1], $
+                               orbRange[0], $
+                               orbRange[1])
         paramStrPrefix = (KEYWORD_SET(paramPref) ? paramPref : '') + altStr
-        plotPrefix = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
+        plotPrefix     = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
         SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
                                       angleLim1,angleLim2, $

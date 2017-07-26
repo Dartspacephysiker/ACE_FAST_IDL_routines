@@ -44,7 +44,6 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;; fixed_night_delay           = 70*60
 
   delayArr                 = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
-  delayArr = delayArr[0]
   ;; delayArr                 = [25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60 ;dayside
   ;; delayArr                 = [-15,-10,-5,50,55,60,65,70,75,80]*60 ;dayside
   ;; delayArr                 = [55,60,65,70]*60 ;dayside
@@ -68,9 +67,9 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   minI_c    = [70,70]
   maxI_c    = [90,90]
 
-  include_32Hz                   = 0
-  EA_binning                     = 0
-  use_AACGM                      = 1
+  include_32Hz = 0
+  EA_binning   = 0
+  use_AACGM    = 0
 
   fluxPlots__invert_Newell_the_cusp = 0
   fluxPlots__Newell_the_cusp     = 0
@@ -104,7 +103,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
   make_OMNI_stats_savFile         = KEYWORD_SET(make_OMNI_stuff)
-  OMNI_statsSavFilePref           = 'Alfvens_zhonghua_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
+  OMNI_statsSavFilePref           = 'Alfvens_latuhst_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   calc_KL_sw_coupling_func        = 1
   make_integral_savfiles          = 0
 
@@ -112,7 +111,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   write_obsArr_textFile           = 0
   write_obsArr__inc_IMF           = 0
   write_obsArr__orb_avg_obs       = 1
-  justData                        = 0
+  justData                        = 1
   justInds                        = 0
   indsPref                        = ''
   CASE 1 OF
