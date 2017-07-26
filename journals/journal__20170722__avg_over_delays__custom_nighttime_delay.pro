@@ -3,7 +3,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  eSpeckers       = 0
+  eSpeckers       = 1
 
   use_nEvents_not_nDelay_for_denom = 1
   
@@ -14,7 +14,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   makePlots       = 1
 
   DstCutoff    = -25
-  stableIMF    = '19'
+  stableIMF    = '14'
 
   btMin        = 1.0
 
