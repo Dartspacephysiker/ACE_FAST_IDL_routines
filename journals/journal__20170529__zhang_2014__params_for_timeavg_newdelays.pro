@@ -8,8 +8,8 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  minMC                              = 10
-  maxNegMC                           = -10
+  minMC                              = 3
+  maxNegMC                           = -3
 
   do_timeAvg_fluxQuantities          = 1
   logAvgPlot                         = 0
@@ -45,7 +45,7 @@
 
   smoothWindow                   = 0
 
-  stableIMF                      = 19
+  stableIMF                      = 14
   IMF_allowable_streak_dt        = 0
 
   ;;Delay stuff
