@@ -14,7 +14,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   labels_for_presentation        = 1
 
   use_prev_plot_i                = 1
-  remake_prev_plot_file          = 1
+  remake_prev_plot_file          = 0
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
@@ -25,7 +25,6 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  paramPref                      = plotPref
   ;; include_32Hz                   = 
   ;; sample_t_restriction           = 10
   disregard_sample_t             = 1
@@ -33,7 +32,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   show_integrals                 = 1
 
   EA_binning                     = 0
-  plotH2D_contour                = 1
+  plotH2D_contour                = 0
   plotH2D__kde                   = KEYWORD_SET(plotH2D_contour)
 
   ;; contour__levels                = [20,40,60,80,95]
@@ -252,14 +251,16 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;MLT stuff
-  ;; binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
-  ;; shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
-  binM                         = 1.0
-  shiftM                       = 0.5
+  binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
+  shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
+  ;; binM                         = 1.0
+  ;; shiftM                       = 0.5
 
   IF shiftM GT 0. THEN BEGIN
      plotPref += '-rot'
   ENDIF
+
+  paramPref                    = plotPref
 
   IF KEYWORD_SET(plotH2D_contour) THEN BEGIN
      plotPref += '-cont'

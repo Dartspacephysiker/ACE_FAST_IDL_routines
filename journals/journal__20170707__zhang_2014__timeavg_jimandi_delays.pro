@@ -16,6 +16,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
   contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
   contour__percent         = KEYWORD_SET(plotH2D_contour)
+  shiftM_binM_for_contour  = 1
 
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
      @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
@@ -72,7 +73,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   use_AACGM    = 0
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 0
+  fluxPlots__Newell_the_cusp     = 1
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 

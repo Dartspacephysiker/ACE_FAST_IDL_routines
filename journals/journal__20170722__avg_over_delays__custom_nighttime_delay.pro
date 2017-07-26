@@ -3,7 +3,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  eSpeckers       = 0
+  eSpeckers       = 1
+  kill_contour    = 1
+  eSpeck_rot      = 1
 
   use_nEvents_not_nDelay_for_denom = 1
   
@@ -14,7 +16,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   makePlots       = 1
 
   DstCutoff    = -25
-  stableIMF    = '19'
+  stableIMF    = '14'
 
   btMin        = 1.0
 
@@ -72,16 +74,16 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
   ENDIF
   
+  orbPref = "--orb_"
+  kmPref = "km"
   CASE 1 OF
      KEYWORD_SET(eSpeckers): BEGIN
         quants = ['broad','diff','mono']
         quants = '_tAvgd_' + ['NoN-eNumFl-all_fluxes_eSpec-2009_' + quants, $
                   'eFlux-all_fluxes_eSpec-2009_' + quants]
         dbStr  = 'eSpec-w_t-'
-        prefPref = 'NWO--upto90-' + DstString
+        prefPref = 'NWO--upto90-' + DstString + (KEYWORD_SET(eSpeck_rot) ? '-rot' : '')
         ancillaryStr = '0sampT-'
-        orbPref = "--orbs_"
-        kmPref = "_km"
      END
      ELSE: BEGIN
 
@@ -89,8 +91,8 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
         dbStr  = 'alfDB-w_t-'
         prefPref = DstString + '--upto90ILAT'
         ancillaryStr = (minMC NE 10) OR (maxNegMC NE -10) ? STRING(FORMAT='("cur_",I0,"-",I0,"-")',maxNegMC,minMC) : ''
-        orbPref = "-orb_"
-        kmPref = "km"
+        ;; orbPref = "-orb_"
+        ;; kmPref = "km"
      END
   ENDCASE
 
@@ -347,6 +349,11 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
    
         PRINT,fileName + quant
         
+        IF TAG_EXIST(PASIS__alfDB_plot_struct,'plotH2D_contour') AND KEYWORD_SET(kill_contour) THEN BEGIN
+           PASIS__alfDB_plot_struct.plotH2D_contour = 0B
+           PASIS__alfDB_plot_struct.plotH2D__kernel_density_unmask = 0B
+        ENDIF
+
         IF ~FILE_TEST(tempFile) THEN STOP
    
         PLOT_ALFVENDB_2DHISTOS, $
