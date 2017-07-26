@@ -27,6 +27,8 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                                    OUT_CENTERSMLT=centersMLT, $
                                    OUT_CENTERSILAT=centersILAT, $
                                    CHECKOUTINDS=checkOutInds, $
+                                   CHECKOUT_ESPECKERS=eSpeckers, $
+                                   CHECKOUT_ALFDB=alfDB, $
                                    GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
                                    _EXTRA=e
 
@@ -205,84 +207,211 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      DataNameArr_list.Add,TEMPORARY(dataNameArr)
   ENDFOREACH
 
-  eSpec = 1
-  alfDB = 0
-  checkOutInds = 1
   IF KEYWORD_SET(checkOutInds) THEN BEGIN
 
      ;; LOAD_NEWELL_ESPEC_DB,eSpec,/NO_MEMORY_LOAD
 
      ;; mlts = (TEMPORARY(eSpec)).mlt
-     dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
-     mltFile = 'espec_mlts.sav'
-     RESTORE,dirDir+mltFile
-     allDayInds = WHERE(mlts GE 6  AND mlts LT 18, $
-                        nAllDayInds, $
-                        COMPLEMENT=allNightInds,NCOMPLEMENT=nAllNightInds)
-     mlts = !NULL
-     
-     myFile = 'eSpec_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
+     CASE 1 OF
+        KEYWORD_SET(eSpeckers): BEGIN
 
-     IF FILE_TEST(dirDir+myFile) THEN BEGIN
-        RESTORE,dirDir+myFile
-        PRINT,"Spence, check out these inds. Are they qualité? Do you need to spend a little extra time doing this and that?"
-        STOP
-        
-     ENDIF
+           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
+           mltFile = 'espec_mlts.sav'
+           typesFile = 'espec_types.sav'
+           RESTORE,dirDir+mltFile
+           RESTORE,dirDir+typesFile
 
-     dayIndsList = LIST()
-     nitIndsList = LIST()
-     FOREACH delay,dels,iDel DO BEGIN
+           broads = WHERE((types.broad EQ 1) OR (types.broad EQ 2),nBroad)
+           diffs  = WHERE(types.diffuse EQ 1,nDiffuse)
+           monos  = WHERE(types.mono EQ 1 OR types.mono EQ 2,nDiffuse)
+           mlts = !NULL
+           
+           myFile = 'eSpec_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
 
-        PRINT,"Delay ind: ",STRING(FORMAT='(I0,"/",I0)',iDel,N_ELEMENTS(dels)-1)
+           IF FILE_TEST(dirDir+myFile) THEN BEGIN
 
-        FOREACH IMF,clockStrings,iIMF DO BEGIN
+              RESTORE,dirDir+myFile
+              
+              SKIPTHATBRO = 1
+           ENDIF
 
-           IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
+        END        
+        ELSE: BEGIN
 
-              dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
-              nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+getfile_with_nightdelay)/60.) + addNightStr
+           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
+           myFile  = 'alfDB_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
 
-              dayConfigFile = configFilePref + dayDelayStr + fileSuff + '.sav'
-              IF FILE_TEST(fileDir+dayConfigFile) THEN BEGIN
-                 RESTORE,fileDir+dayConfigFile
-              ENDIF ELSE STOP
+           IF FILE_TEST(dirDir+myFile) THEN BEGIN
 
-              CASE 1 OF
-                 KEYWORD_SET(eSpec): BEGIN
-                    IF iDel EQ 0 THEN BEGIN
-                       dayIndsList.Add,CGSETINTERSECTION(PASIS__indices__eSpec_list[iIMF],allDayInds)
-                    ENDIF ELSE BEGIN
-                       dayIndsList[iIMF] = CGSETUNION(dayIndsList[iIMF],CGSETINTERSECTION(allDayInds,PASIS__indices__eSpec_list[iIMF]))
-                    ENDELSE
-                 END
-                 ELSE: STOP
-              ENDCASE
+              RESTORE,dirDir+myFile
 
-              nitConfigFile = configFilePref + nitDelayStr + fileSuff + '.sav'
-              IF FILE_TEST(fileDir+nitConfigFile) THEN BEGIN
-                 RESTORE,fileDir+nitConfigFile
-              ENDIF ELSE STOP
-
-              CASE 1 OF
-                 KEYWORD_SET(eSpec): BEGIN
-                    IF iDel EQ 0 THEN BEGIN
-                       nitIndsList.Add,CGSETINTERSECTION(PASIS__indices__eSpec_list[iIMF],allNightInds)
-                    ENDIF ELSE BEGIN
-                       nitIndsList[iIMF] = CGSETUNION(nitIndsList[iIMF],CGSETINTERSECTION(allNightInds,PASIS__indices__eSpec_list[iIMF]))
-                    ENDELSE
-                 END
-                 ELSE: STOP
-              ENDCASE
-           ENDIF ELSE BEGIN
+              SKIPTHATBRO = 1
 
               STOP
+              
+           ENDIF ELSE BEGIN
+              
+           @common__maximus_vars.pro
+           IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+              LOAD_MAXIMUS_AND_CDBTIME
+           ENDIF
+           mlts = MAXIMUS__maximus.mlt
 
-           ENDELSE
-           
+        ENDELSE
+
+        END
+     ENDCASE
+
+     IF ~KEYWORD_SET(SKIPTHATBRO) THEN BEGIN
+
+        allDayInds = WHERE(mlts GE 6  AND mlts LT 18, $
+                           nAllDayInds, $
+                           COMPLEMENT=allNightInds,NCOMPLEMENT=nAllNightInds)
+        allCuspInds = WHERE(mlts GE 9.5  AND mlts LT 14.5, $
+                           nAllCuspInds, $
+                           COMPLEMENT=allNotCuspInds,NCOMPLEMENT=nAllNotCuspInds)
+   
+        dayIndsList = LIST()
+        nitIndsList = LIST()
+        FOREACH delay,dels,iDel DO BEGIN
+   
+           PRINT,"Delay ind: ",STRING(FORMAT='(I0,"/",I0)',iDel,N_ELEMENTS(dels)-1)
+   
+           FOREACH IMF,clockStrings,iIMF DO BEGIN
+   
+              IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
+   
+                 dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
+                 nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+getfile_with_nightdelay)/60.) + addNightStr
+   
+                 dayConfigFile = configFilePref + dayDelayStr + fileSuff + '.sav'
+                 IF FILE_TEST(fileDir+dayConfigFile) THEN BEGIN
+                    RESTORE,fileDir+dayConfigFile
+                 ENDIF ELSE STOP
+   
+                 CASE 1 OF
+                    KEYWORD_SET(eSpeckers): BEGIN
+                       theList = PASIS__indices__eSpec_list
+                    END
+                    KEYWORD_SET(alfDB): BEGIN
+                       theList = PASIS__plot_i_list
+                    END
+                 ENDCASE
+   
+                 IF iDel EQ 0 THEN BEGIN
+                    dayIndsList.Add,CGSETINTERSECTION(theList[iIMF],allDayInds)
+                 ENDIF ELSE BEGIN
+                    dayIndsList[iIMF] = CGSETUNION(dayIndsList[iIMF],CGSETINTERSECTION(allDayInds,theList[iIMF]))
+                 ENDELSE
+   
+                 nitConfigFile = configFilePref + nitDelayStr + fileSuff + '.sav'
+                 IF FILE_TEST(fileDir+nitConfigFile) THEN BEGIN
+                    RESTORE,fileDir+nitConfigFile
+                 ENDIF ELSE STOP
+   
+                 CASE 1 OF
+                    KEYWORD_SET(eSpeckers): BEGIN
+                       theList = PASIS__indices__eSpec_list
+                    END
+                    KEYWORD_SET(alfDB): BEGIN
+                       theList = PASIS__plot_i_list
+                    END
+                 ENDCASE
+   
+                 IF iDel EQ 0 THEN BEGIN
+                    nitIndsList.Add,CGSETINTERSECTION(theList[iIMF],allNightInds)
+                 ENDIF ELSE BEGIN
+                    nitIndsList[iIMF] = CGSETUNION(nitIndsList[iIMF],CGSETINTERSECTION(allNightInds,theList[iIMF]))
+                 ENDELSE
+   
+              ENDIF ELSE BEGIN
+   
+                 STOP
+   
+              ENDELSE
+              
+           ENDFOREACH
+   
         ENDFOREACH
+   
+     ENDIF
 
-     ENDFOREACH
+     PRINT,"Spence, check out these inds. Are they qualité? Do you need to spend a little extra time doing this and that?"
+     CASE 1 OF
+        KEYWORD_SET(eSpeckers): BEGIN
+           
+           totIndsList = LIST()
+           broadIndsList = LIST()
+           diffIndsList = LIST()
+           FOR k=0,N_ELEMENTS(dayIndsList)-1 DO BEGIN
+              totIndsList.Add,CGSETUNION(dayIndsList[k],nitIndsList[k],COUNT=nHjar)
+              broadIndsList.Add,CGSETINTERSECTION(totIndsList[k],broads,COUNT=nBroadHjar)
+              diffIndsList.Add,CGSETINTERSECTION(totIndsList[k],diffs,COUNT=nDiffHjar)
+              PRINT,k,", ",nHjar,", ",nBroadHjar,", ",nDiffHjar
+           ENDFOR
+        END
+        ELSE: BEGIN
+
+           allAccelInds = WHERE(MAXIMUS__maximus.max_chare_losscone GE 80, $
+                               nAllAccelInds, $
+                               COMPLEMENT=allNotAccelInds,NCOMPLEMENT=nAllNotAccelInds)
+
+           totIndsList              = LIST()
+           accelIndsList            = LIST()
+           cuspAccelIndsList        = LIST()
+           cuspNotAccelIndsList     = LIST()
+           notCuspAccelIndsList     = LIST()
+           notCuspNotAccelIndsList  = LIST()
+           FOR k=0,N_ELEMENTS(dayIndsList)-1 DO BEGIN
+              totIndsList.Add,CGSETUNION(dayIndsList[k],nitIndsList[k],COUNT=nHjar)
+              PRINT,k,", ",nHjar,", "
+
+              cuspAccelIndsList.Add      ,CGSETINTERSECTION(CGSETINTERSECTION(totIndsList[k],allCuspInds),allAccelInds)
+              cuspNotAccelIndsList.Add   ,CGSETINTERSECTION(CGSETINTERSECTION(totIndsList[k],allCuspInds),allNotAccelInds)
+              notCuspAccelIndsList.Add   ,CGSETINTERSECTION(CGSETINTERSECTION(totIndsList[k],allNotCuspInds),allAccelInds)
+              notCuspNotAccelIndsList.Add,CGSETINTERSECTION(CGSETINTERSECTION(totIndsList[k],allNotCuspInds),allNotAccelInds)
+           ENDFOR
+
+           PRINT,FORMAT='(A0,T20,A0,T40,A0,T60,A0,T80,A0)', $
+                 "cuspAccel","cuspNotAccel","notCuspAccel","notCuspNotAccel","Tot (says dayInds)"
+
+           FOR k=0,N_ELEMENTS(dayIndsList)-1 DO BEGIN
+              PRINT,FORMAT='(I0,T20,I0,T40,I0,T60,I0,T80,I0," (",I0,")")', $
+                    N_ELEMENTS(cuspAccelIndsList[k])      , $
+                    N_ELEMENTS(cuspNotAccelIndsList[k])   , $
+                    N_ELEMENTS(notCuspAccelIndsList[k])   , $
+                    N_ELEMENTS(notCuspNotAccelIndsList[k]), $
+                    N_ELEMENTS(cuspAccelIndsList[k])      + $
+                    N_ELEMENTS(cuspNotAccelIndsList[k])   + $
+                    N_ELEMENTS(notCuspAccelIndsList[k])   + $
+                    N_ELEMENTS(notCuspNotAccelIndsList[k]), $
+                    N_ELEMENTS(totIndsList[k])
+              
+           ENDFOR
+
+           totallguys = LIST_TO_1DARRAY(totIndsList,/SORT,/WARN,/SKIP_NANS,/SKIP_NEG1_ELEMENTS)
+           totallguys = totallguys[UNIQ(totallguys,SORT(totAllGuys))]
+           ntotAll    = N_ELEMENTS(totAllGuys)
+
+           cuspAccelInds           = CGSETINTERSECTION(CGSETINTERSECTION(totAllGuys,allCuspInds),allAccelInds)
+           cuspNotAccelInds        = CGSETINTERSECTION(CGSETINTERSECTION(totAllGuys,allCuspInds),allNotAccelInds)
+           notCuspAccelInds        = CGSETINTERSECTION(CGSETINTERSECTION(totAllGuys,allNotCuspInds),allAccelInds)
+           notCuspNotAccelInds     = CGSETINTERSECTION(CGSETINTERSECTION(totAllGuys,allNotCuspInds),allNotAccelInds)
+           
+              PRINT,FORMAT='(I0,T20,I0,T40,I0,T60,I0,T80,I0," (",I0,")")', $
+                    N_ELEMENTS(cuspAccelInds)      , $
+                    N_ELEMENTS(cuspNotAccelInds)   , $
+                    N_ELEMENTS(notCuspAccelInds)   , $
+                    N_ELEMENTS(notCuspNotAccelInds), $
+                    N_ELEMENTS(cuspAccelInds)      + $
+                    N_ELEMENTS(cuspNotAccelInds)   + $
+                    N_ELEMENTS(notCuspAccelInds)   + $
+                    N_ELEMENTS(notCuspNotAccelInds), $
+                    N_ELEMENTS(totAllGuys)
+
+
+        ENDELSE
+     ENDCASE
 
      STOP
 
@@ -297,10 +426,12 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   @common__overplot_vars.pro
 
   eSpeckers             = 0
+  checkOut_eSpeckers    = 0
 
   overplot_pFlux        = 1
+  OP_checkOutInds       = 1
 
-  plotH2D_contour          = 1
+  plotH2D_contour       = 1
 
   ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   ;; OP_quants             = '_tAvgd_pF_pF'
@@ -314,10 +445,21 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   ;; gridColor             = 'gray'
 
 
+  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
+  ;; OP_quants             = '_tAvgd_pF_pF'
+  ;; OP_ancillaryStr       = 'cur_-1-1-invNC-'
+  ;; plotPref              = 'invNC_pF_overlaid-'
+  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+  ;; contour__nColors      = 8
+  ;; contour__CTBottom     = 0
+  ;; contour__CTIndex      = -60
+
+  ;;For reguree pFlux
   myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
   OP_quants             = '_tAvgd_pF_pF'
-  OP_ancillaryStr       = 'cur_-1-1-invNC-'
-  plotPref              = 'invNC_pF_overlaid-'
+  OP_ancillaryStr       = 'cur_-1-1-'
+  plotPref              = 'pF_overlaid-'
   contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
   contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
   contour__nColors      = 8
@@ -355,6 +497,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   ;; overplot_arr             = ['*eNumFl-all_fluxes_eSpec-2009_broad*','*tavgd_pf*']
   IF KEYWORD_SET(overplot_pFlux) THEN BEGIN
+     OP_alfDB              = 1
      strLen                = STRLEN(myQuants) - (STRMID(myQuants,STRLEN(myQuants)-1,1) EQ '_') - (STRMID(myQuants,0,1) EQ '_')
      strBegin              = (STRMID(myQuants,0,1) EQ '_')
      tmpMyQuants           = STRMID(myQuants,strBegin,strLen)
@@ -470,6 +613,8 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
      OUT_CENTERSMLT=centersMLT, $
      OUT_CENTERSILAT=centersILAT, $
      CHECKOUTINDS=checkOutInds, $
+     CHECKOUT_ESPECKERS=checkOut_eSpeckers, $
+     CHECKOUT_ALFDB=alfDB, $
      GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
      _EXTRA=avgPackage
 
@@ -509,7 +654,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
         COOLFILE_LIST=OP_coolFile_list, $
         OUT_CENTERSMLT=oCentersMLT, $
         OUT_CENTERSILAT=oCentersILAT, $
-        CHECKOUTINDS=checkOutInds, $
+        CHECKOUTINDS=OP_checkOutInds, $
+        CHECKOUT_ESPECKERS=OP_eSpeckers, $
+        CHECKOUT_ALFDB=OP_alfDB, $
         GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
         _EXTRA=OP_avgPackage
 

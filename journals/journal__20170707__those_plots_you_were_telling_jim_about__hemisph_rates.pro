@@ -8,10 +8,14 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
 
   include_ions    = 0
 
-  ;; dstMin       = '-20'
-  ;; dstMin       = '-50'
-  ;; dstMin       = '-100'
+  orbRange        = [500,12670]
+  altitudeRange   = [300,4300]
 
+  minMC        = 1
+  maxNegMC     = -1
+
+  use_AACGM    = 1
+  
   justSaveEmAll   = 1B
   stopEachTime    = 0B
 
@@ -19,40 +23,12 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
   ;; nDelay       = 29 ;up to 120, starting at -20
   ;; dels         = (INDGEN(nDelay)-4)*5
   ;; dels            = [-15:70:5]
-  nDelay          = N_ELEMENTS(dels)
+  ;; nDelay          = N_ELEMENTS(dels)
 
-  ;; DstCutoff    = -75
-  ;; stableIMF    = '29'
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '19'
+  DstCutoff    = -25
+  stableIMF    = '9'
   ;; add_night_delay = 45*60
-
-  ;; DstCutoff    = -20
-  ;; stableIMF    = '19'
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '14'
-  ;; fixed_night_delay = 70.*60
-
-  ;; DstCutoff    = -30
-  ;; stableIMF    = '9'
-  ;; dels         = [0:45:5]*60
-
-  ;; DstCutoff    = -30
-  ;; stableIMF    = '19'
-  ;; add_night_delay = 50*60
-  ;; dels         = [0:30:5]*60
-
-  ;; DstCutoff    = -40
-  ;; stableIMF    = '19'
-  ;; add_night_delay = 45*60
-  ;; dels         = [0:30:5]*60
-
-  ;; DstCutoff    = -25
-  stableIMF    = '19'
-  ;; add_night_delay = 45*60
-  dels         = [-15:80:5]*60
+  dels         = [-30:90:5]*60
 
   nDelay          = N_ELEMENTS(dels)
 
@@ -79,33 +55,28 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
      addNightStr             = N_ELEMENTS(addNightStr) GT 0 ? addNightStr : ''
   ENDELSE
 
+  hemi         = 'NORTH'
+  IF KEYWORD_SET(use_AACGM) THEN hemi += '_AACGM'
+
   finalDelStr     = STRING(FORMAT='("_",I0,"-",I0,"Dels")',dels[0]/60.,dels[-1]/60.) + addNightStr
+
+  orbPref         = "-orb_"
+  kmPref          = "km"
+
+  orbStr          = STRING(FORMAT='(A0,I0,"-",I0)',orbPref,orbRange[0],orbRange[1])
+  altStr          = STRING(FORMAT='(I0,"-",I0,A0)',altitudeRange[0],altitudeRange[1],kmPref)
 
   btMin        = 1.0
   btMinStr     = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
 
-  filePref     = 'polarplots_' + DstString + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-' + avgString + $
+  filePref     = 'polarplots_' + DstString + '--upto90ILAT' + altStr + orbStr + '-' + hemi + '-cur_-1-1-' + avgString + $
                  '_' + stableIMF + 'stable'
   fileSuff     = btMinStr + '-Ring'
-  plotPref     = DstString + '--300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-' + avgString + $
+  plotPref     = DstString + '--' + altStr + orbStr + '-' + hemi + '-cur_-1-1-' + avgString + $
                  '_' + stableIMF + 'stable_' + finalDelStr + btMinStr + '-'
 
   fileDir         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
-  ;; filePref     = 'polarplots_Dst_-50--upto90ILAT1500-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_19stable_'
-
-  ;; filePref     = 'polarplots_Dst_-50--upto90ILAT300-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
-  ;; plotPref     = 'polarplots_Dst_-50--upto90ILAT300-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
-
-  ;; filePref     = 'polarplots_Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
-  ;; plotPref     = 'Dst_-50--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_30.0Res_btMin1.0-'
-
-  ;; filePref     = 'polarplots_Dst_' + dstMin + '--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_'
-  ;; plotPref     = 'Dst_' + dstMin + '--upto90ILAT750-4300km-orb_500-12670-NORTH-cur_-1-1-avgnStorm_9stable_30.0Res_btMin1.0-'
-
-  ;; filePref     = 'polarplots_Dst_' + dstMin + '--upto90ILAT300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-avgnStorm_19stable_'
-  ;; fileSuff     = 'Del_btMin1.0-Ring_tAvgd_'
-  ;; plotPref     = 'Dst_' + dstMin + '--300-4300km-orb_500-12670-NORTH_AACGM-cur_-1-1-avgnStorm_19stable_btMin1.0-'
 
   quants       = '_tAvgd_' + ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
   divFacs      = [1.0D25,1.0D9,1.0D9]

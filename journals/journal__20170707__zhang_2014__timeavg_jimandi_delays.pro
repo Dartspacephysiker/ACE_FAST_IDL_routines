@@ -44,6 +44,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;; fixed_night_delay           = 70*60
 
   delayArr                 = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  delayArr = delayArr[0]
   ;; delayArr                 = [25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60 ;dayside
   ;; delayArr                 = [-15,-10,-5,50,55,60,65,70,75,80]*60 ;dayside
   ;; delayArr                 = [55,60,65,70]*60 ;dayside
@@ -103,7 +104,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
   make_OMNI_stats_savFile         = KEYWORD_SET(make_OMNI_stuff)
-  OMNI_statsSavFilePref           = 'Alfvens_dodat_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
+  OMNI_statsSavFilePref           = 'Alfvens_zhonghua_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   calc_KL_sw_coupling_func        = 1
   make_integral_savfiles          = 0
 
@@ -141,9 +142,9 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
-  besides_pFlux                      = 1
+  besides_pFlux                      = 0
   ePlots                             = 0
-  eNumFlPlots                        = 0
+  eNumFlPlots                        = 1
   pPlots                             = 1
   ionPlots                           = besides_pFlux
   probOccurrencePlot                 = besides_pFlux

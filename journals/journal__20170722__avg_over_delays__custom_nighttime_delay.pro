@@ -5,6 +5,8 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   eSpeckers       = 0
 
+  use_nEvents_not_nDelay_for_denom = 1
+  
   orbRange        = [500,12670]
   altitudeRange   = [300,4300]
 
@@ -13,13 +15,28 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   DstCutoff    = -25
   stableIMF    = '19'
-  ;; add_night_delay = 45*60
-  getfile_with_nightdelay = 45*60
-  dels            = [0:30:5]*60
+
+  btMin        = 1.0
+
+  minMC        = 1
+  maxNegMC     = -1
+
+  use_AACGM    = 0
+  
+  getfile_with_nightdelay = 30*60
+  dels            = [0:60:5]*60
 
   nDelay          = N_ELEMENTS(dels)
 
   fileDir         = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
+
+  superSuff = ''
+  IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+     superSuff += '-nEvDiv'
+  ENDIF     
+
+  hemi         = 'NORTH'
+  IF KEYWORD_SET(use_AACGM) THEN hemi += '_AACGM'
 
   IF KEYWORD_SET(DstCutoff) THEN BEGIN
      DstString    = (N_ELEMENTS(plotPref) GT 0 ? plotPref : '' ) + $
@@ -49,10 +66,12 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   finalDelStr  = STRING(FORMAT='("_",I0,"-",I0,"Dels")',dels[0]/60.,dels[-1]/60.) + addNightStr + custom_addNightStr
 
-  btMin        = 1.0
-  btMinStr     = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
+  btMinStr     = ''
+  IF N_ELEMENTS(btMin) GT 0 THEN BEGIN
+     btMinStr  = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
-
+  ENDIF
+  
   CASE 1 OF
      KEYWORD_SET(eSpeckers): BEGIN
         quants = ['broad','diff','mono']
@@ -65,10 +84,11 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
         kmPref = "_km"
      END
      ELSE: BEGIN
+
         quants = '_tAvgd_' + ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
         dbStr  = 'alfDB-w_t-'
         prefPref = DstString + '--upto90ILAT'
-        ancillaryStr = 'cur_-1-1-'
+        ancillaryStr = (minMC NE 10) OR (maxNegMC NE -10) ? STRING(FORMAT='("cur_",I0,"-",I0,"-")',maxNegMC,minMC) : ''
         orbPref = "-orb_"
         kmPref = "km"
      END
@@ -78,11 +98,11 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   altStr          = STRING(FORMAT='(I0,"-",I0,A0)',altitudeRange[0],altitudeRange[1],kmPref)
 
   configFilePref = 'multi_PASIS_vars-' + dbStr + prefPref + $
-                    altStr +  orbStr + '-NORTH_AACGM-' + $
+                    altStr +  orbStr + '-' + hemi + '-' + $
                    ancillaryStr + avgString + $
                    '_' + stableIMF + 'stable'
   filePref     = 'polarplots_' + prefPref +  $
-                 altStr +  orbStr + '-NORTH_AACGM-' + $
+                 altStr +  orbStr + '-' + hemi + '-' + $
                  ancillaryStr + avgString + $
                  '_' + stableIMF + 'stable'
   fileSuff     = btMinStr + '-Ring'
@@ -182,6 +202,16 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
         IF iDel EQ 0 THEN BEGIN
            H2DAvgArr = H2DStrArr
            H2DAvgMaskArr = H2DMaskArr
+
+           CASE 1 OF
+              KEYWORD_SET(use_nEvents_not_nDelay_for_denom): BEGIN
+                 H2DDivFacArr = REPLICATE({data:LONG(H2DMaskArr[0].data*0)},N_ELEMENTS(H2DMaskArr))
+              END
+              ELSE: BEGIN
+                 H2DDivFacArr = nDelay
+              END
+           ENDCASE
+
            FOR k=0,N_ELEMENTS(H2DAvgArr)-1 DO BEGIN
               H2DAvgArr[k].data = 0
               H2DAvgArr[k].grossIntegrals.day   = 0
@@ -198,14 +228,29 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
            ;; IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
 
-           ;;    H2DAvgArr[iIMF].data[dayH2DInds]     += H2DStrArr[iIMF].data/nDelay
-           ;;    H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/nDelay
-           ;;    H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night/nDelay
-           ;;    H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total/nDelay
-           ;;    H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/nDelay
-           ;;    H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
+           ;;    H2DAvgArr[iIMF].data[dayH2DInds]     += H2DStrArr[iIMF].data/H2DDivFac
+           ;;    H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/H2DDivFac
+           ;;    H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night/H2DDivFac
+           ;;    H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total/H2DDivFac
+           ;;    H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/H2DDivFac
+           ;;    H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/H2DDivFac
 
            ;; ENDIF ELSE BEGIN
+
+           ;; ENDELSE
+
+           IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+
+              H2DDivFacArr[iIMF].data += (H2DMaskArr[iIMF].data EQ 0.0)
+
+              H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data
+              H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day
+              H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night
+              H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total
+              H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]
+              H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]
+
+           ENDIF ELSE BEGIN
 
               H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data/nDelay
               H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/nDelay
@@ -214,7 +259,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
               H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/nDelay
               H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
 
-           ;; ENDELSE
+           ENDELSE
 
            H2DAvgMaskArr[iIMF].data = H2DAvgMaskArr[iIMF].data AND H2DMaskArr[iIMF].data
 
@@ -222,12 +267,28 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
      ENDFOREACH
 
+     IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+
+        FOREACH IMF,clockStrings,iIMF DO BEGIN
+           
+           theseInds = WHERE(H2DDivFacArr[iIMF].data GT 0)
+           
+           H2DAvgArr[iIMF].data[theseInds] /= H2DDivFacArr[iIMF].data[theseInds]
+
+        ENDFOREACH
+
+     ENDIF
+
      IF KEYWORD_SET(save_coolFiles) THEN BEGIN
         H2DStrArr  = H2DAvgArr
         H2DMaskArr = H2DAvgMaskArr
         tempFile   = filePref + finalDelStr + fileSuff + quant + '.dat'
         PRINT,"Saving to " + tempFile + ' ...'
-        SAVE,H2DStrArr,H2DMaskArr,FILENAME=fileDir+tempFile
+        IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+           SAVE,H2DStrArr,H2DMaskArr,H2DDivFacArr,FILENAME=fileDir+tempFile
+        ENDIF ELSE BEGIN
+           SAVE,H2DStrArr,H2DMaskArr,FILENAME=fileDir+tempFile
+        ENDELSE
      ENDIF
 
      H2DAvgArr_list.Add,TEMPORARY(H2DAvgArr)
@@ -281,7 +342,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
      FOREACH quant,quants,iQuant DO BEGIN
    
-        paramString =  filePref + finalDelStr + fileSuff + quant
+        paramString =  filePref + finalDelStr + fileSuff + superSuff + quant
         tempFile    = fileDir + filePref + delayStr + fileSuff + quant + '.dat'
    
         PRINT,fileName + quant
