@@ -3,7 +3,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  plotPref = 'NWO-'
+  plotPref = 'NWO'
 
   minM_c    = [ 6,12]
   maxM_c    = [12,18]
@@ -66,7 +66,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
   ;;DB stuff
   do_despun                      = 0
-  use_AACGM                      = 0
+  use_AACGM                      = 1
   use_MAG                        = 0
 
   autoscale_fluxPlots            = 0
@@ -215,6 +215,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
   ;; delayArr                       = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
   delayArr                       = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  delayArr = (INDGEN(121)-30)*60
   ;; delayArr                       = [0]*60
   ;; add_night_delay                = 45*60
 
@@ -282,7 +283,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
 
      FOR i=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
         altitudeRange = altRange[*,i]
-        altStr        = STRING(FORMAT='(I0,"-",I0,"km--orb_",I0,"-",I0)', $
+        altStr        = STRING(FORMAT='(I0,"-",I0,"km-orb_",I0,"-",I0)', $
                                altitudeRange[0], $
                                altitudeRange[1], $
                                orbRange[0], $
