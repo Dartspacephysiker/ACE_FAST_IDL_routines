@@ -3,9 +3,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  eSpeckers       = 1
+  eSpeckers       = 0
   kill_contour    = 1
-  eSpeck_rot      = 1
+  eSpeck_rot      = 0
 
   use_nEvents_not_nDelay_for_denom = 1
   
@@ -23,10 +23,15 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   minMC        = 1
   maxNegMC     = -1
 
-  use_AACGM    = 0
+  use_AACGM    = 1
   
-  getfile_with_nightdelay = 30*60
-  dels            = [0:60:5]*60
+  stepEvery1      = 1B
+  startDel        = 0
+  stopDel         = 60
+  add_nightDelay  = 30
+  dels            = [startDel:stopDel:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
+
+  ;; dels            = [5:35]*60
 
   nDelay          = N_ELEMENTS(dels)
 
@@ -49,8 +54,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
      avgString    = 'avg'
   ENDELSE
 
-  IF KEYWORD_SET(add_night_delay) THEN BEGIN
-     addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel")',add_night_delay/60.) 
+  IF KEYWORD_SET(add_nightDelay) THEN BEGIN
+     add_nightDelay *= 60
+     addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel")',add_nightDelay/60.) 
   ENDIF ELSE BEGIN
      addNightStr  = ''
   ENDELSE
@@ -61,12 +67,14 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
      addNightStr  = N_ELEMENTS(addNightStr) GT 0 ? addNightStr : ''
   ENDELSE
 
-  custom_addNightStr    = ''
-  IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
-     custom_addNightStr = STRING(FORMAT='("_",F0.1,"ntDel_cstm")',getfile_with_nightdelay/60.) 
-  ENDIF
+  ;; custom_addNightStr    = ''
+  ;; IF KEYWORD_SET(add_nightDelay) THEN BEGIN
+  ;;    custom_addNightStr = STRING(FORMAT='("_",F0.1,"ntDel_cstm")',add_nightDelay/60.) 
+  ;; ENDIF
 
-  finalDelStr  = STRING(FORMAT='("_",I0,"-",I0,"Dels")',dels[0]/60.,dels[-1]/60.) + addNightStr + custom_addNightStr
+  finalDelStr  = STRING(FORMAT='("_",I0,"-",I0,A0)', $
+                        dels[0]/60.,dels[-1]/60.,(dels[1]-dels[0] EQ 60 ? "superDels" : "Dels")) + $
+                 addNightStr
 
   btMinStr     = ''
   IF N_ELEMENTS(btMin) GT 0 THEN BEGIN
@@ -74,7 +82,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
   ENDIF
   
-  orbPref = "--orb_"
+  orbPref = "-orb_"
   kmPref = "km"
   CASE 1 OF
      KEYWORD_SET(eSpeckers): BEGIN
@@ -82,7 +90,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
         quants = '_tAvgd_' + ['NoN-eNumFl-all_fluxes_eSpec-2009_' + quants, $
                   'eFlux-all_fluxes_eSpec-2009_' + quants]
         dbStr  = 'eSpec-w_t-'
-        prefPref = 'NWO--upto90-' + DstString + (KEYWORD_SET(eSpeck_rot) ? '-rot' : '')
+        prefPref = 'NWO-upto90-' + DstString + (KEYWORD_SET(eSpeck_rot) ? '-rot' : '')
         ancillaryStr = '0sampT-'
      END
      ELSE: BEGIN
@@ -116,7 +124,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   nIMFOrient   = N_ELEMENTS(clockStrings)
 
   ;;Get configfile to make template array thing
-  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',dels[0]/60.) + addNightStr
+  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',dels[0]/60.)
 
   configFile = configFilePref + tmpDelayStr + fileSuff + '.sav'
   IF FILE_TEST(fileDir+configFile) THEN BEGIN
@@ -151,10 +159,10 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
      FOREACH delay,dels,iDel DO BEGIN
 
-        IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
+        IF KEYWORD_SET(add_nightDelay) THEN BEGIN
 
-           dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
-           nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+getfile_with_nightdelay)/60.) + addNightStr
+           dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.)
+           nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+add_nightDelay)/60.)
            dayFile   = filePref + dayDelayStr + fileSuff
            nitFile = filePref + nitDelayStr + fileSuff
 
@@ -228,7 +236,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
         FOREACH IMF,clockStrings,iIMF DO BEGIN
 
-           ;; IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
+           ;; IF KEYWORD_SET(add_nightDelay) THEN BEGIN
 
            ;;    H2DAvgArr[iIMF].data[dayH2DInds]     += H2DStrArr[iIMF].data/H2DDivFac
            ;;    H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/H2DDivFac

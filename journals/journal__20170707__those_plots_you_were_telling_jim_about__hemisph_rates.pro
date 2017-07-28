@@ -3,8 +3,17 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  doDawnDuskPlots = 0
   doRegPlots      = 1
+  add_total_line  = 0
+
+  doDawnDuskPlots = 0
+  add_day_line    = 0
+
+  justSaveEmAll   = 1B
+  stopEachTime    = 0B
+  stepEvery1      = 1B
+
+  only_bzNorth_legend = 1
 
   include_ions    = 0
 
@@ -16,19 +25,16 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
 
   use_AACGM    = 1
   
-  justSaveEmAll   = 1B
-  stopEachTime    = 0B
-
-  ;; nDelay       = 13 ;up to 60
-  ;; nDelay       = 29 ;up to 120, starting at -20
-  ;; dels         = (INDGEN(nDelay)-4)*5
-  ;; dels            = [-15:70:5]
-  ;; nDelay          = N_ELEMENTS(dels)
-
   DstCutoff    = -25
-  stableIMF    = '9'
+  stableIMF    = '14'
+
+  btMin        = 1.0
+
   ;; add_night_delay = 45*60
-  dels         = [-30:90:5]*60
+  ;; dels         = [-30:90:5]*60
+  dels         = [-30:90:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
+  ;; IF ~ THEN BEGIN
+     
 
   nDelay          = N_ELEMENTS(dels)
 
@@ -66,7 +72,6 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
   orbStr          = STRING(FORMAT='(A0,I0,"-",I0)',orbPref,orbRange[0],orbRange[1])
   altStr          = STRING(FORMAT='(I0,"-",I0,A0)',altitudeRange[0],altitudeRange[1],kmPref)
 
-  btMin        = 1.0
   btMinStr     = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
 
@@ -81,7 +86,7 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
   quants       = '_tAvgd_' + ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
   divFacs      = [1.0D25,1.0D9,1.0D9]
   ;; niceNavn     = MAKE_ARRAY(3,/STRING)
-  niceNavn     = ['Electron Precipitation (x10!U25!N/s)','Wave Energy Deposition (GW)','Electron Energy Deposition (GW)']
+  niceNavn     = ['Electron Precipitation!C(x10!U25!N/s)','Wave Energy Deposition!C(GW)','Electron Energy Deposition!C(GW)']
 
   ;;For three quantities
   xPlotPos      = [0.1,0.95]
@@ -117,9 +122,9 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
   lStyles      = ['--','-','__','--','-']
   thicks       = [3.0,3.0,3.0,3.0,3.0]
   fontSize     = 18
-  xTickFontSize = 14
-  yTickFontSize = 14
-  legPos        = [0.95,0.75]
+  xTickFontSize = 15
+  yTickFontSize = 15
+  legPos        = KEYWORD_SET(only_bzNorth_legend) ? [0.80,0.66] : [0.95,0.75]
 
   FOREACH delay,dels,iDel DO BEGIN
 
@@ -182,6 +187,7 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
         plotNight = MAKE_ARRAY(nQuants,/OBJ)
         plotTot   = MAKE_ARRAY(nQuants,/OBJ)
    
+        doLeg     = (KEYWORD_SET(only_bzNorth_legend) AND (STRUPCASE(IMF) EQ 'BZNORTH')) OR ~KEYWORD_SET(only_bzNorth_legend)
         FOREACH quant,quants,iQuant DO BEGIN
    
            plotDay[iQuant] = PLOT(dels/60., $
@@ -212,20 +218,26 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
                                     POSITION=positionList[iQuant], $
                                     /OVERPLOT)
    
-           plotTot[iQuant] = PLOT(dels/60., $
-                                  totIntegs[iQuant,iIMF,*], $
-                                  NAME=names[2], $
-                                  COLOR=cols[2], $
-                                  LINESTYLE=lStyles[2], $
-                                  THICK=thicks[2], $
-                                  ;; LAYOUT=[1,3,iQuant+1], $
-                                  POSITION=positionList[iQuant], $
-                                  /OVERPLOT)
-   
+           IF KEYWORD_SET(add_total_line) THEN BEGIN
+              plotTot[iQuant] = PLOT(dels/60., $
+                                     totIntegs[iQuant,iIMF,*], $
+                                     NAME=names[2], $
+                                     COLOR=cols[2], $
+                                     LINESTYLE=lStyles[2], $
+                                     THICK=thicks[2], $
+                                     ;; LAYOUT=[1,3,iQuant+1], $
+                                     POSITION=positionList[iQuant], $
+                                     /OVERPLOT)
+           ENDIF
+
        ENDFOREACH
         
-       legend  = LEGEND(TARGET=[plotDay[-1],plotNight[-1],plotTot[-1]], $
-                        POSITION=legPos,/NORMAL)
+       IF doLeg THEN BEGIN
+          legend  = LEGEND(TARGET=(KEYWORD_SET(add_total_line)             ?  $
+                                   [plotDay[-1],plotNight[-1],plotTot[-1]] :  $
+                                   [plotDay[-1],plotNight[-1]])            , $
+                           POSITION=legPos,FONT_SIZE=xTickFontSize,/NORMAL)
+       ENDIF
    
            IF KEYWORD_SET(justSaveEmAll) THEN BEGIN
               tmpPlotName = plotPref+'INTEGS-'+IMF+'-dayNightTot.png'
@@ -248,8 +260,9 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
    
         window    = WINDOW(DIMENSIONS=winDim,BUFFER=justSaveEmAll)
         plotDawn  = MAKE_ARRAY(nQuants,/OBJ)
-        plotDusk = MAKE_ARRAY(nQuants,/OBJ)
-   
+        plotDusk  = MAKE_ARRAY(nQuants,/OBJ)
+        plotDay   = MAKE_ARRAY(nQuants,/OBJ)
+
         FOREACH quant,quants,iQuant DO BEGIN
    
            plotDawn[iQuant] = PLOT(dels/60., $
@@ -280,9 +293,24 @@ PRO JOURNAL__20170707__THOSE_PLOTS_YOU_WERE_TELLING_JIM_ABOUT__HEMISPH_RATES
                                    POSITION=positionList[iQuant], $
                                    /OVERPLOT)
    
+           IF KEYWORD_SET(add_day_line) THEN BEGIN
+
+              plotDusk[iQuant] = PLOT(dels/60., $
+                                      dayIntegs[iQuant,iIMF,*], $
+                                      NAME=names[0], $
+                                      COLOR=cols[0], $
+                                      LINESTYLE=lStyles[0], $
+                                      THICK=thicks[0], $
+                                      POSITION=positionList[iQuant], $
+                                      /OVERPLOT)
+
+           ENDIF
+
        ENDFOREACH
         
-       legend  = LEGEND(TARGET=[plotDawn[-1],plotDusk[-1]], $
+       legend  = LEGEND(TARGET=(KEYWORD_SET(add_day_line)   ? $
+                                [plotDawn[-1],plotDusk[-1]] : $
+                                [plotDawn[-1],plotDusk[-1]]), $
                         POSITION=legPos,/NORMAL)
    
            IF KEYWORD_SET(justSaveEmAll) THEN BEGIN
