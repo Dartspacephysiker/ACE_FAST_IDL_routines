@@ -11,12 +11,12 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   do_what_everyone_does    = 1
 
+  shiftM_binM_for_contour  = 0
   plotH2D_contour          = 0
   ;; plotH2D__kde          = 1
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
   contour__levels          = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
   contour__percent         = KEYWORD_SET(plotH2D_contour)
-  shiftM_binM_for_contour  = 1
 
   IF KEYWORD_SET(do_what_everyone_does) THEN BEGIN
      @journal__20170529__zhang_2014__params_for_timeavg_newdelays.pro
@@ -44,7 +44,13 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   ;; fixed_night_delay           = 70*60
 
-  delayArr                 = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  ;; delayArr                 = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  delayArr                 = INDGEN(31)
+  ;; delayArr                 = [delayArr+5,delayArr+60]*60
+  delayArr                 = [delayArr+5,delayArr+60]
+
+  delayArr                 = CGSETDIFFERENCE(INDGEN(121)-30,delayArr)*60
+
   ;; delayArr                 = [25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60 ;dayside
   ;; delayArr                 = [-15,-10,-5,50,55,60,65,70,75,80]*60 ;dayside
   ;; delayArr                 = [55,60,65,70]*60 ;dayside
@@ -70,10 +76,10 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
 
   include_32Hz = 0
   EA_binning   = 0
-  use_AACGM    = 0
+  use_AACGM    = 1
 
   fluxPlots__invert_Newell_the_cusp = 0
-  fluxPlots__Newell_the_cusp     = 1
+  fluxPlots__Newell_the_cusp     = 0
   fluxPlots__broadband_everywhar = 0
   fluxPlots__diffuse_everywhar   = 0
 
