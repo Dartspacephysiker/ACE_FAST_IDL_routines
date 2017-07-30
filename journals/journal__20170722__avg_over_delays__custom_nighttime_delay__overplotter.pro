@@ -162,6 +162,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
            ENDCASE
 
            FOR k=0,N_ELEMENTS(H2DAvgArr)-1 DO BEGIN
+
               H2DAvgArr[k].data = 0
               H2DAvgArr[k].grossIntegrals.day   = 0
               H2DAvgArr[k].grossIntegrals.night = 0
@@ -169,6 +170,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
               H2DAvgArr[k].grossIntegrals.custom[0] = 0
               H2DAvgArr[k].grossIntegrals.custom[1] = 0
               H2DAvgMaskArr[k].data = 255
+
            ENDFOR
 
         ENDIF
@@ -212,6 +214,9 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
               H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
 
            ENDELSE
+
+           H2DAvgMaskArr[iIMF].data[WHERE( ( H2DAvgArr[iIMF].data GT 0.D )                                   OR $
+                                           ( (H2DStrArr[iIMF].data GT 0.D) AND FINITE(H2DStrArr[iIMF].data)) )] = 0.
 
         ENDFOREACH
 
@@ -268,6 +273,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      H2DAvgArr_list.Add,TEMPORARY(H2DAvgArr)
      H2DAvgMaskArr_list.Add,TEMPORARY(H2DAvgMaskArr)
      DataNameArr_list.Add,TEMPORARY(dataNameArr)
+
   ENDFOREACH
 
   IF KEYWORD_SET(checkOutInds) THEN BEGIN
@@ -919,13 +925,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
            IF ~KEYWORD_SET(OP__HAVE_VARS) THEN BEGIN
               SET_OVERPLOT_COMMON_VARS_FROM_FILE,PASIS__alfDB_plot_struct.overplot_file
-
            ENDIF
 
            match = 0
-
-
-
 
            FOR bk=0,N_ELEMENTS(PASIS__alfDB_plot_struct.overplot_arr[0,*])-1 DO BEGIN
 
