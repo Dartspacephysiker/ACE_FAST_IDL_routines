@@ -122,7 +122,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; eSpec__noMap                   = 1
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
-  ePlots                         = 1
+  ePlots                         = 0
   eNumFlPlots                    = 1
 
   tHistDenominatorPlot           = 0
@@ -211,13 +211,10 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayDeltaSec                  = 1800
   ;; binOffset_delay                = 0
   ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-  ;; delayArr                       = (INDGEN(25)*5*60)[1:-1]
-  ;; delayArr                       = (INDGEN(12)*5*60)[5:-1]
   ;; delayArr                       = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
-  delayArr                       = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
-  delayArr = (INDGEN(121)-30)*60
-  ;; delayArr                       = [0]*60
-  ;; add_night_delay                = 45*60
+  ;; delayArr                       = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
+  ;; delayArr = (INDGEN(121)-30)*60
+  delayArr = [0:90]*60
 
   ;; fixed_night_delay           = 70*60
 
@@ -254,12 +251,12 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;;MLT stuff
   binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
   shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
-  ;; binM                         = 1.0
-  ;; shiftM                       = 0.5
+  binM                         = 1.0
+  shiftM                       = 0.5
 
-  IF shiftM GT 0. THEN BEGIN
-     plotPref += '-rot'
-  ENDIF
+  ;; IF shiftM GT 0. THEN BEGIN
+  ;;    plotPref += '-rot'
+  ;; ENDIF
 
   paramPref                    = plotPref
 
