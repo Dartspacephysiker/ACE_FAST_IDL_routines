@@ -30,17 +30,27 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                                    CHECKOUT_ESPECKERS=eSpeckers, $
                                    CHECKOUT_ALFDB=alfDB, $
                                    GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
+                                   USE_NEVENTS_NOT_NDELAY_FOR_DENOM=use_nEvents_not_nDelay_for_denom, $
+                                   USE_AACGM=use_AACGM, $
                                    _EXTRA=e
 
   orbStr          = STRING(FORMAT='(A0,I0,"-",I0)',orbPref,orbRange[0],orbRange[1])
   altStr          = STRING(FORMAT='(I0,"-",I0,A0)',altitudeRange[0],altitudeRange[1],kmPref)
 
+  superSuff = ''
+  IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+     superSuff += '-nEvDiv'
+  ENDIF     
+
+  hemi         = 'NORTH'
+  IF KEYWORD_SET(use_AACGM) THEN hemi += '_AACGM'
+
   configFilePref = 'multi_PASIS_vars-' + dbStr + prefPref + $
-                    altStr +  orbStr + '-NORTH_AACGM-' + $
+                    altStr +  orbStr + '-' + hemi + '-' + $
                    ancillaryStr + avgString + $
                    '_' + stableIMFString + 'stable'
   filePref     = 'polarplots_' + prefPref +  $
-                 altStr +  orbStr + '-NORTH_AACGM-' + $
+                 altStr +  orbStr + '-' + hemi + '-' + $
                  ancillaryStr + avgString + $
                  '_' + stableIMFString + 'stable'
   fileSuff     = btMinStr + '-Ring'
@@ -92,8 +102,8 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
 
            dayDelayStr = STRING(FORMAT='("_",F0.1,"Del")',delay/60.) + addNightStr
            nitDelayStr = STRING(FORMAT='("_",F0.1,"Del")',(delay+getfile_with_nightdelay)/60.) + addNightStr
-           dayFile   = filePref + dayDelayStr + fileSuff
-           nitFile = filePref + nitDelayStr + fileSuff
+           dayFile     = filePref + dayDelayStr + fileSuff
+           nitFile     = filePref + nitDelayStr + fileSuff
 
            ;;Need these later
            delayStr    = dayDelayStr ;need this later
@@ -141,6 +151,16 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
         IF iDel EQ 0 THEN BEGIN
            H2DAvgArr = H2DStrArr
            H2DAvgMaskArr = H2DMaskArr
+
+           CASE 1 OF
+              KEYWORD_SET(use_nEvents_not_nDelay_for_denom): BEGIN
+                 H2DDivFacArr = REPLICATE({data:LONG(H2DMaskArr[0].data*0)},N_ELEMENTS(H2DAvgMaskArr))
+              END
+              ELSE: BEGIN
+                 H2DDivFacArr = nDelay
+              END
+           ENDCASE
+
            FOR k=0,N_ELEMENTS(H2DAvgArr)-1 DO BEGIN
               H2DAvgArr[k].data = 0
               H2DAvgArr[k].grossIntegrals.day   = 0
@@ -155,18 +175,61 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
 
         FOREACH IMF,clockStrings,iIMF DO BEGIN
 
-           H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data/nDelay
-           H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/nDelay
-           H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night/nDelay
-           H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total/nDelay
-           H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/nDelay
-           H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
+           ;;;ALDER
 
-           H2DAvgMaskArr[iIMF].data = H2DAvgMaskArr[iIMF].data AND H2DMaskArr[iIMF].data
+           ;; H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data/nDelay
+           ;; H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/nDelay
+           ;; H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night/nDelay
+           ;; H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total/nDelay
+           ;; H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/nDelay
+           ;; H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
+
+           ;; H2DAvgMaskArr[iIMF].data = H2DAvgMaskArr[iIMF].data AND H2DMaskArr[iIMF].data
+
+           ;;NYERE
+           IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+
+              H2DDivFacArr[iIMF].data += (H2DMaskArr[iIMF].data EQ 0.0)
+
+              IF N_ELEMENTS(H2DStrArr[iIMF].data) NE N_ELEMENTS(H2DAvgArr[iIMF].data) THEN STOP
+
+              H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data
+              H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day
+              H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night
+              H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total
+              H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]
+              H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]
+
+           ENDIF ELSE BEGIN
+
+              IF N_ELEMENTS(H2DStrArr[iIMF].data) NE N_ELEMENTS(H2DAvgArr[iIMF].data) THEN STOP
+              
+              H2DAvgArr[iIMF].data                 += H2DStrArr[iIMF].data/nDelay
+              H2DAvgArr[iIMF].grossIntegrals.day   += H2DStrArr[iIMF].grossIntegrals.day/nDelay
+              H2DAvgArr[iIMF].grossIntegrals.night += H2DStrArr[iIMF].grossIntegrals.night/nDelay
+              H2DAvgArr[iIMF].grossIntegrals.total += H2DStrArr[iIMF].grossIntegrals.total/nDelay
+              H2DAvgArr[iIMF].grossIntegrals.custom[0] += H2DStrArr[iIMF].grossIntegrals.custom[0]/nDelay
+              H2DAvgArr[iIMF].grossIntegrals.custom[1] += H2DStrArr[iIMF].grossIntegrals.custom[1]/nDelay
+
+           ENDELSE
 
         ENDFOREACH
 
      ENDFOREACH
+
+     IF KEYWORD_SET(use_nEvents_not_nDelay_for_denom) THEN BEGIN
+
+        FOREACH IMF,clockStrings,iIMF DO BEGIN
+           
+           theseInds = WHERE(H2DDivFacArr[iIMF].data NE 0.D)
+           
+           H2DAvgArr[iIMF].data[theseInds] /= H2DDivFacArr[iIMF].data[theseInds]
+
+           ;; H2DAvgMaskArr[iIMF].data = 
+
+        ENDFOREACH
+
+     ENDIF
 
      IF KEYWORD_SET(save_coolFiles) THEN BEGIN
         H2DStrArr  = H2DAvgArr
@@ -425,13 +488,17 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   @common__overplot_vars.pro
 
-  eSpeckers             = 0
+  eSpeckers             = 1
   checkOut_eSpeckers    = 0
 
   overplot_pFlux        = 1
-  OP_checkOutInds       = 1
+  OP_checkOutInds       = 0
 
   plotH2D_contour       = 1
+
+  use_AACGM             = 1
+
+  use_nEvents_not_nDelay_for_denom = 0
 
   ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   ;; OP_quants             = '_tAvgd_pF_pF'
@@ -456,7 +523,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   ;; contour__CTIndex      = -60
 
   ;;For reguree pFlux
-  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
+  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   OP_quants             = '_tAvgd_pF_pF'
   OP_ancillaryStr       = 'cur_-1-1-'
   plotPref              = 'pF_overlaid-'
@@ -476,9 +543,15 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   ;;Which files??
   DstCutoff                = -25
-  stableIMFString          = '19'
-  getfile_with_nightdelay  = 45*60
-  dels                     = [0:30:5]*60
+  stableIMFString          = '14'
+
+  stepEvery1               = 1B
+  startDel                 = 0
+  stopDel                  = 60
+  add_nightDelay           = 30
+  dels                     = [startDel:stopDel:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
+
+  btMin                    = 1.0
 
   show_integrals           = 0
 
@@ -528,58 +601,54 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
      avgString    = 'avg'
   ENDELSE
 
-  IF KEYWORD_SET(add_night_delay) THEN BEGIN
-     addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel")',add_night_delay/60.) 
-  ENDIF ELSE BEGIN
-     addNightStr  = ''
-  ENDELSE
+  ;; IF KEYWORD_SET(add_night_delay) THEN BEGIN
+  ;;    addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel")',add_night_delay/60.) 
+  ;; ENDIF ELSE BEGIN
+  ;;    addNightStr  = ''
+  ;; ENDELSE
 
-  IF KEYWORD_SET(fixed_night_delay) THEN BEGIN
-     addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel_fix")',fixed_night_delay/60.) 
-  ENDIF ELSE BEGIN
-     addNightStr  = N_ELEMENTS(addNightStr) GT 0 ? addNightStr : ''
-  ENDELSE
+  ;; IF KEYWORD_SET(fixed_night_delay) THEN BEGIN
+  ;;    addNightStr  = STRING(FORMAT='("_",F0.1,"ntDel_fix")',fixed_night_delay/60.) 
+  ;; ENDIF ELSE BEGIN
+  ;;    addNightStr  = N_ELEMENTS(addNightStr) GT 0 ? addNightStr : ''
+  ;; ENDELSE
 
-  custom_addNightStr    = ''
-  IF KEYWORD_SET(getfile_with_nightdelay) THEN BEGIN
-     custom_addNightStr = STRING(FORMAT='("_",F0.1,"ntDel_cstm")',getfile_with_nightdelay/60.) 
+  addNightStr    = ''
+  IF KEYWORD_SET(add_nightDelay) THEN BEGIN
+     add_nightDelay *= 60
+     addNightStr = STRING(FORMAT='("_",F0.1,"ntDel")',add_nightDelay/60.) 
   ENDIF
 
-  finalDelStr  = STRING(FORMAT='("_",I0,"-",I0,"Dels")',dels[0]/60.,dels[-1]/60.) + addNightStr + custom_addNightStr
+  finalDelStr  = STRING(FORMAT='("_",I0,"-",I0,"Dels")',dels[0]/60.,dels[-1]/60.) + addNightStr
   IF KEYWORD_SET(finalDelOnplotPref) AND KEYWORD_SET(plotPref) THEN BEGIN
      plotPref  = plotPref + finalDelStr
   ENDIF
 
-  btMin        = 1.0
   btMinStr     = '_' + (KEYWORD_SET(abs_btMin) ? 'ABS' : '') $
                  + 'btMin' + STRING(btMin,FORMAT='(D0.1)')
 
+  orbPref = "-orb_"
+  kmPref = "km"
   CASE 1 OF
      KEYWORD_SET(eSpeckers): BEGIN
         quants = ['broad','diff','mono']
         quants = '_tAvgd_' + ['NoN-eNumFl-all_fluxes_eSpec-2009_' + quants, $
                   'eFlux-all_fluxes_eSpec-2009_' + quants]
         dbStr  = 'eSpec-w_t-'
-        prefPref = 'NWO--upto90-' + DstString
+        prefPref = 'NWO-upto90-' + DstString
         ancillaryStr = '0sampT-'
-        orbPref = "--orbs_"
-        kmPref = "_km"
      END
      KEYWORD_SET(myQuants): BEGIN
         quants = myQuants
         dbStr  = 'eSpec-w_t-'
-        prefPref = 'NWO--upto90-' + DstString
+        prefPref = 'NWO-upto90-' + DstString
         ancillaryStr = '0sampT-'
-        orbPref = "--orbs_"
-        kmPref = "_km"
      END
      ELSE: BEGIN
         quants = '_tAvgd_' + ['NoN-eNumFl','pF_pF','sptAvg_NoN-eNumFl_eF_LC_intg']
         dbStr  = 'alfDB-w_t-'
         prefPref = DstString + '--upto90ILAT'
         ancillaryStr = 'cur_-1-1-'
-        orbPref = "-orb_"
-        kmPref = "km"
      END
   ENDCASE
 
@@ -590,7 +659,10 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
                 dels             : dels, $
                 nDelay           : nDelay, $
                 finalDelStr      : finalDelStr, $
-                addNightStr      : addNightStr, $
+                use_AACGM        : use_AACGM, $
+                use_nEvents_not_nDelay_for_denom : use_nEvents_not_nDelay_for_denom, $
+                ;; addNightStr      : addNightStr, $
+                addNightStr      : '', $
                 orbRange         : orbRange, $
                 altitudeRange    : altitudeRange, $
                 dbStr            : dbStr, $
@@ -615,7 +687,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
      CHECKOUTINDS=checkOutInds, $
      CHECKOUT_ESPECKERS=checkOut_eSpeckers, $
      CHECKOUT_ALFDB=alfDB, $
-     GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
+     GETFILE_WITH_NIGHTDELAY=add_nightDelay, $
      _EXTRA=avgPackage
 
   IF KEYWORD_SET(overplot_pFlux) THEN BEGIN
@@ -632,7 +704,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
                       dels             : dels, $
                       nDelay           : nDelay, $
                       finalDelStr      : finalDelStr, $
-                      addNightStr      : addNightStr, $
+                      addNightStr      : '', $
+                      use_AACGM        : use_AACGM, $
+                      use_nEvents_not_nDelay_for_denom : use_nEvents_not_nDelay_for_denom, $
                       orbRange         : orbRange, $
                       altitudeRange    : altitudeRange, $
                       dbStr            : OP_dbStr, $
@@ -657,7 +731,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
         CHECKOUTINDS=OP_checkOutInds, $
         CHECKOUT_ESPECKERS=OP_eSpeckers, $
         CHECKOUT_ALFDB=OP_alfDB, $
-        GETFILE_WITH_NIGHTDELAY=getfile_with_nightdelay, $
+        GETFILE_WITH_NIGHTDELAY=add_nightDelay, $
         _EXTRA=OP_avgPackage
 
   ENDIF
