@@ -251,12 +251,12 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;;MLT stuff
   binM                         = KEYWORD_SET(plotH2D_contour) ? 1.0 : 0.75
   shiftM                       = KEYWORD_SET(plotH2D_contour) ? 0.5 : 0.0
-  binM                         = 1.0
-  shiftM                       = 0.5
+  ;; binM                         = 1.0
+  ;; shiftM                       = 0.5
 
-  ;; IF shiftM GT 0. THEN BEGIN
-  ;;    plotPref += '-rot'
-  ;; ENDIF
+  IF shiftM GT 0. THEN BEGIN
+     plotPref += '-rot'
+  ENDIF
 
   paramPref                    = plotPref
 
