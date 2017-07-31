@@ -284,7 +284,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      CASE 1 OF
         KEYWORD_SET(eSpeckers): BEGIN
 
-           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
+           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
            mltFile = 'espec_mlts.sav'
            typesFile = 'espec_types.sav'
            RESTORE,dirDir+mltFile
@@ -293,7 +293,6 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
            broads = WHERE((types.broad EQ 1) OR (types.broad EQ 2),nBroad)
            diffs  = WHERE(types.diffuse EQ 1,nDiffuse)
            monos  = WHERE(types.mono EQ 1 OR types.mono EQ 2,nDiffuse)
-           mlts = !NULL
            
            myFile = 'eSpec_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
 
@@ -307,7 +306,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
         END        
         ELSE: BEGIN
 
-           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/journals/'
+           dirDir  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/temp/'
            myFile  = 'alfDB_uniqInds_CHECK_BECAUSEYOUHAVENTYET.sav'
 
            IF FILE_TEST(dirDir+myFile) THEN BEGIN
@@ -482,6 +481,20 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
         ENDELSE
      ENDCASE
 
+     CASE 1 OF
+        KEYWORD_SET(eSpeckers): BEGIN
+
+        END
+        ELSE: BEGIN
+           SAVE,totindslist,accelindslist,cuspaccelindslist, $
+                cuspnotaccelindslist,notcuspaccelindslist,notcuspnotaccelindslist, $
+                dayIndsList,nitIndsList, $
+                totallguys, $
+                FILENAME=dirdir+myfile
+        END
+     ENDCASE
+
+
      STOP
 
   ENDIF
@@ -494,17 +507,28 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   @common__overplot_vars.pro
 
-  eSpeckers             = 0 ;DON'T set this if you only want to do overplotting
-  checkOut_eSpeckers    = 0
+  eSpeckers             = 1 ;DON'T set this if you only want to do overplotting
+  eSpeck_numFl          = 1
+  eSpeck_eFlux          = 0
+  checkOutInds          = 1
+  checkOut_alfDB        = 0
+  checkOut_eSpeckers    = 1
 
   overplot_pFlux        = 1
-  OP_checkOutInds       = 0
+  OP_checkOutInds       = 1
 
   plotH2D_contour       = 1
 
   use_AACGM             = 1
 
   use_nEvents_not_nDelay_for_denom = 1
+
+  save_coolFiles           = 1
+  makePlots                = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Who are you going to overplot with whom?
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   ;; OP_quants             = '_tAvgd_pF_pF'
@@ -518,34 +542,31 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   ;; gridColor             = 'gray'
 
 
-  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
-  OP_quants             = '_tAvgd_pF_pF'
-  OP_ancillaryStr       = 'cur_-1-1-invNC-'
-  plotPref              = 'invNC_pF_overlaid-'
-  contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
-  contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  contour__nColors      = 8
-  contour__CTBottom     = 0
-  contour__CTIndex      = -60
-
-  ;;For reguree pFlux
-  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
   ;; OP_quants             = '_tAvgd_pF_pF'
-  ;; OP_ancillaryStr       = 'cur_-1-1-'
-  ;; plotPref              = 'pF_overlaid-'
+  ;; OP_ancillaryStr       = 'cur_-1-1-invNC-'
+  ;; plotPref              = 'invNC_pF_overlaid-'
   ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
   ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
   ;; contour__nColors      = 8
   ;; contour__CTBottom     = 0
   ;; contour__CTIndex      = -60
 
+  ;;For reguree pFlux, checking out inds
+  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  OP_quants             = '_tAvgd_pF_pF'
+  OP_ancillaryStr       = 'cur_-1-1-'
+  plotPref              = 'pF_overlaid-'
+  contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+  contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+  contour__nColors      = 8
+  contour__CTBottom     = 0
+  contour__CTIndex      = -60
+
   finalDelOnplotPref       = 1
 
   orbRange                 = [500,12670]
   altitudeRange            = [300,4300]
-
-  save_coolFiles           = 1
-  makePlots                = 1
 
   ;;Which files??
   DstCutoff                = -25
@@ -637,9 +658,18 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   kmPref = "km"
   CASE 1 OF
      KEYWORD_SET(eSpeckers): BEGIN
-        quants = ['broad','diff','mono']
-        quants = '_tAvgd_' + ['NoN-eNumFl-all_fluxes_eSpec-2009_' + quants, $
-                  'eFlux-all_fluxes_eSpec-2009_' + quants]
+        rawQuants = ['broad','diff','mono']
+
+        quants = !NULL
+        IF KEYWORD_SET(eSpeck_eFlux) THEN BEGIN
+           quants = [quants,'_tAvgd_eFlux-all_fluxes_eSpec-2009_' + rawQuants]
+        ENDIF
+        IF KEYWORD_SET(eSpeck_numFl) THEN BEGIN
+           quants = [quants,'_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_' + rawQuants]
+        ENDIF
+        ;; quants = ['broad','diff','mono']
+        ;; quants = '_tAvgd_' + ['NoN-eNumFl-all_fluxes_eSpec-2009_' + quants, $
+        ;;           'eFlux-all_fluxes_eSpec-2009_' + quants]
         dbStr  = 'eSpec-w_t-'
         prefPref = 'NWO-upto90-' + DstString
         ancillaryStr = '0sampT-'
@@ -692,7 +722,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
      OUT_CENTERSILAT=centersILAT, $
      CHECKOUTINDS=checkOutInds, $
      CHECKOUT_ESPECKERS=checkOut_eSpeckers, $
-     CHECKOUT_ALFDB=alfDB, $
+     CHECKOUT_ALFDB=checkOut_alfDB, $
      GETFILE_WITH_NIGHTDELAY=add_nightDelay, $
      _EXTRA=avgPackage
 
