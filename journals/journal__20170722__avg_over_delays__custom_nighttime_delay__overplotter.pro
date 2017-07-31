@@ -484,6 +484,9 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      CASE 1 OF
         KEYWORD_SET(eSpeckers): BEGIN
 
+           eSpec_totIndsList = totIndsList
+           SAVE,eSpec_totIndsList,broadIndsList,diffIndsList,dayIndsList,nitIndsList, $
+                FILENAME=dirDir + myFile
         END
         ELSE: BEGIN
            SAVE,totindslist,accelindslist,cuspaccelindslist, $
