@@ -55,7 +55,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                  '_' + stableIMFString + 'stable'
   fileSuff     = btMinStr + '-Ring'
   
-  paramStringPref = filePref + finalDelStr + fileSuff 
+  paramStringPref = filePref + finalDelStr + fileSuff + superSuff
   tempFilePref = fileDir + filePref + finalDelStr + fileSuff
 
   clockStrings = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
@@ -494,7 +494,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   @common__overplot_vars.pro
 
-  eSpeckers             = 1
+  eSpeckers             = 0 ;DON'T set this if you only want to do overplotting
   checkOut_eSpeckers    = 0
 
   overplot_pFlux        = 1
@@ -504,7 +504,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
 
   use_AACGM             = 1
 
-  use_nEvents_not_nDelay_for_denom = 0
+  use_nEvents_not_nDelay_for_denom = 1
 
   ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
   ;; OP_quants             = '_tAvgd_pF_pF'
@@ -518,26 +518,26 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   ;; gridColor             = 'gray'
 
 
-  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
-  ;; OP_quants             = '_tAvgd_pF_pF'
-  ;; OP_ancillaryStr       = 'cur_-1-1-invNC-'
-  ;; plotPref              = 'invNC_pF_overlaid-'
-  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
-  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  ;; contour__nColors      = 8
-  ;; contour__CTBottom     = 0
-  ;; contour__CTIndex      = -60
-
-  ;;For reguree pFlux
-  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
   OP_quants             = '_tAvgd_pF_pF'
-  OP_ancillaryStr       = 'cur_-1-1-'
-  plotPref              = 'pF_overlaid-'
+  OP_ancillaryStr       = 'cur_-1-1-invNC-'
+  plotPref              = 'invNC_pF_overlaid-'
   contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
   contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
   contour__nColors      = 8
   contour__CTBottom     = 0
   contour__CTIndex      = -60
+
+  ;;For reguree pFlux
+  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+  ;; OP_quants             = '_tAvgd_pF_pF'
+  ;; OP_ancillaryStr       = 'cur_-1-1-'
+  ;; plotPref              = 'pF_overlaid-'
+  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+  ;; contour__nColors      = 8
+  ;; contour__CTBottom     = 0
+  ;; contour__CTIndex      = -60
 
   finalDelOnplotPref       = 1
 

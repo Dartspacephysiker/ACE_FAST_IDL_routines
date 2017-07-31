@@ -3,9 +3,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
-  eSpeckers       = 0
+  eSpeckers       = 1
   eSpeck_numFl    = 1
-  eSpeck_eFlux    = 1
+  eSpeck_eFlux    = 0
   eSpeck_rot      = 0
 
   kill_contour    = 1
