@@ -29,10 +29,11 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   use_AACGM    = 1
   
   stepEvery1      = 1B
-  startDel        = 0
-  stopDel         = 60
-  add_nightDelay  = 30
+  startDel        = -5
+  stopDel         = 40
+  add_nightDelay  = 50
   dels            = [startDel:stopDel:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
+  ;; configFileDelay = -10*60
 
   ;; dels            = [5:35]*60
 
@@ -133,7 +134,10 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   nIMFOrient   = N_ELEMENTS(clockStrings)
 
   ;;Get configfile to make template array thing
-  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',dels[0]/60.)
+  IF N_ELEMENTS(configFileDelay) EQ 0 THEN BEGIN
+     configFileDelay = dels[0]
+  ENDIF
+  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',configFileDelay/60.)
 
   configFile = configFilePref + tmpDelayStr + fileSuff + '.sav'
   IF FILE_TEST(fileDir+configFile) THEN BEGIN

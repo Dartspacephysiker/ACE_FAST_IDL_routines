@@ -14,6 +14,7 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
                                    ANCILLARYSTR=ancillaryStr, $
                                    ORBPREF=orbPref, $
                                    KMPREF=kmPref, $
+                                   CONFIGFILEDELAY=configFileDelay, $
                                    OUT_CONFFILEPREF=configFilePref, $
                                    FILEDIR=fileDir, $
                                    OUT_CONFIGFILE=configFile, $
@@ -62,7 +63,10 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
   nIMFOrient   = N_ELEMENTS(clockStrings)
 
   ;;Get configfile to make template array thing
-  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',dels[0]/60.) + addNightStr
+  IF N_ELEMENTS(configFileDelay) EQ 0 THEN BEGIN
+     configFileDelay = dels[0]
+  ENDIF
+  tmpDelayStr = STRING(FORMAT='("_",F0.1,"Del")',configFileDelay/60.) + addNightStr
 
   configFile = configFilePref + tmpDelayStr + fileSuff + '.sav'
   IF FILE_TEST(fileDir+configFile) THEN BEGIN
@@ -513,12 +517,16 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   eSpeckers             = 1 ;DON'T set this if you only want to do overplotting
   eSpeck_numFl          = 1
   eSpeck_eFlux          = 0
-  checkOutInds          = 1
+  checkOutInds          = 0
   checkOut_alfDB        = 0
-  checkOut_eSpeckers    = 1
+  checkOut_eSpeckers    = 0
+
+  doBroadAndNC          = 0
+  doDiffAndInvNC        = 1
+  checkoutAllPF         = 0
 
   overplot_pFlux        = 1
-  OP_checkOutInds       = 1
+  OP_checkOutInds       = 0
 
   plotH2D_contour       = 1
 
@@ -527,44 +535,49 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   use_nEvents_not_nDelay_for_denom = 1
 
   save_coolFiles           = 1
-  makePlots                = 0
+  makePlots                = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Who are you going to overplot with whom?
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
-  ;; OP_quants             = '_tAvgd_pF_pF'
-  ;; OP_ancillaryStr       = 'cur_-1-1-NC-'
-  ;; plotPref              = 'NC_pF_overlaid-'
-  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
-  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  ;; ;; contour__nColors   = 8
-  ;; contour__CTBottom     = 0
-  ;; contour__CTIndex      = -49
-  ;; gridColor             = 'gray'
-
-
-  ;; myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
-  ;; OP_quants             = '_tAvgd_pF_pF'
-  ;; OP_ancillaryStr       = 'cur_-1-1-invNC-'
-  ;; plotPref              = 'invNC_pF_overlaid-'
-  ;; contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
-  ;; contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  ;; contour__nColors      = 8
-  ;; contour__CTBottom     = 0
-  ;; contour__CTIndex      = -60
-
-  ;;For reguree pFlux, checking out inds
-  myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
-  OP_quants             = '_tAvgd_pF_pF'
-  OP_ancillaryStr       = 'cur_-1-1-'
-  plotPref              = 'pF_overlaid-'
-  contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
-  contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
-  contour__nColors      = 8
-  contour__CTBottom     = 0
-  contour__CTIndex      = -60
+  CASE 1 OF
+     KEYWORD_SET(doBroadAndNC): BEGIN
+        myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+        OP_quants             = '_tAvgd_pF_pF'
+        OP_ancillaryStr       = 'cur_-1-1-NC-'
+        plotPref              = 'NC_pF_overlaid-'
+        contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+        contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+        ;; contour__nColors   = 8
+        contour__CTBottom     = 0
+        contour__CTIndex      = -49
+        gridColor             = 'gray'
+     END
+     KEYWORD_SET(doDiffAndInvNC): BEGIN
+        myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_diff'
+        OP_quants             = '_tAvgd_pF_pF'
+        OP_ancillaryStr       = 'cur_-1-1-invNC-'
+        plotPref              = 'invNC_pF_overlaid-'
+        contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+        contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+        contour__nColors      = 8
+        contour__CTBottom     = 0
+        contour__CTIndex      = -60
+     END
+     KEYWORD_SET(checkoutAllPF): BEGIN
+  ;; For reguree pFlux, checking out inds
+        myQuants              = '_tAvgd_NoN-eNumFl-all_fluxes_eSpec-2009_broad'
+        OP_quants             = '_tAvgd_pF_pF'
+        OP_ancillaryStr       = 'cur_-1-1-'
+        plotPref              = 'pF_overlaid-'
+        contour__levels       = KEYWORD_SET(plotH2D_contour) ? [0,25,50,75,100] : !NULL
+        contour__percent      = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
+        contour__nColors      = 8
+        contour__CTBottom     = 0
+        contour__CTIndex      = -60
+     END
+  ENDCASE
 
   finalDelOnplotPref       = 1
 
@@ -576,10 +589,11 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   stableIMFString          = '14'
 
   stepEvery1               = 1B
-  startDel                 = 0
-  stopDel                  = 60
-  add_nightDelay           = 30
+  startDel                 = -5
+  stopDel                  = 40
+  add_nightDelay           = 50
   dels                     = [startDel:stopDel:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
+  configFileDelay          = 0*60
 
   btMin                    = 1.0
 
@@ -697,6 +711,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
                 btMinStr         : btMinStr, $
                 dels             : dels, $
                 nDelay           : nDelay, $
+                configFileDelay  : configFileDelay, $
                 finalDelStr      : finalDelStr, $
                 use_AACGM        : use_AACGM, $
                 use_nEvents_not_nDelay_for_denom : use_nEvents_not_nDelay_for_denom, $
@@ -742,6 +757,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
                       btMinStr         : btMinStr, $
                       dels             : dels, $
                       nDelay           : nDelay, $
+                      configFileDelay  : configFileDelay, $
                       finalDelStr      : finalDelStr, $
                       addNightStr      : '', $
                       use_AACGM        : use_AACGM, $
