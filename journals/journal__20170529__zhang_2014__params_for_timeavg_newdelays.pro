@@ -48,14 +48,6 @@
   stableIMF                      = 14
   IMF_allowable_streak_dt        = 0
 
-  ;;Delay stuff
-  ;; nDelays                        = 1
-  ;; delayDeltaSec                  = 0
-  ;; binOffset_delay                = 0
-  ;; delayArr                       = (INDGEN(nDelays,/LONG)-nDelays/2)*delayDeltaSec
-  ;; delayArr                       = 300
-  delayArr                       = 0
-
   reset_omni_inds                = 1
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

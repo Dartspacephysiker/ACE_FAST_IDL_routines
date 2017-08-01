@@ -7,11 +7,12 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i          = 1
-  remake_prev_plot_file    = 1
+  remake_prev_plot_file    = 0
+  prev_plot__skip_existing = 0
 
   do_what_everyone_does    = 1
 
-  shiftM_binM_for_contour  = 1
+  shiftM_binM_for_contour  = 0
   plotH2D_contour          = 0
   ;; plotH2D__kde          = 1
   plotH2D__kde             = KEYWORD_SET(plotH2D_contour)
@@ -39,32 +40,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                 calcVar_MagC    : 0B $
   ;;                                }
 
-  ;; delayArr                 = [10]*60 ;dayside
-  ;; add_night_delay          = 45*60 ;because Jim and I know
-
-  ;; fixed_night_delay           = 70*60
-
-  ;; delayArr                 = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
-  ;; delayArr                 = INDGEN(31)
-  ;; ;; delayArr                 = [delayArr+5,delayArr+60]*60
-  ;; delayArr                 = [delayArr+5,delayArr+60]
-
-  ;; delayArr                 = CGSETDIFFERENCE(INDGEN(121)-30,delayArr)*60
-
-  ;; delayArr                 = [34:90]*60
-  delayArr                 = [-30:90]*60
-  ;; delayArr                 = [25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60 ;dayside
-  ;; delayArr                 = [-15,-10,-5,50,55,60,65,70,75,80]*60 ;dayside
-  ;; delayArr                 = [55,60,65,70]*60 ;dayside
-  ;; delayArr                 = (0+[15])*60 ;dayside
-  ;; delayArr                 = (0+[0,5,10,15,20,25,30,35,40,45])*60 ;dayside
-  ;; delayArr                 = (0+[20])*60 ;dayside
-  ;; delayArr                 = [55]*60 ;dayside
-  ;; delayArr                 = [-10,-5,0,5]*60 ;dayside
-  ;; delayArr                 = [-25,-20,-15,-10,-5,0]*60 ;dayside
-  ;; delayArr                 = [5]*60 ;dayside
-  ;; delayArr                 = [40,45,50,55]*60 ;dayside
-  ;; add_night_delay          = 55*60 ;because Jim and I know
+  delayArr                 = [-10:90]*60
 
   labels_for_presentation  = 1
   
@@ -599,6 +575,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
            OUT_PARAMSTRING_LIST=out_paramString_list, $
            USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
            REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+           PREV_PLOT__SKIP_EXISTING=prev_plot__skip_existing, $
            GROUP_LIKE_PLOTS_FOR_TILING=group_like_plots_for_tiling, $
            SCALE_LIKE_PLOTS_FOR_TILING=scale_like_plots_for_tiling, $
            ADJ_UPPER_PLOTLIM=adj_upper_plotlim_thresh, $

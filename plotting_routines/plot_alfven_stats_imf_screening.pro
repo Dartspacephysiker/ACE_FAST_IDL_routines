@@ -416,6 +416,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
    OUT_PARAMSTRING_LIST=out_paramString_list, $
    USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
    REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+   PREV_PLOT__SKIP_EXISTING=prev_plot__skip_existing, $
    PREV_PLOT_I__LIMIT_TO_THESE=prev_plot_i__limit_to_these, $
    USE_PREVIOUS_THISTOS_IF_EXISTING=use_prev_tHistos, $
    OUT_PLOT_I_LIST=out_plot_i_list, $
@@ -498,9 +499,17 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
      IF LOAD_PASIS_VARS(NEED_FASTLOC_I=need_fastLoc_i, $
                         REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+                        PREV_PLOT__SKIP_EXISTING=prev_plot__skip_existing, $
                         /VERBOSE) $
 
      THEN BEGIN
+
+        IF KEYWORD_SET(prev_plot__skip_existing) THEN BEGIN
+           PRINT,"PASIS file exists: " + GET_PASIS_VARS_FNAME(NEED_FASTLOC_I=need_fastLoc_i)
+           PRINT,"Exiting ..."
+           RETURN
+        ENDIF
+
         get_plot_i    = 0
         get_fastLoc_i = 0
         get_eSpec_i   = 0
