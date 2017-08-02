@@ -73,6 +73,10 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      RESTORE,fileDir+configFile
   ENDIF ELSE STOP
 
+  ;; PASIS__MIMC_struct.binM = 0.75
+  ;; PASIS__MIMC_struct.shiftM = 0.0
+  ;; PASIS__MIMC_struct.binI = 2.0
+  
   GET_H2D_BIN_AREAS,h2dAreas, $
                     CENTERS1=centersMLT, $
                     CENTERS2=centersILAT, $
@@ -517,16 +521,16 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   eSpeckers             = 1 ;DON'T set this if you only want to do overplotting
   eSpeck_numFl          = 1
   eSpeck_eFlux          = 0
-  checkOutInds          = 0
+  checkOutInds          = 1
   checkOut_alfDB        = 0
-  checkOut_eSpeckers    = 0
+  checkOut_eSpeckers    = 1
 
   doBroadAndNC          = 0
-  doDiffAndInvNC        = 1
-  checkoutAllPF         = 0
+  doDiffAndInvNC        = 0
+  checkoutAllPF         = 1
 
   overplot_pFlux        = 1
-  OP_checkOutInds       = 0
+  OP_checkOutInds       = 1
 
   plotH2D_contour       = 1
 
@@ -535,7 +539,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   use_nEvents_not_nDelay_for_denom = 1
 
   save_coolFiles           = 1
-  makePlots                = 1
+  makePlots                = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Who are you going to overplot with whom?
