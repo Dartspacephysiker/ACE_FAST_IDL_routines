@@ -19,10 +19,10 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; prev_plot_i__limit_to_these    = [0] ;bzNorth
   ;; prev_plot_i__limit_to_these    = [3,4] ;dusk-south and bzSouth
   
-  nonstorm                       = 1
-  DSTcutoff                      = -25
-  smooth_dst                     = 0
-  use_mostRecent_Dst_files       = 1
+  ;; nonstorm                       = 1
+  ;; DSTcutoff                      = -25
+  ;; smooth_dst                     = 0
+  ;; use_mostRecent_Dst_files       = 1
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
@@ -216,7 +216,7 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; delayArr                       = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90]*60
   ;; delayArr = (INDGEN(121)-30)*60
   ;; delayArr = [0:90]*60
-  delayArr = [-5:-1]*60
+  delayArr = [-5:90]*60
 
   ;; fixed_night_delay           = 70*60
 

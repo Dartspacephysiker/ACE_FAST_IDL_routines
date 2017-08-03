@@ -90,8 +90,8 @@ PRO JOURNAL__20170731__ALFVENS_IMF_BY_SEASON
 
               IF iIMF EQ 0 THEN BEGIN
                  PRINT,FORMAT='(A0,T30,A0,A0,A0,T45,A0,A0,T65,A0,A0,T85,A0,A0,T105,A0,A0,T125,A0,A0)', $
-                       '$phi_{\textrm{\textsc{IMF}}}$',ampSpace, $
-                       ' N ',ampSpace, $
+                       '$\phi_{\textrm{\textsc{IMF}}}$',ampSpace, $
+                       ' N Obs',ampSpace, $
                        indStruct.season[0],ampSpace, $
                        indStruct.season[1],ampSpace, $
                        indStruct.season[2],ampSpace, $
@@ -100,7 +100,7 @@ PRO JOURNAL__20170731__ALFVENS_IMF_BY_SEASON
 
                  PRINT,FORMAT='(A0,T15,A0,A0,A0,T35,A0,A0,T55,A0,A0,T75,A0,A0,T95,A0,A0,T115,A0,A0)', $
                        '',ampSpace, $
-                       ' IAW (Broadband)',ampSpace, $
+                       ' IAW (BB)',ampSpace, $
                        '\%',ampSpace, $
                        '\%',ampSpace, $
                        '\%',ampSpace, $
@@ -124,11 +124,11 @@ PRO JOURNAL__20170731__ALFVENS_IMF_BY_SEASON
                  PRINT,FORMAT='(A0,T35,A0,A0,A0,T50,A0,A0,T65,A0,A0,T80,A0,A0,T95,A0,A0,T110,A0,A0)', $
                        '$\phi_{\textrm{\textsc{IMF}}}$',ampSpace, $
                        ' N ',ampSpace, $
-                       indStruct.season[0],ampSpace, $
-                       indStruct.season[1],ampSpace, $
-                       indStruct.season[2],ampSpace, $
-                       indStruct.season[3],ampSpace, $
-                       indStruct.season[4],retStr
+                       '\tbf{' +indStruct.season[0] + '}',ampSpace, $
+                       '\tbf{' +indStruct.season[1] + '}',ampSpace, $
+                       '\tbf{' +indStruct.season[2] + '}',ampSpace, $
+                       '\tbf{' +indStruct.season[3] + '}',ampSpace, $
+                       '\tbf{' +indStruct.season[4] + '}',retStr
                  ;; PRINT,FORMAT='(A0,A0,T15,A0,A0,T30,A0,A0,T45,A0,A0,T60,A0,A0,T75,A0)','', $
                  ;;       indStruct.season[0],ampSpace, $
                  ;;       indStruct.season[1],ampSpace, $
