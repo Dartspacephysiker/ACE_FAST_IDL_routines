@@ -18,7 +18,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   save_coolFiles  = 1
   makePlots       = 1
 
-  DstCutoff    = -25
+  ;; DstCutoff    = -25
   stableIMF    = '14'
 
   btMin        = 1.0
@@ -33,7 +33,7 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY
   stopDel         = 40
   add_nightDelay  = 50
   dels            = [startDel:stopDel:(KEYWORD_SET(stepEvery1) ? 1 : 5)]*60
-  ;; configFileDelay = -10*60
+  ;; configFileDelay = 0*60
 
   ;; dels            = [5:35]*60
 
