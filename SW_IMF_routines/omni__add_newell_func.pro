@@ -25,8 +25,8 @@ PRO OMNI__ADD_NEWELL_FUNC,goodmag_goodtimes_i
 
   good_SWMag_i                      = SWMag_i[SWMag_ii]
   good_magSW_i                      = magSW_i[magSW_ii]
-  C_OMNI__NewellFunc[good_magSW_i]  = (flow_speed[good_SWMag_i] )^(4.D/3.D)*(1.D4)*$ ;Flow speed in m/s ( (1.D3)^(4./3.) = 1.D4)
-                                      (C_OMNI__Bt[good_magSW_i] )^(2.D/3.D)*(1.D-6)*$ ;magField in nT! ( (1.D-9)^(2./3.) = 1.D-6 )
-                                      ABS(SIN(C_OMNI__phiClock[good_magSW_i]*!DTOR/2.D))^(8.D/3.D)
+  C_OMNI__NewellFunc[good_magSW_i]  = (flow_speed[good_SWMag_i] )^(4.D/3.D)* $ ;Flow speed in km/s
+                                      (C_OMNI__Bt[good_magSW_i] )^(2.D/3.D)* $ ;magField in nT
+                                      ((SIN(C_OMNI__phiClock[good_magSW_i]*!DTOR/2.D))^(8.D))^(1.D/3.D)
 
 END

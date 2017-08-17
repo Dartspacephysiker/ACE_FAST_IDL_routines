@@ -7,7 +7,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   use_prev_plot_i          = 1
-  remake_prev_plot_file    = 0
+  remake_prev_plot_file    = 1
   prev_plot__skip_existing = 0
 
   do_what_everyone_does    = 1
@@ -41,6 +41,7 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   ;;                                }
 
   delayArr                 = [-10:90]*60
+  delayArr                 = [-10]*60
 
   labels_for_presentation  = 1
   
@@ -83,12 +84,12 @@ PRO JOURNAL__20170707__ZHANG_2014__TIMEAVG_JIMANDI_DELAYS
   reset_OMNI_inds                 = 1
      
   ;;bonus
-    make_OMNI_stuff                 = 0
+    make_OMNI_stuff                 = 1
   ;; print_avg_imf_components        = KEYWORD_SET(make_OMNI_stuff)
   ;; print_master_OMNI_file          = KEYWORD_SET(make_OMNI_stuff)
   save_master_OMNI_inds           = KEYWORD_SET(make_OMNI_stuff)
   make_OMNI_stats_savFile         = KEYWORD_SET(make_OMNI_stuff)
-  OMNI_statsSavFilePref           = 'Alfvens_latuhst_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
+  OMNI_statsSavFilePref           = 'Alfvens_latuhst2_'+GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   calc_KL_sw_coupling_func        = 1
   make_integral_savfiles          = 0
 

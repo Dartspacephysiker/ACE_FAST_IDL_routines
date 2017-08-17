@@ -88,6 +88,7 @@ FUNCTION GET_STABLE_IMF_INDS, $
      tiltFile          = 'sw_data--dpTilt_for_culled_OMNI_magdata.dat'
 
      RESTORE,dataDir + culledDataStr
+
      ;; RESTORE,dataDir + "/OMNI/culled_OMNI_magdata__20160702.dat"
      ;; ENDIF
 
