@@ -3,6 +3,9 @@ PRO JOURNAL__20170204__ZHANG2014__HOW_MANY_ALFS_BROAD_DIFFUSE_MONO_IN_CUSP
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
+  PRINT,"This journal is not as helpful as it might appear to be! It's not immediately going to get you anything—rather, it only takes you as far as VALUE_CLOSEST2 with NEWELL__eSpec and MAXIMUS__maximus (or something like that)."
+  PRINT,"What you really want is JOURNAL__20170209__ALIGN_ALFDB_WITH_CLOSEST_ESPEC_DB_TO_GET_PRECIP_TYPE in the Alfven_db_routines repo"
+
   magc10files   = 0
 
   ;; dir       = '/home/spencerh/Desktop/Spence_paper_drafts/2017/Alfvens_IMF/dataFiles/'
@@ -28,7 +31,6 @@ PRO JOURNAL__20170204__ZHANG2014__HOW_MANY_ALFS_BROAD_DIFFUSE_MONO_IN_CUSP
   IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
      LOAD_MAXIMUS_AND_CDBTIME
   ENDIF
-
 
   ;;First sort out things with the good inds, the cusp, etc.
   nGood                = N_ELEMENTS(good_i)

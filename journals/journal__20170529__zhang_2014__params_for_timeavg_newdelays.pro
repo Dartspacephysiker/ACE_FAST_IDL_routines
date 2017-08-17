@@ -8,8 +8,8 @@
 
   @journal__20161202__plotpref_for_journals_with_dst_restriction.pro
 
-  minMC                              = 10
-  maxNegMC                           = -10
+  minMC                              = 1
+  maxNegMC                           = -1
 
   do_timeAvg_fluxQuantities          = 1
   logAvgPlot                         = 0
