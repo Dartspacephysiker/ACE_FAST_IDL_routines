@@ -123,8 +123,8 @@ PRO JOURNAL__20170707__ZHANG_2014__NEWELLDB__JIMANDI
   ;; eSpec__noMap                   = 1
 
   ;; ePlots                         = KEYWORD_SET(justData) ? 0 : 1
-  ePlots                         = 0
-  eNumFlPlots                    = 1
+  ePlots                         = 1
+  eNumFlPlots                    = 0
 
   tHistDenominatorPlot           = 0
    tHistDenomPlotRange           = [0.,150.]

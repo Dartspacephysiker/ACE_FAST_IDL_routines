@@ -73,9 +73,9 @@ PRO AVERAGE_H2DSTRUCTS_OVER_DELAYS,QUANTS=quants, $
      RESTORE,fileDir+configFile
   ENDIF ELSE STOP
 
-  ;; PASIS__MIMC_struct.binM = 0.75
-  ;; PASIS__MIMC_struct.shiftM = 0.0
-  ;; PASIS__MIMC_struct.binI = 2.0
+  PASIS__MIMC_struct.binM = 0.75
+  PASIS__MIMC_struct.shiftM = 0.0
+  PASIS__MIMC_struct.binI = 2.0
   
   GET_H2D_BIN_AREAS,h2dAreas, $
                     CENTERS1=centersMLT, $
@@ -521,9 +521,9 @@ PRO JOURNAL__20170722__AVG_OVER_DELAYS__CUSTOM_NIGHTTIME_DELAY__OVERPLOTTER
   eSpeckers             = 1 ;DON'T set this if you only want to do overplotting
   eSpeck_numFl          = 1
   eSpeck_eFlux          = 0
-  checkOutInds          = 1
+  checkOutInds          = 0
   checkOut_alfDB        = 0
-  checkOut_eSpeckers    = 1
+  checkOut_eSpeckers    = 0
 
   doBroadAndNC          = 0
   doDiffAndInvNC        = 0
