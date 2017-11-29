@@ -619,6 +619,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
            USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
            FOR_ESPEC_DBS=fl_elOrIon, $
+           FOR_ESPEC__GIGANTE=PASIS__alfDB_plot_struct.eSpec__gigante_DB, $
            ;; CHECK_DB=check_DB, $
            JUST_FASTLOC=just_fastLoc, $
            JUST_TIMES=just_times, $
@@ -642,6 +643,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      other_guys = PASIS__alfDB_plot_struct.load_dILAT OR PASIS__alfDB_plot_struct.load_dAngle OR PASIS__alfDB_plot_struct.load_dx
      LOAD_NEWELL_ESPEC_DB, $
         UPGOING=PASIS__alfDB_plot_struct.eSpec__upgoing, $
+        GIGANTE=PASIS__alfDB_plot_struct.eSpec__gigante_DB, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
