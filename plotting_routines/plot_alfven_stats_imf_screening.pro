@@ -1093,18 +1093,18 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
            USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases, $
-           NONSTORM_I=ns_FL_i, $
-           INITIALPHASE_I=init_FL_i, $
-           MAINPHASE_I=mp_FL_i, $
-           RECOVERYPHASE_I=rp_FL_i, $
-           EARLYMAINPHASE_I=earlyMP_FL_i, $
-           EARLYRECOVERYPHASE_I=earlyRP_FL_i, $
-           LATEMAINPHASE_I=lateMP_FL_i, $
-           LATERECOVERYPHASE_I=lateRP_FL_i, $
-           ;; STORM_DST_I=s_dst_FL_i, $
-           ;; NONSTORM_DST_I=ns_dst_FL_i, $
-           ;; MAINPHASE_DST_I=mp_dst_FL_i, $
-           ;; RECOVERYPHASE_DST_I=rp_dst_FL_i, $
+           NONSTORM_I=ns_eSpec_i, $
+           INITIALPHASE_I=init_eSpec_i, $
+           MAINPHASE_I=mp_eSpec_i, $
+           RECOVERYPHASE_I=rp_eSpec_i, $
+           EARLYMAINPHASE_I=earlyMP_eSpec_i, $
+           EARLYRECOVERYPHASE_I=earlyRP_eSpec_i, $
+           LATEMAINPHASE_I=lateMP_eSpec_i, $
+           LATERECOVERYPHASE_I=lateRP_eSpec_i, $
+           ;; STORM_DST_I=s_dst_eSpec_i, $
+           ;; NONSTORM_DST_I=ns_dst_eSpec_i, $
+           ;; MAINPHASE_DST_I=mp_dst_eSpec_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
            N_NONSTORM=n_eSpec_ns, $
            N_STORM=n_eSpec_s, $
            N_INITIALPHASE=n_eSpec_init, $
@@ -1445,7 +1445,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.ae_opt.AE_both): BEGIN
               PRINTF,lun,'Restricting eSpec with low and high ' + navn + ' indices in turn ...'
-              restrict_with_these_i = LIST(high_eSpec_i,low_eSpec_i)
+              restrict_with_these_eSpec_i = LIST(high_eSpec_i,low_eSpec_i)
            END
         ENDCASE
 
