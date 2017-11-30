@@ -92,11 +92,11 @@ PRO SETUP_TO_RUN_ALL_CLOCK_ANGLES,multiple_IMF_clockAngles,clockStrings, $
   IF KEYWORD_SET(and_tiling_options) THEN BEGIN
      tile_images                 = 1
      IF KEYWORD_SET(group_like_plots_for_tiling) THEN BEGIN
-     clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
+        clockStrings    = ['bzNorth','dusk-north','duskward','dusk-south','bzSouth','dawn-south','dawnward','dawn-north']
 
-     tiling_order             = [7,0,1, $
+        tiling_order             = [7, 0,1, $
                                     6,-9,2, $
-                                    5,4,3]
+                                    5, 4,3]
         n_tile_columns           = 3
         n_tile_rows              = 3
         IF KEYWORD_SET(tile__cb_in_center_panel) THEN BEGIN
