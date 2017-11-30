@@ -905,7 +905,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases, $
            EARLIEST_UTC=PASIS__IMF_struct.earliest_UTC, $
            LATEST_UTC=PASIS__IMF_struct.latest_UTC, $
            USE_JULDAY_NOT_UTC=PASIS__IMF_struct.use_julDay_not_UTC, $
@@ -1004,7 +1004,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases, $
            NONSTORM_I=ns_FL_i, $
            INITIALPHASE_I=init_FL_i, $
            MAINPHASE_I=mp_FL_i, $
@@ -1092,7 +1092,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases, $
            NONSTORM_I=ns_FL_i, $
            INITIALPHASE_I=init_FL_i, $
            MAINPHASE_I=mp_FL_i, $
@@ -1188,7 +1188,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases;, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases;, $
            ;; NONSTORM_I=ns_ion_i, $
            ;; MAINPHASE_I=mp_ion_i, $
            ;; RECOVERYPHASE_I=rp_ion_i, $
@@ -1236,7 +1236,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases;, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases;, $
            ;; NONSTORM_I=ns_sWay_i, $
            ;; MAINPHASE_I=mp_sWay_i, $
            ;; RECOVERYPHASE_I=rp_sWay_i, $
