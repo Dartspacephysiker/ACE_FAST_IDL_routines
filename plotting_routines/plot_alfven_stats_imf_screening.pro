@@ -820,20 +820,49 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
+           USE_KATUS_STORM_PHASES=PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases, $
            NONSTORM_I=ns_i, $
+           INITIALPHASE_I=init_i, $
            MAINPHASE_I=mp_i, $
            RECOVERYPHASE_I=rp_i, $
-           STORM_DST_I=s_dst_i, $
+           EARLYMAINPHASE_I=earlyMP_i, $
+           EARLYRECOVERYPHASE_I=earlyRP_i, $
+           LATEMAINPHASE_I=lateMP_i, $
+           LATERECOVERYPHASE_I=lateRP_i, $
            NONSTORM_DST_I=ns_dst_i, $
+           STORM_DST_I=s_dst_i, $
+           INITIALPHASE_DST_I=init_dst_i, $
            MAINPHASE_DST_I=mp_dst_i, $
            RECOVERYPHASE_DST_I=rp_dst_i, $
-           N_STORM=n_s, $
+           EARLYMAINPHASE_DST_I=earlyMP_dst_i, $
+           EARLYRECOVERYPHASE_DST_I=earlyRP_dst_i, $
+           LATEMAINPHASE_DST_I=lateMP_dst_i, $
+           LATERECOVERYPHASE_DST_I=lateRP_dst_i, $
            N_NONSTORM=n_ns, $
+           N_STORM=n_s, $
+           N_INITIALPHASE=n_init, $
            N_MAINPHASE=n_mp, $
            N_RECOVERYPHASE=n_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           N_EARLYMAINPHASE=n_earlyMP, $
+           N_EARLYRECOVERYPHASE=n_earlyRP, $
+           N_LATEMAINPHASE=n_lateMP, $
+           N_LATERECOVERYPHASE=n_lateRP, $
+           NONSTORM_T1=ns_t1, $
+           INITIALPHASE_T1=init_t1, $
+           MAINPHASE_T1=mp_t1, $
+           RECOVERYPHASE_T1=rp_t1, $
+           EARLYMAINPHASE_T1=earlyMP_t1, $
+           EARLYRECOVERYPHASE_T1=earlyRP_t1, $
+           LATEMAINPHASE_T1=lateMP_t1, $
+           LATERECOVERYPHASE_T1=lateRP_t1, $
+           NONSTORM_T2=ns_t2, $
+           INITIALPHASE_T2=init_t2, $
+           MAINPHASE_T2=mp_t2, $
+           RECOVERYPHASE_T2=rp_t2, $
+           EARLYMAINPHASE_T2=earlyMP_t2, $
+           EARLYRECOVERYPHASE_T2=earlyRP_t2, $
+           LATEMAINPHASE_T2=lateMP_t2, $
+           LATERECOVERYPHASE_T2=lateRP_t2
         
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
@@ -850,7 +879,19 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
               PRINTF,lun,'Restricting maximus with each storm phase in turn ...'
-              restrict_with_these_i = LIST(ns_i,mp_i,rp_i)
+              IF KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases) THEN BEGIN
+                 CASE PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases OF
+                    1: BEGIN
+                       restrict_with_these_i = LIST(init_i,mp_i,rp_i)
+                    END
+                    2: BEGIN
+                       restrict_with_these_i = LIST(init_i,earlyMP_i,lateMP_i, $
+                                                    earlyRP_i,lateRP_i)
+                    END
+                 ENDCASE
+              ENDIF ELSE BEGIN
+                 restrict_with_these_i = LIST(ns_i,mp_i,rp_i)
+              ENDELSE
            END
         ENDCASE
      ENDIF
@@ -871,18 +912,42 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            EARLIEST_JULDAY=PASIS__IMF_struct.earliest_julDay, $
            LATEST_JULDAY=PASIS__IMF_struct.latest_julDay, $
            NONSTORM_I=ns_OMNI_i, $
+           INITIALPHASE_I=init_OMNI_i, $
            MAINPHASE_I=mp_OMNI_i, $
            RECOVERYPHASE_I=rp_OMNI_i, $
-           STORM_DST_I=s_dst_OMNI_i, $
-           NONSTORM_DST_I=ns_dst_OMNI_i, $
-           MAINPHASE_DST_I=mp_dst_OMNI_i, $
-           RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
-           N_STORM=n_OMNI_s, $
+           EARLYMAINPHASE_I=earlyMP_OMNI_i, $
+           EARLYRECOVERYPHASE_I=earlyRP_OMNI_i, $
+           LATEMAINPHASE_I=lateMP_OMNI_i, $
+           LATERECOVERYPHASE_I=lateRP_OMNI_i, $
+           ;; STORM_DST_I=s_dst_OMNI_i, $
+           ;; NONSTORM_DST_I=ns_dst_OMNI_i, $
+           ;; MAINPHASE_DST_I=mp_dst_OMNI_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_OMNI_i, $
            N_NONSTORM=n_OMNI_ns, $
+           N_STORM=n_OMNI_s, $
+           N_INITIALPHASE=n_OMNI_init, $
            N_MAINPHASE=n_OMNI_mp, $
            N_RECOVERYPHASE=n_OMNI_rp, $
-           NONSTORM_T1=ns_OMNI_t1,MAINPHASE_T1=mp_OMNI_t1,RECOVERYPHASE_T1=rp_OMNI_t1, $
-           NONSTORM_T2=ns_OMNI_t2,MAINPHASE_T2=mp_OMNI_t2,RECOVERYPHASE_T2=rp_OMNI_t2
+           N_EARLYMAINPHASE=n_OMNI_earlyMP, $
+           N_EARLYRECOVERYPHASE=n_OMNI_earlyRP, $
+           N_LATEMAINPHASE=n_OMNI_lateMP, $
+           N_LATERECOVERYPHASE=n_OMNI_lateRP, $
+           NONSTORM_T1=ns_OMNI_t1, $
+           INITIALPHASE_T1=init_OMNI_t1, $
+           MAINPHASE_T1=mp_OMNI_t1, $
+           RECOVERYPHASE_T1=rp_OMNI_t1, $
+           EARLYMAINPHASE_T1=earlyMP_OMNI_t1, $
+           EARLYRECOVERYPHASE_T1=earlyRP_OMNI_t1, $
+           LATEMAINPHASE_T1=lateMP_OMNI_t1, $
+           LATERECOVERYPHASE_T1=lateRP_OMNI_t1, $
+           NONSTORM_T2=ns_OMNI_t2, $
+           INITIALPHASE_T2=init_OMNI_t2, $
+           MAINPHASE_T2=mp_OMNI_t2, $
+           RECOVERYPHASE_T2=rp_OMNI_t2, $
+           EARLYMAINPHASE_T2=earlyMP_OMNI_t2, $
+           EARLYRECOVERYPHASE_T2=earlyRP_OMNI_t2, $
+           LATEMAINPHASE_T2=lateMP_OMNI_t2, $
+           LATERECOVERYPHASE_T2=lateRP_OMNI_t2
 
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
@@ -904,8 +969,23 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
               t2_OMNI_arr                = rp_OMNI_t2
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
+
               PRINTF,lun,'Restricting OMNI with each storm phase in turn ...'
-              restrict_OMNI_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
+              IF KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases) THEN BEGIN
+                 CASE PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases OF
+                    1: BEGIN
+                       restrict_OMNI_with_these_i = LIST(init_OMNI_i,mp_OMNI_i,rp_OMNI_i)
+                    END
+                    2: BEGIN
+                       restrict_OMNI_with_these_i = LIST(init_OMNI_i, $
+                                                         earlyMP_OMNI_i,lateMP_OMNI_i, $
+                                                         earlyRP_OMNI_i,lateRP_OMNI_i)
+                    END
+                 ENDCASE
+              ENDIF ELSE BEGIN
+                 restrict_OMNI_with_these_i = LIST(ns_OMNI_i,mp_OMNI_i,rp_OMNI_i)
+              ENDELSE
+
            END
         ENDCASE
 
@@ -926,18 +1006,42 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
            USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
            NONSTORM_I=ns_FL_i, $
+           INITIALPHASE_I=init_FL_i, $
            MAINPHASE_I=mp_FL_i, $
            RECOVERYPHASE_I=rp_FL_i, $
-           STORM_DST_I=s_dst_FL_i, $
-           NONSTORM_DST_I=ns_dst_FL_i, $
-           MAINPHASE_DST_I=mp_dst_FL_i, $
-           RECOVERYPHASE_DST_I=rp_dst_FL_i, $
-           N_STORM=n_FL_s, $
+           EARLYMAINPHASE_I=earlyMP_FL_i, $
+           EARLYRECOVERYPHASE_I=earlyRP_FL_i, $
+           LATEMAINPHASE_I=lateMP_FL_i, $
+           LATERECOVERYPHASE_I=lateRP_FL_i, $
+           ;; STORM_DST_I=s_dst_FL_i, $
+           ;; NONSTORM_DST_I=ns_dst_FL_i, $
+           ;; MAINPHASE_DST_I=mp_dst_FL_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_FL_i, $
            N_NONSTORM=n_FL_ns, $
+           N_STORM=n_FL_s, $
+           N_INITIALPHASE=n_FL_init, $
            N_MAINPHASE=n_FL_mp, $
            N_RECOVERYPHASE=n_FL_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+           N_EARLYMAINPHASE=n_FL_earlyMP, $
+           N_EARLYRECOVERYPHASE=n_FL_earlyRP, $
+           N_LATEMAINPHASE=n_FL_lateMP, $
+           N_LATERECOVERYPHASE=n_FL_lateRP, $
+           NONSTORM_T1=ns_FL_t1, $
+           INITIALPHASE_T1=init_FL_t1, $
+           MAINPHASE_T1=mp_FL_t1, $
+           RECOVERYPHASE_T1=rp_FL_t1, $
+           EARLYMAINPHASE_T1=earlyMP_FL_t1, $
+           EARLYRECOVERYPHASE_T1=earlyRP_FL_t1, $
+           LATEMAINPHASE_T1=lateMP_FL_t1, $
+           LATERECOVERYPHASE_T1=lateRP_FL_t1, $
+           NONSTORM_T2=ns_FL_t2, $
+           INITIALPHASE_T2=init_FL_t2, $
+           MAINPHASE_T2=mp_FL_t2, $
+           RECOVERYPHASE_T2=rp_FL_t2, $
+           EARLYMAINPHASE_T2=earlyMP_FL_t2, $
+           EARLYRECOVERYPHASE_T2=earlyRP_FL_t2, $
+           LATEMAINPHASE_T2=lateMP_FL_t2, $
+           LATERECOVERYPHASE_T2=lateRP_FL_t2, $
            GET_TIME_FOR_ESPEC_DBS=fl_elOrIon
         
         
@@ -956,7 +1060,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
               PRINTF,lun,'Restricting fastLoc with each storm phase in turn ...'
-              restrict_with_these_FL_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
+
+              IF KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases) THEN BEGIN
+                 CASE PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases OF
+                    1: BEGIN
+                       restrict_with_these_FL_i = LIST(init_FL_i,mp_FL_i,rp_FL_i)
+                    END
+                    2: BEGIN
+                       restrict_with_these_FL_i = LIST(init_FL_i, $
+                                                         earlyMP_FL_i,lateMP_FL_i, $
+                                                         earlyRP_FL_i,lateRP_FL_i)
+                    END
+                 ENDCASE
+              ENDIF ELSE BEGIN
+                 restrict_with_these_FL_i = LIST(ns_FL_i,mp_FL_i,rp_FL_i)
+              ENDELSE
            END
         ENDCASE
 
@@ -975,19 +1093,56 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
            USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
-           NONSTORM_I=ns_eSpec_i, $
-           MAINPHASE_I=mp_eSpec_i, $
-           RECOVERYPHASE_I=rp_eSpec_i, $
-           STORM_DST_I=s_dst_eSpec_i, $
-           NONSTORM_DST_I=ns_dst_eSpec_i, $
-           MAINPHASE_DST_I=mp_dst_eSpec_i, $
-           RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
-           N_STORM=n_eSpec_s, $
+           NONSTORM_I=ns_FL_i, $
+           INITIALPHASE_I=init_FL_i, $
+           MAINPHASE_I=mp_FL_i, $
+           RECOVERYPHASE_I=rp_FL_i, $
+           EARLYMAINPHASE_I=earlyMP_FL_i, $
+           EARLYRECOVERYPHASE_I=earlyRP_FL_i, $
+           LATEMAINPHASE_I=lateMP_FL_i, $
+           LATERECOVERYPHASE_I=lateRP_FL_i, $
+           ;; STORM_DST_I=s_dst_FL_i, $
+           ;; NONSTORM_DST_I=ns_dst_FL_i, $
+           ;; MAINPHASE_DST_I=mp_dst_FL_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_FL_i, $
            N_NONSTORM=n_eSpec_ns, $
+           N_STORM=n_eSpec_s, $
+           N_INITIALPHASE=n_eSpec_init, $
            N_MAINPHASE=n_eSpec_mp, $
            N_RECOVERYPHASE=n_eSpec_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           N_EARLYMAINPHASE=n_eSpec_earlyMP, $
+           N_EARLYRECOVERYPHASE=n_eSpec_earlyRP, $
+           N_LATEMAINPHASE=n_eSpec_lateMP, $
+           N_LATERECOVERYPHASE=n_eSpec_lateRP, $
+           NONSTORM_T1=ns_eSpec_t1, $
+           INITIALPHASE_T1=init_eSpec_t1, $
+           MAINPHASE_T1=mp_eSpec_t1, $
+           RECOVERYPHASE_T1=rp_eSpec_t1, $
+           EARLYMAINPHASE_T1=earlyMP_eSpec_t1, $
+           EARLYRECOVERYPHASE_T1=earlyRP_eSpec_t1, $
+           LATEMAINPHASE_T1=lateMP_eSpec_t1, $
+           LATERECOVERYPHASE_T1=lateRP_eSpec_t1, $
+           NONSTORM_T2=ns_eSpec_t2, $
+           INITIALPHASE_T2=init_eSpec_t2, $
+           MAINPHASE_T2=mp_eSpec_t2, $
+           RECOVERYPHASE_T2=rp_eSpec_t2, $
+           EARLYMAINPHASE_T2=earlyMP_eSpec_t2, $
+           EARLYRECOVERYPHASE_T2=earlyRP_eSpec_t2, $
+           LATEMAINPHASE_T2=lateMP_eSpec_t2, $
+           LATERECOVERYPHASE_T2=lateRP_eSpec_t2
+           ;; NONSTORM_I=ns_eSpec_i, $
+           ;; MAINPHASE_I=mp_eSpec_i, $
+           ;; RECOVERYPHASE_I=rp_eSpec_i, $
+           ;; STORM_DST_I=s_dst_eSpec_i, $
+           ;; NONSTORM_DST_I=ns_dst_eSpec_i, $
+           ;; MAINPHASE_DST_I=mp_dst_eSpec_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_eSpec_i, $
+           ;; N_STORM=n_eSpec_s, $
+           ;; N_NONSTORM=n_eSpec_ns, $
+           ;; N_MAINPHASE=n_eSpec_mp, $
+           ;; N_RECOVERYPHASE=n_eSpec_rp, $
+           ;; NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           ;; NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
         
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
@@ -1001,7 +1156,21 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
               PRINTF,lun,'Restricting eSpec with each storm phase in turn ...'
-              restrict_with_these_eSpec_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+
+              IF KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases) THEN BEGIN
+                 CASE PASIS__alfDB_plot_struct.storm_opt.use_katus_storm_phases OF
+                    1: BEGIN
+                       restrict_with_these_eSpec_i = LIST(init_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+                    END
+                    2: BEGIN
+                       restrict_with_these_eSpec_i = LIST(init_eSpec_i, $
+                                                       earlyMP_eSpec_i,lateMP_eSpec_i, $
+                                                       earlyRP_eSpec_i,lateRP_eSpec_i)
+                    END
+                 ENDCASE
+              ENDIF ELSE BEGIN
+                 restrict_with_these_eSpec_i = LIST(ns_eSpec_i,mp_eSpec_i,rp_eSpec_i)
+              ENDELSE
            END
         ENDCASE
 
@@ -1019,21 +1188,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
-           NONSTORM_I=ns_ion_i, $
-           MAINPHASE_I=mp_ion_i, $
-           RECOVERYPHASE_I=rp_ion_i, $
-           STORM_DST_I=s_dst_ion_i, $
-           NONSTORM_DST_I=ns_dst_ion_i, $
-           MAINPHASE_DST_I=mp_dst_ion_i, $
-           RECOVERYPHASE_DST_I=rp_dst_ion_i, $
-           N_STORM=n_ion_s, $
-           N_NONSTORM=n_ion_ns, $
-           N_MAINPHASE=n_ion_mp, $
-           N_RECOVERYPHASE=n_ion_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           USE_KATUS_STORM_PHASES=use_katus_storm_phases;, $
+           ;; NONSTORM_I=ns_ion_i, $
+           ;; MAINPHASE_I=mp_ion_i, $
+           ;; RECOVERYPHASE_I=rp_ion_i, $
+           ;; STORM_DST_I=s_dst_ion_i, $
+           ;; NONSTORM_DST_I=ns_dst_ion_i, $
+           ;; MAINPHASE_DST_I=mp_dst_ion_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_ion_i, $
+           ;; N_STORM=n_ion_s, $
+           ;; N_NONSTORM=n_ion_ns, $
+           ;; N_MAINPHASE=n_ion_mp, $
+           ;; N_RECOVERYPHASE=n_ion_rp, $
+           ;; NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           ;; NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
         
+        PRINT,"UPDATE WITH KATUS"
+        STOP
+
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
               restrict_with_these_ion_i = ns_ion_i
@@ -1046,7 +1218,7 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            END
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.all_storm_phases): BEGIN
               PRINTF,lun,'Restricting ionDB with each storm phase in turn ...'
-              restrict_with_these_ion_i = LIST(ns_ion_i,mp_ion_i,rp_ion_i)
+              ;; restrict_with_these_ion_i = LIST(ns_ion_i,mp_ion_i,rp_ion_i)
            END
         ENDCASE
 
@@ -1064,21 +1236,24 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
            ;; DSTCUTOFF=dstCutoff, $
            ;; SMOOTH_DST=smooth_dst, $
            USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
-           USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
-           NONSTORM_I=ns_sWay_i, $
-           MAINPHASE_I=mp_sWay_i, $
-           RECOVERYPHASE_I=rp_sWay_i, $
-           STORM_DST_I=s_dst_sWay_i, $
-           NONSTORM_DST_I=ns_dst_sWay_i, $
-           MAINPHASE_DST_I=mp_dst_sWay_i, $
-           RECOVERYPHASE_DST_I=rp_dst_sWay_i, $
-           N_STORM=n_sWay_s, $
-           N_NONSTORM=n_sWay_ns, $
-           N_MAINPHASE=n_sWay_mp, $
-           N_RECOVERYPHASE=n_sWay_rp, $
-           NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-           NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
+           USE_KATUS_STORM_PHASES=use_katus_storm_phases;, $
+           ;; NONSTORM_I=ns_sWay_i, $
+           ;; MAINPHASE_I=mp_sWay_i, $
+           ;; RECOVERYPHASE_I=rp_sWay_i, $
+           ;; STORM_DST_I=s_dst_sWay_i, $
+           ;; NONSTORM_DST_I=ns_dst_sWay_i, $
+           ;; MAINPHASE_DST_I=mp_dst_sWay_i, $
+           ;; RECOVERYPHASE_DST_I=rp_dst_sWay_i, $
+           ;; N_STORM=n_sWay_s, $
+           ;; N_NONSTORM=n_sWay_ns, $
+           ;; N_MAINPHASE=n_sWay_mp, $
+           ;; N_RECOVERYPHASE=n_sWay_rp, $
+           ;; NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
+           ;; NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2
         
+           PRINT,"UPDATE WITH KATUS"
+        STOP
+
         CASE 1 OF
            KEYWORD_SET(PASIS__alfDB_plot_struct.storm_opt.nonStorm): BEGIN
               restrict_with_these_sWay_i = ns_sWay_i
