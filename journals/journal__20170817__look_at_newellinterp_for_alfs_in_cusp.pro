@@ -15,8 +15,12 @@ PRO JOURNAL__20170817__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
   pasApresMidi  = 1
 
   ;; outFile    = 'NewellInterp_for_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '.sav'
-  outFile       = 'NewellInterp_for_cusp_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
+  outFile       = 'NewellInterp_for_' + $
+                  (KEYWORD_SET(pasApresMidi) ? 'notCusp' : 'cusp') + $
+                  '_Alfs-' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
                   '.sav'
+  ;; outFile       = 'NewellInterp_for_cusp_Alfs-' + '20170817' + $
+  ;;                 '.sav'
 
   good_i_date   = '20170817'
   good_i_dir    = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/' + $
@@ -34,7 +38,8 @@ PRO JOURNAL__20170817__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
      all      = MAKE_NEWELL_IDENT_STRUCT_FOR_ALFDB__FROM_FILE(!NULL,!NULL,!NULL, $
                                                               inFile, $
                                                               /USE_COMMON_VARS, $
-                                                              /DONT_MAP_TO_100KM)
+                                                              /DONT_MAP_TO_100KM);, $
+                                                              ;; /GIGANTE_ESPECDB)
 
      nBef     = N_ELEMENTS(good_i)
      nooner_i = WHERE((MAXIMUS__maximus.MLT GE 9.5) AND $
@@ -59,7 +64,8 @@ PRO JOURNAL__20170817__LOOK_AT_NEWELLINTERP_FOR_ALFS_IN_CUSP
                                                               inFile, $
                                                               /USE_COMMON_VARS, $
                                                               USER_INDS=good_i, $
-                                                              /DONT_MAP_TO_100KM)
+                                                              /DONT_MAP_TO_100KM);, $
+                                                              ;; /GIGANTE_ESPECDB)
 
      PRINT,"Saving ALL and JUSTGOOD to " + outFile + ' ...'
      SAVE,all,justGood,FILENAME=good_i_dir+outFile
