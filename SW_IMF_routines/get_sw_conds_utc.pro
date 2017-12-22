@@ -7,8 +7,9 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
 
   COMMON OMNI_DBs,OMNI_SW,OMNI_B,OMNI_TP
   COMMON KPCOMMON,KP__Kp,KP__dbDir,KP__dbFile
-  COMMON DSTCOMMON,DST__Dst,DST__dbDir,Dst__dbFile
-  COMMON AECOMMON,AE__AE,AE__dbDir,AE__dbFile
+  @common__dst_and_ae_db.pro
+  ;; COMMON DSTCOMMON,DST__Dst,DST__dbDir,Dst__dbFile
+  ;; COMMON AECOMMON,AE__AE,AE__dbDir,AE__dbFile
 
   ;;Innie
   dataDir           = "/SPENCEdata/Research/database/OMNI/"
