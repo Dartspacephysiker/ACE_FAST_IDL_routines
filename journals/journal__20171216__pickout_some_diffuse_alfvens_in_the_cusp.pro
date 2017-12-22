@@ -62,6 +62,16 @@ PRO JOURNAL__20171216__PICKOUT_SOME_DIFFUSE_ALFVENS_IN_THE_CUSP
      PRINT,FORMAT='(I5,T10,I5,T20,I5,T30,I5,T40,A0,T65,A0)',orbs[k],nHere,nHighCE,nLowCE, $
            T2S(justGood.x[inds[0]]), $
            T2S(justGood.x[inds[-1]])
+     IF orbs[k] EQ 1817 THEN BEGIN
+        PRINT, "diffuse"
+        FOR kk=0,nLowCE-1 DO BEGIN
+           PRINT,T2S(justGood.x[inds[lowCE_inds[kk]]],/MS)
+        ENDFOR
+        PRINT, "accel"
+        FOR kk=0,nHighCE-1 DO BEGIN
+           PRINT,T2S(justGood.x[inds[highCE_inds[kk]]],/MS)
+        ENDFOR
+     ENDIF
   ENDFOR
   
   STOP
