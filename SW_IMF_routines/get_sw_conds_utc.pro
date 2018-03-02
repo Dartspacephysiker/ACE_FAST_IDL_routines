@@ -83,10 +83,10 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
      (WHERE(ABS(AE__AE.time[AEInds]-struc.time       ) GT maxDstTDiff))[0] NE -1 OR $
      (WHERE(ABS(KP__Kp.time[kpInds]-struc.time       ) GT maxDstTDiff))[0] NE -1 $
   THEN BEGIN
-     STOP
+     ;; STOP
      good_SW_dat = 0
-  ENDIF
-  good_sw_dat   = 1 ;;Otherwise it's good
+  ENDIF ELSE $
+     good_sw_dat   = 1 ;;Otherwise it's good
 
 
   Bx            = Bx[magInds]
