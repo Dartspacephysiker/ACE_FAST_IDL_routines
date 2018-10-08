@@ -188,6 +188,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
                    ;; By    : By, $
                    ;; Bz    : Bz, $
                    IMF    : TEMPORARY(IMF)      , $
+                   clkAngle : TEMPORARY(phiClock), $
                    N      : TEMPORARY(protDens) , $
                    P      : TEMPORARY(press)    , $
                    T      : TEMPORARY(temp)     , $
