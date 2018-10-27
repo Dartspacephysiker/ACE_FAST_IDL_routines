@@ -590,50 +590,6 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
 
   ENDIF
 
-  IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
-
-     fl_elOrIon = KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs)
-
-     IF N_ELEMENTS((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
-        IF (STRUPCASE(STRMID((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
-            STRUPCASE(STRMID(PASIS__MIMC_struct.coordinate_system,0,3))) $
-        THEN BEGIN
-           DBs_reset = 1
-        ENDIF
-     ENDIF 
-
-     IF ( KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
-        (~KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0)) OR $
-        KEYWORD_SET(DBs_reset)                                                    $
-     THEN BEGIN
-        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
-           FORCE_LOAD_FASTLOC=force_load_fastLoc, $
-           FORCE_LOAD_TIMES=force_load_times, $
-           FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
-           INCLUDE_32Hz=PASIS__alfDB_plot_struct.include_32Hz, $
-           COORDINATE_SYSTEM=coordinate_system, $
-           USE_LNG=PASIS__MIMC_struct.use_lng, $
-           USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
-           USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
-           USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
-           USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
-           USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
-           FOR_ESPEC_DBS=fl_elOrIon, $
-           FOR_ESPEC__GIGANTE=PASIS__alfDB_plot_struct.eSpec__gigante_DB, $
-           ;; CHECK_DB=check_DB, $
-           JUST_FASTLOC=just_fastLoc, $
-           JUST_TIMES=just_times, $
-           LOAD_DELTA_ILAT_NOT_DELTA_T=PASIS__alfDB_plot_struct.load_dILAT, $
-           LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__ALFDB_PLOT_struct.load_dAngle, $
-           LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__ALFDB_PLOT_struct.load_dx, $
-           DO_NOT_MAP_DELTA_T=do_not_map_delta_t, $
-           NO_MEMORY_LOAD=noMem, $
-           CLEAR_MEMORY=clear_memory, $
-           LUN=lun     
-
-     ENDIF
-  ENDIF 
-
   IF (KEYWORD_SET(PASIS__alfDB_plot_struct.eNumFlPlots)                      OR $
       KEYWORD_SET(PASIS__alfDB_plot_struct.ePlots)                            OR $ 
       KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__newellPlot_probOccurrence)) AND $
@@ -644,6 +600,9 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
      LOAD_NEWELL_ESPEC_DB, $
         UPGOING=PASIS__alfDB_plot_struct.eSpec__upgoing, $
         GIGANTE=PASIS__alfDB_plot_struct.eSpec__gigante_DB, $
+        FINALDB=PASIS__alfDB_plot_struct.eSpec__final_DB, $
+        FINAL__LCMOMS=PASIS__alfDB_plot_struct.eSpec__final__LCMoms, $
+        FINAL__ALLANGLEMOMS=PASIS__alfDB_plot_struct.eSpec__final__allAngleMoms, $
         DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(PASIS__alfDB_plot_struct.eSpec__Newell_2009_interp), $
         USE_2000KM_FILE=PASIS__alfDB_plot_struct.eSpec__use_2000km_file, $
         DONT_MAP_TO_100KM=PASIS__alfDB_plot_struct.eSpec__noMap, $
@@ -729,6 +688,51 @@ PRO PLOT_ALFVEN_STATS_IMF_SCREENING, $
                                     LUN=lun
 
   ENDIF
+
+  IF KEYWORD_SET(need_fastLoc_i) THEN BEGIN
+
+     fl_elOrIon = KEYWORD_SET(PASIS__alfDB_plot_struct.for_eSpec_DBs) OR KEYWORD_SET(PASIS__alfDB_plot_struct.for_ion_DBs)
+
+     IF N_ELEMENTS((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc)) GT 0 THEN BEGIN
+        IF (STRUPCASE(STRMID((KEYWORD_SET(fl_elOrIon) ? FL_eSpec__fastLoc : FL__fastLoc).info.coords,0,3)) NE $
+            STRUPCASE(STRMID(PASIS__MIMC_struct.coordinate_system,0,3))) $
+        THEN BEGIN
+           DBs_reset = 1
+        ENDIF
+     ENDIF 
+
+     IF ( KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
+        (~KEYWORD_SET(fl_elOrIon) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0)) OR $
+        KEYWORD_SET(DBs_reset)                                                    $
+     THEN BEGIN
+        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
+           FORCE_LOAD_FASTLOC=force_load_fastLoc, $
+           FORCE_LOAD_TIMES=force_load_times, $
+           FORCE_LOAD_ALL=KEYWORD_SET(force_load_all) OR KEYWORD_SET(DBs_reset), $
+           INCLUDE_32Hz=PASIS__alfDB_plot_struct.include_32Hz, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_LNG=PASIS__MIMC_struct.use_lng, $
+           USE_AACGM_COORDS=PASIS__MIMC_struct.use_AACGM, $
+           USE_GEI_COORDS=PASIS__MIMC_struct.use_GEI, $
+           USE_GEO_COORDS=PASIS__MIMC_struct.use_GEO, $
+           USE_MAG_COORDS=PASIS__MIMC_struct.use_MAG, $
+           USE_SDT_COORDS=PASIS__MIMC_struct.use_SDT, $
+           FOR_ESPEC_DBS=fl_elOrIon, $
+           FOR_ESPEC__GIGANTE=PASIS__alfDB_plot_struct.eSpec__gigante_DB, $
+           FOR_ESPEC__FINAL_DB=PASIS__alfDB_plot_struct.eSpec__final_DB, $
+           ;; CHECK_DB=check_DB, $
+           JUST_FASTLOC=just_fastLoc, $
+           JUST_TIMES=just_times, $
+           LOAD_DELTA_ILAT_NOT_DELTA_T=PASIS__alfDB_plot_struct.load_dILAT, $
+           LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=PASIS__ALFDB_PLOT_struct.load_dAngle, $
+           LOAD_DELTA_X_FOR_WIDTH_TIME=PASIS__ALFDB_PLOT_struct.load_dx, $
+           DO_NOT_MAP_DELTA_T=do_not_map_delta_t, $
+           NO_MEMORY_LOAD=noMem, $
+           CLEAR_MEMORY=clear_memory, $
+           LUN=lun     
+
+     ENDIF
+  ENDIF 
 
   ;;Handle hemisphere issues up front if we're doing equal-area binning
   IF KEYWORD_SET(PASIS__alfDB_plot_struct.EA_binning) THEN BEGIN
