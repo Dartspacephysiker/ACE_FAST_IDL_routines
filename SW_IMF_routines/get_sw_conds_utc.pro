@@ -72,7 +72,7 @@ FUNCTION GET_SW_CONDS_UTC,tee1,tee2, $
 
   ENDIF ELSE IF KEYWORD_SET(get_all_values_between_t1_and_t2) THEN BEGIN
      t2 = time_array[-1]
-  ENDIF
+  ENDIF ELSE times = t1
 
   ;; GET_FA_ORBIT,t1,t2, $
   ;;              TIME_ARRAY=time_array, $
